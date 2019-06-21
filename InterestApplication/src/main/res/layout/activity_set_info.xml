@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rootview"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.SetInfoActivity">
+
+    <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/icon_return"
+            android:scaleType="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <ImageView
+            android:background="@drawable/circle_gray_bg"
+            android:id="@+id/userProfileBtn"
+            android:layout_width="186dp"
+            android:layout_height="186dp"
+            android:src="@drawable/icon_camera"
+            android:scaleType="center"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="26dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnBack"/>
+
+    <EditText
+            android:maxLength="10"
+            android:id="@+id/userNickNameEt"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:paddingLeft="12dp"
+            android:gravity="center_vertical"
+            android:hint="请填写用户昵称"
+            android:textSize="14sp"
+            android:textColor="@color/colorBlack"
+            android:background="@drawable/login_rectangle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="26dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userProfileBtn"/>
+
+    <RadioGroup
+            android:id="@+id/sexGroup"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/userNickNameEt"
+            app:layout_constraintLeft_toLeftOf="@id/userNickNameEt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <RadioButton
+                android:textColor="@color/sex_color_selector"
+                android:id="@+id/userSexWoman"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:text="女"
+                android:paddingLeft="40dp"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:drawableLeft="@drawable/selector_pic_woman_btn"
+                app:layout_constraintLeft_toLeftOf="@id/userNickNameEt"
+                android:background="@drawable/selector_woman_btn"
+                app:layout_constraintRight_toLeftOf="@id/userSexMan"
+                app:layout_constraintTop_toBottomOf="@id/userNickNameEt"/>
+
+        <RadioButton
+                android:textColor="@color/sex_color_selector"
+                android:paddingLeft="40dp"
+                android:drawableLeft="@drawable/selector_pic_man_btn"
+                android:id="@+id/userSexMan"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:button="@null"
+                android:text="男"
+                android:gravity="center"
+                android:background="@drawable/selector_man_btn"
+                app:layout_constraintRight_toRightOf="@id/userNickNameEt"
+                app:layout_constraintTop_toTopOf="@+id/userSexWoman"/>
+
+    </RadioGroup>
+
+
+    <TextView
+            android:id="@+id/userBirthTv"
+            android:layout_width="300dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_height="50dp"
+            android:text="点击填写生日"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/icon_next"
+            android:background="@drawable/login_rectangle"
+            app:layout_constraintLeft_toLeftOf="@id/userNickNameEt"
+            app:layout_constraintRight_toRightOf="@id/userNickNameEt"
+            app:layout_constraintTop_toBottomOf="@id/sexGroup"/>
+
+
+    <Button
+            android:id="@+id/confirmBtn"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_rectangle_unable_btn"
+            android:text="确定"
+            android:textSize="14sp"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintLeft_toLeftOf="@id/userNickNameEt"
+            app:layout_constraintTop_toBottomOf="@id/userBirthTv"
+            android:layout_marginTop="30dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

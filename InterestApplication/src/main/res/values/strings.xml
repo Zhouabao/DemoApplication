@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">翻版积目</string>
+    <string name="permission_tip">为了更好的用户体验 需要开启以下系统权限</string>
+
+
+    <!--拍摄照片时的滤镜    -->
+    <string name="beauty_setting_pannel_filter_none">无</string>
+    <string name="beauty_setting_pannel_filter_standard">标准</string>
+    <string name="beauty_setting_pannel_filter_cheery">樱红</string>
+    <string name="beauty_setting_pannel_filter_cloud">云裳</string>
+    <string name="beauty_setting_pannel_filter_pure">纯真</string>
+    <string name="beauty_setting_pannel_filter_orchid">白兰</string>
+    <string name="beauty_setting_pannel_filter_vitality">元气</string>
+    <string name="beauty_setting_pannel_filter_super">超脱</string>
+    <string name="beauty_setting_pannel_filter_fragrance">香氛</string>
+    <string name="beauty_setting_pannel_filter_romantic">浪漫</string>
+    <string name="beauty_setting_pannel_filter_fresh">清新</string>
+    <string name="beauty_setting_pannel_filter_beautiful">唯美</string>
+    <string name="beauty_setting_pannel_filter_pink">粉嫩</string>
+    <string name="beauty_setting_pannel_filter_reminiscence">怀旧</string>
+    <string name="beauty_setting_pannel_filter_blues">蓝调</string>
+    <string name="beauty_setting_pannel_filter_cool">清凉</string>
+    <string name="beauty_setting_pannel_filter_Japanese">日系</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
