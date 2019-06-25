@@ -72,8 +72,7 @@ dependencies {
     api "com.bigkoo:alertview:$alert_view_version"
     //七牛
     api 'com.qiniu:qiniu-android-sdk:7.3.+'
-    //底部导航
-    api 'com.ashokvarma.android:bottom-navigation-bar:2.0.2'
+
     //Banner
     api 'com.youth.banner:banner:1.4.10'  //最新版本
     //icon_label_orange
@@ -89,7 +88,7 @@ dependencies {
     //FlowLayout
     //api 'com.zhy:flowlayout-lib:1.0.3'
     //ARouter
-    api "com.alibaba:arouter-api:$arouter_api_version"
+//    api "com.alibaba:arouter-api:$arouter_api_version"
 
     //图片选择器
     api 'com.github.labmem005.PictureSelector:picture_library:v2.3.0'

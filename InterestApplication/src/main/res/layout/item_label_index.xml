@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/labelIndex"
+        android:text="+"
+        android:background="@drawable/shape_rectangle_gray_white_15dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/colorOrange"
+        android:layout_width="52dp"
+        android:layout_height="27dp">
+
+</TextView>

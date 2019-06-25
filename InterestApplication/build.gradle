@@ -59,7 +59,11 @@ dependencies {
     //recyclerview的animation
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
 
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-alpha01'
+
+//    implementation 'ckrjfrog.Page:PageView:1.2.7'
     compile(name: 'LiteAVSDK_Professional_6.5.7272', ext: 'aar')
 
+    implementation 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'
     implementation project(path: ':BaseLibrary')
 }

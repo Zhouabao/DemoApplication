@@ -2,7 +2,6 @@ package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.demoapplication.R
 import com.example.demoapplication.model.Label
 import com.example.demoapplication.presenter.LabelsPresenter
@@ -25,7 +24,6 @@ import kotlinx.android.synthetic.main.activity_labels.*
  * 如果是二级标签，就取消选中其子级
  * 如果是一级标签，就取消选中子级和子级的子级
  */
-@Route(path = "/activity/LabelsActivity")
 class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
     private lateinit var adapter: LabelAdapter
     //拿一个集合来存储所有的标签
@@ -67,7 +65,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
 
         adapter.setOnItemClickListener(object : BaseRecyclerViewAdapter.OnItemClickListener<Label> {
             override fun onItemClick(item: Label, position: Int) {
-//                adapter.dataList[position].checked = !item.checked
+//                adapter.labelList[position].checked = !item.checked
                 item.checked = !item.checked
                 adapter.notifyItemChanged(position)
                 updateCheckedLabels(item)

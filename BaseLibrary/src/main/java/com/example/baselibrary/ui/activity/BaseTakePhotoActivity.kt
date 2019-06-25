@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import com.alibaba.android.arouter.launcher.ARouter
 import com.bigkoo.alertview.AlertView
 import com.bigkoo.alertview.OnItemClickListener
 import com.jph.takephoto.app.TakePhoto
@@ -45,7 +44,6 @@ abstract open class BaseTakePhotoActivity<T : BasePresenter<*>> : BaseActivity()
         mTakePhoto.onCreate(savedInstanceState)
 
         //mLoadingDialog = ProgressLoading.create(this)
-        ARouter.getInstance().inject(this)
     }
 
 

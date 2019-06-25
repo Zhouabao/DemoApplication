@@ -42,7 +42,7 @@
             android:gravity="center_vertical"
             android:hint="请填写用户昵称"
             android:textSize="14sp"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorBlack26"
             android:background="@drawable/login_rectangle"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginTop="26dp"

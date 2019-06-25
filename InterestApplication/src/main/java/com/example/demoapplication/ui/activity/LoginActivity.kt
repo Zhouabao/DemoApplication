@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.demoapplication.R
 import com.kotlin.base.ui.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_login.*
@@ -14,7 +13,6 @@ import org.jetbrains.anko.toast
 /**
  * 手机登录界面
  */
-@Route(path = "/activity/LoginActivity")
 class LoginActivity : BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

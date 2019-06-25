@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="345dp"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_gravity="center"
+        android:background="@drawable/shadow_173133"
+        android:elevation="2dp"
+        android:layout_height="wrap_content">
+
+    <androidx.viewpager2.widget.ViewPager2
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/vpPhotos"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_height="300dp"/>
+
+    <ImageView
+            android:visibility="gone"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/icon_vip"
+            android:id="@+id/ivVip"
+            android:layout_width="28dp"
+            android:layout_height="28dp"/>
+
+    <ImageView
+            app:layout_constraintBottom_toBottomOf="@id/vpPhotos"
+            app:layout_constraintTop_toTopOf="@id/vpPhotos"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:id="@+id/iv_dislike"
+            android:background="@drawable/shape_oval_white"
+            android:layout_width="60dp"
+            android:scaleType="center"
+            android:alpha="0"
+            android:src="@drawable/icon_like"
+            android:layout_height="60dp"/>
+
+    <ImageView
+            android:alpha="0"
+            android:background="@drawable/shape_oval_white"
+            app:layout_constraintBottom_toBottomOf="@id/vpPhotos"
+            app:layout_constraintTop_toTopOf="@id/vpPhotos"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:scaleType="center"
+            android:id="@+id/iv_like"
+            android:src="@drawable/icon_dislike"
+            android:layout_width="60dp"
+            android:layout_height="60dp"/>
+
+    <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/vpIndicator"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    <ImageView
+            android:layout_marginLeft="60dp"
+            app:layout_constraintTop_toTopOf="@id/btnChat"
+            app:layout_constraintRight_toLeftOf="@id/btnChat"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:scaleType="center"
+            android:background="@drawable/shape_oval_white"
+            android:src="@drawable/icon_dislike"
+            android:layout_width="60dp"
+            app:layout_constraintBottom_toBottomOf="@id/btnChat"
+            android:id="@+id/btnDislike"
+            android:elevation="4dp"
+            android:layout_height="60dp"/>
+
+    <ImageView
+            android:id="@+id/btnChat"
+            android:layout_marginTop="260dp"
+            app:layout_constraintTop_toTopOf="@id/vpPhotos"
+            android:src="@drawable/icon_flash"
+            android:layout_width="72dp"
+            android:layout_marginLeft="24dp"
+            app:layout_constraintRight_toLeftOf="@id/btnLike"
+            app:layout_constraintLeft_toRightOf="@id/btnDislike"
+            android:layout_height="72dp"/>
+
+    <TextView
+            android:id="@+id/tvLeftChatTime"
+            android:elevation="4dp"
+            android:layout_marginTop="55dp"
+            app:layout_constraintRight_toRightOf="@id/btnChat"
+            app:layout_constraintLeft_toLeftOf="@id/btnChat"
+            android:textColor="@color/colorOrange"
+            app:layout_constraintTop_toTopOf="@id/btnChat"
+            android:background="@drawable/shape_rectangle_gray_white_15dp"
+            android:layout_width="21dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="3"
+            android:layout_height="21dp"/>
+
+    <ImageView
+            android:layout_marginLeft="24dp"
+            android:id="@+id/btnLike"
+            app:layout_constraintTop_toTopOf="@id/btnChat"
+            app:layout_constraintBottom_toBottomOf="@id/btnChat"
+            android:background="@drawable/shape_oval_white"
+            android:src="@drawable/icon_like"
+            android:layout_width="60dp"
+            android:scaleType="center"
+            android:elevation="4dp"
+            android:layout_marginRight="60dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/btnChat"
+            android:layout_height="60dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:id="@+id/v1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvLeftChatTime"
+            android:layout_height="140dp">
+
+        <TextView
+                android:id="@+id/tvUserName"
+                android:maxLength="10"
+                android:textColor="@color/colorBlack4a"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textSize="24sp"
+                android:text="Username"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:elevation="2dp"
+                android:id="@+id/tvUserAge"
+                app:layout_constraintLeft_toRightOf="@id/tvUserName"
+                app:layout_constraintTop_toTopOf="@id/tvUserName"
+                app:layout_constraintBottom_toBottomOf="@id/tvUserName"
+                android:gravity="center"
+                tools:text="23"
+                android:textSize="12sp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/colorOrange"
+                android:background="@drawable/shape_rectangle_gray_white_9dp"
+                android:layout_width="wrap_content"
+                android:paddingLeft="8dp"
+                android:paddingTop="2dp"
+                android:drawablePadding="4dp"
+                android:paddingBottom="2dp"
+                android:paddingRight="8dp"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:elevation="2dp"
+                android:gravity="center"
+                android:id="@+id/tvUserLabels"
+                android:background="@drawable/shape_rectangle_gray_white_9dp"
+                app:layout_constraintLeft_toRightOf="@id/tvUserAge"
+                app:layout_constraintTop_toTopOf="@id/tvUserAge"
+                android:layout_width="wrap_content"
+                android:text="12"
+                android:paddingLeft="8dp"
+                android:textSize="12sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingRight="8dp"
+                android:drawablePadding="4dp"
+                android:drawableLeft="@drawable/icon_label_orange"
+                android:textColor="@color/colorOrange"
+                android:layout_marginLeft="6dp"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/tvLocation"
+                android:elevation="2dp"
+                android:gravity="center"
+                android:drawableLeft="@drawable/icon_location_orange"
+                android:background="@drawable/shape_rectangle_gray_white_9dp"
+                app:layout_constraintLeft_toRightOf="@id/tvUserLabels"
+                app:layout_constraintTop_toTopOf="@id/tvUserAge"
+                android:layout_width="wrap_content"
+                android:text="123333km"
+                android:paddingLeft="8dp"
+                android:drawablePadding="4dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:textSize="12sp"
+                android:paddingRight="8dp"
+                android:textColor="@color/colorOrange"
+                android:layout_marginLeft="6dp"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/tvUserIntroduce"
+                android:layout_marginTop="7dp"
+                app:layout_constraintTop_toBottomOf="@id/tvUserName"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_width="match_parent"
+                android:text="AntV 是蚂蚁金服全新代数据可视化解决方案，致力于提供一套…单方便、专业可靠、无限可能的数据可视化最佳实践。"
+                android:textColor="@color/colorBlack4a"
+                android:textSize="14sp"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="13dp"
+                android:lineSpacingMultiplier="1.25"
+                android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

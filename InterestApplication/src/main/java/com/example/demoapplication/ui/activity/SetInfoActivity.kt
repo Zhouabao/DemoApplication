@@ -7,7 +7,6 @@ import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.cazaea.sweetalert.SweetAlertDialog
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
@@ -25,7 +24,6 @@ import org.jetbrains.anko.startActivity
 /**
  * 填写个人信息页面
  */
-@Route(path = "/activity/SetInfoActivity")
 class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.OnClickListener {
 
     private val handler by lazy { Handler() }

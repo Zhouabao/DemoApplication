@@ -3,7 +3,6 @@ package com.example.demoapplication.ui.activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.demoapplication.R
 import com.example.demoapplication.presenter.VerifyCodePresenter
 import com.example.demoapplication.presenter.view.VerifyCodeView
@@ -16,7 +15,6 @@ import org.jetbrains.anko.toast
 /**
  * 填写验证码界面
  */
-@Route(path = "/activity/VerifyCodeActivity")
 class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeView, View.OnClickListener {
     private lateinit var verifyCode: String
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -64,7 +64,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:vTextSize="16sp"
                 app:vAutoShowInputBoard="true"
-                app:vTextColor="@color/colorBlack"
+                app:vTextColor="@color/colorBlack26"
                 app:vIsTextBold="true"
                 app:vBackgroundResource="@drawable/verify_code_bg"
                 android:layout_height="46dp"/>
@@ -103,7 +103,7 @@
                 app:vIsTextBold="true"
                 app:vTextSize="16sp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:vTextColor="@color/colorBlack"
+                app:vTextColor="@color/colorBlack26"
                 app:vBackgroundResource="@drawable/verify_code_bg"
                 android:layout_height="46dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

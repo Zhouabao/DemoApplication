@@ -9,4 +9,7 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface MatchView : BaseView {
+
+
+    fun onGetNewUserFromLabelResult(users: String)
 }

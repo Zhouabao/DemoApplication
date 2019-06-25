@@ -2,7 +2,6 @@ package com.kotlin.base.common
 
 import android.app.Application
 import android.content.Context
-import com.alibaba.android.arouter.launcher.ARouter
 
 
 /*
@@ -17,10 +16,6 @@ open class BaseApplication : Application() {
 
         context = this
 
-        //ARouter初始化
-        ARouter.openLog()    // 打印日志
-        ARouter.openDebug()
-        ARouter.init(this)
     }
 
 
@@ -33,6 +28,5 @@ open class BaseApplication : Application() {
 
     override fun onTerminate() {
         super.onTerminate()
-        ARouter.getInstance().destroy()
     }
 }

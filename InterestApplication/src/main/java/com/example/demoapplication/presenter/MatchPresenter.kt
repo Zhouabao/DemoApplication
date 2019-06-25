@@ -10,4 +10,11 @@ import com.kotlin.base.presenter.BasePresenter
  *    version: 1.0
  */
 class MatchPresenter : BasePresenter<MatchView>() {
+
+    /**
+     * 根据标签来获取新的用户数据
+     */
+    fun getNewUserFromLabel() {
+
+    }
 }

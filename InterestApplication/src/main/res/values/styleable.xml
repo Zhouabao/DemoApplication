@@ -11,3 +11,4 @@
         <attr name="vAutoShowInputBoard" format="boolean"/>
     </declare-styleable>
 </resources>
+
