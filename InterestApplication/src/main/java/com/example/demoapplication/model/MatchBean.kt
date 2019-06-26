@@ -8,4 +8,5 @@ import java.io.Serializable
  *    desc   :  sex：1男2女
  *    version: 1.0
  */
-data class MatchBean(var name: String, var age: Int, var sex: Int, var imgs: MutableList<Int>) : Serializable
+data class MatchBean(var name: String, var age: Int, var sex: Int, var imgs: MutableList<Int>, var type: Int = 1) :
+    Serializable

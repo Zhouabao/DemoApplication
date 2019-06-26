@@ -31,8 +31,10 @@ class ObservableScrollView @JvmOverloads constructor(
         }
     }
 
-
     interface OnScrollChangedListener {
         fun onScrollChanged(scrollView: ObservableScrollView, x: Int, y: Int, oldX: Int, oldY: Int)
     }
+
+
+
 }

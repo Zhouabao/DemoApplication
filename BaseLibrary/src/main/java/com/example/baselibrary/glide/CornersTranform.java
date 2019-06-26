@@ -23,7 +23,7 @@ public class CornersTranform extends BitmapTransformation {
 
     public CornersTranform(float radius) {
         super();
-        this.radius = radius;
+        this.radius = SizeUtils.applyDimension(radius, TypedValue.COMPLEX_UNIT_DIP);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class CornersTranform extends BitmapTransformation {
         paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
         paint.setAntiAlias(true);
         RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getHeight());
-        canvas.drawRoundRect(rectF, SizeUtils.applyDimension(radius, TypedValue.COMPLEX_UNIT_DIP), SizeUtils.applyDimension(radius, TypedValue.COMPLEX_UNIT_DIP), paint);
+        canvas.drawRoundRect(rectF, radius, radius, paint);
         return result;
     }
 

@@ -52,6 +52,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
     }
 
     private fun initView() {
+
         //标签管理
         val labelManager = LinearLayoutManager(activity?.applicationContext, LinearLayoutManager.HORIZONTAL, false)
         matchLabelRv.layoutManager = labelManager

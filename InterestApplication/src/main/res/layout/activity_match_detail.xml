@@ -21,7 +21,7 @@
             <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/detailPhotosVp"
                     android:layout_width="match_parent"
-                    android:layout_height="568dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/img_avatar_01"
                     android:orientation="vertical"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -193,7 +193,7 @@
                     android:id="@+id/detail_content_fragment"
                     android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/t2"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

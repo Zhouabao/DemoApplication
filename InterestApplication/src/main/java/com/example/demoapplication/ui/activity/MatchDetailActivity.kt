@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
 import androidx.core.view.size
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.ScreenUtils
@@ -20,6 +21,8 @@ import com.example.demoapplication.presenter.view.MatchDetailView
 import com.example.demoapplication.ui.adapter.DetailThumbAdapter
 import com.example.demoapplication.ui.adapter.MatchDetailLabelAdapter
 import com.example.demoapplication.ui.adapter.MatchImgsAdapter
+import com.example.demoapplication.ui.fragment.BlockSquareFragment
+import com.example.demoapplication.ui.fragment.ListSquareFragment
 import com.example.demoapplication.widgets.ObservableScrollView
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
@@ -28,8 +31,11 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.match_action_layout.*
-import org.jetbrains.anko.toast
+import java.util.*
 
+/**
+ * 匹配详情页
+ */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView {
     private val matchBean by lazy { intent.getSerializableExtra("matchBean") as MatchBean }
     private val thumbAdapter by lazy { DetailThumbAdapter(this) }
@@ -130,6 +136,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     private fun initView() {
+        val layoutParams = detailPhotosVp.layoutParams
+        layoutParams.width = ScreenUtils.getScreenWidth()
+        layoutParams.height = (4 / 3.0F * layoutParams.width).toInt()
+        detailPhotosVp.layoutParams = layoutParams
+
         btnDislike.visibility = View.GONE
 
         //用户的广场预览界面
@@ -139,13 +150,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         manager.alignItems = AlignItems.STRETCH
         detailLabelRv.layoutManager = manager
 
-
+        initFragment()
         detailSquareSwitchRg.setOnCheckedChangeListener { radioGroup, checkedId ->
 
             if (checkedId == R.id.rbList) {
-                toast("列表形式")
+                changeFragment(1)
             } else if (checkedId == R.id.rbBlock) {
-                toast("九宫格形式")
+                changeFragment(0)
             }
         }
 
@@ -156,5 +167,36 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 Log.i("scrollviewTag", "${ScreenUtils.getScreenHeight()}")
             }
         })
+    }
+
+    //fragment栈管理
+    private val mStack = Stack<Fragment>()
+    //九宫格
+    private val blockFragment by lazy { BlockSquareFragment() }
+    //列表
+    private val listFragment by lazy { ListSquareFragment() }
+
+    /**
+     * 初始化fragments
+     */
+    private fun initFragment() {
+        val manager = supportFragmentManager.beginTransaction()
+        manager.add(R.id.detail_content_fragment, blockFragment)
+        manager.add(R.id.detail_content_fragment, listFragment)
+        manager.commit()
+        mStack.add(blockFragment)
+        mStack.add(listFragment)
+    }
+
+    /**
+     * 点击切换fragment
+     */
+    private fun changeFragment(position: Int) {
+        val transaction = supportFragmentManager.beginTransaction()
+        for (fragment in mStack) {
+            transaction.hide(fragment)
+        }
+        transaction.show(mStack[position])
+        transaction.commit()
     }
 }

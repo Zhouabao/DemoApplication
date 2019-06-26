@@ -42,7 +42,7 @@ class MatchUserAdapter(context: Context) : BaseRecyclerViewAdapter<MatchBean, Ma
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
         //todo("设置rv中的viewpgaer2竖直滑动 并且添加图片指示器")
-//        holder.itemView.vpPhotos.setImageResource(dataList[position])
+
         val model = dataList[position]
         holder.itemView.vpPhotos.adapter = MatchImgsAdapter(mContext, model.imgs)
         holder.itemView.vpPhotos.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {

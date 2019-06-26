@@ -28,8 +28,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             tools:replace="android:theme,android:icon">
-        <activity android:name=".ui.activity.MatchDetailActivity"
-                android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+        <activity android:name=".ui.activity.MatchDetailActivity">
         </activity>
         <activity android:name=".ui.activity.VideoRecordActivity">
         </activity>
