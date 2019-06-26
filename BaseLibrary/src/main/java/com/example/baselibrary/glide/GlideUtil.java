@@ -32,14 +32,13 @@ import java.io.File;
 
 public class GlideUtil {
     private static RequestOptions getOptions() {
-        RequestOptions options = new RequestOptions()
+        return new RequestOptions()
                 .fitCenter()
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher)
                 .priority(Priority.HIGH)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
-        return options;
     }
 
     /**
@@ -58,6 +57,7 @@ public class GlideUtil {
 
     /**
      * 加载圆形图片
+     *
      * @param context
      * @param url
      * @param targetImg
@@ -90,18 +90,16 @@ public class GlideUtil {
      * @param context      上下文
      * @param imageView    图片显示控件
      * @param url          图片链接
-     * @param defaultImage 默认占位图片
-     * @param errorImage   加载失败后图片
      * @param radius       图片圆角半径
      * @return
      * @author leibing
      * @createTime 2016/8/15
      * @lastModify 2016/8/15
      */
-    public static void loadRoundImg(Context context, String url, ImageView imageView, int defaultImage, int errorImage, int radius) {
+    public static void loadRoundImg(Context context, Object url, ImageView imageView, int radius) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().transform(new CornersTranform(radius)))
+                .apply(getOptions().diskCacheStrategy(DiskCacheStrategy.NONE).transform(new CornersTranform(radius)))
                 .into(imageView);
 
     }

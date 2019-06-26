@@ -1,4 +1,4 @@
-package com.example.demoapplication.cardswipelayout;
+package com.example.demoapplication.widgets.cardswipelayout;
 
 import android.graphics.Canvas;
 import android.view.View;

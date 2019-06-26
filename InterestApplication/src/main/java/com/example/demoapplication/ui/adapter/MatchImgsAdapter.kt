@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import kotlinx.android.synthetic.main.item_img.view.*
+import kotlinx.android.synthetic.main.item_match_detail_img.view.*
 
 /**
  *    author : ZFM
@@ -20,7 +20,7 @@ class MatchImgsAdapter(var context: Context, private var datas: MutableList<Int>
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_img, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_match_detail_img, parent, false)
         return ViewHolder(view)
     }
 

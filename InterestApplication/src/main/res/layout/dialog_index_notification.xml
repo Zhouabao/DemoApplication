@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="40dp"
+              android:background="@drawable/icon_notification_bg"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+              android:paddingLeft="11dp"
+              android:elevation="3dp"
+              android:paddingRight="12dp">
+
+    <TextView
+            android:id="@+id/msgHi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/icon_flash_white"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:text="3"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+
+    <TextView
+            android:id="@+id/msgLike"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/icon_like_white"
+            android:drawablePadding="5dp"
+            android:text="3"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+
+    <TextView
+            android:id="@+id/msgSquare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/icon_time_white"
+            android:drawablePadding="5dp"
+            android:text="3"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+
+    <TextView
+            android:id="@+id/msgChat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/icon_msg_white"
+            android:drawablePadding="5dp"
+            android:text="3"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+
+</LinearLayout>
+

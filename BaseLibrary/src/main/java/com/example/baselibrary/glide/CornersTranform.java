@@ -1,6 +1,8 @@
 package com.example.baselibrary.glide;
 
 import android.graphics.*;
+import android.util.TypedValue;
+import com.blankj.utilcode.util.SizeUtils;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
@@ -14,12 +16,12 @@ import java.security.MessageDigest;
 public class CornersTranform extends BitmapTransformation {
     private float radius;
 
-    public CornersTranform( ) {
+    public CornersTranform() {
         super();
-        radius = 10;
+        radius = SizeUtils.applyDimension(10, TypedValue.COMPLEX_UNIT_DIP);
     }
 
-    public CornersTranform( float radius) {
+    public CornersTranform(float radius) {
         super();
         this.radius = radius;
     }
@@ -34,7 +36,7 @@ public class CornersTranform extends BitmapTransformation {
 
         Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
 
-        if (result != null && !result.isRecycled()){
+        if (result != null && !result.isRecycled()) {
             result.recycle();
             result = null;
         }
@@ -43,11 +45,11 @@ public class CornersTranform extends BitmapTransformation {
             result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
         }
         Canvas canvas = new Canvas(result);
-        Paint paint  = new Paint();
+        Paint paint = new Paint();
         paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
         paint.setAntiAlias(true);
         RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getHeight());
-        canvas.drawRoundRect(rectF, radius, radius, paint);
+        canvas.drawRoundRect(rectF, SizeUtils.applyDimension(radius, TypedValue.COMPLEX_UNIT_DIP), SizeUtils.applyDimension(radius, TypedValue.COMPLEX_UNIT_DIP), paint);
         return result;
     }
 

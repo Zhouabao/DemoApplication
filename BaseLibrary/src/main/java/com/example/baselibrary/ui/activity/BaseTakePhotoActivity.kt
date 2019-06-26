@@ -17,7 +17,6 @@ import com.kotlin.base.presenter.view.BaseView
 import com.kotlin.base.utils.DateUtils
 import org.jetbrains.anko.toast
 import java.io.File
-import javax.inject.Inject
 
 
 /*
@@ -30,7 +29,6 @@ abstract open class BaseTakePhotoActivity<T : BasePresenter<*>> : BaseActivity()
 
     private lateinit var mTempFile: File
 
-    @Inject
     lateinit var mPresenter: T
 
 

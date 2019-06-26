@@ -9,24 +9,20 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
-import com.example.demoapplication.cardswipelayout.CardConfig
-import com.example.demoapplication.cardswipelayout.CardItemTouchHelperCallback
-import com.example.demoapplication.cardswipelayout.CardLayoutManager
-import com.example.demoapplication.cardswipelayout.OnSwipeListener
 import com.example.demoapplication.model.Label
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.presenter.MatchPresenter
 import com.example.demoapplication.presenter.view.MatchView
 import com.example.demoapplication.ui.activity.LabelsActivity
+import com.example.demoapplication.ui.activity.MatchDetailActivity
 import com.example.demoapplication.ui.adapter.MatchLabelAdapter
 import com.example.demoapplication.ui.adapter.MatchUserAdapter
-import com.example.demoapplication.widgets.FilterUserDialog
-import com.jaygoo.widget.OnRangeChangedListener
-import com.jaygoo.widget.RangeSeekBar
-import com.kotlin.base.ext.onClick
+import com.example.demoapplication.widgets.cardswipelayout.CardConfig
+import com.example.demoapplication.widgets.cardswipelayout.CardItemTouchHelperCallback
+import com.example.demoapplication.widgets.cardswipelayout.CardLayoutManager
+import com.example.demoapplication.widgets.cardswipelayout.OnSwipeListener
 import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import com.kotlin.base.ui.fragment.BaseMvpFragment
-import kotlinx.android.synthetic.main.dialog_match_filter.*
 import kotlinx.android.synthetic.main.fragment_match.*
 import kotlinx.android.synthetic.main.item_match_user.view.*
 import org.jetbrains.anko.support.v4.startActivity
@@ -117,6 +113,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
         userAdapter.setOnItemClickListener(object : BaseRecyclerViewAdapter.OnItemClickListener<MatchBean> {
             override fun onItemClick(item: MatchBean, position: Int) {
                 toast("$position")
+                startActivity<MatchDetailActivity>("matchBean" to item)
             }
         })
     }
@@ -239,27 +236,4 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
     }
 
 
-    fun showFilterDialog() {
-        val dialog = FilterUserDialog(activity!!)
-        dialog.show()
-
-        dialog.btnCompleteFilter.onClick {
-            //TODO("发起网络请求，并关闭对话框")
-            dialog.dismiss()
-        }
-        dialog.seekBarAge.setOnRangeChangedListener(object : OnRangeChangedListener {
-            override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
-
-            }
-
-            override fun onRangeChanged(view: RangeSeekBar?, leftValue: Float, rightValue: Float, isFromUser: Boolean) {
-                dialog.filterAge.text = "${leftValue.toInt()}-${rightValue.toInt()}岁"
-            }
-
-            override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
-            }
-
-        })
-
-    }
 }

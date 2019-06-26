@@ -19,6 +19,7 @@ import com.kotlin.base.common.BaseApplication
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import kotlinx.android.synthetic.main.item_match_user.view.*
+import kotlinx.android.synthetic.main.match_action_layout.view.*
 
 /**
  *    author : ZFM

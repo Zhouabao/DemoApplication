@@ -28,15 +28,16 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             tools:replace="android:theme,android:icon">
+        <activity android:name=".ui.activity.MatchDetailActivity"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+        </activity>
         <activity android:name=".ui.activity.VideoRecordActivity">
         </activity>
         <activity android:name=".ui.activity.UserBirthActivity">
         </activity>
         <activity android:name=".ui.activity.LabelsActivity">
-
         </activity>
         <activity android:name=".ui.activity.SetInfoActivity">
-
         </activity>
         <activity android:name=".ui.activity.VerifyCodeActivity">
         </activity>

@@ -15,5 +15,6 @@
     <color name="colorGray4df">#4dffffff</color>
     <color name="colorTransparent">#00000000</color>
     <color name="colorRed3E">#FF003E</color>
+    <color name="colorDivider">#f1f1f1</color>
 
 </resources>

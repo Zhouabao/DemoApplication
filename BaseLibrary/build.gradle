@@ -54,9 +54,7 @@ dependencies {
     api "com.squareup.okhttp3:logging-interceptor:$ok_http_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit_version"
     api "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
-    //Dagger2
-    api "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
     //RxLifecycle
     api "com.trello:rxlifecycle-kotlin:$rx_lifecycle_version"
     api "com.trello:rxlifecycle-components:$rx_lifecycle_version"
@@ -83,15 +81,13 @@ dependencies {
     api "com.github.Kennyc1012:MultiStateView:$multi_state_view_version"
     //上下拉刷新
     api 'cn.bingoogolapple:bga-refreshlayout:1.1.7@aar'
-    //Kotlin Bus
-    api 'com.eightbitlab:rxbus:1.0.2'
     //FlowLayout
     //api 'com.zhy:flowlayout-lib:1.0.3'
-    //ARouter
-//    api "com.alibaba:arouter-api:$arouter_api_version"
-
     //图片选择器
     api 'com.github.labmem005.PictureSelector:picture_library:v2.3.0'
+
+    //事件总线eventbus
+    api 'org.greenrobot:eventbus:3.1.1'
 
     //强大的工具类
     api 'com.blankj:utilcodex:1.24.2'
