@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
 import com.example.demoapplication.model.MatchBean
-import com.example.demoapplication.ui.adapter.ListSquareAdapter
-import com.example.demoapplication.widgets.MyLinearLayoutManager
+import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import kotlinx.android.synthetic.main.fragment_list_square.*
 
 
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_list_square.*
  * 列表形式的广场列表
  */
 class ListSquareFragment : Fragment() {
-    private val listSquareAdapter by lazy { ListSquareAdapter(activity!!) }
+    private val listSquareAdapter by lazy { MultiListSquareAdapter(activity!!, userList) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -32,8 +32,10 @@ class ListSquareFragment : Fragment() {
     }
 
     private fun initView() {
-        val manager1 = MyLinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        manager1.setScrollEnabled(false)
+        val manager1 = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+//        val manager1 = MyLinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+//        manager1.setScrollEnabled(false)
+//        listSquareRv.isNestedScrollingEnabled = false
         listSquareRv.layoutManager = manager1
         listSquareRv.adapter = listSquareAdapter
 
@@ -60,7 +62,7 @@ class ListSquareFragment : Fragment() {
                     R.drawable.img_avatar_07,
                     R.drawable.img_avatar_05,
                     R.drawable.img_avatar_06
-                ), 1
+                ), 2
             )
         )
         userList.add(
@@ -93,7 +95,7 @@ class ListSquareFragment : Fragment() {
                     R.drawable.img_avatar_07,
                     R.drawable.img_avatar_05,
                     R.drawable.img_avatar_06
-                ), 3
+                ), 2
             )
         )
         userList.add(
@@ -117,12 +119,12 @@ class ListSquareFragment : Fragment() {
                 23,
                 1,
                 mutableListOf(
-                    R.drawable.img_avatar_05
+                    R.drawable.img_avatar_03
                 ), 1
             )
         )
 
-        listSquareAdapter.setData(userList)
+        listSquareAdapter.addData(userList)
 
     }
 

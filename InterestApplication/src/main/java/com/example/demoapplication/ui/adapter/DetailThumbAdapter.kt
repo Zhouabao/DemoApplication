@@ -24,7 +24,7 @@ class DetailThumbAdapter(context: Context) : BaseRecyclerViewAdapter<Int, Detail
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
-        GlideUtil.loadRoundImg(mContext, dataList[position], holder.itemView.ivThumb,10)
+        GlideUtil.loadImg(mContext, dataList[position], holder.itemView.ivThumb)
     }
 
 

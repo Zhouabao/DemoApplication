@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
 import androidx.core.view.size
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -19,18 +20,21 @@ import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.presenter.MatchDetailPresenter
 import com.example.demoapplication.presenter.view.MatchDetailView
 import com.example.demoapplication.ui.adapter.DetailThumbAdapter
+import com.example.demoapplication.ui.adapter.MatchDetailImgsAdapter
 import com.example.demoapplication.ui.adapter.MatchDetailLabelAdapter
-import com.example.demoapplication.ui.adapter.MatchImgsAdapter
+import com.example.demoapplication.ui.chat.MatchSucceedActivity
+import com.example.demoapplication.ui.dialog.ChargeVipDialog
 import com.example.demoapplication.ui.fragment.BlockSquareFragment
 import com.example.demoapplication.ui.fragment.ListSquareFragment
-import com.example.demoapplication.widgets.ObservableScrollView
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.match_action_layout.*
+import org.jetbrains.anko.startActivity
 import java.util.*
 
 /**
@@ -41,7 +45,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     private val thumbAdapter by lazy { DetailThumbAdapter(this) }
 
     var photos: MutableList<Int> = mutableListOf()
-    private val photosAdapter by lazy { MatchImgsAdapter(this, photos) }
+    private val photosAdapter by lazy { MatchDetailImgsAdapter(this, photos) }
 
     private val labelsAdapter by lazy { MatchDetailLabelAdapter(this) }
 
@@ -136,12 +140,22 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     private fun initView() {
+        //设置图片的宽度占满屏幕，宽高比3:4
         val layoutParams = detailPhotosVp.layoutParams
         layoutParams.width = ScreenUtils.getScreenWidth()
         layoutParams.height = (4 / 3.0F * layoutParams.width).toInt()
         detailPhotosVp.layoutParams = layoutParams
 
         btnDislike.visibility = View.GONE
+        btnLike.onClick {
+            startActivity<MatchSucceedActivity>()
+        }
+        btnChat.onClick {
+            val dialog = ChargeVipDialog(this)
+            dialog.show()
+        }
+
+
 
         //用户的广场预览界面
         detailThumbRv.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
@@ -161,12 +175,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
         //设置根布局的滑动事件监听，如果滑出屏幕高度的1/3，就将按钮浮动在底部
-        detailScrollView.setOnScrollViewChangedListener(object : ObservableScrollView.OnScrollChangedListener {
-            override fun onScrollChanged(scrollView: ObservableScrollView, x: Int, y: Int, oldX: Int, oldY: Int) {
-                Log.i("scrollviewTag", "x = $x, y = $y  ;  oldX = $oldX, oldY = $oldY")
-                Log.i("scrollviewTag", "${ScreenUtils.getScreenHeight()}")
-            }
-        })
+        detailScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            Log.i("scrollviewTag", "x = $scrollX, y = $scrollY  ;  oldX = $oldScrollX, oldY = $oldScrollY")
+            Log.i("scrollviewTag", "${ScreenUtils.getScreenHeight()}")
+        }
+
+
     }
 
     //fragment栈管理

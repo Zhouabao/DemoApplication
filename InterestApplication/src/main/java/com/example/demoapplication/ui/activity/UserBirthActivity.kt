@@ -53,7 +53,7 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
     }
 
     /**
-     * type :1年 2月
+     * itemType :1年 2月
      */
     private fun calculateAgeAndAstro() {
         if (year == null || year!!.isEmpty()) {

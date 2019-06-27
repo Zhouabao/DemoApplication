@@ -26,7 +26,7 @@ class BlockAdapter(context: Context) : BaseRecyclerViewAdapter<Int, BlockAdapter
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
-        GlideUtil.loadRoundImg(mContext, dataList[position], holder.itemView.ivSquare, 60)
+        GlideUtil.loadImg(mContext, dataList[position], holder.itemView.ivSquare)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)

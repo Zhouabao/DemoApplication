@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <com.youth.banner.Banner
+                android:id="@+id/bannerVip"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:background="@drawable/gradient_vip_charge_bg"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/bannerVip">
+
+            <LinearLayout
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:id="@+id/vipOneMonth"
+                    android:orientation="vertical"
+                    android:layout_marginTop="17dp"
+                    android:background="@drawable/shape_rectangle_gray_vip"
+                    android:layout_width="102dp"
+                    android:gravity="center_horizontal"
+                    android:layout_height="100dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/vipThreeMonth"
+                    >
+
+                <TextView
+                        android:textStyle="normal"
+                        android:text="￥15"
+                        android:textColor="@color/colorBlackTitle"
+                        android:textSize="12sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥9.9"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorBlack4a"
+                        android:textSize="28sp"
+                        />
+
+                <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1个月"
+                        android:textColor="#ff333333"
+                        android:textSize="12sp"
+                        />
+            </LinearLayout>
+
+            <LinearLayout
+                    app:layout_constraintTop_toTopOf="@id/vipOneMonth"
+                    android:id="@+id/vipThreeMonth"
+                    android:orientation="vertical"
+                    android:background="@drawable/shape_rectangle_gray_vip"
+                    android:layout_width="102dp"
+                    android:layout_height="100dp"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintLeft_toRightOf="@id/vipOneMonth"
+                    app:layout_constraintRight_toLeftOf="@id/vipOneYear"
+                    >
+
+                <TextView
+                        android:textStyle="normal"
+                        android:text="￥15"
+                        android:textColor="@color/colorBlackTitle"
+                        android:textSize="12sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥9.9"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorBlack4a"
+                        android:textSize="28sp"
+                        />
+
+                <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1个月"
+                        android:textColor="#ff333333"
+                        android:textSize="12sp"
+                        />
+            </LinearLayout>
+
+            <LinearLayout
+
+                    app:layout_constraintTop_toTopOf="@id/vipOneMonth"
+                    android:id="@+id/vipOneYear"
+                    android:orientation="vertical"
+                    android:background="@drawable/shape_rectangle_gray_vip"
+                    android:layout_width="102dp"
+                    android:layout_height="100dp"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintLeft_toRightOf="@id/vipThreeMonth"
+                    app:layout_constraintRight_toRightOf="parent"
+                    >
+
+                <TextView
+                        android:textStyle="normal"
+                        android:text="￥15"
+                        android:textColor="@color/colorBlackTitle"
+                        android:textSize="12sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥9.9"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorBlack4a"
+                        android:textSize="28sp"
+                        />
+
+                <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1个月"
+                        android:textColor="#ff333333"
+                        android:textSize="12sp"
+                        />
+            </LinearLayout>
+
+            <CheckBox
+                    android:id="@+id/autoChargeCb"
+                    android:checked="false"
+                    android:text="开通自动续费，享受特惠价格"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorGrayText"
+                    android:textSize="10sp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vipOneMonth"/>
+
+            <Button
+                    android:id="@+id/zhiPayBtn"
+                    android:text="支付宝支付"
+                    android:textColor="#ffffffff"
+                    android:textSize="16sp"
+                    android:background="@drawable/shape_rectangle_blue_vip"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/autoChargeCb"/>
+
+            <Button
+                    android:id="@+id/wechatPayBtn"
+                    android:text="微信支付"
+                    android:textColor="#ffffffff"
+                    android:textSize="16sp"
+                    android:background="@drawable/shape_rectangle_green_vip"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/zhiPayBtn"/>
+
+            <TextView
+                    android:id="@+id/inviteBtn"
+                    android:layout_marginTop="13dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="限时邀请好友获取"
+                    android:textColor="@color/colorOrange"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/wechatPayBtn"
+                    />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

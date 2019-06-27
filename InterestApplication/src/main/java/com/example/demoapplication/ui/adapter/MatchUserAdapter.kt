@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.match_action_layout.view.*
  *
  *    //todo("图片高度要按照屏幕比例来压缩进行适配")
  */
-class MatchUserAdapter(context: Context) : BaseRecyclerViewAdapter<MatchBean, MatchUserAdapter.ViewHolder>(context) {
+class MatchUserAdapter(context: Context) : BaseRecyclerViewAdapter<MatchBean, MatchUserAdapter.ViewHolder>(context){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,7 +41,17 @@ class MatchUserAdapter(context: Context) : BaseRecyclerViewAdapter<MatchBean, Ma
     //todo("填充用户数据")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
-        //todo("设置rv中的viewpgaer2竖直滑动 并且添加图片指示器")
+//        holder.itemView.vpPhotos.setImageResource(dataList[position])
+//        val layoutParams = holder.itemView.clRoot.layoutParams
+//        layoutParams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)
+//        layoutParams.height = (4 / 3.0F * layoutParams.width).toInt()
+//        holder.itemView.clRoot.layoutParams = layoutParams
+//
+//        val layoutParams1 = holder.itemView.vpPhotos.layoutParams
+//        layoutParams1.width = layoutParams.width
+//        layoutParams1.height = (layoutParams.height - SizeUtils.applyDimension(140F,TypedValue.COMPLEX_UNIT_DIP)).toInt()
+//        holder.itemView.vpPhotos.layoutParams = layoutParams1
+//        Log.i("width", "${ScreenUtils.getScreenWidth()},${layoutParams.width},${layoutParams.height}")
 
         val model = dataList[position]
         holder.itemView.vpPhotos.adapter = MatchImgsAdapter(mContext, model.imgs)

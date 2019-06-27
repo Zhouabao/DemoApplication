@@ -32,6 +32,8 @@ import org.jetbrains.anko.support.v4.toast
  * 匹配页面
  */
 class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
+
+
     //标签适配器
     private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(context!!) }
     //用户适配器

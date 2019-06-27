@@ -81,6 +81,8 @@ dependencies {
 //    implementation 'com.github.crosswall:Android-Coverflow:release-v1.0.4'
     //MulitStateView
     api "com.github.Kennyc1012:MultiStateView:$multi_state_view_version"
+
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
     //上下拉刷新
     api 'cn.bingoogolapple:bga-refreshlayout:1.1.7@aar'
     //FlowLayout
@@ -93,6 +95,9 @@ dependencies {
 
     //强大的工具类
     api 'com.blankj:utilcodex:1.24.2'
+
+    //屏幕适配
+    api 'me.jessyan:autosize:1.1.2'
 
     //statusBar
     api 'com.readystatesoftware.systembartint:systembartint:1.0.3'

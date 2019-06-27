@@ -12,7 +12,7 @@ import com.example.demoapplication.presenter.MainPresenter
 import com.example.demoapplication.presenter.view.MainView
 import com.example.demoapplication.ui.fragment.MatchFragment
 import com.example.demoapplication.ui.fragment.SquareFragment
-import com.example.demoapplication.widgets.FilterUserDialog
+import com.example.demoapplication.ui.dialog.FilterUserDialog
 import com.google.android.material.tabs.TabLayout
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
@@ -100,7 +100,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
     //筛选对话框
-    private val filterUserDialog: FilterUserDialog by lazy { FilterUserDialog(this) }
+    private val filterUserDialog: FilterUserDialog by lazy {
+        FilterUserDialog(
+            this
+        )
+    }
 
 
     /**

@@ -12,16 +12,16 @@ import kotlinx.android.synthetic.main.item_match_detail_img.view.*
 /**
  *    author : ZFM
  *    date   : 2019/6/2418:04
- *    desc   : 加载用户多张图片的adapter
+ *    desc   : Y用户详情加载用户多张图片的adapter
  *    version: 1.0
  */
-class MatchImgsAdapter(var context: Context, private var datas: MutableList<Int>) :
-    RecyclerView.Adapter<MatchImgsAdapter.ViewHolder>() {
+class MatchDetailImgsAdapter(var context: Context, private var datas: MutableList<Int>) :
+    RecyclerView.Adapter<MatchDetailImgsAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val view = LayoutInflater.from(context).inflate(R.layout.item_match_roundimg, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_match_detail_img, parent, false)
         return ViewHolder(view)
     }
 

@@ -2,6 +2,8 @@ package com.example.demoapplication.common
 
 import com.kotlin.base.common.BaseApplication
 import com.tencent.ugc.TXUGCBase
+import me.jessyan.autosize.AutoSizeConfig
+import me.jessyan.autosize.unit.Subunits
 
 class MyApplication : BaseApplication() {
 
@@ -11,6 +13,17 @@ class MyApplication : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        TXUGCBase.getInstance().setLicence(this,ugcLicenseUrl,ugcKey)
+        TXUGCBase.getInstance().setLicence(this, ugcLicenseUrl, ugcKey)
+        configUnits()
+    }
+
+
+    private fun configUnits() {
+        AutoSizeConfig
+            .getInstance()
+            .unitsManager
+            .setSupportDP(true)
+            .supportSubunits = Subunits.PT
+
     }
 }
