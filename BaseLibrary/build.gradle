@@ -48,6 +48,7 @@ dependencies {
     // RxKotlin and RxAndroid
     api "io.reactivex:rxkotlin:$rx_kotlin_version"
     api "io.reactivex:rxandroid:$rx_android_version"
+    api 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
     //Retrofit
     api "com.squareup.okhttp3:okhttp:$ok_http_version"
     api "com.squareup.retrofit2:retrofit:${retrofit_version}"
@@ -74,11 +75,7 @@ dependencies {
     api 'com.qiniu:qiniu-android-sdk:7.3.+'
 
     //Banner
-    api 'com.youth.banner:banner:1.4.10'  //最新版本
-    //icon_label_orange
-//    implementation 'com.github.shts:TriangleLabelView:1.1.2'
-    //画廊
-//    implementation 'com.github.crosswall:Android-Coverflow:release-v1.0.4'
+    api 'com.bigkoo:convenientbanner:2.1.5'
     //MulitStateView
     api "com.github.Kennyc1012:MultiStateView:$multi_state_view_version"
 
@@ -88,7 +85,7 @@ dependencies {
     //FlowLayout
     //api 'com.zhy:flowlayout-lib:1.0.3'
     //图片选择器
-    api 'com.github.labmem005.PictureSelector:picture_library:v2.3.0'
+//    api 'com.github.labmem005.PictureSelector:picture_library:v2.3.0'
 
     //事件总线eventbus
     api 'org.greenrobot:eventbus:3.1.1'
@@ -98,6 +95,8 @@ dependencies {
 
     //屏幕适配
     api 'me.jessyan:autosize:1.1.2'
+    //权限请求
+    api 'com.github.tbruyelle:rxpermissions:0.10.2'
 
     //statusBar
     api 'com.readystatesoftware.systembartint:systembartint:1.0.3'

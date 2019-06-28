@@ -12,12 +12,14 @@ import com.example.demoapplication.model.Label
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.presenter.SquarePresenter
 import com.example.demoapplication.presenter.view.SquareView
+import com.example.demoapplication.ui.activity.SquareDetailActivity
 import com.example.demoapplication.ui.adapter.MatchLabelAdapter
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import com.example.demoapplication.ui.adapter.SquareFriendsAdapter
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import kotlinx.android.synthetic.main.fragment_square.*
 import kotlinx.android.synthetic.main.headerview_label.view.*
+import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
 
 /**
@@ -70,6 +72,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView {
         squareDynamicRv.adapter = adapter
         adapter.addHeaderView(initLabelView(), 0)
         adapter.addHeaderView(initFriendsView(), 1)
+        adapter.setOnItemClickListener { adapter, view, position ->
+            startActivity<SquareDetailActivity>("matchbean" to adapter.data[position])
+        }
 
 
     }
@@ -91,7 +96,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView {
                     R.drawable.img_avatar_07,
                     R.drawable.img_avatar_05,
                     R.drawable.img_avatar_06
-                ), 1
+                ), 1,true
             )
         )
         userList.add(

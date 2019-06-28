@@ -5,6 +5,7 @@ import android.view.View
 import com.example.demoapplication.R
 import com.example.demoapplication.presenter.UserBirthPresenter
 import com.example.demoapplication.presenter.view.UserBirthView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_user_birth.*
 import org.jetbrains.anko.toast
@@ -23,6 +24,7 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
 
         mPresenter = UserBirthPresenter()
         mPresenter.mView = this
+        btnBack.onClick { finish() }
         userBirthYear.listener = { year, complete ->
             this.year = year
             if (complete) {

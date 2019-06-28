@@ -51,7 +51,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_match_detail)
+        setContentView(R.layout.activity_match_detail1)
 
         initView()
 
@@ -140,6 +140,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     private fun initView() {
+        backBtn.onClick { finish() }
+
         //设置图片的宽度占满屏幕，宽高比3:4
         val layoutParams = detailPhotosVp.layoutParams
         layoutParams.width = ScreenUtils.getScreenWidth()

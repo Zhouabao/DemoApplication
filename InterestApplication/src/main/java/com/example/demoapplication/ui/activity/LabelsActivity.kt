@@ -12,6 +12,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.kotlin.base.common.BaseApplication
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
@@ -49,6 +50,10 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
     }
 
     private fun initView() {
+        btnBack.onClick {
+            finish()
+        }
+
         val manager = FlexboxLayoutManager(this)
         //item的排列方向
         manager.flexDirection = FlexDirection.ROW

@@ -40,29 +40,29 @@
 
         <com.example.baselibrary.widgets.RoundImageView
                 android:id="@+id/iconMine"
-                android:layout_marginTop="12dp"
+                android:alpha="0"
+                android:layout_marginTop="30dp"
                 android:layout_width="120dp"
                 android:layout_height="160dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_avatar_01"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="70dp"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/t1"
                 gs:borderRadius="10dp"
                 gs:type="round"/>
 
         <com.example.baselibrary.widgets.RoundImageView
                 android:id="@+id/iconOther"
+
+                android:alpha="0"
                 android:scaleType="centerCrop"
-                gs:borderRadius="10dp"
-                gs:type="round"
-                android:src="@drawable/img_avatar_04"
-                android:layout_marginTop="12dp"
                 android:layout_width="120dp"
                 android:layout_height="160dp"
                 android:layout_marginRight="70dp"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/t1"/>
+                app:layout_constraintTop_toTopOf="@id/iconMine"
+                gs:borderRadius="10dp"
+                gs:type="round"/>
 
         <ImageView
                 android:id="@+id/iconLike"
@@ -89,17 +89,20 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iconLike"
                 />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <EditText
-            android:id="@+id/et"
-            android:hint="      说点什么打破僵局吧"
-            android:textColor="#ff9b9b9b"
-            android:textSize="18sp"
-            android:background="@color/colorWhite"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        <EditText
+                android:id="@+id/et"
+                android:hint="      说点什么打破僵局吧"
+                android:textColor="#ff9b9b9b"
+                android:textSize="18sp"
+                android:focusable="true"
+                android:background="@color/colorWhite"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

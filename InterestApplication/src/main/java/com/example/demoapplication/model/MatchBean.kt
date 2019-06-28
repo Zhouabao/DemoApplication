@@ -14,7 +14,8 @@ data class MatchBean(
     var age: Int,
     var sex: Int,
     var imgs: MutableList<Int>,
-    var type: Int = 1
+    var type: Int = 1,
+    var zan: Boolean = false
 ) :
     Serializable, MultiItemEntity {
     override fun getItemType(): Int {

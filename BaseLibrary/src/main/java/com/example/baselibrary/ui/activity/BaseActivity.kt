@@ -21,6 +21,8 @@ open class BaseActivity : RxAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppManager.instance.addActivity(this)
+        initState()
+
     }
 
     override fun onDestroy() {

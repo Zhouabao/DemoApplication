@@ -62,7 +62,7 @@
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
                     android:text="3"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="14sp"/>
 
 
@@ -76,7 +76,7 @@
                     android:drawableLeft="@drawable/icon_like_white"
                     android:drawablePadding="5dp"
                     android:text="3"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="14sp"/>
 
 
@@ -90,7 +90,7 @@
                     android:drawableLeft="@drawable/icon_time_white"
                     android:drawablePadding="5dp"
                     android:text="3"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="14sp"/>
 
 
@@ -103,7 +103,7 @@
                     android:drawableLeft="@drawable/icon_msg_white"
                     android:drawablePadding="5dp"
                     android:text="3"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="14sp"/>
 
 

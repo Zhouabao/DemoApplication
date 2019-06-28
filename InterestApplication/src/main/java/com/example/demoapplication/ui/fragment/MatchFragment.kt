@@ -63,7 +63,6 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
         labelAdapter.setOnItemClickListener(object : MatchLabelAdapter.OnItemClickListener {
             override fun onItemClick(itemView: View, position: Int) {
                 if (position == 0) {
-                    //todo("跳转到标签选择页面")
                     startActivity<LabelsActivity>()
                 } else {
                     //TODO("修改标签的选中状态并且要更新此时的用户数据")

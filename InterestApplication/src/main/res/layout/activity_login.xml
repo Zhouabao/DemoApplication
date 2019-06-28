@@ -94,12 +94,12 @@
 
 
     <Button
+            android:id="@+id/btnVerifyCode"
             android:layout_width="300dp"
             android:layout_height="56dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/selector_confirm_btn"
             android:gravity="center"
-            android:id="@+id/btnVerifyCode"
             android:text="获取验证码"
             android:textColor="#ffffffff"
             android:enabled="false"

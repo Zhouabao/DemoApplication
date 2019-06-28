@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_height="160dp">
+
+    <TextView
+            android:id="@+id/transpondFriend"
+            android:gravity="center"
+            android:drawableTop="@drawable/icon_transpond_friend"
+            android:text="好友"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="14sp"
+            android:drawablePadding="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/transpondWebo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/transpondWechat"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/transpondWechat"
+            android:gravity="center"
+            android:drawableTop="@drawable/icon_transpond_wechat"
+            android:text="微信好友"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="4dp"
+            app:layout_constraintBottom_toBottomOf="@id/transpondFriend"
+            app:layout_constraintLeft_toRightOf="@id/transpondFriend"
+            app:layout_constraintRight_toLeftOf="@id/transpondWechatZone"
+            app:layout_constraintTop_toTopOf="@id/transpondFriend"/>
+
+    <TextView
+            android:id="@+id/transpondWechatZone"
+            android:gravity="center"
+            android:drawableTop="@drawable/icon_transpond_wechat_zone"
+            android:text="微信朋友圈"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="14sp"
+            android:drawablePadding="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/transpondFriend"
+            app:layout_constraintLeft_toRightOf="@id/transpondWechat"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/transpondFriend"/>
+
+    <TextView
+            android:id="@+id/transpondWebo"
+            android:gravity="center"
+            android:drawableTop="@drawable/icon_transpond_weibo"
+            android:text="微博"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="14sp"
+            android:drawablePadding="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/transpondWechat"
+            app:layout_constraintTop_toBottomOf="@id/transpondFriend"/>
+
+    <TextView
+            android:id="@+id/transpondQQ"
+            android:gravity="center"
+            android:drawableTop="@drawable/icon_transpond_qq"
+            android:text="QQ"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="4dp"
+            app:layout_constraintLeft_toRightOf="@id/transpondFriend"
+            app:layout_constraintRight_toLeftOf="@id/transpondWechatZone"
+            app:layout_constraintTop_toTopOf="@id/transpondWebo"/>
+
+    <TextView
+            android:id="@+id/transpondQQZone"
+            android:gravity="center"
+            android:drawableTop="@drawable/icon_transpond_qqzone"
+            android:text="QQ空间"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="14sp"
+            android:drawablePadding="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/transpondWechat"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/transpondWebo"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

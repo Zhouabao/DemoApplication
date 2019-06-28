@@ -6,12 +6,13 @@
         android:id="@+id/detailScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/colorWhite"
         tools:context=".ui.activity.MatchDetailActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:focusable="true"
+            android:descendantFocusability="blocksDescendants"
             android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -20,8 +21,7 @@
                 android:id="@+id/detailPhotosVp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/img_avatar_01"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -75,7 +75,7 @@
                 layout="@layout/match_action_layout"
                 android:layout_gravity="right"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
                 android:layout_width="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@id/detailUserName"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -107,7 +107,7 @@
                 android:id="@+id/detailUserSign"
                 android:layout_marginTop="10dp"
                 android:layout_width="0dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_height="wrap_content"
                 android:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。"
                 android:textColor="@color/colorBlack4a"

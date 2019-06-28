@@ -35,7 +35,7 @@ class ListSquareFragment : Fragment() {
         val manager1 = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 //        val manager1 = MyLinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 //        manager1.setScrollEnabled(false)
-//        listSquareRv.isNestedScrollingEnabled = false
+        listSquareRv.isNestedScrollingEnabled = false
         listSquareRv.layoutManager = manager1
         listSquareRv.adapter = listSquareAdapter
 

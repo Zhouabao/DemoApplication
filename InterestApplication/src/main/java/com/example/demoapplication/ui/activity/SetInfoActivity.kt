@@ -8,15 +8,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import com.cazaea.sweetalert.SweetAlertDialog
-import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.presenter.SetInfoPresenter
 import com.example.demoapplication.presenter.view.SetInfoView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureConfig
-import com.luck.picture.lib.config.PictureMimeType
-import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.activity_set_info.*
 import org.jetbrains.anko.startActivity
 
@@ -36,6 +32,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         setContentView(R.layout.activity_set_info)
         mPresenter = SetInfoPresenter()
         mPresenter.mView = this
+        btnBack.onClick { finish() }
         userProfileBtn.setOnClickListener(this)
         confirmBtn.setOnClickListener(this)
         userBirthTv.setOnClickListener(this)
@@ -69,20 +66,20 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
      * 拍照或者选取照片
      */
     override fun onTakePhoto() {
-        PictureSelector.create(this)
-            .openGallery(PictureMimeType.ofAll())
-            .maxSelectNum(1)
-            .minSelectNum(0)
-            .imageSpanCount(4)
-            .selectionMode(PictureConfig.SINGLE)
-            .previewImage(true)
-            .previewVideo(true)
-            .isCamera(true)
-            .enableCrop(true)
-            .withAspectRatio(4, 3)
-            .compress(true)
-            .openClickSound(true)
-            .forResult(PictureConfig.CHOOSE_REQUEST)
+//        PictureSelector.create(this)
+//            .openGallery(PictureMimeType.ofAll())
+//            .maxSelectNum(1)
+//            .minSelectNum(0)
+//            .imageSpanCount(4)
+//            .selectionMode(PictureConfig.SINGLE)
+//            .previewImage(true)
+//            .previewVideo(true)
+//            .isCamera(true)
+//            .enableCrop(true)
+//            .withAspectRatio(4, 3)
+//            .compress(true)
+//            .openClickSound(true)
+//            .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
     /**
@@ -141,10 +138,10 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                PictureConfig.CHOOSE_REQUEST -> {
-                    val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
-                    GlideUtil.loadCircleImg(applicationContext, selectList[0].compressPath, userProfileBtn)
-                }
+//                PictureConfig.CHOOSE_REQUEST -> {
+//                    val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
+//                    GlideUtil.loadCircleImg(applicationContext, selectList[0].compressPath, userProfileBtn)
+//                }
             }
         }
     }

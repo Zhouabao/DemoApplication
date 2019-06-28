@@ -86,7 +86,7 @@
 
     <TextView
             android:id="@+id/squareDianzanBtn"
-            android:drawableLeft="@drawable/icon_dianzan_red"
+            android:drawableLeft="@drawable/icon_dianzan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="123"

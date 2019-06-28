@@ -6,6 +6,7 @@ import android.view.View
 import com.example.demoapplication.R
 import com.example.demoapplication.presenter.VerifyCodePresenter
 import com.example.demoapplication.presenter.view.VerifyCodeView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_verify_code.*
 import org.jetbrains.anko.startActivity
@@ -26,6 +27,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
     private fun initView() {
         mPresenter = VerifyCodePresenter()
         mPresenter.mView = this
+        btnBack.onClick { finish() }
         btnVerifyCode.setOnClickListener(this)
         countVerifyCodeTime.setOnClickListener(this)
         onGetPhoneNum()

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:orientation="vertical"
+                                                   android:layout_width="match_parent"
+                                                   android:background="@color/colorWhite"
+                                                   android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/commentUser"
+            android:src="@drawable/img_avatar_02"
+            android:layout_width="40dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:scaleType="centerCrop"
+            android:layout_height="40dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/commentUserName"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正宇的查卡拉"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toRightOf="@id/commentUser"
+            app:layout_constraintTop_toTopOf="@id/commentUser"
+            />
+
+    <TextView
+            android:id="@+id/commentTime"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="04-16 14:32"
+            android:textColor="@color/colorBlack99"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@id/commentUserName"
+            app:layout_constraintTop_toBottomOf="@id/commentUserName"
+            />
+
+    <ImageView
+            android:id="@+id/commentReplyBtn"
+            android:background="@drawable/icon_comment"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginRight="15dp"
+            app:layout_constraintBottom_toBottomOf="@id/commentUser"
+            app:layout_constraintRight_toLeftOf="@id/commentDianzanBtn"
+            app:layout_constraintTop_toTopOf="@id/commentUser"/>
+
+    <CheckBox
+            android:id="@+id/commentDianzanBtn"
+            android:checked="true"
+            android:button="@null"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/selector_dianzan_btn"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/commentUser"
+            app:layout_constraintRight_toLeftOf="@id/commentDianzanNum"
+            app:layout_constraintTop_toTopOf="@id/commentUser"/>
+
+    <TextView
+            android:id="@+id/commentDianzanNum"
+            android:text="3"
+            android:textColor="@color/colorGrayText"
+            android:textSize="12sp"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/commentDianzanBtn"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/commentDianzanBtn"/>
+
+    <TextView
+            android:id="@+id/commentContent"
+            android:layout_marginTop="10dp"
+            android:layout_width="0dp"
+            android:text="语雀是一款优雅高效的在线文档编辑与协同工具，让每个企业轻松拥有文档中心阿里巴巴集团内部使用多年，众多中小企业首选。"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="14sp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/commentUserName"
+            app:layout_constraintRight_toRightOf="@id/commentDianzanNum"
+            app:layout_constraintTop_toBottomOf="@id/commentTime"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
