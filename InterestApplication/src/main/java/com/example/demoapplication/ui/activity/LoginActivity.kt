@@ -7,7 +7,9 @@ import android.view.View
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.example.demoapplication.R
-import com.kotlin.base.ui.activity.BaseActivity
+import com.example.demoapplication.presenter.LoginPresenter
+import com.example.demoapplication.presenter.view.LoginView
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -15,7 +17,9 @@ import org.jetbrains.anko.toast
 /**
  * 手机登录界面
  */
-class LoginActivity : BaseActivity(), View.OnClickListener {
+class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClickListener {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -34,8 +38,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun initView() {
-//        etPhone.isFocusable = true
-//        etPhone.requestFocus()
+
+        mPresenter = LoginPresenter()
+        mPresenter.mView = this
+        mPresenter.context = this
 
 
         btnBack.setOnClickListener(this)
@@ -70,11 +76,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.btnVerifyCode -> {
                 if (RegexUtils.isMobileSimple(etPhone.text.toString())) {
-                    startActivity<VerifyCodeActivity>("phone" to etPhone.text.toString())
+                    startActivity<VerifyCodeActivity>("phone" to etPhone.text.toString(), "register" to "register")
                 } else {
                     toast("请输入正确的手机号!")
                 }
             }
         }
     }
+
 }

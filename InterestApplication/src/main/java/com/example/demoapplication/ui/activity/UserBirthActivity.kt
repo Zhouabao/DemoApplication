@@ -1,5 +1,6 @@
 package com.example.demoapplication.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import com.example.demoapplication.R
@@ -22,6 +23,12 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_birth)
 
+        initView()
+
+
+    }
+
+    private fun initView() {
         mPresenter = UserBirthPresenter()
         mPresenter.mView = this
         btnBack.onClick { finish() }
@@ -51,7 +58,10 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
             }
         }
 
-
+        confirmBtn.onClick {
+            setResult(Activity.RESULT_OK, intent.putExtra("birthday", "$year$monthAndDay"))
+            finish()
+        }
     }
 
     /**

@@ -10,9 +10,9 @@ import com.example.demoapplication.R
 import com.example.demoapplication.event.NewMsgEvent
 import com.example.demoapplication.presenter.MainPresenter
 import com.example.demoapplication.presenter.view.MainView
+import com.example.demoapplication.ui.dialog.FilterUserDialog
 import com.example.demoapplication.ui.fragment.MatchFragment
 import com.example.demoapplication.ui.fragment.SquareFragment
-import com.example.demoapplication.ui.dialog.FilterUserDialog
 import com.google.android.material.tabs.TabLayout
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
@@ -82,7 +82,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         })
         tabMain.addTab(tabMain.newTab().setText("匹配"), true)
-        tabMain.addTab(tabMain.newTab().setText("广场"))
+        tabMain.addTab(tabMain.newTab().setText("发布"))
 
     }
 

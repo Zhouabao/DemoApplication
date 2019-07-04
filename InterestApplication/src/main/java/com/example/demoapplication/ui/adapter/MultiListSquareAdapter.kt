@@ -40,8 +40,6 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<MatchBean>)
             drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
             holder.itemView.squareDianzanBtn.setCompoundDrawables(drawable1, null, null, null)
         }
-
-
         holder.itemView.squareZhuanfaBtn.onClick {
             showTranspondDialog()
         }
@@ -55,7 +53,13 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<MatchBean>)
 
             }
             MatchBean.VIDEO -> {
-
+//                holder.itemView.squareUserVideo.backButton.visibility = View.GONE
+//                holder.itemView.squareUserVideo.fullscreenButton.onClick {
+//                    holder.itemView.squareUserVideo.startWindowFullscreen(context, false, true)
+//                }
+//                holder.itemView.squareUserVideo.isReleaseWhenLossAudio = false
+//                holder.itemView.squareUserVideo.setIsTouchWiget(false)
+//                holder.itemView.squareUserVideo.isShowFullAnimation = true
             }
             MatchBean.AUDIO -> {
 

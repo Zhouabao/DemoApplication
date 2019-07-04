@@ -74,9 +74,11 @@ class WelcomeActivity : BaseActivity() {
     private fun requestForPermissions() {
         rxPermissions
             .request(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission_group.CAMERA,
+                Manifest.permission_group.STORAGE,
+                Manifest.permission_group.CONTACTS,
+                Manifest.permission_group.MICROPHONE,
+                Manifest.permission_group.PHONE
             )
             .subscribe {
                 if (!it) AppUtils.exitApp()

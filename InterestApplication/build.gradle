@@ -4,13 +4,14 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.mob.sdk'
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    compileSdkVersion compile_sdk_version
+    buildToolsVersion build_tools_version
     defaultConfig {
         applicationId "com.example.demoapplication"
-        minSdkVersion 16
-        targetSdkVersion 29
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -26,6 +27,7 @@ android {
             // 如果使用的是商业版，只能使用armeabi架构
             abiFilters "armeabi"
         }
+
     }
     buildTypes {
         release {
@@ -33,6 +35,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+
+
+MobSDK {
+    appKey "198a047f87d0c"
+    appSecret "fdac15d4e51de4590d25293a78da7dc7"
+
+    ShareSDK {}
+
 }
 
 dependencies {
@@ -45,12 +57,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    //验证码控件
-    implementation 'com.jyn.verificationcodeview:verificationcodeview:1.0.0'
+    //viewpager2
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-alpha01'
+    //anko
+    implementation "org.jetbrains.anko:anko:$anko_version"
+
     //标签控件
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     //anko
-    implementation "org.jetbrains.anko:anko:$anko_version"
     //弹窗工具
     implementation 'com.github.cazaea:sweet-alert-dialog:1.0.0'
     //animation集合
@@ -58,8 +72,7 @@ dependencies {
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
     //recyclerview的animation
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
-    //viewpager2
-    implementation 'androidx.viewpager2:viewpager2:1.0.0-alpha01'
+
 
 //    implementation 'ckrjfrog.Page:PageView:1.2.7'
     compile(name: 'LiteAVSDK_Professional_6.5.7272', ext: 'aar')

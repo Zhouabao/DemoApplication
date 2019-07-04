@@ -61,6 +61,15 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView {
 //        }
 //    }
 
+        squareDynamicRv.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+//                if (GSYVideoManager.instance().playPosition >= 0) {
+//                    val position = GSYVideoManager.instance().playPosition
+//
+//                }
+            }
+        })
 
     }
 
@@ -302,5 +311,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView {
         return friendsView
     }
 
+
+    override fun onPause() {
+        super.onPause()
+    }
 }
 

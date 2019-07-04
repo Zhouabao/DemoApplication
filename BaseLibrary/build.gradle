@@ -3,16 +3,15 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    compileSdkVersion compile_sdk_version
+    buildToolsVersion build_tools_version
 
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 29
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
@@ -97,6 +96,9 @@ dependencies {
     api 'me.jessyan:autosize:1.1.2'
     //权限请求
     api 'com.github.tbruyelle:rxpermissions:0.10.2'
+
+    //完整版引入
+//    api 'com.shuyu:GSYVideoPlayer:7.0.2'
 
     //statusBar
     api 'com.readystatesoftware.systembartint:systembartint:1.0.3'

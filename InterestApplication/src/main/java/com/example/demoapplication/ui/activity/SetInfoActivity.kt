@@ -6,21 +6,32 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
+import com.blankj.utilcode.util.KeyboardUtils
 import com.cazaea.sweetalert.SweetAlertDialog
+import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.presenter.SetInfoPresenter
 import com.example.demoapplication.presenter.view.SetInfoView
+import com.example.demoapplication.videorecord.TCCameraActivity
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_set_info.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.toast
 
 
 /**
  * 填写个人信息页面
  */
 class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.OnClickListener {
+    companion object {
+        const val USER_BIRTH_REQUEST_CODE = 1000
+        const val USER_PROFILE_REQUEST_CODE = 1001
+    }
+
 
     private val handler by lazy { Handler() }
     private val delayRun by lazy { Runnable { mPresenter.checkNickName(userNickNameEt.text.toString()) } }
@@ -54,11 +65,20 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                userNickNameEt.setBackgroundResource(R.drawable.login_rectangle)
+                userNickNameEt.setCompoundDrawables(null, null, null, null)
             }
 
         })
 
 
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        userNickNameEt.postDelayed({
+            KeyboardUtils.showSoftInput(userNickNameEt, 0)
+        }, 200)
     }
 
 
@@ -101,11 +121,19 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
     override fun onCheckNickNameResult(result: Boolean) {
         if (!result) {
-            SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("")
-                .setContentText("昵称违规请修改")
-                .setConfirmText("OK")
-                .show()
+            userNickNameEt.setBackgroundResource(R.drawable.shape_rectangle_et_error)
+            val drawableRight = resources.getDrawable(R.drawable.icon_error_tip1)
+            drawableRight.setBounds(0, 0, drawableRight.intrinsicWidth, drawableRight.intrinsicHeight)
+            userNickNameEt.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null)
+
+
+            toast("昵称不合法")
+
+//            SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+//                .setTitleText("")
+//                .setContentText("昵称违规请修改")
+//                .setConfirmText("OK")
+//                .show()
         }
     }
 
@@ -114,7 +142,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         when (view.id) {
             R.id.userProfileBtn -> {
 //                onTakePhoto()
-                startActivity<VideoRecordActivity>()
+                startActivityForResult<TCCameraActivity>(USER_PROFILE_REQUEST_CODE)
             }
             //点击跳转到标签选择页
             R.id.confirmBtn -> {
@@ -129,11 +157,13 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                     .show()
             }
             R.id.userBirthTv -> {
-                startActivity<UserBirthActivity>()
+                startActivityForResult<UserBirthActivity>(USER_BIRTH_REQUEST_CODE)
             }
         }
     }
 
+
+    private var userProfile: String? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -142,6 +172,21 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 //                    val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
 //                    GlideUtil.loadCircleImg(applicationContext, selectList[0].compressPath, userProfileBtn)
 //                }
+
+                USER_BIRTH_REQUEST_CODE -> {
+                    if (data != null)
+                        userBirthTv.text = data.getStringExtra("birthday")
+                }
+                USER_PROFILE_REQUEST_CODE -> {
+                    if (data != null) {
+                        userProfile = data.getStringExtra("filePath")
+                        if (userProfile != null) {
+                            Log.i(SetInfoActivity::class.java.name, userProfile.toString())
+                            GlideUtil.loadCircleImg(applicationContext, userProfile, userProfileBtn)
+//                            userProfileBtn.setImageBitmap(data.getParcelableExtra("file"))
+                        }
+                    }
+                }
             }
         }
     }
