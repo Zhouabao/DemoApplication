@@ -5,9 +5,6 @@ import com.kotlin.base.presenter.view.BaseView
 
 interface SetInfoView : BaseView {
 
-    //裁剪照片以及上传
-    fun onTakePhoto()
-
     //切换用户性别
     fun onChangeSex(id: Int = R.id.userSexWoman)
 

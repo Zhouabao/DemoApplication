@@ -10,23 +10,20 @@ import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.cazaea.sweetalert.SweetAlertDialog
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.presenter.SetInfoPresenter
 import com.example.demoapplication.presenter.view.SetInfoView
-import com.example.demoapplication.utils.QNUploadManager
 import com.example.demoapplication.videorecord.TCCameraActivity
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.qiniu.android.http.ResponseInfo
-import com.qiniu.android.storage.UpCompletionHandler
 import kotlinx.android.synthetic.main.activity_set_info.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
-import org.json.JSONObject
 
 
 /**
@@ -39,8 +36,9 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     }
 
     //请求参数
-    private val params by lazy { HashMap<String, String>() }
-
+    private val params by lazy { HashMap<String, Any>() }
+    private var userProfile: String? = null
+    private var userBirth: String? = null
     private val handler by lazy { Handler() }
 
     private val delayRun by lazy { Runnable { mPresenter.checkNickName(userNickNameEt.text.toString()) } }
@@ -52,6 +50,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         setContentView(R.layout.activity_set_info)
         mPresenter = SetInfoPresenter()
         mPresenter.mView = this
+        mPresenter.context = this
         btnBack.onClick { finish() }
         userProfileBtn.setOnClickListener(this)
         confirmBtn.setOnClickListener(this)
@@ -67,7 +66,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                 }
                 //延迟800ms，如果没有输入，就执行输入检查
                 handler.postDelayed(delayRun, 800)
-
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -92,26 +90,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
 
     /**
-     * 拍照或者选取照片
-     */
-    override fun onTakePhoto() {
-//        PictureSelector.create(this)
-//            .openGallery(PictureMimeType.ofAll())
-//            .maxSelectNum(1)
-//            .minSelectNum(0)
-//            .imageSpanCount(4)
-//            .selectionMode(PictureConfig.SINGLE)
-//            .previewImage(true)
-//            .previewVideo(true)
-//            .isCamera(true)
-//            .enableCrop(true)
-//            .withAspectRatio(4, 3)
-//            .compress(true)
-//            .openClickSound(true)
-//            .forResult(PictureConfig.CHOOSE_REQUEST)
-    }
-
-    /**
      * 改变性别
      */
     override fun onChangeSex(id: Int) {}
@@ -120,12 +98,14 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
      * 填写生日
      */
     override fun onChangeBirth() {
+
     }
 
     /**
      * 上传信息结果
      */
     override fun onUploadUserInfoResult() {
+
     }
 
     override fun onCheckNickNameResult(result: Boolean) {
@@ -144,13 +124,14 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 //                .setConfirmText("OK")
 //                .show()
         }
+        checkConfirmBtnEnable()
+
     }
 
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.userProfileBtn -> {
-//                onTakePhoto()
                 startActivityForResult<TCCameraActivity>(USER_PROFILE_REQUEST_CODE)
             }
             //点击跳转到标签选择页
@@ -160,6 +141,15 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                     .setContentText("性别是不可更改项仅可选择一次")
                     .setConfirmText("确定")
                     .setConfirmClickListener {
+                        params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
+                        params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
+                        params["avatar"] = userProfile.toString()
+                        params["nickname"] = userNickNameEt.text.toString()
+                        params["gender"] = if (sexGroup.checkedRadioButtonId == R.id.userSexMan) 1 else 2
+                        params["birth"] = TimeUtils.string2Millis(userBirth.toString())
+                        params["timestamp"] = TimeUtils.getNowMills()
+//                        params["sign"] = TimeUtils.getNowMills()
+//                        params["tags"] = TimeUtils.getNowMills()
                         startActivity<LabelsActivity>("params" to params)
                         it.cancel()
                     }
@@ -171,8 +161,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         }
     }
 
-
-    private var userProfile: String? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -183,8 +171,11 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 //                }
 
                 USER_BIRTH_REQUEST_CODE -> {
-                    if (data != null)
+                    if (data != null) {
                         userBirthTv.text = data.getStringExtra("birthday")
+                        checkConfirmBtnEnable()
+                    }
+
                 }
                 USER_PROFILE_REQUEST_CODE -> {
                     if (data != null) {
@@ -193,8 +184,9 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                             Log.i("SetInfoActivity", userProfile.toString())
                             GlideUtil.loadCircleImg(applicationContext, userProfile, userProfileBtn)
 //                            userProfileBtn.setImageBitmap(data.getParcelableExtra("file"))
-                            uploadUserProfile(userProfile!!)
+                            mPresenter.uploadProfile(userProfile!!)
                         }
+                        checkConfirmBtnEnable()
                     }
                 }
             }
@@ -202,23 +194,8 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     }
 
 
-    fun uploadUserProfile(filePath: String) {
-        QNUploadManager.getInstance().put(
-            filePath,
-            "${System.currentTimeMillis()}.jpg",
-            SPUtils.getInstance(Constants.SPNAME).getString("qntoken"), object : UpCompletionHandler {
-                override fun complete(key: String?, info: ResponseInfo?, response: JSONObject?) {
-                    Log.i("retrofit", "key=$key\ninfo=$info\nresponse=$response")
-
-                    if (info != null) {
-                        if (info.isOK) {
-                            Log.i("retrofit", "key=$key\ninfo=$info\nresponse=$response")
-                        }
-                    }
-                }
-
-            }, null
-        )
+    private fun checkConfirmBtnEnable() {
+        confirmBtn.isEnabled =
+            !userProfile.isNullOrEmpty() && !userBirth.isNullOrEmpty() && userNickNameEt.text.toString().isNotEmpty()
     }
-
 }

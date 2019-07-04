@@ -13,7 +13,6 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
-import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_welcome.*
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import org.jetbrains.anko.startActivity
@@ -24,8 +23,6 @@ import org.jetbrains.anko.startActivity
 
 //todo(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
 class WelcomeActivity : BaseActivity() {
-    private val rxPermissions by lazy { RxPermissions(this) }
-
     private val dialog: AlertDialog by lazy {
         val view = LayoutInflater.from(this).inflate(R.layout.dialog_permissions, null, false)
         view.allowPermissionBtn.onClick {
@@ -42,6 +39,14 @@ class WelcomeActivity : BaseActivity() {
         if (!SPUtils.getInstance(Constants.SPNAME).getBoolean("autoPermissions", false)) {
             showAlertDialog()
         }
+
+        //判断是否有登录
+        if (SPUtils.getInstance(Constants.SPNAME).getString("token").isNotEmpty()) {
+            startActivity<MainActivity>()
+            finish()
+        }
+
+
 
         //手机登录
         phoneLoginBtn.onClick {
@@ -86,8 +91,8 @@ class WelcomeActivity : BaseActivity() {
                         break
                     }
                 }
-                dialog.dismiss()
                 SPUtils.getInstance(Constants.SPNAME).put("autoPermissions", true)
+                dialog.dismiss()
             }
         }
 

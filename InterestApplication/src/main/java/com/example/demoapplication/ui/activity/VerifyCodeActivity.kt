@@ -116,7 +116,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
                 startActivity<SetInfoActivity>()
             } else {
                 SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo!!.nickname)
-                SPUtils.getInstance(Constants.SPNAME).put("avator", data.userinfo!!.avatar)
+                SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo!!.avatar)
                 SPUtils.getInstance(Constants.SPNAME).put("gender", data.userinfo!!.gender)
                 SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo!!.birth)
                 startActivity<MainActivity>()
