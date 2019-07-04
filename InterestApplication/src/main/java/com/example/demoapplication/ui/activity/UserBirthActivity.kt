@@ -31,6 +31,7 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
     private fun initView() {
         mPresenter = UserBirthPresenter()
         mPresenter.mView = this
+        mPresenter.context = this
         btnBack.onClick { finish() }
         userBirthYear.listener = { year, complete ->
             this.year = year

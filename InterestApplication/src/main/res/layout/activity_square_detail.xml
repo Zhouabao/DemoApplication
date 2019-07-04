@@ -55,7 +55,7 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                    android:id="@+id/squareUserVipIv"
+                    android:id="@+id/detailPlayUserVipIv"
                     android:layout_marginLeft="42dp"
                     android:src="@drawable/icon_vip"
                     android:layout_width="17dp"
@@ -64,27 +64,27 @@
                     app:layout_constraintTop_toTopOf="@id/squareUserIv"/>
 
             <TextView
-                    android:id="@+id/squareUserName"
+                    android:id="@+id/detailPlayUserName"
                     android:layout_marginLeft="9dp"
                     android:layout_width="115dp"
                     android:layout_height="22dp"
                     android:text="Kimberly Davis"
                     android:textColor="@color/colorBlack22"
                     android:textSize="16sp"
-                    app:layout_constraintLeft_toRightOf="@id/squareUserVipIv"
+                    app:layout_constraintLeft_toRightOf="@id/detailPlayUserVipIv"
                     app:layout_constraintTop_toTopOf="@id/squareUserIv"
                     />
 
             <TextView
-                    android:id="@+id/squareUserLocationAndTime"
+                    android:id="@+id/detailPlayUserLocationAndTime"
                     android:layout_width="100dp"
                     android:layout_height="17dp"
                     android:text="北京市 10小时前"
                     android:textColor="@color/colorBlack99"
                     android:layout_marginTop="4dp"
                     android:textSize="12sp"
-                    app:layout_constraintStart_toStartOf="@id/squareUserName"
-                    app:layout_constraintTop_toBottomOf="@id/squareUserName"
+                    app:layout_constraintStart_toStartOf="@id/detailPlayUserName"
+                    app:layout_constraintTop_toBottomOf="@id/detailPlayUserName"
                     />
 
             <TextView
@@ -100,7 +100,7 @@
                     android:layout_marginRight="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@id/squareUserLocationAndTime"
+                    app:layout_constraintBottom_toBottomOf="@id/detailPlayUserLocationAndTime"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/squareUserIv"/>
 
@@ -114,13 +114,13 @@
                     app:layout_constraintTop_toTopOf="@id/btnChat"/>
 
             <VideoView
-                    android:id="@+id/squareUserVideo"
+                    android:id="@+id/squareUserAudio"
                     android:layout_marginTop="10dp"
                     android:layout_width="0dp"
                     android:layout_height="252dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/squareUserLocationAndTime"/>
+                    app:layout_constraintTop_toBottomOf="@id/detailPlayUserLocationAndTime"/>
 
             <TextView
                     android:id="@+id/squareContent"
@@ -136,7 +136,7 @@
                     android:ellipsize="end"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/squareUserIv"
-                    app:layout_constraintTop_toBottomOf="@id/squareUserVideo"
+                    app:layout_constraintTop_toBottomOf="@id/squareUserAudio"
                     />
 
             <TextView

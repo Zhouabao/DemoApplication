@@ -79,6 +79,10 @@ class MatchUserAdapter(context: Context) : BaseRecyclerViewAdapter<MatchBean, Ma
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.tvUserAge.setCompoundDrawables(drawable1, null, null, null)
 //        holder.itemView.tvLocation.text = model.
+        holder.itemView.v1.setOnClickListener {
+            if (mItemClickListener != null)
+                mItemClickListener!!.onItemClick(model, position)
+        }
 
 
         holder.itemView.btnLike.onClick {

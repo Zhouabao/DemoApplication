@@ -7,9 +7,15 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.demoapplication.R
 import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.kotlin.base.ext.onClick
+import kotlinx.android.synthetic.main.item_list_square_audio.view.*
 import kotlinx.android.synthetic.main.item_list_square_pic.view.*
+import kotlinx.android.synthetic.main.item_list_square_pic.view.squareDianzanBtn
+import kotlinx.android.synthetic.main.item_list_square_pic.view.squareZhuanfaBtn
+import kotlinx.android.synthetic.main.item_list_square_video.view.*
+import org.jetbrains.anko.startActivity
 
 
 /**
@@ -50,9 +56,16 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<MatchBean>)
                 holder.itemView.squareUserPics.layoutManager =
                     LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
                 holder.itemView.squareUserPics.adapter = ListSquareImgsAdapter(context, item.imgs)
+                holder.itemView.squareUserPics.onClick {
+                    context.startActivity<SquarePlayDetailActivity>()
+                }
 
             }
             MatchBean.VIDEO -> {
+                holder.itemView.squareUserVideo.onClick {
+                    context.startActivity<SquarePlayDetailActivity>()
+                }
+
 //                holder.itemView.squareUserVideo.backButton.visibility = View.GONE
 //                holder.itemView.squareUserVideo.fullscreenButton.onClick {
 //                    holder.itemView.squareUserVideo.startWindowFullscreen(context, false, true)
@@ -62,7 +75,10 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<MatchBean>)
 //                holder.itemView.squareUserVideo.isShowFullAnimation = true
             }
             MatchBean.AUDIO -> {
+                holder.itemView.squareUserAudio.onClick {
+                    context.startActivity<SquarePlayDetailActivity>()
 
+                }
             }
         }
 

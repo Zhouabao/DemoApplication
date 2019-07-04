@@ -77,6 +77,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView {
     private fun initView() {
         mPresenter = SquarePresenter()
         mPresenter.mView = this
+        mPresenter.context = activity!!
         squareDynamicRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         squareDynamicRv.adapter = adapter
         adapter.addHeaderView(initLabelView(), 0)

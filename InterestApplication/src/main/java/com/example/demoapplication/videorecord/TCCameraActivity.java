@@ -416,8 +416,20 @@ public class TCCameraActivity extends AppCompatActivity implements
     private boolean hasPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
             List<String> permissions = new ArrayList<>();
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
             if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)) {
                 permissions.add(Manifest.permission.CAMERA);
+            }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+            if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
             }
             if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)) {
                 permissions.add(Manifest.permission.RECORD_AUDIO);

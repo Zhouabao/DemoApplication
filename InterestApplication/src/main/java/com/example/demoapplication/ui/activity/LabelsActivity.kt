@@ -38,6 +38,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
         setContentView(R.layout.activity_labels)
         mPresenter = LabelsPresenter()
         mPresenter.mView = this
+        mPresenter.context = this
         initView()
 
 

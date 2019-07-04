@@ -8,9 +8,6 @@ import com.example.demoapplication.presenter.view.SetInfoView
 import com.example.demoapplication.utils.QNUploadManager
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.utils.NetWorkUtils
-import com.qiniu.android.http.ResponseInfo
-import com.qiniu.android.storage.UpCompletionHandler
-import org.json.JSONObject
 
 class SetInfoPresenter : BasePresenter<SetInfoView>() {
 
@@ -33,17 +30,15 @@ class SetInfoPresenter : BasePresenter<SetInfoView>() {
             mView.onError(context.getString(R.string.net_not_available))
         }
 
-        QNUploadManager.getInstance().put(filePath, "${System.currentTimeMillis()}.jpg", SPUtils.getInstance(Constants.SPNAME).getString("qntoken"), object : UpCompletionHandler {
-                override fun complete(key: String?, info: ResponseInfo?, response: JSONObject?) {
-                    Log.i("retrofit", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
-                    Log.i("retrofit", "key=$key\ninfo=$info\nresponse=$response")
-                    if (info != null) {
-                        if (info.isOK) {
-                            Log.i("retrofit", "key=$key\ninfo=$info\nresponse=$response")
-                        }
+        QNUploadManager.getInstance().put(filePath, "${System.currentTimeMillis()}.jpg", SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
+            { key, info, response ->
+                Log.i("retrofit", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
+                Log.i("retrofit", "key=$key\ninfo=$info\nresponse=$response")
+                if (info != null) {
+                    if (info.isOK) {
+                        Log.i("retrofit", "key=$key\ninfo=$info\nresponse=$response")
                     }
                 }
-
             }, null
         )
     }

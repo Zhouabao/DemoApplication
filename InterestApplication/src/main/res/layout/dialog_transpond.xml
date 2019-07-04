@@ -6,7 +6,7 @@
         android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_gravity="center"
-        android:layout_height="160dp">
+        android:layout_height="190dp">
 
     <TextView
             android:id="@+id/transpondFriend"

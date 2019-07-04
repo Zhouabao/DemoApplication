@@ -33,13 +33,17 @@ class SquareDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDet
     private fun initView() {
         mPresenter = SquareDetailPresenter()
         mPresenter.mView = this
+        mPresenter.context = context
+
+        btnBack.onClick {
+            finish()
+        }
 
         squareZhuanfaBtn.onClick {
             TranspondDialog(this).show()
         }
 
-        val drawable1 =
-            resources.getDrawable(if (matchBean.zan) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+        val drawable1 = resources.getDrawable(if (matchBean.zan) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         squareDianzanBtn.setCompoundDrawables(drawable1, null, null, null)
         squareDianzanBtn.onClick {

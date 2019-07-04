@@ -25,8 +25,9 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
-            tools:replace="android:name,android:theme,android:icon"
-            >
+            tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.SquarePlayDetailActivity">
+        </activity>
         <activity
                 android:name=".ui.activity.SquareDetailActivity"
                 android:screenOrientation="portrait"/>
@@ -56,12 +57,11 @@
         <activity
                 android:name=".ui.activity.LoginActivity"
                 android:screenOrientation="portrait">
-
         </activity>
         <activity
                 android:name=".ui.activity.WelcomeActivity"
-                android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
 
         </activity>
         <activity android:name=".ui.activity.MainActivity">
@@ -74,8 +74,7 @@
         <activity
                 android:name=".videorecord.TCCameraActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustNothing"
-                />
+                android:windowSoftInputMode="adjustNothing"/>
 
         <meta-data
                 android:name="design_width_in_dp"

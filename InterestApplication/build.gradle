@@ -38,7 +38,6 @@ android {
 }
 
 
-
 MobSDK {
     appKey "198a047f87d0c"
     appSecret "fdac15d4e51de4590d25293a78da7dc7"

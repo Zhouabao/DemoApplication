@@ -54,6 +54,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         notificationBtn.setOnClickListener(this)
         mPresenter = MainPresenter()
         mPresenter.mView = this
+        mPresenter.context = this
     }
 
 
