@@ -1,5 +1,6 @@
 package com.example.demoapplication.presenter
 
+import android.util.Log
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.presenter.view.LoginView
 import com.kotlin.base.data.net.RetrofitFactory
@@ -35,6 +36,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
             .getVerifyCode(mobile, "register")
             .excute(object : BaseSubscriber<BaseResp<Array<String>?>>(mView) {
                 override fun onNext(t: BaseResp<Array<String>?>) {
+                    Log.i("retrofit", t.toString())
                     super.onNext(t)
                 }
             })

@@ -6,7 +6,11 @@ import com.kotlin.base.presenter.BasePresenter
 class SetInfoPresenter : BasePresenter<SetInfoView>() {
 
     fun checkNickName(nickName: String) {
-        mView.onCheckNickNameResult(!nickName.contains("约"))
+//        RetrofitFactory.instance
+//            .create(Api::class.java)
+//            .setProfile(params)
+//            .subscribe {
+//            }
     }
 
 }

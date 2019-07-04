@@ -1,5 +1,6 @@
 package com.example.demoapplication.presenter.view
 
+import com.example.demoapplication.model.LoginBean
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
 
@@ -9,8 +10,8 @@ interface VerifyCodeView : BaseView {
     fun onChangeVerifyButtonStatus(enable: Boolean)
 
 
-    //对比验证码是否正确
-    fun onConfirmVerifyCode(isRight: Boolean)
+    //对比验证码是否正确,存储登录数据
+    fun onConfirmVerifyCode(data: LoginBean,success:Boolean)
 
 
     //获取验证码结果

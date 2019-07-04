@@ -45,6 +45,8 @@ abstract open class BaseMvpActivity<T : BasePresenter<*>> : BaseActivity(), Base
         错误信息提示，默认实现
      */
     override fun onError(text: String) {
+       // SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE).setContentText(text).show()
+
         toast(text)
     }
 }

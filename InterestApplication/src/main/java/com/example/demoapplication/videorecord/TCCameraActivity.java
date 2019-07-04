@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.example.demoapplication.R;
@@ -55,6 +56,7 @@ public class TCCameraActivity extends AppCompatActivity implements
         GestureDetector.OnGestureListener,
         ScaleGestureDetector.OnScaleGestureListener {
 
+    private static final int CHOOSE_PHOTO_REQUEST_CODE = 1002;
     private static final String TAG = "TCCameraActivity";
     private int mRecordType = TCConstants.VIDEO_RECORD_TYPE_UGC_RECORD;
     private boolean mRecording = false;
@@ -341,6 +343,7 @@ public class TCCameraActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mTXCameraRecord.stopCameraPreview();
     }
 
     @Override
@@ -368,6 +371,9 @@ public class TCCameraActivity extends AppCompatActivity implements
                     TXCLog.i(TAG, "switchCamera = " + mFront);
                     mTXCameraRecord.switchCamera(mFront);
                 }
+                break;
+            case R.id.btn_album:
+                choosePhoto();
                 break;
         }
     }
@@ -650,6 +656,33 @@ public class TCCameraActivity extends AppCompatActivity implements
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+
+    private void choosePhoto() {
+        Intent intentToPickPic = new Intent(Intent.ACTION_PICK, null);
+        // 如果限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型" 所有类型则写 "image/*"
+        intentToPickPic.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intentToPickPic, CHOOSE_PHOTO_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CHOOSE_PHOTO_REQUEST_CODE && data != null) {
+                filePath = getRealPathFromURI(data.getData());
+                setResult(Activity.RESULT_OK, new Intent().putExtra("filePath", filePath));
+                finish();
+            }
+        }
+    }
+
     public String getRealPathFromURI(Uri contentUri) {//通过本地路经 content://得到URI路径
         Cursor cursor = null;
         String locationPath = null;
@@ -666,11 +699,5 @@ public class TCCameraActivity extends AppCompatActivity implements
             }
         }
         return locationPath;
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

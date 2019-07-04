@@ -2,7 +2,7 @@ package com.example.demoapplication.presenter
 
 import android.util.Log
 import com.example.demoapplication.api.Api
-import com.example.demoapplication.model.CheckBean
+import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.presenter.view.VerifyCodeView
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -14,19 +14,23 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
 
 
     /**
-     * 对比验证码是否正确
+     * 对比验证码是否正确，正确即登录
      */
     fun checkVerifyCode(phone: String, verifyCode: String) {
+        if (!checkNetWork()) {
+            return
+        }
         RetrofitFactory.instance.create(Api::class.java)
-            .checkVerifyCode(phone, verifyCode,"register")
-            .excute(object : BaseSubscriber<BaseResp<CheckBean>>(mView) {
-                override fun onNext(t: BaseResp<CheckBean>) {
+            .loginOrAlloc(phone, code = verifyCode)
+            .excute(object : BaseSubscriber<BaseResp<LoginBean>>(mView) {
+                override fun onNext(t: BaseResp<LoginBean>) {
                     super.onNext(t)
-                    Log.i("retrofit", t.toString())
-                    if (t.data.check) {
-                        mView.onConfirmVerifyCode(true)
+                    if (t.code == 500) {
+                        mView.onError(t.msg)
+                    } else if (t.code == 200) {
+                        mView.onConfirmVerifyCode(t.data, true)
                     } else {
-                        mView.onConfirmVerifyCode(false)
+                        mView.onConfirmVerifyCode(t.data, false)
                     }
                 }
             })

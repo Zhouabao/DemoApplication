@@ -3,8 +3,12 @@ package com.example.demoapplication.ui.activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.cazaea.sweetalert.SweetAlertDialog
 import com.example.demoapplication.R
+import com.example.demoapplication.common.Constants
+import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.presenter.VerifyCodePresenter
 import com.example.demoapplication.presenter.view.VerifyCodeView
 import com.kotlin.base.data.protocol.BaseResp
@@ -59,7 +63,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
         /** 倒计时60秒，一次1秒 */
         object : CountDownTimer(60 * 1000, 1000) {
             override fun onFinish() {
-                tvPhone.text = "已发送至 $phone"
+                tvPhone.text = "+86 $phone"
                 countVerifyCodeTime.text =
                     SpanUtils.with(countVerifyCodeTime).append("验证码已发送").append("  重新获取").setBold().create()
                 countVerifyCodeTime.isEnabled = true
@@ -96,21 +100,38 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
         }
     }
 
-    override fun onConfirmVerifyCode(isRight: Boolean) {
-        if (isRight) {
-            startActivity<SetInfoActivity>()
-            finish()
-        } else {
-            toast("验证码输入不正确！")
+    override fun onConfirmVerifyCode(data: LoginBean, isRight: Boolean) {
+        if (!isRight) {
+            SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE).setContentText(data.err_type).show()
+//            toast("验证码输入不正确！")
             onChangeVerifyButtonStatus(false)
+        } else if (isRight) {
+            SPUtils.getInstance(Constants.SPNAME).put("qntoken", data.qntk)
+            SPUtils.getInstance(Constants.SPNAME).put("token", data.token)
+            SPUtils.getInstance(Constants.SPNAME).put("accid", data.accid)
+
+            if (data.userinfo != null && data.userinfo.nickname.isEmpty()) {
+                if (data.taglist == null || data.taglist.isEmpty())
+                    SPUtils.getInstance(Constants.SPNAME).put("taglist", false)
+                startActivity<SetInfoActivity>()
+            } else {
+                SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo!!.nickname)
+                SPUtils.getInstance(Constants.SPNAME).put("avator", data.userinfo!!.avatar)
+                SPUtils.getInstance(Constants.SPNAME).put("gender", data.userinfo!!.gender)
+                SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo!!.birth)
+                startActivity<MainActivity>()
+                finish()
+            }
         }
     }
 
 
     override fun onGetVerifyCode(data: BaseResp<Array<String>?>) {
         if (data.code == 200) {
+            tvPhone.text = "已发送至 $phone"
             countVerifyCodeTime.isEnabled = false
             onCountTime()
         }
     }
+
 }

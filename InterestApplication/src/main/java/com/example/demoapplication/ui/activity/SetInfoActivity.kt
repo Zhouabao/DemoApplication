@@ -9,18 +9,24 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.SPUtils
 import com.cazaea.sweetalert.SweetAlertDialog
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
+import com.example.demoapplication.common.Constants
 import com.example.demoapplication.presenter.SetInfoPresenter
 import com.example.demoapplication.presenter.view.SetInfoView
+import com.example.demoapplication.utils.QNUploadManager
 import com.example.demoapplication.videorecord.TCCameraActivity
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.qiniu.android.http.ResponseInfo
+import com.qiniu.android.storage.UpCompletionHandler
 import kotlinx.android.synthetic.main.activity_set_info.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
+import org.json.JSONObject
 
 
 /**
@@ -32,8 +38,11 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         const val USER_PROFILE_REQUEST_CODE = 1001
     }
 
+    //请求参数
+    private val params by lazy { HashMap<String, String>() }
 
     private val handler by lazy { Handler() }
+
     private val delayRun by lazy { Runnable { mPresenter.checkNickName(userNickNameEt.text.toString()) } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -151,7 +160,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                     .setContentText("性别是不可更改项仅可选择一次")
                     .setConfirmText("确定")
                     .setConfirmClickListener {
-                        startActivity<LabelsActivity>()
+                        startActivity<LabelsActivity>("params" to params)
                         it.cancel()
                     }
                     .show()
@@ -181,9 +190,10 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                     if (data != null) {
                         userProfile = data.getStringExtra("filePath")
                         if (userProfile != null) {
-                            Log.i(SetInfoActivity::class.java.name, userProfile.toString())
+                            Log.i("SetInfoActivity", userProfile.toString())
                             GlideUtil.loadCircleImg(applicationContext, userProfile, userProfileBtn)
 //                            userProfileBtn.setImageBitmap(data.getParcelableExtra("file"))
+                            uploadUserProfile(userProfile!!)
                         }
                     }
                 }
@@ -191,5 +201,24 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         }
     }
 
+
+    fun uploadUserProfile(filePath: String) {
+        QNUploadManager.getInstance().put(
+            filePath,
+            "${System.currentTimeMillis()}.jpg",
+            SPUtils.getInstance(Constants.SPNAME).getString("qntoken"), object : UpCompletionHandler {
+                override fun complete(key: String?, info: ResponseInfo?, response: JSONObject?) {
+                    Log.i("retrofit", "key=$key\ninfo=$info\nresponse=$response")
+
+                    if (info != null) {
+                        if (info.isOK) {
+                            Log.i("retrofit", "key=$key\ninfo=$info\nresponse=$response")
+                        }
+                    }
+                }
+
+            }, null
+        )
+    }
 
 }

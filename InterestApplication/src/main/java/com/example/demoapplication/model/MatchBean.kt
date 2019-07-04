@@ -27,6 +27,4 @@ data class MatchBean(
         const val VIDEO = 2
         const val AUDIO = 3
     }
-
-
 }
