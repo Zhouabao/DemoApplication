@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
 import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.ui.activity.SquareDetailActivity
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import kotlinx.android.synthetic.main.fragment_list_square.*
+import kotlinx.android.synthetic.main.item_list_square_pic.*
+import org.jetbrains.anko.support.v4.startActivity
 
 
 /**
@@ -38,7 +41,10 @@ class ListSquareFragment : Fragment() {
         listSquareRv.isNestedScrollingEnabled = false
         listSquareRv.layoutManager = manager1
         listSquareRv.adapter = listSquareAdapter
-
+        listSquareAdapter.setOnItemChildClickListener { adapter, view, position ->
+            if (view == squareUserPics)
+                startActivity<SquareDetailActivity>()
+        }
         initData()
     }
 
@@ -53,16 +59,8 @@ class ListSquareFragment : Fragment() {
                 23,
                 1,
                 mutableListOf(
-                    R.drawable.img_avatar_01,
-                    R.drawable.img_avatar_02,
-                    R.drawable.img_avatar_03,
-                    R.drawable.img_avatar_04,
-                    R.drawable.img_avatar_05,
-                    R.drawable.img_avatar_06,
-                    R.drawable.img_avatar_07,
-                    R.drawable.img_avatar_05,
-                    R.drawable.img_avatar_06
-                ), 2
+                    R.drawable.img_avatar_01
+                ), 1
             )
         )
         userList.add(
@@ -119,7 +117,8 @@ class ListSquareFragment : Fragment() {
                 23,
                 1,
                 mutableListOf(
-                    R.drawable.img_avatar_03
+                    R.drawable.img_avatar_03, R.drawable.img_avatar_05,
+                    R.drawable.img_avatar_06
                 ), 1
             )
         )

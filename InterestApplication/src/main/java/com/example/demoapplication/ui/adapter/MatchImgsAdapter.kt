@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import kotlinx.android.synthetic.main.item_match_detail_img.view.*
+import kotlinx.android.synthetic.main.item_match_roundimg.view.*
 
 /**
  *    author : ZFM

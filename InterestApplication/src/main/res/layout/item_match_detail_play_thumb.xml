@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.baselibrary.widgets.RoundImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ivUser"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginLeft="1dp"
+        app:type="round"
+        app:borderRadius="5dp"
+        android:scaleType="centerInside"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_avatar_03"
+  >
+
+</com.example.baselibrary.widgets.RoundImageView>

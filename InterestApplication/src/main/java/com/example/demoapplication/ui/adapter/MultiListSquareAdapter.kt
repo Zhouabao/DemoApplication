@@ -21,7 +21,7 @@ import org.jetbrains.anko.startActivity
 /**
  *    author : ZFM
  *    date   : 2019/6/2616:27
- *    desc   :
+ *    desc   : 多状态的广场
  *    version: 1.0
  */
 class MultiListSquareAdapter(var context: Context, data: MutableList<MatchBean>) :
@@ -55,10 +55,17 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<MatchBean>)
             MatchBean.PIC -> {
                 holder.itemView.squareUserPics.layoutManager =
                     LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                holder.itemView.squareUserPics.adapter = ListSquareImgsAdapter(context, item.imgs)
-                holder.itemView.squareUserPics.onClick {
-                    context.startActivity<SquarePlayDetailActivity>()
-                }
+                val adapter = ListSquareImgsAdapter(context, item.imgs)
+                holder.itemView.squareUserPics.adapter = adapter
+                adapter.setOnItemClickListener(object : ListSquareImgsAdapter.OnItemClickListener {
+                    override fun onItemClick(position: Int) {
+                        context.startActivity<SquarePlayDetailActivity>()
+                    }
+
+                })
+//                holder.itemView.squareUserPics.onClick {
+//                    context.startActivity<SquarePlayDetailActivity>()
+//                }
 
             }
             MatchBean.VIDEO -> {

@@ -19,12 +19,9 @@ import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import javax.annotation.Nullable;
 import java.io.File;
-
-import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 
 /**
  * @author Zhou Fengmei
@@ -84,26 +81,6 @@ public class GlideUtil {
                 .into(tartgetImg);
     }
 
-    /**
-     * 圆角图片加载
-     *
-     * @param context   上下文
-     * @param imageView 图片显示控件
-     * @param url       图片链接
-     * @param radius    图片圆角半径
-     * @return
-     * @author leibing
-     * @createTime 2016/8/15
-     * @lastModify 2016/8/15
-     */
-    public static void loadRoundImg(Context context, Object url, ImageView imageView, int radius) {
-        Glide.with(context)
-                .load(url)
-                .apply(getOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
-                .apply(bitmapTransform(new RoundedCornersTransformation(radius, 1)))
-                .into(imageView);
-
-    }
 
     /**
      * 根据资源ID加载图片

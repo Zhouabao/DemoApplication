@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_list_square_pic.view.*
 /**
  *    author : ZFM
  *    date   : 2019/6/2616:27
- *    desc   :
+ *    desc   : 列表的广场
  *    version: 1.0
  */
 class ListSquareAdapter(var context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

@@ -1,8 +1,14 @@
 package com.example.demoapplication.ui.adapter
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
@@ -17,6 +23,7 @@ import kotlinx.android.synthetic.main.item_square_play_detail_pics.view.detailPl
 import kotlinx.android.synthetic.main.item_square_play_detail_pics.view.detailPlayCommentSend
 import kotlinx.android.synthetic.main.item_square_play_detail_pics.view.detailPlaydianzan
 import kotlinx.android.synthetic.main.item_square_play_detail_video.view.*
+import org.jetbrains.anko.backgroundColorResource
 
 
 /**
@@ -35,8 +42,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<MatchBe
     }
 
     override fun convert(holder: BaseViewHolder, item: MatchBean) {
-
-
+        var play = false
         when (holder.itemViewType) {
             MatchBean.PIC -> {
                 val drawable1 =
@@ -54,14 +60,12 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<MatchBe
                     ToastUtils.showShort(holder.itemView.detailPlayComment.text.toString())
                 }
 
-                holder.itemView.picFl.background = BitmapDrawable(
-                    ImageUtils.fastBlur(
-                        BitmapFactory.decodeResource(context.resources, R.drawable.img_avatar_01),
-                        1f,
-                        25f
-                    )
-                )
 
+
+                holder.itemView.picFl.backgroundColorResource = R.color.colorBlack
+                holder.itemView.detailPlayVp2.layoutManager =
+                    LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                holder.itemView.detailPlayVp2.adapter = ListSquareImgsAdapter(context, item.imgs, true)
 
             }
             MatchBean.VIDEO -> {
@@ -120,6 +124,38 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<MatchBe
                         25f
                     )
                 )
+                val rotateAnimation =
+                    RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+                rotateAnimation.interpolator = LinearInterpolator()
+                rotateAnimation.duration = 4000
+                rotateAnimation.repeatCount = Animation.INFINITE
+                //设定动画作用于的控件，以及什么动画，旋转的开始角度和结束角度
+                val objAnim = ObjectAnimator.ofFloat(holder.itemView.detailPlayAudioBg, "rotation", 0.0f, 360.0f);
+                //设定动画的旋转周期
+                objAnim.setDuration(20000);
+                //设置动画的插值器，这个为匀速旋转
+                objAnim.setInterpolator(LinearInterpolator());
+                //设置动画为无限重复
+                objAnim.setRepeatCount(-1);
+                //设置动画重复模式
+                objAnim.setRepeatMode(ObjectAnimator.RESTART);
+
+
+                holder.itemView.detailPlayBtn.onClick {
+                    play = !play
+                    if (play) {
+                        if (objAnim.isStarted)
+                            objAnim.resume()
+                        else
+                            objAnim.start()
+                        holder.itemView.detailPlayBtn.setImageResource(R.drawable.ugc_pause_record)
+//                        holder.itemView.detailPlayAudioBg.startAnimation(rotateAnimation)
+                    } else {
+                        holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_play_white)
+                        objAnim.pause()
+//                        holder.itemView.detailPlayAudioBg.clearAnimation()
+                    }
+                }
             }
         }
 
