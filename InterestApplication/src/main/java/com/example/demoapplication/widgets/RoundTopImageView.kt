@@ -11,7 +11,7 @@ import com.example.demoapplication.R
  * @author zfm
  */
 
-class RoundImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+class RoundTopImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     ImageView(context, attrs, defStyleAttr) {
 
     private val mPath: Path
@@ -20,8 +20,8 @@ class RoundImageView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val paintFlagsDrawFilter: PaintFlagsDrawFilter
 
     init {
-        val array = context.obtainStyledAttributes(attrs, R.styleable.RoundImageView)
-        val mRadius = array.getDimension(R.styleable.RoundImageView_radius, 10f)
+        val array = context.obtainStyledAttributes(attrs, R.styleable.RoundTopImageView)
+        val mRadius = array.getDimension(R.styleable.RoundTopImageView_radius, 10f)
         rids[0] = mRadius
         rids[1] = mRadius
         rids[2] = mRadius

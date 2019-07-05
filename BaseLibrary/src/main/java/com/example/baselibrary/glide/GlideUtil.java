@@ -19,7 +19,6 @@ import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.baselibrary.R;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import javax.annotation.Nullable;
@@ -37,8 +36,6 @@ public class GlideUtil {
     private static RequestOptions getOptions() {
         return new RequestOptions()
                 .fitCenter()
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher)
                 .priority(Priority.HIGH)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
@@ -83,7 +80,7 @@ public class GlideUtil {
     public static void loadRoundImg(Context context, String url, ImageView tartgetImg) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).centerInside())
+                .apply(getOptions())
                 .into(tartgetImg);
     }
 

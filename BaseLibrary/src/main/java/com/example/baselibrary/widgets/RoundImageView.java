@@ -32,9 +32,10 @@ public class RoundImageView extends ImageView {
     /**
      * 图片的类型 圆角or 圆形
      */
-    private int type;
-    private static final int TYPE_CIRCLE = 0;
-    private static final int TYPE_ROUND = 1;
+    private int type = TYPE_NORMAL;
+    public static final int TYPE_CIRCLE = 0;
+    public static final int TYPE_ROUND = 1;
+    public static final int TYPE_NORMAL = 2;
 
 
     /**
@@ -61,7 +62,7 @@ public class RoundImageView extends ImageView {
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_RADIUS,
                         getResources().getDisplayMetrics()));
         //设置默认类型
-        type = typedArray.getInt(R.styleable.roundImageViewAttrs_type, 1);
+        type = typedArray.getInt(R.styleable.roundImageViewAttrs_type, 2);
 
         typedArray.recycle();
 
@@ -181,9 +182,11 @@ public class RoundImageView extends ImageView {
         if (type == TYPE_ROUND) {
             canvas.drawRoundRect(new RectF(0, 0, getWidth(), getHeight()),
                     mBorderRadius, mBorderRadius, paint);
+        } else if (type == TYPE_CIRCLE) {
+            canvas.drawCircle(getWidth() / 2, getWidth() / 2, getWidth() / 2, paint);
         } else {
-            canvas.drawCircle(getWidth() / 2, getWidth() / 2, getWidth() / 2,
-                    paint);
+            canvas.drawRoundRect(new RectF(0, 0, getWidth(), getHeight()),
+                    0, 0, paint);
         }
 
         return bitmap;
@@ -195,12 +198,6 @@ public class RoundImageView extends ImageView {
     }
 
     public void setType(int type) {
-
-        if (type != TYPE_CIRCLE || type != TYPE_ROUND) {
-            type = TYPE_CIRCLE;
-        } else {
-            this.type = type;
-        }
-
+        this.type = type;
     }
 }
