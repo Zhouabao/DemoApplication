@@ -30,7 +30,18 @@ data class LabelBean(
     var checked: Boolean = false
 )
 
-/*{"msg":"获取数据成功！","code":200,"data":{"version":9,"data":[{"id":1,"parent_id":0,"title":"测试1","path":"1","icon":"","video_path":"","descr":"","level":0,"son":[{"id":4,"parent_id":1,"title":"测试3","path":"1-4","icon":"","video_path":"","descr":"","level":1,"son":[]}]},{"id":3,"parent_id":0,"title":"测试2","path":"3","icon":"","video_path":"","descr":"","level":0,"son":[{"id":5,"parent_id":3,"title":"测试4","path":"3-5","icon":"","video_path":"","descr":"","level":1,"son":[]},{"id":6,"parent_id":3,"title":"测试5","path":"3-6","icon":"","video_path":"","descr":"","level":1,"son":[{"id":7,"parent_id":6,"title":"测试3级","path":"3-6-7","icon":"","video_path":"","descr":"","level":2,"son":[]}]}]}]},"time":1562551530}
+/*{"msg":"获取数据成功！","code":200,"data":{"version":9,"data":
+[{"id":1,
+"parent_id":0,
+"title":"测试1",
+"path":"1",
+"icon":"","video_path":"","descr":"","level":0,
+"son":[{"id":4,"parent_id":1,"title":"测试3","path":"1-4","icon":"","video_path":"","descr":"","level":1,"son":[]}]
+},
+{"id":3,"parent_id":0,"title":"测试2","path":"3","icon":"","video_path":"","descr":"","level":0,
+"son":[{"id":5,"parent_id":3,"title":"测试4","path":"3-5","icon":"","video_path":"","descr":"","level":1,"son":[]},
+{"id":6,"parent_id":3,"title":"测试5","path":"3-6","icon":"","video_path":"","descr":"","level":1,
+"son":[{"id":7,"parent_id":6,"title":"测试3级","path":"3-6-7","icon":"","video_path":"","descr":"","level":2,"son":[]}]}]}]},"time":1562551530}
 * */
 
 

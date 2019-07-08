@@ -26,7 +26,7 @@ import org.jetbrains.anko.startActivity
  * 如果是三级标签，就取消选中
  * 如果是二级标签，就取消选中其子级
  * 如果是一级标签，就取消选中子级和子级的子级
- * //todo 回去整理标签
+ * //todo 标签选中之后位置有点混乱
  */
 class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnClickListener {
 
@@ -128,7 +128,9 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
      */
     override fun onRemoveSubLablesResult(label: LabelBean, parentPos: Int) {
         for (tempLabel in label.son) {
+            tempLabel.checked = false
             adapter.dataList.remove(tempLabel)
+            updateCheckedLabels(tempLabel)
             onRemoveSubLablesResult(tempLabel,parentPos)
         }
         adapter.notifyDataSetChanged()
@@ -144,24 +146,23 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
             if (!checkedLabels.contains(label)) {
                 checkedLabels.add(label)
             }
-            if (checkedLabels.size < 3) {
-                completeLabelBtn.isEnabled = false
-                completeLabelBtn.text = "再选${3 - checkedLabels.size}个"
-                completeLabelBtn.setCompoundDrawables(null, null, null, null)
-            } else {
-                completeLabelBtn.isEnabled = true
-                completeLabelBtn.text = "完成"
-                val drawable1 = ContextCompat.getDrawable(BaseApplication.context, R.drawable.icon_gou)
-                drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-                completeLabelBtn.setCompoundDrawables(drawable1, null, null, null)
-            }
+
         } else {
+            //此处应该还要删除父级的子级数据
             if (checkedLabels.contains(label)) {
                 checkedLabels.remove(label)
-                completeLabelBtn.isEnabled = false
-                completeLabelBtn.text = "再选${3 - checkedLabels.size}个"
-                completeLabelBtn.setCompoundDrawables(null, null, null, null)
             }
+        }
+        if (checkedLabels.size < 3) {
+            completeLabelBtn.isEnabled = false
+            completeLabelBtn.text = "再选${3 - checkedLabels.size}个"
+            completeLabelBtn.setCompoundDrawables(null, null, null, null)
+        } else {
+            completeLabelBtn.isEnabled = true
+            completeLabelBtn.text = "完成"
+            val drawable1 = ContextCompat.getDrawable(BaseApplication.context, R.drawable.icon_gou)
+            drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
+            completeLabelBtn.setCompoundDrawables(drawable1, null, null, null)
         }
     }
 

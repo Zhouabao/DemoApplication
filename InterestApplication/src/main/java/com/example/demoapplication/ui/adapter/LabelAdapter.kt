@@ -29,7 +29,7 @@ class LabelAdapter(context: Context) : BaseRecyclerViewAdapter<LabelBean, LabelA
         super.onBindViewHolder(holder, position)
         val model = dataList[position]
 
-        holder.itemView.labelTv.text = model.descr
+        holder.itemView.labelTv.text = model.title
         holder.itemView.labelTv.isChecked = model.checked
     }
 
