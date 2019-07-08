@@ -1,9 +1,10 @@
 package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.demoapplication.R
-import com.example.demoapplication.model.Label
+import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.presenter.LabelsPresenter
 import com.example.demoapplication.presenter.view.LabelsView
 import com.example.demoapplication.ui.adapter.LabelAdapter
@@ -17,6 +18,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
 import kotlinx.android.synthetic.main.activity_labels.*
+import org.jetbrains.anko.startActivity
 
 
 /**
@@ -24,13 +26,16 @@ import kotlinx.android.synthetic.main.activity_labels.*
  * 如果是三级标签，就取消选中
  * 如果是二级标签，就取消选中其子级
  * 如果是一级标签，就取消选中子级和子级的子级
+ * //todo 回去整理标签
  */
-class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
+class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnClickListener {
+
+
     private lateinit var adapter: LabelAdapter
     //拿一个集合来存储所有的标签
-    private lateinit var allLabels: MutableList<Label>
+    private lateinit var allLabels: MutableList<LabelBean>
     //拿一个集合来存储当前选中的标签
-    private val checkedLabels: MutableList<Label> = mutableListOf()
+    private val checkedLabels: MutableList<LabelBean> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,20 +45,27 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
         mPresenter.mView = this
         mPresenter.context = this
         initView()
+        getLabel()
 
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        mPresenter.getLabels(1)
-
+    private fun getLabel() {
+        val params = HashMap<String, String>()
+//        params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
+//        params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
+        params["accid"] = "e3a623fbef21dd5fc00b189cb9949ade"
+        params["token"] = "9ece2129f6400972bde861bd816ccca7"
+        params["version"] = "${1}"
+        params["timestamp"] = "${System.currentTimeMillis()}"
+        mPresenter.getLabels(params)
     }
 
     private fun initView() {
         btnBack.onClick {
             finish()
         }
+        completeLabelBtn.setOnClickListener(this)
 
         val manager = FlexboxLayoutManager(this)
         //item的排列方向
@@ -67,19 +79,17 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
         //设置添加和移除动画
         labelRecyclerview.itemAnimator = ScaleInLeftAnimator()
 
-
-
-        adapter.setOnItemClickListener(object : BaseRecyclerViewAdapter.OnItemClickListener<Label> {
-            override fun onItemClick(item: Label, position: Int) {
+        adapter.setOnItemClickListener(object : BaseRecyclerViewAdapter.OnItemClickListener<LabelBean> {
+            override fun onItemClick(item: LabelBean, position: Int) {
 //                adapter.labelList[position].checked = !item.checked
                 item.checked = !item.checked
                 adapter.notifyItemChanged(position)
                 updateCheckedLabels(item)
                 if (adapter.dataList[position].checked) {
-                    mPresenter.getSubLabels(item.parId, item.subId, item.subSubId)
+                    mPresenter.mView.onGetSubLabelsResult(item.son, position)
                 } else {
                     //反选就清除父标签的所有子标签
-                    adapter.notifyItemRemoved(0)
+                    mPresenter.mView.onRemoveSubLablesResult(item, position)
                 }
             }
         })
@@ -89,12 +99,10 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
     /**
      * 获取标签数据
      */
-    override fun onGetLabelsResult(labels: MutableList<Label>?) {
+    override fun onGetLabelsResult(labels: MutableList<LabelBean>?) {
         if (labels != null && labels.size > 0) {
-            for (index in labels.indices) {
-                labels[index].parId = index
-            }
             adapter.setData(labels)
+            allLabels = labels
         }
         if (labels != null) {
             for (label in labels)
@@ -106,16 +114,24 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
     /**
      * 添加父级标签的子标签
      */
-    override fun onGetSubLabelsResult(labels: MutableList<Label>?, parentPos: Int) {
-
+    override fun onGetSubLabelsResult(labels: List<LabelBean>?, parentPos: Int) {
         if (labels != null && labels.size > 0) {
-            for (index in labels.indices) {
-                labels[index].level = parentPos * 10
-            }
             adapter.dataList.addAll(labels)
             adapter.notifyItemRangeInserted(parentPos + 1, labels.size)
-//            adapter.notifyItemInserted(parentPos + 1)
         }
+    }
+
+
+    /**
+     * 移除子级标签
+     * //todo  设计标签移除的算法
+     */
+    override fun onRemoveSubLablesResult(label: LabelBean, parentPos: Int) {
+        for (tempLabel in label.son) {
+            adapter.dataList.remove(tempLabel)
+            onRemoveSubLablesResult(tempLabel,parentPos)
+        }
+        adapter.notifyDataSetChanged()
     }
 
 
@@ -123,7 +139,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
      * 此处判断标签最少选择三个
      */
 
-    fun updateCheckedLabels(label: Label) {
+    fun updateCheckedLabels(label: LabelBean) {
         if (label.checked) {
             if (!checkedLabels.contains(label)) {
                 checkedLabels.add(label)
@@ -150,4 +166,11 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView {
     }
 
 
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.completeLabelBtn -> {
+                startActivity<MainActivity>()
+            }
+        }
+    }
 }

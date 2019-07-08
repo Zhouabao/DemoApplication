@@ -7,7 +7,7 @@ buildscript {
 
     ext.compile_sdk_version = 29
     ext.build_tools_version = "29.0.0"
-    ext.min_sdk_version = 19
+    ext.min_sdk_version = 22
     ext.target_sdk_version = 29
     ext.android_support_version = "29.0.0"
 

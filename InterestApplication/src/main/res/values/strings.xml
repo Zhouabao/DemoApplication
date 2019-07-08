@@ -1,72 +1,9 @@
 <resources>
-    <string name="app_name">翻版积目</string>
+    <string name="app_name">兴趣</string>
     <string name="permission_tip">为了更好的用户体验 需要开启以下系统权限</string>
 
 
     <!--拍摄照片时的滤镜    -->
-    <string name="beauty_setting_pannel_style">风格</string>
-    <string name="beauty_setting_pannel_beauty">美颜</string>
-    <string name="beauty_setting_pannel_filter">滤镜</string>
-    <string name="beauty_setting_pannel_dynamic_effect">动效</string>
-    <string name="beauty_setting_pannel_key">抠背</string>
-    <string name="beauty_setting_pannel_green_screen">绿幕</string>
 
-    <string name="beauty_setting_pannel_style_smooth">美颜(光滑)</string>
-    <string name="beauty_setting_pannel_style_natural">美颜(自然)</string>
-    <string name="beauty_setting_pannel_style_hazy">美颜(天天P图)</string>
-
-    <string name="beauty_setting_pannel_beauty_beauty">美颜</string>
-    <string name="beauty_setting_pannel_beauty_whitening">美白</string>
-    <string name="beauty_setting_pannel_beauty_ruddy">红润</string>
-    <string name="beauty_setting_pannel_beauty_big_eye">大眼</string>
-    <string name="beauty_setting_pannel_beauty_thin_face">瘦脸</string>
-    <string name="beauty_setting_pannel_beauty_v_face">V脸</string>
-    <string name="beauty_setting_pannel_beauty_chin">下巴</string>
-    <string name="beauty_setting_pannel_beauty_short_face">短脸</string>
-    <string name="beauty_setting_pannel_beauty_small_nose">小鼻</string>
-
-    <string name="beauty_setting_pannel_filter_none">无</string>
-    <string name="beauty_setting_pannel_filter_standard">标准</string>
-    <string name="beauty_setting_pannel_filter_cheery">樱红</string>
-    <string name="beauty_setting_pannel_filter_cloud">云裳</string>
-    <string name="beauty_setting_pannel_filter_pure">纯真</string>
-    <string name="beauty_setting_pannel_filter_orchid">白兰</string>
-    <string name="beauty_setting_pannel_filter_vitality">元气</string>
-    <string name="beauty_setting_pannel_filter_super">超脱</string>
-    <string name="beauty_setting_pannel_filter_fragrance">香氛</string>
-    <string name="beauty_setting_pannel_filter_romantic">浪漫</string>
-    <string name="beauty_setting_pannel_filter_fresh">清新</string>
-    <string name="beauty_setting_pannel_filter_beautiful">唯美</string>
-    <string name="beauty_setting_pannel_filter_pink">粉嫩</string>
-    <string name="beauty_setting_pannel_filter_reminiscence">怀旧</string>
-    <string name="beauty_setting_pannel_filter_blues">蓝调</string>
-    <string name="beauty_setting_pannel_filter_cool">清凉</string>
-    <string name="beauty_setting_pannel_filter_Japanese">日系</string>
-
-    <string name="beauty_setting_pannel_dynamic_effect_none">无</string>
-    <string name="beauty_setting_pannel_dynamic_effect_boom">Boom</string>
-    <string name="beauty_setting_pannel_dynamic_effect_neon_mouse">霓虹鼠</string>
-    <string name="beauty_setting_pannel_dynamic_effect_star_ear">星耳</string>
-    <string name="beauty_setting_pannel_dynamic_effect_crazy_cheer_up">疯狂打call</string>
-    <string name="beauty_setting_pannel_dynamic_effect_Q_cancelonstellation">Q星座</string>
-    <string name="beauty_setting_pannel_dynamic_effect_colored_ribbon">彩色丝带</string>
-    <string name="beauty_setting_pannel_dynamic_effect_bands_hairband">刘海发带</string>
-    <string name="beauty_setting_pannel_dynamic_effect_change_face">变脸</string>
-    <string name="beauty_setting_pannel_dynamic_effect_purple_kitten">紫色小猫</string>
-    <string name="beauty_setting_pannel_dynamic_effect_flower_faerie">花仙子</string>
-    <string name="beauty_setting_pannel_dynamic_effect_little_Princess">小公举</string>
-
-    <string name="beauty_setting_pannel_key_none">无动效</string>
-    <string name="beauty_setting_pannel_key_AI_key">AI抠背</string>
-
-    <string name="beauty_setting_pannel_green_screen_none">无</string>
-    <string name="beauty_setting_pannel_green_screen_good_luck">Good luck</string>
-
-    <string name="tc_video_record_activity_on_request_permissions_result_failed_to_get_permission">获取权限失败</string>
-    <string name="activity_video_record_take_photo_success">拍照成功，已存到系统相册</string>
-    <string name="activity_video_record_take_photo_fail">拍照失败</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="next_step">下一步</string>
-    <string name="net_not_available">网络不可用</string>
 </resources>

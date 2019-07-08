@@ -1,15 +1,21 @@
 package com.example.demoapplication.presenter.view
 
-import com.example.demoapplication.model.Label
+import com.example.demoapplication.model.LabelBean
 import com.kotlin.base.presenter.view.BaseView
 
 interface LabelsView : BaseView {
 
-    fun onGetLabelsResult(labels: MutableList<Label>?)
+    fun onGetLabelsResult(labels: MutableList<LabelBean>?)
 
 
     /**
      * 获取子级标签，并记录其父级标签的位置
      */
-    fun onGetSubLabelsResult(labels:MutableList<Label>?,parentPosition:Int)
+    fun onGetSubLabelsResult(labels: List<LabelBean>?, parentPosition: Int)
+
+
+    /**
+     * 清除子级标签
+     */
+    fun onRemoveSubLablesResult(labels: LabelBean,parentLevel:Int)
 }

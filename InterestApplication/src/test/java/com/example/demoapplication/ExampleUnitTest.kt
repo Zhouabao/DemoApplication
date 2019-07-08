@@ -2,8 +2,6 @@ package com.example.demoapplication
 
 import org.junit.Test
 
-import org.junit.Assert.*
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -12,6 +10,14 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+//        assertEquals(4, 2 + 2)
+        val data = arrayOf("1", "2", "哈", "敏感")
+        var sensitive = ""
+        for (char in data) {
+            System.out.println(char)
+
+            sensitive = sensitive.plus(char)
+        }
+        System.out.println(sensitive)
     }
 }

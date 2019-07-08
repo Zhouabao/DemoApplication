@@ -48,7 +48,7 @@ open class BaseActivity : RxAppCompatActivity() {
         //激活导航栏设置
         manager.setNavigationBarTintEnabled(true)
         //设置一个状态栏颜色
-        manager.setStatusBarTintColor(Color.TRANSPARENT)
+        manager.setStatusBarTintColor(Color.WHITE)
     }
 
     @TargetApi(19)

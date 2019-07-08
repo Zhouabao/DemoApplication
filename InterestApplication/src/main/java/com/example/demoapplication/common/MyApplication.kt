@@ -2,7 +2,6 @@ package com.example.demoapplication.common
 
 import com.kotlin.base.common.BaseApplication
 import com.mob.MobSDK
-import com.tencent.ugc.TXUGCBase
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
 
@@ -13,11 +12,10 @@ class MyApplication : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        //短视频设置
-        TXUGCBase.getInstance().setLicence(this, ugcLicenseUrl, ugcKey)
         MobSDK.init(this)
         configUnits()
         configPlayer()
+
     }
 
     private fun configPlayer() {

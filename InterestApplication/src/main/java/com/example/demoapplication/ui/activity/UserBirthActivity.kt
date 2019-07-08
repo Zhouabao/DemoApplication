@@ -60,7 +60,7 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
         }
 
         confirmBtn.onClick {
-            setResult(Activity.RESULT_OK, intent.putExtra("birthday", "$year$monthAndDay"))
+            setResult(Activity.RESULT_OK, intent.putExtra("year", "$year").putExtra("month","$monthAndDay"))
             finish()
         }
     }

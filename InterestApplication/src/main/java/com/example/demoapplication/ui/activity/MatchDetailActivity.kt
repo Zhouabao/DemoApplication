@@ -32,7 +32,7 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import kotlinx.android.synthetic.main.activity_match_detail.*
+import kotlinx.android.synthetic.main.activity_match_detail1.*
 import kotlinx.android.synthetic.main.match_action_layout.*
 import org.jetbrains.anko.startActivity
 import java.util.*

@@ -6,24 +6,30 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.cazaea.sweetalert.SweetAlertDialog
 import com.example.baselibrary.glide.GlideUtil
+import com.example.baselibrary.utils.RandomUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.presenter.SetInfoPresenter
 import com.example.demoapplication.presenter.view.SetInfoView
-import com.example.demoapplication.videorecord.TCCameraActivity
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.config.PictureMimeType
+import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.activity_set_info.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 
 /**
@@ -36,18 +42,29 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     }
 
     //请求参数
-    private val params by lazy { HashMap<String, Any>() }
+    private val params by lazy { HashMap<String, String>() }
+    //用户头像
     private var userProfile: String? = null
-    private var userBirth: String? = null
+    //昵称是否合法
+    private var nickNameValidate = false
+    //handler
     private val handler by lazy { Handler() }
-
-    private val delayRun by lazy { Runnable { mPresenter.checkNickName(userNickNameEt.text.toString()) } }
+    //延迟校验输入昵称的runnable
+    private val delayRun by lazy { Runnable { mPresenter.mView.onCheckNickNameResult() } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initState()
-
         setContentView(R.layout.activity_set_info)
+
+        initView()
+
+        if (SPUtils.getInstance(Constants.SPNAME).getString("sensitive").isNullOrEmpty())
+            mPresenter.checkNickName()
+
+    }
+
+    private fun initView() {
         mPresenter = SetInfoPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -77,8 +94,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             }
 
         })
-
-
     }
 
     override fun onAttachedToWindow() {
@@ -90,49 +105,64 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
 
     /**
-     * 改变性别
+     * 上传信息成功
      */
-    override fun onChangeSex(id: Int) {}
-
-    /**
-     * 填写生日
-     */
-    override fun onChangeBirth() {
-
+    override fun onUploadUserInfoResult(uploadResult: Boolean) {
+        if (uploadResult) {
+            startActivity<LabelsActivity>("params" to params)
+        }
     }
 
     /**
-     * 上传信息结果
+     * 验证昵称是否正确
      */
-    override fun onUploadUserInfoResult() {
-
-    }
-
-    override fun onCheckNickNameResult(result: Boolean) {
-        if (!result) {
-            userNickNameEt.setBackgroundResource(R.drawable.shape_rectangle_et_error)
-            val drawableRight = resources.getDrawable(R.drawable.icon_error_tip1)
-            drawableRight.setBounds(0, 0, drawableRight.intrinsicWidth, drawableRight.intrinsicHeight)
-            userNickNameEt.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null)
-
-
-            toast("昵称不合法")
-
-//            SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-//                .setTitleText("")
-//                .setContentText("昵称违规请修改")
-//                .setConfirmText("OK")
-//                .show()
+    override fun onCheckNickNameResult() {
+        val userNickName = userNickNameEt.text.toString()
+        val sensitiveWords = SPUtils.getInstance(Constants.SPNAME).getString("sensitive")
+        for (tempChar in userNickName) {
+            if (sensitiveWords.contains(tempChar)) {
+                //包含敏感词汇
+                userNickNameEt.setBackgroundResource(R.drawable.shape_rectangle_et_error)
+                val drawableRight = resources.getDrawable(R.drawable.icon_error_tip1)
+                drawableRight.setBounds(0, 0, drawableRight.intrinsicWidth, drawableRight.intrinsicHeight)
+                userNickNameEt.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null)
+                toast("昵称不合法")
+                nickNameValidate = false
+                break
+            } else {
+                nickNameValidate = true
+            }
         }
         checkConfirmBtnEnable()
 
+    }
+
+    /**
+     * 拍照或者选取照片
+     */
+    private fun onTakePhoto() {
+        PictureSelector.create(this)
+            .openGallery(PictureMimeType.ofImage())
+            .maxSelectNum(1)
+            .minSelectNum(0)
+            .imageSpanCount(4)
+            .selectionMode(PictureConfig.SINGLE)
+            .previewImage(true)
+            .isCamera(true)
+            .enableCrop(true)
+            .withAspectRatio(3, 4)
+            .compress(true)
+            .openClickSound(true)
+            .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.userProfileBtn -> {
-                startActivityForResult<TCCameraActivity>(USER_PROFILE_REQUEST_CODE)
+                onTakePhoto()
+                userProfile = null
+//                startActivityForResult<TCCameraActivity>(USER_PROFILE_REQUEST_CODE)
             }
             //点击跳转到标签选择页
             R.id.confirmBtn -> {
@@ -140,23 +170,31 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                     .setTitleText("温馨提示")
                     .setContentText("性别是不可更改项仅可选择一次")
                     .setConfirmText("确定")
+                    .setCancelText("取消")
                     .setConfirmClickListener {
                         params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
                         params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
                         params["avatar"] = userProfile.toString()
                         params["nickname"] = userNickNameEt.text.toString()
-                        params["gender"] = if (sexGroup.checkedRadioButtonId == R.id.userSexMan) 1 else 2
-                        params["birth"] = TimeUtils.string2Millis(userBirth.toString())
-                        params["timestamp"] = TimeUtils.getNowMills()
-//                        params["sign"] = TimeUtils.getNowMills()
-//                        params["tags"] = TimeUtils.getNowMills()
+                        params["gender"] = "${if (sexGroup.checkedRadioButtonId == R.id.userSexMan) 1 else 2}"
+                        params["birth"] = "${TimeUtils.date2Millis(
+                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(userBirthTv.text.toString())
+                        )}"
+                        params["timestamp"] = "${TimeUtils.getNowMills()}"
+//                        params["sign"] = ""
+//                        params["tags"] = ""
+//                        mPresenter.uploadUserInfo(params)
                         startActivity<LabelsActivity>("params" to params)
+                        it.cancel()
+                    }
+                    .setCancelClickListener {
                         it.cancel()
                     }
                     .show()
             }
             R.id.userBirthTv -> {
                 startActivityForResult<UserBirthActivity>(USER_BIRTH_REQUEST_CODE)
+                userBirthTv.text = ""
             }
         }
     }
@@ -165,29 +203,27 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-//                PictureConfig.CHOOSE_REQUEST -> {
-//                    val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
-//                    GlideUtil.loadCircleImg(applicationContext, selectList[0].compressPath, userProfileBtn)
-//                }
-
+                PictureConfig.CHOOSE_REQUEST -> {
+                    if (data != null) {
+                        val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
+                        GlideUtil.loadCircleImg(applicationContext, selectList[0].compressPath, userProfileBtn)
+                        userProfile =
+                            "${Constants.FILE_NAME_INDEX}avator/${SPUtils.getInstance(Constants.SPNAME).getString("accid")}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                                16
+                            )}.jpg"
+                        mPresenter.uploadProfile(selectList[0].compressPath, userProfile.toString())
+                        checkConfirmBtnEnable()
+                    }
+                }
                 USER_BIRTH_REQUEST_CODE -> {
                     if (data != null) {
-                        userBirthTv.text = data.getStringExtra("birthday")
+                        val year = data.getStringExtra("year")
+                        val monthDay = data.getStringExtra("month").substring(0, 2).plus("-")
+                            .plus(data.getStringExtra("month").substring(2, 4))
+                        userBirthTv.text = year.plus("-").plus(monthDay)
                         checkConfirmBtnEnable()
                     }
 
-                }
-                USER_PROFILE_REQUEST_CODE -> {
-                    if (data != null) {
-                        userProfile = data.getStringExtra("filePath")
-                        if (userProfile != null) {
-                            Log.i("SetInfoActivity", userProfile.toString())
-                            GlideUtil.loadCircleImg(applicationContext, userProfile, userProfileBtn)
-//                            userProfileBtn.setImageBitmap(data.getParcelableExtra("file"))
-                            mPresenter.uploadProfile(userProfile!!)
-                        }
-                        checkConfirmBtnEnable()
-                    }
                 }
             }
         }
@@ -196,6 +232,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
     private fun checkConfirmBtnEnable() {
         confirmBtn.isEnabled =
-            !userProfile.isNullOrEmpty() && !userBirth.isNullOrEmpty() && userNickNameEt.text.toString().isNotEmpty()
+            !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty() && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
     }
 }

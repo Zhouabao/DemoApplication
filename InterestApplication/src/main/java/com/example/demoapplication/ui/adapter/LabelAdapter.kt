@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
-import com.example.demoapplication.model.Label
+import com.example.demoapplication.model.LabelBean
 import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import kotlinx.android.synthetic.main.item_label.view.*
 
@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_label.view.*
  *    desc   : 此处存在二级标签和三级标签的选择和反选
  *    version: 1.0
  */
-class LabelAdapter(context: Context) : BaseRecyclerViewAdapter<Label, LabelAdapter.ViewHolder>(context) {
+class LabelAdapter(context: Context) : BaseRecyclerViewAdapter<LabelBean, LabelAdapter.ViewHolder>(context) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,7 +29,7 @@ class LabelAdapter(context: Context) : BaseRecyclerViewAdapter<Label, LabelAdapt
         super.onBindViewHolder(holder, position)
         val model = dataList[position]
 
-        holder.itemView.labelTv.text = model.name
+        holder.itemView.labelTv.text = model.descr
         holder.itemView.labelTv.isChecked = model.checked
     }
 

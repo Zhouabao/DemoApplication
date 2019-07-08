@@ -127,11 +127,9 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
 
 
     override fun onGetVerifyCode(data: BaseResp<Array<String>?>) {
-        if (data.code == 200) {
             tvPhone.text = "已发送至 $phone"
             countVerifyCodeTime.isEnabled = false
             onCountTime()
-        }
     }
 
 }

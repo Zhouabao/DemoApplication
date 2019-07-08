@@ -3,12 +3,12 @@ package com.example.demoapplication.ui.activity
 import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.app.ActivityCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.kotlin.base.ext.onClick
@@ -34,6 +34,7 @@ class WelcomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
+        ScreenUtils.setFullScreen(this)
 
         //动态申请权限
         if (!SPUtils.getInstance(Constants.SPNAME).getBoolean("autoPermissions", false)) {
@@ -45,7 +46,6 @@ class WelcomeActivity : BaseActivity() {
 //            startActivity<MainActivity>()
 //            finish()
 //        }
-
 
 
         //手机登录
@@ -68,18 +68,15 @@ class WelcomeActivity : BaseActivity() {
      * 动态申请权限，不给权限就直接退出APP
      */
     private fun requestPermissions() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            val permissions = arrayOf(
-                Manifest.permission.CAMERA,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-            ActivityCompat.requestPermissions(this, permissions, 100)
-        }
-
+        val permissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        ActivityCompat.requestPermissions(this, permissions, 100)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

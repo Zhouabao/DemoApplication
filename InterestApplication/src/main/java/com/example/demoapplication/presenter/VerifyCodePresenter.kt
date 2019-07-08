@@ -51,7 +51,10 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 override fun onNext(t: BaseResp<Array<String>?>) {
                     super.onNext(t)
                     Log.i("retrofit", t.toString())
-                    mView.onGetVerifyCode(t)
+                    if (t.code == 200)
+                        mView.onGetVerifyCode(t)
+                    else
+                        mView.onError(t.msg)
                 }
             })
 

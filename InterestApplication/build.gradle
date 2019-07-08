@@ -23,10 +23,6 @@ android {
             exclude 'META-INF/rxjava.properties'
         }
 
-        ndk {
-            // 如果使用的是商业版，只能使用armeabi架构
-            abiFilters "armeabi"
-        }
 
     }
     buildTypes {
@@ -74,7 +70,6 @@ dependencies {
 
 
 //    implementation 'ckrjfrog.Page:PageView:1.2.7'
-    compile(name: 'LiteAVSDK_Professional_6.5.7272', ext: 'aar')
     //年龄选择进度条
     implementation 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'
 
