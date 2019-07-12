@@ -11,14 +11,18 @@ data class LoginBean(
 )
 
 data class Userinfo(
-    val avatar: String,
-    val birth: Int,
-    val gender: Int,
-    val nickname: String
+    val avatar: String?,
+    val birth: Int?,
+    val gender: Int?,
+    val nickname: String?
 )
 
 data class TagBean(
-    var icon: String,
-    var tagId: Int,
-    var tagTitle: String
+    var id: Int?,
+    var title: String?
 )
+data class UserBean(
+    var taglist: MutableList<TagBean?>?,
+    var userinfo: Userinfo?
+)
+

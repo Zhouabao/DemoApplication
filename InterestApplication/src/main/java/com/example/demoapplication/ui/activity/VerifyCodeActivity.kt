@@ -11,6 +11,8 @@ import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.presenter.VerifyCodePresenter
 import com.example.demoapplication.presenter.view.VerifyCodeView
+import com.example.demoapplication.utils.UserManager
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -110,26 +112,26 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
             SPUtils.getInstance(Constants.SPNAME).put("token", data.token)
             SPUtils.getInstance(Constants.SPNAME).put("accid", data.accid)
 
-            if (data.userinfo != null && data.userinfo.nickname.isEmpty()) {
-                if (data.taglist == null || data.taglist.isEmpty())
-                    SPUtils.getInstance(Constants.SPNAME).put("taglist", false)
+            if (data.userinfo != null && data.userinfo.nickname.isNullOrEmpty()) {
                 startActivity<SetInfoActivity>()
             } else {
-                SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo!!.nickname)
-                SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo!!.avatar)
-                SPUtils.getInstance(Constants.SPNAME).put("gender", data.userinfo!!.gender)
-                SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo!!.birth)
-                startActivity<MainActivity>()
-                finish()
+                UserManager.saveUserInfo(data)
+                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isEmpty()) {
+                    startActivity<LabelsActivity>()
+                } else {
+                    AppManager.instance.finishAllActivity()
+                    startActivity<MainActivity>()
+
+                }
             }
         }
     }
 
 
-    override fun onGetVerifyCode(data: BaseResp<Array<String>?>) {
-            tvPhone.text = "已发送至 $phone"
-            countVerifyCodeTime.isEnabled = false
-            onCountTime()
+    override fun onGetVerifyCode(data: BaseResp<Any?>) {
+        tvPhone.text = "已发送至 $phone"
+        countVerifyCodeTime.isEnabled = false
+        onCountTime()
     }
 
 }

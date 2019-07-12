@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
-import com.example.demoapplication.model.Label
-import kotlinx.android.synthetic.main.item_label.view.*
+import com.example.demoapplication.model.LabelBean
+import kotlinx.android.synthetic.main.item_label_match.view.*
 
 /**
  *    author : ZFM
@@ -36,13 +36,13 @@ class MatchLabelAdapter(var context: Context) : RecyclerView.Adapter<RecyclerVie
     }
 
     //数据集合
-    var dataList: MutableList<Label> = mutableListOf()
+    var dataList: MutableList<LabelBean> = mutableListOf()
 
     /*
         设置数据
         Presenter处理过为null的情况，所以为不会为Null
      */
-    fun setData(sources: MutableList<Label>) {
+    fun setData(sources: MutableList<LabelBean>) {
         dataList = sources
         notifyDataSetChanged()
     }
@@ -71,7 +71,7 @@ class MatchLabelAdapter(var context: Context) : RecyclerView.Adapter<RecyclerVie
             mItemClickListener?.onItemClick(holder.itemView, position)
         }
         if (holder is ViewHolder) {
-            holder.itemView.labelTv.text = dataList[position - 1].name
+            holder.itemView.labelTv.text = dataList[position - 1].title
             holder.itemView.labelTv.isChecked = dataList[position - 1].checked
         }
 

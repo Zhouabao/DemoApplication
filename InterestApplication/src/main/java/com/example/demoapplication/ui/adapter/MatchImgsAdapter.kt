@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_match_roundimg.view.*
  *    desc   : 加载用户多张图片的adapter
  *    version: 1.0
  */
-class MatchImgsAdapter(var context: Context, private var datas: MutableList<Int>) :
+class MatchImgsAdapter(var context: Context, private var datas: MutableList<String>) :
     RecyclerView.Adapter<MatchImgsAdapter.ViewHolder>() {
 
 

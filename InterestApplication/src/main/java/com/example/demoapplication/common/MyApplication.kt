@@ -1,18 +1,31 @@
 package com.example.demoapplication.common
 
+import com.blankj.utilcode.util.CrashUtils
+import com.example.demoapplication.R
 import com.kotlin.base.common.BaseApplication
 import com.mob.MobSDK
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter
+import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
 
 class MyApplication : BaseApplication() {
-    val ugcLicenseUrl = "http://license.vod2.myqcloud.com/license/v1/09557a438c98b1e9e28a6d0c3b052ecc/TXUgcSDK.licence"
-    val ugcKey = "dcede96f01ea0cb45e1bd7a3017ea144"
+    init {
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
+            layout.setPrimaryColorsId(R.color.colorWhite)
+            ClassicsHeader(context)
+        }
+        SmartRefreshLayout.setDefaultRefreshFooterCreator { context, layout ->
+            ClassicsFooter(context).setDrawableSize(20F)
+        }
+    }
 
 
     override fun onCreate() {
         super.onCreate()
         MobSDK.init(this)
+        CrashUtils.init()
         configUnits()
         configPlayer()
 

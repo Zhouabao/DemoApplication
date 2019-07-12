@@ -28,9 +28,32 @@ class LabelAdapter(context: Context) : BaseRecyclerViewAdapter<LabelBean, LabelA
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
         val model = dataList[position]
+        if (model.checked) {
+            holder.itemView.llroot.setBackgroundResource(R.drawable.cb_label_checked)
+            holder.itemView.checkedIcon.visibility = View.VISIBLE
+            holder.itemView.labelTv.setTextColor(mContext.resources.getColor(R.color.colorOrange))
+        } else {
+            holder.itemView.llroot.setBackgroundResource(R.drawable.cb_label_unchecked)
+            holder.itemView.checkedIcon.visibility = View.GONE
+            holder.itemView.labelTv.setTextColor(mContext.resources.getColor(R.color.colorBlackTitle))
+        }
 
+//        holder.itemView.onClick {
+//            mItemClickListener?.onItemClick(model, position)
+//        }
+//
+//        if (model.checked) {
+//            holder.itemView.llroot.setBackgroundResource(R.drawable.cb_label_checked)
+//            holder.itemView.checkedIcon.visibility = View.VISIBLE
+//            holder.itemView.labelTv.isChecked = true
+//        } else {
+//            holder.itemView.llroot.setBackgroundResource(R.drawable.cb_label_unchecked)
+//            holder.itemView.checkedIcon.visibility = View.GONE
+//            holder.itemView.labelTv.isChecked = false
+//        }
+
+//        holder.itemView.labelTv.isChecked = model.checked
         holder.itemView.labelTv.text = model.title
-        holder.itemView.labelTv.isChecked = model.checked
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)

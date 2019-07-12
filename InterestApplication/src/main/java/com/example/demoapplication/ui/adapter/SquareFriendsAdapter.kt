@@ -4,7 +4,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.model.FriendBean
 
 /**
  *    author : ZFM
@@ -12,12 +12,12 @@ import com.example.demoapplication.model.MatchBean
  *    desc   :
  *    version: 1.0
  */
-class SquareFriendsAdapter(datas: MutableList<MatchBean>) :
-    BaseQuickAdapter<MatchBean, BaseViewHolder>(R.layout.item_square_friends, datas) {
+class SquareFriendsAdapter(datas: MutableList<FriendBean>) :
+    BaseQuickAdapter<FriendBean, BaseViewHolder>(R.layout.item_square_friends, datas) {
 
-    override fun convert(helper: BaseViewHolder, item: MatchBean) {
-        helper.setText(R.id.friendName, item.name)
+    override fun convert(helper: BaseViewHolder, item: FriendBean) {
+        helper.setText(R.id.friendName, item.nickname.toString())
 
-        GlideUtil.loadImg(mContext, item.imgs[0], helper.getView(R.id.friendsIv))
+        GlideUtil.loadImg(mContext, item.avatar, helper.getView(R.id.friendsIv))
     }
 }

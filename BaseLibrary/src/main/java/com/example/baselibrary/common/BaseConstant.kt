@@ -8,7 +8,7 @@ class BaseConstant{
         //七牛服务地址
         const val IMAGE_SERVER_ADDRESS = "http://osea2fxp7.bkt.clouddn.com/"
         //本地服务器地址
-        const val SERVER_ADDRESS = "https://devppsns.duluduludala.com//openApi/android/ppsns/v1/huawei/1/"
+        const val SERVER_ADDRESS = "https://devppsns.duluduludala.com/ppsns/"
         //SP表名
         const val TABLE_PREFS = "Kotlin_mall"
         //Token Key

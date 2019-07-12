@@ -13,7 +13,7 @@ data class MatchBean(
     var name: String,
     var age: Int,
     var sex: Int,
-    var imgs: MutableList<Int>,
+    var imgs: MutableList<String>,
     var type: Int = 1,
     var zan: Boolean = false
 ) :
@@ -28,3 +28,83 @@ data class MatchBean(
         const val AUDIO = 3
     }
 }
+
+
+data class SquareListBean(
+    var `data`: MutableList<SquareBean>,
+    var current_page: String?,
+    var last_page: Int?,
+    var per_page: Int?,
+    var total: Int?
+)
+
+/**
+ * 广场列表数据
+ */
+data class SquareBean(
+    var isPlayAudio: Boolean = false,
+    var isvip: Int?,//是否会员 1是 0 不是
+    var icon: String?,
+    var accid: String?,
+    var audio_json: MutableList<String>?,
+    var avatar: String?,
+    var city_name: String?,
+    var comment_cnt: Int?,
+    var create_time: String?,
+    var descr: String?,
+    var id: Int?,
+    var isliked: Int?,
+    var iscollected: Int?,//0没收藏 1收藏
+    var like_cnt: Int?,
+    var member_level: Int?,
+    var nickname: String?,
+    var out_time: String?,
+    var photo_json: MutableList<String>?,
+    var province_name: String?,
+    var share_cnt: Int?,
+    var tag_id: Int?,
+    var title: String?,
+    var video_json: MutableList<String>?,
+    var type: Int = 1,
+    var duration: Long = 0L
+) :
+    Serializable, MultiItemEntity {
+
+
+    override fun getItemType(): Int {
+        return type
+    }
+
+    companion object {
+        const val PIC = 1
+        const val VIDEO = 2
+        const val AUDIO = 3
+    }
+}
+
+// SquareBean(
+// isvip=1,
+// accid=0ca42c0d253ebee3f2bb197fbfcc5527,
+// audioJson=null,
+// avatar=/,
+// cityName=null,
+// commentCnt=0,
+// createTime=null,
+// descr=1111,
+// icon=,
+// id=1,
+// isliked=1,
+// likeCnt=0,
+// memberLevel=0,
+// nickname=, outTime=null, photoJson=null, provinceName=null, shareCnt=0, tagId=0, title=测试3, videoJson=null, type=0),
+
+
+/**
+ * 广场列表好友数据
+ */
+data class FriendBean(
+    var accid: String?,
+    var avatar: String?,
+    var id: Int?,
+    var nickname: String?
+)

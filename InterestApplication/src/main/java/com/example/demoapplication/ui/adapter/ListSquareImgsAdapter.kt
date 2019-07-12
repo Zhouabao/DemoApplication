@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.item_match_detail_img.view.*
  */
 class ListSquareImgsAdapter(
     var context: Context,
-    private var datas: MutableList<Int>,
+    private var datas: MutableList<String>,
     private var fullScreenWidth: Boolean = false
 ) :
     RecyclerView.Adapter<ListSquareImgsAdapter.ViewHolder>() {

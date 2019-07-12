@@ -35,7 +35,7 @@ abstract open class BaseMvpFragment<T : BasePresenter<*>> : BaseFragment(), Base
     */
     override fun showLoading() {
         //mLoadingDialog.showLoading()
-        toast("展示加载框")
+//        toast("展示加载框")
     }
 
     /*
@@ -43,7 +43,7 @@ abstract open class BaseMvpFragment<T : BasePresenter<*>> : BaseFragment(), Base
      */
     override fun hideLoading() {
         //mLoadingDialog.hideLoading()
-        toast("隐藏加载框")
+//        toast("隐藏加载框")
     }
 
     /*

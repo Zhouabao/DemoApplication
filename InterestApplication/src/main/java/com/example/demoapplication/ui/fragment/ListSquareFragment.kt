@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
-import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.ui.activity.SquareDetailActivity
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import kotlinx.android.synthetic.main.fragment_list_square.*
@@ -42,7 +42,7 @@ class ListSquareFragment : Fragment() {
         listSquareRv.layoutManager = manager1
         listSquareRv.adapter = listSquareAdapter
         listSquareAdapter.setOnItemChildClickListener { adapter, view, position ->
-            if (view == squareUserPics)
+            if (view == squareUserPics1)
                 startActivity<SquareDetailActivity>()
         }
         initData()
@@ -50,78 +50,9 @@ class ListSquareFragment : Fragment() {
 
 
     //用户数据源
-    var userList: MutableList<MatchBean> = mutableListOf()
+    var userList: MutableList<SquareBean> = mutableListOf()
 
     private fun initData() {
-        userList.add(
-            MatchBean(
-                "Lily",
-                23,
-                1,
-                mutableListOf(
-                    R.drawable.img_avatar_01
-                ), 1
-            )
-        )
-        userList.add(
-            MatchBean(
-                "Username",
-                28,
-                2,
-                mutableListOf(
-                    R.drawable.img_avatar_02,
-                    R.drawable.img_avatar_03,
-                    R.drawable.img_avatar_04,
-                    R.drawable.img_avatar_05,
-                    R.drawable.img_avatar_06,
-                    R.drawable.img_avatar_07,
-                    R.drawable.img_avatar_05,
-                    R.drawable.img_avatar_06
-                ), 2
-            )
-        )
-        userList.add(
-            MatchBean(
-                "Shirly",
-                24,
-                2,
-                mutableListOf(
-                    R.drawable.img_avatar_03,
-                    R.drawable.img_avatar_04,
-                    R.drawable.img_avatar_05,
-                    R.drawable.img_avatar_06,
-                    R.drawable.img_avatar_07,
-                    R.drawable.img_avatar_05,
-                    R.drawable.img_avatar_06
-                ), 2
-            )
-        )
-        userList.add(
-            MatchBean(
-                "爱的魔力圈",
-                19,
-                1,
-                mutableListOf(
-                    R.drawable.img_avatar_04,
-                    R.drawable.img_avatar_05,
-                    R.drawable.img_avatar_06,
-                    R.drawable.img_avatar_07,
-                    R.drawable.img_avatar_05,
-                    R.drawable.img_avatar_06
-                ), 3
-            )
-        )
-        userList.add(
-            MatchBean(
-                "Lily",
-                23,
-                1,
-                mutableListOf(
-                    R.drawable.img_avatar_03, R.drawable.img_avatar_05,
-                    R.drawable.img_avatar_06
-                ), 1
-            )
-        )
 
         listSquareAdapter.addData(userList)
 

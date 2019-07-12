@@ -109,7 +109,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
      */
     override fun onUploadUserInfoResult(uploadResult: Boolean) {
         if (uploadResult) {
-            startActivity<LabelsActivity>("params" to params)
+            startActivity<LabelsActivity>()
         }
     }
 
@@ -180,11 +180,11 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                         params["birth"] = "${TimeUtils.date2Millis(
                             SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(userBirthTv.text.toString())
                         )}"
-                        params["timestamp"] = "${TimeUtils.getNowMills()}"
-//                        params["sign"] = ""
-//                        params["tags"] = ""
-//                        mPresenter.uploadUserInfo(params)
-                        startActivity<LabelsActivity>("params" to params)
+                        params["_timestamp"] = "${TimeUtils.getNowMills()}"
+                        params["sign"] = ""
+                        params["tags"] = ""
+                        mPresenter.uploadUserInfo(params)
+//                        startActivity<LabelsActivity>("params" to params)
                         it.cancel()
                     }
                     .setCancelClickListener {

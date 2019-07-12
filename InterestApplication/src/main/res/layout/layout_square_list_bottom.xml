@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <com.example.demoapplication.widgets.ExpandableTextView
+            android:id="@+id/squareContent1"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/colorBlack22"
+            android:textSize="14sp"
+            android:layout_marginLeft="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品"/>
+    <!--
+
+        <TextView
+                android:id="@+id/squareContent1"
+                android:layout_marginTop="10dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:lines="3"
+                android:textColor="@color/colorBlack22"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.3"
+                android:ellipsize="end"
+                android:lineSpacingExtra="3dp"
+                android:layout_marginLeft="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品"
+                />
+
+        <TextView
+                android:id="@+id/squareMoreContentBtn1"
+                android:text="展开"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@id/squareContent1"
+                app:layout_constraintTop_toBottomOf="@id/squareContent1"/>
+    -->
+
+
+    <TextView
+            android:id="@+id/squareDianzanBtn1"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/icon_dianzan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack22"
+            android:textSize="14sp"
+            android:layout_marginLeft="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/squareContent1"
+            tools:text="123"/>
+
+
+    <TextView
+            android:id="@+id/squareCommentBtn1"
+            android:drawableLeft="@drawable/icon_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack22"
+            android:textSize="14sp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+            app:layout_constraintStart_toEndOf="@id/squareDianzanBtn1"
+            app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
+            tools:text="123"/>
+
+
+    <TextView
+            android:id="@+id/squareZhuanfaBtn1"
+            android:drawableLeft="@drawable/icon_zhuanfa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack22"
+            android:textSize="14sp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+            app:layout_constraintStart_toEndOf="@id/squareCommentBtn1"
+            app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
+            tools:text="123"/>
+
+    <ImageView
+            android:id="@+id/squareMoreBtn1"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/icon_more_black"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

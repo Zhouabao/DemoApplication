@@ -44,7 +44,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     private val matchBean by lazy { intent.getSerializableExtra("matchBean") as MatchBean }
     private val thumbAdapter by lazy { DetailThumbAdapter(this) }
 
-    var photos: MutableList<Int> = mutableListOf()
+    var photos: MutableList<String> = mutableListOf()
     private val photosAdapter by lazy { MatchDetailImgsAdapter(this, photos) }
 
     private val labelsAdapter by lazy { MatchDetailLabelAdapter(this) }

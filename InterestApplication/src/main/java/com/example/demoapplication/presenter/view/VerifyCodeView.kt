@@ -15,7 +15,7 @@ interface VerifyCodeView : BaseView {
 
 
     //获取验证码结果
-    fun onGetVerifyCode(data: BaseResp<Array<String>?>)
+    fun onGetVerifyCode(data: BaseResp<Any?>)
 
 
     //倒计时

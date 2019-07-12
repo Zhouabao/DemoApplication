@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.baselibrary.R;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -48,6 +49,20 @@ public class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .apply(getOptions())
+                .into(targetImg);
+    }
+
+
+    /**
+     * 返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
+     * 传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
+     * 切记不要胡乱强转！
+     */
+
+    public static void loadAvatorImg(Context context, Object url, ImageView targetImg) {
+        Glide.with(context)
+                .load(url)
+                .apply(getOptions().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
                 .into(targetImg);
     }
 

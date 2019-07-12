@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.mob.sdk'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
 android {
     compileSdkVersion compile_sdk_version
     buildToolsVersion build_tools_version
@@ -22,7 +22,10 @@ android {
             //解决编译时com.android.builder.merge.DuplicateRelativeFileException: More than one file was found with OS independent path 'META-INF/rxjava.properties'这个错误
             exclude 'META-INF/rxjava.properties'
         }
-
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi', 'armeabi-v7a', 'x86'
+        }
 
     }
     buildTypes {
@@ -40,6 +43,12 @@ MobSDK {
 
     ShareSDK {}
 
+}
+
+greendao {
+    schemaVersion 1
+    daoPackage 'com.demoapplication.greendao.gen'
+    targetGenDir 'src.main.java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/
 }
 
 dependencies {
@@ -68,6 +77,9 @@ dependencies {
     //recyclerview的animation
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
 
+
+    //GreenDao
+    implementation 'org.greenrobot:greendao:3.2.2' // add library
 
 //    implementation 'ckrjfrog.Page:PageView:1.2.7'
     //年龄选择进度条

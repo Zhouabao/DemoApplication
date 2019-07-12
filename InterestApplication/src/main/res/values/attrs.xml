@@ -4,7 +4,7 @@
         <attr name="radius" format="reference|dimension" />
     </declare-styleable>
 
-
+<!--验证码框-->
     <declare-styleable name="VerificationView">
         <attr name="vTextSize" format="dimension"/>
         <attr name="vIsTextBold" format="boolean"/>
@@ -14,5 +14,13 @@
         <attr name="vCursorDrawable" format="reference"/>
         <attr name="vBackgroundColor" format="color"/>
         <attr name="vAutoShowInputBoard" format="boolean"/>
+    </declare-styleable>
+
+    <!--频谱-->
+    <declare-styleable name="voisePlayingIconAttr">
+        <attr name="pointer_color" format="color" />
+        <attr name="pointer_num" format="integer" />
+        <attr name="pointer_width" format="float" />
+        <attr name="pointer_speed" format="integer" />
     </declare-styleable>
 </resources>

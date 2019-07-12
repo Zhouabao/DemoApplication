@@ -1,11 +1,12 @@
 package com.example.demoapplication.presenter.view
 
 import com.example.demoapplication.model.LabelBean
+import com.example.demoapplication.model.LoginBean
 import com.kotlin.base.presenter.view.BaseView
 
 interface LabelsView : BaseView {
 
-    fun onGetLabelsResult(labels: MutableList<LabelBean>?)
+    fun onGetLabelsResult(labels: MutableList<LabelBean>)
 
 
     /**
@@ -17,5 +18,13 @@ interface LabelsView : BaseView {
     /**
      * 清除子级标签
      */
-    fun onRemoveSubLablesResult(labels: LabelBean,parentLevel:Int)
+    fun onRemoveSubLablesResult(labels: LabelBean, parentLevel: Int)
+
+
+    /**
+     * 标签上传结果
+     */
+    fun onUploadLabelsResult(result: Boolean, userBean: LoginBean?)
+
+
 }

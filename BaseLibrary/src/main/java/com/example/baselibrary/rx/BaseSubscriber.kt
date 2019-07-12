@@ -7,7 +7,7 @@ import rx.Subscriber
 /*
     Rx订阅者默认实现
  */
-open class BaseSubscriber<T>(val baseView:BaseView):Subscriber<T>() {
+open class BaseSubscriber<T>(val baseView: BaseView) : Subscriber<T>() {
 
     override fun onCompleted() {
         baseView.hideLoading()
@@ -22,7 +22,7 @@ open class BaseSubscriber<T>(val baseView:BaseView):Subscriber<T>() {
         if (e is BaseException) {
             baseView.onError(e.msg)
         } else {
-            baseView.onError("服务器异常！请重试")
+            baseView.onError(e?.message ?: "服务器异常！请重试")
         }
     }
 }

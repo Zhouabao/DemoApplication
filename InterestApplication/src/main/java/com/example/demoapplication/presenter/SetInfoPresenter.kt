@@ -50,8 +50,8 @@ class SetInfoPresenter : BasePresenter<SetInfoView>() {
         QNUploadManager.getInstance().put(
             filePath, imagePath, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
             { key, info, response ->
-                Log.i("retrofit", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
-                Log.i("retrofit", "key=$key\ninfo=$info\nresponse=$response")
+                Log.d("OkHttp", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
+                Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null) {
                     if (!info.isOK) {
                         mView.onError("头像上传失败！")
@@ -69,11 +69,10 @@ class SetInfoPresenter : BasePresenter<SetInfoView>() {
 
         RetrofitFactory.instance.create(Api::class.java)
             .setProfile(params)
-            .excute(object : BaseSubscriber<BaseResp<String>>(mView) {
-                override fun onNext(t: BaseResp<String>) {
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
-//                    if (t.code == 200) {
-                    if (t.code == 400) {
+                    if (t.code == 200) {
                         mView.onUploadUserInfoResult(true)
                     } else {
                         mView.onError(t.msg)

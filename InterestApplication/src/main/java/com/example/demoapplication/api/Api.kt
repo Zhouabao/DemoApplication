@@ -1,8 +1,7 @@
 package com.example.demoapplication.api
 
-import com.example.demoapplication.model.CheckBean
-import com.example.demoapplication.model.LabelBean
-import com.example.demoapplication.model.LoginBean
+import com.example.demoapplication.common.Constants
+import com.example.demoapplication.model.*
 import com.kotlin.base.data.protocol.BaseResp
 import okhttp3.ResponseBody
 import retrofit2.http.*
@@ -18,14 +17,14 @@ interface Api {
     /**
      * 发送验证码
      */
-    @POST("Open_Api/SendSms")
-    fun getVerifyCode(@Query("phone") phone: String, @Query("scene") scene: String): Observable<BaseResp<Array<String>?>>
+    @POST("Open_Api/SendSms${Constants.END_BASE_URL}")
+    fun getVerifyCode(@Query("phone") phone: String, @Query("scene") scene: String): Observable<BaseResp<Any?>>
 
 
     /**
      * 检查验证码是否一致,即登录
      */
-    @POST("Open_Api/LoginOrAlloc")
+    @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")
     fun loginOrAlloc(
         @Query("uni_account") phone: String, @Query("type") scene: String = "1", @Query("password") password: String = "", @Query(
             "code"
@@ -36,14 +35,14 @@ interface Api {
     /**
      * 验证短信(已经过期)
      */
-    @POST("Open_Api/CheckSms")
+    @POST("Open_Api/CheckSms${Constants.END_BASE_URL}")
     fun checkVerifyCode(@Path("phone") phone: String, @Path("scene") scene: String, @Path("code") code: String): Observable<BaseResp<CheckBean>>
 
 
     /**
      * 验证昵称是否正确
      */
-    @POST("open_api/nickFilteRrule")
+    @POST("open_api/nickFilteRrule${Constants.END_BASE_URL}")
     fun checkNickName(): Observable<BaseResp<Array<String>>>
 
 
@@ -51,16 +50,56 @@ interface Api {
      * 上传个人信息
      */
     @FormUrlEncoded
-    @POST("member_info/SetProfile")
-    fun setProfile(@FieldMap params: Map<String, String>): Observable<BaseResp<String>>
+    @POST("member_info/SetProfile${Constants.END_BASE_URL}")
+    fun setProfile(@FieldMap params: Map<String, String>): Observable<BaseResp<Any?>>
 
 
     /**
      * 获取标签列表
      */
     @FormUrlEncoded
-    @POST("tags/TagsLists")
-    fun getTagLists(@FieldMap params: Map<String, String>): Observable<BaseResp<MutableList<LabelBean>>>
+    @POST("tags/TagsLists${Constants.END_BASE_URL}")
+    fun getTagLists(@FieldMap params: Map<String, String>): Observable<BaseResp<Labels>>
+
+
+    /**
+     * 获取标签列表
+     */
+    @FormUrlEncoded
+    @POST("tags/addTag${Constants.END_BASE_URL}")
+    fun uploadTagLists(@FieldMap params: HashMap<String, String>, @Field("tags[]") idList: Array<Int?>): Observable<BaseResp<LoginBean?>>
+
+
+    /**
+     * 获取广场好友列表
+     */
+    @FormUrlEncoded
+    @POST("square/squareFriends${Constants.END_BASE_URL}")
+    fun getSquareFriends(@FieldMap params: HashMap<String, String>): Observable<BaseResp<MutableList<FriendBean?>?>>
+
+
+    /**
+     * 获取广场好友列表
+     */
+    @FormUrlEncoded
+    @POST("square/squareLists${Constants.END_BASE_URL}")
+    fun getSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean>>
+
+
+    /**
+     * 广场点赞/取消点赞
+     */
+    @FormUrlEncoded
+    @POST("square/squareLikes${Constants.END_BASE_URL}")
+    fun getSquareLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 广场收藏
+     */
+    @FormUrlEncoded
+    @POST("square/squareCollect${Constants.END_BASE_URL}")
+    fun getSquareCollect(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     @GET

@@ -27,52 +27,69 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.PublishActivity">
-        </activity>
+        <activity
+                android:name=".ui.activity.PublishActivity"
+                android:launchMode="singleTask"/>
         <activity
                 android:name=".ui.activity.SquarePlayDetailActivity"
+                android:launchMode="singleTask"
                 android:windowSoftInputMode="adjustPan">
         </activity>
+
         <activity
                 android:name=".ui.activity.SquareDetailActivity"
+                android:launchMode="singleTask"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.chat.MatchSucceedActivity"
+                android:launchMode="singleTask"
+
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.MatchDetailActivity"
+                android:launchMode="singleTask"
+
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.UserBirthActivity"
+                android:launchMode="singleTask"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.LabelsActivity"
+                android:launchMode="singleTask"
                 android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <activity
                 android:name=".ui.activity.SetInfoActivity"
+                android:launchMode="singleTask"
                 android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".ui.activity.VerifyCodeActivity"
+                android:launchMode="singleTask"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.LoginActivity"
+                android:launchMode="singleTask"
                 android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".ui.activity.WelcomeActivity"
+                android:launchMode="singleTask"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.MainActivity">
+        <activity
+                android:name=".ui.activity.MainActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:screenOrientation="portrait"
+                android:launchMode="singleTask">
 
         </activity>
 

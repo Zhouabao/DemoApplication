@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 /*
     RecyclerViewAdapter基类
  */
-abstract class BaseRecyclerViewAdapter<T, VH : RecyclerView.ViewHolder>(var mContext: Context) : RecyclerView.Adapter<VH>() {
+abstract class BaseRecyclerViewAdapter<T, VH : RecyclerView.ViewHolder>(var mContext: Context) :
+    RecyclerView.Adapter<VH>() {
 
     //ItemClick事件
     var mItemClickListener: OnItemClickListener<T>? = null
@@ -21,6 +22,13 @@ abstract class BaseRecyclerViewAdapter<T, VH : RecyclerView.ViewHolder>(var mCon
     fun setData(sources: MutableList<T>) {
         dataList = sources
         notifyDataSetChanged()
+    }
+
+
+    fun addData(position: Int, data: T) {
+        dataList.add(position, data)
+        notifyItemInserted(position)//通知演示插入动画
+        notifyItemRangeChanged(position, dataList.size - position)//通知数据与界面重新绑定
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {

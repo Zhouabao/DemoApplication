@@ -47,8 +47,8 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
         RetrofitFactory.instance
             .create(Api::class.java)
             .getVerifyCode(mobile, "register")
-            .excute(object : BaseSubscriber<BaseResp<Array<String>?>>(mView) {
-                override fun onNext(t: BaseResp<Array<String>?>) {
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
                     Log.i("retrofit", t.toString())
                     if (t.code == 200)

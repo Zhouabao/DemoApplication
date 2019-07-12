@@ -80,8 +80,8 @@ class ListSquareAdapter(var context: Context) : RecyclerView.Adapter<RecyclerVie
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is PicViewHolder -> {
-                holder.itemView.squareUserPics.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                holder.itemView.squareUserPics.adapter = ListSquareImgsAdapter(context, data[position].imgs)
+                holder.itemView.squareUserPics1.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                holder.itemView.squareUserPics1.adapter = ListSquareImgsAdapter(context, data[position].imgs)
 
                 ToastUtils.showShort("图")
             }

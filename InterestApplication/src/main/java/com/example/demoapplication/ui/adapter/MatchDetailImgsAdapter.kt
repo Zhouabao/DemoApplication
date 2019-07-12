@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_match_detail_img.view.*
  *    desc   : Y用户详情加载用户多张图片的adapter
  *    version: 1.0
  */
-class MatchDetailImgsAdapter(var context: Context, private var datas: MutableList<Int>) :
+class MatchDetailImgsAdapter(var context: Context, private var datas: MutableList<String>) :
     RecyclerView.Adapter<MatchDetailImgsAdapter.ViewHolder>() {
 
 

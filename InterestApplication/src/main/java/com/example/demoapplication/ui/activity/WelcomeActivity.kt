@@ -42,10 +42,10 @@ class WelcomeActivity : BaseActivity() {
         }
 
         //判断是否有登录
-//        if (SPUtils.getInstance(Constants.SPNAME).getString("token").isNotEmpty()) {
-//            startActivity<MainActivity>()
-//            finish()
-//        }
+        if (SPUtils.getInstance(Constants.SPNAME).getString("token").isNotEmpty()) {
+            startActivity<MainActivity>()
+            finish()
+        }
 
 
         //手机登录

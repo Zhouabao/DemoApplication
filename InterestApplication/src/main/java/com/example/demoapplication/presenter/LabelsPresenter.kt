@@ -1,7 +1,9 @@
 package com.example.demoapplication.presenter
 
 import com.example.demoapplication.api.Api
-import com.example.demoapplication.model.LabelBean
+import com.example.demoapplication.model.Labels
+import com.example.demoapplication.model.LoginBean
+import com.example.demoapplication.model.UserBean
 import com.example.demoapplication.presenter.view.LabelsView
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -17,40 +19,33 @@ class LabelsPresenter : BasePresenter<LabelsView>() {
     fun getLabels(params: HashMap<String, String>) {
         RetrofitFactory.instance.create(Api::class.java)
             .getTagLists(params)
-            .excute(object : BaseSubscriber<BaseResp<MutableList<LabelBean>>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<LabelBean>>) {
+            .excute(object : BaseSubscriber<BaseResp<Labels>>(mView) {
+                override fun onNext(t: BaseResp<Labels>) {
                     super.onNext(t)
-                    t.data[0].checked = true
-                    mView.onGetLabelsResult(t.data)
+                    mView.onGetLabelsResult(t.data.data)
                 }
             })
+    }
 
 
-//        mView.onGetLabelsResult(
-//            mutableListOf(
-//                Label("精选", checked = true, parId = 0),
-//                Label("PlayStation", checked = false, parId = 1),
-//                Label("游戏", checked = false, parId = 2)
-////                Label("主机"),
-////                Label("PlayStation"),
-////                Label("独立游戏"),
-////                Label("XBOX"),
-////                Label("精选"),
-////                Label("PlayStation"),
-////                Label("游戏"),
-////                Label("主机"),
-////                Label("PlayStation"),
-////                Label("独立游戏"),
-////                Label("XBOX"), Label("精选"),
-////                Label("PlayStation"),
-////                Label("游戏"),
-////                Label("主机"),
-////                Label("PlayStation"),
-////                Label("独立游戏"),
-////                Label("XBOX")
-//
-//            )
-//        )
+    /**
+     * 上传用户标签
+     */
+    fun uploadLabels(params: HashMap<String, String>, tags: Array<Int?>) {
+
+        RetrofitFactory.instance.create(Api::class.java)
+            .uploadTagLists(params, tags)
+            .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {
+                override fun onNext(t: BaseResp<LoginBean?>) {
+                    super.onNext(t)
+                    if (t.code == 200) {
+                        mView.onUploadLabelsResult(true,t.data)
+                    } else {
+                        mView.onError(t.msg)
+                    }
+                }
+
+            })
     }
 
 

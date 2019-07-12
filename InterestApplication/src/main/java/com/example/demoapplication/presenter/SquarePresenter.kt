@@ -1,7 +1,16 @@
 package com.example.demoapplication.presenter
 
+import android.app.Activity
+import com.example.demoapplication.api.Api
+import com.example.demoapplication.model.FriendBean
+import com.example.demoapplication.model.SquareListBean
 import com.example.demoapplication.presenter.view.SquareView
+import com.example.demoapplication.utils.UserManager
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseSubscriber
 
 /**
  *    author : ZFM
@@ -10,4 +19,85 @@ import com.kotlin.base.presenter.BasePresenter
  *    version: 1.0
  */
 class SquarePresenter : BasePresenter<SquareView>() {
+    /**
+     * 获取广场列表中的好友列表
+     */
+    fun getFrinedsList(params: HashMap<String, String>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getSquareFriends(params)
+            .excute(object : BaseSubscriber<BaseResp<MutableList<FriendBean?>?>>(mView) {
+                override fun onNext(t: BaseResp<MutableList<FriendBean?>?>) {
+                    super.onNext(t)
+                    if (t.code == 200 && t.data != null)
+                        mView.onGetFriendsListResult(t.data ?: mutableListOf<FriendBean?>())
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    }
+                }
+            })
+    }
+
+    /**
+     * 获取广场列表
+     */
+    fun getSquareList(params: HashMap<String, Any>, isRefresh: Boolean) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getSquareList(params)
+            .excute(object : BaseSubscriber<BaseResp<SquareListBean>>(mView) {
+                override fun onNext(t: BaseResp<SquareListBean>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onGetSquareListResult(t.data, true, isRefresh)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGetSquareListResult(t.data, false, isRefresh)
+                    }
+                }
+            })
+    }
+
+
+    /**
+     * 点赞 取消点赞
+     * 1 点赞 2取消点赞
+     */
+    fun getSquareLike(params: HashMap<String, Any>, position: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getSquareLike(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200) {
+                        mView.onGetSquareLikeResult(position, true)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGetSquareLikeResult(position, false)
+                    }
+
+                }
+            })
+    }
+
+    /**
+     * 点赞 取消点赞
+     * 1 收藏 2取消收藏
+     */
+    fun getSquareCollect(params: HashMap<String, Any>, position: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getSquareCollect(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onGetSquareCollectResult(position, t)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGetSquareCollectResult(position, t)
+                    }
+                }
+            })
+    }
 }

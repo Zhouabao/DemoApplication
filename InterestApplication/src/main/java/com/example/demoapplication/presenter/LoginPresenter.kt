@@ -34,8 +34,8 @@ class LoginPresenter : BasePresenter<LoginView>() {
         RetrofitFactory.instance
             .create(Api::class.java)
             .getVerifyCode(mobile, "register")
-            .excute(object : BaseSubscriber<BaseResp<Array<String>?>>(mView) {
-                override fun onNext(t: BaseResp<Array<String>?>) {
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
                     Log.i("retrofit", t.toString())
                     super.onNext(t)
                 }

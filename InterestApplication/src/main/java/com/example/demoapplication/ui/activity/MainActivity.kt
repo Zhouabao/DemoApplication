@@ -2,11 +2,16 @@ package com.example.demoapplication.ui.activity
 
 import android.animation.Animator
 import android.os.Bundle
+import android.transition.Explode
 import android.view.View
+import android.view.Window
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.SPUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
+import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.NewMsgEvent
 import com.example.demoapplication.presenter.MainPresenter
 import com.example.demoapplication.presenter.view.MainView
@@ -40,6 +45,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     var fragments: MutableList<Fragment> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 设置一个exit transition
+        window?.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+        window?.enterTransition = Explode()
+        window?.exitTransition = Explode()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -55,6 +64,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         mPresenter = MainPresenter()
         mPresenter.mView = this
         mPresenter.context = this
+
+        GlideUtil.loadAvatorImg(this, SPUtils.getInstance(Constants.SPNAME).getString("avatar"), ivUserFace)
     }
 
 
@@ -82,8 +93,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
 
         })
-        tabMain.addTab(tabMain.newTab().setText("匹配"), true)
-        tabMain.addTab(tabMain.newTab().setText("发布"))
+        tabMain.addTab(tabMain.newTab().setText("匹配"))
+        tabMain.addTab(tabMain.newTab().setText("发布"), true)
 
     }
 

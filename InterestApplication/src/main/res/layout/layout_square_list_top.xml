@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/squareUserIv1"
+            android:src="@drawable/img_avatar_01"
+            android:layout_width="40dp"
+            android:layout_marginLeft="15dp"
+            android:layout_height="40dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+            android:id="@+id/squareUserVipIv1"
+            android:layout_marginLeft="40dp"
+            android:src="@drawable/icon_vip"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/squareUserName1"
+            tools:text="Kimberly Davis"
+            android:layout_marginLeft="9dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack22"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@id/squareUserVipIv1"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    <TextView
+            android:id="@+id/squareLocationAndTime1"
+            tools:text="北京市 10小时前"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack99"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/squareUserName1"
+            app:layout_constraintTop_toBottomOf="@id/squareUserName1"
+            />
+
+    <LinearLayout
+            android:id="@+id/squareChatBtn1"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/shape_rectangle_gray_white_15dp"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/squareLocationAndTime1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/squareUserName1">
+
+        <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_flash_small"
+                app:layout_constraintBottom_toBottomOf="@id/squareLocationAndTime1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/squareUserName1"/>
+
+        <TextView
+                android:text="聊天"
+                android:textColor="@color/colorOrange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="14sp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/squareLocationAndTime1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/squareUserName1"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

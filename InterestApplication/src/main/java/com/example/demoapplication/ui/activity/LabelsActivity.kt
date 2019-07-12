@@ -1,18 +1,24 @@
 package com.example.demoapplication.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import androidx.core.content.ContextCompat
+import com.blankj.utilcode.util.SPUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.LabelBean
+import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.presenter.LabelsPresenter
 import com.example.demoapplication.presenter.view.LabelsView
 import com.example.demoapplication.ui.adapter.LabelAdapter
+import com.example.demoapplication.utils.SharedPreferenceUtil
+import com.example.demoapplication.utils.UserManager
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.kotlin.base.common.BaseApplication
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
@@ -22,11 +28,7 @@ import org.jetbrains.anko.startActivity
 
 
 /**
- * 页面标签的选择和删除应当根据其父级标签来判定，
- * 如果是三级标签，就取消选中
- * 如果是二级标签，就取消选中其子级
- * 如果是一级标签，就取消选中子级和子级的子级
- * //todo 标签选中之后位置有点混乱
+ * 目前存在的问题是从发布进入标签选择要默认展开和选中已经选过的标签及其子级
  */
 class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnClickListener {
 
@@ -36,6 +38,8 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
     private lateinit var allLabels: MutableList<LabelBean>
     //拿一个集合来存储当前选中的标签
     private val checkedLabels: MutableList<LabelBean> = mutableListOf()
+    //拿一个集合来存储之前选中的标签
+    private val saveLabels: MutableList<LabelBean> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,14 +54,15 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
 
     }
 
+    //todo 此处的version应该要更改
     private fun getLabel() {
         val params = HashMap<String, String>()
-//        params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
-//        params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
-        params["accid"] = "e3a623fbef21dd5fc00b189cb9949ade"
-        params["token"] = "9ece2129f6400972bde861bd816ccca7"
+        params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
+        params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
+//        params["accid"] = Constants.ACCID
+//        params["token"] = Constants.TOKEN
         params["version"] = "${1}"
-        params["timestamp"] = "${System.currentTimeMillis()}"
+        params["_timestamp"] = "${System.currentTimeMillis()}"
         mPresenter.getLabels(params)
     }
 
@@ -65,7 +70,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
         btnBack.onClick {
             finish()
         }
-        completeLabelBtn.setOnClickListener(this)
+        completeLabelLL.setOnClickListener(this)
 
         val manager = FlexboxLayoutManager(this)
         //item的排列方向
@@ -81,7 +86,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
 
         adapter.setOnItemClickListener(object : BaseRecyclerViewAdapter.OnItemClickListener<LabelBean> {
             override fun onItemClick(item: LabelBean, position: Int) {
-//                adapter.labelList[position].checked = !item.checked
+//                adapter.dataList[position].checked = !item.checked
                 item.checked = !item.checked
                 adapter.notifyItemChanged(position)
                 updateCheckedLabels(item)
@@ -99,14 +104,36 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
     /**
      * 获取标签数据
      */
-    override fun onGetLabelsResult(labels: MutableList<LabelBean>?) {
-        if (labels != null && labels.size > 0) {
+    override fun onGetLabelsResult(labels: MutableList<LabelBean>) {
+        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
+            (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels")).forEach {
+                saveLabels.add(SharedPreferenceUtil.String2Object(it) as LabelBean)
+            }
+
+            for (i in 0 until labels.size) {
+                for (j in 0 until saveLabels.size) {
+                    if (labels[i].id == saveLabels[j].id) {
+                        labels[i].checked = true
+                        updateCheckedLabels(labels[i])
+                        labels.addAll(i + 1, labels[i].son ?: mutableListOf())
+                    }
+                }
+            }
             adapter.setData(labels)
-            allLabels = labels
-        }
-        if (labels != null) {
-            for (label in labels)
-                updateCheckedLabels(label)
+
+        } else {
+            if (labels != null && labels.size > 0) {
+                //默认设置选中第一个标签，并加载其子标签
+                labels[0].checked = true
+                adapter.setData(labels)
+                allLabels = labels
+                //默认选中之后加载子标签
+                mPresenter.mView.onGetSubLabelsResult(labels[0].son, 0)
+            }
+            if (labels != null) {
+                for (label in labels)
+                    updateCheckedLabels(label)
+            }
         }
     }
 
@@ -116,22 +143,23 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
      */
     override fun onGetSubLabelsResult(labels: List<LabelBean>?, parentPos: Int) {
         if (labels != null && labels.size > 0) {
-            adapter.dataList.addAll(labels)
-            adapter.notifyItemRangeInserted(parentPos + 1, labels.size)
+            for (i in 0 until labels.size) {
+                adapter.addData(parentPos + (i + 1), labels[i])
+            }
         }
     }
 
 
     /**
      * 移除子级标签
-     * //todo  设计标签移除的算法
+     *
      */
     override fun onRemoveSubLablesResult(label: LabelBean, parentPos: Int) {
-        for (tempLabel in label.son) {
+        for (tempLabel in label.son!!) {
             tempLabel.checked = false
             adapter.dataList.remove(tempLabel)
             updateCheckedLabels(tempLabel)
-            onRemoveSubLablesResult(tempLabel,parentPos)
+            onRemoveSubLablesResult(tempLabel, parentPos)
         }
         adapter.notifyDataSetChanged()
     }
@@ -140,13 +168,11 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
     /**
      * 此处判断标签最少选择三个
      */
-
     fun updateCheckedLabels(label: LabelBean) {
         if (label.checked) {
             if (!checkedLabels.contains(label)) {
                 checkedLabels.add(label)
             }
-
         } else {
             //此处应该还要删除父级的子级数据
             if (checkedLabels.contains(label)) {
@@ -154,23 +180,51 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
             }
         }
         if (checkedLabels.size < 3) {
-            completeLabelBtn.isEnabled = false
+//            shape_rectangle_unable_btn_15dp
+            completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_unable_btn_15dp)
+            completeLabelBtn.setTextColor(resources.getColor(R.color.colorBlackText))
+            iconChecked.visibility = View.GONE
             completeLabelBtn.text = "再选${3 - checkedLabels.size}个"
-            completeLabelBtn.setCompoundDrawables(null, null, null, null)
+            completeLabelLL.isEnabled = false
         } else {
-            completeLabelBtn.isEnabled = true
+            completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_enable_btn_15dp)
+            completeLabelLL.isEnabled = true
+            completeLabelBtn.setTextColor(resources.getColor(R.color.colorWhite))
             completeLabelBtn.text = "完成"
-            val drawable1 = ContextCompat.getDrawable(BaseApplication.context, R.drawable.icon_gou)
-            drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-            completeLabelBtn.setCompoundDrawables(drawable1, null, null, null)
+            iconChecked.visibility = View.VISIBLE
+        }
+    }
+
+
+    override fun onUploadLabelsResult(result: Boolean, data: LoginBean?) {
+        if (result) {
+            if (data != null) {
+                UserManager.saveUserInfo(data)
+            }
+            if (intent.getStringExtra("from").isNotEmpty() && intent.getStringExtra("from") == "squarefragment") {
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            } else {
+                AppManager.instance.finishAllActivity()
+                startActivity<MainActivity>()
+            }
         }
     }
 
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.completeLabelBtn -> {
-                startActivity<MainActivity>()
+            R.id.completeLabelLL -> {
+                val params = hashMapOf<String, String>()
+                params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
+                params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
+                params["_timestamp"] = "${System.currentTimeMillis()}"
+                val checkIds = arrayOfNulls<Int>(9)
+                for (index in 0 until checkedLabels.size) {
+                    checkIds[index] = checkedLabels[index].id
+                }
+                Log.i("params", "${android.os.Build.BRAND},${android.os.Build.HOST},${android.os.Build.PRODUCT}")
+                mPresenter.uploadLabels(params, checkIds)
             }
         }
     }
