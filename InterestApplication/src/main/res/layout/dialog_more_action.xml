@@ -19,8 +19,8 @@
         <ImageView
                 android:id="@+id/collectBtn"
                 android:src="@drawable/icon_collect_no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginRight="3dp"
                 app:layout_constraintBottom_toBottomOf="@id/collect"
                 app:layout_constraintRight_toLeftOf="@id/collect"
@@ -29,6 +29,50 @@
         <TextView
                 android:id="@+id/collect"
                 android:text="收藏"
+                android:textColor="@color/colorBlackTitle"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:background="@color/colorDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/llShare"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+                android:id="@+id/shareBtn"
+                android:src="@drawable/icon_zhuanfa"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="3dp"
+                app:layout_constraintBottom_toBottomOf="@id/share"
+                app:layout_constraintRight_toLeftOf="@id/share"
+                app:layout_constraintTop_toTopOf="@id/share"/>
+
+        <TextView
+                android:id="@+id/share"
+                android:text="分享"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
                 android:gravity="center"
@@ -63,8 +107,8 @@
 
         <ImageView
                 android:src="@drawable/icon_heimingdan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginRight="3dp"
                 app:layout_constraintBottom_toBottomOf="@id/lahei"
                 app:layout_constraintRight_toLeftOf="@id/lahei"
@@ -108,8 +152,8 @@
 
         <ImageView
                 android:src="@drawable/icon_jubao"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginRight="3dp"
                 app:layout_constraintBottom_toBottomOf="@id/jubao"
                 app:layout_constraintRight_toLeftOf="@id/jubao"
@@ -153,8 +197,8 @@
 
         <ImageView
                 android:src="@drawable/icon_remove_relationship"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginRight="3dp"
                 app:layout_constraintBottom_toBottomOf="@id/removeRelation"
                 app:layout_constraintRight_toLeftOf="@id/removeRelation"

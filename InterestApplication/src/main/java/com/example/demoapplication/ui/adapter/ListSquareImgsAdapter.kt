@@ -52,14 +52,16 @@ class ListSquareImgsAdapter(
                 layoutParams.width = SizeUtils.applyDimension(270F, TypedValue.COMPLEX_UNIT_DIP).toInt()
                 layoutParams.height = SizeUtils.applyDimension(252F, TypedValue.COMPLEX_UNIT_DIP).toInt()
                 layoutParams.leftMargin = SizeUtils.applyDimension(10F, TypedValue.COMPLEX_UNIT_DIP).toInt()
+                if (position == datas.size - 1) {
+                    layoutParams.rightMargin = SizeUtils.applyDimension(10F, TypedValue.COMPLEX_UNIT_DIP).toInt()
+                }
                 holder.itemView.ivUser.layoutParams = layoutParams
-
             }
 
         } else {
             holder.itemView.ivUser.setType(RoundImageView.TYPE_NORMAL)
             layoutParams.width = ScreenUtils.getScreenWidth()
-            layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
+            layoutParams.height = ScreenUtils.getScreenHeight()
             holder.itemView.ivUser.layoutParams = layoutParams
         }
         GlideUtil.loadImg(context, datas[position], holder.itemView.ivUser)

@@ -29,8 +29,13 @@ class MoreActionDialog(context: Context, val from: String) : Dialog(context, R.s
         if (from == "square") {
             llLahei.visibility = View.GONE
             llRemoveRelation.visibility = View.GONE
+            llShare.visibility = View.GONE
+        } else if (from == "square_detail") {
+            llLahei.visibility = View.GONE
+            llRemoveRelation.visibility = View.GONE
         } else {
             llCollect.visibility = View.GONE
+            llShare.visibility = View.GONE
         }
     }
 

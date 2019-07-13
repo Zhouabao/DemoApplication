@@ -23,6 +23,7 @@ import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_match_filter.*
 import org.greenrobot.eventbus.EventBus
@@ -156,15 +157,27 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
     }
 
+
+    override fun onPause() {
+        super.onPause()
+        //        GSYVideoManager.onPause()
+
+    }
+
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().post(NewMsgEvent(21, 6, 3, 2))
+        //        GSYVideoManager.onResume(false)
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+        //        GSYVideoManager.releaseAllVideos()
+
     }
+
 
     override fun onUpdateFilterResult() {
 

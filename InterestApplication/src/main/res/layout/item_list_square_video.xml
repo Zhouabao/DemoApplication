@@ -21,10 +21,11 @@
             app:layout_constraintStart_toStartOf="parent"
             >
 
-        <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+        <com.example.demoapplication.switchplay.SwitchVideo
                 android:id="@+id/squareUserVideo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+
         <!--<VideoView-->
         <!--android:id="@+id/squareUserVideo"-->
         <!--android:layout_width="match_parent"-->

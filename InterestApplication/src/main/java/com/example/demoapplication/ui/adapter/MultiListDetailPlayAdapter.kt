@@ -1,29 +1,38 @@
-package com.example.demoapplication.ui.adapter
+package com.example.demoap
 
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import androidx.core.view.get
+import androidx.core.view.size
+import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.ui.adapter.SquareDetailImgsAdaper
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.kotlin.base.ext.onClick
+import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
+import kotlinx.android.synthetic.main.item_square_detail_play_cover.view.*
 import kotlinx.android.synthetic.main.item_square_play_detail_audio.view.*
 import kotlinx.android.synthetic.main.item_square_play_detail_pics.view.*
-import kotlinx.android.synthetic.main.item_square_play_detail_pics.view.detailPlayComment
-import kotlinx.android.synthetic.main.item_square_play_detail_pics.view.detailPlayCommentSend
-import kotlinx.android.synthetic.main.item_square_play_detail_pics.view.detailPlaydianzan
 import kotlinx.android.synthetic.main.item_square_play_detail_video.view.*
-import org.jetbrains.anko.backgroundColorResource
 
 
 /**
@@ -32,66 +41,143 @@ import org.jetbrains.anko.backgroundColorResource
  *    desc   :
  *    version: 1.0
  */
-class MultiListDetailPlayAdapter(var context: Context, data: MutableList<MatchBean>) :
-    BaseMultiItemQuickAdapter<MatchBean, BaseViewHolder>(data) {
+class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareBean>) :
+    BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
+    val TAG = "MultiListDetailPlayAdapter"
 
     init {
-        addItemType(MatchBean.PIC, R.layout.item_square_play_detail_pics)
-        addItemType(MatchBean.VIDEO, R.layout.item_square_play_detail_video)
-        addItemType(MatchBean.AUDIO, R.layout.item_square_play_detail_audio)
+        addItemType(SquareBean.PIC, R.layout.item_square_play_detail_pics)
+        addItemType(SquareBean.VIDEO, R.layout.item_square_play_detail_video)
+        addItemType(SquareBean.AUDIO, R.layout.item_square_play_detail_audio)
     }
 
-    override fun convert(holder: BaseViewHolder, item: MatchBean) {
+    private val gsyVideoOptionBuilder by lazy { GSYVideoOptionBuilder() }
+
+    override fun convert(holder: BaseViewHolder, item: SquareBean) {
+        // 这里指定了被共享的视图元素
+        holder.addOnClickListener(R.id.detailPlaydianzan)
+        holder.addOnClickListener(R.id.detailPlayMoreActions)
+        holder.addOnClickListener(R.id.detailPlayComment)
+        holder.addOnClickListener(R.id.detailPlayContent)
+
+        GlideUtil.loadAvatorImg(context, item.avatar ?: "", holder.itemView.detailPlayUserAvatar)
+        holder.itemView.detailPlayUserLocationAndTime.text = item.city_name ?: "".plus("\t").plus(item.out_time ?: "")
+        holder.itemView.detailPlayUserName.text = item.nickname ?: ""
+        holder.itemView.detailPlayContent.text = item.descr ?: ""
+
+        val drawable1 = context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+        drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
+        holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
+        holder.itemView.detailPlaydianzan.text = "${item.like_cnt}"
+
+        holder.itemView.detailPlayCommentSend.onClick {
+            ToastUtils.showShort(holder.itemView.detailPlayComment.text.toString())
+        }
+        holder.itemView.detailPlayComment.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(edit: Editable?) {
+                if (onTextChangeListener != null) {
+                    onTextChangeListener!!.afterTextChanged(edit.toString(), holder.layoutPosition)
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+
+
         var play = false
         when (holder.itemViewType) {
-            MatchBean.PIC -> {
-                val drawable1 =
-                    context.resources.getDrawable(if (item.zan) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-                drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-                holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
-                holder.itemView.detailPlaydianzan.onClick {
-                    item.zan = !item.zan
-                    val drawable1 =
-                        context.resources.getDrawable(if (item.zan) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-                    drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-                    holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
+            SquareBean.PIC -> {
+                holder.itemView.picFl.setBackgroundResource(R.color.colorBlack)
+                if (holder.itemView.detailPlayVp2Indicator1.childCount == 0) {
+                    holder.itemView.detailPlayVp2.adapter =
+                        SquareDetailImgsAdaper(context, item.photo_json ?: mutableListOf())
+
+                    //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
+                    holder.itemView.detailPlayVp2.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                        }
+
+                        override fun onPageScrollStateChanged(state: Int) {
+                        }
+
+                        override fun onPageSelected(position: Int) {
+                            for (i in 0 until holder.itemView.detailPlayVp2Indicator1.size) {
+                                (holder.itemView.detailPlayVp2Indicator1[i] as RadioButton).isChecked = i == position
+                            }
+                        }
+                    })
+                    if (item.photo_json != null && item.photo_json!!.size > 1) {
+                        for (i in 0 until item.photo_json!!.size) {
+                            val indicator = RadioButton(mContext)
+                            indicator.width = SizeUtils.dp2px(10F)
+                            indicator.height = SizeUtils.dp2px(10F)
+                            indicator.buttonDrawable = null
+                            indicator.background = mContext.resources.getDrawable(R.drawable.selector_circle_indicator)
+
+                            indicator.layoutParams = LinearLayout.LayoutParams(
+                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT
+                            )
+                            val layoutParams: LinearLayout.LayoutParams =
+                                indicator.layoutParams as LinearLayout.LayoutParams
+                            layoutParams.setMargins(0, 0, SizeUtils.dp2px(6f), 0)
+                            indicator.layoutParams = layoutParams
+
+                            indicator.isChecked = i == 0
+                            holder.itemView.detailPlayVp2Indicator1.addView(indicator)
+                        }
+                    }
                 }
-                holder.itemView.detailPlayCommentSend.onClick {
-                    ToastUtils.showShort(holder.itemView.detailPlayComment.text.toString())
-                }
 
-
-
-                holder.itemView.picFl.backgroundColorResource = R.color.colorBlack
-                holder.itemView.detailPlayVp2.layoutManager =
-                    LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                holder.itemView.detailPlayVp2.adapter = ListSquareImgsAdapter(context, item.imgs, true)
 
             }
-            MatchBean.VIDEO -> {
-                val drawable1 =
-                    context.resources.getDrawable(if (item.zan) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-                drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-                holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
-                holder.itemView.detailPlaydianzan.onClick {
-                    item.zan = !item.zan
-                    val drawable1 =
-                        context.resources.getDrawable(if (item.zan) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-                    drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-                    holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
-                }
-                holder.itemView.detailPlayCommentSend.onClick {
-                    ToastUtils.showShort(holder.itemView.detailPlayComment.text.toString())
-                }
+            SquareBean.VIDEO -> {
 
                 holder.itemView.videoFl.background = BitmapDrawable(
                     ImageUtils.fastBlur(
-                        BitmapFactory.decodeResource(context.resources, R.drawable.img_avatar_01),
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.drawable.img_avatar_01
+                        ),
                         1f,
                         25f
                     )
                 )
+                gsyVideoOptionBuilder.setIsTouchWiget(false)
+//                    .setThumbImageView()
+                    .setUrl(item.video_json?.get(0) ?: "")
+                    .setCacheWithPlay(false)
+                    .setRotateViewAuto(true)
+                    .setLockLand(false)
+                    .setPlayTag(TAG)
+                    .setPlayPosition(holder.layoutPosition)
+                    .setShowFullAnimation(true)
+                    .setVideoAllCallBack(object : GSYSampleCallBack() {
+                        override fun onPrepared(url: String?, vararg objects: Any?) {
+                            super.onPrepared(url, *objects)
+                            if (!holder.itemView.detailPlayVideo.isIfCurrentIsFullscreen) {
+                                //静音
+                                GSYVideoManager.instance().isNeedMute = true
+                            }
+                        }
 
+                        override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
+                            super.onQuitFullscreen(url, *objects)
+                            //全屏不静音
+                            GSYVideoManager.instance().isNeedMute = true
+                        }
+
+                        override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
+                            super.onEnterFullscreen(url, *objects)
+                            GSYVideoManager.instance().isNeedMute = false
+                        }
+                    })
+                    .build(holder.itemView.detailPlayVideo)
 
 //                holder.itemView.squareUserVideo.backButton.visibility = View.GONE
 //                holder.itemView.squareUserVideo.fullscreenButton.onClick {
@@ -101,29 +187,11 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<MatchBe
 //                holder.itemView.squareUserVideo.setIsTouchWiget(false)
 //                holder.itemView.squareUserVideo.isShowFullAnimation = true
             }
-            MatchBean.AUDIO -> {
-                val drawable1 =
-                    context.resources.getDrawable(if (item.zan) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-                drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-                holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
-                holder.itemView.detailPlaydianzan.onClick {
-                    item.zan = !item.zan
-                    val drawable1 =
-                        context.resources.getDrawable(if (item.zan) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-                    drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-                    holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
-                }
-                holder.itemView.detailPlayCommentSend.onClick {
-                    ToastUtils.showShort(holder.itemView.detailPlayComment.text.toString())
-                }
+            SquareBean.AUDIO -> {
+//                holder.addOnClickListener(R.id.detailPlayBtn)
 
-                holder.itemView.audioFl.background = BitmapDrawable(
-                    ImageUtils.fastBlur(
-                        BitmapFactory.decodeResource(context.resources, R.drawable.img_avatar_01),
-                        1f,
-                        25f
-                    )
-                )
+                GlideUtil.loadImg(context, item.avatar ?: "", holder.itemView.detailPlayAudioBg)
+                holder.itemView.audioFl.background = BitmapDrawable(ImageUtils.fastBlur(BitmapFactory.decodeResource(context.resources, R.drawable.img_avatar_01), 1f, 25f))
                 val rotateAnimation =
                     RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
                 rotateAnimation.interpolator = LinearInterpolator()
@@ -148,7 +216,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<MatchBe
                             objAnim.resume()
                         else
                             objAnim.start()
-                        holder.itemView.detailPlayBtn.setImageResource(R.drawable.ugc_pause_record)
+                        holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_pause_white)
 //                        holder.itemView.detailPlayAudioBg.startAnimation(rotateAnimation)
                     } else {
                         holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_play_white)
@@ -166,5 +234,11 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<MatchBe
      */
     private fun showTranspondDialog() {
         TranspondDialog(context).show()
+    }
+
+    var onTextChangeListener: OnTextChangeListener? = null
+
+    interface OnTextChangeListener {
+        fun afterTextChanged(text: String, position: Int)
     }
 }

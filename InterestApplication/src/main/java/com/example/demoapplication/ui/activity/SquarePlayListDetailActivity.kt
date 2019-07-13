@@ -1,0 +1,269 @@
+package com.example.demoapplication.ui.activity
+
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.media.AudioManager
+import android.net.Uri
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.SPUtils
+import com.example.demoap.MultiListDetailPlayAdapter
+import com.example.demoapplication.R
+import com.example.demoapplication.common.Constants
+import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.presenter.SquarePlayDetaiPresenter
+import com.example.demoapplication.presenter.view.SquarePlayDetailView
+import com.example.demoapplication.ui.dialog.MoreActionDialog
+import com.example.demoapplication.ui.dialog.TranspondDialog
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import kotlinx.android.synthetic.main.activity_square_play_detail.btnBack
+import kotlinx.android.synthetic.main.activity_square_play_list_detail.*
+import kotlinx.android.synthetic.main.dialog_more_action.*
+import org.jetbrains.anko.toast
+import tv.danmaku.ijk.media.player.IjkMediaPlayer
+
+/**
+ * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
+ */
+class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView {
+    //广场列表内容适配器
+    private val adapter by lazy { MultiListDetailPlayAdapter(this, mutableListOf()) }
+    private val squareBean: SquareBean by lazy { intent.getSerializableExtra("item") as SquareBean }
+
+    var ijkMediaPlayer: IjkMediaPlayer? = null
+    fun initAudio() {
+        ijkMediaPlayer?.release()
+        ijkMediaPlayer = IjkMediaPlayer()
+        ijkMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_square_play_list_detail)
+        initView()
+        if (intent.getSerializableExtra("item") != null) {
+            rvLast.visibility = View.GONE
+            rvNext.visibility = View.GONE
+            squareBean.avatar =
+                "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
+            adapter.addData(squareBean)
+        } else {
+            rvLast.visibility = View.VISIBLE
+            rvNext.visibility = View.VISIBLE
+            mPresenter.getRencentlySquares()
+        }
+        moveToPosition(layoutmanager, friendSquareList, currentIndex)
+    }
+
+    val layoutmanager by lazy {
+        object : LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false) {
+            override fun canScrollHorizontally(): Boolean {
+                return false
+            }
+        }
+    }
+
+    private fun initView() {
+        mPresenter = SquarePlayDetaiPresenter()
+        mPresenter.mView = this
+        mPresenter.context = this
+        btnBack.onClick { finish() }
+
+        friendSquareList.layoutManager = layoutmanager
+        friendSquareList.adapter = adapter
+
+        //获取用户输入的评论
+        adapter.onTextChangeListener = object : MultiListDetailPlayAdapter.OnTextChangeListener {
+            override fun afterTextChanged(text: String, position: Int) {
+                KeyboardUtils.hideSoftInput(this@SquarePlayListDetailActivity)
+                adapter.data[position].comment = text
+            }
+
+        }
+        adapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                //播放
+                R.id.detailPlayBtn -> {
+                    initAudio()
+                    ijkMediaPlayer!!.setDataSource(this, Uri.parse(adapter.data[position].audio_json?.get(0)))
+
+                }
+                //评论
+                R.id.detailPlayComment -> {
+                    //todo 评论
+                    toast(adapter.data[position].comment ?: "")
+                }
+                //更多操作
+                R.id.detailPlayMoreActions -> {
+                    showMoreDialog(position)
+                }
+                //点赞
+                R.id.detailPlaydianzan -> {
+                    val params = hashMapOf(
+                        "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                        "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                        "type" to if (adapter.data[position].isliked == 1) {
+                            2
+                        } else {
+                            1
+                        },
+                        "square_id" to adapter.data[position].id!!,
+                        "_timestamp" to System.currentTimeMillis()
+                    )
+                    mPresenter.getSquareLike(params, position)
+                }
+                //点击内容跳转到评论详情页面
+                R.id.detailPlayContent -> {
+                }
+
+            }
+        }
+
+        //上一个
+        rvLast.onClick {
+            if (currentIndex > 0) {
+                currentIndex--
+                Log.i("squareplaydetail", "$currentIndex")
+            }
+            if (currentIndex >= 0) {
+                moveToPosition(layoutmanager, friendSquareList, currentIndex)
+            }
+        }
+        //下一个
+        rvNext.onClick {
+            if (currentIndex < adapter.data.size) {
+                currentIndex++
+                Log.i("squareplaydetail", "$currentIndex")
+            }
+            if (currentIndex < adapter.data.size) {
+                moveToPosition(layoutmanager, friendSquareList, currentIndex)
+            }
+        }
+
+    }
+
+    override fun onGetRecentlySquaresResults(data: MutableList<SquareBean>) {
+        adapter.addData(data)
+        currentIndex = adapter.data.size / 2
+    }
+
+
+    private var currentIndex = 0
+    private fun moveToPosition(manager: LinearLayoutManager, mRecyclerView: RecyclerView, n: Int) {
+        val firstItem = manager.findFirstVisibleItemPosition()
+        val lastItem = manager.findLastVisibleItemPosition()
+        if (n <= firstItem) {
+            mRecyclerView.scrollToPosition(n)
+        } else if (n <= lastItem) {
+            val top = mRecyclerView.getChildAt(n - firstItem).getTop()
+            mRecyclerView.scrollBy(0, top)
+        } else {
+            mRecyclerView.scrollToPosition(n)
+        }
+    }
+
+    lateinit var moreActionDialog: MoreActionDialog
+
+    /**
+     * 展示更多操作对话框
+     */
+    private fun showMoreDialog(position: Int) {
+        moreActionDialog = MoreActionDialog(this, "square_detail")
+        moreActionDialog.show()
+
+        if (adapter.data[position]?.iscollected == 0) {
+            moreActionDialog.collect.text = "收藏"
+            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
+        } else {
+            moreActionDialog.collect.text = "取消收藏"
+            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
+        }
+        moreActionDialog.llShare.onClick {
+            showTranspondDialog(position)
+        }
+        moreActionDialog.llCollect.onClick {
+
+            //发起收藏请求
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "type" to if (adapter.data[position].iscollected == 0) {
+                    1
+                } else {
+                    2
+                },
+                "square_id" to adapter.data[position].id!!,
+                "_timestamp" to System.currentTimeMillis()
+            )
+            mPresenter.getSquareCollect(params, position)
+        }
+        moreActionDialog.llJubao.onClick {
+            //todo 发起举报请求
+            AlertDialog.Builder(this)
+                .setNegativeButton("取消举报", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface, p1: Int) {
+                        p0.cancel()
+                    }
+                })
+                .setPositiveButton("确认举报", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        //todo 举报
+                        toast("已举报$position")
+                    }
+
+                })
+                .setTitle("举报")
+                .setMessage("是否确认举报该动态？")
+                .show()
+        }
+        moreActionDialog.cancel.onClick {
+            moreActionDialog.dismiss()
+        }
+
+    }
+
+
+    private val transpondDialog by lazy { TranspondDialog(this) }
+
+    /**
+     * 展示转发动态对话框
+     */
+    private fun showTranspondDialog(position: Int) {
+        if (transpondDialog != null && !transpondDialog.isShowing)
+            transpondDialog.show()
+    }
+
+
+    override fun onGetSquareLikeResult(position: Int, result: Boolean) {
+        if (result) {
+            if (adapter.data[position].isliked == 1) {
+                adapter.data[position].isliked = 0
+                adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.minus(1)
+            } else {
+                adapter.data[position].isliked = 1
+                adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
+            }
+            adapter.notifyItemChanged(position, "hahah")
+        }
+    }
+
+    override fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>) {
+        toast(data.msg)
+        if (adapter.data[position].iscollected == 1) {
+            adapter.data[position].iscollected = 0
+        } else {
+            adapter.data[position].iscollected = 1
+        }
+        if (moreActionDialog != null && moreActionDialog.isShowing) {
+            moreActionDialog.dismiss()
+        }
+    }
+
+}

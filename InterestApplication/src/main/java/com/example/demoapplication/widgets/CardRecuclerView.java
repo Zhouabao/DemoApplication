@@ -67,7 +67,7 @@ public class CardRecuclerView extends RecyclerView {
     private int getOrientation(float dx, float dy) {
         if (Math.abs(dx)>Math.abs(dy)){
             //X轴移动
-            return dx>0?'r':'l';//右,左
+            return dx>0?'r':'l';//右,icon_left
         }else{
             //Y轴移动
             return dy>0?'b':'t';//下//上

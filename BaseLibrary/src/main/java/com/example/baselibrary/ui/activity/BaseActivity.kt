@@ -7,21 +7,21 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.kotlin.base.common.AppManager
 import com.readystatesoftware.systembartint.SystemBarTintManager
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity
 import org.jetbrains.anko.find
 
 
 /*
     Activity基类，业务无关
  */
-open class BaseActivity : RxAppCompatActivity() {
+open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppManager.instance.addActivity(this)
-        initState()
+        //initState()
 
     }
 

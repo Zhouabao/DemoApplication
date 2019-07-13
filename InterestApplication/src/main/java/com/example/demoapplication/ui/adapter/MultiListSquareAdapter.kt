@@ -1,5 +1,6 @@
 package com.example.demoapplication.ui.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.util.TypedValue
 import android.view.View
@@ -14,16 +15,17 @@ import com.example.demoapplication.R
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.player.UpdateVoiceTimeThread
+import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
+import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.kotlin.base.ext.onClick
-import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
-import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import kotlinx.android.synthetic.main.item_list_square_audio.view.*
 import kotlinx.android.synthetic.main.item_list_square_pic.view.*
 import kotlinx.android.synthetic.main.item_list_square_video.view.*
 import kotlinx.android.synthetic.main.layout_square_list_bottom.view.*
 import kotlinx.android.synthetic.main.layout_square_list_top.view.*
+import kotlinx.android.synthetic.main.switch_video.view.*
 import org.jetbrains.anko.startActivity
 
 
@@ -102,58 +104,54 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
                     holder.itemView.squareUserPics1.adapter = adapter
                     adapter.setOnItemClickListener(object : ListSquareImgsAdapter.OnItemClickListener {
                         override fun onItemClick(position: Int) {
-                            context.startActivity<SquarePlayDetailActivity>("item" to item)
+                            context.startActivity<SquarePlayListDetailActivity>("item" to item)
                         }
                     })
                 } else {
                     holder.itemView.squareUserPics1.visibility = View.GONE
                     holder.itemView.squareContent1.onClick {
-                        context.startActivity<SquarePlayDetailActivity>("item" to item)
+                        context.startActivity<SquarePlayListDetailActivity>("item" to item)
                     }
                 }
 
             }
             MatchBean.VIDEO -> {
-//                holder.itemView.squareUserVideo.onClick {
-//                    context.startActivity<SquarePlayDetailActivity>()
-//                }
-                gsyVideoOptionBuilder.setIsTouchWiget(false)
-//                    .setThumbImageView()
-                    .setUrl("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4")
-                    .setCacheWithPlay(false)
-                    .setRotateViewAuto(true)
-                    .setLockLand(false)
-                    .setPlayTag(TAG)
-                    .setPlayPosition(holder.layoutPosition)
-                    .setShowFullAnimation(true)
-                    .setNeedLockFull(true)
-                    .setVideoAllCallBack(object : GSYSampleCallBack() {
-                        override fun onPrepared(url: String?, vararg objects: Any?) {
-                            super.onPrepared(url, *objects)
-                            if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen) {
-                                //静音
-                                GSYVideoManager.instance().isNeedMute = true
-                            }
-                        }
 
-                        override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
-                            super.onQuitFullscreen(url, *objects)
-                            //全屏不静音
-                            GSYVideoManager.instance().isNeedMute = true
-                        }
-
-                        override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
-                            super.onEnterFullscreen(url, *objects)
-                            GSYVideoManager.instance().isNeedMute = false
-                        }
-                    })
-                    .build(holder.itemView.squareUserVideo)
-                holder.itemView.squareUserVideo.backButton.visibility = View.GONE
-                holder.itemView.squareUserVideo.fullscreenButton.onClick {
-                    holder.itemView.squareUserVideo.startWindowFullscreen(context, false, true)
+                if (SwitchUtil.sSwitchVideo != null) {
+                    SwitchUtil.clonePlayState(holder.itemView.squareUserVideo)
+                    holder.itemView.squareUserVideo.setSurfaceToPlay()
                 }
-
-
+                holder.itemView.squareUserVideo.detail_btn.setOnClickListener {
+                    if (holder.itemView.squareUserVideo.isInPlayingState) {
+                        SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
+                        holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(holder.itemView.squareUserVideo)
+                        //fixme 页面跳转是，元素共享，效果会有一个中间中间控件的存在
+                        //fixme 这时候中间控件 CURRENT_STATE_PLAYING，会触发 startProgressTimer
+                        //FIXME 但是没有cancel
+                        SquarePlayDetailActivity.startActivity(
+                            context as Activity,
+                            holder.itemView.squareUserVideo,
+                            item,
+                            holder.layoutPosition
+                        )
+                    }
+                }
+                holder.itemView.squareUserVideo.setPlayTag(TAG)
+                holder.itemView.squareUserVideo.setPlayPosition(holder.layoutPosition)
+//                SwitchUtil.optionPlayer(holder.itemView.squareUserVideo, item.video_json?.get(0) ?: "", true, "")
+                SwitchUtil.optionPlayer(
+                    holder.itemView.squareUserVideo,
+                    "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
+                    true,
+                    ""
+                )
+                holder.itemView.squareUserVideo.setUp(
+                    "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
+                    true,
+                    null,
+                    null,
+                    ""
+                )
             }
             MatchBean.AUDIO -> {
                 //点击播放
@@ -168,11 +166,12 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 }
                 holder.itemView.squareUserAudio.onClick {
-                    context.startActivity<SquarePlayDetailActivity>("item" to item)
+                    context.startActivity<SquarePlayListDetailActivity>("item" to item)
                 }
             }
         }
 
     }
+
 
 }

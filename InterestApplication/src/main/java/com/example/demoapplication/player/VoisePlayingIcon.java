@@ -196,7 +196,7 @@ public class VoisePlayingIcon extends View {
                         pointers.get(j).setHeight((basePointY - getPaddingTop()) * rate); //rate 乘以 可绘制高度，来改变每个指针的高度
                     }
                     Thread.sleep(pointerSpeed);//休眠一下下，可自行调节
-                    if (isPlaying) { //控制开始/暂停
+                    if (isPlaying) { //控制开始/icon_pause_white
                         myHandler.sendEmptyMessage(0);
                         i += 0.1;
                     }

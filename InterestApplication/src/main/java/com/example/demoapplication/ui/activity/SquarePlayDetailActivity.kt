@@ -1,140 +1,374 @@
 package com.example.demoapplication.ui.activity
 
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.ViewCompat
+import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.PlayVideoEvent
+import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.presenter.SquarePlayDetaiPresenter
 import com.example.demoapplication.presenter.view.SquarePlayDetailView
-import com.example.demoapplication.ui.adapter.MultiListDetailPlayAdapter
+import com.example.demoapplication.switchplay.SwitchUtil
+import com.example.demoapplication.ui.dialog.MoreActionDialog
+import com.example.demoapplication.ui.dialog.TranspondDialog
+import com.kotlin.base.common.BaseApplication.Companion.context
+import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
+import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import kotlinx.android.synthetic.main.activity_square_play_detail.*
+import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
+import kotlinx.android.synthetic.main.switch_video.view.*
+import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.toast
 
 /**
  * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
  */
-class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView {
-    //广场列表内容适配器
-    private val adapter by lazy { MultiListDetailPlayAdapter(this, mutableListOf()) }
+class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
+    View.OnClickListener {
+    private val squareBean: SquareBean by lazy { intent.getSerializableExtra("squareBean") as SquareBean }
+    //外部辅助的旋转，帮助全屏
+    private var orientationUtils: OrientationUtils? = null
+
+    companion object {
+        public val OPTION_VIEW = "VIEW"
+        public val REQUEST_CODE = 1002
+        fun startActivity(activity: Activity, transactionView: View, data: SquareBean, position: Int) {
+            val intent = Intent(activity, SquarePlayDetailActivity::class.java)
+            intent.putExtra("squareBean", data)
+            intent.putExtra("position", position)
+            //这里指定了共享的视图元素
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transactionView, OPTION_VIEW)
+            ActivityCompat.startActivityForResult(activity, intent, REQUEST_CODE, options.toBundle())
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_square_play_detail)
-
         initView()
+
+
         initData()
-        currentIndex = userList.size / 2
-        moveToPosition(layoutmanager, friendSquareList, currentIndex)
     }
 
-    val layoutmanager by lazy {
-        object : LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false) {
-            override fun canScrollHorizontally(): Boolean {
-                return false
-            }
-        }
-    }
 
     private fun initView() {
+        squareBean.avatar =
+            "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
+
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
         mPresenter.context = this
-        btnBack.onClick { finish() }
-
-        friendSquareList.layoutManager = layoutmanager
-        friendSquareList.adapter = adapter
-
-
-        rvLast.onClick {
-            if (currentIndex > 0) {
-                currentIndex--
-                Log.i("squareplaydetail", "$currentIndex")
-            }
-            if (currentIndex >= 0) {
-                moveToPosition(layoutmanager, friendSquareList, currentIndex)
-            }
+        btnBack.onClick {
+            onBackPressed()
         }
+//        btnBack.visibility = View.GONE
 
-        rvNext.onClick {
-            if (currentIndex < adapter.data.size) {
-                currentIndex++
-                Log.i("squareplaydetail", "$currentIndex")
+
+        //评论
+        detailPlayComment.setOnClickListener(this)
+        //更多操作
+        detailPlayMoreActions.setOnClickListener(this)
+        //点赞
+        detailPlaydianzan.setOnClickListener(this)
+        //点击内容跳转到评论详情页面
+        detailPlayContent.setOnClickListener(this)
+        //發送評論
+        detailPlayCommentSend.setOnClickListener(this)
+        detailPlayVideo.titleTextView.visibility = View.GONE
+        detailPlayVideo.backButton.visibility = View.VISIBLE
+        detailPlayVideo.detail_btn.visibility = View.GONE
+
+        //外部辅助的旋转，帮助全屏
+        orientationUtils = OrientationUtils(this, detailPlayVideo)
+        //初始化不打开外部的旋转
+        orientationUtils!!.isEnable = false
+//        SwitchUtil.optionPlayer(detailPlayVideo, squareBean.video_json?.get(0) ?: "", true, "这是title")
+        SwitchUtil.optionPlayer(
+            detailPlayVideo,
+            "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
+            true,
+            ""
+        )
+
+        SwitchUtil.clonePlayState(detailPlayVideo)
+        detailPlayVideo.setIsTouchWiget(true)
+        detailPlayVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+            override fun onPrepared(url: String?, vararg objects: Any?) {
+                super.onPrepared(url, *objects)
+                //开始播放了才能旋转和全屏
+                orientationUtils!!.setEnable(true)
             }
-            if (currentIndex < adapter.data.size) {
-                moveToPosition(layoutmanager, friendSquareList, currentIndex)
+
+            override fun onClickBlank(url: String?, vararg objects: Any?) {
+                super.onClickBlank(url, *objects)
+                if (videoCover.visibility == View.VISIBLE) {
+
+                    videoCover.visibility = View.GONE
+                    btnBack.visibility = View.GONE
+                } else {
+                    videoCover.visibility = View.VISIBLE
+                    btnBack.visibility = View.VISIBLE
+
+                }
+
             }
-        }
+
+            override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
+                super.onQuitFullscreen(url, *objects)
+                if (orientationUtils != null) {
+                    orientationUtils!!.backToProtVideo()
+                }
+            }
+        })
 
 
+        detailPlayVideo.getFullscreenButton().setOnClickListener(View.OnClickListener {
+            //直接横屏
+            orientationUtils!!.resolveByClick()
+            //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+            detailPlayVideo.startWindowFullscreen(this, false, false)
+        })
+
+        detailPlayVideo.setSurfaceToPlay()
+        // 这里指定了被共享的视图元素
+        ViewCompat.setTransitionName(videoFl, OPTION_VIEW)
     }
-
-    //好友信息用户数据源
-    var userList: MutableList<MatchBean> = mutableListOf()
 
     private fun initData() {
+        GlideUtil.loadAvatorImg(context, squareBean.avatar ?: "", detailPlayUserAvatar)
+        detailPlayUserLocationAndTime.text = squareBean.city_name ?: "".plus("\t").plus(squareBean.out_time ?: "")
+        detailPlayUserName.text = squareBean.nickname ?: ""
+        detailPlayContent.text = squareBean.descr ?: ""
 
-        adapter.addData(userList)
+        val drawable1 =
+            context.resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+        drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
+        detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
+        detailPlaydianzan.text = "${squareBean.like_cnt}"
+
+        videoFl.background = BitmapDrawable(
+            ImageUtils.fastBlur(
+                BitmapFactory.decodeResource(
+                    context.resources,
+                    R.drawable.img_avatar_01
+                ),
+                1f,
+                25f
+            )
+        )
+    }
+
+    override fun onGetRecentlySquaresResults(data: MutableList<SquareBean>) {
 
     }
 
-    private var currentIndex = 0
-    fun moveToPosition(manager: LinearLayoutManager, mRecyclerView: RecyclerView, n: Int) {
-        val firstItem = manager.findFirstVisibleItemPosition()
-        val lastItem = manager.findLastVisibleItemPosition()
-        if (n <= firstItem) {
-            mRecyclerView.scrollToPosition(n)
-        } else if (n <= lastItem) {
-            val top = mRecyclerView.getChildAt(n - firstItem).getTop()
-            mRecyclerView.scrollBy(0, top)
+
+    lateinit var moreActionDialog: MoreActionDialog
+
+    /**
+     * 展示更多操作对话框
+     */
+    private fun showMoreDialog(position: Int) {
+        moreActionDialog = MoreActionDialog(this, "square_detail")
+        moreActionDialog.show()
+
+        if (squareBean?.iscollected == 0) {
+            moreActionDialog.collect.text = "收藏"
+            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
         } else {
-            mRecyclerView.scrollToPosition(n)
+            moreActionDialog.collect.text = "取消收藏"
+            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
         }
+        moreActionDialog.llShare.onClick {
+            showTranspondDialog(position)
+        }
+        moreActionDialog.llCollect.onClick {
+
+            //发起收藏请求
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "type" to if (squareBean.iscollected == 0) {
+                    1
+                } else {
+                    2
+                },
+                "square_id" to squareBean.id!!,
+                "_timestamp" to System.currentTimeMillis()
+            )
+            mPresenter.getSquareCollect(params, position)
+        }
+        moreActionDialog.llJubao.onClick {
+            //todo 发起举报请求
+            AlertDialog.Builder(this)
+                .setNegativeButton("取消举报", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface, p1: Int) {
+                        p0.cancel()
+                    }
+                })
+                .setPositiveButton("确认举报", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        //todo 举报
+                        toast("已举报$position")
+                    }
+
+                })
+                .setTitle("举报")
+                .setMessage("是否确认举报该动态？")
+                .show()
+        }
+        moreActionDialog.cancel.onClick {
+            moreActionDialog.dismiss()
+        }
+
     }
 
 
-    /**
-     * 目标项是否在最后一个可见项之后
-     */
-    private var mShouldScroll: Boolean = false
-    /**
-     * 记录目标项位置
-     */
-    private var mToPosition: Int = 0
+    private val transpondDialog by lazy { TranspondDialog(this) }
 
     /**
-     * 滑动到指定位置
-     *
-     * @param mRecyclerView
-     * @param position
+     * 展示转发动态对话框
      */
-    private fun smoothMoveToPosition(mRecyclerView: RecyclerView, position: Int) {
-        // 第一个可见位置
-        val firstItem = mRecyclerView.getChildLayoutPosition(mRecyclerView.getChildAt(0))
-        // 最后一个可见位置
-        val lastItem = mRecyclerView.getChildLayoutPosition(mRecyclerView.getChildAt(mRecyclerView.childCount - 1))
+    private fun showTranspondDialog(position: Int) {
+        if (transpondDialog != null && !transpondDialog.isShowing)
+            transpondDialog.show()
+    }
 
-        if (position < firstItem) {
-            // 如果跳转位置在第一个可见位置之前，就smoothScrollToPosition可以直接跳转
-            mRecyclerView.smoothScrollToPosition(position)
-        } else if (position <= lastItem) {
-            // 跳转位置在第一个可见项之后，最后一个可见项之前
-            // smoothScrollToPosition根本不会动，此时调用smoothScrollBy来滑动到指定位置
-            val movePosition = position - firstItem
-            if (movePosition >= 0 && movePosition < mRecyclerView.getChildCount()) {
-                val top = mRecyclerView.getChildAt(movePosition).top
-                mRecyclerView.smoothScrollBy(0, top)
+
+    override fun onGetSquareLikeResult(position: Int, result: Boolean) {
+        if (result) {
+            if (squareBean.isliked == 1) {
+                squareBean.isliked = 0
+                squareBean.like_cnt = squareBean.like_cnt!!.minus(1)
+            } else {
+                squareBean.isliked = 1
+                squareBean.like_cnt = squareBean.like_cnt!!.plus(1)
             }
-        } else {
-            // 如果要跳转的位置在最后可见项之后，则先调用smoothScrollToPosition将要跳转的位置滚动到可见位置
-            // 再通过onScrollStateChanged控制再次调用smoothMoveToPosition，执行上一个判断中的方法
-            mRecyclerView.smoothScrollToPosition(position)
-            mToPosition = position
-            mShouldScroll = true
+
+            val drawable1 =
+                context.resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+            drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
+            detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
+            detailPlaydianzan.text = "${squareBean.like_cnt}"
         }
     }
 
+    override fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>) {
+        toast(data.msg)
+        if (squareBean.iscollected == 1) {
+            squareBean.iscollected = 0
+        } else {
+            squareBean.iscollected = 1
+        }
+        if (moreActionDialog != null && moreActionDialog.isShowing) {
+            moreActionDialog.dismiss()
+        }
+    }
+
+
+    override fun onClick(view: View) {
+        when (view.id) {
+
+            //评论
+            R.id.detailPlayComment -> {
+                //todo 评论
+                toast(detailPlayComment.text.toString() ?: "")
+            }
+            //更多操作
+            R.id.detailPlayMoreActions -> {
+                showMoreDialog(0)
+            }
+            //点赞
+            R.id.detailPlaydianzan -> {
+                val params = hashMapOf(
+                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                    "type" to if (squareBean.isliked == 1) {
+                        2
+                    } else {
+                        1
+                    },
+                    "square_id" to squareBean.id!!,
+                    "_timestamp" to System.currentTimeMillis()
+                )
+                mPresenter.getSquareLike(params, 0)
+            }
+            //点击内容跳转到评论详情页面
+            R.id.detailPlayContent -> {
+            }
+            R.id.detailPlayCommentSend -> {
+                ToastUtils.showShort(detailPlayComment.text.toString())
+            }
+
+        }
+    }
+
+    private val isPlay = true
+    private var isPause: Boolean = false
+
+
+    override fun onBackPressed() {
+        if (orientationUtils != null) {
+            orientationUtils!!.backToProtVideo()
+        }
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return
+        }
+        detailPlayVideo.getGSYVideoManager().setListener(detailPlayVideo.getGSYVideoManager().listener())
+        SwitchUtil.savePlayState(detailPlayVideo)
+        EventBus.getDefault().post(PlayVideoEvent(intent.getIntExtra("position", -1)))
+        super.onBackPressed()
+    }
+
+    override fun onPause() {
+        detailPlayVideo.onVideoPause()
+        super.onPause()
+        isPause = true
+    }
+
+    override fun onResume() {
+        detailPlayVideo.onVideoResume(false)
+        super.onResume()
+        isPause = false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        detailPlayVideo.getGSYVideoManager().setListener(detailPlayVideo.getGSYVideoManager().lastListener())
+//        detailPlayVideo.getGSYVideoManager().setLastListener(null)
+//        GSYVideoManager.releaseAllVideos()
+//        if (orientationUtils != null)
+//            orientationUtils!!.releaseListener()
+//        SwitchUtil.release()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        //如果旋转了就全屏
+        if (isPlay && !isPause) {
+            detailPlayVideo.onConfigurationChanged(this, newConfig, orientationUtils, true, true)
+        }
+    }
 
 }

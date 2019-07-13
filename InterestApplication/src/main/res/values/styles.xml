@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorBlack26</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
@@ -19,12 +19,20 @@
     </style>
 
     <style name="AppTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
-
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:clipToPadding">false</item>
         <!--<item name="android:windowNoTitle">true</item>//无标题-->
         <!--<item name="android:windowActionBar">false</item>//无ActionBar-->
     </style>
+
+
+    <!-- window 透明的-->
+    <style name="Theme.AppCompat.Transitions" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <!--自定义Dialog背景全透明无边框theme-->
     <style name="MyDialog" parent="android:style/Theme.Dialog">
         <!--背景颜色和透明程度-->
