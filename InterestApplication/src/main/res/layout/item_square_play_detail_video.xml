@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:id="@+id/videoFl"
              android:orientation="vertical"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
+
+
+    <ImageView
+            android:id="@+id/videoFl"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
             android:id="@+id/detailPlayVideo"
             android:layout_marginTop="100dp"
             android:layout_width="match_parent"
             android:layout_height="418dp"/>
+
     <include layout="@layout/item_square_detail_play_cover"/>
 
 </FrameLayout>

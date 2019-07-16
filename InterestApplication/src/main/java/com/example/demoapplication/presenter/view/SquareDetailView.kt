@@ -1,5 +1,7 @@
 package com.example.demoapplication.presenter.view
 
+import com.example.demoapplication.model.AllCommentBean
+import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
 
 /**
@@ -8,5 +10,19 @@ import com.kotlin.base.presenter.view.BaseView
  *    desc   :
  *    version: 1.0
  */
-interface SquareDetailView:BaseView {
+interface SquareDetailView : BaseView {
+
+    fun onGetCommentListResult(allCommentBean: AllCommentBean, refresh: Boolean)
+
+    fun onGetSquareLikeResult(result: Boolean)
+
+    fun onLikeCommentResult(data: BaseResp<Any?>,position:Int)
+
+    fun onDeleteCommentResult(data: BaseResp<Any?>,position:Int)
+
+    fun onGetSquareCollectResult(data: BaseResp<Any?>)
+
+    fun onGetSquareReport(data: BaseResp<Any?>)
+
+    fun onAddCommentResult(data: BaseResp<Any?>, result: Boolean)
 }

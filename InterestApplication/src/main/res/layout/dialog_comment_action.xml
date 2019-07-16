@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="250dp"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_rectangle_gray_white_9dp"
+        android:layout_height="wrap_content">
+
+
+    <TextView
+            android:id="@+id/copyComment"
+            android:text="复制评论"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+            android:id="@+id/replyComment"
+            android:text="回复评论"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:paddingLeft="12dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+            android:id="@+id/jubaoComment"
+            android:text="举报评论"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:paddingLeft="12dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+            android:id="@+id/deleteComment"
+            android:text="删除评论"
+            android:textColor="@color/colorOrange"
+            android:textSize="16sp"
+            android:paddingLeft="12dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            />
+
+
+</LinearLayout>

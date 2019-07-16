@@ -2,7 +2,7 @@ package com.example.demoapplication.presenter
 
 import android.app.Activity
 import com.example.demoapplication.api.Api
-import com.example.demoapplication.model.FriendBean
+import com.example.demoapplication.model.FriendListBean
 import com.example.demoapplication.model.SquareListBean
 import com.example.demoapplication.presenter.view.SquareView
 import com.example.demoapplication.utils.UserManager
@@ -25,11 +25,11 @@ class SquarePresenter : BasePresenter<SquareView>() {
     fun getFrinedsList(params: HashMap<String, String>) {
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareFriends(params)
-            .excute(object : BaseSubscriber<BaseResp<MutableList<FriendBean?>?>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<FriendBean?>?>) {
+            .excute(object : BaseSubscriber<BaseResp<FriendListBean?>>(mView) {
+                override fun onNext(t: BaseResp<FriendListBean?>) {
                     super.onNext(t)
                     if (t.code == 200 && t.data != null)
-                        mView.onGetFriendsListResult(t.data ?: mutableListOf<FriendBean?>())
+                        mView.onGetFriendsListResult(t.data!!.list ?: mutableListOf())
                     else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     }
@@ -81,7 +81,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
     }
 
     /**
-     * 点赞 取消点赞
+     * 收藏
      * 1 收藏 2取消收藏
      */
     fun getSquareCollect(params: HashMap<String, Any>, position: Int) {
@@ -100,4 +100,27 @@ class SquarePresenter : BasePresenter<SquareView>() {
                 }
             })
     }
+
+
+
+    /**
+     * 广场举报
+     */
+    fun getSquareReport(params: HashMap<String, Any>,position: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getSquareReport(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onGetSquareReport(t,position)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGetSquareReport(t,position)
+                    }
+                }
+            })
+    }
+
 }

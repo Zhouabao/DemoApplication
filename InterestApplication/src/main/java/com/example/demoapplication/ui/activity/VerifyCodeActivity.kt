@@ -5,7 +5,6 @@ import android.os.CountDownTimer
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.cazaea.sweetalert.SweetAlertDialog
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.LoginBean
@@ -104,8 +103,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
 
     override fun onConfirmVerifyCode(data: LoginBean, isRight: Boolean) {
         if (!isRight) {
-            SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE).setContentText(data.err_type).show()
-//            toast("验证码输入不正确！")
+            toast("验证码输入不正确！")
             onChangeVerifyButtonStatus(false)
         } else if (isRight) {
             SPUtils.getInstance(Constants.SPNAME).put("qntoken", data.qntk)
@@ -116,7 +114,10 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
                 startActivity<SetInfoActivity>()
             } else {
                 UserManager.saveUserInfo(data)
-                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isEmpty()) {
+                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
+                        Constants.SPNAME
+                    ).getStringSet("checkedLabels").isEmpty()
+                ) {
                     startActivity<LabelsActivity>()
                 } else {
                     AppManager.instance.finishAllActivity()

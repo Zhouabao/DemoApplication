@@ -28,12 +28,12 @@
     <TextView
             android:id="@+id/squareUserName1"
             tools:text="Kimberly Davis"
-            android:layout_marginLeft="9dp"
+            android:layout_marginLeft="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack22"
             android:textSize="16sp"
-            app:layout_constraintLeft_toRightOf="@id/squareUserVipIv1"
+            app:layout_constraintLeft_toRightOf="@id/squareUserIv1"
             app:layout_constraintTop_toTopOf="parent"
             />
 

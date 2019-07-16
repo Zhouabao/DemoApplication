@@ -14,7 +14,6 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
@@ -31,12 +30,14 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import kotlinx.android.synthetic.main.activity_square_play_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
 import kotlinx.android.synthetic.main.switch_video.view.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -44,6 +45,7 @@ import org.jetbrains.anko.toast
  */
 class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
     View.OnClickListener {
+
     private val squareBean: SquareBean by lazy { intent.getSerializableExtra("squareBean") as SquareBean }
     //外部辅助的旋转，帮助全屏
     private var orientationUtils: OrientationUtils? = null
@@ -66,16 +68,12 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_square_play_detail)
         initView()
-
-
         initData()
     }
 
 
     private fun initView() {
-        squareBean.avatar =
-            "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
-
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_MATCH_FULL)
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -83,7 +81,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             onBackPressed()
         }
 //        btnBack.visibility = View.GONE
-
 
         //评论
         detailPlayComment.setOnClickListener(this)
@@ -107,7 +104,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         SwitchUtil.optionPlayer(
             detailPlayVideo,
             "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
-            true,
+            false,
             ""
         )
 
@@ -177,10 +174,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                 25f
             )
         )
-    }
-
-    override fun onGetRecentlySquaresResults(data: MutableList<SquareBean>) {
-
     }
 
 
@@ -286,6 +279,10 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         }
     }
 
+    override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
+        toast(data.msg)
+    }
+
 
     override fun onClick(view: View) {
         when (view.id) {
@@ -316,9 +313,20 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             }
             //点击内容跳转到评论详情页面
             R.id.detailPlayContent -> {
+                startActivity<SquareCommentDetailActivity>("squareBean" to squareBean)
             }
             R.id.detailPlayCommentSend -> {
-                ToastUtils.showShort(detailPlayComment.text.toString())
+                if (!detailPlayComment.text.toString().isEmpty())
+                    mPresenter.addComment(
+                        hashMapOf(
+                            "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                            "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                            "square_id" to squareBean.id!!,
+                            "content" to detailPlayComment.text.toString()
+                        ), 0
+                    )
+                else
+                    toast("说点什么吧")
             }
 
         }
@@ -355,12 +363,12 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onDestroy() {
         super.onDestroy()
-//        detailPlayVideo.getGSYVideoManager().setListener(detailPlayVideo.getGSYVideoManager().lastListener())
-//        detailPlayVideo.getGSYVideoManager().setLastListener(null)
-//        GSYVideoManager.releaseAllVideos()
-//        if (orientationUtils != null)
-//            orientationUtils!!.releaseListener()
-//        SwitchUtil.release()
+        detailPlayVideo.getGSYVideoManager().setListener(detailPlayVideo.getGSYVideoManager().lastListener())
+        detailPlayVideo.getGSYVideoManager().setLastListener(null)
+        GSYVideoManager.releaseAllVideos()
+        if (orientationUtils != null)
+            orientationUtils!!.releaseListener()
+        SwitchUtil.release()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -371,4 +379,8 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         }
     }
 
+    override fun onGetRecentlySquaresResults(mutableList: MutableList<SquareBean?>) {
+
+
+    }
 }

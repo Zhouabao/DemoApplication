@@ -26,7 +26,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
-                android:id="@+id/t1"
+                android:id="@+id/hotT1"
                 android:layout_marginTop="26dp"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                 android:scaleType="centerCrop"
                 android:layout_marginLeft="70dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/t1"
+                app:layout_constraintTop_toBottomOf="@id/hotT1"
                 gs:borderRadius="10dp"
                 gs:type="round"/>
 

@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.example.demoap.MultiListDetailPlayAdapter
@@ -22,22 +23,28 @@ import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType.SCREEN_MATCH_FULL
 import kotlinx.android.synthetic.main.activity_square_play_detail.btnBack
 import kotlinx.android.synthetic.main.activity_square_play_list_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 /**
  * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
  */
-class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView {
+class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
+    View.OnClickListener {
+
     //广场列表内容适配器
     private val adapter by lazy { MultiListDetailPlayAdapter(this, mutableListOf()) }
     private val squareBean: SquareBean by lazy { intent.getSerializableExtra("item") as SquareBean }
 
-    var ijkMediaPlayer: IjkMediaPlayer? = null
-    fun initAudio() {
+    private var ijkMediaPlayer: IjkMediaPlayer? = null
+    private fun initAudio() {
         ijkMediaPlayer?.release()
         ijkMediaPlayer = IjkMediaPlayer()
         ijkMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
@@ -57,9 +64,15 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
         } else {
             rvLast.visibility = View.VISIBLE
             rvNext.visibility = View.VISIBLE
-            mPresenter.getRencentlySquares()
+
+            mPresenter.getRencentlySquares(
+                hashMapOf(
+                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                    "target_accid" to intent.getStringExtra("target_accid")
+                )
+            )
         }
-        moveToPosition(layoutmanager, friendSquareList, currentIndex)
     }
 
     val layoutmanager by lazy {
@@ -71,13 +84,17 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
     }
 
     private fun initView() {
+        GSYVideoType.setShowType(SCREEN_MATCH_FULL)
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
         mPresenter.context = this
         btnBack.onClick { finish() }
 
+
         friendSquareList.layoutManager = layoutmanager
         friendSquareList.adapter = adapter
+        //取消动画，主要是闪烁
+        (friendSquareList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         //获取用户输入的评论
         adapter.onTextChangeListener = object : MultiListDetailPlayAdapter.OnTextChangeListener {
@@ -85,20 +102,36 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
                 KeyboardUtils.hideSoftInput(this@SquarePlayListDetailActivity)
                 adapter.data[position].comment = text
             }
-
         }
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 //播放
                 R.id.detailPlayBtn -> {
                     initAudio()
-                    ijkMediaPlayer!!.setDataSource(this, Uri.parse(adapter.data[position].audio_json?.get(0)))
-
+//                    ijkMediaPlayer!!.setDataSource(this, Uri.parse(adapter.data[position].audio_json?.get(0)))
+                    ijkMediaPlayer!!.setDataSource(this, Uri.parse("http://up.mcyt.net/down/47541.mp3"))
+                    adapter.data[position].isPlayAudio = !adapter.data[position].isPlayAudio
+                    if (adapter.data[position].isPlayAudio) {
+                        ijkMediaPlayer!!.prepareAsync()
+                        ijkMediaPlayer!!.start()
+                    } else {
+                        ijkMediaPlayer!!.pause()
+                    }
+                    adapter.notifyDataSetChanged()
                 }
                 //评论
-                R.id.detailPlayComment -> {
-                    //todo 评论
-                    toast(adapter.data[position].comment ?: "")
+                R.id.detailPlayCommentSend -> {
+                    if (!adapter.data[position].comment.isNullOrEmpty())
+                        mPresenter.addComment(
+                            hashMapOf(
+                                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                                "square_id" to adapter.data[position].id!!,
+                                "content" to (adapter.data[position].comment ?: "")
+                            ), position
+                        )
+                    else
+                        toast("说点什么吧")
                 }
                 //更多操作
                 R.id.detailPlayMoreActions -> {
@@ -121,51 +154,31 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
                 }
                 //点击内容跳转到评论详情页面
                 R.id.detailPlayContent -> {
+                    startActivity<SquareCommentDetailActivity>("squareBean" to adapter.data[position])
                 }
 
             }
         }
 
         //上一个
-        rvLast.onClick {
-            if (currentIndex > 0) {
-                currentIndex--
-                Log.i("squareplaydetail", "$currentIndex")
-            }
-            if (currentIndex >= 0) {
-                moveToPosition(layoutmanager, friendSquareList, currentIndex)
-            }
-        }
+        rvLast.setOnClickListener(this)
         //下一个
-        rvNext.onClick {
-            if (currentIndex < adapter.data.size) {
-                currentIndex++
-                Log.i("squareplaydetail", "$currentIndex")
-            }
-            if (currentIndex < adapter.data.size) {
-                moveToPosition(layoutmanager, friendSquareList, currentIndex)
-            }
-        }
+        rvNext.setOnClickListener(this)
 
-    }
-
-    override fun onGetRecentlySquaresResults(data: MutableList<SquareBean>) {
-        adapter.addData(data)
-        currentIndex = adapter.data.size / 2
     }
 
 
     private var currentIndex = 0
-    private fun moveToPosition(manager: LinearLayoutManager, mRecyclerView: RecyclerView, n: Int) {
+    private fun moveToPosition(manager: LinearLayoutManager, mRecyclerView: RecyclerView, currentIndex: Int) {
         val firstItem = manager.findFirstVisibleItemPosition()
         val lastItem = manager.findLastVisibleItemPosition()
-        if (n <= firstItem) {
-            mRecyclerView.scrollToPosition(n)
-        } else if (n <= lastItem) {
-            val top = mRecyclerView.getChildAt(n - firstItem).getTop()
+        if (currentIndex <= firstItem) {
+            mRecyclerView.scrollToPosition(currentIndex)
+        } else if (currentIndex <= lastItem) {
+            val top = mRecyclerView.getChildAt(currentIndex - firstItem).getTop()
             mRecyclerView.scrollBy(0, top)
         } else {
-            mRecyclerView.scrollToPosition(n)
+            mRecyclerView.scrollToPosition(currentIndex)
         }
     }
 
@@ -241,6 +254,30 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
     }
 
 
+    override fun onGetRecentlySquaresResults(data: MutableList<SquareBean?>) {
+//        data.addAll(data)
+        for (tempData in 0 until data.size) {
+
+            data[tempData]!!.type = when {
+                !data!![tempData]!!.video_json.isNullOrEmpty() -> SquareBean.VIDEO
+                !data!![tempData]!!.audio_json.isNullOrEmpty() -> SquareBean.AUDIO
+                !data!![tempData]!!.photo_json.isNullOrEmpty() ||
+                        (data!![tempData]!!.photo_json.isNullOrEmpty() && data!![tempData]!!.audio_json.isNullOrEmpty() && data!![tempData]!!.video_json.isNullOrEmpty()) -> SquareBean.PIC
+                else -> SquareBean.PIC
+            }
+        }
+
+        if (data.size <= 1) {
+            rvLast.visibility = View.GONE
+            rvNext.visibility = View.GONE
+        } else {
+            rvLast.visibility = View.GONE
+            rvNext.visibility = View.VISIBLE
+        }
+        adapter.addData(data)
+
+    }
+
     override fun onGetSquareLikeResult(position: Int, result: Boolean) {
         if (result) {
             if (adapter.data[position].isliked == 1) {
@@ -266,4 +303,74 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
         }
     }
 
+    override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
+        toast(data.msg)
+        if (data.code == 200) {
+            adapter.data[position].comment = ""
+            adapter.notifyItemChanged(position)
+        }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        GSYVideoManager.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        GSYVideoManager.onResume(false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        GSYVideoManager.releaseAllVideos()
+    }
+
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.rvLast -> {
+                if (currentIndex > 0) {
+                    currentIndex--
+                    Log.i("squareplaydetail", "$currentIndex")
+                }
+                if (currentIndex >= 0) {
+                    moveToPosition(layoutmanager, friendSquareList, currentIndex)
+                }
+
+                if (currentIndex == 0) {
+                    rvLast.visibility = View.GONE
+                } else {
+                    rvLast.visibility = View.VISIBLE
+                }
+                if (adapter.data.size > 1) {
+                    rvNext.visibility = View.VISIBLE
+                }
+                GSYVideoManager.releaseAllVideos()
+                if (ijkMediaPlayer != null)
+                    ijkMediaPlayer!!.release()
+            }
+            R.id.rvNext -> {
+                if (currentIndex < adapter.data.size) {
+                    currentIndex++
+                    Log.i("squareplaydetail", "$currentIndex")
+                }
+                if (currentIndex < adapter.data.size) {
+                    moveToPosition(layoutmanager, friendSquareList, currentIndex)
+                }
+                if (currentIndex + 1 == adapter.data.size) {
+                    rvNext.visibility = View.GONE
+                } else {
+                    rvNext.visibility = View.VISIBLE
+                }
+                if (adapter.data.size > 1) {
+                    rvLast.visibility = View.VISIBLE
+                }
+                GSYVideoManager.releaseAllVideos()
+                if (ijkMediaPlayer != null)
+                    ijkMediaPlayer!!.release()
+            }
+        }
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.demoapplication.common
 
+import android.annotation.SuppressLint
 import com.blankj.utilcode.util.CrashUtils
 import com.example.demoapplication.R
 import com.kotlin.base.common.BaseApplication
@@ -22,10 +23,11 @@ class MyApplication : BaseApplication() {
     }
 
 
+    @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
         MobSDK.init(this)
-        CrashUtils.init()
+        CrashUtils.init("demoapplicaiton")
         configUnits()
         configPlayer()
 

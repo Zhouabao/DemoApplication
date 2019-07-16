@@ -141,5 +141,8 @@ public class Player implements IPlayback, MediaPlayer.OnCompletionListener {
         }
     }
 
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
 
 }

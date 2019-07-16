@@ -1,11 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorWhite</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorLightGray</item>
+
     </style>
 
 
@@ -21,13 +23,17 @@
     <style name="AppTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:clipToPadding">false</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorLightGray</item>
         <!--<item name="android:windowNoTitle">true</item>//无标题-->
         <!--<item name="android:windowActionBar">false</item>//无ActionBar-->
     </style>
 
 
     <!-- window 透明的-->
-    <style name="Theme.AppCompat.Transitions" parent="AppTheme">
+    <style name="Theme.AppCompat.Transitions" parent="MyAppTheme">
         <item name="android:windowContentTransitions">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

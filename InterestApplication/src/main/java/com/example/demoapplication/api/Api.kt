@@ -75,15 +75,23 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("square/squareFriends${Constants.END_BASE_URL}")
-    fun getSquareFriends(@FieldMap params: HashMap<String, String>): Observable<BaseResp<MutableList<FriendBean?>?>>
+    fun getSquareFriends(@FieldMap params: HashMap<String, String>): Observable<BaseResp<FriendListBean?>>
 
 
     /**
-     * 获取广场好友列表
+     * 获取广场列表
      */
     @FormUrlEncoded
     @POST("square/squareLists${Constants.END_BASE_URL}")
     fun getSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean>>
+
+
+    /**
+     * 获取广场好友最近的动态列表
+     */
+    @FormUrlEncoded
+    @POST("square/getLatelySquareInfo${Constants.END_BASE_URL}")
+    fun getLatelySquareInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareRecentlyListBean?>>
 
 
     /**
@@ -95,11 +103,50 @@ interface Api {
 
 
     /**
+     * 广场评论
+     */
+    @FormUrlEncoded
+    @POST("square/addComment${Constants.END_BASE_URL}")
+    fun addComment(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
      * 广场收藏
      */
     @FormUrlEncoded
     @POST("square/squareCollect${Constants.END_BASE_URL}")
     fun getSquareCollect(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+
+    /**
+     * 广场举报
+     */
+    @FormUrlEncoded
+    @POST("square/squareReport${Constants.END_BASE_URL}")
+    fun getSquareReport(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 获取广场的评论列表
+     */
+    @FormUrlEncoded
+    @POST("square/commentLists${Constants.END_BASE_URL}")
+    fun getCommentLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AllCommentBean?>>
+
+    /**
+     * 删除评论
+     */
+    @FormUrlEncoded
+    @POST("square/destoryComment${Constants.END_BASE_URL}")
+    fun destoryComment(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * 评论点赞
+     */
+    @FormUrlEncoded
+    @POST("square/commentLikes${Constants.END_BASE_URL}")
+    fun commentLikes(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     @GET

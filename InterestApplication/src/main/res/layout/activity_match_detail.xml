@@ -127,7 +127,7 @@
                 app:layout_constraintTop_toBottomOf="@id/detailUserSign"/>
 
         <TextView
-                android:id="@+id/t1"
+                android:id="@+id/hotT1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="标签"
@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="@id/detailUserName"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/t1"/>
+                app:layout_constraintTop_toBottomOf="@id/hotT1"/>
 
         <View
                 android:id="@+id/view1"
@@ -160,7 +160,7 @@
                 app:layout_constraintRight_toRightOf="parent"/>
 
         <TextView
-                android:id="@+id/t2"
+                android:id="@+id/allT2"
                 android:text="广场"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
@@ -177,7 +177,7 @@
                 android:orientation="horizontal"
                 android:layout_height="24dp"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/t2">
+                app:layout_constraintTop_toTopOf="@id/allT2">
 
             <RadioButton
                     android:id="@+id/rbBlock"
@@ -201,7 +201,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/t2"/>
+                app:layout_constraintTop_toBottomOf="@id/allT2"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

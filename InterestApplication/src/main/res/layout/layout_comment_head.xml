@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/allT2"
+        android:text="所有评论"
+        android:textColor="@color/colorGrayText"
+        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/colorDivider"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical"
+
+        />

@@ -2,10 +2,9 @@ package com.example.demoap
 
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -15,9 +14,9 @@ import android.widget.RadioButton
 import androidx.core.view.get
 import androidx.core.view.size
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
@@ -25,10 +24,8 @@ import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.ui.adapter.SquareDetailImgsAdaper
 import com.example.demoapplication.ui.dialog.TranspondDialog
-import com.kotlin.base.ext.onClick
-import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
-import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.view.*
 import kotlinx.android.synthetic.main.item_square_play_detail_audio.view.*
 import kotlinx.android.synthetic.main.item_square_play_detail_pics.view.*
@@ -57,8 +54,9 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         // 这里指定了被共享的视图元素
         holder.addOnClickListener(R.id.detailPlaydianzan)
         holder.addOnClickListener(R.id.detailPlayMoreActions)
-        holder.addOnClickListener(R.id.detailPlayComment)
+//        holder.addOnClickListener(R.id.detailPlayComment)
         holder.addOnClickListener(R.id.detailPlayContent)
+        holder.addOnClickListener(R.id.detailPlayCommentSend)
 
         GlideUtil.loadAvatorImg(context, item.avatar ?: "", holder.itemView.detailPlayUserAvatar)
         holder.itemView.detailPlayUserLocationAndTime.text = item.city_name ?: "".plus("\t").plus(item.out_time ?: "")
@@ -69,10 +67,8 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         holder.itemView.detailPlaydianzan.text = "${item.like_cnt}"
-
-        holder.itemView.detailPlayCommentSend.onClick {
-            ToastUtils.showShort(holder.itemView.detailPlayComment.text.toString())
-        }
+        if (holder.itemView.detailPlayComment.text.toString().isNotEmpty())
+            holder.itemView.detailPlayComment.setText("")//尤其是在评论之后清除数据
         holder.itemView.detailPlayComment.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(edit: Editable?) {
                 if (onTextChangeListener != null) {
@@ -92,8 +88,11 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         var play = false
         when (holder.itemViewType) {
             SquareBean.PIC -> {
-                holder.itemView.picFl.setBackgroundResource(R.color.colorBlack)
+//                holder.itemView.picFl.setBackgroundResource(R.color.colorBlack)
                 if (holder.itemView.detailPlayVp2Indicator1.childCount == 0) {
+                    if (item.photo_json.isNullOrEmpty()) {
+                        item.photo_json = mutableListOf(item.avatar ?: "")
+                    }
                     holder.itemView.detailPlayVp2.adapter =
                         SquareDetailImgsAdaper(context, item.photo_json ?: mutableListOf())
 
@@ -137,49 +136,27 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 
             }
             SquareBean.VIDEO -> {
+                Glide.with(context)
+                    .load(item.avatar!!)
+                    .apply(bitmapTransform(BlurTransformation(25)))
+                    .into(holder.itemView.videoFl)
 
-                holder.itemView.videoFl.background = BitmapDrawable(
-                    ImageUtils.fastBlur(
-                        BitmapFactory.decodeResource(
-                            context.resources,
-                            R.drawable.img_avatar_01
-                        ),
-                        1f,
-                        25f
-                    )
-                )
+
+
                 gsyVideoOptionBuilder.setIsTouchWiget(false)
 //                    .setThumbImageView()
-                    .setUrl(item.video_json?.get(0) ?: "")
+//                    .setUrl(item.video_json?.get(0) ?: "")
+                    .setUrl("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4")
                     .setCacheWithPlay(false)
-                    .setRotateViewAuto(true)
+                    .setRotateViewAuto(false)
                     .setLockLand(false)
                     .setPlayTag(TAG)
                     .setPlayPosition(holder.layoutPosition)
                     .setShowFullAnimation(true)
-                    .setVideoAllCallBack(object : GSYSampleCallBack() {
-                        override fun onPrepared(url: String?, vararg objects: Any?) {
-                            super.onPrepared(url, *objects)
-                            if (!holder.itemView.detailPlayVideo.isIfCurrentIsFullscreen) {
-                                //静音
-                                GSYVideoManager.instance().isNeedMute = true
-                            }
-                        }
-
-                        override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
-                            super.onQuitFullscreen(url, *objects)
-                            //全屏不静音
-                            GSYVideoManager.instance().isNeedMute = true
-                        }
-
-                        override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
-                            super.onEnterFullscreen(url, *objects)
-                            GSYVideoManager.instance().isNeedMute = false
-                        }
-                    })
                     .build(holder.itemView.detailPlayVideo)
 
-//                holder.itemView.squareUserVideo.backButton.visibility = View.GONE
+                holder.itemView.detailPlayVideo.backButton.visibility = View.GONE
+                holder.itemView.detailPlayVideo.fullscreenButton.visibility = View.GONE
 //                holder.itemView.squareUserVideo.fullscreenButton.onClick {
 //                    holder.itemView.squareUserVideo.startWindowFullscreen(context, false, true)
 //                }
@@ -188,10 +165,13 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 //                holder.itemView.squareUserVideo.isShowFullAnimation = true
             }
             SquareBean.AUDIO -> {
-//                holder.addOnClickListener(R.id.detailPlayBtn)
-
+                holder.addOnClickListener(R.id.detailPlayBtn)
+                Glide.with(context)
+                    .load(item.avatar!!)
+                    .apply(bitmapTransform(BlurTransformation(25)))
+                    .into(holder.itemView.audioFl)
                 GlideUtil.loadImg(context, item.avatar ?: "", holder.itemView.detailPlayAudioBg)
-                holder.itemView.audioFl.background = BitmapDrawable(ImageUtils.fastBlur(BitmapFactory.decodeResource(context.resources, R.drawable.img_avatar_01), 1f, 25f))
+
                 val rotateAnimation =
                     RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
                 rotateAnimation.interpolator = LinearInterpolator()
@@ -208,21 +188,17 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                 //设置动画重复模式
                 objAnim.setRepeatMode(ObjectAnimator.RESTART);
 
-
-                holder.itemView.detailPlayBtn.onClick {
-                    play = !play
-                    if (play) {
-                        if (objAnim.isStarted)
-                            objAnim.resume()
-                        else
-                            objAnim.start()
-                        holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_pause_white)
-//                        holder.itemView.detailPlayAudioBg.startAnimation(rotateAnimation)
+                if (item.isPlayAudio) {
+                    if (objAnim.isStarted) {
+                        objAnim.resume()
                     } else {
-                        holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_play_white)
-                        objAnim.pause()
-//                        holder.itemView.detailPlayAudioBg.clearAnimation()
                     }
+                    objAnim.start()
+                    holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_pause_white)
+//
+                } else {
+                    holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_play_white)
+                    objAnim.pause()
                 }
             }
         }

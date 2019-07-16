@@ -27,6 +27,7 @@ class SquareDetailImgsAdaper(val context: Context, val datas: MutableList<String
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val imageview = RoundImageView(context)
         imageview.setType(RoundImageView.TYPE_NORMAL)
+        imageview.transitionName = "imageview"
         imageview.layoutParams = ViewGroup.LayoutParams(ScreenUtils.getScreenWidth(), ScreenUtils.getScreenHeight())
         GlideUtil.loadImg(context, datas[position], imageview)
         container.addView(imageview)

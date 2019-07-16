@@ -21,5 +21,7 @@ interface SquareView : BaseView {
 
     fun onGetSquareCollectResult(position: Int, result: BaseResp<Any?>)
 
-    fun onGetSquareJubaoResult(position: Int, result: Boolean)
+
+
+    fun onGetSquareReport(baseResp: BaseResp<Any?>, position: Int)
 }

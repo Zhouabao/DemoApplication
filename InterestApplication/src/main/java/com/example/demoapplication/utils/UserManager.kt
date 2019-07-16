@@ -44,4 +44,13 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo!!.birth!!)
         }
     }
+
+
+    fun getToken():String{
+        return  SPUtils.getInstance(Constants.SPNAME).getString("token")
+    }
+
+    fun getAccid():String{
+        return  SPUtils.getInstance(Constants.SPNAME).getString("accid")
+    }
 }

@@ -3,8 +3,6 @@ package com.example.demoapplication.ui.fragment
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -26,6 +25,7 @@ import com.example.demoapplication.model.SquareListBean
 import com.example.demoapplication.presenter.SquarePresenter
 import com.example.demoapplication.presenter.view.SquareView
 import com.example.demoapplication.ui.activity.LabelsActivity
+import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.ui.adapter.MatchLabelAdapter
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
@@ -40,7 +40,7 @@ import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
-import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.fragment_square.*
 import org.greenrobot.eventbus.EventBus
@@ -94,6 +94,12 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         )
     }
 
+    //好友的params
+    private val friendsParams = hashMapOf(
+        "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+        "token" to SPUtils.getInstance(Constants.SPNAME).getString("token")
+    )
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_square, container, false)
@@ -125,6 +131,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
 
     private fun initView() {
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_4_3)
         EventBus.getDefault().register(this)
         mPresenter = SquarePresenter()
         mPresenter.mView = this
@@ -136,6 +143,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
         squareDynamicRv.layoutManager = layoutManager
         squareDynamicRv.adapter = adapter
+        //取消动画，主要是闪烁
+        (squareDynamicRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         //限定范围为屏幕一半的上下偏移180
 //        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(252F)
@@ -156,13 +165,12 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 //滑动自动播放
-                if (!mFull)
-                    scrollCalculatorHelper.onScroll(
-                        recyclerView,
-                        firstVisibleItem,
-                        lastVisibleItem,
-                        lastVisibleItem - firstVisibleItem
-                    )
+                scrollCalculatorHelper.onScroll(
+                    recyclerView,
+                    firstVisibleItem,
+                    lastVisibleItem,
+                    lastVisibleItem - firstVisibleItem
+                )
 
 
                 //大于0说明有播放
@@ -182,7 +190,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         })
 
         adapter.setOnItemClickListener { adapter, view, position ->
-            //            startActivity<SquareDetailActivity>("matchbean" to adapter.data[position])
+            startActivity<SquareCommentDetailActivity>("squareBean" to adapter.data[position])
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -191,7 +199,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                     toast("聊天呗$position")
                 }
                 R.id.squareCommentBtn1 -> {
-                    toast("评论$position")
+                    startActivity<SquareCommentDetailActivity>("squareBean" to adapter.data[position])
                 }
                 R.id.squareDianzanBtn1 -> {
                     val params = hashMapOf(
@@ -237,15 +245,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
         //这个地方还要默认设置选中第一个标签来更新数据
         mPresenter.getSquareList(listParams, true)
-
-        mPresenter.getFrinedsList(
-            hashMapOf(
-//                "accid" to Constants.ACCID,
-//                "token" to Constants.TOKEN
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token")
-            )
-        )
+        mPresenter.getFrinedsList(friendsParams)
 
     }
 
@@ -290,8 +290,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         headRvFriends.layoutManager = linearLayoutManager
         headRvFriends.adapter = friendsAdapter
         friendsAdapter.setOnItemClickListener { adapter, view, position ->
-            startActivity<SquarePlayListDetailActivity>("square_id" to (friendsAdapter.data[position].square_id ?: 0))
-            toast("${adapter.data[position]}")
+            startActivity<SquarePlayListDetailActivity>("target_accid" to (friendsAdapter.data[position].accid ?: 0))
         }
     }
 
@@ -338,8 +337,19 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             mPresenter.getSquareCollect(params, position)
         }
         moreActionDialog.llJubao.onClick {
-            //todo 发起举报请求
-            toast("举报${adapter.data[position].id}")
+            //发起举报请求
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "type" to if (adapter.data[position].iscollected == 0) {
+                    1
+                } else {
+                    2
+                },
+                "square_id" to adapter.data[position].id!!,
+                "_timestamp" to System.currentTimeMillis()
+            )
+            mPresenter.getSquareReport(params, position)
         }
         moreActionDialog.cancel.onClick {
             moreActionDialog.dismiss()
@@ -355,7 +365,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onResume() {
         super.onResume()
-        GSYVideoManager.onResume(false)
+//        GSYVideoManager.onResume(false)
     }
 
     override fun onDestroy() {
@@ -370,6 +380,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         listParams["page"] = page
         adapter.data.clear()
         mPresenter.getSquareList(listParams, true)
+
+        friendsAdapter.data.clear()
+        mPresenter.getFrinedsList(friendsParams)
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
@@ -398,8 +411,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 data!!.data[tempData].type = when {
                     !data!!.data[tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
                     !data!!.data[tempData].audio_json.isNullOrEmpty() -> SquareBean.AUDIO
-                    !data!!.data[tempData].photo_json.isNullOrEmpty() -> SquareBean.PIC
-                    else -> SquareBean.VIDEO
+                    !data!!.data[tempData].photo_json.isNullOrEmpty() || (data!!.data[tempData].photo_json.isNullOrEmpty() && data!!.data[tempData].audio_json.isNullOrEmpty() && data!!.data[tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
+                    else -> SquareBean.PIC
                 }
             }
             if (refresh)
@@ -439,8 +452,11 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         }
     }
 
-    override fun onGetSquareJubaoResult(position: Int, result: Boolean) {
-        toast("举报成功！")
+    override fun onGetSquareReport(baseResp: BaseResp<Any?>, position: Int) {
+        toast(baseResp.msg)
+        if (moreActionDialog != null && moreActionDialog.isShowing) {
+            moreActionDialog.dismiss()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -460,14 +476,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             }
         }
     }
-
-    private var mFull = false
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        //如果旋转了就全屏
-        mFull = newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_USER
-    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNewMsgEvent(event: PlayVideoEvent) {

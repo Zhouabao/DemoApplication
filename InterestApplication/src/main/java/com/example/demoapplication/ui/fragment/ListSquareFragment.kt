@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
-import com.example.demoapplication.ui.activity.SquareDetailActivity
+import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import kotlinx.android.synthetic.main.fragment_list_square.*
 import kotlinx.android.synthetic.main.item_list_square_pic.*
@@ -43,7 +43,7 @@ class ListSquareFragment : Fragment() {
         listSquareRv.adapter = listSquareAdapter
         listSquareAdapter.setOnItemChildClickListener { adapter, view, position ->
             if (view == squareUserPics1)
-                startActivity<SquareDetailActivity>()
+                startActivity<SquareCommentDetailActivity>()
         }
         initData()
     }

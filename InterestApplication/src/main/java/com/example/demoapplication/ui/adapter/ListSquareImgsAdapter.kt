@@ -2,16 +2,14 @@ package com.example.demoapplication.ui.adapter
 
 import android.content.Context
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.baselibrary.widgets.RoundImageView
 import com.example.demoapplication.R
-import com.kotlin.base.ext.onClick
 import kotlinx.android.synthetic.main.item_match_detail_img.view.*
 
 /**
@@ -25,19 +23,10 @@ class ListSquareImgsAdapter(
     private var datas: MutableList<String>,
     private var fullScreenWidth: Boolean = false
 ) :
-    RecyclerView.Adapter<ListSquareImgsAdapter.ViewHolder>() {
-    private var itemClickListener: OnItemClickListener? = null
+    BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_match_detail_img, datas) {
 
-    fun setOnItemClickListener(itemClickListener: OnItemClickListener) {
-        this.itemClickListener = itemClickListener
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_match_detail_img, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun convert(holder: BaseViewHolder, item: String) {
+        val position = holder.layoutPosition
         val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
         if (!fullScreenWidth) {
             if (datas.size == 1) {
@@ -65,23 +54,6 @@ class ListSquareImgsAdapter(
             holder.itemView.ivUser.layoutParams = layoutParams
         }
         GlideUtil.loadImg(context, datas[position], holder.itemView.ivUser)
-
-        holder.itemView.onClick {
-            if (itemClickListener != null) {
-                itemClickListener!!.onItemClick(position)
-            }
-        }
     }
 
-
-    override fun getItemCount(): Int {
-        return datas.size
-    }
-
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
-    }
 }

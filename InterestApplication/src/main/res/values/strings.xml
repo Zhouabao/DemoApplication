@@ -2,6 +2,8 @@
     <string name="app_name">兴趣</string>
     <string name="permission_tip">为了更好的用户体验 需要开启以下系统权限</string>
 
+    <string name="service_error">服务器出错，请重试</string>
+
 
     <!--拍摄照片时的滤镜    -->
 

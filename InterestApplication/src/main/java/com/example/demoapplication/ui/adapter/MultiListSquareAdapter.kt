@@ -19,7 +19,9 @@ import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.kotlin.base.ext.onClick
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import kotlinx.android.synthetic.main.item_list_square_audio.view.*
 import kotlinx.android.synthetic.main.item_list_square_pic.view.*
 import kotlinx.android.synthetic.main.item_list_square_video.view.*
@@ -75,7 +77,8 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
         )
 //        holder.itemView.squareContent1.setOriginalText(item.descr ?: "")
 
-        holder.itemView.squareContent1.setOriginalText("在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品")
+        holder.itemView.squareUserName1.text = item.nickname ?: ""
+        holder.itemView.squareContent1.setOriginalText(item.descr ?: "")
         holder.itemView.squareContent1.setHasAnimation(true)
 
         holder.itemView.squareDianzanBtn1.text = item.like_cnt.toString()
@@ -86,13 +89,11 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
             View.GONE
         }
         GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.squareUserIv1)
-        holder.itemView.squareLocationAndTime1.text =
-            (item.city_name ?: "").plus("\t").plus(
-                item.out_time
+        holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus("\t").plus(item.out_time)
 //                if (!item.create_time.isNullOrEmpty()) {
 //                    TimeUtils.getFitTimeSpan(TimeUtils.getNowString(), item.create_time, 2)
 //                } else ""
-            )
+
 
         when (holder.itemViewType) {
             MatchBean.PIC -> {
@@ -102,11 +103,10 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
                         LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
                     val adapter = ListSquareImgsAdapter(context, item.photo_json ?: mutableListOf())
                     holder.itemView.squareUserPics1.adapter = adapter
-                    adapter.setOnItemClickListener(object : ListSquareImgsAdapter.OnItemClickListener {
-                        override fun onItemClick(position: Int) {
-                            context.startActivity<SquarePlayListDetailActivity>("item" to item)
-                        }
-                    })
+                    adapter.setOnItemClickListener { adapter, view, position ->
+                        context.startActivity<SquarePlayListDetailActivity>("item" to item)
+
+                    }
                 } else {
                     holder.itemView.squareUserPics1.visibility = View.GONE
                     holder.itemView.squareContent1.onClick {
@@ -117,10 +117,10 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
             }
             MatchBean.VIDEO -> {
 
-                if (SwitchUtil.sSwitchVideo != null) {
-                    SwitchUtil.clonePlayState(holder.itemView.squareUserVideo)
-                    holder.itemView.squareUserVideo.setSurfaceToPlay()
-                }
+//                if (SwitchUtil.sSwitchVideo != null) {
+//                    SwitchUtil.clonePlayState(holder.itemView.squareUserVideo)
+//                    holder.itemView.squareUserVideo.setSurfaceToPlay()
+//                }
                 holder.itemView.squareUserVideo.detail_btn.setOnClickListener {
                     if (holder.itemView.squareUserVideo.isInPlayingState) {
                         SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
@@ -138,16 +138,36 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
                 }
                 holder.itemView.squareUserVideo.setPlayTag(TAG)
                 holder.itemView.squareUserVideo.setPlayPosition(holder.layoutPosition)
+                holder.itemView.squareUserVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+                    override fun onPrepared(url: String?, vararg objects: Any?) {
+                        if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen) {
+                            //静音
+                            GSYVideoManager.instance().isNeedMute = true
+                        }
+                    }
+
+                    override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
+                        super.onQuitFullscreen(url, *objects)
+                        //退出全屏静音
+                        GSYVideoManager.instance().isNeedMute = true
+                    }
+
+                    override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
+                        super.onEnterFullscreen(url, *objects)
+                        GSYVideoManager.instance().isNeedMute = false
+                    }
+
+                })
 //                SwitchUtil.optionPlayer(holder.itemView.squareUserVideo, item.video_json?.get(0) ?: "", true, "")
                 SwitchUtil.optionPlayer(
                     holder.itemView.squareUserVideo,
                     "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
-                    true,
+                    false,
                     ""
                 )
                 holder.itemView.squareUserVideo.setUp(
                     "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
-                    true,
+                    false,
                     null,
                     null,
                     ""
@@ -166,7 +186,7 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 }
                 holder.itemView.squareUserAudio.onClick {
-                    context.startActivity<SquarePlayListDetailActivity>("item" to item)
+                    context.startActivity<SquarePlayListDetailActivity>("item" to item, "from" to "squareFragment")
                 }
             }
         }

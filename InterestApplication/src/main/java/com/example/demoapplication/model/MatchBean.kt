@@ -50,7 +50,7 @@ data class SquareBean(
     var avatar: String?,
     var city_name: String?,
     var comment_cnt: Int?,
-    var comment: String?=null,
+    var comment: String? = null,
     var create_time: String?,
     var descr: String?,
     var id: Int?,
@@ -110,3 +110,48 @@ data class FriendBean(
     var id: Int?,
     var nickname: String?
 )
+
+
+data class FriendListBean(
+    var list: MutableList<FriendBean?>?
+)
+
+
+data class SquareRecentlyListBean(
+    var list: MutableList<SquareBean?>?
+)
+
+data class AllCommentBean(
+    var hotlist: MutableList<CommentBean?>?,
+    var list: MutableList<CommentBean?>?
+)
+
+
+/**
+ * 评论数据
+ */
+data class CommentBean(
+    var avatar: String? = null,
+    var content: String? = null,
+    var create_time: String? = null,
+    var id: Int?=0,
+    var isliked: Int?=0,
+    var like_count: Int?=0,
+    var member_accid: String? = null,
+    var reply_content: String? = null,
+    var reply_count: Int?=0,
+    var reply_id: Int?=0,
+    var replyed_nickname: String? = null,
+    var nickname: String? = null,
+    var square_id: Int?=0,
+    var type: Int = 1 //1数据  0标题
+) : MultiItemEntity {
+    override fun getItemType(): Int {
+        return type
+    }
+
+    companion object {
+        const val TITLE = 0
+        const val CONTENT = 1
+    }
+}
