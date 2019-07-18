@@ -14,7 +14,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.ui.adapter.SquareDetailImgsAdaper
-import com.kotlin.base.common.BaseApplication.Companion.context
 import kotlinx.android.synthetic.main.activity_big_image.*
 
 /**
@@ -39,7 +38,7 @@ class BigImageActivity : AppCompatActivity() {
     private val squareBean: SquareBean by lazy { intent.getSerializableExtra(IMG_KEY) as SquareBean }
     private val currIndex by lazy { intent.getIntExtra(IMG_POSITION, 0) }
     private fun initView() {
-        bigImageVP.adapter = SquareDetailImgsAdaper(context, squareBean.photo_json ?: mutableListOf())
+        bigImageVP.adapter = SquareDetailImgsAdaper(this, squareBean.photo_json ?: mutableListOf())
         //图片加载完后 继续执行过渡动画
         startPostponedEnterTransition()
         if (squareBean.photo_json != null && squareBean.photo_json!!.size > 1) {

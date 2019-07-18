@@ -21,7 +21,7 @@ import org.jetbrains.anko.support.v4.startActivity
  * 列表形式的广场列表
  */
 class ListSquareFragment : Fragment() {
-    private val listSquareAdapter by lazy { MultiListSquareAdapter(activity!!, userList) }
+    private val listSquareAdapter by lazy { MultiListSquareAdapter( userList) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment

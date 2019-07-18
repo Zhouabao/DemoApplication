@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
+        android:background="@color/colorBlack"
         tools:context=".ui.activity.SquarePlayListDetailActivity">
 
     <FrameLayout
@@ -16,9 +17,9 @@
 
         <com.example.demoapplication.switchplay.SwitchVideo
                 android:id="@+id/detailPlayVideo"
-                android:layout_marginTop="100dp"
                 android:layout_width="match_parent"
-                android:layout_height="418dp"/>
+                android:layout_gravity="center"
+                android:layout_height="match_parent"/>
 
         <include
                 android:id="@+id/videoCover"

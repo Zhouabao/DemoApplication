@@ -6,14 +6,11 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.media.AudioManager
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.transition.Explode
 import android.view.View
-import android.view.Window
 import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.SharedElementCallback
@@ -28,6 +25,9 @@ import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.AllCommentBean
 import com.example.demoapplication.model.CommentBean
 import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.player.IjkMediaPlayerUtil
+import com.example.demoapplication.player.OnPlayingListener
+import com.example.demoapplication.player.UpdateVoiceTimeThread
 import com.example.demoapplication.presenter.SquareDetailPresenter
 import com.example.demoapplication.presenter.view.SquareDetailView
 import com.example.demoapplication.switchplay.SwitchUtil
@@ -37,19 +37,18 @@ import com.example.demoapplication.ui.dialog.CommentActionDialog
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.example.demoapplication.utils.UserManager
-import com.kotlin.base.common.BaseApplication.Companion.context
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.activity_square_comment_detail.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.switch_video.view.*
 import org.jetbrains.anko.toast
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 
 
@@ -59,13 +58,14 @@ import java.util.*
 class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView, View.OnClickListener,
     OnRefreshListener, OnLoadMoreListener {
 
-
     //评论数据
     private var commentDatas: MutableList<CommentBean> = mutableListOf()
     private val adapter: MultiListCommentAdapter by lazy { MultiListCommentAdapter(this, commentDatas) }
 
     private val squareBean: SquareBean  by lazy { intent.getSerializableExtra("squareBean") as SquareBean }
 
+    //通过标志进入的入口来决定是否弹起键盘
+    private val enterPosition: String? by lazy { intent.getStringExtra("enterPosition") }
 
     private var page = 1
 
@@ -79,7 +79,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // 设置一个exit transition
-        window?.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         window?.enterTransition = Explode()
         window?.exitTransition = Explode()
         super.onCreate(savedInstanceState)
@@ -111,7 +110,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     private fun initView() {
         mPresenter = SquareDetailPresenter()
         mPresenter.mView = this
-        mPresenter.context = context
+        mPresenter.context = this
 
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
@@ -135,7 +134,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
             else -> {
                 squareUserAudio.visibility = View.VISIBLE
-                initAudio()
+//                initAudio()
+                initAudio(0)
+                mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0) ?: "").prepareMedia()
             }
         }
 
@@ -218,13 +219,97 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     /**
      * 初始化播放音频
      */
-    var ijkMediaPlayer: IjkMediaPlayer? = null
+    // var ijkMediaPlayer: IjkMediaPlayer? = null
 
-    private fun initAudio() {
-        ijkMediaPlayer?.release()
-        ijkMediaPlayer = IjkMediaPlayer()
-        ijkMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-        ijkMediaPlayer!!.setDataSource(this, Uri.parse("http://up.mcyt.net/down/47541.mp3"))
+//    private fun initAudio() {
+//        ijkMediaPlayer?.release()
+//        ijkMediaPlayer = IjkMediaPlayer()
+//        ijkMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+//        ijkMediaPlayer!!.setDataSource(this, Uri.parse(squareBean.audio_json?.get(0) ?: ""))
+//
+//
+//
+//    }
+
+
+    var mediaPlayer: IjkMediaPlayerUtil? = null
+
+    private fun initAudio(position: Int) {
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+        mediaPlayer = IjkMediaPlayerUtil(this, position, object : OnPlayingListener {
+            override fun onPlay(position: Int) {
+                squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
+                voicePlayView.start()
+                UpdateVoiceTimeThread.getInstance("03:40", audioTime).start()
+                audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
+            }
+
+            override fun onPause(position: Int) {
+                squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
+                voicePlayView.stop()
+                UpdateVoiceTimeThread.getInstance("03:40", audioTime).pause()
+                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+            }
+
+            override fun onStop(position: Int) {
+                squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                voicePlayView.stop()
+                UpdateVoiceTimeThread.getInstance("03:40", audioTime).stop()
+                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+                mediaPlayer!!.resetMedia()
+                mediaPlayer = null
+            }
+
+            override fun onError(position: Int) {
+                toast("音频播放出错")
+                squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+                mediaPlayer!!.resetMedia()
+                mediaPlayer = null
+            }
+
+            override fun onPrepared(position: Int) {
+                //todo  异步准备 准备好了才会实现播放。
+                mediaPlayer!!.startPlay()
+            }
+
+            override fun onPreparing(position: Int) {
+                voicePlayView.stop()
+                UpdateVoiceTimeThread.getInstance("03:40", audioTime).stop()
+                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+            }
+
+            override fun onRelease(position: Int) {
+//                squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+//                voicePlayView.stop()
+//                UpdateVoiceTimeThread.getInstance("03:40", audioTime).stop()
+//                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+//                mediaPlayer!!.resetMedia()
+//                mediaPlayer = null
+            }
+
+        }).getInstance()
+
+        audioPlayBtn.setOnClickListener {
+            when (squareBean.isPlayAudio) {
+                IjkMediaPlayerUtil.MEDIA_PREPARE -> {
+                    mediaPlayer!!.prepareMedia()
+                }
+                IjkMediaPlayerUtil.MEDIA_STOP -> {
+                    mediaPlayer!!.prepareMedia()
+                }
+                IjkMediaPlayerUtil.MEDIA_PLAY -> {
+                    mediaPlayer!!.pausePlay()
+                }
+                IjkMediaPlayerUtil.MEDIA_PAUSE -> {
+                    mediaPlayer!!.resumePlay()
+                }
+            }
+        }
     }
 
 
@@ -232,6 +317,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
      * 初始化播放视频
      */
     private fun initVideo() {
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
         squareUserVideo.fullscreenButton.visibility = View.GONE//设置全屏按钮
         squareUserVideo.startButton.visibility = View.GONE
         squareUserVideo.backButton.visibility = View.GONE//设置返回键
@@ -247,9 +333,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 SquarePlayDetailActivity.startActivity(this, squareUserVideo, squareBean, 0)
             }
         }
-        squareUserVideo.setSwitchUrl("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4")
+        squareUserVideo.setSwitchUrl(squareBean.video_json?.get(0) ?: "")
         squareUserVideo.setSwitchCache(false)
-        squareUserVideo.setUp("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4", false, "")
+        squareUserVideo.setUp(squareBean.video_json?.get(0) ?: "", false, "")
         squareUserVideo.startPlayLogic()
     }
 
@@ -257,11 +343,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     /**
      * 初始化图片列表
      */
-    private val imgsAdapter by lazy { ListSquareImgsAdapter(context, squareBean.photo_json ?: mutableListOf()) }
+    private val imgsAdapter by lazy { ListSquareImgsAdapter(this, squareBean.photo_json ?: mutableListOf()) }
 
     private fun initPics() {
         if (squareBean.photo_json != null && squareBean.photo_json!!.size > 0) {
-            squareUserPics.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            squareUserPics.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
             squareUserPics.adapter = imgsAdapter
             imgsAdapter.setOnItemClickListener { _, view, position ->
                 val intent = Intent(this@SquareCommentDetailActivity, BigImageActivity::class.java)
@@ -355,7 +441,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
             squareDianzanBtn.text = "${squareBean.like_cnt}"
             val drawable1 =
-                context.resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+                resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
             drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
             squareDianzanBtn.setCompoundDrawables(drawable1, null, null, null)
         } else {
@@ -392,6 +478,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         toast(data.msg)
         adapter.notifyItemChanged(position)
     }
+
+    override fun onReportCommentResult(data: BaseResp<Any?>, position: Int) {
+        toast(data.msg)
+    }
+
 
     override fun onClick(view: View) {
         when (view.id) {
@@ -536,6 +627,14 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         commentActionDialog!!.jubaoComment.onClick {
             //todo 举报
+            mPresenter.commentReport(
+                hashMapOf(
+                    "token" to UserManager.getToken(),
+                    "accid" to UserManager.getAccid(),
+                    "id" to adapter.data[position].id!!
+                )
+                , position
+            )
             commentActionDialog!!.dismiss()
 
         }
@@ -576,25 +675,37 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onPause() {
         super.onPause()
+        squareUserVideo.onVideoPause()
+        if (mediaPlayer != null)
+            mediaPlayer!!.pausePlay()
 //        squareUserVideo.onVideoPause()
-        if (ijkMediaPlayer != null)
-            ijkMediaPlayer!!.pause()
-//        squareUserVideo.onVideoPause()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!enterPosition.isNullOrEmpty()) {
+            showCommentEt.isFocusable = true
+            showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 500L)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-//        squareUserVideo.onVideoResume(false)
-        if (ijkMediaPlayer != null)
-            ijkMediaPlayer!!.start()
+        squareUserVideo.onVideoResume(false)
+        if (mediaPlayer != null)
+            mediaPlayer!!.resumePlay()
 //        squareUserVideo.onVideoResume()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 //        squareUserVideo.release()
-        if (ijkMediaPlayer != null)
-            ijkMediaPlayer!!.release()
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+        if (showCommentEt.isFocused)
+            resetCommentEt()
 //        GSYVideoManager.releaseAllVideos()
     }
 

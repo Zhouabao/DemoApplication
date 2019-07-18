@@ -1,55 +1,49 @@
 package com.example.demoapplication.ui.fragment
 
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
-import android.media.AudioManager
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.event.PlayVideoEvent
+import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.FriendBean
-import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.SquareListBean
+import com.example.demoapplication.player.IjkMediaPlayerUtil
+import com.example.demoapplication.player.OnPlayingListener
 import com.example.demoapplication.presenter.SquarePresenter
 import com.example.demoapplication.presenter.view.SquareView
-import com.example.demoapplication.ui.activity.LabelsActivity
 import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
-import com.example.demoapplication.ui.adapter.MatchLabelAdapter
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import com.example.demoapplication.ui.adapter.SquareFriendsAdapter
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.example.demoapplication.utils.ScrollCalculatorHelper
-import com.example.demoapplication.utils.SharedPreferenceUtil
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.fragment_square.*
+import kotlinx.android.synthetic.main.headerview_label.*
+import kotlinx.android.synthetic.main.headerview_label.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.startActivityForResult
 import org.jetbrains.anko.support.v4.toast
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 
 /**
@@ -58,20 +52,15 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer
  */
 class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener {
 
-    companion object {
-        val REQUEST_LABEL_CODE = 2000
-    }
 
     //广场列表内容适配器
-    private val adapter by lazy { MultiListSquareAdapter(activity!!, mutableListOf()) }
-    //标签适配器
-    private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(context!!) }
+    private val adapter by lazy { MultiListSquareAdapter(mutableListOf()) }
+
     //广场好友适配器
     private val friendsAdapter: SquareFriendsAdapter by lazy { SquareFriendsAdapter(userList) }
     //好友信息用户数据源
     var userList: MutableList<FriendBean> = mutableListOf()
-    //标签数据源
-    var labelList: MutableList<LabelBean> = mutableListOf()
+
 
     private lateinit var scrollCalculatorHelper: ScrollCalculatorHelper
 
@@ -109,29 +98,30 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         super.onViewCreated(view, savedInstanceState)
         initView()
 
-        initData()
     }
 
-    private fun initData() {
-        labelList = getSpLabels()
-        if (labelList.size > 0)
-            labelList[0].checked = true
-        labelAdapter.setData(labelList)
-    }
 
-    private fun getSpLabels(): MutableList<LabelBean> {
-        val tempLabels = mutableListOf<LabelBean>()
-        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
-            (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels")).forEach {
-                tempLabels.add(SharedPreferenceUtil.String2Object(it) as LabelBean)
-            }
+    //创建好友布局
+    private fun initFriendsView(): View {
+        val friendsView = LayoutInflater.from(activity!!).inflate(R.layout.headerview_label, squareDynamicRv, false)
+        val linearLayoutManager =
+            LinearLayoutManager(activity?.applicationContext, LinearLayoutManager.HORIZONTAL, false)
+        friendsView.headRv.layoutManager = linearLayoutManager
+        friendsView.headRv.adapter = friendsAdapter
+        friendsAdapter.addData(userList)
+        friendsAdapter.setOnItemClickListener { adapter, view, position ->
+            startActivity<SquarePlayListDetailActivity>("target_accid" to (friendsAdapter.data[position].accid ?: 0))
         }
-        return tempLabels
+
+        return friendsView
     }
 
+
+    private var currPlayIndex = -1
 
     private fun initView() {
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_4_3)
+//        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_4_3)
+        //注册eventbus
         EventBus.getDefault().register(this)
         mPresenter = SquarePresenter()
         mPresenter.mView = this
@@ -139,18 +129,16 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
 
-        initHeadView()
-
         squareDynamicRv.layoutManager = layoutManager
         squareDynamicRv.adapter = adapter
+        adapter.addHeaderView(initFriendsView())
         //取消动画，主要是闪烁
-        (squareDynamicRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+//        (squareDynamicRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        squareDynamicRv.itemAnimator?.changeDuration = 0
 
         //限定范围为屏幕一半的上下偏移180
-//        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(252F)
         val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
         val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
-//        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(252F)
         scrollCalculatorHelper = ScrollCalculatorHelper(R.id.squareUserVideo, playTop, playBottom)
         squareDynamicRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
@@ -191,26 +179,38 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
         adapter.setOnItemClickListener { adapter, view, position ->
             startActivity<SquareCommentDetailActivity>("squareBean" to adapter.data[position])
+            if (mediaPlayer != null) {
+                mediaPlayer!!.resetMedia()
+                mediaPlayer = null
+            }
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
+            val squareBean = adapter.data[position]
             when (view.id) {
                 R.id.squareChatBtn1 -> {
                     toast("聊天呗$position")
                 }
                 R.id.squareCommentBtn1 -> {
-                    startActivity<SquareCommentDetailActivity>("squareBean" to adapter.data[position])
+                    startActivity<SquareCommentDetailActivity>(
+                        "squareBean" to squareBean,
+                        "enterPosition" to "comment"
+                    )
+                    if (mediaPlayer != null) {
+                        mediaPlayer!!.resetMedia()
+                        mediaPlayer = null
+                    }
                 }
                 R.id.squareDianzanBtn1 -> {
                     val params = hashMapOf(
                         "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                         "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                        "type" to if (adapter.data[position].isliked == 1) {
+                        "type" to if (squareBean.isliked == 1) {
                             2
                         } else {
                             1
                         },
-                        "square_id" to adapter.data[position].id!!,
+                        "square_id" to squareBean.id!!,
                         "_timestamp" to System.currentTimeMillis()
                     )
                     mPresenter.getSquareLike(params, position)
@@ -223,19 +223,22 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 }
                 //播放音频
                 R.id.audioPlayBtn -> {
-                    initAudio()
-                    ijkMediaPlayer!!.setDataSource(context, Uri.parse("http://up.mcyt.net/down/47541.mp3"))
-                    adapter.data[position].isPlayAudio = !adapter.data[position].isPlayAudio
+                    if (currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
+                        initAudio(position)
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0) ?: "").prepareMedia()
+                        currPlayIndex = position
+                    }
                     for (index in 0 until adapter.data.size) {
                         if (index != position && adapter.data[index].type == 3) {
-                            adapter.data[index].isPlayAudio = false
+                            adapter.data[index].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
                         }
                     }
-                    if (adapter.data[position].isPlayAudio) {
-                        ijkMediaPlayer!!.prepareAsync()
-                        ijkMediaPlayer!!.start()
-                    } else {
-                        ijkMediaPlayer!!.pause()
+                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
+                        mediaPlayer!!.startPlay()
+                    } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {
+                        mediaPlayer!!.resumePlay()
+                    } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) {
+                        mediaPlayer!!.pausePlay()
                     }
                     adapter.notifyDataSetChanged()
                 }
@@ -249,49 +252,63 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     }
 
-    var ijkMediaPlayer: IjkMediaPlayer? = null
-    fun initAudio() {
-        ijkMediaPlayer?.release()
-        ijkMediaPlayer = IjkMediaPlayer()
-        ijkMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+    var mediaPlayer: IjkMediaPlayerUtil? = null
 
-    }
+    private fun initAudio(position: Int) {
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+        mediaPlayer = IjkMediaPlayerUtil(activity!!, position, object : OnPlayingListener {
 
+            override fun onPlay(position: Int) {
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
 
-    /**
-     * 好友列表和标签列表
-     * 设置头部数据一直居于最顶端
-     */
-    private fun initHeadView() {
-        val labelManager = LinearLayoutManager(activity?.applicationContext, LinearLayoutManager.HORIZONTAL, false)
-        headRvLabels.layoutManager = labelManager
-        headRvLabels.adapter = labelAdapter
-        labelAdapter.dataList = labelList
-        labelAdapter.setOnItemClickListener(object : MatchLabelAdapter.OnItemClickListener {
-            override fun onItemClick(item: View, position: Int) {
-                if (position == 0) {
-                    startActivityForResult<LabelsActivity>(REQUEST_LABEL_CODE, "from" to "squarefragment")
-                } else {
-                    for (index in 0 until labelAdapter.dataList.size) {
-                        labelAdapter.dataList[index].checked = index == position - 1
-                    }
-                    labelAdapter.notifyDataSetChanged()
-                    listParams["tagid"] = labelList[position - 1].id
-                    //这个地方还要默认设置选中第一个标签来更新数据
-                    mPresenter.getSquareList(listParams, true)
-                }
             }
 
-        })
+            override fun onPause(position: Int) {
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+            }
 
+            override fun onStop(position: Int) {
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+                mediaPlayer!!.resetMedia()
+                mediaPlayer = null
+            }
 
-        val linearLayoutManager =
-            LinearLayoutManager(activity?.applicationContext, LinearLayoutManager.HORIZONTAL, false)
-        headRvFriends.layoutManager = linearLayoutManager
-        headRvFriends.adapter = friendsAdapter
-        friendsAdapter.setOnItemClickListener { adapter, view, position ->
-            startActivity<SquarePlayListDetailActivity>("target_accid" to (friendsAdapter.data[position].accid ?: 0))
-        }
+            override fun onError(position: Int) {
+                toast("音频播放出错")
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+                mediaPlayer!!.resetMedia()
+                mediaPlayer = null
+            }
+
+            override fun onPrepared(position: Int) {
+                //todo  异步准备 准备好了才会实现播放。
+//                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
+//                adapter.notifyItemChanged(position)
+//                adapter.notifyDataSetChanged()
+                mediaPlayer!!.startPlay()
+            }
+
+            override fun onPreparing(position: Int) {
+            }
+
+            override fun onRelease(position: Int) {
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+            }
+
+        }).getInstance()
     }
 
 
@@ -365,12 +382,20 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onResume() {
         super.onResume()
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
+
 //        GSYVideoManager.onResume(false)
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
-//        GSYVideoManager.releaseAllVideos()
+        GSYVideoManager.releaseAllVideos()
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+        //反注册eventbus
         EventBus.getDefault().unregister(this)
     }
 
@@ -435,7 +460,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 adapter.data[position].isliked = 1
                 adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
             }
-            adapter.notifyItemChanged(position)
+//            adapter.notifyItemChanged(position)
+            adapter.notifyDataSetChanged()
+
         }
     }
 
@@ -459,27 +486,13 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_LABEL_CODE) {
-                val list = getSpLabels()
-                for (i in 0 until labelList.size) {
-                    for (j in 0 until list.size) {
-                        if (labelList[i].id == list[j].id) {
-                            list[j].checked = labelList[i].checked
-                        }
-                    }
-                }
-                labelList = list
-                labelAdapter.setData(labelList)
-            }
-        }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateLabelEvent(event: UpdateLabelEvent) {
+        listParams["tagid"] = event.label.id
+        //这个地方还要默认设置选中第一个标签来更新数据
+        mPresenter.getSquareList(listParams, true)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNewMsgEvent(event: PlayVideoEvent) {
-        adapter.notifyItemChanged(event.position)
-    }
+
 }
 

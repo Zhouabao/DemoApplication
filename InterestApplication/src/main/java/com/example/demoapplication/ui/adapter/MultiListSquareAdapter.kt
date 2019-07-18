@@ -1,7 +1,6 @@
 package com.example.demoapplication.ui.adapter
 
 import android.app.Activity
-import android.content.Context
 import android.util.TypedValue
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +13,7 @@ import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.UpdateVoiceTimeThread
 import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
@@ -37,7 +37,7 @@ import org.jetbrains.anko.startActivity
  *    desc   : 多状态的广场
  *    version: 1.0
  */
-class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>) :
+class MultiListSquareAdapter(data: MutableList<SquareBean>) :
     BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
     companion object {
         val TAG = "RecyclerView2List"
@@ -53,7 +53,7 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
 
     override fun convert(holder: BaseViewHolder, item: SquareBean) {
         val drawable1 =
-            context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+            mContext.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.squareDianzanBtn1.setCompoundDrawables(drawable1, null, null, null)
 
@@ -100,17 +100,16 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
                 if (item.photo_json != null && item.photo_json!!.size > 0) {
                     holder.itemView.squareUserPics1.visibility = View.VISIBLE
                     holder.itemView.squareUserPics1.layoutManager =
-                        LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                    val adapter = ListSquareImgsAdapter(context, item.photo_json ?: mutableListOf())
+                        LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+                    val adapter = ListSquareImgsAdapter(mContext, item.photo_json ?: mutableListOf())
                     holder.itemView.squareUserPics1.adapter = adapter
                     adapter.setOnItemClickListener { adapter, view, position ->
-                        context.startActivity<SquarePlayListDetailActivity>("item" to item)
-
+                        mContext.startActivity<SquarePlayListDetailActivity>("item" to item)
                     }
                 } else {
                     holder.itemView.squareUserPics1.visibility = View.GONE
                     holder.itemView.squareContent1.onClick {
-                        context.startActivity<SquarePlayListDetailActivity>("item" to item)
+                        mContext.startActivity<SquarePlayListDetailActivity>("item" to item)
                     }
                 }
 
@@ -129,7 +128,7 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
                         //fixme 这时候中间控件 CURRENT_STATE_PLAYING，会触发 startProgressTimer
                         //FIXME 但是没有cancel
                         SquarePlayDetailActivity.startActivity(
-                            context as Activity,
+                            mContext as Activity,
                             holder.itemView.squareUserVideo,
                             item,
                             holder.layoutPosition
@@ -161,12 +160,12 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
 //                SwitchUtil.optionPlayer(holder.itemView.squareUserVideo, item.video_json?.get(0) ?: "", true, "")
                 SwitchUtil.optionPlayer(
                     holder.itemView.squareUserVideo,
-                    "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
+                    item.video_json?.get(0) ?: "",
                     false,
                     ""
                 )
                 holder.itemView.squareUserVideo.setUp(
-                    "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
+                    item.video_json?.get(0) ?: "",
                     false,
                     null,
                     null,
@@ -176,17 +175,25 @@ class MultiListSquareAdapter(var context: Context, data: MutableList<SquareBean>
             MatchBean.AUDIO -> {
                 //点击播放
                 holder.addOnClickListener(R.id.audioPlayBtn)
-                if (item.isPlayAudio) {
+                if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) { //播放中
                     holder.itemView.voicePlayView.start()
                     UpdateVoiceTimeThread.getInstance("03:40", holder.itemView.audioTime).start()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
-                } else {
+                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {//暂停中
                     holder.itemView.voicePlayView.stop()
                     UpdateVoiceTimeThread.getInstance("03:40", holder.itemView.audioTime).pause()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_STOP) {//停止中
+                    holder.itemView.voicePlayView.stop()
+                    UpdateVoiceTimeThread.getInstance("03:40", holder.itemView.audioTime).stop()
+                    holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
+                    holder.itemView.voicePlayView.stop()
+                    UpdateVoiceTimeThread.getInstance("03:40", holder.itemView.audioTime).stop()
+                    holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 }
                 holder.itemView.squareUserAudio.onClick {
-                    context.startActivity<SquarePlayListDetailActivity>("item" to item, "from" to "squareFragment")
+                    mContext.startActivity<SquarePlayListDetailActivity>("item" to item, "from" to "squareFragment")
                 }
             }
         }

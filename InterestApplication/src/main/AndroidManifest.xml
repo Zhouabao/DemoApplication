@@ -26,63 +26,53 @@
             android:networkSecurityConfig="@xml/network_security_config"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
         <activity android:name=".ui.activity.BigImageActivity">
         </activity>
         <activity
                 android:name=".ui.activity.PublishActivity"
-                android:launchMode="singleTask"/>
+                />
         <activity
                 android:name=".ui.activity.SquarePlayListDetailActivity"
-                android:launchMode="singleTask"
+                android:theme="@style/BlackTheme"
                 android:windowSoftInputMode="adjustPan"/>
         <activity
                 android:name=".ui.activity.SquarePlayDetailActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustPan"/>
         <activity
                 android:name=".ui.activity.SquareCommentDetailActivity"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"/>
         <activity
                 android:name=".ui.chat.MatchSucceedActivity"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.MatchDetailActivity"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.UserBirthActivity"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.LabelsActivity"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".ui.activity.SetInfoActivity"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".ui.activity.VerifyCodeActivity"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.LoginActivity"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".ui.activity.WelcomeActivity"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
@@ -94,7 +84,6 @@
         <activity
                 android:name=".ui.activity.MainActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:launchMode="singleTask"
                 android:screenOrientation="portrait">
         </activity>
 

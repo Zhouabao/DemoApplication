@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
-            android:id="@+id/iv_dislike"
+            android:id="@+id/matchDislike"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/shape_oval_white"
@@ -44,7 +44,7 @@
             app:layout_constraintTop_toTopOf="@id/vpPhotos"/>
 
     <ImageView
-            android:id="@+id/iv_like"
+            android:id="@+id/matchLike"
             android:alpha="0"
             android:background="@drawable/shape_oval_white"
             android:layout_marginLeft="15dp"
@@ -91,7 +91,7 @@
             app:layout_constraintTop_toBottomOf="@id/llAction">
 
         <TextView
-                android:id="@+id/tvUserName"
+                android:id="@+id/matchUserName"
                 android:maxLength="10"
                 android:textColor="@color/colorBlack4a"
                 android:textSize="24sp"
@@ -105,7 +105,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
-                android:id="@+id/tvUserAge"
+                android:id="@+id/matchUserAge"
                 android:elevation="2dp"
                 android:gravity="center"
                 android:textSize="12sp"
@@ -119,13 +119,13 @@
                 android:paddingBottom="2dp"
                 android:paddingRight="8dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/tvUserName"
-                app:layout_constraintLeft_toRightOf="@id/tvUserName"
-                app:layout_constraintTop_toTopOf="@id/tvUserName"
+                app:layout_constraintBottom_toBottomOf="@id/matchUserName"
+                app:layout_constraintLeft_toRightOf="@id/matchUserName"
+                app:layout_constraintTop_toTopOf="@id/matchUserName"
                 tools:text="23"/>
 
         <TextView
-                android:id="@+id/tvUserLabels"
+                android:id="@+id/matchUserJob"
                 android:elevation="2dp"
                 android:gravity="center"
                 android:background="@drawable/shape_rectangle_gray_white_9dp"
@@ -141,8 +141,8 @@
                 android:textColor="@color/colorOrange"
                 android:layout_marginLeft="6dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/tvUserAge"
-                app:layout_constraintTop_toTopOf="@id/tvUserAge"/>
+                app:layout_constraintLeft_toRightOf="@id/matchUserAge"
+                app:layout_constraintTop_toTopOf="@id/matchUserAge"/>
 
         <TextView
                 android:id="@+id/tvLocation"
@@ -161,11 +161,11 @@
                 android:textColor="@color/colorOrange"
                 android:layout_marginLeft="6dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/tvUserLabels"
-                app:layout_constraintTop_toTopOf="@id/tvUserAge"/>
+                app:layout_constraintLeft_toRightOf="@id/matchUserJob"
+                app:layout_constraintTop_toTopOf="@id/matchUserAge"/>
 
         <TextView
-                android:id="@+id/tvUserIntroduce"
+                android:id="@+id/matchUserIntroduce"
                 android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
                 android:text="AntV 是蚂蚁金服全新代数据可视化解决方案，致力于提供一套…单方便、专业可靠、无限可能的数据可视化最佳实践。"
@@ -177,7 +177,7 @@
                 android:lineSpacingMultiplier="1.25"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvUserName"/>
+                app:layout_constraintTop_toBottomOf="@id/matchUserName"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

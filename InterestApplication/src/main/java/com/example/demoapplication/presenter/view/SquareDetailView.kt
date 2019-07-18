@@ -20,6 +20,8 @@ interface SquareDetailView : BaseView {
 
     fun onDeleteCommentResult(data: BaseResp<Any?>,position:Int)
 
+    fun onReportCommentResult(data: BaseResp<Any?>,position:Int)
+
     fun onGetSquareCollectResult(data: BaseResp<Any?>)
 
     fun onGetSquareReport(data: BaseResp<Any?>)

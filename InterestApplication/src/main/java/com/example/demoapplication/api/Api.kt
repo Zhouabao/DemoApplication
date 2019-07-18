@@ -51,7 +51,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("member_info/SetProfile${Constants.END_BASE_URL}")
-    fun setProfile(@FieldMap params: Map<String, String>): Observable<BaseResp<Any?>>
+    fun setProfile(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -147,6 +147,14 @@ interface Api {
     @FormUrlEncoded
     @POST("square/commentLikes${Constants.END_BASE_URL}")
     fun commentLikes(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 评论举报
+     */
+    @FormUrlEncoded
+    @POST("square/replyReport${Constants.END_BASE_URL}")
+    fun commentReport(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     @GET

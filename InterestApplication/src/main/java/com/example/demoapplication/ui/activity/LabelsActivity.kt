@@ -201,7 +201,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
             if (data != null) {
                 UserManager.saveUserInfo(data)
             }
-            if (intent.getStringExtra("from").isNotEmpty() && intent.getStringExtra("from") == "squarefragment") {
+            if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "mainactivity") {
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else {

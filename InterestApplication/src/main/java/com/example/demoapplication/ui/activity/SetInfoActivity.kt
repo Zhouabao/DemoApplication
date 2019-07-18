@@ -42,7 +42,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     }
 
     //请求参数
-    private val params by lazy { HashMap<String, String>() }
+    private val params by lazy { HashMap<String, Any>() }
     //用户头像
     private var userProfile: String? = null
     //昵称是否合法
@@ -178,8 +178,12 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                         params["nickname"] = userNickNameEt.text.toString()
                         params["gender"] = "${if (sexGroup.checkedRadioButtonId == R.id.userSexMan) 1 else 2}"
                         params["birth"] = "${TimeUtils.date2Millis(
-                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(userBirthTv.text.toString())
-                        )}"
+                            SimpleDateFormat(
+                                "yyyy-MM-dd",
+                                Locale.getDefault()
+                            ).parse(userBirthTv.text.toString())
+                        ) / 1000L}"
+
                         params["_timestamp"] = "${TimeUtils.getNowMills()}"
                         params["sign"] = ""
                         params["tags"] = ""
@@ -199,6 +203,8 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         }
     }
 
+
+    private var userBirth = ""
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -217,6 +223,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                 }
                 USER_BIRTH_REQUEST_CODE -> {
                     if (data != null) {
+                        userBirth = "${data.getStringExtra("year")}${data.getStringExtra("month")}"
                         val year = data.getStringExtra("year")
                         val monthDay = data.getStringExtra("month").substring(0, 2).plus("-")
                             .plus(data.getStringExtra("month").substring(2, 4))

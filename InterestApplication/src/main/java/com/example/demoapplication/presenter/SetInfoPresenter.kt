@@ -62,7 +62,7 @@ class SetInfoPresenter : BasePresenter<SetInfoView>() {
     }
 
 
-    fun uploadUserInfo(params: HashMap<String, String>) {
+    fun uploadUserInfo(params: HashMap<String, Any>) {
         if (!checkNetWork()) {
             return
         }

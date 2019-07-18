@@ -37,12 +37,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/notificationBtn"
                 app:layout_constraintTop_toTopOf="parent"/>
+
         <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/llMsgCount"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/notificationBtn"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/icon_notification1"
@@ -50,7 +48,10 @@
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:layout_marginTop="4dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/notificationBtn"
+                app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                     android:id="@+id/msgHi"
@@ -108,6 +109,7 @@
 
 
         </LinearLayout>
+
         <ImageView
                 android:id="@+id/notificationBtn"
                 android:layout_width="24dp"
@@ -141,10 +143,24 @@
                 app:layout_constraintTop_toTopOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-     <FrameLayout
-            android:id="@+id/content"
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/headRvLabels"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+        <FrameLayout
+                android:id="@+id/content"
+                android:layout_marginTop="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+    </FrameLayout>
 
 
 </LinearLayout>

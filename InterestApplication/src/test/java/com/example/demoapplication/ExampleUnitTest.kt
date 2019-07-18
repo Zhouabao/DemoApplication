@@ -1,6 +1,9 @@
 package com.example.demoapplication
 
+import com.blankj.utilcode.util.TimeUtils
 import org.junit.Test
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -10,14 +13,13 @@ import org.junit.Test
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-//        assertEquals(4, 2 + 2)
-        val data = arrayOf("1", "2", "哈", "敏感")
-        var sensitive = ""
-        for (char in data) {
-            System.out.println(char)
 
-            sensitive = sensitive.plus(char)
-        }
-        System.out.println(sensitive)
+        System.out.println("${TimeUtils.date2Millis(
+            SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale.getDefault()
+            ).parse("1995-02-27")
+        )}")
+        System.out.println(TimeUtils.string2Millis("19950227"))
     }
 }

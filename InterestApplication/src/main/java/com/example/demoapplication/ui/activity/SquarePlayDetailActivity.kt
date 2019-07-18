@@ -17,14 +17,12 @@ import com.blankj.utilcode.util.SPUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.event.PlayVideoEvent
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.presenter.SquarePlayDetaiPresenter
 import com.example.demoapplication.presenter.view.SquarePlayDetailView
 import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
-import com.kotlin.base.common.BaseApplication.Companion.context
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -36,7 +34,6 @@ import kotlinx.android.synthetic.main.activity_square_play_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
 import kotlinx.android.synthetic.main.switch_video.view.*
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
@@ -67,13 +64,14 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_square_play_detail)
+
         initView()
         initData()
     }
 
 
     private fun initView() {
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_MATCH_FULL)
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_FULL)
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -103,12 +101,14 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 //        SwitchUtil.optionPlayer(detailPlayVideo, squareBean.video_json?.get(0) ?: "", true, "这是title")
         SwitchUtil.optionPlayer(
             detailPlayVideo,
-            "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4",
+            squareBean.video_json?.get(0) ?: "",
             false,
             ""
         )
 
         SwitchUtil.clonePlayState(detailPlayVideo)
+        GSYVideoManager.instance().isNeedMute = false
+
         detailPlayVideo.setIsTouchWiget(true)
         detailPlayVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
             override fun onPrepared(url: String?, vararg objects: Any?) {
@@ -120,7 +120,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             override fun onClickBlank(url: String?, vararg objects: Any?) {
                 super.onClickBlank(url, *objects)
                 if (videoCover.visibility == View.VISIBLE) {
-
                     videoCover.visibility = View.GONE
                     btnBack.visibility = View.GONE
                 } else {
@@ -153,13 +152,13 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     }
 
     private fun initData() {
-        GlideUtil.loadAvatorImg(context, squareBean.avatar ?: "", detailPlayUserAvatar)
+        GlideUtil.loadAvatorImg(this, squareBean.avatar ?: "", detailPlayUserAvatar)
         detailPlayUserLocationAndTime.text = squareBean.city_name ?: "".plus("\t").plus(squareBean.out_time ?: "")
         detailPlayUserName.text = squareBean.nickname ?: ""
         detailPlayContent.text = squareBean.descr ?: ""
 
         val drawable1 =
-            context.resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+            resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         detailPlaydianzan.text = "${squareBean.like_cnt}"
@@ -167,7 +166,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         videoFl.background = BitmapDrawable(
             ImageUtils.fastBlur(
                 BitmapFactory.decodeResource(
-                    context.resources,
+                    resources,
                     R.drawable.img_avatar_01
                 ),
                 1f,
@@ -260,7 +259,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             }
 
             val drawable1 =
-                context.resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+                resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
             drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
             detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
             detailPlaydianzan.text = "${squareBean.like_cnt}"
@@ -345,7 +344,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         }
         detailPlayVideo.getGSYVideoManager().setListener(detailPlayVideo.getGSYVideoManager().listener())
         SwitchUtil.savePlayState(detailPlayVideo)
-        EventBus.getDefault().post(PlayVideoEvent(intent.getIntExtra("position", -1)))
+        // EventBus.getDefault().post(UpdateLabelEvent(intent.getIntExtra("position", -1)))
         super.onBackPressed()
     }
 

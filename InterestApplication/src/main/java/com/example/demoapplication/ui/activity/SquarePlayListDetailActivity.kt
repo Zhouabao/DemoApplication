@@ -2,8 +2,6 @@ package com.example.demoapplication.ui.activity
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.media.AudioManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,6 +14,8 @@ import com.example.demoap.MultiListDetailPlayAdapter
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.player.IjkMediaPlayerUtil
+import com.example.demoapplication.player.OnPlayingListener
 import com.example.demoapplication.presenter.SquarePlayDetaiPresenter
 import com.example.demoapplication.presenter.view.SquarePlayDetailView
 import com.example.demoapplication.ui.dialog.MoreActionDialog
@@ -31,7 +31,6 @@ import kotlinx.android.synthetic.main.activity_square_play_list_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 /**
  * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
@@ -43,11 +42,62 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
     private val adapter by lazy { MultiListDetailPlayAdapter(this, mutableListOf()) }
     private val squareBean: SquareBean by lazy { intent.getSerializableExtra("item") as SquareBean }
 
-    private var ijkMediaPlayer: IjkMediaPlayer? = null
-    private fun initAudio() {
-        ijkMediaPlayer?.release()
-        ijkMediaPlayer = IjkMediaPlayer()
-        ijkMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+
+    var mediaPlayer: IjkMediaPlayerUtil? = null
+
+    private fun initAudio(position: Int) {
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+        mediaPlayer = IjkMediaPlayerUtil(this, position, object : OnPlayingListener {
+            override fun onPlay(position: Int) {
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+
+            }
+
+            override fun onPause(position: Int) {
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+            }
+
+            override fun onStop(position: Int) {
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+                mediaPlayer!!.resetMedia()
+                mediaPlayer = null
+            }
+
+            override fun onError(position: Int) {
+                toast("音频播放出错")
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+//                adapter.notifyItemChanged(position)
+                adapter.notifyDataSetChanged()
+                mediaPlayer!!.resetMedia()
+                mediaPlayer = null
+            }
+
+            override fun onPrepared(position: Int) {
+                //todo  异步准备 准备好了才会实现播放。
+//                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
+//                adapter.notifyItemChanged(position)
+//                adapter.notifyDataSetChanged()
+                mediaPlayer!!.startPlay()
+            }
+
+            override fun onPreparing(position: Int) {
+            }
+
+            override fun onRelease(position: Int) {
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                adapter.notifyDataSetChanged()
+            }
+
+        }).getInstance()
     }
 
 
@@ -58,8 +108,6 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
         if (intent.getSerializableExtra("item") != null) {
             rvLast.visibility = View.GONE
             rvNext.visibility = View.GONE
-            squareBean.avatar =
-                "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
             adapter.addData(squareBean)
         } else {
             rvLast.visibility = View.VISIBLE
@@ -104,18 +152,27 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
             }
         }
         adapter.setOnItemChildClickListener { _, view, position ->
+            val squareBean = adapter.data[position]
             when (view.id) {
                 //播放
                 R.id.detailPlayBtn -> {
-                    initAudio()
-//                    ijkMediaPlayer!!.setDataSource(this, Uri.parse(adapter.data[position].audio_json?.get(0)))
-                    ijkMediaPlayer!!.setDataSource(this, Uri.parse("http://up.mcyt.net/down/47541.mp3"))
-                    adapter.data[position].isPlayAudio = !adapter.data[position].isPlayAudio
-                    if (adapter.data[position].isPlayAudio) {
-                        ijkMediaPlayer!!.prepareAsync()
-                        ijkMediaPlayer!!.start()
-                    } else {
-                        ijkMediaPlayer!!.pause()
+                    if (mediaPlayer == null && currentIndex != position) {
+                        initAudio(position)
+                        //todo  还原播放器
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?:"").prepareMedia()
+                    }
+
+                    for (index in 0 until adapter.data.size) {
+                        if (index != position && adapter.data[index].type == 3) {
+                            adapter.data[index].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                        }
+                    }
+                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
+                        mediaPlayer!!.startPlay()
+                    } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {
+                        mediaPlayer!!.resumePlay()
+                    } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) {
+                        mediaPlayer!!.pausePlay()
                     }
                     adapter.notifyDataSetChanged()
                 }
@@ -325,6 +382,10 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
     override fun onDestroy() {
         super.onDestroy()
         GSYVideoManager.releaseAllVideos()
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
     }
 
     override fun onClick(view: View) {
@@ -347,8 +408,10 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
                     rvNext.visibility = View.VISIBLE
                 }
                 GSYVideoManager.releaseAllVideos()
-                if (ijkMediaPlayer != null)
-                    ijkMediaPlayer!!.release()
+                if (mediaPlayer != null) {
+                    mediaPlayer!!.resetMedia()
+                    mediaPlayer = null
+                }
             }
             R.id.rvNext -> {
                 if (currentIndex < adapter.data.size) {
@@ -367,8 +430,10 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
                     rvLast.visibility = View.VISIBLE
                 }
                 GSYVideoManager.releaseAllVideos()
-                if (ijkMediaPlayer != null)
-                    ijkMediaPlayer!!.release()
+                if (mediaPlayer != null) {
+                    mediaPlayer!!.resetMedia()
+                    mediaPlayer = null
+                }
             }
         }
 

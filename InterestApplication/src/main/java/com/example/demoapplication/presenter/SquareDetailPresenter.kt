@@ -182,4 +182,25 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
     }
 
 
+    /**
+     * 评论举报
+     */
+    fun commentReport(params: HashMap<String, Any>, position: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .commentReport(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onReportCommentResult(t, position)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onReportCommentResult(t, position)
+                    }
+                }
+            })
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.demoapplication.common
 
 import android.annotation.SuppressLint
+import android.os.Environment
 import com.blankj.utilcode.util.CrashUtils
 import com.example.demoapplication.R
 import com.kotlin.base.common.BaseApplication
@@ -10,6 +11,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
+import java.io.File
 
 class MyApplication : BaseApplication() {
     init {
@@ -27,7 +29,7 @@ class MyApplication : BaseApplication() {
     override fun onCreate() {
         super.onCreate()
         MobSDK.init(this)
-        CrashUtils.init("demoapplicaiton")
+        CrashUtils.init(File(Environment.getExternalStorageDirectory().absolutePath.plus(File.separator).plus("demoapplicaiton")))
         configUnits()
         configPlayer()
 

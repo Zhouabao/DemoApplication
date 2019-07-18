@@ -9,12 +9,6 @@
         tools:context=".ui.fragment.MatchFragment">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/matchLabelRv"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_marginLeft="15dp"
-            android:layout_height="wrap_content"/>
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/matchUserRv"

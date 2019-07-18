@@ -1,25 +1,18 @@
 package com.example.demoapplication.ui.adapter
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.core.view.size
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
 import com.example.demoapplication.R
 import com.example.demoapplication.model.MatchBean
-import com.kotlin.base.common.BaseApplication
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import kotlinx.android.synthetic.main.item_match_user.view.*
-import kotlinx.android.synthetic.main.match_action_layout.view.*
 
 /**
  *    author : ZFM
@@ -28,19 +21,10 @@ import kotlinx.android.synthetic.main.match_action_layout.view.*
  *    version: 1.0
  *
  */
-class MatchUserAdapter(context: Context) : BaseRecyclerViewAdapter<MatchBean, MatchUserAdapter.ViewHolder>(context) {
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.item_match_user, parent, false)
-        return ViewHolder(view)
-    }
-
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        super.onBindViewHolder(holder, position)
-        val model = dataList[position]
-        holder.itemView.vpPhotos.adapter = MatchImgsAdapter(mContext, model.imgs)
+class MatchUserAdapter(data: MutableList<MatchBean>) :
+    BaseQuickAdapter<MatchBean, BaseViewHolder>(R.layout.item_match_user, data) {
+    override fun convert(holder: BaseViewHolder, item: MatchBean) {
+        holder.itemView.vpPhotos.adapter = MatchImgsAdapter(mContext, item.imgs)
         holder.itemView.vpPhotos.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
@@ -51,8 +35,8 @@ class MatchUserAdapter(context: Context) : BaseRecyclerViewAdapter<MatchBean, Ma
             }
         })
 
-        if (dataList[position].imgs.size > 1) {
-            for (i in 0 until dataList[position].imgs.size) {
+        if (item.imgs.size > 1 && holder.itemView.vpIndicator.childCount == 0) {
+            for (i in 0 until item.imgs.size) {
                 val indicator = RadioButton(mContext)
                 indicator.width = SizeUtils.dp2px(10F)
                 indicator.height = SizeUtils.dp2px(10F)
@@ -70,33 +54,20 @@ class MatchUserAdapter(context: Context) : BaseRecyclerViewAdapter<MatchBean, Ma
             }
         }
 
-        holder.itemView.tvUserName.text = model.name
-        holder.itemView.tvUserAge.text = "${model.age}"
+        holder.itemView.matchUserName.text = item.name
+        holder.itemView.matchUserAge.text = "${item.age}"
         val drawable1 = ContextCompat.getDrawable(
-            BaseApplication.context,
-            if (model.sex == 1) R.drawable.icon_man_orange else R.drawable.icon_woman_orange
+            mContext,
+            if (item.sex == 1) R.drawable.icon_man_orange else R.drawable.icon_woman_orange
         )
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-        holder.itemView.tvUserAge.setCompoundDrawables(drawable1, null, null, null)
+        holder.itemView.matchUserAge.setCompoundDrawables(drawable1, null, null, null)
 //        holder.itemView.tvLocation.text = model.
-        holder.itemView.v1.setOnClickListener {
-            if (mItemClickListener != null)
-                mItemClickListener!!.onItemClick(model, position)
-        }
+//        holder.addOnClickListener(R.id.v1)
+        holder.addOnClickListener(R.id.btnLike)
+        holder.addOnClickListener(R.id.btnDislike)
 
-
-        holder.itemView.btnLike.onClick {
-            ToastUtils.showShort("like  $position")
-        }
-        holder.itemView.btnLike.onClick {
-            ToastUtils.showShort("like  $position")
-        }
-    }
-
-    private fun createIndicator() {
 
     }
 
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

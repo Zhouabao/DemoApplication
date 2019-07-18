@@ -42,7 +42,7 @@ data class SquareListBean(
  * 广场列表数据
  */
 data class SquareBean(
-    var isPlayAudio: Boolean = false, //0-未播放 1-icon_pause_white 2-停止
+    var isPlayAudio: Int = 0, //0未播放  1 播放中 2暂停  3 停止
     var isvip: Int?,//是否会员 1是 0 不是
     var icon: String?,
     var accid: String?,

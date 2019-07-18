@@ -18,6 +18,6 @@ class SquareFriendsAdapter(datas: MutableList<FriendBean>) :
     override fun convert(helper: BaseViewHolder, item: FriendBean) {
         helper.setText(R.id.friendName, item.nickname.toString())
 
-        GlideUtil.loadImg(mContext, item.avatar, helper.getView(R.id.friendsIv))
+        GlideUtil.loadAvatorImg(mContext, item.avatar, helper.getView(R.id.friendsIv))
     }
 }

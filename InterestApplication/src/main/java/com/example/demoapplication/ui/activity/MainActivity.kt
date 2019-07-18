@@ -1,11 +1,12 @@
 package com.example.demoapplication.ui.activity
 
 import android.animation.Animator
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.transition.Explode
 import android.view.View
-import android.view.Window
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
@@ -13,22 +14,26 @@ import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.NewMsgEvent
+import com.example.demoapplication.event.UpdateLabelEvent
+import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.presenter.MainPresenter
 import com.example.demoapplication.presenter.view.MainView
+import com.example.demoapplication.ui.adapter.MatchLabelAdapter
 import com.example.demoapplication.ui.dialog.FilterUserDialog
-import com.example.demoapplication.ui.fragment.MatchFragment
+import com.example.demoapplication.ui.fragment.MatchFragment1
 import com.example.demoapplication.ui.fragment.SquareFragment
+import com.example.demoapplication.utils.SharedPreferenceUtil
 import com.google.android.material.tabs.TabLayout
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.shuyu.gsyvideoplayer.GSYVideoManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_match_filter.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivityForResult
 import java.util.*
 
 //在支持路由的页面上添加注解（必选）
@@ -40,16 +45,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     //匹配
-    private val matchFragment by lazy { MatchFragment() }
+    private val matchFragment by lazy { MatchFragment1() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
 
     var fragments: MutableList<Fragment> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         // 设置一个exit transition
-        window?.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+        /*window?.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         window?.enterTransition = Explode()
-        window?.exitTransition = Explode()
+        window?.exitTransition = Explode()*/
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -65,8 +70,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         mPresenter = MainPresenter()
         mPresenter.mView = this
         mPresenter.context = this
-
         GlideUtil.loadAvatorImg(this, SPUtils.getInstance(Constants.SPNAME).getString("avatar"), ivUserFace)
+        initHeadView()
     }
 
 
@@ -95,7 +100,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         })
         tabMain.addTab(tabMain.newTab().setText("匹配"))
-        tabMain.addTab(tabMain.newTab().setText("发布"), true)
+        tabMain.addTab(tabMain.newTab().setText("发布"),true)
 
     }
 
@@ -214,5 +219,79 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             .playOn(llMsgCount)
 
 
+    }
+
+
+    /**
+     * 好友列表和标签列表
+     * 设置头部数据一直居于最顶端
+     */
+    //标签适配器
+    private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(this) }
+    //标签数据源
+    var labelList: MutableList<LabelBean> = mutableListOf()
+
+    companion object {
+        val REQUEST_LABEL_CODE = 2000
+    }
+    private fun initHeadView() {
+        val labelManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        headRvLabels.layoutManager = labelManager
+        headRvLabels.adapter = labelAdapter
+        labelAdapter.dataList = labelList
+        labelAdapter.setOnItemClickListener(object : MatchLabelAdapter.OnItemClickListener {
+            override fun onItemClick(item: View, position: Int) {
+                if (position == 0) {
+                    startActivityForResult<LabelsActivity>(
+                        REQUEST_LABEL_CODE,
+                        "from" to "mainactivity"
+                    )
+                } else {
+                    for (index in 0 until labelAdapter.dataList.size) {
+                        labelAdapter.dataList[index].checked = index == position - 1
+                    }
+                    labelAdapter.notifyDataSetChanged()
+
+                    EventBus.getDefault().post(UpdateLabelEvent(labelList[position - 1]))
+                }
+            }
+
+        })
+        initData()
+    }
+
+    private fun initData() {
+        labelList = getSpLabels()
+        if (labelList.size > 0)
+            labelList[0].checked = true
+        labelAdapter.setData(labelList)
+    }
+
+    private fun getSpLabels(): MutableList<LabelBean> {
+        val tempLabels = mutableListOf<LabelBean>()
+        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
+            (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels")).forEach {
+                tempLabels.add(SharedPreferenceUtil.String2Object(it) as LabelBean)
+            }
+        }
+        return tempLabels
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_LABEL_CODE) {
+                val list = getSpLabels()
+                for (i in 0 until labelList.size) {
+                    for (j in 0 until list.size) {
+                        if (labelList[i].id == list[j].id) {
+                            list[j].checked = labelList[i].checked
+                        }
+                    }
+                }
+                labelList = list
+                labelAdapter.setData(labelList)
+            }
+        }
     }
 }

@@ -22,6 +22,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.ui.adapter.SquareDetailImgsAdaper
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
@@ -63,7 +64,8 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
         holder.itemView.detailPlayContent.text = item.descr ?: ""
 
-        val drawable1 = context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+        val drawable1 =
+            context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         holder.itemView.detailPlaydianzan.text = "${item.like_cnt}"
@@ -145,8 +147,8 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 
                 gsyVideoOptionBuilder.setIsTouchWiget(false)
 //                    .setThumbImageView()
-//                    .setUrl(item.video_json?.get(0) ?: "")
-                    .setUrl("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4")
+                    .setUrl(item.video_json?.get(0) ?: "")
+//                    .setUrl("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4")
                     .setCacheWithPlay(false)
                     .setRotateViewAuto(false)
                     .setLockLand(false)
@@ -188,7 +190,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                 //设置动画重复模式
                 objAnim.setRepeatMode(ObjectAnimator.RESTART);
 
-                if (item.isPlayAudio) {
+                if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) {
                     if (objAnim.isStarted) {
                         objAnim.resume()
                     } else {
