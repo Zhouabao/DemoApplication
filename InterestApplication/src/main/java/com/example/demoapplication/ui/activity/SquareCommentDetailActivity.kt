@@ -10,7 +10,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.transition.Explode
+import android.view.MotionEvent
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.SharedElementCallback
@@ -43,6 +45,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.activity_square_comment_detail.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
@@ -296,16 +299,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         audioPlayBtn.setOnClickListener {
             when (squareBean.isPlayAudio) {
-                IjkMediaPlayerUtil.MEDIA_PREPARE -> {
+                IjkMediaPlayerUtil.MEDIA_PREPARE -> {//准备中
                     mediaPlayer!!.prepareMedia()
                 }
-                IjkMediaPlayerUtil.MEDIA_STOP -> {
+                IjkMediaPlayerUtil.MEDIA_STOP -> {//停止就重新准备
                     mediaPlayer!!.prepareMedia()
                 }
-                IjkMediaPlayerUtil.MEDIA_PLAY -> {
+                IjkMediaPlayerUtil.MEDIA_PLAY -> {//播放点击就暂停
                     mediaPlayer!!.pausePlay()
                 }
-                IjkMediaPlayerUtil.MEDIA_PAUSE -> {
+                IjkMediaPlayerUtil.MEDIA_PAUSE -> {//暂停再次点击就播放
                     mediaPlayer!!.resumePlay()
                 }
             }
@@ -317,7 +320,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
      * 初始化播放视频
      */
     private fun initVideo() {
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
         squareUserVideo.fullscreenButton.visibility = View.GONE//设置全屏按钮
         squareUserVideo.startButton.visibility = View.GONE
         squareUserVideo.backButton.visibility = View.GONE//设置返回键
@@ -675,7 +677,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onPause() {
         super.onPause()
-        squareUserVideo.onVideoPause()
+//        squareUserVideo.onVideoPause()
         if (mediaPlayer != null)
             mediaPlayer!!.pausePlay()
 //        squareUserVideo.onVideoPause()
@@ -683,6 +685,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onStart() {
         super.onStart()
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
         if (!enterPosition.isNullOrEmpty()) {
             showCommentEt.isFocusable = true
             showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 500L)
@@ -691,7 +694,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onResume() {
         super.onResume()
-        squareUserVideo.onVideoResume(false)
+//        squareUserVideo.onVideoResume(false)
         if (mediaPlayer != null)
             mediaPlayer!!.resumePlay()
 //        squareUserVideo.onVideoResume()
@@ -699,19 +702,18 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onDestroy() {
         super.onDestroy()
-//        squareUserVideo.release()
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
             mediaPlayer = null
         }
         if (showCommentEt.isFocused)
             resetCommentEt()
-//        GSYVideoManager.releaseAllVideos()
+//        squareUserVideo.release()
     }
 
     override fun onBackPressed() {
         //释放所有
-        squareUserVideo.setVideoAllCallBack(null)
+        GSYVideoManager.releaseAllVideos()
         if (showCommentEt.isFocused) {
             resetCommentEt()
         } else
@@ -756,5 +758,29 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 }
             }
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.action == MotionEvent.ACTION_UP) {
+            val view = currentFocus
+
+            //如果不是落在edittext区域,就关闭输入法
+            if (view != null && view is EditText) {
+                val location = intArrayOf(0, 0)
+                view.getLocationInWindow(location)
+
+                //获取现在拥有焦点控件的位置
+                val left = location[0] //控件的左
+                val top = location[1] //控件的上
+                val bottom = top + view.height
+                val right = left + view.width
+
+                if (!(ev.x > left && ev.x < right && ev.y > top && ev.y < bottom)) {
+                    KeyboardUtils.hideSoftInput(view)
+                }
+            }
+        }
+
+        return super.dispatchTouchEvent(ev)
     }
 }

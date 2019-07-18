@@ -33,7 +33,6 @@ import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
-import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.fragment_square.*
@@ -159,21 +158,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                     lastVisibleItem,
                     lastVisibleItem - firstVisibleItem
                 )
-
-
-                //大于0说明有播放
-//                if (GSYVideoManager.instance().playPosition >= 0) {
-//                    //当前播放的位置
-//                    val position = GSYVideoManager.instance().playPosition
-//                    //对应的播放列表TAG
-//                    if (GSYVideoManager.instance().playTag.equals(MultiListSquareAdapter.TAG) && (position < firstVisibleItem || position > lastVisibleItem)) {
-//                        //如果滑出去了就是否
-//                        if (!GSYVideoManager.isFullState(activity)) {
-//                            GSYVideoManager.releaseAllVideos()
-//                            adapter.notifyDataSetChanged()
-//                        }
-//                    }
-//                }
             }
         })
 
@@ -390,7 +374,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onDestroy() {
         super.onDestroy()
-        GSYVideoManager.releaseAllVideos()
+//        GSYVideoManager.releaseAllVideos()
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
             mediaPlayer = null

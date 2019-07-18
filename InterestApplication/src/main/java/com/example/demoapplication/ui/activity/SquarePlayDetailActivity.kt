@@ -79,6 +79,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             onBackPressed()
         }
 //        btnBack.visibility = View.GONE
+        detailPlayComment.setTextColor(resources.getColor(R.color.colorWhite))
 
         //评论
         detailPlayComment.setOnClickListener(this)
@@ -139,7 +140,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         })
 
 
-        detailPlayVideo.getFullscreenButton().setOnClickListener(View.OnClickListener {
+        detailPlayVideo.fullscreenButton.setOnClickListener(View.OnClickListener {
             //直接横屏
             orientationUtils!!.resolveByClick()
             //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
@@ -285,12 +286,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onClick(view: View) {
         when (view.id) {
-
-            //评论
-            R.id.detailPlayComment -> {
-                //todo 评论
-                toast(detailPlayComment.text.toString() ?: "")
-            }
             //更多操作
             R.id.detailPlayMoreActions -> {
                 showMoreDialog(0)
@@ -362,8 +357,8 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onDestroy() {
         super.onDestroy()
-        detailPlayVideo.getGSYVideoManager().setListener(detailPlayVideo.getGSYVideoManager().lastListener())
-        detailPlayVideo.getGSYVideoManager().setLastListener(null)
+        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.getGSYVideoManager().lastListener())
+        detailPlayVideo.gsyVideoManager.setLastListener(null)
         GSYVideoManager.releaseAllVideos()
         if (orientationUtils != null)
             orientationUtils!!.releaseListener()
@@ -379,7 +374,5 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     }
 
     override fun onGetRecentlySquaresResults(mutableList: MutableList<SquareBean?>) {
-
-
     }
 }
