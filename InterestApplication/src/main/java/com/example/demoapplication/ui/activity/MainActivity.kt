@@ -2,9 +2,13 @@ package com.example.demoapplication.ui.activity
 
 import android.animation.Animator
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
@@ -18,18 +22,26 @@ import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.presenter.MainPresenter
 import com.example.demoapplication.presenter.view.MainView
+import com.example.demoapplication.ui.adapter.MainPagerAdapter
 import com.example.demoapplication.ui.adapter.MatchLabelAdapter
 import com.example.demoapplication.ui.dialog.FilterUserDialog
 import com.example.demoapplication.ui.fragment.MatchFragment1
 import com.example.demoapplication.ui.fragment.SquareFragment
 import com.example.demoapplication.utils.SharedPreferenceUtil
-import com.google.android.material.tabs.TabLayout
+import com.example.demoapplication.widgets.ScaleTransitionPagerTitleView
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_match_filter.*
+import net.lucode.hackware.magicindicator.ViewPagerHelper
+import net.lucode.hackware.magicindicator.buildins.UIUtil
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -48,8 +60,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val matchFragment by lazy { MatchFragment1() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
+    private val titles = arrayOf("匹配", "发布")
 
-    var fragments: MutableList<Fragment> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         // 设置一个exit transition
         /*window?.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
@@ -72,6 +84,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         mPresenter.context = this
         GlideUtil.loadAvatorImg(this, SPUtils.getInstance(Constants.SPNAME).getString("avatar"), ivUserFace)
         initHeadView()
+
     }
 
 
@@ -79,42 +92,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
       初始化Fragment栈管理
    */
     private fun initFragment() {
-        val manager = supportFragmentManager.beginTransaction()
-        manager.add(R.id.content, matchFragment)
-        manager.add(R.id.content, squareFragment)
-        manager.commit()
         mStack.add(matchFragment)
         mStack.add(squareFragment)
-
-        tabMain.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab) {
-
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                changeFragment(tab.position)
-            }
-
-        })
-        tabMain.addTab(tabMain.newTab().setText("匹配"))
-        tabMain.addTab(tabMain.newTab().setText("发布"),true)
-
-    }
-
-
-    /*
-      切换Tab，切换对应的Fragment
-   */
-    private fun changeFragment(position: Int) {
-        val transaction = supportFragmentManager.beginTransaction()
-        for (fragment in mStack) {
-            transaction.hide(fragment)
-        }
-        transaction.show(mStack[position])
-        transaction.commit()
+        vpMain.adapter = MainPagerAdapter(supportFragmentManager, mStack,titles)
+        initIndicator()
+        vpMain.currentItem = 0
     }
 
     //筛选对话框
@@ -234,6 +216,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     companion object {
         val REQUEST_LABEL_CODE = 2000
     }
+
     private fun initHeadView() {
         val labelManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         headRvLabels.layoutManager = labelManager
@@ -294,4 +277,42 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
         }
     }
+
+
+    private fun initIndicator() {
+        tabMain.setBackgroundColor(Color.WHITE)
+        val commonNavigator = CommonNavigator(this)
+        commonNavigator.adapter = object : CommonNavigatorAdapter() {
+            override fun getCount(): Int {
+                return mStack.size
+            }
+
+            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
+                val simplePagerTitleView = ScaleTransitionPagerTitleView(context)
+                simplePagerTitleView.text = titles[index]
+                simplePagerTitleView.textSize = 20f
+                simplePagerTitleView.normalColor = resources.getColor(R.color.colorGrayText)
+                simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlackTitle)
+                simplePagerTitleView.onClick {
+                    vpMain.currentItem = index
+                }
+                return simplePagerTitleView
+            }
+
+            override fun getIndicator(context: Context): IPagerIndicator {
+                val indicator = LinePagerIndicator(context)
+                indicator.mode = LinePagerIndicator.MODE_EXACTLY
+                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
+                indicator.lineWidth = UIUtil.dip2px(context, 35.0).toFloat()
+                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
+                indicator.startInterpolator = AccelerateInterpolator()
+                indicator.endInterpolator = DecelerateInterpolator(2.0f)
+                indicator.setColors(resources.getColor(R.color.colorOrange))
+                return indicator
+            }
+        }
+        tabMain.navigator = commonNavigator
+        ViewPagerHelper.bind(tabMain, vpMain)
+    }
+
 }

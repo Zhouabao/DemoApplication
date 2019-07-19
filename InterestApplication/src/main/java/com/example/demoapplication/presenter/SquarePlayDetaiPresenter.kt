@@ -1,6 +1,7 @@
 package com.example.demoapplication.presenter
 
 import android.app.Activity
+import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.SquareRecentlyListBean
 import com.example.demoapplication.presenter.view.SquarePlayDetailView
@@ -41,8 +42,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    super.onError(e)
-                    e?.message?.let { mView.onError(it) }
+                    mView.onError(context.getString(R.string.service_error))
                 }
             })
     }
@@ -67,6 +67,10 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     }
 
                 }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
             })
     }
 
@@ -88,6 +92,10 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                         mView.onGetSquareCollectResult(position, t)
                     }
                 }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
             })
     }
 
@@ -95,7 +103,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
     /**
      * 添加评论
      */
-    fun addComment(params: HashMap<String, Any>,position: Int) {
+    fun addComment(params: HashMap<String, Any>, position: Int) {
         RetrofitFactory.instance.create(Api::class.java)
             .addComment(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -108,6 +116,10 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     } else {
                         mView.onAddCommentResult(position, t)
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
                 }
             })
     }

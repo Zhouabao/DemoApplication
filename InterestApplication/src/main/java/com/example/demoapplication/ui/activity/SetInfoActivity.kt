@@ -6,11 +6,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.cazaea.sweetalert.SweetAlertDialog
+import com.blankj.utilcode.util.ToastUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.baselibrary.utils.RandomUtils
 import com.example.demoapplication.R
@@ -47,6 +48,8 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     private var userProfile: String? = null
     //昵称是否合法
     private var nickNameValidate = false
+    //是否提示过性别
+    private var sexTip = false
     //handler
     private val handler by lazy { Handler() }
     //延迟校验输入昵称的runnable
@@ -73,7 +76,13 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         confirmBtn.setOnClickListener(this)
         userBirthTv.setOnClickListener(this)
 
-
+        sexGroup.setOnCheckedChangeListener { radioGroup, i ->
+            if (!sexTip) {
+                ToastUtils.setGravity(Gravity.CENTER, 0, 0)
+                ToastUtils.showShort("性别是不可更改项仅可选择一次")
+                sexTip = true
+            }
+        }
         //判断et输入完成并检验输入昵称的合法性
         userNickNameEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -166,35 +175,24 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             }
             //点击跳转到标签选择页
             R.id.confirmBtn -> {
-                SweetAlertDialog(this)
-                    .setTitleText("温馨提示")
-                    .setContentText("性别是不可更改项仅可选择一次")
-                    .setConfirmText("确定")
-                    .setCancelText("取消")
-                    .setConfirmClickListener {
-                        params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
-                        params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
-                        params["avatar"] = userProfile.toString()
-                        params["nickname"] = userNickNameEt.text.toString()
-                        params["gender"] = "${if (sexGroup.checkedRadioButtonId == R.id.userSexMan) 1 else 2}"
-                        params["birth"] = "${TimeUtils.date2Millis(
-                            SimpleDateFormat(
-                                "yyyy-MM-dd",
-                                Locale.getDefault()
-                            ).parse(userBirthTv.text.toString())
-                        ) / 1000L}"
+                params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
+                params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
+                params["avatar"] = userProfile.toString()
+                params["nickname"] = userNickNameEt.text.toString()
+                params["gender"] = "${if (sexGroup.checkedRadioButtonId == R.id.userSexMan) 1 else 2}"
+                params["birth"] = "${TimeUtils.date2Millis(
+                    SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.getDefault()
+                    ).parse(userBirthTv.text.toString())
+                ) / 1000L}"
 
-                        params["_timestamp"] = "${TimeUtils.getNowMills()}"
-                        params["sign"] = ""
-                        params["tags"] = ""
-                        mPresenter.uploadUserInfo(params)
+                params["_timestamp"] = "${TimeUtils.getNowMills()}"
+                params["sign"] = ""
+                params["tags"] = ""
+                mPresenter.uploadUserInfo(params)
 //                        startActivity<LabelsActivity>("params" to params)
-                        it.cancel()
-                    }
-                    .setCancelClickListener {
-                        it.cancel()
-                    }
-                    .show()
+
             }
             R.id.userBirthTv -> {
                 startActivityForResult<UserBirthActivity>(USER_BIRTH_REQUEST_CODE)

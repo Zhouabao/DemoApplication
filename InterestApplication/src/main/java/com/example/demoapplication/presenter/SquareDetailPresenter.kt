@@ -45,6 +45,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.onError(context.getString(R.string.service_error))
+                    mView.onGetCommentListResult(null, refresh)
                 }
             })
     }
@@ -70,7 +71,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onGetSquareLikeResult(false)
+                    mView.onError(context.getString(R.string.service_error))
                 }
             })
     }
@@ -93,6 +94,10 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                         mView.onGetSquareCollectResult(t)
                     }
                 }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
             })
     }
 
@@ -114,6 +119,10 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                         mView.onGetSquareReport(t)
                     }
                 }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
             })
     }
 
@@ -134,6 +143,10 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     } else {
                         mView.onAddCommentResult(t, false)
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
                 }
             })
     }
@@ -157,6 +170,12 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                         mView.onLikeCommentResult(t, position)
                     }
                 }
+
+                override fun onError(e: Throwable?) {
+
+                    mView.onError(context.getString(R.string.service_error))
+
+                }
             })
     }
 
@@ -178,6 +197,12 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                         mView.onDeleteCommentResult(t, position)
                     }
                 }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+
+
+                }
             })
     }
 
@@ -198,6 +223,10 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     } else {
                         mView.onReportCommentResult(t, position)
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
                 }
             })
     }

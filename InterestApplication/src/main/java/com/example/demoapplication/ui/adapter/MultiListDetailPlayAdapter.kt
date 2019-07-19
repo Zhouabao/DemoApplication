@@ -60,7 +60,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         holder.addOnClickListener(R.id.detailPlayCommentSend)
 
         GlideUtil.loadAvatorImg(context, item.avatar ?: "", holder.itemView.detailPlayUserAvatar)
-        holder.itemView.detailPlayUserLocationAndTime.text = item.city_name ?: "".plus("\t").plus(item.out_time ?: "")
+        holder.itemView.detailPlayUserLocationAndTime.text = (item.city_name ?: "").plus("市\t\t").plus(item.out_time)
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
         holder.itemView.detailPlayContent.text = item.descr ?: ""
 
@@ -69,6 +69,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         holder.itemView.detailPlaydianzan.text = "${item.like_cnt}"
+
         if (holder.itemView.detailPlayComment.text.toString().isNotEmpty())
             holder.itemView.detailPlayComment.setText("")//尤其是在评论之后清除数据
         holder.itemView.detailPlayComment.addTextChangedListener(object : TextWatcher {
@@ -142,7 +143,6 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                     .load(item.avatar!!)
                     .apply(bitmapTransform(BlurTransformation(25)))
                     .into(holder.itemView.videoFl)
-
 
 
                 gsyVideoOptionBuilder.setIsTouchWiget(false)

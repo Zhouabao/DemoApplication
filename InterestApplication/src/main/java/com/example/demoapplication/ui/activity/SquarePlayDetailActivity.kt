@@ -154,7 +154,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     private fun initData() {
         GlideUtil.loadAvatorImg(this, squareBean.avatar ?: "", detailPlayUserAvatar)
-        detailPlayUserLocationAndTime.text = squareBean.city_name ?: "".plus("\t").plus(squareBean.out_time ?: "")
+        detailPlayUserLocationAndTime.text = (squareBean.city_name ?: "").plus("市\t\t").plus(squareBean.out_time)
         detailPlayUserName.text = squareBean.nickname ?: ""
         detailPlayContent.text = squareBean.descr ?: ""
 

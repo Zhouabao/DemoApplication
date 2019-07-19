@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
@@ -27,6 +28,7 @@ import com.example.demoapplication.ui.adapter.SquareFriendsAdapter
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.example.demoapplication.utils.ScrollCalculatorHelper
+import com.example.demoapplication.widgets.CommonItemDecoration
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
@@ -36,7 +38,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.fragment_square.*
-import kotlinx.android.synthetic.main.headerview_label.*
 import kotlinx.android.synthetic.main.headerview_label.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -127,6 +128,11 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         mPresenter.context = activity!!
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
+
+
+        val itemdecoration =  CommonItemDecoration(activity!!, DividerItemDecoration.VERTICAL)
+        itemdecoration.setDrawable(activity!!.resources.getDrawable(R.drawable.recycler_divider))
+        squareDynamicRv.addItemDecoration(itemdecoration)
 
         squareDynamicRv.layoutManager = layoutManager
         squareDynamicRv.adapter = adapter
@@ -407,10 +413,10 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
         if (friends.size == 0) {
-            friendTv.visibility = View.GONE
+            adapter.headerLayout.friendTv.visibility = View.GONE
         } else {
             friendsAdapter.setNewData(friends)
-            friendTv.visibility = View.VISIBLE
+            adapter.headerLayout.friendTv.visibility = View.VISIBLE
         }
     }
 
@@ -446,12 +452,12 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             }
 //            adapter.notifyItemChanged(position)
             adapter.notifyDataSetChanged()
-
         }
     }
 
-    override fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>) {
-        toast(data.msg)
+    override fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>?) {
+        if (data != null)
+            toast(data.msg)
         if (adapter.data[position].iscollected == 1) {
             adapter.data[position].iscollected = 0
         } else {
@@ -463,8 +469,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         }
     }
 
-    override fun onGetSquareReport(baseResp: BaseResp<Any?>, position: Int) {
-        toast(baseResp.msg)
+    override fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int) {
+        if (baseResp != null)
+            toast(baseResp.msg)
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }

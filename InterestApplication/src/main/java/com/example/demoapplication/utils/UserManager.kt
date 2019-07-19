@@ -34,7 +34,14 @@ object UserManager {
         val savaLabels = mutableSetOf<String>()
         for (label in data!!.taglist ?: mutableListOf()) {
             if (label != null)
-                savaLabels.add(SharedPreferenceUtil.Object2String(LabelBean(title = label?.title ?: "", id = label?.id ?: -1)))
+                savaLabels.add(
+                    SharedPreferenceUtil.Object2String(
+                        LabelBean(
+                            title = label?.title ?: "",
+                            id = label?.id ?: -1
+                        )
+                    )
+                )
         }
         SPUtils.getInstance(Constants.SPNAME).put("checkedLabels", savaLabels)
         if (data.userinfo != null) {
@@ -45,12 +52,22 @@ object UserManager {
         }
     }
 
-
-    fun getToken():String{
-        return  SPUtils.getInstance(Constants.SPNAME).getString("token")
+    /**
+     * 登录成功保存用户信息
+     */
+    fun isUserInfoMade(): Boolean {
+        return !(SPUtils.getInstance(Constants.SPNAME).getString("nickname").isNullOrEmpty() ||
+                SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
+                SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
+                SPUtils.getInstance(Constants.SPNAME).getInt("birth") == 0)
     }
 
-    fun getAccid():String{
-        return  SPUtils.getInstance(Constants.SPNAME).getString("accid")
+
+    fun getToken(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("token")
+    }
+
+    fun getAccid(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("accid")
     }
 }

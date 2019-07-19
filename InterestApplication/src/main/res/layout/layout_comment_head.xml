@@ -7,7 +7,7 @@
         android:textColor="@color/colorGrayText"
         android:textSize="12sp"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="26dp"
         android:background="@color/colorDivider"
         android:paddingLeft="15dp"
         android:gravity="center_vertical"

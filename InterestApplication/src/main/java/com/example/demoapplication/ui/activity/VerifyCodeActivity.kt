@@ -103,7 +103,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
 
     override fun onConfirmVerifyCode(data: LoginBean, isRight: Boolean) {
         if (!isRight) {
-            toast("验证码输入不正确！")
+//            toast("验证码输入不正确！")
             onChangeVerifyButtonStatus(false)
         } else if (isRight) {
             SPUtils.getInstance(Constants.SPNAME).put("qntoken", data.qntk)

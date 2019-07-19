@@ -343,22 +343,23 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/locationCity"/>
 
-            <com.flyco.tablayout.CommonTabLayout
+            <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabPublishWay"
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="@id/locationCity"
                     app:layout_constraintTop_toBottomOf="@id/divide"
-                    app:tl_indicator_color="@color/colorOrange"
+                  />
+
+            <!--  app:tl_indicator_color="@color/colorOrange"
                     app:tl_indicator_gravity="BOTTOM"
                     app:tl_indicator_height="3dp"
                     app:tl_indicator_width="11dp"
                     app:tl_tab_width="28dp"
                     app:tl_textSelectColor="@color/colorBlack22"
                     app:tl_textUnselectColor="@color/colorGrayText"
-                    app:tl_textsize="14sp"/>
-
+                    app:tl_textsize="14sp"-->
             <androidx.viewpager.widget.ViewPager
                     android:id="@+id/vpChooseWay"
                     android:layout_marginTop="10dp"

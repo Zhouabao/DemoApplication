@@ -6,7 +6,6 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:background="@color/colorWhite"
-        android:layout_marginTop="30dp"
         android:layout_height="wrap_content">
 
     <include
@@ -16,7 +15,7 @@
     <LinearLayout
             android:id="@+id/squareUserAudio"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:paddingLeft="14dp"
@@ -52,7 +51,7 @@
                 app:pointer_color="@color/colorWhite"
                 app:pointer_num="11"
                 android:layout_marginLeft="12dp"
-                app:pointer_width="5"/>
+                app:pointer_width="3"/>
 
 
     </LinearLayout>

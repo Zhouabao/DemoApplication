@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_welcome.*
@@ -42,8 +43,16 @@ class WelcomeActivity : BaseActivity() {
         }
 
         //判断是否有登录
-        if (SPUtils.getInstance(Constants.SPNAME).getString("token").isNotEmpty()) {
-            startActivity<MainActivity>()
+        if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
+            if (UserManager.isUserInfoMade()) {//是否填写过用户信息
+                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isEmpty()) {//是否选择过标签
+                    startActivity<LabelsActivity>()
+                } else {
+                    startActivity<MainActivity>()
+                }
+            } else {
+                startActivity<SetInfoActivity>()
+            }
             finish()
         }
 

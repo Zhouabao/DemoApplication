@@ -1,6 +1,7 @@
 package com.example.demoapplication.presenter
 
 import android.util.Log
+import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.presenter.view.VerifyCodeView
@@ -25,13 +26,16 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
             .excute(object : BaseSubscriber<BaseResp<LoginBean>>(mView) {
                 override fun onNext(t: BaseResp<LoginBean>) {
                     super.onNext(t)
-                    if (t.code == 500) {
-                        mView.onError(t.msg)
-                    } else if (t.code == 200) {
+                     if (t.code == 200) {
                         mView.onConfirmVerifyCode(t.data, true)
                     } else {
-                        mView.onConfirmVerifyCode(t.data, false)
+                         mView.onError(t.msg)
+                         mView.onConfirmVerifyCode(t.data, false)
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
                 }
             })
     }

@@ -175,7 +175,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         when (view.id) {
             R.id.btnDislike -> {
                 toast("不喜欢")
-                matchUserAdapter.remove(0)
+                if (matchUserAdapter.data.size > 0)
+                    matchUserAdapter.remove(matchUserAdapter.data.size - 1)
                 //
 //                    matchUserAdapter.remove(0)
 //                matchUserStackView.removeCover(StackCardsView.SWIPE_LEFT)

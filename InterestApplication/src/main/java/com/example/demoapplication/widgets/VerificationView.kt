@@ -110,7 +110,7 @@ class VerificationView @JvmOverloads constructor(
     /**
      * 展示输入键盘
      */
-    private fun showInputPad(editText: EditText) {
+    public fun showInputPad(editText: EditText) {
         editText.isFocusable = true
         editText.isFocusableInTouchMode = true
         editText.requestFocus()
@@ -222,7 +222,7 @@ class VerificationView @JvmOverloads constructor(
         focus()
     }
 
-    private fun requestEditeFocus() {
+    public fun requestEditeFocus() {
         val lastETC = getChildAt(etTextCount - 1) as EditText
         if (lastETC.text.isNotEmpty()) {
             lastETC.isEnabled = true

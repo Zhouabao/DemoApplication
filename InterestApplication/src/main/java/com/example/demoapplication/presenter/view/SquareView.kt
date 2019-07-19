@@ -19,9 +19,9 @@ interface SquareView : BaseView {
 
     fun onGetSquareLikeResult(position: Int, result: Boolean)
 
-    fun onGetSquareCollectResult(position: Int, result: BaseResp<Any?>)
+    fun onGetSquareCollectResult(position: Int, result: BaseResp<Any?>?)
 
 
 
-    fun onGetSquareReport(baseResp: BaseResp<Any?>, position: Int)
+    fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int)
 }

@@ -1,6 +1,7 @@
 package com.example.demoapplication.presenter
 
 import android.app.Activity
+import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.FriendListBean
 import com.example.demoapplication.model.SquareListBean
@@ -34,6 +35,10 @@ class SquarePresenter : BasePresenter<SquareView>() {
                         UserManager.startToLogin(context as Activity)
                     }
                 }
+
+                override fun onError(e: Throwable?) {
+                    mView.onGetFriendsListResult(mutableListOf())
+                }
             })
     }
 
@@ -44,6 +49,10 @@ class SquarePresenter : BasePresenter<SquareView>() {
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareList(params)
             .excute(object : BaseSubscriber<BaseResp<SquareListBean>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                    //todo  showloading
+                }
                 override fun onNext(t: BaseResp<SquareListBean>) {
                     super.onNext(t)
                     if (t.code == 200)
@@ -53,6 +62,11 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     } else {
                         mView.onGetSquareListResult(t.data, false, isRefresh)
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError("服务器错误~")
+                    mView.onGetSquareListResult(null, false, isRefresh)
                 }
             })
     }
@@ -77,6 +91,11 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     }
 
                 }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                    mView.onGetSquareLikeResult(position, false)
+                }
             })
     }
 
@@ -97,6 +116,11 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     } else {
                         mView.onGetSquareCollectResult(position, t)
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                    mView.onGetSquareCollectResult(position,null)
                 }
             })
     }
@@ -119,6 +143,11 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     } else {
                         mView.onGetSquareReport(t,position)
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                    mView.onGetSquareReport(null,position)
                 }
             })
     }

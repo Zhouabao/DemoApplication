@@ -12,7 +12,7 @@ import com.kotlin.base.presenter.view.BaseView
  */
 interface SquareDetailView : BaseView {
 
-    fun onGetCommentListResult(allCommentBean: AllCommentBean, refresh: Boolean)
+    fun onGetCommentListResult(allCommentBean: AllCommentBean?, refresh: Boolean)
 
     fun onGetSquareLikeResult(result: Boolean)
 
@@ -22,9 +22,9 @@ interface SquareDetailView : BaseView {
 
     fun onReportCommentResult(data: BaseResp<Any?>,position:Int)
 
-    fun onGetSquareCollectResult(data: BaseResp<Any?>)
+    fun onGetSquareCollectResult(data: BaseResp<Any?>?)
 
-    fun onGetSquareReport(data: BaseResp<Any?>)
+    fun onGetSquareReport(data: BaseResp<Any?>?)
 
-    fun onAddCommentResult(data: BaseResp<Any?>, result: Boolean)
+    fun onAddCommentResult(data: BaseResp<Any?>?, result: Boolean)
 }

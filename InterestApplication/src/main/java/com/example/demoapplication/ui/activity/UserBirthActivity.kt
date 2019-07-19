@@ -25,7 +25,6 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
 
         initView()
 
-
     }
 
     private fun initView() {
@@ -37,6 +36,9 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
             this.year = year
             if (complete) {
                 calculateAgeAndAstro()
+                //年份输入完成后，让月日获取焦点
+                userBirthMonth.postDelayed({ userBirthMonth.requestEditeFocus() }, 200L)
+
             } else if (!complete && userAge.visibility == View.VISIBLE) {
                 confirmBtn.isEnabled = false
                 userAge.text = ""
@@ -60,7 +62,7 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
         }
 
         confirmBtn.onClick {
-            setResult(Activity.RESULT_OK, intent.putExtra("year", "$year").putExtra("month","$monthAndDay"))
+            setResult(Activity.RESULT_OK, intent.putExtra("year", "$year").putExtra("month", "$monthAndDay"))
             finish()
         }
     }

@@ -119,7 +119,7 @@ dependencies {
     api 'com.shuyu:gsyVideoPlayer-x86:7.0.2'
 
     //TabLayout
-    api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    api  'com.github.hackware1993:MagicIndicator:1.5.0'
 
 
     //statusBar

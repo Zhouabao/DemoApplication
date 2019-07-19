@@ -27,11 +27,17 @@ class MultiListCommentAdapter(var context: Context, data: MutableList<CommentBea
     }
 
     override fun convert(holder: BaseViewHolder, item: CommentBean) {
+
         when (holder.itemViewType) {
             CommentBean.TITLE -> {
                 holder.itemView.allT2.text = item.content ?: ""
             }
             CommentBean.CONTENT -> {
+                if (holder.layoutPosition == mData.size - 1) {
+                    holder.itemView.commentDivider.visibility = View.GONE
+                } else {
+                    holder.itemView.commentDivider.visibility = View.VISIBLE
+                }
                 if (item.reply_content.isNullOrEmpty() || item.replyed_nickname.isNullOrEmpty()) {
                     holder.itemView.childView.visibility = View.GONE
                 } else {

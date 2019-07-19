@@ -90,16 +90,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         initData()
 
 
+
         commentParams["square_id"] = "${squareBean.id}"
         mPresenter.getCommentList(commentParams, true)
     }
 
     private fun initData() {
         GlideUtil.loadAvatorImg(this, squareBean.avatar ?: "", squareUserIv)
-        val drawable1 =
-            resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-        drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-        squareDianzanBtn.setCompoundDrawables(drawable1, null, null, null)
+
+        squareDianzanBtnImg.setImageResource(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+
         squareDianzanBtn.text = "${squareBean.like_cnt}"
         squareCommentBtn.text = "${squareBean.comment_cnt}"
         squareContent.text = "${squareBean.descr}"
@@ -143,20 +143,20 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
         }
 
-        squareZhuanfaBtn.setOnClickListener(this)
-        squareDianzanBtn.setOnClickListener(this)
-        squareCommentBtn.setOnClickListener(this)
+        squareZhuanfaLl.setOnClickListener(this)
+        squareDianzanlL.setOnClickListener(this)
+        squareCommentlL.setOnClickListener(this)
         squareMoreBtn.setOnClickListener(this)
-        showCommentBtn.setOnClickListener(this)
+        sendCommentBtn.setOnClickListener(this)
 
         showCommentEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(charSequence: Editable?) {
                 if (charSequence.toString().isNotEmpty()) {
-                    showCommentBtn.isEnabled = true
-                    showCommentBtn.setBackgroundResource(R.drawable.icon_send_enable)
+                    sendCommentBtn.isEnabled = true
+                    sendCommentBtn.setBackgroundResource(R.drawable.icon_send_enable)
                 } else {
-                    showCommentBtn.isEnabled = false
-                    showCommentBtn.setBackgroundResource(R.drawable.icon_send_unable)
+                    sendCommentBtn.isEnabled = false
+                    sendCommentBtn.setBackgroundResource(R.drawable.icon_send_unable)
                 }
             }
 
@@ -379,53 +379,59 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     }
 
-    override fun onGetCommentListResult(allCommentBean: AllCommentBean, refresh: Boolean) {
+    override fun onGetCommentListResult(allCommentBean: AllCommentBean?, refresh: Boolean) {
         if (refresh) {
             refreshLayout.setNoMoreData(false)
-            if (allCommentBean.hotlist != null && allCommentBean.hotlist!!.size > 0) {
-                adapter.addData(CommentBean(content = "热门评论", type = 0))
-                for (i in 0 until allCommentBean.hotlist!!.size) {
-                    allCommentBean.hotlist!![i]!!.type = 1
+            if (allCommentBean != null) {
+                if (allCommentBean.hotlist != null && allCommentBean.hotlist!!.size > 0) {
+                    adapter.addData(CommentBean(content = "热门评论", type = 0))
+                    for (i in 0 until allCommentBean.hotlist!!.size) {
+                        allCommentBean.hotlist!![i]!!.type = 1
+                    }
+                    adapter.addData(allCommentBean.hotlist!!)
                 }
-                adapter.addData(allCommentBean.hotlist!!)
-            }
-            adapter.addData(CommentBean(content = "所有评论", type = 0))
-            if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
-                for (i in 0 until allCommentBean.list!!.size) {
-                    allCommentBean.list!![i]!!.type = 1
+                adapter.addData(CommentBean(content = "所有评论", type = 0))
+                if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
+                    for (i in 0 until allCommentBean.list!!.size) {
+                        allCommentBean.list!![i]!!.type = 1
+                    }
+                    adapter.addData(allCommentBean.list!!)
                 }
-                adapter.addData(allCommentBean.list!!)
             }
             refreshLayout.finishRefresh(true)
         } else {
-            if ((allCommentBean.hotlist == null || allCommentBean.hotlist!!.size == 0) && (allCommentBean.list == null || allCommentBean.list!!.size == 0)) {
-                refreshLayout.finishLoadMoreWithNoMoreData()
-                return
-            }
+            if (allCommentBean != null) {
+                if ((allCommentBean.hotlist == null || allCommentBean.hotlist!!.size == 0) && (allCommentBean.list == null || allCommentBean.list!!.size == 0)) {
+                    refreshLayout.finishLoadMoreWithNoMoreData()
+                    return
+                }
 
-            if (allCommentBean.hotlist != null && allCommentBean.hotlist!!.size > 0) {
-                for (i in 0 until allCommentBean.hotlist!!.size) {
-                    allCommentBean.hotlist!![i]!!.type = 1
+                if (allCommentBean.hotlist != null && allCommentBean.hotlist!!.size > 0) {
+                    for (i in 0 until allCommentBean.hotlist!!.size) {
+                        allCommentBean.hotlist!![i]!!.type = 1
+                    }
+                    adapter.addData(allCommentBean.hotlist!!)
                 }
-                adapter.addData(allCommentBean.hotlist!!)
-            }
-            if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
-                for (i in 0 until allCommentBean.list!!.size) {
-                    allCommentBean.list!![i]!!.type = 1
+                if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
+                    for (i in 0 until allCommentBean.list!!.size) {
+                        allCommentBean.list!![i]!!.type = 1
+                    }
+                    adapter.addData(allCommentBean.list!!)
                 }
-                adapter.addData(allCommentBean.list!!)
             }
             refreshLayout.finishLoadMore(true)
         }
     }
 
-    override fun onGetSquareCollectResult(data: BaseResp<Any?>) {
-        toast(data.msg)
-        if (data.code == 200) {
-            squareBean.iscollected = if (squareBean.iscollected == 1) {
-                0
-            } else {
-                1
+    override fun onGetSquareCollectResult(data: BaseResp<Any?>?) {
+        if (data != null) {
+            toast(data.msg)
+            if (data.code == 200) {
+                squareBean.iscollected = if (squareBean.iscollected == 1) {
+                    0
+                } else {
+                    1
+                }
             }
         }
     }
@@ -442,22 +448,23 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 0
             }
             squareDianzanBtn.text = "${squareBean.like_cnt}"
-            val drawable1 =
-                resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-            drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-            squareDianzanBtn.setCompoundDrawables(drawable1, null, null, null)
+            squareDianzanBtnImg.setImageResource(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+
         } else {
             toast("点赞失败，请重试")
         }
     }
 
-    override fun onGetSquareReport(data: BaseResp<Any?>) {
-        toast(data.msg)
+    override fun onGetSquareReport(data: BaseResp<Any?>?) {
+        if (data != null)
+            toast(data.msg)
     }
 
 
-    override fun onAddCommentResult(data: BaseResp<Any?>, result: Boolean) {
-        toast(data.msg)
+    override fun onAddCommentResult(data: BaseResp<Any?>?, result: Boolean) {
+
+        if (data != null)
+            toast(data.msg)
         if (result) {
             resetCommentEt()
             refreshLayout.autoRefresh()
@@ -488,11 +495,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.squareZhuanfaBtn -> {
+            R.id.squareZhuanfaLl -> {
                 showTranspondDialog()
             }
             //todo  取消点赞后台有问题
-            R.id.squareDianzanBtn -> {
+            R.id.squareDianzanlL -> {
                 val params = hashMapOf(
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
@@ -506,13 +513,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 )
                 mPresenter.getSquareLike(params)
             }
-            R.id.squareCommentBtn -> {
+            R.id.squareCommentlL -> {
                 squareScrollView.smoothScrollTo(commentList.left, commentList.top)
             }
             R.id.squareMoreBtn -> {
                 showMoreDialog()
             }
-            R.id.showCommentBtn -> {
+            R.id.sendCommentBtn -> {
                 mPresenter.addComment(
                     hashMapOf(
                         "accid" to UserManager.getAccid(),

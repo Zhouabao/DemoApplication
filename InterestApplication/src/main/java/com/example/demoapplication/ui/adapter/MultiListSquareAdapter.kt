@@ -89,7 +89,7 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>) :
             View.GONE
         }
         GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.squareUserIv1)
-        holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus("\t").plus(item.out_time)
+        holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus("市\t\t").plus(item.out_time)
 //                if (!item.create_time.isNullOrEmpty()) {
 //                    TimeUtils.getFitTimeSpan(TimeUtils.getNowString(), item.create_time, 2)
 //                } else ""

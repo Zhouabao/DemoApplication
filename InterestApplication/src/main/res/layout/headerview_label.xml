@@ -7,6 +7,7 @@
     <TextView
             android:id="@+id/friendTv"
             android:text="好友"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:textColor="#ff000000"
             android:textSize="14sp"

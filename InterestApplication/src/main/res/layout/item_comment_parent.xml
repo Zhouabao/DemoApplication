@@ -6,11 +6,12 @@
                                                    android:background="@color/colorWhite"
                                                    android:layout_height="wrap_content">
 
+
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/commentUser"
             android:src="@drawable/img_avatar_02"
             android:layout_width="40dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="15dp"
             android:scaleType="centerCrop"
             android:layout_height="40dp"
@@ -48,6 +49,7 @@
             android:layout_width="14dp"
             android:layout_height="14dp"
             android:layout_marginRight="15dp"
+            android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="@id/commentUser"
             app:layout_constraintRight_toLeftOf="@id/commentDianzanBtn"
             app:layout_constraintTop_toTopOf="@id/commentUser"/>
@@ -92,7 +94,16 @@
             android:id="@+id/childView"
             layout="@layout/item_comment_child"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/commentContent"/>
+
+    <View
+            android:id="@+id/commentDivider"
+            android:background="@color/colorLightGray"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintLeft_toLeftOf="@id/commentUserName"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
