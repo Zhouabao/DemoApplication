@@ -11,7 +11,6 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.UpdateVoiceTimeThread
@@ -96,7 +95,7 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>) :
 
 
         when (holder.itemViewType) {
-            MatchBean.PIC -> {
+            SquareBean.PIC -> {
                 if (item.photo_json != null && item.photo_json!!.size > 0) {
                     holder.itemView.squareUserPics1.visibility = View.VISIBLE
                     holder.itemView.squareUserPics1.layoutManager =
@@ -114,7 +113,7 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>) :
                 }
 
             }
-            MatchBean.VIDEO -> {
+            SquareBean.VIDEO -> {
 
 //                if (SwitchUtil.sSwitchVideo != null) {
 //                    SwitchUtil.clonePlayState(holder.itemView.squareUserVideo)
@@ -172,7 +171,7 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>) :
                     ""
                 )
             }
-            MatchBean.AUDIO -> {
+            SquareBean.AUDIO -> {
                 //点击播放
                 holder.addOnClickListener(R.id.audioPlayBtn)
                 if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) { //播放中

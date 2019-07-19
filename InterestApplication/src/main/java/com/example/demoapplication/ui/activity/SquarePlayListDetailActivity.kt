@@ -124,7 +124,7 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
     }
 
     val layoutmanager by lazy {
-        object : LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false) {
+        object : LinearLayoutManager(this, RecyclerView.HORIZONTAL, false) {
             override fun canScrollHorizontally(): Boolean {
                 return false
             }
@@ -147,7 +147,6 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
         //获取用户输入的评论
         adapter.onTextChangeListener = object : MultiListDetailPlayAdapter.OnTextChangeListener {
             override fun afterTextChanged(text: String, position: Int) {
-                KeyboardUtils.hideSoftInput(this@SquarePlayListDetailActivity)
                 adapter.data[position].comment = text
             }
         }
