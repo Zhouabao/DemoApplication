@@ -6,26 +6,11 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragment.MatchFragment">
-
-
-    <com.example.demoapplication.widgets.stackview.StackCardsView
-            android:id="@+id/matchUserStackView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="66dp"
-            android:clipToPadding="false"
-            android:visibility="gone"
-            app:itemHeight="535dp"
-            app:itemWidth="340dp"/>
+        tools:context=".ui.fragment.MatchFragment1">
 
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/matchUserRv"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -35,7 +20,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_gravity="bottom|center_horizontal"
             android:layout_width="wrap_content"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="20dp"
             android:layout_height="wrap_content">
 
         <ImageView
@@ -56,8 +41,8 @@
         <ImageView
                 android:id="@+id/btnChat"
                 android:src="@drawable/icon_flash"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toRightOf="@id/btnDislike"
                 app:layout_constraintRight_toLeftOf="@id/btnLike"
@@ -67,18 +52,17 @@
         <TextView
                 android:id="@+id/tvLeftChatTime"
                 android:elevation="2dp"
-                android:layout_marginTop="46dp"
                 android:textColor="@color/colorOrange"
                 android:background="@drawable/shape_rectangle_gray_white_15dp"
-                android:layout_width="21dp"
+                android:layout_width="20dp"
                 android:gravity="center"
                 android:textSize="12sp"
                 android:text="3"
-                android:layout_height="21dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/btnChat"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toLeftOf="@id/btnChat"
-                app:layout_constraintRight_toRightOf="@id/btnChat"
-                app:layout_constraintTop_toTopOf="@id/btnChat"/>
+                app:layout_constraintRight_toRightOf="@id/btnChat"/>
 
         <ImageView
                 android:id="@+id/btnLike"

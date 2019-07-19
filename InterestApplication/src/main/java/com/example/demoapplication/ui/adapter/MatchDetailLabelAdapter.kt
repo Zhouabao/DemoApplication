@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
-import com.example.demoapplication.model.Label
+import com.example.demoapplication.model.Tag
 import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import kotlinx.android.synthetic.main.item_match_detail_label.view.*
 
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.item_match_detail_label.view.*
  *    version: 1.0
  */
 class MatchDetailLabelAdapter(context: Context) :
-    BaseRecyclerViewAdapter<Label, MatchDetailLabelAdapter.ViewHolder>(context) {
+    BaseRecyclerViewAdapter<Tag, MatchDetailLabelAdapter.ViewHolder>(context) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,7 +30,7 @@ class MatchDetailLabelAdapter(context: Context) :
         super.onBindViewHolder(holder, position)
         val model = dataList[position]
 
-        holder.itemView.labelName.text = model.name
+        holder.itemView.labelName.text = model.title
         holder.itemView.labelSame.visibility = if (position % 3 == 0) View.VISIBLE else View.GONE
     }
 

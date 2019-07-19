@@ -7,9 +7,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.core.view.size
-import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.model.MatchBean
@@ -26,7 +23,7 @@ class MatchCardItem(val context: Context, val data: MatchBean) : BaseCardItem(co
 
     override fun getView(convertView: View?, parent: ViewGroup?): View {
         val view = LayoutInflater.from(context).inflate(R.layout.item_match_user1, null)
-        view.vpPhotos.adapter = MatchImgsAdapter1(mContext, data.imgs)
+     /*   view.vpPhotos.adapter = MatchImgsAdapter1(mContext, data.imgs)
         view.vpPhotos.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
@@ -35,7 +32,7 @@ class MatchCardItem(val context: Context, val data: MatchBean) : BaseCardItem(co
                     (view.vpIndicator[i] as RadioButton).isChecked = i == position
                 }
             }
-        })
+        })*/
 
         if (data.imgs.size > 1 && view.vpIndicator.childCount == 0) {
             for (i in 0 until data.imgs.size) {

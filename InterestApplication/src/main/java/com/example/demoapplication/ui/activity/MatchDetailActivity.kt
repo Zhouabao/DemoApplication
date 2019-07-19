@@ -1,22 +1,19 @@
 package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
 import androidx.core.view.size
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
-import com.example.demoapplication.model.Label
-import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.model.MatchUserDetailBean
 import com.example.demoapplication.presenter.MatchDetailPresenter
 import com.example.demoapplication.presenter.view.MatchDetailView
 import com.example.demoapplication.ui.adapter.DetailThumbAdapter
@@ -26,6 +23,7 @@ import com.example.demoapplication.ui.chat.MatchSucceedActivity
 import com.example.demoapplication.ui.dialog.ChargeVipDialog
 import com.example.demoapplication.ui.fragment.BlockSquareFragment
 import com.example.demoapplication.ui.fragment.ListSquareFragment
+import com.example.demoapplication.utils.UserManager
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -41,7 +39,9 @@ import java.util.*
  * 匹配详情页
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView {
-    private val matchBean by lazy { intent.getSerializableExtra("matchBean") as MatchBean }
+
+    private val target_accid by lazy { intent.getStringExtra("target_accid") }
+    private var matchBean: MatchUserDetailBean? = null
     private val thumbAdapter by lazy { DetailThumbAdapter(this) }
 
     var photos: MutableList<String> = mutableListOf()
@@ -49,59 +49,40 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     private val labelsAdapter by lazy { MatchDetailLabelAdapter(this) }
 
+    private val params by lazy {
+        hashMapOf(
+            "accid" to UserManager.getAccid(),
+            "token" to UserManager.getToken(),
+            "target_accid" to target_accid,
+            "_sign" to "",
+            "_timestamp" to System.currentTimeMillis()
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match_detail1)
 
         initView()
 
-        initData()
+        mPresenter.getUserDetailInfo(params)
     }
 
     private fun initData() {
-        detailUserName.text = matchBean.name
-        detailUserInfo.text = "${matchBean.age} / ${if (matchBean.sex == 1) "男" else "女"} / android开发"
-        detailUserSign.text =
-            "Suppressing notification from package com.qihoo360.mobilesafe by user request, and Notification.FLAG = 98, and when = 1561516865824"
+        detailUserName.text = matchBean!!.nickname
+//        detailUserInfo.text = "${matchBean!!.age} / ${if (matchBean!!.gender == 1) "男" else "女"} / ${matchBean.job}"
+        detailUserSign.text = matchBean!!.sign
 
         detailThumbRv.adapter = thumbAdapter
-        thumbAdapter.setData(
-            mutableListOf(
-                R.drawable.img_avatar_01,
-                R.drawable.img_avatar_01,
-                R.drawable.img_avatar_01,
-                R.drawable.img_avatar_01,
-                R.drawable.img_avatar_01
-            )
-        )
+        thumbAdapter.setData(matchBean!!.square ?: mutableListOf())
 
         detailPhotosVp.adapter = photosAdapter
-        photos.addAll(matchBean.imgs)
+        photos.addAll(matchBean!!.photos ?: mutableListOf(matchBean!!.avatar ?: ""))
         photosAdapter.notifyDataSetChanged()
         setViewpagerAndIndicator()
 
-
         detailLabelRv.adapter = labelsAdapter
-        labelsAdapter.setData(
-            mutableListOf(
-                Label("精选", checked = true, parId = 0),
-                Label("PlayStation", checked = false, parId = 1),
-                Label("游戏", checked = false, parId = 2),
-                Label("精选", checked = false, parId = 0),
-                Label("PlayStation", checked = false, parId = 1),
-                Label("游戏", checked = false, parId = 2),
-                Label("精选", checked = false, parId = 0),
-                Label("PlayStation", checked = false, parId = 1),
-                Label("游戏", checked = false, parId = 2),
-                Label("精选", checked = false, parId = 0),
-                Label("PlayStation", checked = false, parId = 1),
-                Label("游戏", checked = false, parId = 2),
-                Label("精选", checked = false, parId = 0),
-                Label("PlayStation", checked = false, parId = 1),
-                Label("游戏", checked = false, parId = 2)
-            )
-        )
-
+        labelsAdapter.setData(matchBean!!.tags ?: mutableListOf())
 
     }
 
@@ -158,7 +139,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
 
-
         //用户的广场预览界面
         detailThumbRv.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
         //用户标签
@@ -177,10 +157,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
         //设置根布局的滑动事件监听，如果滑出屏幕高度的1/3，就将按钮浮动在底部
-        detailScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-            Log.i("scrollviewTag", "x = $scrollX, y = $scrollY  ;  oldX = $oldScrollX, oldY = $oldScrollY")
-            Log.i("scrollviewTag", "${ScreenUtils.getScreenHeight()}")
-        }
+//        detailScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+//            Log.i("scrollviewTag", "x = $scrollX, y = $scrollY  ;  oldX = $oldScrollX, oldY = $oldScrollY")
+//            Log.i("scrollviewTag", "${ScreenUtils.getScreenHeight()}")
+//        }
 
 
     }
@@ -214,5 +194,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
         transaction.show(mStack[position])
         transaction.commit()
+    }
+
+    override fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchUserDetailBean?) {
+        if (success) {
+            matchBean = matchUserDetailBean
+            initData()
+        }
     }
 }

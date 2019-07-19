@@ -1,5 +1,6 @@
 package com.example.demoapplication.presenter.view
 
+import com.example.demoapplication.model.MatchUserDetailBean
 import com.kotlin.base.presenter.view.BaseView
 
 /**
@@ -9,4 +10,6 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface MatchDetailView : BaseView {
+
+    fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchUserDetailBean?)
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
+import com.example.demoapplication.model.Square
 import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import kotlinx.android.synthetic.main.item_match_detail_thumb.view.*
 
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.item_match_detail_thumb.view.*
  *    desc   :广场动态封面adapter
  *    version: 1.0
  */
-class DetailThumbAdapter(context: Context) : BaseRecyclerViewAdapter<Int, DetailThumbAdapter.ViewHolder>(context) {
+class DetailThumbAdapter(context: Context) : BaseRecyclerViewAdapter<Square, DetailThumbAdapter.ViewHolder>(context) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_match_detail_thumb, parent, false))
     }
@@ -24,7 +25,14 @@ class DetailThumbAdapter(context: Context) : BaseRecyclerViewAdapter<Int, Detail
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
-        GlideUtil.loadImg(mContext, dataList[position], holder.itemView.ivThumb)
+        val item: Square = dataList[position]
+        GlideUtil.loadImg(
+            mContext, if (item.photo_json.isNullOrEmpty()) {
+                item.video_json
+            } else {
+                item.photo_json
+            }, holder.itemView.ivThumb
+        )
     }
 
 

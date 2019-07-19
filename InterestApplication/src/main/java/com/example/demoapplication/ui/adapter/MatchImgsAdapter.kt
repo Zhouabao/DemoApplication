@@ -26,7 +26,7 @@ class MatchImgsAdapter(var context: Context, private var datas: MutableList<Stri
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        GlideUtil.loadImg(context, datas[position], holder.itemView.ivUser)
+        GlideUtil.loadImgWithError(context, datas[position], holder.itemView.ivUser)
     }
 
 

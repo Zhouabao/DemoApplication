@@ -9,10 +9,7 @@ import rx.Observable
 
 interface Api {
 
-
-    @POST
-    fun login(shipUserName: String, shipUserMobile: String, shipAddress: String): Observable<Boolean>
-
+    /****************登录板块**********************/
 
     /**
      * 发送验证码
@@ -63,12 +60,15 @@ interface Api {
 
 
     /**
-     * 获取标签列表
+     * 上传标签列表
      */
     @FormUrlEncoded
     @POST("tags/addTag${Constants.END_BASE_URL}")
     fun uploadTagLists(@FieldMap params: HashMap<String, String>, @Field("tags[]") idList: Array<Int?>): Observable<BaseResp<LoginBean?>>
 
+
+
+    /************************广场列表*****************************/
 
     /**
      * 获取广场好友列表
@@ -155,6 +155,25 @@ interface Api {
     @FormUrlEncoded
     @POST("square/replyReport${Constants.END_BASE_URL}")
     fun commentReport(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**********************匹配**************************/
+
+
+    /**
+     * 匹配首页数据
+     */
+    @FormUrlEncoded
+    @POST("Index/index${Constants.END_BASE_URL}")
+    fun getMatchList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchListBean?>>
+
+
+
+    /**
+     * 匹配首页数据
+     */
+    @FormUrlEncoded
+    @POST("member_info/usrinfo${Constants.END_BASE_URL}")
+    fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchUserDetailBean?>>
 
 
     @GET

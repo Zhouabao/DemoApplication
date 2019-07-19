@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.demoapplication.widgets.RoundTopImageView
+<com.example.baselibrary.widgets.RoundImageView
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ivUser"
         android:layout_width="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        app:type="normal"
+        app:borderRadius="10dp"
+        android:src="@drawable/img_avatar_01"
         android:layout_height="match_parent">
 
-</com.example.demoapplication.widgets.RoundTopImageView>
+</com.example.baselibrary.widgets.RoundImageView>

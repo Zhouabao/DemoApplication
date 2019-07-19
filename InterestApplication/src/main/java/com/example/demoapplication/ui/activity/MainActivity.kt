@@ -97,6 +97,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         vpMain.adapter = MainPagerAdapter(supportFragmentManager, mStack,titles)
         initIndicator()
         vpMain.currentItem = 0
+        vpMain.setScrollable(false)
     }
 
     //筛选对话框

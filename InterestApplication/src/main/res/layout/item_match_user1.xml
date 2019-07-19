@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_gravity="center"
-        android:background="@drawable/shadow_173133"
-        android:layout_height="match_parent">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:descendantFocusability="beforeDescendants"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="@color/colorBlack"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="2dp"
+        app:contentPadding="0dp">
 
     <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vpPhotos"
-            android:background="@color/black"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
+
 
 
     <TextView
@@ -38,13 +46,13 @@
 
     <ImageView
             android:id="@+id/matchDislike"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/shape_oval_white"
             android:layout_width="60dp"
             android:scaleType="center"
-            android:visibility="invisible"
-            android:layout_gravity="center_vertical|left"
+            android:alpha="0"
+            android:layout_gravity="top|right"
             android:src="@drawable/icon_dislike"
             android:layout_height="60dp"
             app:layout_constraintRight_toRightOf="parent"
@@ -52,11 +60,11 @@
 
     <ImageView
             android:id="@+id/matchLike"
-            android:layout_gravity="center_vertical|right"
-            android:visibility="invisible"
+            android:layout_gravity="top|left"
+            android:alpha="0"
             android:background="@drawable/shape_oval_white"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
             android:scaleType="center"
             android:src="@drawable/icon_like"
             android:layout_width="60dp"
@@ -74,14 +82,15 @@
         <ImageView
                 android:id="@+id/ivVip"
                 android:visibility="visible"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="5dp"
                 android:src="@drawable/icon_vip"
                 android:layout_width="25dp"
+                android:scaleType="centerInside"
                 android:layout_height="25dp"
                 app:layout_constraintBottom_toBottomOf="@id/matchUserName"
                 app:layout_constraintLeft_toRightOf="@id/matchUserName"
                 app:layout_constraintTop_toTopOf="@id/matchUserName"
-                app:layout_goneMarginLeft="10dp"/>
+                />
 
 
         <TextView
@@ -90,7 +99,7 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="24sp"
                 android:text="Username"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="25dp"
                 android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
@@ -117,9 +126,9 @@
                     android:textColor="@color/colorWhite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="23 / 女 / 半导体"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:text="23 / 女 / 半导体"/>
+                    app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                     android:id="@+id/matchUserJob"
@@ -128,7 +137,7 @@
                     android:text="半导体研发工程师"
                     android:textSize="12sp"
                     android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/icon_label_orange"
+                    android:drawableLeft="@drawable/icon_job"
                     android:textColor="@color/colorWhite"
                     android:drawablePadding="6dp"
                     android:layout_height="wrap_content"
@@ -144,25 +153,25 @@
                     android:text="12"
                     android:textSize="12sp"
                     android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/icon_label_orange"
+                    android:drawableLeft="@drawable/icon_dynamic_small"
                     android:textColor="@color/colorWhite"
                     android:layout_marginLeft="6dp"
                     android:drawablePadding="6dp"
                     android:layout_marginRight="10dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintRight_toLeftOf="@id/matchUserLikeCount"
+                    app:layout_constraintRight_toLeftOf="@id/matchUserLabelsLikeCount"
                     app:layout_constraintTop_toBottomOf="@id/matchUserAge"
                     />
 
             <TextView
-                    android:id="@+id/matchUserLikeCount"
+                    android:id="@+id/matchUserLabelsLikeCount"
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:text="12"
                     android:textSize="12sp"
                     android:layout_marginRight="30dp"
                     android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/icon_label_orange"
+                    android:drawableLeft="@drawable/icon_label_small"
                     android:textColor="@color/colorWhite"
                     android:drawablePadding="6dp"
                     android:layout_height="wrap_content"
@@ -181,6 +190,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="@id/matchUserName"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/matchUserName">
 
             <TextView
@@ -188,7 +198,7 @@
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:text="最近发布动态"
-                    android:drawableLeft="@drawable/icon_edit"
+                    android:drawableLeft="@drawable/icon_dynamic_small"
                     android:drawablePadding="6dp"
                     android:textSize="12sp"
                     android:textColor="@color/colorWhite"
@@ -224,4 +234,4 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</androidx.cardview.widget.CardView>

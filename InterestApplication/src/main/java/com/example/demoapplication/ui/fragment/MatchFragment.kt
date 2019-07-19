@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.demoapplication.R
 import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.model.MatchListBean
 import com.example.demoapplication.presenter.MatchPresenter
 import com.example.demoapplication.presenter.view.MatchView
 import com.example.demoapplication.ui.activity.MatchDetailActivity
@@ -27,6 +28,11 @@ import org.jetbrains.anko.support.v4.toast
  * 匹配页面
  */
 class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
+    override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
+
+
+    }
+
     //用户适配器
     private val matchUserAdapter: MatchUserAdapter by lazy { MatchUserAdapter(mutableListOf()) }
 
@@ -91,9 +97,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
     //用户数据源
     var userList: MutableList<MatchBean> = mutableListOf()
 
-    override fun onGetNewUserFromLabelResult(users: String) {
 
-    }
 
     private fun initData() {
         userList.add(

@@ -1,5 +1,6 @@
 package com.example.demoapplication.presenter.view
 
+import com.example.demoapplication.model.MatchListBean
 import com.kotlin.base.presenter.view.BaseView
 
 /**
@@ -10,6 +11,5 @@ import com.kotlin.base.presenter.view.BaseView
  */
 interface MatchView : BaseView {
 
-
-    fun onGetNewUserFromLabelResult(users: String)
+    fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?)
 }
