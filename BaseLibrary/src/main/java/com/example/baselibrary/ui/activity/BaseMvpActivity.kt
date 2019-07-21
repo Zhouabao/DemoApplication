@@ -1,6 +1,7 @@
 package com.kotlin.base.ui.activity
 
 import android.os.Bundle
+import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.presenter.view.BaseView
 import org.jetbrains.anko.toast
@@ -46,7 +47,6 @@ abstract open class BaseMvpActivity<T : BasePresenter<*>> : BaseActivity(), Base
      */
     override fun onError(text: String) {
        // SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE).setContentText(text).show()
-
-        toast(text)
+        ToastUtils.showShort(text)
     }
 }

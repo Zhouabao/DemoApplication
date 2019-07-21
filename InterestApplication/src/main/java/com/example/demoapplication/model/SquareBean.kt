@@ -12,7 +12,8 @@ import java.io.Serializable
 
 
 data class SquareListBean(
-    var `data`: MutableList<SquareBean>,
+    var data: MutableList<SquareBean>?,
+    var list: MutableList<SquareBean>?,
     var current_page: String?,
     var last_page: Int?,
     var per_page: Int?,
@@ -119,3 +120,4 @@ data class CommentBean(
         const val CONTENT = 1
     }
 }
+

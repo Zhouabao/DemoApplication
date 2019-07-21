@@ -26,13 +26,8 @@ class DetailThumbAdapter(context: Context) : BaseRecyclerViewAdapter<Square, Det
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
         val item: Square = dataList[position]
-        GlideUtil.loadImg(
-            mContext, if (item.photo_json.isNullOrEmpty()) {
-                item.video_json
-            } else {
-                item.photo_json
-            }, holder.itemView.ivThumb
-        )
+//        GlideUtil.loadImg(mContext, if (item.photo_json.isNullOrEmpty()) { item.video_json } else { item.photo_json }, holder.itemView.ivThumb)
+        GlideUtil.loadImg(mContext, item.cover_url, holder.itemView.ivThumb)
     }
 
 

@@ -29,9 +29,10 @@ class MatchDetailLabelAdapter(context: Context) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
         val model = dataList[position]
-
+        holder.itemView.isEnabled = false
         holder.itemView.labelName.text = model.title
-        holder.itemView.labelSame.visibility = if (position % 3 == 0) View.VISIBLE else View.GONE
+        holder.itemView.labelName.isChecked = model.sameLabel ?: false
+
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)

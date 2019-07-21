@@ -70,4 +70,14 @@ object UserManager {
     fun getAccid(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("accid")
     }
+
+     fun getSpLabels(): MutableList<LabelBean> {
+        val tempLabels = mutableListOf<LabelBean>()
+        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
+            (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels")).forEach {
+                tempLabels.add(SharedPreferenceUtil.String2Object(it) as LabelBean)
+            }
+        }
+        return tempLabels
+    }
 }

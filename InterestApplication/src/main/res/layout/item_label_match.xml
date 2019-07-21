@@ -6,12 +6,12 @@
         android:text="任天堂"
         android:button="@null"
         android:background="@drawable/cb_label_selector_orange"
+        android:textColor="@color/label_color_selector_orange"
         android:drawablePadding="2dp"
         android:textSize="12sp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:textColor="@color/label_color_selector_orange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 

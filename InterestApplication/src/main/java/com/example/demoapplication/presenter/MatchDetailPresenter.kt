@@ -49,4 +49,91 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
             })
 
     }
+
+    /**
+     * 拉黑用户
+     */
+    fun shieldingFriend(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .shieldingFriend(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        mView.onGetUserActionResult(true, t.msg)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onError(t.msg)
+                        mView.onGetUserActionResult(false, "")
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                    mView.onGetUserActionResult(false, null)
+                }
+            })
+
+    }
+
+    /**
+     * 拉黑用户
+     */
+    fun reportUser(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .reportUser(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        mView.onGetUserActionResult(true, t.msg)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onError(t.msg)
+                        mView.onGetUserActionResult(false, null)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                    mView.onGetUserActionResult(false, null)
+                }
+            })
+
+    }
+
+    /*
+     * 解除匹配
+     */
+    fun dissolutionFriend(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .dissolutionFriend(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        mView.onGetUserActionResult(true, t.msg)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onError(t.msg)
+                        mView.onGetUserActionResult(false, null)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                    mView.onGetUserActionResult(false, null)
+                }
+            })
+
+    }
 }

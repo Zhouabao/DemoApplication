@@ -1,13 +1,10 @@
 package com.example.demoapplication.ui.adapter
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
+import com.example.demoapplication.model.Photos
 import kotlinx.android.synthetic.main.item_block_square.view.*
 
 /**
@@ -16,18 +13,11 @@ import kotlinx.android.synthetic.main.item_block_square.view.*
  *    desc   :九宫格形式的广场内容适配器
  *    version: 1.0
  */
-class BlockAdapter(context: Context) : BaseRecyclerViewAdapter<Int, BlockAdapter.ViewHolder>(context) {
+class BlockAdapter : BaseQuickAdapter<Photos, BaseViewHolder>(R.layout.item_block_square) {
 
+    override fun convert(holder: BaseViewHolder, item: Photos) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_block_square, parent, false))
+        GlideUtil.loadImg(mContext, item.url ?: "", holder.itemView.ivSquare)
     }
 
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        super.onBindViewHolder(holder, position)
-        GlideUtil.loadImg(mContext, dataList[position], holder.itemView.ivSquare)
-    }
-
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

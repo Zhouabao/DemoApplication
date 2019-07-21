@@ -35,7 +35,9 @@ data class MatchBean(
     }
 }
 
-
+/**
+ * 匹配用户
+ */
 data class MatchBean1(
     var accid: String? = null,
     var age: Int? = 0,
@@ -58,14 +60,22 @@ data class MatchBean1(
     var tagcount: Int? = 0
 ) : Serializable
 
-
+/**
+ * 广场封面
+ */
 data class Square(
     var id: Int?,
-    var photo_json: String?,
-    var video_json: String?
+    var cover_url: String?
+//    var photo_json: String?,
+//    var video_json: String?
 )
 
 
+/**
+ * 匹配状态
+ * status :1.喜欢成功  2.匹配成功
+ */
+data class StatusBean(val status: Int)
 
 data class MatchUserDetailBean(
     var accid: String?,
@@ -79,11 +89,32 @@ data class MatchUserDetailBean(
     var photos: MutableList<String>?,
     var sign: String?,
     var square: MutableList<Square>?,
-    var tags: MutableList<Tag>?
+    var tags: MutableList<Tag>?,
+    var isliked: Int?,
+    var lightning: Int?,
+    var age: Int?,
+    var distance: String?,
+    var gender: Int?,
+    var jobname: String?,
+    var lightningcnt: Int?,
+    var isfriend: Int?
 )
+
 
 data class Tag(
     var icon: String?,
     var id: Int?,
-    var title: String?
+    var title: String?,
+    var sameLabel: Boolean?
+)
+
+//九宫格相册
+data class BlockListBean(
+    var list: MutableList<Photos>? //	1 图片 2视频
+)
+
+
+data class Photos(
+    var type: Int?,
+    var url: String?
 )

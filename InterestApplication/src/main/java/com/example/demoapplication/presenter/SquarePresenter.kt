@@ -152,4 +152,37 @@ class SquarePresenter : BasePresenter<SquareView>() {
             })
     }
 
+
+
+    /**
+     * 获取广场列表
+     */
+    fun getSomeoneSquare(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .someoneSquare(params)
+            .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                    //todo  showloading
+                }
+                override fun onNext(t: BaseResp<SquareListBean?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onGetSquareListResult(t.data, true)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGetSquareListResult(t.data, false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError("服务器错误~")
+                    mView.onGetSquareListResult(null, false)
+                }
+            })
+    }
+
+
+
 }

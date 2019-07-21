@@ -51,8 +51,6 @@ import org.jetbrains.anko.support.v4.toast
  * //todo 发布列表接口接入
  */
 class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener {
-
-
     //广场列表内容适配器
     private val adapter by lazy { MultiListSquareAdapter(mutableListOf()) }
 
@@ -420,20 +418,23 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         }
     }
 
-    override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, refresh: Boolean) {
+    override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, refresh: Boolean?) {
         if (result) {
-            for (tempData in 0 until data!!.data.size) {
-                data!!.data[tempData].type = when {
-                    !data!!.data[tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
-                    !data!!.data[tempData].audio_json.isNullOrEmpty() -> SquareBean.AUDIO
-                    !data!!.data[tempData].photo_json.isNullOrEmpty() || (data!!.data[tempData].photo_json.isNullOrEmpty() && data!!.data[tempData].audio_json.isNullOrEmpty() && data!!.data[tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
-                    else -> SquareBean.PIC
+            if (data!!.list != null && data!!.list!!.size > 0) {
+                for (tempData in 0 until data!!.list!!.size) {
+                    data!!.list!![tempData].type = when {
+                        !data!!.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
+                        !data!!.list!![tempData].audio_json.isNullOrEmpty() -> SquareBean.AUDIO
+                        !data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
+                        else -> SquareBean.PIC
+                    }
                 }
+                if (refresh!=null && refresh!!)
+                    adapter.setNewData(data!!.list!!)
+                else
+                    adapter.addData(data!!.list!!)
             }
-            if (refresh)
-                adapter.setNewData(data!!.data)
-            else
-                adapter.addData(data!!.data)
+
 //            adapter.notifyDataSetChanged()
         }
         refreshLayout.finishRefresh(result)

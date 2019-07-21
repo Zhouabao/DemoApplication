@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                                           xmlns:tools="http://schemas.android.com/tools"
-                                           android:id="@+id/blockRv"
-                                           android:layout_width="match_parent"
-                                           android:layout_height="match_parent"
-                                           android:background="@color/colorWhite"
-                                           android:paddingLeft="10dp"
-                                           tools:context=".ui.fragment.BlockSquareFragment">
 
-</androidx.recyclerview.widget.RecyclerView>
+<com.scwang.smartrefresh.layout.SmartRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlEnableLoadMore="true"
+        android:id="@+id/refreshBlock"
+        app:srlEnableLoadMoreWhenContentNotFull="false"
+        app:srlEnableRefresh="false">
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/blockRv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:paddingLeft="10dp"
+            tools:context=".ui.fragment.BlockSquareFragment">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>

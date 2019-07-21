@@ -15,6 +15,7 @@
     <color name="colorBlack22">#ff222222</color>
     <color name="colorBlack99">#ff999999</color>
     <color name="colorGray4df">#4dffffff</color>
+    <color name="colorGray3300">#33000000</color>
     <color name="colorTransparent">#00000000</color>
     <color name="colorRed3E">#FF003E</color>
     <color name="colorPink">#FF5A5A</color>
@@ -22,5 +23,6 @@
     <color name="colorBlue">#4A90E2FF</color>
     <color name="colorBlack66">#666666</color>
     <color name="colorBlackC9">#C9C9C9</color>
+    <color name="colorBlueSky">#52C2DC</color>
 
 </resources>

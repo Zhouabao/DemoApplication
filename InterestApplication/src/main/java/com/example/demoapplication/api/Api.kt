@@ -176,6 +176,73 @@ interface Api {
     fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchUserDetailBean?>>
 
 
+
+    /**
+     * 不喜欢、左滑
+     */
+    @FormUrlEncoded
+    @POST("relationship/dontLike${Constants.END_BASE_URL}")
+    fun dontLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+
+    /**
+     * 喜欢、右滑
+     */
+    @FormUrlEncoded
+    @POST("relationship/addLike${Constants.END_BASE_URL}")
+    fun addLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
+
+
+
+    /**
+     * 举报用户
+     */
+    @FormUrlEncoded
+    @POST("member_info/reportUser${Constants.END_BASE_URL}")
+    fun reportUser(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+
+
+    /**
+     * 拉黑用户
+     */
+    @FormUrlEncoded
+    @POST("relationship/shieldingFriend${Constants.END_BASE_URL}")
+    fun shieldingFriend(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+
+
+    /**
+     * 解除匹配
+     */
+    @FormUrlEncoded
+    @POST("relationship/dissolutionFriend${Constants.END_BASE_URL}")
+    fun dissolutionFriend(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+
+
+    /**
+     * 获取用户相册
+     */
+    @FormUrlEncoded
+    @POST("member_info/squarePhotosList${Constants.END_BASE_URL}")
+    fun squarePhotosList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<BlockListBean?>>
+
+
+
+
+    /**
+     * 获取用户广场列表
+     */
+    @FormUrlEncoded
+    @POST("square/someoneSquare${Constants.END_BASE_URL}")
+    fun someoneSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
+
+
     @GET
     fun getFileFromNet(@Url url: String): Observable<ResponseBody>
 

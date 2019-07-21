@@ -12,4 +12,6 @@ import com.kotlin.base.presenter.view.BaseView
 interface MatchDetailView : BaseView {
 
     fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchUserDetailBean?)
+
+    fun onGetUserActionResult(success: Boolean, result: String?)
 }

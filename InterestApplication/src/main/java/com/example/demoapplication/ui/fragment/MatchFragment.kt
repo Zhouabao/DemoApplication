@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.example.demoapplication.R
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.MatchListBean
+import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.presenter.MatchPresenter
 import com.example.demoapplication.presenter.view.MatchView
 import com.example.demoapplication.ui.activity.MatchDetailActivity
@@ -28,6 +29,7 @@ import org.jetbrains.anko.support.v4.toast
  * 匹配页面
  */
 class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
+
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
 
 
@@ -80,7 +82,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
             override fun onSwipedClear() {
                 toast("data clear")
                 matchUserRv.postDelayed({
-                     initData()
+                    initData()
                 }, 3000L)
             }
 
@@ -96,7 +98,6 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
 
     //用户数据源
     var userList: MutableList<MatchBean> = mutableListOf()
-
 
 
     private fun initData() {
@@ -162,6 +163,13 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView {
         )
 
         matchUserAdapter.addData(userList)
+    }
+
+    override fun onGetDislikeResult(success: Boolean) {
+    }
+
+    override fun onGetLikeResult(success: Boolean, data: StatusBean?) {
+
     }
 
 }

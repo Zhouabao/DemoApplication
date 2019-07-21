@@ -15,13 +15,14 @@ interface SquareView : BaseView {
 
     fun onGetFriendsListResult(friends: MutableList<FriendBean?>)
 
-    fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean)
+    fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean?=null)
 
     fun onGetSquareLikeResult(position: Int, result: Boolean)
 
     fun onGetSquareCollectResult(position: Int, result: BaseResp<Any?>?)
 
-
-
     fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int)
+
+
+
 }

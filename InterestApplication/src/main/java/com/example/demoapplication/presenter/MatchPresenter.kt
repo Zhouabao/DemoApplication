@@ -3,8 +3,8 @@ package com.example.demoapplication.presenter
 import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
-import com.example.demoapplication.model.MatchBean1
 import com.example.demoapplication.model.MatchListBean
+import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.presenter.view.MatchView
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
@@ -47,9 +47,58 @@ class MatchPresenter : BasePresenter<MatchView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.onError(context.getString(R.string.service_error))
-                    mView.onGetMatchListResult(false,null)
+                    mView.onGetMatchListResult(false, null)
                 }
             })
 
+    }
+
+    /**
+     * 不喜欢
+     */
+    fun dislikeUser(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .dontLike(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        mView.onGetDislikeResult(true)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onError(t.msg)
+                        mView.onGetDislikeResult(false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
+
+
+    /**
+     * 喜欢
+     */
+    fun likeUser(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .addLike(params)
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
+                    if (t.code == 200) {
+                        mView.onGetLikeResult(true,t.data?:null)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onError(t.msg)
+                        mView.onGetLikeResult(false,null)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
+            })
     }
 }

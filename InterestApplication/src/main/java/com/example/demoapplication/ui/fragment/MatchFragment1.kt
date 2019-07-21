@@ -13,10 +13,13 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.MatchBean1
 import com.example.demoapplication.model.MatchListBean
+import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.presenter.MatchPresenter
 import com.example.demoapplication.presenter.view.MatchView
 import com.example.demoapplication.ui.activity.MatchDetailActivity
 import com.example.demoapplication.ui.adapter.MatchUserAdapter1
+import com.example.demoapplication.ui.chat.MatchSucceedActivity
+import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.swipecard.CardConfig
 import com.example.demoapplication.widgets.swipecard.OverLayCardLayoutManager
 import com.example.demoapplication.widgets.swipecard.RenRenCallback
@@ -32,6 +35,7 @@ import org.jetbrains.anko.support.v4.toast
  */
 class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener,
     RenRenCallback.OnSwipeListener {
+
 
     //用户适配器
     private val matchUserAdapter: MatchUserAdapter1 by lazy { MatchUserAdapter1(mutableListOf()) }
@@ -93,13 +97,23 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     override fun onSwiped(adapterPosition: Int, direction: Int) {
         if (direction == ItemTouchHelper.UP) {
             startActivity<MatchDetailActivity>("target_accid" to matchUserAdapter.data[adapterPosition].accid)
-            userList.add(0, userList.removeAt(adapterPosition))
-        } else {
-            if (matchUserAdapter.data.size > 0) {
-                matchUserAdapter.data.removeAt(adapterPosition)
-            }
+//            matchUserAdapter.data.add(adapterPosition, userList.removeAt(adapterPosition))
+        } else if (direction == ItemTouchHelper.LEFT) {
+            params["target_accid"] = matchUserAdapter.data[adapterPosition].accid ?: ""
+            mPresenter.dislikeUser(params)
+
+        } else if (direction == ItemTouchHelper.RIGHT) {
+            params["target_accid"] = matchUserAdapter.data[adapterPosition].accid ?: ""
+            mPresenter.likeUser(params)
         }
-        matchUserAdapter.notifyDataSetChanged()
+    }
+
+    val params by lazy {
+        hashMapOf<String, Any>(
+            "accid" to UserManager.getAccid(),
+            "token" to UserManager.getToken(),
+            "target_accid" to ""
+        )
     }
 
     override fun onSwipeTo(viewHolder: RecyclerView.ViewHolder?, offset: Float) {
@@ -117,19 +131,17 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     }
 
-    //用户数据源
-    var userList: MutableList<MatchBean1> = mutableListOf()
-
-
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnDislike -> {
-                toast("不喜欢")
                 callback.toLeft(matchUserRv)
-
+                params["target_accid"] = matchUserAdapter.data[matchUserAdapter.data.size - 1].accid ?: ""
+                mPresenter.dislikeUser(params)
             }
             R.id.btnLike -> {
-                toast("喜欢")
+                callback.toRight(matchUserRv)
+                params["target_accid"] = matchUserAdapter.data[matchUserAdapter.data.size - 1].accid ?: ""
+                mPresenter.likeUser(params)
             }
             R.id.btnChat -> {
             }
@@ -140,113 +152,37 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
-//            for (match in matchBeans!!) {
-//                match.photos = mutableListOf(
-//                    "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg",
-//                    "http://rsrc1.futrueredland.com.cn/ppns/headImage/0ca42c0d253ebee3f2bb197fbfcc5527/1562740286/0uBnhoxs4yRnWl39",
-//                    "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg"
-//                )
-//            }
             matchUserAdapter.addData(matchBeans!!.list ?: mutableListOf<MatchBean1>())
             tvLeftChatTime.text = "${matchBeans.lightningcnt}"
         } else {
             mPresenter.mView.onError("加载失败")
-            initData()
-
         }
     }
 
-    private fun initData() {
-        userList.add(
-            MatchBean1(
-                nickname = "Lily",
-                age = 23,
-                gender = 1,
-                photos = mutableListOf(
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg",
-                    "http://rsrc1.futrueredland.com.cn/ppns/headImage/0ca42c0d253ebee3f2bb197fbfcc5527/1562740286/0uBnhoxs4yRnWl39",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
-                )
+    override fun onGetDislikeResult(success: Boolean) {
+        if (success) {
+            matchUserAdapter.data.removeAt(matchUserAdapter.data.size - 1)
+        } else {
+            matchUserAdapter.data.add(
+                matchUserAdapter.data.size - 1,
+                matchUserAdapter.data.removeAt(matchUserAdapter.data.size - 1)
             )
-        )
-        userList.add(
-            MatchBean1(
-                nickname = "Username",
-                age = 28,
-                gender = 2,
-                photos = mutableListOf(
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg",
-                    "http://rsrc1.futrueredland.com.cn/ppns/headImage/0ca42c0d253ebee3f2bb197fbfcc5527/1562740286/0uBnhoxs4yRnWl39",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg"
-                )
-            )
-        )
-        userList.add(
-            MatchBean1(
-                "Shirly",
-                24,
-                gender = 2,
-                photos = mutableListOf(
-                    "http://rsrc1.futrueredland.com.cn/ppns/headImage/0ca42c0d253ebee3f2bb197fbfcc5527/1562740286/0uBnhoxs4yRnWl39",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
-                )
-            )
-        )
-        userList.add(
-            MatchBean1(
-                "爱的魔力圈",
-                19,
-                gender = 1,
-                avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg"
-            )
-        )
-        userList.add(
-            MatchBean1(
-                "Lily",
-                23,
-                gender = 1,
-                photos = mutableListOf(
-                    "http://rsrc1.futrueredland.com.cn/ppns/headImage/0ca42c0d253ebee3f2bb197fbfcc5527/1562740286/0uBnhoxs4yRnWl39",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
-                )
-            )
-        )
-        userList.add(
-            MatchBean1(
-                "爱的魔力圈",
-                19,
-                gender = 1,
-                avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg"
-            )
-        )
-        userList.add(
-            MatchBean1(
-                "Lily",
-                23,
-                gender = 1,
-                photos = mutableListOf(
-                    "http://rsrc1.futrueredland.com.cn/ppns/headImage/0ca42c0d253ebee3f2bb197fbfcc5527/1562740286/0uBnhoxs4yRnWl39",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
-                )
-            )
-        )
-        userList.add(
-            MatchBean1(
-                "Lily",
-                23,
-                gender = 1,
-                photos = mutableListOf(
-                    "http://rsrc1.futrueredland.com.cn/ppns/headImage/0ca42c0d253ebee3f2bb197fbfcc5527/1562740286/0uBnhoxs4yRnWl39",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg",
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
-                )
-            )
-        )
-        matchUserAdapter.addData(userList)
+        }
+        matchUserAdapter.notifyDataSetChanged()
     }
 
+    //todo  这里应该还要传参数
+    override fun onGetLikeResult(success: Boolean, data: StatusBean?) {
+        if (success) {
+            matchUserAdapter.data.removeAt(matchUserAdapter.data.size - 1)
+            if (data != null && data.status == 2) {
+                startActivity<MatchSucceedActivity>()
+            }
+        } else {
+            matchUserAdapter.data.add(matchUserAdapter.data.size - 1, matchUserAdapter.data.removeAt(matchUserAdapter.data.size - 1))
+        }
+        matchUserAdapter.notifyDataSetChanged()
+
+    }
 
 }
