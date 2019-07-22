@@ -1,28 +1,33 @@
 package com.kotlin.base.ui.activity
 
 import android.annotation.TargetApi
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
+import com.example.baselibrary.widgets.swipeback.SwipeBackLayout
+import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivity
 import com.kotlin.base.common.AppManager
-import com.readystatesoftware.systembartint.SystemBarTintManager
 import org.jetbrains.anko.find
 
 
 /*
     Activity基类，业务无关
  */
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity : SwipeBackActivity() {
+
+    private lateinit var mSwipeBackLayout: SwipeBackLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppManager.instance.addActivity(this)
-        //initState()
+        initSwipeBackFinish()
+    }
 
+    private fun initSwipeBackFinish() {
+        mSwipeBackLayout = swipeBackLayout
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
     }
 
     override fun onDestroy() {
@@ -42,13 +47,13 @@ open class BaseActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true)
         }
-        val manager = SystemBarTintManager(this)
+        //val manager = SystemBarTintManager(this)
         //激活状态栏设置
-        manager.isStatusBarTintEnabled = true
+      //  manager.isStatusBarTintEnabled = true
         //激活导航栏设置
-        manager.setNavigationBarTintEnabled(true)
+       // manager.setNavigationBarTintEnabled(true)
         //设置一个状态栏颜色
-        manager.setStatusBarTintColor(Color.WHITE)
+       // manager.setStatusBarTintColor(Color.WHITE)
     }
 
     @TargetApi(19)
@@ -63,5 +68,6 @@ open class BaseActivity : AppCompatActivity() {
         }
         win.attributes = winParams
     }
+
 
 }
