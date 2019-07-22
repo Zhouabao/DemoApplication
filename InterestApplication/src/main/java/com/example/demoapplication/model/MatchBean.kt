@@ -1,6 +1,5 @@
 package com.example.demoapplication.model
 
-import com.chad.library.adapter.base.entity.MultiItemEntity
 import java.io.Serializable
 
 /**
@@ -10,35 +9,14 @@ import java.io.Serializable
  *    version: 1.0
  */
 data class MatchListBean(
-    var list: MutableList<MatchBean1>?,
+    var list: MutableList<MatchBean>?,
     var lightningcnt: Int?
 )
-
-
-data class MatchBean(
-    var name: String,
-    var age: Int,
-    var sex: Int,
-    var imgs: MutableList<String>,
-    var type: Int = 1,
-    var zan: Boolean = false
-) :
-    Serializable, MultiItemEntity {
-    override fun getItemType(): Int {
-        return type
-    }
-
-    companion object {
-        const val PIC = 1
-        const val VIDEO = 2
-        const val AUDIO = 3
-    }
-}
 
 /**
  * 匹配用户
  */
-data class MatchBean1(
+data class MatchBean(
     var accid: String? = null,
     var age: Int? = 0,
     var avatar: String? = null,
@@ -57,8 +35,18 @@ data class MatchBean1(
     var constellation: String? = null,
     var square: MutableList<Square>? = null,
     var square_count: Int? = 0,
-    var tagcount: Int? = 0
+    var tagcount: Int? = 0,
+
+    var birth: Int?,
+    var tags: MutableList<Tag>?,
+    var jobname: String?,
+    var lightningcnt: Int?,
+    var isfriend: Int?
+
 ) : Serializable
+
+
+
 
 /**
  * 广场封面
@@ -77,6 +65,9 @@ data class Square(
  */
 data class StatusBean(val status: Int)
 
+/**
+ * 用户详细信息
+ */
 data class MatchUserDetailBean(
     var accid: String?,
     var avatar: String?,
@@ -98,9 +89,11 @@ data class MatchUserDetailBean(
     var jobname: String?,
     var lightningcnt: Int?,
     var isfriend: Int?
-)
+) : Serializable
 
-
+/**
+ * 用戶標簽
+ */
 data class Tag(
     var icon: String?,
     var id: Int?,
@@ -113,7 +106,9 @@ data class BlockListBean(
     var list: MutableList<Photos>? //	1 图片 2视频
 )
 
-
+/**
+ * 用户照片
+ */
 data class Photos(
     var type: Int?,
     var url: String?

@@ -71,6 +71,10 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getString("accid")
     }
 
+    fun getAvator(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("avatar")
+    }
+
      fun getSpLabels(): MutableList<LabelBean> {
         val tempLabels = mutableListOf<LabelBean>()
         if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {

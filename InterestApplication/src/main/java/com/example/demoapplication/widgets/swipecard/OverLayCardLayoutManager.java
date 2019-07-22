@@ -1,6 +1,6 @@
 package com.example.demoapplication.widgets.swipecard;
 
-import android.util.Log;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,15 +16,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class OverLayCardLayoutManager extends RecyclerView.LayoutManager {
     private static final String TAG = "swipecard";
+    public static int MAX_SHOW_COUNT = 4;
+    public static float SCALE_GAP = 0.05f;
+    public static int TRANS_Y_GAP;
+    public int mTopOffset = 0;
+
+    public OverLayCardLayoutManager(Context context) {
+        TRANS_Y_GAP = (int) (20 * context.getResources().getDisplayMetrics().density);
+    }
 
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
+    public OverLayCardLayoutManager setTopOffset(int topOffset) {
+        mTopOffset = topOffset;
+        return this;
+    }
+
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        Log.e(TAG, "onLayoutChildren() called with: recycler = [" + recycler + "], state = [" + state + "]");
+//        Log.e(TAG, "onLayoutChildren() called with: recycler = [" + recycler + "], state = [" + state + "]");
         detachAndScrapAttachedViews(recycler);
         int itemCount = getItemCount();
         if (itemCount < 1) {
@@ -33,10 +46,10 @@ public class OverLayCardLayoutManager extends RecyclerView.LayoutManager {
         //top-3View的position
         int bottomPosition;
         //边界处理
-        if (itemCount < CardConfig.MAX_SHOW_COUNT) {
+        if (itemCount < MAX_SHOW_COUNT) {
             bottomPosition = 0;
         } else {
-            bottomPosition = itemCount - CardConfig.MAX_SHOW_COUNT;
+            bottomPosition = itemCount - MAX_SHOW_COUNT;
         }
 
         //从可见的最底层View开始layout，依次层叠上去
@@ -47,9 +60,14 @@ public class OverLayCardLayoutManager extends RecyclerView.LayoutManager {
             int widthSpace = getWidth() - getDecoratedMeasuredWidth(view);
             int heightSpace = getHeight() - getDecoratedMeasuredHeight(view);
             //我们在布局时，将childView居中处理，这里也可以改为只水平居中
-            layoutDecoratedWithMargins(view, widthSpace / 2, heightSpace / 2,
+//            layoutDecoratedWithMargins(view, widthSpace / 2, mTopOffset == 0 ? (heightSpace / 2) : mTopOffset,
+//                    widthSpace / 2 + getDecoratedMeasuredWidth(view),
+//                    mTopOffset == 0 ? (heightSpace / 2 + getDecoratedMeasuredHeight(view)) : (mTopOffset + getDecoratedMeasuredHeight(view)));
+            //只是水平居中
+            layoutDecoratedWithMargins(view, widthSpace / 2,0,
                     widthSpace / 2 + getDecoratedMeasuredWidth(view),
-                    heightSpace / 2 + getDecoratedMeasuredHeight(view));
+                     (heightSpace + getDecoratedMeasuredHeight(view)));
+
             /**
              * TopView的Scale 为1，translationY 0
              * 每一级Scale相差0.05f，translationY相差7dp左右
@@ -62,20 +80,21 @@ public class OverLayCardLayoutManager extends RecyclerView.LayoutManager {
 
             //第几层,举例子，count =7， 最后一个TopView（6）是第0层，
             int level = itemCount - position - 1;
+
             //除了顶层不需要缩小和位移
             if (level > 0 /*&& level < mShowCount - 1*/) {
                 //每一层都需要X方向的缩小
-                view.setScaleX(1 - CardConfig.SCALE_GAP * level);
+                view.setScaleX(1 - SCALE_GAP * level);
                 //前N层，依次向下位移和Y方向的缩小
-                if (level < CardConfig.MAX_SHOW_COUNT - 1) {
-                    view.setTranslationY(CardConfig.TRANS_Y_GAP * level);
-                    view.setScaleY(1 - CardConfig.SCALE_GAP * level);
-                } else {//第N层在 向下位移和Y方向的缩小的成都与 N-1层保持一致
-                    view.setTranslationY(CardConfig.TRANS_Y_GAP * (level - 1));
-                    view.setScaleY(1 - CardConfig.SCALE_GAP * (level - 1));
+                if (level < MAX_SHOW_COUNT - 1) {
+                    view.setTranslationY(TRANS_Y_GAP * level);
+                    view.setScaleY(1 - SCALE_GAP * level);
+                } else {//第N层在 向下位移和Y方向的缩小的程度与 N-1层保持一致
+                    view.setTranslationY(TRANS_Y_GAP * (level - 1));
+                    view.setScaleY(1 - SCALE_GAP * (level - 1));
                 }
             }
         }
     }
-
 }
+

@@ -3,7 +3,8 @@ package com.example.demoapplication.presenter
 import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
-import com.example.demoapplication.model.MatchUserDetailBean
+import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.presenter.view.MatchDetailView
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
@@ -27,23 +28,21 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
     fun getUserDetailInfo(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .getMatchUserInfo(params)
-            .excute(object : BaseSubscriber<BaseResp<MatchUserDetailBean?>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<MatchBean?>>(mView) {
                 override fun onStart() {
                 }
 
-                override fun onNext(t: BaseResp<MatchUserDetailBean?>) {
+                override fun onNext(t: BaseResp<MatchBean?>) {
                     if (t.code == 200) {
                         mView.onGetMatchDetailResult(true, t.data)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
-                        mView.onError(t.msg)
                         mView.onGetMatchDetailResult(false, null)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
                     mView.onGetMatchDetailResult(false, null)
                 }
             })
@@ -135,5 +134,30 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 }
             })
 
+    }
+
+
+    /**
+     * 喜欢
+     */
+    fun likeUser(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .addLike(params)
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
+                    if (t.code == 200) {
+                        mView.onGetLikeResult(true, t)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onError(t.msg)
+                        mView.onGetLikeResult(false, null)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
+            })
     }
 }

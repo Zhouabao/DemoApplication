@@ -9,6 +9,8 @@ import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
+import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.ext.onClick
 import kotlinx.android.synthetic.main.activity_match_succeed.*
 
@@ -16,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_match_succeed.*
  * 配对成功进入聊天界面
  */
 class MatchSucceedActivity : AppCompatActivity() {
-
+    private val matchBean by lazy { intent.getSerializableExtra("matchBean") as MatchBean }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match_succeed)
@@ -25,8 +27,8 @@ class MatchSucceedActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        GlideUtil.loadImg(this, R.drawable.img_avatar_04, iconMine)
-        GlideUtil.loadImg(this, R.drawable.img_avatar_05, iconOther)
+        GlideUtil.loadImg(this, UserManager.getAvator(), iconMine)
+        GlideUtil.loadImg(this, matchBean.avatar ?: "",iconOther)
 
     }
 

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static android.R.attr.x;
-import static com.example.demoapplication.widgets.swipecard.CardConfig.*;
+import static com.example.demoapplication.widgets.swipecard.OverLayCardLayoutManager.*;
 
 
 /**
@@ -29,8 +29,7 @@ public class RenRenCallback extends ItemTouchHelper.SimpleCallback {
     boolean isSwipeAnim = false;
 
     public RenRenCallback() {
-//        super(0, ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-        super(0,  ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+        super(0, ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
     }
 
     public void setSwipeListener(OnSwipeListener swipeListener) {
@@ -147,11 +146,10 @@ public class RenRenCallback extends ItemTouchHelper.SimpleCallback {
 
         final View view = viewHolder.itemView;
 
-        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0,
-                Animation.RELATIVE_TO_SELF, right ? 1f : -1f,
-                Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1.3f);
+        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, right ? 1f : -1f,
+                Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
         translateAnimation.setFillAfter(true);
-        translateAnimation.setDuration(300);
+        translateAnimation.setDuration(500);
         translateAnimation.setInterpolator(new DecelerateInterpolator());
         translateAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -163,10 +161,7 @@ public class RenRenCallback extends ItemTouchHelper.SimpleCallback {
             public void onAnimationEnd(Animation animation) {
                 isSwipeAnim = false;
                 recyclerView.removeView(view);
-                notifyListener(position,
-                        x > view.getMeasuredWidth() / 2
-                                ?
-                                ItemTouchHelper.RIGHT : ItemTouchHelper.LEFT);
+                notifyListener(position, x > view.getMeasuredWidth() / 2 ? ItemTouchHelper.RIGHT : ItemTouchHelper.LEFT);
             }
 
             @Override
@@ -206,6 +201,7 @@ public class RenRenCallback extends ItemTouchHelper.SimpleCallback {
          * @param offset     距离原始位置的偏移量
          */
         void onSwipeTo(RecyclerView.ViewHolder viewHolder, float offset);
+
     }
 
     public static class SimpleSwipeCallback implements OnSwipeListener {

@@ -173,7 +173,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("member_info/usrinfo${Constants.END_BASE_URL}")
-    fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchUserDetailBean?>>
+    fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchBean?>>
 
 
 

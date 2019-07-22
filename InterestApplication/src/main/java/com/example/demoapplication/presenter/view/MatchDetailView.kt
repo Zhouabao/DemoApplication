@@ -1,6 +1,8 @@
 package com.example.demoapplication.presenter.view
 
-import com.example.demoapplication.model.MatchUserDetailBean
+import com.example.demoapplication.model.MatchBean
+import com.example.demoapplication.model.StatusBean
+import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
 
 /**
@@ -11,7 +13,10 @@ import com.kotlin.base.presenter.view.BaseView
  */
 interface MatchDetailView : BaseView {
 
-    fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchUserDetailBean?)
+    fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchBean?)
 
     fun onGetUserActionResult(success: Boolean, result: String?)
+
+
+    fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?)
 }

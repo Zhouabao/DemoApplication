@@ -3,6 +3,8 @@
     <string name="permission_tip">为了更好的用户体验 需要开启以下系统权限</string>
 
     <string name="service_error">服务器出错，请重试</string>
+    <string name="retry_net_error">网络异常，请稍后重试</string>
+    <string name="retry_load_error">加载失败，请稍后重试</string>
 
 
     <!--拍摄照片时的滤镜    -->

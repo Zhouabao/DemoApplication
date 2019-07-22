@@ -57,6 +57,6 @@ public class CardConfig {
     public static void initConfig(Context context) {
         MAX_SHOW_COUNT = 4;
         SCALE_GAP = 0.05f;
-        TRANS_Y_GAP = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, context.getResources().getDisplayMetrics());
+        TRANS_Y_GAP = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, context.getResources().getDisplayMetrics());
     }
 }

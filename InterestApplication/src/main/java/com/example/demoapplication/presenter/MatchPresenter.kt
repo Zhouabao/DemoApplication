@@ -29,14 +29,12 @@ class MatchPresenter : BasePresenter<MatchView>() {
             .getMatchList(params)
             .excute(object : BaseSubscriber<BaseResp<MatchListBean?>>(mView) {
                 override fun onStart() {
-
+                    mView.showLoading()
                     //todo showloading
                 }
-
-
                 override fun onNext(t: BaseResp<MatchListBean?>) {
                     if (t.code == 200) {
-                        if (t.data != null && t.data!!.list != null)
+                        if (t.data != null && t.data!!.list != null){}
                             mView.onGetMatchListResult(true, t.data)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
@@ -46,7 +44,6 @@ class MatchPresenter : BasePresenter<MatchView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
                     mView.onGetMatchListResult(false, null)
                 }
             })
@@ -57,6 +54,10 @@ class MatchPresenter : BasePresenter<MatchView>() {
      * 不喜欢
      */
     fun dislikeUser(params: HashMap<String, Any>) {
+        if (!checkNetWork()){
+            return
+        }
+
         RetrofitFactory.instance.create(Api::class.java)
             .dontLike(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -82,6 +83,9 @@ class MatchPresenter : BasePresenter<MatchView>() {
      * 喜欢
      */
     fun likeUser(params: HashMap<String, Any>) {
+        if (!checkNetWork()){
+            return
+        }
         RetrofitFactory.instance.create(Api::class.java)
             .addLike(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {

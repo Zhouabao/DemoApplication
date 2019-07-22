@@ -25,7 +25,7 @@ import com.example.demoapplication.presenter.view.MainView
 import com.example.demoapplication.ui.adapter.MainPagerAdapter
 import com.example.demoapplication.ui.adapter.MatchLabelAdapter
 import com.example.demoapplication.ui.dialog.FilterUserDialog
-import com.example.demoapplication.ui.fragment.MatchFragment1
+import com.example.demoapplication.ui.fragment.MatchFragment
 import com.example.demoapplication.ui.fragment.SquareFragment
 import com.example.demoapplication.utils.SharedPreferenceUtil
 import com.example.demoapplication.widgets.ScaleTransitionPagerTitleView
@@ -57,7 +57,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     //匹配
-    private val matchFragment by lazy { MatchFragment1() }
+    private val matchFragment by lazy { MatchFragment() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
     private val titles = arrayOf("匹配", "发布")
