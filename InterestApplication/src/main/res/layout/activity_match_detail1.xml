@@ -11,6 +11,8 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
+        android:background="@color/colorWhite"
+
         app:msv_viewState="loading">
 
     <RelativeLayout
@@ -24,7 +26,7 @@
             android:layout_height="match_parent"
             tools:context=".ui.activity.MatchDetailActivity">
 
-        <androidx.core.widget.NestedScrollView
+        <com.example.demoapplication.widgets.BounceScrollView
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
@@ -267,7 +269,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </androidx.core.widget.NestedScrollView>
+        </com.example.demoapplication.widgets.BounceScrollView>
 
         <RelativeLayout
                 android:id="@+id/detailUserChatBtn"

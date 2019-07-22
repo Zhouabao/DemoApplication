@@ -8,13 +8,17 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
 import androidx.core.view.size
+import androidx.core.widget.NestedScrollView
+import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.common.CommonFunction
 import com.example.demoapplication.event.BlockDataEvent
 import com.example.demoapplication.event.ListDataEvent
 import com.example.demoapplication.model.MatchBean
@@ -38,8 +42,6 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_match_detail1.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -50,8 +52,9 @@ import java.util.*
 /**
  * 匹配详情页
  */
-class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView, OnRefreshListener,
+class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
     View.OnClickListener {
+
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
@@ -95,6 +98,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         mPresenter = MatchDetailPresenter()
         mPresenter.mView = this
         mPresenter.context = this
+        detailScrollView.setOnBounceListener {
+            finish()
+        }
 
 
         //设置图片的宽度占满屏幕，宽高比3:4
@@ -109,8 +115,24 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailUserChatBtn.setOnClickListener(this)
         backBtn.setOnClickListener(this)
 
+        //刚度 默认1200 值越大回弹的速度越快
+        springAnim.spring.stiffness = 800.0f
+        //阻尼 默认0.5 值越小，回弹之后来回的次数越多
+        springAnim.spring.dampingRatio = 0.50f
+        detailScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            if (scrollY < 0) {
+                springAnim.start()
+            } else if (scrollY < -100) {
+                springAnim.cancel()
+                finish()
+            } else {
+                springAnim.cancel()
+            }
+        }
+
+
         //用户的广场预览界面
-        detailThumbRv.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
+        detailThumbRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         //用户标签
         val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH
@@ -136,10 +158,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
         }
 
-
+        //重试
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getUserDetailInfo(params)
+            if (currIndex == 0) {
+                EventBus.getDefault().post(BlockDataEvent(targetAccid, true))
+            } else {
+                EventBus.getDefault().post(ListDataEvent(targetAccid, true))
+            }
         }
     }
 
@@ -306,7 +333,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
     override fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchBean?) {
-//        refreshLayout.finishRefresh(success)
         if (success) {
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             matchBean = matchUserDetailBean
@@ -325,12 +351,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             detailSquareSwitchRg.check(R.id.rbList)
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-            stateview.errorMsg.text= if (!mPresenter.checkNetWork()){getString(R.string.retry_net_error)}else{getString(R.string.retry_load_error)}
+            stateview.errorMsg.text = CommonFunction.getErrorMsg(this)
         }
     }
 
     override fun onGetUserActionResult(success: Boolean, result: String?) {
         if (success) {
+            if (result == "解除成功!") {
+                matchBean!!.isfriend = 0
+            }
             ToastUtils.showShort(result)
         }
     }
@@ -347,16 +376,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
             }
 
-        }
-    }
-
-
-    override fun onRefresh(refreshLayout: RefreshLayout) {
-        mPresenter.getUserDetailInfo(params)
-        if (currIndex == 0) {
-            EventBus.getDefault().post(BlockDataEvent(targetAccid, true))
-        } else {
-            EventBus.getDefault().post(ListDataEvent(targetAccid, true))
         }
     }
 
@@ -384,7 +403,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     }
 
-    //拉黑、举报、取消配对（判断对方是否为好友）、取消
+    /**
+     * 拉黑、举报、取消配对（判断对方是否为好友）、取消
+     */
     private fun showMoreActionDialog() {
         val dialog = MoreActionDialog(this, "matchDetail")
         dialog.show()
@@ -415,4 +436,17 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
+    private val springAnim: SpringAnimation by lazy {
+        SpringAnimation(
+            detailScrollView,
+            SpringAnimation.TRANSLATION_Y,
+            0.0f
+        )
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        detailScrollView.destroy()
+    }
 }

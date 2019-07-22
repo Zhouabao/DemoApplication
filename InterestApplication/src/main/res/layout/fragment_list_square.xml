@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.layout.SmartRefreshLayout
+
+<com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/listRefresh"
+        android:id="@+id/stateview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        app:srlEnableLoadMore="true"
-        app:srlEnableLoadMoreWhenContentNotFull="true"
-        app:srlEnableRefresh="false">
+        android:layout_height="match_parent"
+        app:msv_emptyView="@layout/empty_layout"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_viewState="content">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listSquareRv"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/listRefresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            app:srlEnableLoadMore="true"
+            app:srlEnableLoadMoreWhenContentNotFull="true"
+            app:srlEnableRefresh="false">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listSquareRv"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</com.kennyc.view.MultiStateView>

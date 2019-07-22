@@ -1,6 +1,5 @@
 package com.example.demoapplication.presenter.view
 
-import com.example.demoapplication.R
 import com.kotlin.base.presenter.view.BaseView
 
 interface SetInfoView : BaseView {

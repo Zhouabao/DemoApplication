@@ -53,6 +53,9 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
      * 拉黑用户
      */
     fun shieldingFriend(params: HashMap<String, Any>) {
+        if (!checkNetWork()) {
+            return
+        }
         RetrofitFactory.instance.create(Api::class.java)
             .shieldingFriend(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -82,6 +85,9 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
      * 拉黑用户
      */
     fun reportUser(params: HashMap<String, Any>) {
+        if (!checkNetWork()) {
+            return
+        }
         RetrofitFactory.instance.create(Api::class.java)
             .reportUser(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -111,6 +117,9 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
      * 解除匹配
      */
     fun dissolutionFriend(params: HashMap<String, Any>) {
+        if (!checkNetWork()) {
+            return
+        }
         RetrofitFactory.instance.create(Api::class.java)
             .dissolutionFriend(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -141,6 +150,9 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
      * 喜欢
      */
     fun likeUser(params: HashMap<String, Any>) {
+        if (!checkNetWork()) {
+            return
+        }
         RetrofitFactory.instance.create(Api::class.java)
             .addLike(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {

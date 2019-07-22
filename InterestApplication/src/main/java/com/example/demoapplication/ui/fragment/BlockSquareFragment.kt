@@ -7,16 +7,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
+import com.example.demoapplication.common.CommonFunction
 import com.example.demoapplication.event.BlockDataEvent
-import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.Photos
 import com.example.demoapplication.presenter.BlockSquarePresenter
 import com.example.demoapplication.presenter.view.BlockSquareView
 import com.example.demoapplication.ui.adapter.BlockAdapter
 import com.example.demoapplication.utils.UserManager
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_block_square.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -36,7 +39,6 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        initData()
     }
 
     private val blockAdapter by lazy { BlockAdapter() }
@@ -52,42 +54,13 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
         blockRv.layoutManager = GridLayoutManager(activity, 3, RecyclerView.VERTICAL, false)
         blockRv.adapter = blockAdapter
 
+        stateview.retryBtn.onClick {
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+            mPresenter.squarePhotosList(params)
+        }
+
     }
 
-
-    //用户数据源
-    var userList: MutableList<MatchBean> = mutableListOf()
-
-    private fun initData() {
-        blockAdapter.setNewData(
-            mutableListOf(
-                Photos(
-                    1,
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
-                ),
-                Photos(
-                    1,
-                    "http://rsrc1.futrueredland.com.cn/ppns/headImage/0ca42c0d253ebee3f2bb197fbfcc5527/1562740286/0uBnhoxs4yRnWl39"
-                ),
-                Photos(
-                    1,
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg"
-                ),
-                Photos(
-                    1,
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/e3a623fbef21dd5fc00b189cb9949ade/1562754134044/ehjjqedmm107wsz3.jpg"
-                ),
-                Photos(
-                    1,
-                    "http://rsrc1.futrueredland.com.cn/ppns/headImage/0ca42c0d253ebee3f2bb197fbfcc5527/1562740286/0uBnhoxs4yRnWl39"
-                ),
-                Photos(
-                    1,
-                    "http://rsrc1.futrueredland.com.cn/ppns/avator/0ca42c0d253ebee3f2bb197fbfcc5527/1562759634820/1pw367w0qfwtuwm0.jpg"
-                )
-            )
-        )
-    }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
@@ -97,17 +70,26 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
 
     override fun getBlockSquareResult(success: Boolean, data: MutableList<Photos>?) {
         if (success) {
+            if (blockAdapter.data.isNullOrEmpty() && data.isNullOrEmpty()) {
+                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
+            } else {
+                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+            }
             if (data.isNullOrEmpty()) {
                 refreshBlock.finishLoadMoreWithNoMoreData()
             }
-            blockAdapter.addData(data?: mutableListOf())
+            blockAdapter.addData(data ?: mutableListOf())
+        } else {
+            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
+            blockAdapter.data.clear()
+            page = 1
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
-
     }
 
     //todo 此处刷新通过发送bus来进行

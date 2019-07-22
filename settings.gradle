@@ -1,1 +1,1 @@
-include ':InterestApplication', ':BaseLibrary'
+include ':InterestApplication', ':BaseLibrary', 'SwipeBackLibrary'

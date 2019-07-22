@@ -31,15 +31,12 @@ class BlockSquarePresenter : BasePresenter<BlockSquareView>() {
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
-                        mView.onError(t.msg)
                         mView.getBlockSquareResult(false, null)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
                     mView.getBlockSquareResult(false, null)
-
                 }
 
             })

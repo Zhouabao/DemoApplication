@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.common.CommonFunction
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.ListDataEvent
 import com.example.demoapplication.model.FriendBean
@@ -28,6 +29,7 @@ import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.example.demoapplication.utils.ScrollCalculatorHelper
 import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.CommonItemDecoration
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
@@ -35,6 +37,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_list_square.*
 import kotlinx.android.synthetic.main.item_list_square_pic.*
 import org.greenrobot.eventbus.EventBus
@@ -72,6 +75,11 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         mPresenter.context = activity!!
         listRefresh.setOnLoadMoreListener(this)
         EventBus.getDefault().register(this)
+
+        stateview.retryBtn.onClick {
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+            mPresenter.getSomeoneSquare(params)
+        }
 
         val linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         val itemdecoration = CommonItemDecoration(activity!!, DividerItemDecoration.VERTICAL)
@@ -211,22 +219,36 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
     }
 
     override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
+
     }
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean?) {
-        if (data == null || data.list == null || data!!.list!!.size == 0) {
-            listRefresh.setNoMoreData(true)
-        } else {
-            for (tempData in 0 until data!!.list!!.size) {
-                data!!.list!![tempData].type = when {
-                    !data!!.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
-                    !data!!.list!![tempData].audio_json.isNullOrEmpty() -> SquareBean.AUDIO
-                    !data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
-                    else -> SquareBean.PIC
-                }
+        if (result) {
+            if ((data == null|| data.list.isNullOrEmpty()) && adapter.data.isNullOrEmpty()) {
+                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
+            } else {
+                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             }
-            adapter.addData(data!!.list!!)
-            listRefresh.finishLoadMore(true)
+
+            if (data == null || data.list == null || data!!.list!!.size == 0) {
+                listRefresh.setNoMoreData(true)
+            } else {
+                for (tempData in 0 until data!!.list!!.size) {
+                    data.list!![tempData].type = when {
+                        !data.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
+                        !data.list!![tempData].audio_json.isNullOrEmpty() -> SquareBean.AUDIO
+                        !data.list!![tempData].photo_json.isNullOrEmpty() || (data.list!![tempData].photo_json.isNullOrEmpty() && data.list!![tempData].audio_json.isNullOrEmpty() && data.list!![tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
+                        else -> SquareBean.PIC
+                    }
+                }
+                adapter.addData(data!!.list!!)
+                listRefresh.finishLoadMore(true)
+            }
+        } else {
+            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
+            adapter.data.clear()
+            page = 1
         }
     }
 

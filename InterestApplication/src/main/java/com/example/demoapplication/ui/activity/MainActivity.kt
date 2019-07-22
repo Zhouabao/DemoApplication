@@ -69,7 +69,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         window?.exitTransition = Explode()*/
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         EventBus.getDefault().register(this)
         initView()
         initFragment()

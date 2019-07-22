@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.view.size
 import androidx.viewpager.widget.ViewPager
@@ -14,12 +13,13 @@ import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.ui.adapter.SquareDetailImgsAdaper
+import com.kotlin.base.ui.activity.BaseActivity
 import kotlinx.android.synthetic.main.activity_big_image.*
 
 /**
  * 点击图片实现查看大图
  */
-class BigImageActivity : AppCompatActivity() {
+class BigImageActivity : BaseActivity() {
     companion object {
         val IMG_KEY = "squareBean"
         val IMG_POSITION = "imagepostion"
