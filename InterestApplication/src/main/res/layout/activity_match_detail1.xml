@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.layout.SmartRefreshLayout
+
+<com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/refreshLayout"
+        android:id="@+id/stateview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        app:srlEnableLoadMore="false"
-        app:srlEnableRefresh="true"
-        tools:context=".ui.activity.MatchDetailActivity">
+        app:msv_animateViewChanges="true"
+        app:msv_emptyView="@layout/empty_layout"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading">
 
     <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:descendantFocusability="blocksDescendants"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:context=".ui.activity.MatchDetailActivity">
 
         <androidx.core.widget.NestedScrollView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/detailScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -98,7 +107,6 @@
                         android:id="@+id/detailUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        tools:text="用户名最大长度是十字"
                         android:textStyle="bold"
                         android:textColor="@color/colorBlackTitle"
                         android:textSize="28sp"
@@ -106,6 +114,7 @@
                         android:layout_marginLeft="15dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/detailPhotosVp"
+                        tools:text="用户名最大长度是十字"
                         />
 
                 <ImageView
@@ -136,24 +145,24 @@
                         android:id="@+id/detailUserInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="17dp"
-                        tools:text="24 / 女 / 天秤座 / 100km"
                         android:textColor="@color/colorGrayText"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="@id/detailUserName"
-                        app:layout_constraintTop_toBottomOf="@id/detailUserName"/>
+                        app:layout_constraintTop_toBottomOf="@id/detailUserName"
+                        tools:text="24 / 女 / 天秤座 / 100km"/>
 
                 <TextView
                         android:id="@+id/detailUserJob"
                         android:layout_width="wrap_content"
                         android:layout_height="17dp"
                         android:drawableLeft="@drawable/icon_job_gray"
-                        tools:text="资深工程师"
                         android:textColor="@color/colorGrayText"
                         android:textSize="12sp"
                         android:layout_marginTop="5dp"
                         android:drawablePadding="6dp"
                         app:layout_constraintStart_toStartOf="@id/detailUserName"
-                        app:layout_constraintTop_toBottomOf="@id/detailUserInfo"/>
+                        app:layout_constraintTop_toBottomOf="@id/detailUserInfo"
+                        tools:text="资深工程师"/>
 
                 <TextView
                         android:id="@+id/detailUserSign"
@@ -161,13 +170,13 @@
                         android:layout_width="0dp"
                         android:layout_marginRight="15dp"
                         android:layout_height="wrap_content"
-                        tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。"
                         android:textColor="@color/colorBlack4a"
                         android:lineSpacingMultiplier="1.4"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@id/detailUserName"
                         app:layout_constraintTop_toBottomOf="@id/detailUserJob"
+                        tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。"
                         />
 
                 <View
@@ -296,12 +305,12 @@
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="@color/colorOrange"
-                    tools:text="3"
                     android:background="@drawable/shape_oval_white"
                     android:gravity="center"
                     android:layout_centerInParent="true"
                     android:layout_width="21dp"
-                    android:layout_height="21dp"/>
+                    android:layout_height="21dp"
+                    tools:text="3"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -324,7 +333,7 @@
                     android:layout_height="21dp"/>
 
             <TextView
-
+                    android:id="@+id/detailUserLikeTv"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="@color/colorWhite"
@@ -338,4 +347,5 @@
 
 
     </RelativeLayout>
-</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</com.kennyc.view.MultiStateView>
