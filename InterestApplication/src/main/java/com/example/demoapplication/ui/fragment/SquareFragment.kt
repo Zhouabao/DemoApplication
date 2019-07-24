@@ -21,6 +21,7 @@ import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.OnPlayingListener
 import com.example.demoapplication.presenter.SquarePresenter
 import com.example.demoapplication.presenter.view.SquareView
+import com.example.demoapplication.ui.activity.PublishActivity
 import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
@@ -48,9 +49,10 @@ import org.jetbrains.anko.support.v4.toast
 
 /**
  * 广场列表
- * //todo 发布列表接口接入
  */
-class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener {
+class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
+    View.OnClickListener {
+
     //广场列表内容适配器
     private val adapter by lazy { MultiListSquareAdapter(mutableListOf()) }
 
@@ -126,9 +128,10 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         mPresenter.context = activity!!
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
+        squareEdit.setOnClickListener(this)
 
 
-        val itemdecoration =  CommonItemDecoration(activity!!, DividerItemDecoration.VERTICAL)
+        val itemdecoration = CommonItemDecoration(activity!!, DividerItemDecoration.VERTICAL)
         itemdecoration.setDrawable(activity!!.resources.getDrawable(R.drawable.recycler_divider))
         squareDynamicRv.addItemDecoration(itemdecoration)
 
@@ -429,7 +432,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                         else -> SquareBean.PIC
                     }
                 }
-                if (refresh!=null && refresh!!)
+                if (refresh != null && refresh!!)
                     adapter.setNewData(data!!.list!!)
                 else
                     adapter.addData(data!!.list!!)
@@ -485,6 +488,13 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         mPresenter.getSquareList(listParams, true)
     }
 
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.squareEdit -> {
+                startActivity<PublishActivity>()
+            }
+        }
+    }
 
 }
 

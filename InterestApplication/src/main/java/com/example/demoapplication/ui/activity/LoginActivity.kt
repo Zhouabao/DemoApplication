@@ -24,7 +24,6 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-//        initState()
         initView()
     }
 

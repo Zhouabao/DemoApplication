@@ -26,7 +26,7 @@ data class LabelBean(
     @Id var title: String = "",
     var descr: String = "",
     var icon: String = "",
-    var id: Int = 1,
+    var id: Int = -1,
     var level: Int = 0,
     var parent_id: Int = 0,
     var path: String = "",

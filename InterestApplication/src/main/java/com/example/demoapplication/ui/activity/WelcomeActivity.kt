@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.utils.AMapManager
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
@@ -40,6 +41,9 @@ class WelcomeActivity : BaseActivity() {
         //动态申请权限
         if (!SPUtils.getInstance(Constants.SPNAME).getBoolean("autoPermissions", false)) {
             showAlertDialog()
+        } else {
+            //进行定位
+            AMapManager.initLocation(this)
         }
 
         //判断是否有登录
@@ -83,7 +87,8 @@ class WelcomeActivity : BaseActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE
         )
         ActivityCompat.requestPermissions(this, permissions, 100)
     }
@@ -97,6 +102,8 @@ class WelcomeActivity : BaseActivity() {
                         break
                     }
                 }
+                //获取权限成功进行定位
+                AMapManager.initLocation(this)
                 SPUtils.getInstance(Constants.SPNAME).put("autoPermissions", true)
                 dialog.dismiss()
             }

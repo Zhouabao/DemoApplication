@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.LabelBean
@@ -57,10 +58,8 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
     //todo 此处的version应该要更改
     private fun getLabel() {
         val params = HashMap<String, String>()
-        params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
-        params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
-//        params["accid"] = Constants.ACCID
-//        params["token"] = Constants.TOKEN
+        params["accid"] = UserManager.getAccid()
+        params["token"] = UserManager.getToken()
         params["version"] = "${1}"
         params["_timestamp"] = "${System.currentTimeMillis()}"
         mPresenter.getLabels(params)
@@ -179,12 +178,17 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                 checkedLabels.remove(label)
             }
         }
-        if (checkedLabels.size < 3) {
+        if (checkedLabels.size < 3 || checkedLabels.size > Constants.LABEL_MAX_COUNT) {
 //            shape_rectangle_unable_btn_15dp
             completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_unable_btn_15dp)
             completeLabelBtn.setTextColor(resources.getColor(R.color.colorBlackText))
             iconChecked.visibility = View.GONE
-            completeLabelBtn.text = "再选${3 - checkedLabels.size}个"
+            completeLabelBtn.text = if (checkedLabels.size < 3) {
+                "再选${3 - checkedLabels.size}个"
+            } else {
+                ToastUtils.showShort("最多只能选${Constants.LABEL_MAX_COUNT}个标签")
+                "完成"
+            }
             completeLabelLL.isEnabled = false
         } else {
             completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_enable_btn_15dp)

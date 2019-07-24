@@ -19,8 +19,10 @@ data class Userinfo(
 
 data class TagBean(
     var id: Int?,
-    var title: String?
+    var title: String?,
+    var path: String?
 )
+
 data class UserBean(
     var taglist: MutableList<TagBean?>?,
     var userinfo: Userinfo?

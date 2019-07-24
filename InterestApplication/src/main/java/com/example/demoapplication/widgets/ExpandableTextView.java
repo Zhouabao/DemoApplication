@@ -14,7 +14,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import javax.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * author : ZFM

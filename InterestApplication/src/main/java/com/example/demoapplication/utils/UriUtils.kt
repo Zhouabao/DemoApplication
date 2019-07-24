@@ -2,6 +2,9 @@ package com.example.demoapplication.utils
 
 import android.content.Context
 import android.provider.MediaStore
+import android.util.Log
+import com.example.demoapplication.model.MediaBean
+import java.io.File
 
 /**
  *    author : ZFM
@@ -11,7 +14,7 @@ import android.provider.MediaStore
  */
 object UriUtils {
 
-     fun getDuration(path: String, context: Context): Int {
+    fun getDuration(path: String, context: Context): Int {
         var duration = 0
         val contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val columns = arrayOf(
@@ -29,4 +32,125 @@ object UriUtils {
 
         return duration
     }
+
+
+
+
+    /**
+     * 读取手机中所有图片信息
+     */
+    fun getAllPhotoInfo(context: Context): MutableList<MediaBean> {
+        val medias = mutableListOf<MediaBean>()
+//        LoaderManager.getInstance(this).initLoader(1, null, this)
+        Thread(Runnable {
+            val mediaBeen = ArrayList<MediaBean>()
+            val mImageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            val projImage = arrayOf(
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.SIZE,
+                MediaStore.Images.Media.DISPLAY_NAME
+            )
+            val mCursor = context.contentResolver.query(
+                mImageUri,
+                projImage,
+                MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=?",
+                arrayOf("image/jpeg", "image/png", "image/jpg"),
+                MediaStore.Images.Media.DATE_MODIFIED + " desc"
+            )
+
+            if (mCursor != null) {
+                while (mCursor.moveToNext()) {
+                    // 获取图片的路径
+                    val id = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media._ID))
+                    val path = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA))
+                    val size = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.SIZE)) / 1024L
+                    val displayName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
+                    //用于展示相册初始化界面
+                    mediaBeen.add(MediaBean(id, MediaBean.TYPE.IMAGE, path, displayName, "", 0, size))
+                }
+                mCursor.close()
+            }
+            medias.addAll(mediaBeen)
+        }).start()
+
+        return medias
+    }
+
+
+
+    /**
+     * 获取手机中所有视频的信息
+     */
+     fun getAllVideoInfos(context: Context) :MutableList<MediaBean>{
+        val medias = mutableListOf<MediaBean>()
+        Thread(Runnable {
+            val mediaBeen = ArrayList<MediaBean>()
+            val mImageUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            val proj = arrayOf(
+                MediaStore.Video.Thumbnails._ID,
+                MediaStore.Video.Thumbnails.DATA,
+                MediaStore.Video.Media.DURATION,
+                MediaStore.Video.Media.SIZE,
+                MediaStore.Video.Media.DISPLAY_NAME,
+                MediaStore.Video.Media.DATE_MODIFIED
+            )
+            val mCursor = context.contentResolver.query(
+                mImageUri,
+                proj,
+                MediaStore.Video.Media.MIME_TYPE + "=?",
+                arrayOf("video/mp4"),
+                MediaStore.Video.Media.DATE_MODIFIED + " desc"
+            )
+            if (mCursor != null) {
+                while (mCursor.moveToNext()) {
+                    // 获取视频的路径
+                    val videoId = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Video.Media._ID))
+                    val path = mCursor.getString(mCursor.getColumnIndex(MediaStore.Video.Media.DATA))
+                    val duration = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Video.Media.DURATION))
+                    var size = mCursor.getLong(mCursor.getColumnIndex(MediaStore.Video.Media.SIZE)) / 1024 //单位kb
+                    if (size < 0) {
+                        //某些设备获取size<0，直接计算
+                        Log.e("dml", "this video size < 0 $path")
+                        size = File(path).length() / 1024
+                    }
+                    val displayName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME))
+
+                    //提前生成缩略图，再获取：http://stackoverflow.com/questions/27903264/how-to-get-the-video-thumbnail-path-and-not-the-bitmap
+                    MediaStore.Video.Thumbnails.getThumbnail(context.contentResolver, videoId.toLong(), MediaStore.Video.Thumbnails.MICRO_KIND, null)
+                    val projection = arrayOf(MediaStore.Video.Thumbnails._ID, MediaStore.Video.Thumbnails.DATA)
+                    val cursor = context.contentResolver.query(
+                        MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
+                        projection,
+                        MediaStore.Video.Thumbnails.VIDEO_ID + "=?",
+                        arrayOf(videoId.toString() + ""),
+                        null
+                    )
+                    var thumbPath = ""
+                    while (cursor!!.moveToNext()) {
+                        thumbPath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Thumbnails.DATA))
+                    }
+                    cursor.close()
+                    mediaBeen.add(
+                        MediaBean(
+                            videoId,
+                            MediaBean.TYPE.VIDEO,
+                            path,
+                            displayName,
+                            thumbPath,
+                            duration,
+                            size
+                        )
+                    )
+
+                }
+                mCursor.close()
+            }
+            medias.addAll(mediaBeen)
+        }).start()
+
+        return medias
+    }
+
+
 }

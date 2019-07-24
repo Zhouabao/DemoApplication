@@ -9,10 +9,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
+import androidx.annotation.Nullable;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.demoapplication.R;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

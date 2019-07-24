@@ -6,6 +6,20 @@ apply plugin: 'com.mob.sdk'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\Admin\\AndroidStudioProjects\\DemoApplication\\demoapp.jks')
+            storePassword '123456'
+            keyAlias = 'key'
+            keyPassword '123456'
+        }
+        release {
+            storeFile file('C:\\Users\\Admin\\AndroidStudioProjects\\DemoApplication\\demoapp.jks')
+            storePassword '123456'
+            keyAlias = 'key'
+            keyPassword '123456'
+        }
+    }
     compileSdkVersion compile_sdk_version
     buildToolsVersion build_tools_version
     defaultConfig {
@@ -28,6 +42,8 @@ android {
         }
 
     }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -86,4 +102,13 @@ dependencies {
     implementation 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'
 
     implementation project(path: ':BaseLibrary')
+
+
+    //高德地图
+    //3D地图so及jar
+    implementation 'com.amap.api:3dmap:latest.integration'
+    //定位功能
+    implementation 'com.amap.api:location:latest.integration'
+    //搜索功能
+    implementation 'com.amap.api:search:latest.integration'
 }

@@ -7,9 +7,11 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.presenter.VerifyCodePresenter
 import com.example.demoapplication.presenter.view.VerifyCodeView
+import com.example.demoapplication.utils.SharedPreferenceUtil
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.protocol.BaseResp
@@ -120,6 +122,8 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
                 ) {
                     startActivity<LabelsActivity>()
                 } else {
+
+
                     AppManager.instance.finishAllActivity()
                     startActivity<MainActivity>()
 

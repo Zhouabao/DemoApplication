@@ -13,6 +13,7 @@
             android:layout_width="24dp"
             android:src="@drawable/icon_return"
             android:layout_height="24dp"
+            android:scaleType="centerInside"
             android:layout_marginLeft="10dp"
             app:layout_constraintBottom_toBottomOf="@id/hotT1"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -22,12 +23,11 @@
             android:id="@+id/hotT1"
             android:layout_marginLeft="12dp"
             android:text="发布内容"
-            android:textStyle="bold"
             android:textColor="@color/colorBlackTitle"
             android:textSize="20sp"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="44dp"
+            android:layout_height="56dp"
             app:layout_constraintLeft_toRightOf="@id/btnBack"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -35,341 +35,366 @@
     <Button
             android:id="@+id/publishBtn"
             android:gravity="center"
-            android:background="@drawable/selector_confirm_btn"
+            android:background="@drawable/selector_confirm_btn_15dp"
             android:layout_marginRight="12dp"
             android:textColor="@color/complete_btn_color_selector"
             android:layout_width="50dp"
             android:enabled="false"
             android:textSize="14sp"
             android:layout_height="28dp"
+            android:text="发布"
             app:layout_constraintBottom_toBottomOf="@id/hotT1"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/hotT1"
-            tools:text="发布"/>
+            app:layout_constraintTop_toTopOf="@id/hotT1"/>
 
     <View
             android:background="@color/colorDivider"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             app:layout_constraintTop_toBottomOf="@id/hotT1"/>
 
-    <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+    <!--<androidx.core.widget.NestedScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/colorWhite"-->
+    <!--android:layout_marginTop="1dp"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/hotT1">-->
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@color/colorWhite"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/hotT1">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/publisherAvator"
+                android:layout_width="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="12dp"
+                android:layout_height="50dp"
+                android:src="@drawable/img_avatar_02"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        <EditText
+                android:id="@+id/publishContent"
+                android:layout_marginLeft="30dp"
+                android:layout_width="0dp"
+                android:layout_marginRight="12dp"
+                android:layout_height="0dp"
+                android:hint="说点儿自己想说的给想听的人吧"
+                android:gravity="left"
+                android:textColor="@color/colorBlackTitle"
+                android:textSize="14sp"
+                android:background="@null"
+                android:maxLength="197"
+                android:minHeight="50dp"
+                app:layout_constraintBottom_toTopOf="@+id/pickedPhotosRv"
+                app:layout_constraintLeft_toRightOf="@id/publisherAvator"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/publisherAvator"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/pickedPhotosRv"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="83dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toTopOf="@id/tagLayoutRv"
+                app:layout_constraintLeft_toLeftOf="parent"
+                />
+
+        <VideoView
+                android:id="@+id/pickedVideo"
+                android:visibility="gone"
+                android:layout_width="83dp"
+                android:layout_height="83dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="12dp"
+                app:layout_constraintBottom_toTopOf="@id/tagLayoutRv"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+        <LinearLayout
+                android:id="@+id/publishAudioLL"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/gradient_audio_bg"
+                app:layout_constraintBottom_toTopOf="@id/tagLayoutRv"
+                app:layout_constraintLeft_toLeftOf="parent">
+
+            <ImageView
+                    android:id="@+id/audioPlayPreBtn"
+                    android:background="@drawable/shape_oval_white"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_play_audio"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"/>
+
+            <TextView
+                    android:id="@+id/audioPreTime"
+                    android:layout_marginLeft="10dp"
+                    android:text="00:30"
+                    android:textStyle="bold"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <com.example.demoapplication.player.VoisePlayingIcon
+                    android:layout_width="160dp"
+                    android:layout_height="22dp"
+                    android:background="@color/transparent"
+                    android:layout_marginLeft="12dp"
+                    app:pointer_color="@color/colorWhite"
+                    app:pointer_num="11"
+                    app:pointer_width="3"
+                    />
+
+
+        </LinearLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tagLayoutRv"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/locationCity"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+                android:id="@+id/locationCity"
+                android:drawablePadding="4dp"
+                android:drawableLeft="@drawable/icon_location"
+                android:text="成都市"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/colorBlack22"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="6dp"
+                android:gravity="center"
+                android:paddingBottom="6dp"
+                android:background="@drawable/shape_rectangle_black22_white_15dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/divide"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+        <TextView
+                android:id="@+id/contentLength"
+                android:text="0/200"
+                android:layout_marginRight="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@id/locationCity"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/locationCity"
+                />
+
+        <View
+                android:id="@+id/divide"
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:layout_constraintBottom_toTopOf="@id/tabPublishWay"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <!--<net.lucode.hackware.magicindicator.MagicIndicator-->
+        <!--android:id="@+id/tabPublishWay"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="23dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--app:layout_constraintLeft_toLeftOf="@id/locationCity"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/divide"-->
+        <!--/>-->
+
+        <RadioGroup
+                android:id="@+id/tabPublishWay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toTopOf="@id/allPhotosRv"
+                app:layout_constraintLeft_toLeftOf="@id/locationCity"
+                >
+
+            <RadioButton
+                    android:id="@+id/publishPhotos"
+                    android:button="@null"
+                    android:text="图片"
+                    android:textColor="@color/publish_way_color_selector"
+                    android:textSize="14sp"
+                    android:checked="true"
+                    android:drawableBottom="@drawable/selector_publish_way"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <RadioButton
+                    android:id="@+id/publishVideo"
+                    android:button="@null"
+                    android:text="视频"
+                    android:textColor="@color/publish_way_color_selector"
+                    android:textSize="14sp"
+                    android:drawableBottom="@drawable/selector_publish_way"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <RadioButton
+                    android:id="@+id/publishAudio"
+                    android:button="@null"
+                    android:text="语音"
+                    android:textColor="@color/publish_way_color_selector"
+                    android:textSize="14sp"
+                    android:drawableBottom="@drawable/selector_publish_way"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </RadioGroup>
+
+        <ImageView
+                android:id="@+id/btn_emo"
+                android:src="@drawable/icon_dianzan"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/tabPublishWay"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tabPublishWay"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/allPhotosRv"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="15dp"
+                app:layout_constraintRight_toRightOf="parent"
+                >
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/videosRv"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:layout_width="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_height="300dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:id="@+id/audioLl"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                >
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/publisherAvator"
-                    android:layout_width="50dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/img_avatar_02"
+            <TextView
+                    android:id="@+id/recordTime"
+                    android:text="00:00"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorBlack22"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    app:layout_constraintBottom_toTopOf="@id/recordTv"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     />
 
-            <EditText
-                    android:id="@+id/publishContent"
-                    android:layout_marginLeft="30dp"
-                    android:layout_width="0dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_height="200dp"
-                    android:hint="说点儿自己想说的给想听的人吧"
-                    android:gravity="left"
-                    android:textColor="@color/colorBlackTitle"
+
+            <TextView
+                    android:id="@+id/recordTv"
+                    android:text="点击录音"
+                    android:textColor="#ff666666"
                     android:textSize="14sp"
-                    android:background="@null"
-                    android:maxLength="200"
-                    android:minHeight="50dp"
-                    app:layout_constraintLeft_toRightOf="@id/publisherAvator"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/publisherAvator"/>
-
-
-            <GridView
-                    android:id="@+id/pickedPhotosGv"
-                    android:visibility="gone"
-                    android:numColumns="4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toTopOf="@id/tagLayout"/>
-
-            <VideoView
-                    android:id="@+id/pickedVideo"
-                    android:visibility="gone"
-                    android:numColumns="4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="12dp"
-                    app:layout_constraintBottom_toTopOf="@id/tagLayout"
-                    app:layout_constraintLeft_toLeftOf="parent"/>
-
+                    android:layout_marginBottom="15dp"
+                    app:layout_constraintBottom_toTopOf="@id/startRecordLl"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    />
 
             <LinearLayout
-                    android:id="@+id/publishAudio"
-                    android:visibility="gone"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="14dp"
-                    android:layout_marginLeft="12dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/gradient_audio_bg"
-                    app:layout_constraintBottom_toTopOf="@id/tagLayout"
-                    app:layout_constraintLeft_toLeftOf="parent">
+                    android:id="@+id/startRecordLl"
+                    android:layout_width="91dp"
+                    android:gravity="center"
+                    android:layout_height="91dp"
+                    android:background="@drawable/shape_oval_record_ll"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                        android:id="@+id/audioPlayBtn"
-                        android:background="@drawable/shape_oval_white"
+                        android:background="@drawable/gradient_record_bg"
                         android:layout_gravity="center"
-                        android:src="@drawable/icon_play_audio"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"/>
-
-                <TextView
-                        android:id="@+id/audioTime"
-                        android:layout_marginLeft="10dp"
-                        android:text="00:30"
-                        android:textStyle="bold"
-                        android:textColor="#ffffffff"
-                        android:textSize="14sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                <View
-                        android:layout_marginLeft="12dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="12dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="20dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="26dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="20dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="12dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="6dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="12dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="20dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="26dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="20dp"/>
-
-                <View
-                        android:layout_marginLeft="6dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
-                        android:layout_width="4dp"
-                        android:layout_height="12dp"/>
-
-
+                        android:src="@drawable/icon_record"
+                        android:layout_width="68dp"
+                        android:scaleType="centerInside"
+                        android:layout_height="68dp"/>
             </LinearLayout>
 
+            <ImageView
+                    android:id="@+id/deleteRecord"
+                    android:visibility="gone"
+                    android:layout_marginRight="35dp"
+                    android:background="@drawable/gradient_recording_bg"
+                    android:src="@drawable/icon_cancel_record"
+                    android:layout_width="44dp"
+                    android:scaleType="centerInside"
+                    android:layout_height="44dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/startRecordLl"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-            <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/tagLayout"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/publishContent">
-
-                <TextView
-                        android:id="@+id/addTagBtn"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="6dp"
-                        android:background="@drawable/shape_rectangle_gray_white_15dp"
-                        android:text="添加标签"
-                        android:layout_marginLeft="14dp"
-                        android:textColor="@color/colorGrayText"
-                        android:layout_width="wrap_content"
-                        android:textSize="12sp"
-                        android:layout_height="wrap_content"/>
-
-                <TextView
-                        android:id="@+id/labelOne"
-                        android:text="标签一"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingBottom="6dp"
-                        android:paddingTop="6dp"
-                        android:textSize="12sp"
-                        android:drawablePadding="6dp"
-                        android:drawableRight="@drawable/icon_label_orange"
-                        android:layout_marginLeft="8dp"
-                        android:textColor="@color/colorOrange"
-                        android:background="@drawable/shape_rectangle_orange_15dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                <TextView
-                        android:id="@+id/labelTwo"
-                        android:text="标签二"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingBottom="6dp"
-                        android:paddingTop="6dp"
-                        android:textSize="12sp"
-                        android:drawablePadding="6dp"
-                        android:drawableRight="@drawable/icon_label_orange"
-                        android:layout_marginLeft="8dp"
-                        android:textColor="@color/colorOrange"
-                        android:background="@drawable/shape_rectangle_orange_15dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                <TextView
-                        android:id="@+id/labelThree"
-                        android:text="标签三"
-                        android:textSize="12sp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingBottom="6dp"
-                        android:paddingTop="6dp"
-                        android:drawablePadding="6dp"
-                        android:drawableRight="@drawable/icon_label_orange"
-                        android:layout_marginLeft="8dp"
-                        android:textColor="@color/colorOrange"
-                        android:background="@drawable/shape_rectangle_orange_15dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <TextView
-                    android:id="@+id/locationCity"
-                    android:drawablePadding="4dp"
-                    android:drawableLeft="@drawable/icon_location"
-                    android:text="成都市"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginLeft="15dp"
-                    android:textColor="@color/colorBlack22"
-                    android:textSize="12sp"
-                    android:layout_width="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:background="@drawable/shape_rectangle_black22_white_15dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tagLayout"/>
-
-
-            <TextView
-                    android:id="@+id/contentLength"
-                    android:text="0/200"
-                    android:layout_marginRight="12dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@id/locationCity"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/locationCity"
-                    />
-
-            <View
-                    android:id="@+id/divide"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/colorDivider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/locationCity"/>
-
-            <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabPublishWay"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@id/locationCity"
-                    app:layout_constraintTop_toBottomOf="@id/divide"
-                  />
-
-            <!--  app:tl_indicator_color="@color/colorOrange"
-                    app:tl_indicator_gravity="BOTTOM"
-                    app:tl_indicator_height="3dp"
-                    app:tl_indicator_width="11dp"
-                    app:tl_tab_width="28dp"
-                    app:tl_textSelectColor="@color/colorBlack22"
-                    app:tl_textUnselectColor="@color/colorGrayText"
-                    app:tl_textsize="14sp"-->
-            <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/vpChooseWay"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tabPublishWay">
-            </androidx.viewpager.widget.ViewPager>
-
-
+            <ImageView
+                    android:id="@+id/finishRecord"
+                    android:visibility="gone"
+                    android:layout_marginLeft="35dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_gou_white"
+                    android:background="@drawable/shape_rectangle_solid_58blue"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/startRecordLl"
+                    app:layout_constraintTop_toTopOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!--</androidx.core.widget.NestedScrollView>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

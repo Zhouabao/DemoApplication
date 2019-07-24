@@ -37,8 +37,9 @@ object UserManager {
                 savaLabels.add(
                     SharedPreferenceUtil.Object2String(
                         LabelBean(
-                            title = label?.title ?: "",
-                            id = label?.id ?: -1
+                            title = label.title ?: "",
+                            id = label.id ?: -1,
+                            path = label.path ?: ""
                         )
                     )
                 )
@@ -63,6 +64,76 @@ object UserManager {
     }
 
 
+    /**
+     * 保存位置信息
+     */
+    fun saveLocation(
+        latitude: String?,
+        longtitude: String?,
+        province: String?,
+        city: String?,
+        district: String?,
+        code: String?
+    ) {
+        if (latitude != null)
+            SPUtils.getInstance(Constants.SPNAME).put("latitude", latitude)
+        if (longtitude != null)
+            SPUtils.getInstance(Constants.SPNAME).put("longtitude", longtitude)
+        if (province != null)
+            SPUtils.getInstance(Constants.SPNAME).put("province", province)
+        if (city != null)
+            SPUtils.getInstance(Constants.SPNAME).put("city", city)
+        if (district != null)
+            SPUtils.getInstance(Constants.SPNAME).put("district", district)
+        if (code != null)
+            SPUtils.getInstance(Constants.SPNAME).put("citycode", code)
+
+    }
+
+
+    /**
+     * 获取维度
+     */
+    fun getlatitude(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("latitude", "0")
+    }
+
+    /**
+     * 获取经度
+     */
+    fun getlongtitude(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("longtitude", "0")
+    }
+
+    /**
+     * 获取城市码
+     */
+    fun getCityCode(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("citycode", "")
+    }
+
+    /**
+     * 获取省份
+     */
+    fun getProvince(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("province", "")
+    }
+
+    /**
+     * 获取城市
+     */
+    fun getCity(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("city", "")
+    }
+
+    /**
+     * 获取区域
+     */
+    fun getDistrict(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("district", "")
+    }
+
+
     fun getToken(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("token")
     }
@@ -75,7 +146,7 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getString("avatar")
     }
 
-     fun getSpLabels(): MutableList<LabelBean> {
+    fun getSpLabels(): MutableList<LabelBean> {
         val tempLabels = mutableListOf<LabelBean>()
         if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
             (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels")).forEach {

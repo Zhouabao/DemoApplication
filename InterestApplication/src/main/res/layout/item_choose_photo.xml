@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:gs="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="83dp"
+                android:layout_height="83dp">
+
+    <com.example.baselibrary.widgets.RoundImageView
+            android:id="@+id/choosePhoto"
+            android:layout_width="match_parent"
+            android:src="@drawable/img_avatar_01"
+            android:layout_height="match_parent"
+            gs:borderRadius="5dp"
+            gs:type="round"/>
+
+    <ImageView
+            android:id="@+id/choosePhotoDel"
+            android:visibility="visible"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_delete"
+            android:layout_width="16dp"
+            android:layout_height="16dp"/>
+
+    <TextView
+            android:id="@+id/choosePhotoIndex"
+            android:visibility="gone"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:text="1"
+            android:textSize="12sp"
+            android:textColor="@color/colorWhite"
+            android:gravity="center"
+            android:background="@drawable/shape_oval_orange"
+            android:layout_width="16dp"
+            android:layout_height="16dp"/>
+
+</RelativeLayout>

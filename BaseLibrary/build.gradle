@@ -58,7 +58,6 @@ dependencies {
     // RxKotlin and RxAndroid
     api "io.reactivex:rxkotlin:$rx_kotlin_version"
     api "io.reactivex:rxandroid:$rx_android_version"
-    api 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
     //Retrofit
     api "com.squareup.okhttp3:okhttp:$ok_http_version"
     api "com.squareup.retrofit2:retrofit:${retrofit_version}"
@@ -66,9 +65,6 @@ dependencies {
     api "com.squareup.retrofit2:converter-gson:$retrofit_version"
     api "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
 
-    //RxLifecycle
-    api "com.trello:rxlifecycle-kotlin:$rx_lifecycle_version"
-    api "com.trello:rxlifecycle-components:$rx_lifecycle_version"
     //Glide
     api "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
@@ -98,7 +94,6 @@ dependencies {
     //api 'com.zhy:flowlayout-lib:1.0.3'
     //图片选择器
     api 'com.github.labmem005.PictureSelector:picture_library:v2.3.0'
-    api 'cn.bingoogolapple:bga-swipebacklayout:1.2.0@aar'
 
     //事件总线eventbus
     api 'org.greenrobot:eventbus:3.1.1'
@@ -122,7 +117,7 @@ dependencies {
 
     //TabLayout
     api  'com.github.hackware1993:MagicIndicator:1.5.0'
-
+    api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
 
     //statusBar
     api 'com.readystatesoftware.systembartint:systembartint:1.0.3'

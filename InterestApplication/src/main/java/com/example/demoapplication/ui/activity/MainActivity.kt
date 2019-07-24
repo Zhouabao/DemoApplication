@@ -27,7 +27,8 @@ import com.example.demoapplication.ui.adapter.MatchLabelAdapter
 import com.example.demoapplication.ui.dialog.FilterUserDialog
 import com.example.demoapplication.ui.fragment.MatchFragment
 import com.example.demoapplication.ui.fragment.SquareFragment
-import com.example.demoapplication.utils.SharedPreferenceUtil
+import com.example.demoapplication.utils.AMapManager
+import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.ScaleTransitionPagerTitleView
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
@@ -71,9 +72,15 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         setContentView(R.layout.activity_main)
         EventBus.getDefault().register(this)
         initView()
+
+
+        //如果定位信息没有就重新定位
+        if (UserManager.getlatitude().toDouble() == 0.0 || UserManager.getlongtitude().toDouble() == 0.0)
+            AMapManager.initLocation(this)
         initFragment()
         filterBtn.setOnClickListener(this)
     }
+
 
     private fun initView() {
         filterBtn.setOnClickListener(this)
@@ -93,7 +100,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun initFragment() {
         mStack.add(matchFragment)
         mStack.add(squareFragment)
-        vpMain.adapter = MainPagerAdapter(supportFragmentManager, mStack,titles)
+        vpMain.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
         initIndicator()
         vpMain.currentItem = 0
         vpMain.setScrollable(false)
@@ -167,7 +174,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
     override fun onUpdateFilterResult() {
-
         if (filterUserDialog.isShowing)
             filterUserDialog.dismiss()
     }
@@ -214,7 +220,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     var labelList: MutableList<LabelBean> = mutableListOf()
 
     companion object {
-        val REQUEST_LABEL_CODE = 2000
+        const val REQUEST_LABEL_CODE = 2000
     }
 
     private fun initHeadView() {
@@ -231,10 +237,14 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     )
                 } else {
                     for (index in 0 until labelAdapter.dataList.size) {
-                        labelAdapter.dataList[index].checked = index == position - 1
+                        labelAdapter.dataList[index].checked = if (index == position - 1) {
+                            SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelAdapter.dataList[index].path)
+                            true
+                        } else {
+                            false
+                        }
                     }
                     labelAdapter.notifyDataSetChanged()
-
                     EventBus.getDefault().post(UpdateLabelEvent(labelList[position - 1]))
                 }
             }
@@ -244,27 +254,19 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
     private fun initData() {
-        labelList = getSpLabels()
+        labelList = UserManager.getSpLabels()
         if (labelList.size > 0)
             labelList[0].checked = true
         labelAdapter.setData(labelList)
     }
 
-    private fun getSpLabels(): MutableList<LabelBean> {
-        val tempLabels = mutableListOf<LabelBean>()
-        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
-            (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels")).forEach {
-                tempLabels.add(SharedPreferenceUtil.String2Object(it) as LabelBean)
-            }
-        }
-        return tempLabels
-    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LABEL_CODE) {
-                val list = getSpLabels()
+                val list = UserManager.getSpLabels()
                 for (i in 0 until labelList.size) {
                     for (j in 0 until list.size) {
                         if (labelList[i].id == list[j].id) {
