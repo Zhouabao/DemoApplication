@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 /**
  * author : ZFM
  * date   : 2019/7/2217:26
- * desc   :
+ * desc   : 带有回弹效果的ScrollView
  * version: 1.0
  */
 public class BounceScrollView extends NestedScrollView {

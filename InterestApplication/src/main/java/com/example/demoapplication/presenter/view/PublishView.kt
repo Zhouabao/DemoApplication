@@ -9,4 +9,8 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface PublishView : BaseView {
+
+    fun onSquareAnnounceResult(success: Boolean)
+
+    fun onQnUploadResult(success: Boolean, type: Int, key: String)
 }

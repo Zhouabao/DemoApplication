@@ -156,8 +156,20 @@ interface Api {
     @POST("square/replyReport${Constants.END_BASE_URL}")
     fun commentReport(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
-    /**********************匹配**************************/
 
+
+    /**
+     * 评论举报
+     */
+    @FormUrlEncoded
+    @POST("square/announce${Constants.END_BASE_URL}")
+    fun squareAnnounce(@FieldMap params: MutableMap<String, Any>, @Field("tags[]")tagList: Array<Int?>,@Field("comment[]") keyList: Array<String?>?): Observable<BaseResp<Any?>>
+
+
+
+
+
+    /**********************匹配**************************/
 
     /**
      * 匹配首页数据

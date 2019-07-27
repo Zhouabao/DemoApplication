@@ -45,14 +45,16 @@ class SquarePresenter : BasePresenter<SquareView>() {
     /**
      * 获取广场列表
      */
-    fun getSquareList(params: HashMap<String, Any>, isRefresh: Boolean) {
+    fun getSquareList(params: HashMap<String, Any>, isRefresh: Boolean, firstIn: Boolean = false) {
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareList(params)
             .excute(object : BaseSubscriber<BaseResp<SquareListBean>>(mView) {
                 override fun onStart() {
-                    super.onStart()
-                    //todo  showloading
+                    if (firstIn) {
+                        mView.showLoading()
+                    }
                 }
+
                 override fun onNext(t: BaseResp<SquareListBean>) {
                     super.onNext(t)
                     if (t.code == 200)
@@ -65,7 +67,6 @@ class SquarePresenter : BasePresenter<SquareView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError("服务器错误~")
                     mView.onGetSquareListResult(null, false, isRefresh)
                 }
             })
@@ -120,38 +121,36 @@ class SquarePresenter : BasePresenter<SquareView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.onError(context.getString(R.string.service_error))
-                    mView.onGetSquareCollectResult(position,null)
+                    mView.onGetSquareCollectResult(position, null)
                 }
             })
     }
 
 
-
     /**
      * 广场举报
      */
-    fun getSquareReport(params: HashMap<String, Any>,position: Int) {
+    fun getSquareReport(params: HashMap<String, Any>, position: Int) {
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareReport(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
                     if (t.code == 200)
-                        mView.onGetSquareReport(t,position)
+                        mView.onGetSquareReport(t, position)
                     else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
-                        mView.onGetSquareReport(t,position)
+                        mView.onGetSquareReport(t, position)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
                     mView.onError(context.getString(R.string.service_error))
-                    mView.onGetSquareReport(null,position)
+                    mView.onGetSquareReport(null, position)
                 }
             })
     }
-
 
 
     /**
@@ -165,6 +164,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     super.onStart()
                     //todo  showloading
                 }
+
                 override fun onNext(t: BaseResp<SquareListBean?>) {
                     super.onNext(t)
                     if (t.code == 200)
@@ -182,7 +182,6 @@ class SquarePresenter : BasePresenter<SquareView>() {
                 }
             })
     }
-
 
 
 }

@@ -10,11 +10,11 @@ import rx.Subscriber
 open class BaseSubscriber<T>(val baseView: BaseView) : Subscriber<T>() {
 
     override fun onStart() {
-        baseView.showLoading()
+
     }
 
     override fun onCompleted() {
-        baseView.hideLoading()
+
     }
 
     override fun onNext(t: T) {
@@ -22,7 +22,6 @@ open class BaseSubscriber<T>(val baseView: BaseView) : Subscriber<T>() {
     }
 
     override fun onError(e: Throwable?) {
-        baseView.hideLoading()
         if (e is BaseException) {
             baseView.onError(e.msg)
         } else {

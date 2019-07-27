@@ -38,8 +38,7 @@ object UserManager {
                     SharedPreferenceUtil.Object2String(
                         LabelBean(
                             title = label.title ?: "",
-                            id = label.id ?: -1,
-                            path = label.path ?: ""
+                            id = label.id ?: -1
                         )
                     )
                 )

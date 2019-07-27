@@ -11,15 +11,17 @@ import java.text.SimpleDateFormat;
  * desc   :
  * version: 1.0
  */
-public class UpdateVoiceTimeThread {private static CountDownTimer cdt;
+public class UpdateVoiceTimeThread {
+    private static CountDownTimer cdt;
     private final static int TIME_CHANGE_DELAY = 1000;
     private final static SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
     private static String time;
     private static TextView tvv;
     private static UpdateVoiceTimeThread instance = null;
     public static long l;
-    public static UpdateVoiceTimeThread getInstance( final String stime,final TextView tv){
-        if (instance==null) {
+
+    public static UpdateVoiceTimeThread getInstance(final String stime, final TextView tv) {
+        if (instance == null) {
             synchronized (UpdateVoiceTimeThread.class) {
                 if (instance == null) {
                     instance = new UpdateVoiceTimeThread();
@@ -38,10 +40,13 @@ public class UpdateVoiceTimeThread {private static CountDownTimer cdt;
         return instance;
     }
 
-    private UpdateVoiceTimeThread(){};
+    private UpdateVoiceTimeThread() {
+    }
 
-    private static CountDownTimer getTimer(){
-        if (cdt!=null) {
+    ;
+
+    private static CountDownTimer getTimer() {
+        if (cdt != null) {
             cdt.cancel();
             cdt = null;
         }
@@ -49,7 +54,6 @@ public class UpdateVoiceTimeThread {private static CountDownTimer cdt;
 
             @Override
             public void onTick(long millisUntilFinished) {
-                // TODO Auto-generated method stub
                 tvv.setText(sdf.format(millisUntilFinished));
                 l = l - TIME_CHANGE_DELAY;
             }
@@ -69,13 +73,15 @@ public class UpdateVoiceTimeThread {private static CountDownTimer cdt;
         getTimer();
         cdt.start();
     }
-    public void pause(){
+
+    public void pause() {
         cdt.cancel();
         tvv.setText(sdf.format(l));
     }
-    public void stop(){
+
+    public void stop() {
         instance = null;
-        if (cdt!=null) {
+        if (cdt != null) {
             cdt.cancel();
             cdt = null;
         }

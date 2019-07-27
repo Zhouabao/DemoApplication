@@ -30,6 +30,7 @@ import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.example.demoapplication.utils.ScrollCalculatorHelper
 import com.example.demoapplication.widgets.CommonItemDecoration
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
@@ -38,6 +39,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_square.*
 import kotlinx.android.synthetic.main.headerview_label.view.*
 import org.greenrobot.eventbus.EventBus
@@ -131,6 +133,14 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         squareEdit.setOnClickListener(this)
 
 
+        stateview.retryBtn.onClick {
+            stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+            //这个地方还要默认设置选中第一个标签来更新数据
+            mPresenter.getSquareList(listParams, true, true)
+            mPresenter.getFrinedsList(friendsParams)
+        }
+
+
         val itemdecoration = CommonItemDecoration(activity!!, DividerItemDecoration.VERTICAL)
         itemdecoration.setDrawable(activity!!.resources.getDrawable(R.drawable.recycler_divider))
         squareDynamicRv.addItemDecoration(itemdecoration)
@@ -138,6 +148,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         squareDynamicRv.layoutManager = layoutManager
         squareDynamicRv.adapter = adapter
         adapter.addHeaderView(initFriendsView())
+        adapter.setEmptyView(R.layout.empty_layout, squareDynamicRv)
+        adapter.setHeaderAndEmpty(false)
         //取消动画，主要是闪烁
 //        (squareDynamicRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         squareDynamicRv.itemAnimator?.changeDuration = 0
@@ -238,7 +250,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
 
         //这个地方还要默认设置选中第一个标签来更新数据
-        mPresenter.getSquareList(listParams, true)
+        mPresenter.getSquareList(listParams, true, true)
         mPresenter.getFrinedsList(friendsParams)
 
     }
@@ -422,7 +434,11 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     }
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, refresh: Boolean?) {
+        if (refresh == true) {
+            adapter.data.clear()
+        }
         if (result) {
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data!!.list != null && data!!.list!!.size > 0) {
                 for (tempData in 0 until data!!.list!!.size) {
                     data!!.list!![tempData].type = when {
@@ -432,14 +448,17 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                         else -> SquareBean.PIC
                     }
                 }
-                if (refresh != null && refresh!!)
-                    adapter.setNewData(data!!.list!!)
-                else
-                    adapter.addData(data!!.list!!)
+                adapter.addData(data!!.list!!)
             }
-
-//            adapter.notifyDataSetChanged()
+        } else {
+            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+            stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
+                activity!!.getString(R.string.retry_load_error)
+            } else {
+                activity!!.getString(R.string.retry_net_error)
+            }
         }
+        adapter.notifyDataSetChanged()
         refreshLayout.finishRefresh(result)
         refreshLayout.finishLoadMore(result)
         refreshLayout.setEnableLoadMoreWhenContentNotFull(false)
@@ -485,7 +504,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
         listParams["tagid"] = event.label.id
         //这个地方还要默认设置选中第一个标签来更新数据
-        mPresenter.getSquareList(listParams, true)
+        mPresenter.getSquareList(listParams, true, true)
     }
 
     override fun onClick(view: View) {
@@ -496,5 +515,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         }
     }
 
+    override fun showLoading() {
+        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+    }
 }
 

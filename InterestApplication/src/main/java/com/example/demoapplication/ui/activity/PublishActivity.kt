@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.Video
@@ -13,30 +14,41 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.MediaController
 import android.widget.RadioGroup
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.amap.api.services.core.PoiItem
 import com.blankj.utilcode.util.*
 import com.example.baselibrary.glide.GlideUtil
+import com.example.baselibrary.utils.RandomUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.MediaBean
+import com.example.demoapplication.player.MediaPlayerHelper
+import com.example.demoapplication.player.MediaRecorderHelper
+import com.example.demoapplication.player.MediaRecorderHelper.*
+import com.example.demoapplication.player.UpdateVoiceTimeThread
 import com.example.demoapplication.presenter.PublishPresenter
 import com.example.demoapplication.presenter.view.PublishView
 import com.example.demoapplication.ui.adapter.ChoosePhotosAdapter
 import com.example.demoapplication.ui.adapter.PublishLabelAdapter
+import com.example.demoapplication.utils.AMapManager
+import com.example.demoapplication.utils.UriUtils
 import com.example.demoapplication.utils.UriUtils.getAllPhotoInfo
 import com.example.demoapplication.utils.UriUtils.getAllVideoInfos
 import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.DividerItemDecoration
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_publish.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.toast
 import java.io.File
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -45,29 +57,24 @@ import java.util.*
 
 /**
  * 发布内容页面
- * //todo 此处要接入地图
  *
  */
 class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioGroup.OnCheckedChangeListener,
     View.OnClickListener, TextWatcher {
+
 
     companion object {
         const val AUTHORITY = "com.example.demoapplication.fileprovider" //FileProvider的签名 7.0以上要用
         const val REQUEST_CODE_CAPTURE_RAW = 6 //startActivityForResult时的请求码
         const val REQUEST_CODE_VIDEO = 10 //startActivityForResult时的请求码
         const val REQUEST_CODE_LABEL = 20 //startActivityForResult时的请求码
+        const val REQUEST_CODE_MAP = 30 //startActivityForResult时的请求码
     }
 
-    var imageFile: File? = null     //拍照后保存的照片
-    var imgUri: Uri? = null         //拍照后保存的照片的uri
 
-    private var pickedPhotos: MutableList<MediaBean> = mutableListOf()
-    private var videoPath: String = ""
-    private var audioPath: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_publish)
-
         initView()
 
         //获取所有的照片信息
@@ -78,6 +85,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     }
 
     private fun initData() {
+        locationCity.text = UserManager.getCity()
         GlideUtil.loadAvatorImg(this, UserManager.getAvator(), publisherAvator)
         contentLength.text = SpanUtils.with(contentLength)
             .append(publishContent.length().toString())
@@ -89,8 +97,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             .create()
     }
 
-    //默认选中照片
-    private var currentWayId: Int = R.id.publishPhotos
 
     private fun initView() {
         btnBack.onClick {
@@ -105,11 +111,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
         mPresenter = PublishPresenter()
         mPresenter.mView = this
-        mPresenter.context = this
+        mPresenter.context = applicationContext
 
         tabPublishWay.setOnCheckedChangeListener(this)
         publishContent.addTextChangedListener(this)
         publishBtn.setOnClickListener(this)
+        locationCity.setOnClickListener(this)
 
         initTags()
         initPhotos()
@@ -121,24 +128,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     /***************设置选中的标签******************/
     private val publishLabelAdapter by lazy { PublishLabelAdapter() }
-
-    /**
-     * 移除子级标签
-     *
-     */
-    private fun onRemoveSubLablesResult(label: LabelBean, parentPos: Int) {
-        if (!label.son.isNullOrEmpty())
-            for (tempLabel in label.son!!) {
-                tempLabel.checked = false
-                publishLabelAdapter.data.remove(tempLabel)
-                checkTags.remove(tempLabel)
-                onRemoveSubLablesResult(tempLabel, parentPos)
-            }
-        publishLabelAdapter.notifyDataSetChanged()
-    }
-
-
-    var checkTags = mutableListOf<LabelBean>()
+    private var checkTags = mutableListOf<LabelBean>()
     private fun initTags() {
         tagLayoutRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         tagLayoutRv.addItemDecoration(
@@ -152,23 +142,18 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         tagLayoutRv.adapter = publishLabelAdapter
 
         //获取广场首页选中的标签id
-        val checkedIds = SPUtils.getInstance(Constants.SPNAME).getString("globalLabelId")
+        val checkedId = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
         val myTags: MutableList<LabelBean> = UserManager.getSpLabels()
-        val ids = checkedIds.split("-")
-
-        for (id in ids) {
-            for (tag in myTags) {
-                if (id == tag.id.toString()) {
-                    publishLabelAdapter.addData(tag)
-                    checkTags.add(tag)
-                }
+        for (tag in myTags) {
+            if (checkedId == tag.id) {
+                publishLabelAdapter.addData(tag)
+                checkTags.add(tag)
             }
         }
 
         publishLabelAdapter.addData(0, LabelBean("添加标签"))
         publishLabelAdapter.setOnItemClickListener { adapter, view, position ->
             if (position == 0) {
-                //todo 跳转到标签选择页面选新标签
                 startActivityForResult<PublishChooseLabelsActivity>(
                     REQUEST_CODE_LABEL,
                     "checkedLabels" to checkTags as Serializable
@@ -178,16 +163,27 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     ToastUtils.showShort("至少要选择一个标签哦")
                     return@setOnItemClickListener
                 } else {
-                    onRemoveSubLablesResult(publishLabelAdapter.data[position], position)
+                    val item = publishLabelAdapter.data[position]
+                    checkTags.remove(item)
+                    publishLabelAdapter.data.remove(item)
+                    publishLabelAdapter.notifyItemRemoved(position)
                 }
             }
         }
     }
 
+
+    /*****************设置相册和视频信息********************/
+    private var imageFile: File? = null     //拍照后保存的照片
+    private var imgUri: Uri? = null         //拍照后保存的照片的uri
+    private var pickedPhotos: MutableList<MediaBean> = mutableListOf()
+    private var videoPath: String = ""
+    private var audioPath: String = ""
+
     private val allPhotoAdapter by lazy { ChoosePhotosAdapter(0, pickedPhotos) }
     private val pickedPhotoAdapter by lazy { ChoosePhotosAdapter(1) }
     private val allVideoThumbAdapter by lazy { ChoosePhotosAdapter(2) }
-
+    private var videoCheckIndex = -1
 
     private fun initPickedRv() {
 //        pickedPhotosRv.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
@@ -204,23 +200,47 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         )
         pickedPhotosRv.adapter = pickedPhotoAdapter
         pickedPhotoAdapter.setNewData(pickedPhotos)
-        pickedPhotoAdapter.setOnItemClickListener { adapter, view, position ->
-            val mediaBean = pickedPhotoAdapter.data[position]
-            for (bean in allPhotoAdapter.data) {
-                if (bean.id == mediaBean.id) {
-                    bean.ischecked = false
-                    break
+        pickedPhotoAdapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.choosePhoto -> {
+                    showBigImagePreview(pickedPhotoAdapter.data[position])
+                }
+                R.id.choosePhotoDel -> {
+                    val mediaBean = pickedPhotoAdapter.data[position]
+                    val type = mediaBean.fileType
+                    for (bean in allPhotoAdapter.data) {
+                        if (bean.id == mediaBean.id) {
+                            bean.ischecked = false
+                            break
+                        }
+                    }
+                    pickedPhotos.remove(mediaBean)
+                    if (type == MediaBean.TYPE.IMAGE) {
+                        allPhotoAdapter.notifyDataSetChanged()
+                        pickedPhotoAdapter.notifyItemRemoved(position)
+                        checkCompleteBtnEnable()
+                    } else {
+
+                        allVideoThumbAdapter.data[videoCheckIndex].ischecked = false
+                        allVideoThumbAdapter.notifyItemChanged(videoCheckIndex)
+                    }
+
                 }
             }
-            pickedPhotos.remove(mediaBean)
-            allPhotoAdapter.notifyDataSetChanged()
-            pickedPhotoAdapter.notifyItemRemoved(position)
-            checkCompleteBtnEnable()
+        }
+    }
+
+    private fun showBigImagePreview(mediaBean: MediaBean) {
+        GlideUtil.loadImg(this, mediaBean.filePath, imageBigPreview)
+        imageBigPreview.visibility = View.VISIBLE
+        imageBigPreview.onClick {
+            imageBigPreview.visibility = View.GONE
         }
     }
 
     /**
      * 读取相册中所有图片 时间顺序
+     * 照片最多选择九张
      */
     private fun initPhotos() {
         allPhotosRv.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
@@ -234,20 +254,32 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             )
         )
         allPhotosRv.adapter = allPhotoAdapter
-        allPhotoAdapter.setOnItemClickListener { _, view, position ->
-            if (position == 0) {
-                //todo 去拍照
-                gotoCaptureRaw(true)
-            } else {
-                //相册的选择与取消选择
-                if (!allPhotoAdapter.data[position].ischecked) {
+        allPhotoAdapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                //点击查看大图
+                R.id.choosePhoto -> {
+                    showBigImagePreview(allPhotoAdapter.data[position])
+                }
+                //点击选中
+                R.id.choosePhotoDel -> {
+                    //相册的选择与取消选择
                     if (pickedPhotos.size == 9) {
                         ToastUtils.showShort("最多只能选9张图片")
-                        return@setOnItemClickListener
+                        return@setOnItemChildClickListener
                     }
                     allPhotoAdapter.data[position].ischecked = !(allPhotoAdapter.data[position].ischecked)
                     pickedPhotos.add(allPhotoAdapter.data[position])
-                } else {
+                    pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.INVISIBLE
+                    }
+                    pickedPhotoAdapter.notifyDataSetChanged()
+                    allPhotoAdapter.notifyDataSetChanged()
+                    checkCompleteBtnEnable()
+                }
+                //点击取消选择
+                R.id.choosePhotoIndex -> {
                     allPhotoAdapter.data[position].ischecked = !(allPhotoAdapter.data[position].ischecked)
                     for (photo in pickedPhotos) {
                         if (photo.id == allPhotoAdapter.data[position].id) {
@@ -255,23 +287,26 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                             break
                         }
                     }
+                    pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.INVISIBLE
+                    }
+                    pickedPhotoAdapter.notifyDataSetChanged()
+                    allPhotoAdapter.notifyDataSetChanged()
+                    checkCompleteBtnEnable()
                 }
-                pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.INVISIBLE
+                R.id.chooseCamera -> {
+                    gotoCaptureRaw(true)
                 }
-                pickedPhotoAdapter.notifyDataSetChanged()
-                allPhotoAdapter.notifyDataSetChanged()
-                checkCompleteBtnEnable()
             }
         }
-
 
     }
 
     /**
      * 读取相册中所有视频  时间顺序
+     * 视频的时间是3~120s以内
      */
     private fun initVideos() {
         videosRv.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
@@ -285,84 +320,80 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             )
         )
         videosRv.adapter = allVideoThumbAdapter
-        allVideoThumbAdapter.setOnItemClickListener { adapter, view, position ->
-            if (position == 0) {
-                go2TakeVideo()
-//                gotoCaptureRaw(false)
-            } else {
-                //相册的选择与取消选择
-                if (!allVideoThumbAdapter.data[position].ischecked) {
-                    if (pickedPhotos.size == 1) {
-                        ToastUtils.showShort("最多只能选择1个视频")
-                        return@setOnItemClickListener
-                    }
-                    allVideoThumbAdapter.data[position].ischecked = !(allVideoThumbAdapter.data[position].ischecked)
-                    pickedPhotos.add(allVideoThumbAdapter.data[position])
-                } else {
-                    allVideoThumbAdapter.data[position].ischecked = !(allVideoThumbAdapter.data[position].ischecked)
-                    for (photo in pickedPhotos) {
-                        if (photo.id == allVideoThumbAdapter.data[position].id) {
-                            pickedPhotos.remove(photo)
-                            break
+
+        allVideoThumbAdapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.choosePhoto -> {
+                    showVideoPreview(allVideoThumbAdapter.data[position])
+                }
+                R.id.chooseCamera -> {
+                    go2TakeVideo()
+                }
+                R.id.choosePhotoDel -> {
+                    //视频的选择与取消选择
+                    if (!allVideoThumbAdapter.data[position].ischecked) {
+                        if (pickedPhotos.size == 1) {
+                            ToastUtils.showShort("最多只能选择1个视频")
+                            return@setOnItemChildClickListener
+                        }
+                        if (allVideoThumbAdapter.data[position].duration < 3000) {
+                            ToastUtils.showShort("视频时长过短")
+                            return@setOnItemChildClickListener
+                        } else if (allVideoThumbAdapter.data[position].duration > 120000) {
+                            ToastUtils.showShort("视频时长过长")
+                            return@setOnItemChildClickListener
+                        }
+                        allVideoThumbAdapter.data[position].ischecked =
+                            !(allVideoThumbAdapter.data[position].ischecked)
+                        pickedPhotos.add(allVideoThumbAdapter.data[position])
+                        videoCheckIndex = position
+                    } else {
+                        allVideoThumbAdapter.data[position].ischecked =
+                            !(allVideoThumbAdapter.data[position].ischecked)
+                        for (photo in pickedPhotos) {
+                            if (photo.id == allVideoThumbAdapter.data[position].id) {
+                                pickedPhotos.remove(photo)
+                                break
+                            }
                         }
                     }
+                    pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
+                        View.VISIBLE
+                    } else {
+                        View.INVISIBLE
+                    }
+                    pickedPhotoAdapter.notifyDataSetChanged()
+                    allVideoThumbAdapter.notifyDataSetChanged()
+                    checkCompleteBtnEnable()
                 }
-                pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
-                    View.VISIBLE
-                } else {
-                    View.INVISIBLE
-                }
-                pickedPhotoAdapter.notifyDataSetChanged()
-                allVideoThumbAdapter.notifyDataSetChanged()
-                checkCompleteBtnEnable()
             }
         }
     }
 
     /**
-     * 初始化录音控件
+     * 视频预览
      */
-    private fun initAudioLl() {
+    private fun showVideoPreview(mediaBean: MediaBean) {
+        previewRl.visibility = View.VISIBLE
+        videoPreviewStart.visibility = View.VISIBLE
 
-    }
+        videoPreview.setMediaController(MediaController(this))
+        videoPreview.setVideoURI(Uri.parse(mediaBean.filePath))
+        videoPreview.setOnCompletionListener {
+            videoPreviewStart.visibility = View.VISIBLE
+            videoPreview.stopPlayback()
+        }
+        videoPreview.onClick {
+            previewRl.visibility = View.GONE
+            videoPreview.stopPlayback()
+        }
+        videoPreviewStart.onClick {
+            videoPreviewStart.visibility = View.GONE
+            videoPreview.start()
 
-    override fun onCheckedChanged(radioGroup: RadioGroup, checkedId: Int) {
-        when (checkedId) {
-            R.id.publishPhotos -> {
-                if (videoPath.isNotEmpty() || audioPath.isNotEmpty()) {
-                    tabPublishWay.check(currentWayId)
-                    ToastUtils.showShort("不支持图片和其他媒体一起上传哦")
-                    return
-                }
-                currentWayId = checkedId
-                allPhotosRv.visibility = View.VISIBLE
-                videosRv.visibility = View.GONE
-                audioLl.visibility = View.GONE
-            }
-            R.id.publishVideo -> {
-                if (pickedPhotos.isNotEmpty() || audioPath.isNotEmpty()) {
-                    tabPublishWay.check(currentWayId)
-                    ToastUtils.showShort("不支持视频和其他媒体一起上传哦")
-                    return
-                }
-                currentWayId = checkedId
-                allPhotosRv.visibility = View.GONE
-                videosRv.visibility = View.VISIBLE
-                audioLl.visibility = View.GONE
-            }
-            R.id.publishAudio -> {
-                if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
-                    tabPublishWay.check(currentWayId)
-                    ToastUtils.showShort("不支持音频和其他媒体一起上传哦")
-                    return
-                }
-                currentWayId = checkedId
-                allPhotosRv.visibility = View.GONE
-                videosRv.visibility = View.GONE
-                audioLl.visibility = View.VISIBLE
-            }
         }
     }
+
 
     /**
      * @param isCapture 是否是拍照 true为拍照 false为视频
@@ -415,7 +446,19 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      */
     private fun createImageFile(isCrop: Boolean = false, isCapture: Boolean = true): File? {
         return try {
-            var rootFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera")
+            var rootFile: File? = null
+
+            if (isCapture) {
+                rootFile = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                    "demoapplicaiton/video"
+                )
+            } else {
+                rootFile = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                    "demoapplicaiton/camera"
+                )
+            }
             if (!rootFile.exists())
                 rootFile.mkdirs()
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
@@ -432,9 +475,350 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     }
 
 
+    /**************** * 初始化录音控件 录音时间在5S~3M之间********************/
+    private var mIsRecorder = false
+    private var mIsPreview = false
+    //是否显示顶部预览
+    private var isTopPreview = false
+    private var countTimeThread: CountDownTimer? = null
+    private var mPreviewTimeThread: UpdateVoiceTimeThread? = null
+    private lateinit var mMediaRecorderHelper: MediaRecorderHelper
+    private var totalSecond = 0
+    private var currentActionState = ACTION_NORMAL
+    //判断是否是第一次点击上部分预览界面的播放按钮
+    private var click = false
+
+    private fun initAudioLl() {
+        startRecordBtn.setOnClickListener(this)
+        deleteRecord.setOnClickListener(this)
+        finishRecord.setOnClickListener(this)
+        //上面预览状态变更
+        recordDelete.setOnClickListener(this)
+        audioPlayPreBtn.setOnClickListener(this)
+
+        deleteRecord.setVisible(false)
+        finishRecord.setVisible(false)
+        mMediaRecorderHelper = MediaRecorderHelper(this)
+
+        //开启录音计时线程
+        countTimeThread = object : CountDownTimer(3 * 60 * 1000, 1000) {
+            override fun onFinish() {
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                totalSecond++
+                if (!mIsRecorder) {
+                    countTimeThread?.cancel()
+                }
+
+                if (totalSecond == 170) {
+                    ToastUtils.showShort("还可以录制10秒钟哦，抓紧时间")
+                }
+                recordTime.text = UriUtils.getShowTime(totalSecond)
+                recordTime.setTextColor(resources.getColor(R.color.colorOrange))
+                recordProgress.update(totalSecond, 100)
+
+//                }
+
+            }
+        }
+
+    }
+
+    /**
+     * 切换录音ACTION状态
+     */
+    private fun switchActionState() {
+        mIsRecorder = false
+        if (currentActionState == ACTION_NORMAL) {
+            currentActionState = ACTION_RECORDING
+            startRecordBtn.setImageResource(R.drawable.icon_record_stop)
+            //开始录音
+            mMediaRecorderHelper.startRecord()
+            mIsRecorder = true
+            recordTv.text = "正在录音"
+            countTimeThread?.start()
+
+        } else if (currentActionState == ACTION_RECORDING) {//录制中
+            currentActionState = ACTION_COMMPLETE
+            startRecordBtn.setImageResource(R.drawable.icon_record_start)
+            //停止录音
+            recordTv.text = "点击试听"
+            mMediaRecorderHelper.stopAndRelease()
+            deleteRecord.visibility = View.VISIBLE
+            finishRecord.visibility = View.VISIBLE
+        } else if (currentActionState == ACTION_COMMPLETE) {//录制完成
+            currentActionState = ACTION_PLAYING
+            //开启预览倒计时
+            if (isTopPreview) {
+                mPreviewTimeThread = UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), audioPreTime)
+                audioPlayPreBtn.setImageResource(R.drawable.icon_pause_audio)
+                audioPreAnim.start()
+            } else {
+                //预览播放录音
+                recordTv.text = "播放中.."
+                recordProgress.update(0, 100)
+                mPreviewTimeThread = UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), recordTime)
+                startRecordBtn.setImageResource(R.drawable.icon_record_pause)
+            }
+            mPreviewTimeThread?.start()
+            MediaPlayerHelper.playSound(mMediaRecorderHelper.currentFilePath) {
+                //当播放完了之后切换到录制完成的状态
+                mPreviewTimeThread?.stop()
+//                recordTime.setTextColor(resources.getColor(R.color.colorBlack22))
+                recordProgress.update(0, 100)
+                if (isTopPreview) {
+                    currentActionState = ACTION_DONE
+                    audioPlayPreBtn.setImageResource(R.drawable.icon_play_audio)
+                    audioPreAnim.stop()
+                } else {
+                    currentActionState = ACTION_COMMPLETE
+                    recordTime.text = UriUtils.getShowTime(totalSecond)
+                    recordTv.text = "点击试听"
+                    startRecordBtn.setImageResource(R.drawable.icon_record_start)
+                }
+            }
+        } else if (currentActionState == ACTION_PLAYING) {//播放中
+            currentActionState = ACTION_PAUSE
+            mPreviewTimeThread?.pause()
+            if (isTopPreview) {
+                audioPreAnim.stop()
+                audioPlayPreBtn.setImageResource(R.drawable.icon_play_audio)
+            } else {
+                recordTv.text = "暂停"
+                startRecordBtn.setImageResource(R.drawable.icon_record_start)
+            }
+            //暂停播放
+            MediaPlayerHelper.pause()
+        } else if (currentActionState == ACTION_PAUSE) {//暂停
+            currentActionState = ACTION_PLAYING
+            //开启预览计时线程
+            mPreviewTimeThread?.start()
+            if (isTopPreview) {
+                audioPlayPreBtn.setImageResource(R.drawable.icon_play_audio)
+                audioPreAnim.start()
+            } else {
+                recordTv.text = "播放中.."
+                startRecordBtn.setImageResource(R.drawable.icon_record_pause)
+            }
+            //继续播放
+            MediaPlayerHelper.resume()
+        } else if (currentActionState == ACTION_DONE) {
+            mMediaRecorderHelper.cancel()
+            changeToNormalState()
+        }
+    }
+
+
+    //恢复成未录制状态
+    private fun changeToNormalState() {
+        click = false
+        publishAudioLL.visibility = View.GONE
+        recordTime.visibility = View.VISIBLE
+        recordProgress.visibility = View.VISIBLE
+        mIsPreview = false
+        isTopPreview = false
+        mIsRecorder = false
+        MediaPlayerHelper.realese()
+        currentActionState = ACTION_NORMAL
+        startRecordBtn.setImageResource(R.drawable.icon_record_normal)
+        audioPlayPreBtn.setImageResource(R.drawable.icon_play_audio)
+        totalSecond = 0
+        recordTv.text = "点击录音"
+        recordTime.text = "00:00"
+        recordTime.setTextColor(resources.getColor(R.color.colorBlack22))
+        recordProgress.update(0, 100)
+        deleteRecord.visibility = View.GONE
+        finishRecord.visibility = View.GONE
+    }
+
+
+    //默认单选组按钮选中照片
+    private var currentWayId: Int = R.id.publishPhotos
+
+    override fun onCheckedChanged(radioGroup: RadioGroup, checkedId: Int) {
+        when (checkedId) {
+            R.id.publishPhotos -> {
+                if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.VIDEO || audioPath.isNotEmpty()) {
+                    tabPublishWay.check(currentWayId)
+                    ToastUtils.showShort("不支持图片和其他媒体一起上传哦")
+                    return
+                }
+                currentWayId = checkedId
+                allPhotosRv.visibility = View.VISIBLE
+                videosRv.visibility = View.GONE
+                audioLl.visibility = View.GONE
+            }
+            R.id.publishVideo -> {
+                if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE || audioPath.isNotEmpty()) {
+                    tabPublishWay.check(currentWayId)
+                    ToastUtils.showShort("不支持视频和其他媒体一起上传哦")
+                    return
+                }
+                currentWayId = checkedId
+                allPhotosRv.visibility = View.GONE
+                videosRv.visibility = View.VISIBLE
+                audioLl.visibility = View.GONE
+            }
+            R.id.publishAudio -> {
+                if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
+                    tabPublishWay.check(currentWayId)
+                    ToastUtils.showShort("不支持音频和其他媒体一起上传哦")
+                    return
+                }
+                currentWayId = checkedId
+                allPhotosRv.visibility = View.GONE
+                videosRv.visibility = View.GONE
+                audioLl.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    /************编辑内容监听**************/
+    override fun afterTextChanged(p0: Editable?) {
+        checkCompleteBtnEnable()
+    }
+
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+    }
+
+    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        contentLength.text = SpanUtils.with(contentLength)
+            .append(publishContent.length().toString())
+            .setFontSize(14, true)
+            .setForegroundColor(resources.getColor(R.color.colorOrange))
+            .setBold()
+            .append("/200")
+            .setFontSize(10, true)
+            .create()
+    }
+
+
+    /**
+     * 检查发布按钮是否可用
+     */
+    private fun checkCompleteBtnEnable() {
+        publishBtn.isEnabled =
+            publishContent.text.isNotEmpty() || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AMapManager.initLocation(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (videoPreview.isPlaying) videoPreview.stopPlayback()
+        countTimeThread?.cancel()
+        mPreviewTimeThread?.stop()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (videoPreview.isPlaying) videoPreview.stopPlayback()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (videoPreview.isPlaying) videoPreview.stopPlayback()
+    }
+
+    override fun onBackPressed() {
+        if (imageBigPreview.visibility == View.VISIBLE) {
+            imageBigPreview.visibility = View.GONE
+        } else if (previewRl.visibility == View.VISIBLE) {
+            previewRl.visibility = View.GONE
+            videoPreview.stopPlayback()
+        } else
+            super.onBackPressed()
+    }
+
+
+    private var positionItem: PoiItem? = null
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.publishBtn -> {
+                if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//文本
+                    publish()
+                } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//音频
+                    //TODO上传音频
+                    val audioQnPath =
+                        "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
+                            "accid"
+                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                            16
+                        )}.mp3"
+                    mPresenter.uploadFile(mMediaRecorderHelper.currentFilePath, audioQnPath, 3)
+                } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) { //图片
+                    uploadPictures()
+                } else {//视频
+                    //TODO上传视频
+                    val videoQnPath =
+                        "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
+                            "accid"
+                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                            16
+                        )}.mp4"
+                    mPresenter.uploadFile(pickedPhotos[0].filePath, videoQnPath, 2)
+                }
+                finish()
+            }
+            R.id.locationCity -> {
+                startActivityForResult<LocationActivity>(REQUEST_CODE_MAP)
+            }
+            R.id.startRecordBtn -> {
+                if (currentActionState == ACTION_RECORDING) {
+                    if (totalSecond < 5) {
+                        ToastUtils.showShort("再录制长一点吧")
+                        return
+                    }
+                }
+                if (isTopPreview) {
+                    currentActionState = ACTION_DONE
+                }
+                switchActionState()
+            }
+            R.id.deleteRecord -> {
+                mMediaRecorderHelper.cancel()
+                changeToNormalState()
+            }
+            R.id.finishRecord -> {
+                currentActionState = ACTION_DONE
+                recordTv.text = "删除并重录"
+                deleteRecord.visibility = View.GONE
+                recordTime.visibility = View.GONE
+                finishRecord.visibility = View.GONE
+                recordProgress.visibility = View.GONE
+                startRecordBtn.setImageResource(R.drawable.icon_record_delete)
+
+                audioPreTime.text = UriUtils.getShowTime(totalSecond)
+                publishAudioLL.visibility = View.VISIBLE
+
+                //changeToNormalState()
+            }
+            R.id.recordDelete -> {
+                isTopPreview = false
+                mMediaRecorderHelper.cancel()
+                changeToNormalState()
+            }
+            R.id.audioPlayPreBtn -> {
+                if (!click) {
+                    currentActionState = ACTION_COMMPLETE
+                    click = true
+                }
+                isTopPreview = true
+                switchActionState()
+            }
+        }
+    }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
+            //拍照返回
             if (requestCode == REQUEST_CODE_CAPTURE_RAW) {
                 //用于展示相册初始化界面
                 val imageBean = MediaBean(
@@ -459,7 +843,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     View.INVISIBLE
                 }
                 checkCompleteBtnEnable()
-            } else if (requestCode == REQUEST_CODE_VIDEO) {
+            }
+            //视频返回
+            else if (requestCode == REQUEST_CODE_VIDEO) {
                 val uri = data!!.data!!
 //                val uri = FileProvider.getUriForFile(this, AUTHORITY, imageFile!!)
                 val cursor = contentResolver.query(uri, null, null, null, null)
@@ -489,7 +875,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         thumbPath = thumCursor.getString(thumCursor.getColumnIndex(Video.Thumbnails.DATA))
                     }
                     thumCursor.close()
-                    cursor!!.close()
+                    cursor.close()
 
                     pickedPhotos.add(
                         0,
@@ -500,6 +886,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         1,
                         MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true)
                     )
+                    videoCheckIndex = 1
                     pickedPhotoAdapter.notifyDataSetChanged()
                     allVideoThumbAdapter.notifyDataSetChanged()
                     pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
@@ -509,46 +896,143 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     }
                     checkCompleteBtnEnable()
                 }
-            } else if (requestCode == REQUEST_CODE_LABEL) {
+            }
+            //标签返回
+            else if (requestCode == REQUEST_CODE_LABEL) {
+                checkTags = data!!.getSerializableExtra("checkedLabels") as MutableList<LabelBean>
                 publishLabelAdapter.setNewData(data!!.getSerializableExtra("checkedLabels") as MutableList<LabelBean>)
                 publishLabelAdapter.addData(0, LabelBean("添加标签"))
             }
-        }
-    }
-
-
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.publishBtn -> {
-                //
-                toast("发布")
+            //地图返回
+            else if (requestCode == REQUEST_CODE_MAP) {
+                if (data?.getParcelableExtra<PoiItem>("poiItem") != null) {
+                    positionItem = data!!.getParcelableExtra("poiItem") as PoiItem
+                    locationCity.text =
+                        positionItem!!.title + (positionItem!!.cityName ?: "") + (positionItem!!.adName
+                            ?: "") + (positionItem!!.businessArea ?: "") + (positionItem!!.snippet ?: "")
+                }
             }
         }
     }
 
-    /************编辑内容监听**************/
-    override fun afterTextChanged(p0: Editable?) {
-        checkCompleteBtnEnable()
+
+    //msg.what  0代表是文本，就上传文本    1：代表上传多个图片     2代表上传视频  3代表上传录音文件成功
+    private var uploadCount = 0
+    /**
+     * 设置发布的参数
+     */
+    private val keyList: Array<String?>? = arrayOfNulls<String>(10)
+
+    private fun publish() {
+        val checkIds = arrayOfNulls<Int>(10)
+        for (i in 1 until checkTags.size) {
+            checkIds[i] = checkTags[i].id
+        }
+        val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+            0
+        } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+            3
+        } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) {
+            1
+        } else {
+            2
+        }
+
+        val param = hashMapOf(
+            "token" to UserManager.getToken(),
+            "accid" to UserManager.getAccid(),
+            "tag_id" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"),
+            "descr" to "${publishContent.text}",
+            "lat" to if (positionItem == null) {
+                UserManager.getlatitude()
+            } else {
+                positionItem!!.latLonPoint?.latitude ?: 0.0
+            },
+            "lng" to if (positionItem == null) {
+                UserManager.getlongtitude()
+            } else {
+                positionItem!!.latLonPoint?.longitude ?: 0.0
+            },
+            "province_name" to if (positionItem == null) {
+                UserManager.getProvince()
+            } else {
+                positionItem!!.provinceName ?: ""
+            },
+            "city_name" to if (positionItem == null) {
+                UserManager.getCity()
+            } else {
+                positionItem!!.cityName ?: ""
+            },
+            "city_code" to (if (positionItem == null) {
+                UserManager.getCityCode()
+            } else {
+                positionItem!!.cityCode ?: ""
+            }),
+            //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
+            "type" to type,
+            //上传视频的时间
+            "duration" to if (pickedPhotos.isNotEmpty() && type == 3) {
+                pickedPhotos[0].duration / 1000
+            } else {
+                0
+            }
+            //	发布的图片/视频/声音 的json串（ios和android定义相同数据结构）
+            //  "comment" to "",
+            //发布图片/视频/声音 后加密的json串（ios和android定义相同数据结构）
+            //  "md5_json" to ""
+        )
+
+        mPresenter.publishContent(param, checkIds, keyList)
     }
 
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+    private fun uploadPictures() {
+        //上传图片
+        val imagePath =
+            "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
+                "accid"
+            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                16
+            )}.jpg"
+        mPresenter.uploadFile(pickedPhotos[uploadCount].filePath, imagePath, 1)
     }
 
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        contentLength.text = SpanUtils.with(contentLength)
-            .append(publishContent.length().toString())
-            .setFontSize(14, true)
-            .setForegroundColor(resources.getColor(R.color.colorOrange))
-            .setBold()
-            .append("/200")
-            .setFontSize(10, true)
-            .create()
+    override fun onQnUploadResult(success: Boolean, type: Int, key: String) {
+        if (success) {
+            when (type) {
+                0 -> {
+                    publish()
+                }
+                1 -> {
+                    keyList?.set(uploadCount, key)
+                    uploadCount++
+                    if (uploadCount == pickedPhotos.size) {
+                        publish()
+                    } else {
+                        uploadPictures()
+                    }
+                }
+                2 -> {
+                    keyList?.set(uploadCount, key)
+                    publish()
+                }
+                3 -> {
+                    keyList?.set(uploadCount, key)
+                    publish()
+                }
+            }
+        }
     }
 
 
-    fun checkCompleteBtnEnable() {
-        publishBtn.isEnabled = publishContent.text.isNotEmpty() || pickedPhotos.size > 0 || audioPath.isNotEmpty()
+    /**
+     * 广场发布结果回调
+     */
+    override fun onSquareAnnounceResult(success: Boolean) {
+        if (success) {
+            if (!this.isFinishing)
+                finish()
+        }
     }
-
 
 }

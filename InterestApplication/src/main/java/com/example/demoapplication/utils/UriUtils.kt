@@ -34,8 +34,55 @@ object UriUtils {
     }
 
 
+    //录音展示时间格式化
+     fun getShowTime(countTime: Int): String {
+        var result = ""
+        if (countTime < 10)
+            result = "00:0$countTime"
+        else if (countTime < 60)
+            result = "00:$countTime"
+        else {
+            val minute = countTime / 60
+            val mod = countTime % 60
+            if (minute < 10)
+                result += "0$minute:"
+            else {
+                result += "$minute:"
+            }
+            if (mod < 10)
+                result += "0$mod"
+            else {
+                result += mod
+            }
+
+        }
+        return result
+    }
 
 
+
+    fun ms2HMS(longMills: Int): String {
+        var mills = longMills
+        val HMStime: String
+        mills /= 1000
+        val hour = mills / 3600
+        val mint = mills % 3600 / 60
+        val sed = mills % 60
+        var hourStr = hour.toString()
+        if (hour < 10) {
+            hourStr = "0$hourStr"
+        }
+        var mintStr = mint.toString()
+        if (mint < 10) {
+            mintStr = "0$mintStr"
+        }
+        var sedStr = sed.toString()
+        if (sed < 10) {
+            sedStr = "0$sedStr"
+        }
+        HMStime = "$hourStr:$mintStr:$sedStr"
+        return HMStime
+    }
     /**
      * 读取手机中所有图片信息
      */
@@ -97,9 +144,9 @@ object UriUtils {
             )
             val mCursor = context.contentResolver.query(
                 mImageUri,
-                proj,
-                MediaStore.Video.Media.MIME_TYPE + "=?",
-                arrayOf("video/mp4"),
+                proj,null,null,
+//                MediaStore.Video.Media.MIME_TYPE + "=?",
+//                arrayOf("video/mp4"),
                 MediaStore.Video.Media.DATE_MODIFIED + " desc"
             )
             if (mCursor != null) {

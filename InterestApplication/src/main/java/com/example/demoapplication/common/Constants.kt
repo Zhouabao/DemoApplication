@@ -7,6 +7,11 @@ object Constants {
     const val SPNAME = "mySp"
     //    ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
     const val FILE_NAME_INDEX = "ppns/"
+    //上传文件的类型
+    const val AVATOR = "avator/" //头像
+    const val PUBLISH = "publish/" //发布
+    const val USERCENTER = "usecenter/"//个人中心
+
     //基地址末尾
     const val END_BASE_URL = "/v1.json"
     //pagesize

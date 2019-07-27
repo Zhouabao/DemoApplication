@@ -168,6 +168,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+        //SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId",true)
+        //SPUtils.getInstance(Constants.SPNAME).remove("globalLabelPath",true)
         //        GSYVideoManager.releaseAllVideos()
 
     }
@@ -238,7 +240,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 } else {
                     for (index in 0 until labelAdapter.dataList.size) {
                         labelAdapter.dataList[index].checked = if (index == position - 1) {
-                            SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelAdapter.dataList[index].path)
+                            SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelAdapter.dataList[index].id)
                             true
                         } else {
                             false
@@ -255,8 +257,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     private fun initData() {
         labelList = UserManager.getSpLabels()
-        if (labelList.size > 0)
+        if (labelList.size > 0) {
             labelList[0].checked = true
+            SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelList[0].id)
+        }
         labelAdapter.setData(labelList)
     }
 

@@ -13,7 +13,6 @@ import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.presenter.LabelsPresenter
 import com.example.demoapplication.presenter.view.LabelsView
 import com.example.demoapplication.ui.adapter.LabelAdapter
-import com.example.demoapplication.utils.SharedPreferenceUtil
 import com.example.demoapplication.utils.UserManager
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
@@ -22,7 +21,6 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
 import kotlinx.android.synthetic.main.activity_labels.*
 import org.jetbrains.anko.startActivity
@@ -36,7 +34,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
 
     private lateinit var adapter: LabelAdapter
     //拿一个集合来存储所有的标签
-    private lateinit var allLabels: MutableList<LabelBean>
+    private var allLabels: MutableList<LabelBean> = mutableListOf()
     //拿一个集合来存储当前选中的标签
     private val checkedLabels: MutableList<LabelBean> = mutableListOf()
     //拿一个集合来存储之前选中的标签
@@ -78,25 +76,23 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
         manager.flexWrap = FlexWrap.WRAP
         manager.alignItems = AlignItems.STRETCH
         labelRecyclerview.layoutManager = manager
-        adapter = LabelAdapter(this)
+        adapter = LabelAdapter()
         labelRecyclerview.adapter = adapter
         //设置添加和移除动画
         labelRecyclerview.itemAnimator = ScaleInLeftAnimator()
 
-        adapter.setOnItemClickListener(object : BaseRecyclerViewAdapter.OnItemClickListener<LabelBean> {
-            override fun onItemClick(item: LabelBean, position: Int) {
-//                adapter.dataList[position].checked = !item.checked
-                item.checked = !item.checked
-                adapter.notifyItemChanged(position)
-                updateCheckedLabels(item)
-                if (adapter.dataList[position].checked) {
-                    mPresenter.mView.onGetSubLabelsResult(item.son, position)
-                } else {
-                    //反选就清除父标签的所有子标签
-                    mPresenter.mView.onRemoveSubLablesResult(item, position)
-                }
+        adapter.setOnItemClickListener { _, view, position ->
+            adapter.data[position].checked = !adapter.data[position].checked
+            adapter.notifyItemChanged(position)
+            updateCheckedLabels(adapter.data[position])
+            if (adapter.data[position].checked) {
+                mPresenter.mView.onGetSubLabelsResult(adapter.data[position].son, position)
+            } else {
+                //反选就清除父标签的所有子标签
+                mPresenter.mView.onRemoveSubLablesResult(adapter.data[position], position)
             }
-        })
+        }
+
 
     }
 
@@ -105,26 +101,29 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
      */
     override fun onGetLabelsResult(labels: MutableList<LabelBean>) {
         if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
-            (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels")).forEach {
-                saveLabels.add(SharedPreferenceUtil.String2Object(it) as LabelBean)
-            }
-
-            for (i in 0 until labels.size) {
+            saveLabels.addAll(UserManager.getSpLabels())
+            var index = 0
+            while (labels.iterator().hasNext()) {
+                if (index >= labels.size) {
+                    break
+                }
                 for (j in 0 until saveLabels.size) {
-                    if (labels[i].id == saveLabels[j].id) {
-                        labels[i].checked = true
-                        updateCheckedLabels(labels[i])
-                        labels.addAll(i + 1, labels[i].son ?: mutableListOf())
+                    if (labels[index].id == saveLabels[j].id) {
+                        labels[index].checked = true
+                        updateCheckedLabels(labels[index])
+                        labels.addAll(index + 1, labels[index].son ?: mutableListOf())
+                        break
                     }
                 }
+                index++
             }
-            adapter.setData(labels)
+            adapter.setNewData(labels)
 
         } else {
             if (labels != null && labels.size > 0) {
                 //默认设置选中第一个标签，并加载其子标签
                 labels[0].checked = true
-                adapter.setData(labels)
+                adapter.setNewData(labels)
                 allLabels = labels
                 //默认选中之后加载子标签
                 mPresenter.mView.onGetSubLabelsResult(labels[0].son, 0)
@@ -134,6 +133,24 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                     updateCheckedLabels(label)
             }
         }
+    }
+
+
+    /**
+     * 第一次进入页面进行标签默认选中状态整理
+     */
+    private fun checkFirstInTags(tags: MutableList<LabelBean>): MutableList<LabelBean> {
+        for (i in 0 until tags.size) {
+            for (j in 0 until saveLabels.size) {
+                if (tags[i].id == saveLabels[j].id && !tags.contains(saveLabels[j])) {
+                    tags[i].checked = true
+                    updateCheckedLabels(tags[i])
+                    tags.addAll(i + 1, tags[i].son ?: mutableListOf())
+                    checkFirstInTags(tags[i].son ?: mutableListOf<LabelBean>())
+                }
+            }
+        }
+        return tags
     }
 
 
@@ -154,9 +171,9 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
      *
      */
     override fun onRemoveSubLablesResult(label: LabelBean, parentPos: Int) {
-        for (tempLabel in label.son!!) {
+        for (tempLabel in label.son ?: mutableListOf()) {
             tempLabel.checked = false
-            adapter.dataList.remove(tempLabel)
+            adapter.data.remove(tempLabel)
             updateCheckedLabels(tempLabel)
             onRemoveSubLablesResult(tempLabel, parentPos)
         }
@@ -205,7 +222,9 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
             if (data != null) {
                 UserManager.saveUserInfo(data)
             }
-            if (intent.getStringExtra("from") != null && intent.getStringExtra("from") == "mainactivity") {
+            if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity"
+                        || intent.getStringExtra("from") == "publish")
+            ) {
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else {
@@ -223,7 +242,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                 params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
                 params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
                 params["_timestamp"] = "${System.currentTimeMillis()}"
-                val checkIds = arrayOfNulls<Int>(9)
+                val checkIds = arrayOfNulls<Int>(10)
                 for (index in 0 until checkedLabels.size) {
                     checkIds[index] = checkedLabels[index].id
                 }

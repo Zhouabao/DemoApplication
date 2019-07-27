@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:minHeight="50dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite">
+
+    <TextView
+            android:id="@+id/locationName"
+            android:text="附近100m的有名字的楼宇"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:layout_marginTop="6dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="40dp"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+    <ImageView
+            android:id="@+id/locationChooseImg"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/icon_gou"
+            android:layout_width="24dp"
+            android:scaleType="centerInside"
+            android:layout_centerVertical="true"
+            android:layout_height="24dp"
+            android:layout_marginRight="15dp"/>
+</RelativeLayout>

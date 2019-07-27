@@ -30,7 +30,7 @@ data class LabelBean(
     var level: Int = 0,
     var parent_id: Int = 0,
     var path: String = "",
-    var son: List<LabelBean>? = null,
+    var son: MutableList<LabelBean>? = null,
     var video_path: String = "",
     var checked: Boolean = false
 ) : Serializable

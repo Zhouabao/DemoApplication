@@ -212,7 +212,9 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                         val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
                         GlideUtil.loadCircleImg(applicationContext, selectList[0].compressPath, userProfileBtn)
                         userProfile =
-                            "${Constants.FILE_NAME_INDEX}avator/${SPUtils.getInstance(Constants.SPNAME).getString("accid")}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                            "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
+                                "accid"
+                            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                 16
                             )}.jpg"
                         mPresenter.uploadProfile(selectList[0].compressPath, userProfile.toString())

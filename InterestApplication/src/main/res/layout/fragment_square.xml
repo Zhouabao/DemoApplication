@@ -1,40 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.layout.SmartRefreshLayout
+<com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/refreshLayout"
+        android:orientation="vertical"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_viewState="content"
+        android:id="@+id/stateview"
+        app:msv_animateViewChanges="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        tools:context=".ui.fragment.SquareFragment">
-
-
-    <FrameLayout
+        android:layout_height="match_parent">
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            tools:context=".ui.fragment.SquareFragment">
 
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/squareDynamicRv"
-                android:orientation="vertical"
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:orientation="vertical"
+                android:layout_height="match_parent">
 
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/squareEdit"
-                android:layout_marginRight="15dp"
-                android:layout_gravity="end|bottom"
-                android:backgroundTint="@color/colorOrange"
-                android:src="@drawable/icon_edit"
-                android:layout_marginBottom="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_anchorGravity="bottom|right|end"/>
-
-    </FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/squareDynamicRv"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
 
-</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/squareEdit"
+                    android:layout_marginRight="15dp"
+                    android:layout_gravity="end|bottom"
+                    android:backgroundTint="@color/colorOrange"
+                    android:src="@drawable/icon_edit"
+                    android:layout_marginBottom="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_anchorGravity="bottom|right|end"/>
+
+        </FrameLayout>
+
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</com.kennyc.view.MultiStateView>

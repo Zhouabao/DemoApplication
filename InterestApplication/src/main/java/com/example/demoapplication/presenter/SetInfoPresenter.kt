@@ -37,10 +37,9 @@ class SetInfoPresenter : BasePresenter<SetInfoView>() {
             })
     }
 
-
     /**
      * 上传照片
-     * 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
+     * imagePath 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
      */
     fun uploadProfile(filePath: String, imagePath: String) {
         if (!checkNetWork()) {
