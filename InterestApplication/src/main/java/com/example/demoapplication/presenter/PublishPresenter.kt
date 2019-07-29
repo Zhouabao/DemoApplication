@@ -14,9 +14,9 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
-import com.qiniu.android.storage.UpCompletionHandler
 import com.qiniu.android.storage.UpProgressHandler
 import com.qiniu.android.storage.UploadOptions
+import java.io.File
 
 /**
  *    author : ZFM
@@ -30,9 +30,9 @@ class PublishPresenter : BasePresenter<PublishView>() {
     /**
      * 广场发布
      */
-    fun publishContent(params: HashMap<String, Any>, checkIds: Array<Int?>,keyList:Array<String?>?) {
+    fun publishContent(params: HashMap<String, Any>, checkIds: Array<Int?>, keyList: Array<String?>?) {
         RetrofitFactory.instance.create(Api::class.java)
-            .squareAnnounce(params, checkIds,keyList)
+            .squareAnnounce(params, checkIds, keyList)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     super.onStart()
@@ -57,30 +57,39 @@ class PublishPresenter : BasePresenter<PublishView>() {
 
 
     /**
-     * 上传照片
+     * QN上传照片
      * 文件名格式：ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
      * type 1图片 2视频 3音频
      */
-    fun uploadFile(filePath: String, imagePath: String,type:Int) {
+    fun uploadFile(filePath: String, imagePath: String, type: Int) {
+        val file = File(filePath)
+        if (!file.exists()) {
+            Log.d("OkHttp", "文件不存在")
+            return
+        }
         if (!checkNetWork()) {
             return
         }
         QNUploadManager.getInstance().put(
-            filePath, imagePath, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"), UpCompletionHandler { key, info, response ->
+            file,
+            imagePath,
+            SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
+            { key, info, response ->
                 Log.d("OkHttp", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
                 Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null) {
                     if (!info.isOK) {
-                        mView.onQnUploadResult(false,type,key)
+                        mView.onQnUploadResult(false, type, key)
                     }
                 }
             },
-            UploadOptions(null, null, false,
+            UploadOptions(
+                null, null, false,
                 UpProgressHandler { key, percent ->
                     Log.d("OkHttp", "key=$key\npercent=$percent")
 
                     if (percent == 1.0) {
-                        mView.onQnUploadResult(true,type,key)
+                        mView.onQnUploadResult(true, type, key)
                     }
                 }, null
             )

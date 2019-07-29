@@ -26,7 +26,6 @@ import com.example.baselibrary.glide.GlideUtil
 import com.example.baselibrary.utils.RandomUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.MediaBean
 import com.example.demoapplication.player.MediaPlayerHelper
@@ -47,7 +46,6 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_publish.*
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
 import java.io.File
 import java.io.Serializable
@@ -568,7 +566,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 //                recordTime.setTextColor(resources.getColor(R.color.colorBlack22))
                 recordProgress.update(0, 100)
                 if (isTopPreview) {
-                    currentActionState = ACTION_DONE
+                    currentActionState = ACTION_COMMPLETE
                     audioPlayPreBtn.setImageResource(R.drawable.icon_play_audio)
                     audioPreAnim.stop()
                 } else {
@@ -698,6 +696,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      * 检查发布按钮是否可用
      */
     private fun checkCompleteBtnEnable() {
+
         publishBtn.isEnabled =
             publishContent.text.isNotEmpty() || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()
     }
@@ -784,7 +783,13 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 mMediaRecorderHelper.cancel()
                 changeToNormalState()
             }
-            R.id.finishRecord -> {
+            R.id.finishRecord -> { //录制完成
+                //如果下面在预览播放，那么就先释放资源，停止播放
+                MediaPlayerHelper.realese()
+                mPreviewTimeThread?.stop()
+                //检查发布按钮是否可以使用
+                checkCompleteBtnEnable()
+                //重置状态为完成
                 currentActionState = ACTION_DONE
                 recordTv.text = "删除并重录"
                 deleteRecord.visibility = View.GONE
@@ -925,7 +930,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     private fun publish() {
         val checkIds = arrayOfNulls<Int>(10)
-        for (i in 1 until checkTags.size) {
+        for (i in 0 until checkTags.size) {
             checkIds[i] = checkTags[i].id
         }
         val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
@@ -970,9 +975,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             }),
             //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
             "type" to type,
-            //上传视频的时间
-            "duration" to if (pickedPhotos.isNotEmpty() && type == 3) {
+            //上传音频、视频的时间，精确到秒
+            "duration" to if (pickedPhotos.isNotEmpty() && type == 2) {
                 pickedPhotos[0].duration / 1000
+            } else if (type == 3) {
+                totalSecond
             } else {
                 0
             }

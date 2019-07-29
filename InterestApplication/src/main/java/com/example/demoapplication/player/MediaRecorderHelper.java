@@ -57,10 +57,10 @@ public class MediaRecorderHelper {
             mMediaRecorder.setOutputFile(mCurrentFilePath);
             // 设置录音的来源（从哪里录音）
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            // 设置录音的保存格式
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
-            // 设置录音的编码
-            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            // 设置录音的保存格式,七牛上AMR_NB放不出来
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            // 设置录音的编码,七牛上AMR_NB放不出来
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             mMediaRecorder.prepare();
             mMediaRecorder.start();
 
