@@ -22,7 +22,7 @@ public class OverLayCardLayoutManager extends RecyclerView.LayoutManager {
     public int mTopOffset = 0;
 
     public OverLayCardLayoutManager(Context context) {
-        TRANS_Y_GAP = (int) (20 * context.getResources().getDisplayMetrics().density);
+        TRANS_Y_GAP = (int) (11 * context.getResources().getDisplayMetrics().density);
     }
 
     @Override
@@ -64,9 +64,9 @@ public class OverLayCardLayoutManager extends RecyclerView.LayoutManager {
 //                    widthSpace / 2 + getDecoratedMeasuredWidth(view),
 //                    mTopOffset == 0 ? (heightSpace / 2 + getDecoratedMeasuredHeight(view)) : (mTopOffset + getDecoratedMeasuredHeight(view)));
             //只是水平居中
-            layoutDecoratedWithMargins(view, widthSpace / 2,0,
+            layoutDecoratedWithMargins(view, widthSpace / 2, 0,
                     widthSpace / 2 + getDecoratedMeasuredWidth(view),
-                     (heightSpace + getDecoratedMeasuredHeight(view)));
+                    (heightSpace + getDecoratedMeasuredHeight(view)));
 
             /**
              * TopView的Scale 为1，translationY 0

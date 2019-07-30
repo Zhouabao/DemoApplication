@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import com.shuyu.gsyvideoplayer.utils.*;
-import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
-
 import androidx.recyclerview.widget.RecyclerView;
+import com.shuyu.gsyvideoplayer.utils.CommonUtil;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
+import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 
 /**
  * 计算滑动，自动播放的帮助类
@@ -23,14 +23,16 @@ public class ScrollCalculatorHelper {
     private int lastVisible = 0;
     private int visibleCount = 0;
     private int playId;
+    private int layoutId;
     private int rangeTop;
     private int rangeBottom;
     private PlayRunnable runnable;
 
     private Handler playHandler = new Handler();
 
-    public ScrollCalculatorHelper(int playId, int rangeTop, int rangeBottom) {
+    public ScrollCalculatorHelper(int layoutId,int playId, int rangeTop, int rangeBottom) {
         this.playId = playId;
+        this.layoutId = layoutId;
         this.rangeTop = rangeTop;
         this.rangeBottom = rangeBottom;
     }
@@ -67,10 +69,11 @@ public class ScrollCalculatorHelper {
 
         for (int i = 0; i < visibleCount; i++) {
             if (layoutManager.getChildAt(i) != null && layoutManager.getChildAt(i).findViewById(playId) != null) {
+                LinearLayout linearLayout = (LinearLayout) layoutManager.getChildAt(i).findViewById(layoutId);
                 GSYBaseVideoPlayer player = (GSYBaseVideoPlayer) layoutManager.getChildAt(i).findViewById(playId);
                 Rect rect = new Rect();
-                player.getLocalVisibleRect(rect);
-                int height = player.getHeight();
+                linearLayout.getLocalVisibleRect(rect);
+                int height = linearLayout.getHeight();
                 //说明第一个完全可视
                 if (rect.top == 0 && rect.bottom == height) {
                     gsyBaseVideoPlayer = player;

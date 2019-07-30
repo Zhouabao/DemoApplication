@@ -83,7 +83,7 @@
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="14sp"
                 android:background="@null"
-                android:maxLength="197"
+                android:maxLength="200"
                 android:minHeight="50dp"
                 app:layout_constraintBottom_toTopOf="@+id/pickedPhotosRv"
                 app:layout_constraintLeft_toRightOf="@id/publisherAvator"
@@ -137,12 +137,12 @@
             <TextView
                     android:id="@+id/audioPreTime"
                     android:layout_marginLeft="10dp"
-                    tools:text="00:30"
                     android:textStyle="bold"
                     android:textColor="#ffffffff"
                     android:textSize="14sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    tools:text="00:30"/>
 
             <com.example.demoapplication.player.VoisePlayingIcon
                     android:id="@+id/audioPreAnim"
@@ -193,6 +193,8 @@
                 android:ellipsize="marquee"
                 android:gravity="center"
                 android:paddingBottom="6dp"
+                android:focusable="true"
+                android:scrollHorizontally="true"
                 android:background="@drawable/shape_rectangle_black22_white_15dp"
                 android:layout_height="30dp"
                 app:layout_constraintBottom_toTopOf="@id/divide"

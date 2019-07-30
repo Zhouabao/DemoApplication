@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.baselibrary.widgets.RoundImageView
 import com.example.demoapplication.R
+import com.example.demoapplication.model.VideoJson
 import kotlinx.android.synthetic.main.item_match_detail_img.view.*
 
 /**
@@ -20,12 +21,12 @@ import kotlinx.android.synthetic.main.item_match_detail_img.view.*
  */
 class ListSquareImgsAdapter(
     var context: Context,
-    private var datas: MutableList<String>,
+    private var datas: MutableList<VideoJson>,
     private var fullScreenWidth: Boolean = false
 ) :
-    BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_match_detail_img, datas) {
+    BaseQuickAdapter<VideoJson, BaseViewHolder>(R.layout.item_match_detail_img, datas) {
 
-    override fun convert(holder: BaseViewHolder, item: String) {
+    override fun convert(holder: BaseViewHolder, item: VideoJson) {
         val position = holder.layoutPosition
         val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
         if (!fullScreenWidth) {
@@ -53,7 +54,7 @@ class ListSquareImgsAdapter(
             layoutParams.height = ScreenUtils.getScreenHeight()
             holder.itemView.ivUser.layoutParams = layoutParams
         }
-        GlideUtil.loadImg(context, datas[position], holder.itemView.ivUser)
+        GlideUtil.loadImg(context, datas[position].url, holder.itemView.ivUser)
     }
 
 }

@@ -25,7 +25,7 @@ import com.example.demoapplication.presenter.view.MainView
 import com.example.demoapplication.ui.adapter.MainPagerAdapter
 import com.example.demoapplication.ui.adapter.MatchLabelAdapter
 import com.example.demoapplication.ui.dialog.FilterUserDialog
-import com.example.demoapplication.ui.fragment.MatchFragment
+import com.example.demoapplication.ui.fragment.MatchFragment1
 import com.example.demoapplication.ui.fragment.SquareFragment
 import com.example.demoapplication.utils.AMapManager
 import com.example.demoapplication.utils.UserManager
@@ -58,16 +58,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     //匹配
-    private val matchFragment by lazy { MatchFragment() }
+    private val matchFragment by lazy { MatchFragment1() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
     private val titles = arrayOf("匹配", "发布")
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 设置一个exit transition
-        /*window?.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
-        window?.enterTransition = Explode()
-        window?.exitTransition = Explode()*/
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         EventBus.getDefault().register(this)
@@ -258,12 +254,20 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun initData() {
         labelList = UserManager.getSpLabels()
         if (labelList.size > 0) {
-            labelList[0].checked = true
-            SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelList[0].id)
+            if (SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId") != -1) {
+                val id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
+                for (label in labelList) {
+                    if (label.id == id) {
+                        label.checked = true
+                    }
+                }
+            } else {
+                labelList[0].checked = true
+                SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelList[0].id)
+            }
         }
         labelAdapter.setData(labelList)
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

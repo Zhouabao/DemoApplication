@@ -22,6 +22,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.model.VideoJson
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.ui.adapter.SquareDetailImgsAdaper
 import com.example.demoapplication.ui.dialog.TranspondDialog
@@ -60,7 +61,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         holder.addOnClickListener(R.id.detailPlayCommentSend)
 
         GlideUtil.loadAvatorImg(context, item.avatar ?: "", holder.itemView.detailPlayUserAvatar)
-        holder.itemView.detailPlayUserLocationAndTime.text = (item.city_name ?: "").plus("市\t\t").plus(item.out_time)
+        holder.itemView.detailPlayUserLocationAndTime.text = (item.city_name ?: "").plus("\t\t").plus(item.out_time)
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
         holder.itemView.detailPlayContent.text = item.descr ?: ""
 
@@ -94,7 +95,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 //                holder.itemView.picFl.setBackgroundResource(R.color.colorBlack)
                 if (holder.itemView.detailPlayVp2Indicator1.childCount == 0) {
                     if (item.photo_json.isNullOrEmpty()) {
-                        item.photo_json = mutableListOf(item.avatar ?: "")
+                        item.photo_json = mutableListOf(VideoJson(url = item.avatar ?: ""))
                     }
                     holder.itemView.detailPlayVp2.adapter =
                         SquareDetailImgsAdaper(context, item.photo_json ?: mutableListOf())
@@ -147,7 +148,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 
                 gsyVideoOptionBuilder.setIsTouchWiget(false)
 //                    .setThumbImageView()
-                    .setUrl(item.video_json?.get(0) ?: "")
+                    .setUrl(item.video_json?.get(0)?.url ?: "")
 //                    .setUrl("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4")
                     .setCacheWithPlay(false)
                     .setRotateViewAuto(false)

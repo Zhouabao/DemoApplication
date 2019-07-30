@@ -13,7 +13,7 @@
         app:msv_loadingView="@layout/loading_layout"
         android:background="@color/colorWhite"
 
-        app:msv_viewState="loading">
+        app:msv_viewState="content">
 
     <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -274,7 +274,7 @@
         <RelativeLayout
                 android:id="@+id/detailUserChatBtn"
                 android:layout_marginLeft="15dp"
-                android:background="@drawable/shape_rectangle_solid_orange"
+                android:background="@drawable/gradient_match_detail_red_bg"
                 android:orientation="horizontal"
                 android:layout_width="168dp"
                 android:layout_alignParentLeft="true"

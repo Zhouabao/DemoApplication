@@ -2,10 +2,11 @@ package com.example.demoapplication.switchplay
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Surface
 import android.view.View
-import com.example.demoapplication.R
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import kotlinx.android.synthetic.main.switch_video.view.*
+
 
 /**
  *    author : ZFM
@@ -30,7 +31,7 @@ class SwitchVideo : StandardGSYVideoPlayer {
     }
 
     override fun getLayoutId(): Int {
-        return R.layout.switch_video
+        return com.example.demoapplication.R.layout.switch_video
     }
 
 
@@ -61,6 +62,14 @@ class SwitchVideo : StandardGSYVideoPlayer {
 
     fun cloneState(switchVideo: SwitchVideo) {
         cloneParams(switchVideo, this)
+    }
+
+    override fun onSurfaceDestroyed(surface: Surface): Boolean {
+        //清空释放
+        setDisplay(null)
+        //同一消息队列中去release,屏蔽这个
+        //releaseSurface(surface);
+        return true
     }
 
 }

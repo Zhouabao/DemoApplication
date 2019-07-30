@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.View
 import android.widget.MediaController
 import android.widget.RadioGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -93,12 +94,28 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             .append("/200")
             .setFontSize(10, true)
             .create()
+
+        //进入页面判断是否启用草稿箱，不管启用不启用，最后都删除内容，只保留一次。
+        if (SPUtils.getInstance(Constants.SPNAME).getString("draft", "").isNotEmpty()) {
+            AlertDialog.Builder(this)
+                .setTitle("草稿箱")
+                .setMessage("是否启用草稿箱？")
+                .setPositiveButton("是") { _, _ ->
+                    publishContent.setText(SPUtils.getInstance(Constants.SPNAME).getString("draft", ""))
+                    publishContent.setSelection(publishContent.length())
+                    SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
+                }
+                .setNegativeButton("否") { _, _ ->
+                    SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
+                }
+                .show()
+        }
     }
 
 
     private fun initView() {
         btnBack.onClick {
-            finish()
+            onBackPressed()
         }
 
         //主动弹起键盘
@@ -696,9 +713,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      * 检查发布按钮是否可用
      */
     private fun checkCompleteBtnEnable() {
-
+        if (publishContent.text.length > 200) {
+            ToastUtils.showShort("字数超长啦~")
+        }
         publishBtn.isEnabled =
-            publishContent.text.isNotEmpty() || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()
+            (publishContent.text.isNotEmpty() && publishContent.text.length <= 200) || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()
     }
 
     override fun onResume() {
@@ -725,6 +744,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     }
 
     override fun onBackPressed() {
+        if (publishContent.text.toString().isNotEmpty()) {
+            SPUtils.getInstance(Constants.SPNAME).put("draft",publishContent.text.toString())
+        }
         if (imageBigPreview.visibility == View.VISIBLE) {
             imageBigPreview.visibility = View.GONE
         } else if (previewRl.visibility == View.VISIBLE) {

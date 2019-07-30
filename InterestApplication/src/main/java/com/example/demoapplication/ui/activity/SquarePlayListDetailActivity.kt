@@ -8,7 +8,6 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.example.demoap.MultiListDetailPlayAdapter
 import com.example.demoapplication.R
@@ -158,7 +157,7 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
                     if (mediaPlayer == null && currentIndex != position) {
                         initAudio(position)
                         //todo  还原播放器
-                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?:"").prepareMedia()
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?:"").prepareMedia()
                     }
 
                     for (index in 0 until adapter.data.size) {

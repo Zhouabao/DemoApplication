@@ -103,7 +103,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         //限定范围为屏幕一半的上下偏移180
         val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
         val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
-        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.squareUserVideo, playTop, playBottom)
+        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo,R.id.squareUserVideo, playTop, playBottom)
         listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
             var lastVisibleItem = 0
@@ -174,7 +174,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                 R.id.audioPlayBtn -> {
                     if (currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
                         initAudio(position)
-                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0) ?: "").prepareMedia()
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
                         currPlayIndex = position
                     }
                     for (index in 0 until adapter.data.size) {
@@ -224,7 +224,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean?) {
         if (result) {
-            if ((data == null|| data.list.isNullOrEmpty()) && adapter.data.isNullOrEmpty()) {
+            if ((data == null || data.list.isNullOrEmpty()) && adapter.data.isNullOrEmpty()) {
                 stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
             } else {
                 stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -318,6 +318,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
             override fun onStop(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                currPlayIndex = -1
 //                adapter.notifyItemChanged(position)
                 adapter.notifyDataSetChanged()
                 mediaPlayer!!.resetMedia()
@@ -327,6 +328,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             override fun onError(position: Int) {
                 toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                currPlayIndex = -1
 //                adapter.notifyItemChanged(position)
                 adapter.notifyDataSetChanged()
                 mediaPlayer!!.resetMedia()

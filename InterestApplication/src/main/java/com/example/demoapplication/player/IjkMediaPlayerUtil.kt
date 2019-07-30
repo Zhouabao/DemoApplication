@@ -20,6 +20,7 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
         const val MEDIA_PLAY = 1
         const val MEDIA_PAUSE = 2
         const val MEDIA_STOP = 3
+        const val MEDIA_ERROR = 4
     }
 
     private var pause = false

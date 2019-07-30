@@ -24,11 +24,12 @@ data class SquareListBean(
  * 广场列表数据
  */
 data class SquareBean(
+    var clloneState: Boolean = false,
     var isPlayAudio: Int = 0, //0未播放  1 播放中 2暂停  3 停止
     var isvip: Int?,//是否会员 1是 0 不是
     var icon: String?,
     var accid: String?,
-    var audio_json: MutableList<String>?,
+    var audio_json: MutableList<VideoJson>?,
     var avatar: String?,
     var city_name: String?,
     var comment_cnt: Int?,
@@ -42,12 +43,14 @@ data class SquareBean(
     var member_level: Int?,
     var nickname: String?,
     var out_time: String?,
-    var photo_json: MutableList<String>?,
+    var photo_json: MutableList<VideoJson>?,
     var province_name: String?,
     var share_cnt: Int?,
     var tag_id: Int?,
     var title: String?,
-    var video_json: MutableList<String>?,
+    var cover_url: String?,
+    var tags: MutableList<String>?,
+    var video_json: MutableList<VideoJson>?,
     var type: Int = 1,
     var duration: Long = 0L
 ) :
@@ -64,6 +67,12 @@ data class SquareBean(
         const val AUDIO = 3
     }
 }
+
+data class VideoJson(
+    val duration: Int? = 0,
+    val url: String? = ""
+) : Serializable
+
 
 /**
  * 广场列表好友数据
@@ -99,16 +108,16 @@ data class CommentBean(
     var avatar: String? = null,
     var content: String? = null,
     var create_time: String? = null,
-    var id: Int?=0,
-    var isliked: Int?=0,
-    var like_count: Int?=0,
+    var id: Int? = 0,
+    var isliked: Int? = 0,
+    var like_count: Int? = 0,
     var member_accid: String? = null,
     var reply_content: String? = null,
-    var reply_count: Int?=0,
-    var reply_id: Int?=0,
+    var reply_count: Int? = 0,
+    var reply_id: Int? = 0,
     var replyed_nickname: String? = null,
     var nickname: String? = null,
-    var square_id: Int?=0,
+    var square_id: Int? = 0,
     var type: Int = 1 //1数据  0标题
 ) : MultiItemEntity {
     override fun getItemType(): Int {
@@ -120,4 +129,3 @@ data class CommentBean(
         const val CONTENT = 1
     }
 }
-

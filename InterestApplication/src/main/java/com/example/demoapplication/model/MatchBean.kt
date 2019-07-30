@@ -36,7 +36,6 @@ data class MatchBean(
     var square: MutableList<Square>? = null,
     var square_count: Int? = 0,
     var tagcount: Int? = 0,
-
     var birth: Int?,
     var tags: MutableList<Tag>?,
     var jobname: String?,

@@ -38,6 +38,7 @@ import com.example.demoapplication.ui.adapter.MultiListCommentAdapter
 import com.example.demoapplication.ui.dialog.CommentActionDialog
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
+import com.example.demoapplication.utils.UriUtils
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -102,11 +103,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         squareDianzanBtn.text = "${squareBean.like_cnt}"
         squareCommentBtn.text = "${squareBean.comment_cnt}"
-        squareContent.text = "${squareBean.descr}"
+        squareContent.setContent("${squareBean.descr}")
         squareZhuanfaBtn.text = "${squareBean.share_cnt}"
         detailPlayUserName.text = "${squareBean.nickname}"
         detailPlayUserLocationAndTime.text =
-            "${squareBean.province_name}省${squareBean.city_name}市\t${squareBean.out_time}"
+            "${squareBean.province_name}${squareBean.city_name}\t${squareBean.out_time}"
 
     }
 
@@ -139,7 +140,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 squareUserAudio.visibility = View.VISIBLE
 //                initAudio()
                 initAudio(0)
-                mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0) ?: "").prepareMedia()
+                mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
             }
         }
 
@@ -246,21 +247,30 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             override fun onPlay(position: Int) {
                 squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
                 voicePlayView.start()
-                UpdateVoiceTimeThread.getInstance("03:40", audioTime).start()
+                UpdateVoiceTimeThread.getInstance(
+                    squareBean.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
+                    audioTime
+                ).start()
                 audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
             }
 
             override fun onPause(position: Int) {
                 squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
                 voicePlayView.stop()
-                UpdateVoiceTimeThread.getInstance("03:40", audioTime).pause()
+                UpdateVoiceTimeThread.getInstance(
+                    squareBean.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
+                    audioTime
+                ).pause()
                 audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
             }
 
             override fun onStop(position: Int) {
                 squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
                 voicePlayView.stop()
-                UpdateVoiceTimeThread.getInstance("03:40", audioTime).stop()
+                UpdateVoiceTimeThread.getInstance(
+                    squareBean.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
+                    audioTime
+                ).stop()
                 audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 mediaPlayer!!.resetMedia()
                 mediaPlayer = null
@@ -282,7 +292,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
             override fun onPreparing(position: Int) {
                 voicePlayView.stop()
-                UpdateVoiceTimeThread.getInstance("03:40", audioTime).stop()
+                UpdateVoiceTimeThread.getInstance(
+                    squareBean.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
+                    audioTime
+                ).stop()
                 audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
             }
 
@@ -320,11 +333,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
      * 初始化播放视频
      */
     private fun initVideo() {
-        squareUserVideo.fullscreenButton.visibility = View.GONE//设置全屏按钮
-        squareUserVideo.startButton.visibility = View.GONE
-        squareUserVideo.backButton.visibility = View.GONE//设置返回键
-        squareUserVideo.titleTextView.visibility = View.GONE//增加title
-        squareUserVideo.setIsTouchWiget(true)//可以滑动调整
         squareUserVideo.detail_btn.onClick {
             if (squareUserVideo.isInPlayingState) {
                 SwitchUtil.savePlayState(squareUserVideo)
@@ -335,9 +343,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 SquarePlayDetailActivity.startActivity(this, squareUserVideo, squareBean, 0)
             }
         }
-        squareUserVideo.setSwitchUrl(squareBean.video_json?.get(0) ?: "")
+        squareUserVideo.setSwitchUrl(squareBean.video_json?.get(0)?.url ?: "")
         squareUserVideo.setSwitchCache(false)
-        squareUserVideo.setUp(squareBean.video_json?.get(0) ?: "", false, "")
+        squareUserVideo.setUp(squareBean.video_json?.get(0)?.url ?: "", false, "")
         squareUserVideo.startPlayLogic()
     }
 

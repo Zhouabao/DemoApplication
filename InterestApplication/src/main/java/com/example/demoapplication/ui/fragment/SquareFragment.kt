@@ -1,6 +1,8 @@
 package com.example.demoapplication.ui.fragment
 
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,12 +25,14 @@ import com.example.demoapplication.presenter.SquarePresenter
 import com.example.demoapplication.presenter.view.SquareView
 import com.example.demoapplication.ui.activity.PublishActivity
 import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
+import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import com.example.demoapplication.ui.adapter.SquareFriendsAdapter
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.example.demoapplication.utils.ScrollCalculatorHelper
+import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.CommonItemDecoration
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
@@ -37,6 +41,7 @@ import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -74,14 +79,12 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     //请求广场的参数 TODO要更新tagid
     private val listParams by lazy {
         hashMapOf(
-//            "accid" to Constants.ACCID,
-//            "token" to Constants.TOKEN,
-            "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-            "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+            "accid" to UserManager.getAccid(),
+            "token" to UserManager.getToken(),
             "page" to page,
             "pagesize" to Constants.PAGESIZE,
             "_timestamp" to System.currentTimeMillis(),
-            "tagid" to 1
+            "tagid" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
         )
     }
 
@@ -157,7 +160,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         //限定范围为屏幕一半的上下偏移180
         val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
         val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
-        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.squareUserVideo, playTop, playBottom)
+        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
         squareDynamicRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
             var lastVisibleItem = 0
@@ -228,7 +231,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 R.id.audioPlayBtn -> {
                     if (currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
                         initAudio(position)
-                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0) ?: "").prepareMedia()
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
                         currPlayIndex = position
                     }
                     for (index in 0 until adapter.data.size) {
@@ -236,7 +239,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                             adapter.data[index].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
                         }
                     }
-                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
+                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE || squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {
                         mediaPlayer!!.startPlay()
                     } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {
                         mediaPlayer!!.resumePlay()
@@ -279,6 +282,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
             override fun onStop(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                currPlayIndex = -1
 //                adapter.notifyItemChanged(position)
                 adapter.notifyDataSetChanged()
                 mediaPlayer!!.resetMedia()
@@ -287,8 +291,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
             override fun onError(position: Int) {
                 toast("音频播放出错")
-                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
 //                adapter.notifyItemChanged(position)
+                currPlayIndex = -1
                 adapter.notifyDataSetChanged()
                 mediaPlayer!!.resetMedia()
                 mediaPlayer = null
@@ -303,6 +308,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             }
 
             override fun onPreparing(position: Int) {
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PREPARE
+                adapter.notifyDataSetChanged()
+
             }
 
             override fun onRelease(position: Int) {
@@ -386,14 +394,13 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     override fun onResume() {
         super.onResume()
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
-
 //        GSYVideoManager.onResume(false)
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-//        GSYVideoManager.releaseAllVideos()
+        GSYVideoManager.releaseAllVideos()
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
             mediaPlayer = null
@@ -408,7 +415,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         listParams["page"] = page
         adapter.data.clear()
         mPresenter.getSquareList(listParams, true)
-
         friendsAdapter.data.clear()
         mPresenter.getFrinedsList(friendsParams)
     }
@@ -517,6 +523,26 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun showLoading() {
         stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
+                if (data != null) {
+                    val position = data!!.getIntExtra("position", -1)
+                    val playState = data!!.getIntExtra("playState", -1)
+                    val playPosition = data!!.getIntExtra("playPosition", -1)
+//                    adapter.data[position].clloneState = true
+//                    adapter.notifyItemChanged(position)
+
+                    GSYVideoManager.releaseAllVideos()
+                    adapter.playState = playState
+                    adapter.playPosition = playPosition
+                    adapter.notifyItemChanged(position)
+                }
+            }
+        }
     }
 }
 

@@ -7,22 +7,20 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_loadingView="@layout/loading_layout"
         app:msv_errorView="@layout/error_layout"
-        app:msv_viewState="loading"
+        app:msv_viewState="content"
         android:id="@+id/stateview"
         app:msv_animateViewChanges="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     <FrameLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.fragment.MatchFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_marginBottom="20dp"

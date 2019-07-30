@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
+import android.view.animation.LinearInterpolator
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.blankj.utilcode.util.SPUtils
-import com.chad.library.adapter.base.BaseViewHolder
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.UpdateLabelEvent
@@ -21,14 +20,18 @@ import com.example.demoapplication.ui.activity.MatchDetailActivity
 import com.example.demoapplication.ui.adapter.MatchUserAdapter
 import com.example.demoapplication.ui.chat.MatchSucceedActivity
 import com.example.demoapplication.utils.UserManager
-import com.example.demoapplication.widgets.swipecard.OverLayCardLayoutManager
 import com.example.demoapplication.widgets.swipecard.RenRenCallback
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.fragment_match.*
-import kotlinx.android.synthetic.main.item_match_user.view.*
+import kotlinx.android.synthetic.main.fragment_match.btnChat
+import kotlinx.android.synthetic.main.fragment_match.btnDislike
+import kotlinx.android.synthetic.main.fragment_match.btnLike
+import kotlinx.android.synthetic.main.fragment_match.stateview
+import kotlinx.android.synthetic.main.fragment_match.tvLeftChatTime
+import kotlinx.android.synthetic.main.fragment_match1.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -39,8 +42,42 @@ import org.jetbrains.anko.support.v4.toast
  * 匹配页面(新版)
  * //todo 探探是把用戶存在本地數據庫的
  */
-class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener,
-    RenRenCallback.OnSwipeListener {
+class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
+    private var switch = false
+
+    override fun onCardDisappeared(view: View?, position: Int) {
+    }
+
+    override fun onCardDragging(direction: Direction?, ratio: Float) {
+        if (direction == Direction.Top && ratio > 0.7F && !switch) {
+            startActivity<MatchDetailActivity>("target_accid" to matchUserAdapter.data[manager.topPosition].accid)
+            switch = true
+        }
+    }
+
+    override fun onCardSwiped(direction: Direction?) {
+        if (direction == Direction.Left) {
+            params["target_accid"] = matchUserAdapter.data[manager.topPosition].accid ?: ""
+            mPresenter.dislikeUser(params)
+        } else if (direction == Direction.Right) {
+            params["target_accid"] = matchUserAdapter.data[manager.topPosition].accid ?: ""
+            mPresenter.likeUser(params)
+        }
+
+        //如果已经只剩5张了就请求数据
+        if (manager.topPosition == matchUserAdapter.data.size - 5) {
+            mPresenter.getMatchList(matchParams)
+        }
+    }
+
+    override fun onCardCanceled() {
+    }
+
+    override fun onCardAppeared(view: View?, position: Int) {
+    }
+
+    override fun onCardRewound() {
+    }
 
 
     //用户适配器
@@ -64,7 +101,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
 
     //    private val matchUserAdapter by lazy { CardAdapter() }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_match, container, false)
+        return inflater.inflate(R.layout.fragment_match1, container, false)
 
     }
 
@@ -75,6 +112,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
     }
 
     private val callback by lazy { RenRenCallback() }
+    private val manager by lazy { CardStackLayoutManager(activity!!, this) }
 
     private fun initView() {
         EventBus.getDefault().register(this)
@@ -86,10 +124,8 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
         btnDislike.setOnClickListener(this)
         btnLike.setOnClickListener(this)
         btnChat.setOnClickListener(this)
-        matchUserRv.layoutManager = OverLayCardLayoutManager(activity!!)
-        matchUserRv.adapter = matchUserAdapter
-        ItemTouchHelper(callback).attachToRecyclerView(matchUserRv)
-        callback.setSwipeListener(this)
+
+        initialize()
         mPresenter.getMatchList(matchParams)
         matchUserAdapter.setOnItemClickListener { _, view, position ->
             //保持始终是顶部item被点击到
@@ -104,21 +140,6 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
         }
     }
 
-
-    override fun onSwiped(adapterPosition: Int, direction: Int) {
-        if (direction == ItemTouchHelper.UP) {
-            startActivity<MatchDetailActivity>("target_accid" to matchUserAdapter.data[adapterPosition].accid)
-//            matchUserAdapter.data.add(adapterPosition, userList.removeAt(adapterPosition))
-        } else if (direction == ItemTouchHelper.LEFT) {
-            params["target_accid"] = matchUserAdapter.data[adapterPosition].accid ?: ""
-            mPresenter.dislikeUser(params)
-
-        } else if (direction == ItemTouchHelper.RIGHT) {
-            params["target_accid"] = matchUserAdapter.data[adapterPosition].accid ?: ""
-            mPresenter.likeUser(params)
-        }
-    }
-
     val params by lazy {
         hashMapOf<String, Any>(
             "accid" to UserManager.getAccid(),
@@ -127,30 +148,43 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
         )
     }
 
-    override fun onSwipeTo(viewHolder: RecyclerView.ViewHolder?, offset: Float) {
-        val holder = viewHolder as BaseViewHolder
-        if (offset < -100) {
-            holder.itemView.matchDislike.alpha = (Math.abs(offset) - 100) * 0.02f
-            holder.itemView.matchLike.alpha = 0F
-        } else if (offset > 100) {
-            holder.itemView.matchLike.alpha = (Math.abs(offset) - 100) * 0.02f
-            holder.itemView.matchDislike.alpha = 0F
-        } else {
-            holder.itemView.matchDislike.alpha = 0F
-            holder.itemView.matchLike.alpha = 0F
+    private fun initialize() {
+        //卡片排列方式
+        manager.setStackFrom(StackFrom.Bottom)
+        //最大可见数量
+        manager.setVisibleCount(3)
+        //两个卡片之间的间隔
+        manager.setTranslationInterval(13.0f)
+        //最大的缩放间隔
+        manager.setScaleInterval(0.95f)
+        //卡片滑出飞阈值
+        manager.setSwipeThreshold(0.3f)
+        //横向纵向的旋转角度
+        manager.setMaxDegree(20.0f)
+        //滑动的方向
+        manager.setDirections(Direction.HORIZONTAL)
+        manager.setCanScrollHorizontal(true)
+        manager.setCanScrollVertical(true)
+        manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
+        manager.setOverlayInterpolator(LinearInterpolator())
+        card_stack_view.layoutManager = manager
+        card_stack_view.adapter = matchUserAdapter
+        card_stack_view.itemAnimator.apply {
+            if (this is DefaultItemAnimator) {
+                supportsChangeAnimations = false
+            }
         }
-
     }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnDislike -> {
-                callback.toLeft(matchUserRv)
+                callback.toLeft(card_stack_view)
                 params["target_accid"] = matchUserAdapter.data[matchUserAdapter.data.size - 1].accid ?: ""
                 mPresenter.dislikeUser(params)
             }
             R.id.btnLike -> {
-                callback.toRight(matchUserRv)
+                callback.toRight(card_stack_view)
                 params["target_accid"] = matchUserAdapter.data[matchUserAdapter.data.size - 1].accid ?: ""
                 mPresenter.likeUser(params)
             }
@@ -214,6 +248,10 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
         EventBus.getDefault().unregister(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        switch = false
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
@@ -221,5 +259,4 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
         //这个地方还要默认设置选中第一个标签来更新数据
         mPresenter.getMatchList(matchParams)
     }
-
 }

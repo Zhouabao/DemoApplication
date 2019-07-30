@@ -1,14 +1,14 @@
 package com.example.demoapplication.ui.adapter
 
 import android.app.Activity
-import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.ctetin.expandabletextviewlibrary.app.StatusType
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
@@ -17,9 +17,9 @@ import com.example.demoapplication.player.UpdateVoiceTimeThread
 import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
+import com.example.demoapplication.utils.UriUtils
 import com.kotlin.base.ext.onClick
 import com.shuyu.gsyvideoplayer.GSYVideoManager
-import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import kotlinx.android.synthetic.main.item_list_square_audio.view.*
 import kotlinx.android.synthetic.main.item_list_square_pic.view.*
@@ -35,14 +35,14 @@ import org.jetbrains.anko.startActivity
  *    date   : 2019/6/2616:27
  *    desc   : 多状态的广场
  *    version: 1.0
+ *     playState:Int = -1  //0停止  1播放中  2暂停
+ *     playPosition播放的进度
  */
-class MultiListSquareAdapter(data: MutableList<SquareBean>) :
+class MultiListSquareAdapter(data: MutableList<SquareBean>, var playState: Int = -1, var playPosition: Int = 0) :
     BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
     companion object {
         val TAG = "RecyclerView2List"
     }
-
-    private val gsyVideoOptionBuilder by lazy { GSYVideoOptionBuilder() }
 
     init {
         addItemType(SquareBean.PIC, R.layout.item_list_square_pic)
@@ -68,17 +68,22 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>) :
         holder.addOnClickListener(R.id.squareChatBtn1)
 
         //todo 此处要点击展开所有内容
-        holder.itemView.squareContent1.initWidth(
-            (ScreenUtils.getScreenWidth() - SizeUtils.applyDimension(
-                27F,
-                TypedValue.COMPLEX_UNIT_DIP
-            )).toInt()
-        )
-//        holder.itemView.squareContent1.setOriginalText(item.descr ?: "")
+        if (item.descr.isNullOrEmpty()) {
+            holder.itemView.squareContent1.visibility = View.GONE
+        } else {
+            holder.itemView.squareContent1.visibility = View.VISIBLE
+            holder.itemView.squareContent1.setContent(item.descr ?: "")
+            holder.itemView.squareContent1.setExpandOrContractClickListener {
+                when (it) {
+                    StatusType.STATUS_CONTRACT->
+                        holder.itemView.squareContent1.setCurrStatus(StatusType.STATUS_EXPAND)
+                    StatusType.STATUS_EXPAND->
+                        holder.itemView.squareContent1.setCurrStatus(StatusType.STATUS_CONTRACT)
+                }
+            }
+        }
 
         holder.itemView.squareUserName1.text = item.nickname ?: ""
-        holder.itemView.squareContent1.setOriginalText(item.descr ?: "")
-        holder.itemView.squareContent1.setHasAnimation(true)
 
         holder.itemView.squareDianzanBtn1.text = "${item.like_cnt}"
         holder.itemView.squareCommentBtn1.text = "${item.comment_cnt}"
@@ -88,10 +93,7 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>) :
             View.GONE
         }
         GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.squareUserIv1)
-        holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus("市\t\t").plus(item.out_time)
-//                if (!item.create_time.isNullOrEmpty()) {
-//                    TimeUtils.getFitTimeSpan(TimeUtils.getNowString(), item.create_time, 2)
-//                } else ""
+        holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus("\t\t").plus(item.out_time)
 
 
         when (holder.itemViewType) {
@@ -114,28 +116,31 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>) :
 
             }
             SquareBean.VIDEO -> {
+                //增加封面
+                val imageview = ImageView(mContext)
+                imageview.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                GlideUtil.loadImg(mContext, item.cover_url ?: "", imageview)
+                if (imageview.parent != null) {
+                    val vg = imageview.parent as ViewGroup
+                    vg.removeView(imageview)
+                }
+                holder.itemView.squareUserVideo.thumbImageView = imageview
 
-//                if (SwitchUtil.sSwitchVideo != null) {
-//                    SwitchUtil.clonePlayState(holder.itemView.squareUserVideo)
-//                    holder.itemView.squareUserVideo.setSurfaceToPlay()
-//                }
                 holder.itemView.squareUserVideo.detail_btn.setOnClickListener {
                     if (holder.itemView.squareUserVideo.isInPlayingState) {
                         SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
                         holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(holder.itemView.squareUserVideo)
-                        //fixme 页面跳转是，元素共享，效果会有一个中间中间控件的存在
-                        //fixme 这时候中间控件 CURRENT_STATE_PLAYING，会触发 startProgressTimer
-                        //FIXME 但是没有cancel
                         SquarePlayDetailActivity.startActivity(
                             mContext as Activity,
                             holder.itemView.squareUserVideo,
                             item,
                             holder.layoutPosition
                         )
+                        item.clloneState = true
                     }
                 }
-                holder.itemView.squareUserVideo.setPlayTag(TAG)
-                holder.itemView.squareUserVideo.setPlayPosition(holder.layoutPosition)
+                holder.itemView.squareUserVideo.playTag = TAG
+                holder.itemView.squareUserVideo.playPosition = holder.layoutPosition
                 holder.itemView.squareUserVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
                     override fun onPrepared(url: String?, vararg objects: Any?) {
                         if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen) {
@@ -156,39 +161,52 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>) :
                     }
 
                 })
-//                SwitchUtil.optionPlayer(holder.itemView.squareUserVideo, item.video_json?.get(0) ?: "", true, "")
+
                 SwitchUtil.optionPlayer(
                     holder.itemView.squareUserVideo,
-                    item.video_json?.get(0) ?: "",
+                    item.video_json?.get(0)?.url ?: "",
                     false,
                     ""
                 )
                 holder.itemView.squareUserVideo.setUp(
-                    item.video_json?.get(0) ?: "",
+                    item.video_json?.get(0)?.url ?: "",
                     false,
                     null,
                     null,
                     ""
                 )
             }
+
             SquareBean.AUDIO -> {
                 //点击播放
                 holder.addOnClickListener(R.id.audioPlayBtn)
                 if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) { //播放中
                     holder.itemView.voicePlayView.start()
-                    UpdateVoiceTimeThread.getInstance("03:40", holder.itemView.audioTime).start()
+                    UpdateVoiceTimeThread.getInstance(
+                        item.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
+                        holder.itemView.audioTime
+                    ).start()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
                 } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {//暂停中
                     holder.itemView.voicePlayView.stop()
-                    UpdateVoiceTimeThread.getInstance("03:40", holder.itemView.audioTime).pause()
+                    UpdateVoiceTimeThread.getInstance(
+                        item.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
+                        holder.itemView.audioTime
+                    ).pause()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_STOP) {//停止中
+                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_STOP || item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {//停止中
                     holder.itemView.voicePlayView.stop()
-                    UpdateVoiceTimeThread.getInstance("03:40", holder.itemView.audioTime).stop()
+                    UpdateVoiceTimeThread.getInstance(
+                        item.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
+                        holder.itemView.audioTime
+                    ).stop()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
                     holder.itemView.voicePlayView.stop()
-                    UpdateVoiceTimeThread.getInstance("03:40", holder.itemView.audioTime).stop()
+                    UpdateVoiceTimeThread.getInstance(
+                        item.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
+                        holder.itemView.audioTime
+                    ).stop()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 }
                 holder.itemView.squareUserAudio.onClick {
@@ -198,6 +216,5 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>) :
         }
 
     }
-
 
 }

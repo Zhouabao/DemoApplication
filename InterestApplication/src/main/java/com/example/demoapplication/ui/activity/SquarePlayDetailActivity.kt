@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
@@ -29,11 +28,9 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
-import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import kotlinx.android.synthetic.main.activity_square_play_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
-import kotlinx.android.synthetic.main.switch_video.view.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
@@ -44,8 +41,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     View.OnClickListener {
 
     private val squareBean: SquareBean by lazy { intent.getSerializableExtra("squareBean") as SquareBean }
-    //外部辅助的旋转，帮助全屏
-    private var orientationUtils: OrientationUtils? = null
 
     companion object {
         public val OPTION_VIEW = "VIEW"
@@ -91,33 +86,17 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         detailPlayContent.setOnClickListener(this)
         //發送評論
         detailPlayCommentSend.setOnClickListener(this)
-        detailPlayVideo.titleTextView.visibility = View.GONE
-        detailPlayVideo.backButton.visibility = View.VISIBLE
-        detailPlayVideo.detail_btn.visibility = View.GONE
 
-        //外部辅助的旋转，帮助全屏
-        orientationUtils = OrientationUtils(this, detailPlayVideo)
-        //初始化不打开外部的旋转
-        orientationUtils!!.isEnable = false
-//        SwitchUtil.optionPlayer(detailPlayVideo, squareBean.video_json?.get(0) ?: "", true, "这是title")
         SwitchUtil.optionPlayer(
             detailPlayVideo,
-            squareBean.video_json?.get(0) ?: "",
+            squareBean.video_json?.get(0)?.url ?: "",
             false,
             ""
         )
 
         SwitchUtil.clonePlayState(detailPlayVideo)
         GSYVideoManager.instance().isNeedMute = false
-
-        detailPlayVideo.setIsTouchWiget(true)
         detailPlayVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
-            override fun onPrepared(url: String?, vararg objects: Any?) {
-                super.onPrepared(url, *objects)
-                //开始播放了才能旋转和全屏
-                orientationUtils!!.setEnable(true)
-            }
-
             override fun onClickBlank(url: String?, vararg objects: Any?) {
                 super.onClickBlank(url, *objects)
                 if (videoCover.visibility == View.VISIBLE) {
@@ -126,25 +105,8 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                 } else {
                     videoCover.visibility = View.VISIBLE
                     btnBack.visibility = View.VISIBLE
-
-                }
-
-            }
-
-            override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
-                super.onQuitFullscreen(url, *objects)
-                if (orientationUtils != null) {
-                    orientationUtils!!.backToProtVideo()
                 }
             }
-        })
-
-
-        detailPlayVideo.fullscreenButton.setOnClickListener(View.OnClickListener {
-            //直接横屏
-            orientationUtils!!.resolveByClick()
-            //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-            detailPlayVideo.startWindowFullscreen(this, false, false)
         })
 
         detailPlayVideo.setSurfaceToPlay()
@@ -154,7 +116,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     private fun initData() {
         GlideUtil.loadAvatorImg(this, squareBean.avatar ?: "", detailPlayUserAvatar)
-        detailPlayUserLocationAndTime.text = (squareBean.city_name ?: "").plus("市\t\t").plus(squareBean.out_time)
+        detailPlayUserLocationAndTime.text = (squareBean.city_name ?: "").plus("\t\t").plus(squareBean.out_time)
         detailPlayUserName.text = squareBean.nickname ?: ""
         detailPlayContent.text = squareBean.descr ?: ""
 
@@ -326,52 +288,35 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         }
     }
 
-    private val isPlay = true
-    private var isPause: Boolean = false
-
 
     override fun onBackPressed() {
-        if (orientationUtils != null) {
-            orientationUtils!!.backToProtVideo()
-        }
-        if (GSYVideoManager.backFromWindowFull(this)) {
-            return
-        }
-        detailPlayVideo.getGSYVideoManager().setListener(detailPlayVideo.getGSYVideoManager().listener())
-        SwitchUtil.savePlayState(detailPlayVideo)
-        // EventBus.getDefault().post(UpdateLabelEvent(intent.getIntExtra("position", -1)))
+//        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.listener())
+//        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.lastListener())
+//
+//        SwitchUtil.savePlayState(detailPlayVideo)
+//        supportFinishAfterTransition()
         super.onBackPressed()
     }
 
     override fun onPause() {
-        detailPlayVideo.onVideoPause()
         super.onPause()
-        isPause = true
+        detailPlayVideo.onVideoPause()
     }
 
     override fun onResume() {
-        detailPlayVideo.onVideoResume(false)
         super.onResume()
-        isPause = false
+        detailPlayVideo.onVideoResume(false)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.getGSYVideoManager().lastListener())
+        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.lastListener())
         detailPlayVideo.gsyVideoManager.setLastListener(null)
+        detailPlayVideo.release()
         GSYVideoManager.releaseAllVideos()
-        if (orientationUtils != null)
-            orientationUtils!!.releaseListener()
         SwitchUtil.release()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        //如果旋转了就全屏
-        if (isPlay && !isPause) {
-            detailPlayVideo.onConfigurationChanged(this, newConfig, orientationUtils, true, true)
-        }
-    }
 
     override fun onGetRecentlySquaresResults(mutableList: MutableList<SquareBean?>) {
     }
