@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.ctetin.expandabletextviewlibrary.app.StatusType
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
@@ -73,14 +72,6 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>, var playState: Int =
         } else {
             holder.itemView.squareContent1.visibility = View.VISIBLE
             holder.itemView.squareContent1.setContent(item.descr ?: "")
-            holder.itemView.squareContent1.setExpandOrContractClickListener {
-                when (it) {
-                    StatusType.STATUS_CONTRACT->
-                        holder.itemView.squareContent1.setCurrStatus(StatusType.STATUS_EXPAND)
-                    StatusType.STATUS_EXPAND->
-                        holder.itemView.squareContent1.setCurrStatus(StatusType.STATUS_CONTRACT)
-                }
-            }
         }
 
         holder.itemView.squareUserName1.text = item.nickname ?: ""
@@ -109,7 +100,7 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>, var playState: Int =
                     }
                 } else {
                     holder.itemView.squareUserPics1.visibility = View.GONE
-                    holder.itemView.squareContent1.onClick {
+                    holder.itemView.onClick {
                         mContext.startActivity<SquarePlayListDetailActivity>("item" to item)
                     }
                 }

@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.baselibrary.widgets.RoundImageView
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/ivSquare"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_width="108dp"
-        android:src="@drawable/img_avatar_07"
-        android:scaleType="centerCrop"
-        android:layout_height="108dp"
-        app:borderRadius="5dp"
-        app:type="round">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-</com.example.baselibrary.widgets.RoundImageView>
+    <com.example.baselibrary.widgets.RoundImageView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ivSquare"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="108dp"
+            android:src="@drawable/img_avatar_07"
+            android:scaleType="centerCrop"
+            android:layout_height="108dp"
+            app:borderRadius="5dp"
+            app:type="round">
+
+    </com.example.baselibrary.widgets.RoundImageView>
+
+    <ImageView
+            android:id="@+id/squareVideoType"
+            android:visibility="gone"
+            android:src="@drawable/icon_play_white"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+</RelativeLayout>

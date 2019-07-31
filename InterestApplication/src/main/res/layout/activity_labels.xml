@@ -72,25 +72,37 @@
     </LinearLayout>
 
 
-    <ScrollView
-            android:layout_marginTop="16dp"
+    <com.kennyc.view.MultiStateView
+            android:id="@+id/stateview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnBack">
+            app:layout_constraintTop_toBottomOf="@id/btnBack"
+            app:msv_emptyView="@layout/empty_layout"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="loading">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/labelRecyclerview"
-                android:paddingTop="16dp"
+        <ScrollView
                 android:layout_width="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_height="match_parent"
-                app:layout_constraintLeft_toLeftOf="parent">
+                android:layout_height="wrap_content"
+                >
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/labelRecyclerview"
+                    android:paddingTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="match_parent"
+                    app:layout_constraintLeft_toLeftOf="parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
 
 
-    </ScrollView>
+        </ScrollView>
+    </com.kennyc.view.MultiStateView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.SettingsActivity">
+
+    <LinearLayout
+            android:id="@+id/llTitle"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="24dp"
+                android:src="@drawable/icon_return"
+                android:layout_height="24dp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/hotT1"
+                android:layout_marginLeft="12dp"
+                android:text="设置"
+                android:textColor="@color/colorBlackTitle"
+                android:textSize="20sp"
+                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/t1"
+            android:text="热门评论"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:background="@color/colorDivider"
+            android:layout_width="match_parent"
+            android:textColor="@color/colorGrayText"
+            android:textSize="12sp"
+            android:layout_height="26dp"
+            app:layout_constraintTop_toBottomOf="@id/llTitle"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:text="屏蔽通讯录"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/switchContacts"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/switchContacts"/>
+
+    <Switch
+            android:id="@+id/switchContacts"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:showText="false"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/t1"
+            />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:text="屏蔽距离"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/switchDistance"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/switchDistance"/>
+
+    <Switch
+            android:id="@+id/switchDistance"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:showText="false"
+            android:layout_marginTop="20dp"
+            app:layout_constraintRight_toRightOf="@id/switchContacts"
+            app:layout_constraintTop_toBottomOf="@id/switchContacts"
+            />
+
+    <TextView
+            android:id="@+id/blackListBtn"
+            android:layout_width="0dp"
+            android:text="黑名单"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/icon_more_right"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintTop_toBottomOf="@id/switchDistance"
+            />
+
+
+    <TextView
+            android:id="@+id/t2"
+            android:text="通用设置"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorDivider"
+            android:layout_width="match_parent"
+            android:textColor="@color/colorGrayText"
+            android:textSize="12sp"
+            android:layout_height="26dp"
+            app:layout_constraintTop_toBottomOf="@id/blackListBtn"/>
+
+    <TextView
+            android:id="@+id/msgNotificate"
+            android:layout_width="0dp"
+            android:text="消息提醒"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/icon_more_right"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintTop_toBottomOf="@id/t2"
+            />
+
+    <TextView
+            android:id="@+id/feedBack"
+            android:layout_width="0dp"
+            android:text="意见反馈"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/icon_more_right"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintTop_toBottomOf="@id/msgNotificate"
+            />
+
+    <TextView
+            android:id="@+id/helpCenter"
+            android:layout_width="0dp"
+            android:text="帮助"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/icon_more_right"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintTop_toBottomOf="@id/feedBack"
+            />
+
+    <TextView
+            android:id="@+id/aboutUs"
+            android:layout_width="0dp"
+            android:text="关于"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/icon_more_right"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintTop_toBottomOf="@id/helpCenter"
+            />
+
+    <TextView
+            android:visibility="gone"
+            android:id="@+id/newVersionTip"
+            android:layout_marginRight="40dp"
+            android:text="有版本更新"
+            android:textColor="@color/colorOrange"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/aboutUs"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/aboutUs"/>
+
+    <TextView
+            android:id="@+id/clearData"
+            android:layout_width="0dp"
+            android:text="清理缓存"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/icon_more_right"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintTop_toBottomOf="@id/aboutUs"
+            />
+
+    <TextView
+            android:id="@+id/cacheDataSize"
+            android:layout_marginRight="40dp"
+            android:text="100M"
+            android:textColor="#ffc8c8c8"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/clearData"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/clearData"/>
+
+
+    <TextView
+            android:id="@+id/loginOutBtn"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_rectangle_black_login_out"
+            android:textColor="@color/colorWhite"
+            android:text="退出登录"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_width="316dp"
+            android:layout_height="46dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

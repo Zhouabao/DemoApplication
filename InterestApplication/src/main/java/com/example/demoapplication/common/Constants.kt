@@ -15,7 +15,7 @@ object Constants {
     //基地址末尾
     const val END_BASE_URL = "/v1.json"
     //pagesize
-    const val PAGESIZE = 10
+    const val PAGESIZE = 15
     const val LABEL_MAX_COUNT = 10
     const val TOKEN = "368b7cbd9de3ee4dc1f90f1c24ff3a10"
     const val ACCID = "664eb259a43464123843abbc7488b02b"

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<de.hdodenhof.circleimageview.CircleImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/visitCoverImg"
+        android:layout_width="24dp"
+        android:src="@drawable/img_avatar_07"
+        android:scaleType="centerCrop"
+        android:layout_height="24dp"
+        >
+
+</de.hdodenhof.circleimageview.CircleImageView>
+

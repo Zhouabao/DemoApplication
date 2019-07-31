@@ -184,4 +184,28 @@ class SquarePresenter : BasePresenter<SquareView>() {
     }
 
 
+    /**
+     * 广场举报
+     */
+    fun removeMySquare(params: HashMap<String, Any>, position: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .removeMySquare(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onRemoveMySquareResult(true, position)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onRemoveMySquareResult(false, position)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                    mView.onRemoveMySquareResult(false, position)
+                }
+            })
+    }
 }

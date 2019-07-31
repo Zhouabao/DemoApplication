@@ -348,6 +348,29 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             moreActionDialog.collect.text = "取消收藏"
             moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
         }
+
+
+        if (adapter.data[position].accid == UserManager.getAccid()) {
+            moreActionDialog.llDelete.visibility = View.VISIBLE
+            moreActionDialog.llJubao.visibility = View.GONE
+            moreActionDialog.llCollect.visibility = View.GONE
+        } else {
+            moreActionDialog.llDelete.visibility = View.GONE
+            moreActionDialog.llJubao.visibility = View.VISIBLE
+            moreActionDialog.llCollect.visibility = View.VISIBLE
+        }
+        moreActionDialog.llDelete.onClick {
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "square_id" to adapter.data[position].id!!
+            )
+            mPresenter.removeMySquare(params, position)
+            moreActionDialog.dismiss()
+
+        }
+
+
         moreActionDialog.llCollect.onClick {
 
             //发起收藏请求
@@ -383,6 +406,13 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             moreActionDialog.dismiss()
         }
 
+    }
+
+    override fun onRemoveMySquareResult(result: Boolean, position: Int) {
+        if (result) {
+            adapter.data.removeAt(position)
+            adapter.notifyItemRemoved(position)
+        }
     }
 
 

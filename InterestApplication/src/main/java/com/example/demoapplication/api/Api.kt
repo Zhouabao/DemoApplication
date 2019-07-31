@@ -67,7 +67,6 @@ interface Api {
     fun uploadTagLists(@FieldMap params: HashMap<String, String>, @Field("tags[]") idList: Array<Int?>): Observable<BaseResp<LoginBean?>>
 
 
-
     /************************广场列表*****************************/
 
     /**
@@ -118,7 +117,6 @@ interface Api {
     fun getSquareCollect(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
-
     /**
      * 广场举报
      */
@@ -157,16 +155,12 @@ interface Api {
     fun commentReport(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
-
     /**
      * 评论举报
      */
     @FormUrlEncoded
     @POST("square/announce${Constants.END_BASE_URL}")
-    fun squareAnnounce(@FieldMap params: MutableMap<String, Any>, @Field("tags[]")tagList: Array<Int?>,@Field("comment[]") keyList: Array<String?>?): Observable<BaseResp<Any?>>
-
-
-
+    fun squareAnnounce(@FieldMap params: MutableMap<String, Any>, @Field("tags[]") tagList: Array<Int?>, @Field("comment[]") keyList: Array<String?>?): Observable<BaseResp<Any?>>
 
 
     /**********************匹配**************************/
@@ -179,14 +173,12 @@ interface Api {
     fun getMatchList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchListBean?>>
 
 
-
     /**
      * 匹配首页数据
      */
     @FormUrlEncoded
     @POST("member_info/usrinfo${Constants.END_BASE_URL}")
     fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchBean?>>
-
 
 
     /**
@@ -197,14 +189,12 @@ interface Api {
     fun dontLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
-
     /**
      * 喜欢、右滑
      */
     @FormUrlEncoded
     @POST("relationship/addLike${Constants.END_BASE_URL}")
     fun addLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
-
 
 
     /**
@@ -215,16 +205,12 @@ interface Api {
     fun reportUser(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
-
-
     /**
      * 拉黑用户
      */
     @FormUrlEncoded
     @POST("relationship/shieldingFriend${Constants.END_BASE_URL}")
     fun shieldingFriend(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
-
 
 
     /**
@@ -235,8 +221,6 @@ interface Api {
     fun dissolutionFriend(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
-
-
     /**
      * 获取用户相册
      */
@@ -245,14 +229,60 @@ interface Api {
     fun squarePhotosList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<BlockListBean?>>
 
 
-
-
     /**
      * 获取用户广场列表
      */
     @FormUrlEncoded
     @POST("square/someoneSquare${Constants.END_BASE_URL}")
     fun someoneSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
+
+
+    /*******************************个人中心*****************************************/
+    /**
+     * 个人中心
+     */
+    @FormUrlEncoded
+    @POST("member_info/myInfo${Constants.END_BASE_URL}")
+    fun myInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
+
+    /**
+     * 获取会员支付方式
+     */
+    @FormUrlEncoded
+    @POST("pay_order/productLists${Constants.END_BASE_URL}")
+    fun productLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
+
+
+    /**
+     * 系统推荐问题
+     */
+    @FormUrlEncoded
+    @POST("Questions_Circle/promoteQuestion${Constants.END_BASE_URL}")
+    fun promoteQuestion(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
+
+
+    /**
+     * 我的动态
+     */
+    @FormUrlEncoded
+    @POST("square/aboutMeSquare${Constants.END_BASE_URL}")
+    fun aboutMeSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
+
+
+    /**
+     * 删除我的动态
+     */
+    @FormUrlEncoded
+    @POST("square/removeMySquare${Constants.END_BASE_URL}")
+    fun removeMySquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 看过我的
+     */
+    @FormUrlEncoded
+    @POST("memberInfo/myVisitedList${Constants.END_BASE_URL}")
+    fun myVisitedList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<VisitorBean>?>>
 
 
     @GET

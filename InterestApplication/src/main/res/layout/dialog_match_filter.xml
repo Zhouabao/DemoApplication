@@ -64,18 +64,18 @@
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="@id/filterAge"
-            app:rsb_mode="range"
-            app:rsb_min_interval="2"
-            app:rsb_gravity="center"
-            app:rsb_min="18"
-            app:rsb_max="30"
-            app:rsb_thumb_drawable="@drawable/seekbar_thumb"
-            app:rsb_progress_height="8dp"
             app:layout_constraintStart_toStartOf="@id/tv1"
             app:layout_constraintTop_toBottomOf="@id/tv2"
-            app:rsb_progress_drawable_default="@drawable/color_progress_age_background"
+            app:rsb_gravity="center"
+            app:rsb_max="30"
+            app:rsb_min="18"
+            app:rsb_min_interval="2"
+            app:rsb_mode="range"
             app:rsb_progress_drawable="@drawable/color_progress_age"
-    />
+            app:rsb_progress_drawable_default="@drawable/color_progress_age_background"
+            app:rsb_progress_height="8dp"
+            app:rsb_thumb_drawable="@drawable/seekbar_thumb"
+            />
 
 
     <TextView
@@ -108,8 +108,7 @@
             android:id="@+id/switchSameCity"
             android:layout_width="48dp"
             android:layout_height="24dp"
-            android:thumb="@drawable/switch_button_thumb"
-            android:track="@drawable/selector_switch_ios_track"
+            android:showText="false"
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv4"/>
 
@@ -151,8 +150,7 @@
             android:layout_width="48dp"
             android:layout_height="24dp"
             android:checked="true"
-            android:thumb="@drawable/switch_button_thumb"
-            android:track="@drawable/selector_switch_ios_track"
+            android:showText="false"
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv6"/>
 
@@ -173,8 +171,7 @@
             android:layout_width="48dp"
             android:layout_height="24dp"
             android:checked="true"
-            android:thumb="@drawable/switch_button_thumb"
-            android:track="@drawable/selector_switch_ios_track"
+            android:showText="false"
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv7"/>
 

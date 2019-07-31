@@ -59,7 +59,7 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
 
 
     public fun pausePlay() {
-        if (!pause && mediaPlayer!!.isPlaying) {
+        if (!pause && mediaPlayer != null && mediaPlayer!!.isPlaying) {
             pause = true
             mediaPlayer!!.pause()
         }
@@ -69,7 +69,7 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
 
     public fun resumePlay() {
         pause = false
-        mediaPlayer!!.start()
+        mediaPlayer?.start()
         onPlayingListener.onPlay(position)
     }
 

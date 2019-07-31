@@ -33,6 +33,16 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.MyCommentActivity">
+        </activity>
+        <activity android:name=".ui.activity.MyVisitActivity">
+        </activity>
+        <activity android:name=".ui.activity.MyCollectionEtcActivity">
+        </activity>
+        <activity android:name=".ui.activity.MyQuestionActivity">
+        </activity>
+        <activity android:name=".ui.activity.SettingsActivity">
+        </activity>
         <activity android:name=".ui.activity.UserCenterActivity">
         </activity>
         <activity android:name=".ui.activity.LocationActivity">
@@ -95,8 +105,8 @@
         <activity
                 android:name=".ui.activity.MainActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:theme="@style/Theme.AppCompat.Transitions"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/Theme.AppCompat.Transitions">
         </activity>
 
         <meta-data

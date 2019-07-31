@@ -13,7 +13,7 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/listRefresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/colorWhite"
             app:srlEnableLoadMore="true"
             app:srlEnableLoadMoreWhenContentNotFull="true"

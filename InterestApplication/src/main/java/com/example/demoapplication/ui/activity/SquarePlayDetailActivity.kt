@@ -2,7 +2,6 @@ package com.example.demoapplication.ui.activity
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -13,6 +12,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
@@ -22,6 +22,7 @@ import com.example.demoapplication.presenter.view.SquarePlayDetailView
 import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
+import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -155,6 +156,27 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             moreActionDialog.collect.text = "取消收藏"
             moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
         }
+
+        if (squareBean.accid == UserManager.getAccid()) {
+            moreActionDialog.llDelete.visibility = View.VISIBLE
+            moreActionDialog.llJubao.visibility = View.GONE
+            moreActionDialog.llCollect.visibility = View.GONE
+        } else {
+            moreActionDialog.llDelete.visibility = View.GONE
+            moreActionDialog.llJubao.visibility = View.VISIBLE
+            moreActionDialog.llCollect.visibility = View.VISIBLE
+        }
+        moreActionDialog.llDelete.onClick {
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "square_id" to squareBean.id!!
+            )
+            mPresenter.removeMySquare(params, position)
+            moreActionDialog.dismiss()
+
+        }
+
         moreActionDialog.llShare.onClick {
             showTranspondDialog(position)
         }
@@ -175,20 +197,18 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             mPresenter.getSquareCollect(params, position)
         }
         moreActionDialog.llJubao.onClick {
-            //todo 发起举报请求
             AlertDialog.Builder(this)
-                .setNegativeButton("取消举报", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface, p1: Int) {
-                        p0.cancel()
-                    }
-                })
-                .setPositiveButton("确认举报", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        //todo 举报
-                        toast("已举报$position")
-                    }
-
-                })
+                .setNegativeButton("取消举报") { p0, p1 -> p0.cancel() }
+                .setPositiveButton("确认举报") { p0, p1 ->
+                    mPresenter.getSquareReport(
+                        hashMapOf(
+                            "accid" to UserManager.getAccid(),
+                            "token" to UserManager.getToken(),
+                            "square_id" to squareBean.id!!,
+                            "_timestamp" to System.currentTimeMillis()
+                        )
+                    )
+                }
                 .setTitle("举报")
                 .setMessage("是否确认举报该动态？")
                 .show()
@@ -199,6 +219,21 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     }
 
+    override fun onRemoveMySquareResult(b: Boolean, position: Int) {
+        if (b) {
+            ToastUtils.showShort("删除动态成功！")
+            finish()
+        }
+
+    }
+
+    override fun onGetSquareReport(t: Boolean) {
+        if (t) {
+            ToastUtils.showShort("举报成功！")
+        } else {
+            ToastUtils.showShort("举报失败！")
+        }
+    }
 
     private val transpondDialog by lazy { TranspondDialog(this) }
 

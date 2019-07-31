@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.MyQuestionActivity">
+
+    <LinearLayout
+            android:id="@+id/llTitle"
+            android:background="@drawable/gradient_vip_charge_bg_0dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="24dp"
+                android:src="@drawable/icon_back_white"
+                android:layout_height="24dp"
+                android:scaleType="center"
+                android:layout_marginLeft="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/hotT1"
+                android:layout_marginLeft="12dp"
+                android:text="问题设置"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+    </LinearLayout>
+
+    <com.kennyc.view.MultiStateView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTitle"
+            app:msv_emptyView="@layout/empty_layout"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="content">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl1"
+                android:layout_width="match_parent"
+                android:paddingTop="10dp"
+                android:background="@drawable/gradient_vip_charge_bg_0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llTitle"
+                >
+
+
+            <TextView
+                    android:id="@+id/t1"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    android:lineSpacingMultiplier="1.5"
+                    android:text="有趣有用的问题的设置能让聊天更有效轻松哦，可以拖拽对问题进行排序:)"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/questionRv"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@id/t1"
+                    app:layout_constraintRight_toRightOf="@id/t1"
+                    app:layout_constraintTop_toBottomOf="@id/t1"/>
+
+
+            <TextView
+                    android:id="@+id/t2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:text="推荐问题"
+                    android:textStyle="bold"
+                    android:background="@color/colorWhite"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorBlackTitle"
+                    android:textSize="16sp"
+                    android:paddingTop="20dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/questionRv"/>
+
+            <TextView
+                    android:id="@+id/newQuestionBtn"
+                    android:text="换一批"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="14sp"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:gravity="center"
+                    android:drawableLeft="@drawable/icon_more_right"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@id/t2"
+                    app:layout_constraintRight_toRightOf="parent"
+                    />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/allQuestions"
+                    android:background="@color/colorWhite"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:paddingTop="20dp"
+                    android:paddingLeft="15dp"
+                    android:orientation="vertical"
+                    android:paddingRight="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/t2"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.kennyc.view.MultiStateView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

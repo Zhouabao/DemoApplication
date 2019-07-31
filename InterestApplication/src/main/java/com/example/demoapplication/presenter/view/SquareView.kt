@@ -22,7 +22,7 @@ interface SquareView : BaseView {
     fun onGetSquareCollectResult(position: Int, result: BaseResp<Any?>?)
 
     fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int)
-
+    fun onRemoveMySquareResult(result: Boolean, position: Int)
 
 
 }

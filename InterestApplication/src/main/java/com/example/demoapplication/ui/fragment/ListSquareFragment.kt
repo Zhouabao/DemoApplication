@@ -78,6 +78,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+            params["page"] = page
             mPresenter.getSomeoneSquare(params)
         }
 
@@ -103,7 +104,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         //限定范围为屏幕一半的上下偏移180
         val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
         val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
-        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo,R.id.squareUserVideo, playTop, playBottom)
+        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
         listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
             var lastVisibleItem = 0
@@ -182,7 +183,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                             adapter.data[index].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
                         }
                     }
-                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
+                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE || squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {
                         mediaPlayer!!.startPlay()
                     } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {
                         mediaPlayer!!.resumePlay()
@@ -214,6 +215,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             adapter.data.clear()
             listRefresh.setNoMoreData(false)
             page = 1
+            params["page"] = page
             mPresenter.getSomeoneSquare(params)
         }
     }
@@ -291,6 +293,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
+        params["page"] = page
         mPresenter.getSomeoneSquare(params)
     }
 
@@ -327,7 +330,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
             override fun onError(position: Int) {
                 toast("音频播放出错")
-                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 currPlayIndex = -1
 //                adapter.notifyItemChanged(position)
                 adapter.notifyDataSetChanged()
@@ -380,6 +383,32 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             moreActionDialog.collect.text = "取消收藏"
             moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
         }
+        if (adapter.data[position].accid == UserManager.getAccid()) {
+            moreActionDialog.llDelete.visibility = View.VISIBLE
+        } else {
+            moreActionDialog.llDelete.visibility = View.GONE
+        }
+
+        if (adapter.data[position].accid == UserManager.getAccid()) {
+            moreActionDialog.llDelete.visibility = View.VISIBLE
+            moreActionDialog.llJubao.visibility = View.GONE
+            moreActionDialog.llCollect.visibility = View.GONE
+        } else {
+            moreActionDialog.llDelete.visibility = View.GONE
+            moreActionDialog.llJubao.visibility = View.VISIBLE
+            moreActionDialog.llCollect.visibility = View.VISIBLE
+        }
+        moreActionDialog.llDelete.onClick {
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "square_id" to adapter.data[position].id!!
+            )
+            mPresenter.removeMySquare(params, position)
+            moreActionDialog.dismiss()
+        }
+
+
         moreActionDialog.llCollect.onClick {
 
             //发起收藏请求
@@ -417,6 +446,13 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
     }
 
+
+    override fun onRemoveMySquareResult(result: Boolean, position: Int) {
+        if (result) {
+            adapter.data.removeAt(position)
+            adapter.notifyItemRemoved(position)
+        }
+    }
 
     override fun onPause() {
         super.onPause()

@@ -1,7 +1,6 @@
 package com.example.demoapplication.ui.activity
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.example.demoap.MultiListDetailPlayAdapter
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
@@ -19,6 +19,7 @@ import com.example.demoapplication.presenter.SquarePlayDetaiPresenter
 import com.example.demoapplication.presenter.view.SquarePlayDetailView
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
+import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -73,7 +74,7 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
 
             override fun onError(position: Int) {
                 toast("音频播放出错")
-                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
 //                adapter.notifyItemChanged(position)
                 adapter.notifyDataSetChanged()
                 mediaPlayer!!.resetMedia()
@@ -157,7 +158,7 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
                     if (mediaPlayer == null && currentIndex != position) {
                         initAudio(position)
                         //todo  还原播放器
-                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?:"").prepareMedia()
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
                     }
 
                     for (index in 0 until adapter.data.size) {
@@ -165,7 +166,7 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
                             adapter.data[index].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
                         }
                     }
-                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
+                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE || squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {
                         mediaPlayer!!.startPlay()
                     } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {
                         mediaPlayer!!.resumePlay()
@@ -223,7 +224,7 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
     }
 
 
-    private var currentIndex = 0
+    private var currentIndex = -1
     private fun moveToPosition(manager: LinearLayoutManager, mRecyclerView: RecyclerView, currentIndex: Int) {
         val firstItem = manager.findFirstVisibleItemPosition()
         val lastItem = manager.findLastVisibleItemPosition()
@@ -253,6 +254,27 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
             moreActionDialog.collect.text = "取消收藏"
             moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
         }
+
+        if (adapter.data[position].accid == UserManager.getAccid()) {
+            moreActionDialog.llDelete.visibility = View.VISIBLE
+            moreActionDialog.llJubao.visibility = View.GONE
+            moreActionDialog.llCollect.visibility = View.GONE
+        } else {
+            moreActionDialog.llDelete.visibility = View.GONE
+            moreActionDialog.llJubao.visibility = View.VISIBLE
+            moreActionDialog.llCollect.visibility = View.VISIBLE
+        }
+        moreActionDialog.llDelete.onClick {
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "square_id" to adapter.data[position].id!!
+            )
+            mPresenter.removeMySquare(params, position)
+            moreActionDialog.dismiss()
+        }
+
+
         moreActionDialog.llShare.onClick {
             showTranspondDialog(position)
         }
@@ -273,20 +295,18 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
             mPresenter.getSquareCollect(params, position)
         }
         moreActionDialog.llJubao.onClick {
-            //todo 发起举报请求
             AlertDialog.Builder(this)
-                .setNegativeButton("取消举报", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface, p1: Int) {
-                        p0.cancel()
-                    }
-                })
-                .setPositiveButton("确认举报", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        //todo 举报
-                        toast("已举报$position")
-                    }
-
-                })
+                .setNegativeButton("取消举报") { p0, p1 -> p0.cancel() }
+                .setPositiveButton("确认举报") { p0, p1 ->
+                    mPresenter.getSquareReport(
+                        hashMapOf(
+                            "accid" to UserManager.getAccid(),
+                            "token" to UserManager.getToken(),
+                            "square_id" to adapter.data[position].id!!,
+                            "_timestamp" to System.currentTimeMillis()
+                        )
+                    )
+                }
                 .setTitle("举报")
                 .setMessage("是否确认举报该动态？")
                 .show()
@@ -295,6 +315,22 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
             moreActionDialog.dismiss()
         }
 
+    }
+
+    override fun onGetSquareReport(t: Boolean) {
+        if (t) {
+            ToastUtils.showShort("举报成功！")
+        } else {
+            ToastUtils.showShort("举报失败！")
+        }
+
+    }
+
+    override fun onRemoveMySquareResult(result: Boolean, position: Int) {
+        if (result) {
+            adapter.data.removeAt(position)
+            adapter.notifyItemRemoved(position)
+        }
     }
 
 

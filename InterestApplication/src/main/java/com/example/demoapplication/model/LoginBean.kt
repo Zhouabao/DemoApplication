@@ -11,10 +11,16 @@ data class LoginBean(
 )
 
 data class Userinfo(
-    val avatar: String?,
     val birth: Int?,
     val gender: Int?,
-    val nickname: String?
+    val accid: String? = "",
+    val allvisit: Int? = 0,
+    val avatar: String? = "",
+    val face_audit_state: Int? = 0,
+    val isvip: Int? = 0,
+    val nickname: String? = "",
+    val todayvisit: Int? = 0,
+    val vip_express: String? = ""
 )
 
 data class TagBean(

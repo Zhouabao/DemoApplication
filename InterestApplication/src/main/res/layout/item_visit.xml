@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/colorWhite"
+        >
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/visitImg"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:src="@drawable/img_avatar_01"
+            android:layout_marginLeft="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+            android:id="@+id/visitImgHide"
+            android:background="@drawable/circle_gray_bg"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            app:layout_constraintLeft_toLeftOf="@id/visitImg"
+            app:layout_constraintTop_toTopOf="@id/visitImg"/>
+
+    <TextView
+            android:id="@+id/visitName"
+            android:text="用户名最大长"
+            android:textColor="#ff333333"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toRightOf="@id/visitImg"
+            app:layout_constraintTop_toTopOf="@id/visitImg"/>
+
+
+    <ImageView
+            android:id="@+id/visitVip"
+            android:src="@drawable/icon_vip"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/visitName"
+            app:layout_constraintLeft_toRightOf="@id/visitName"
+            app:layout_constraintTop_toTopOf="@id/visitName"/>
+
+
+    <TextView
+            android:id="@+id/visitInfo"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22 / 女 / 巨蟹座 / 18.85km"
+            android:textColor="#ff9b9b9b"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@id/visitName"
+            app:layout_constraintTop_toBottomOf="@id/visitName"
+            />
+
+    <View
+            android:id="@+id/visitHideName"
+            android:background="@color/colorDivider"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/visitName"
+            app:layout_constraintLeft_toLeftOf="@id/visitName"
+            app:layout_constraintRight_toRightOf="@id/visitVip"
+            app:layout_constraintTop_toTopOf="@id/visitName"/>
+
+    <View
+            android:id="@+id/visitHideInfo"
+            android:background="@color/colorDivider"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/visitInfo"
+            app:layout_constraintLeft_toLeftOf="@id/visitInfo"
+            app:layout_constraintRight_toRightOf="@id/visitInfo"
+            app:layout_constraintTop_toTopOf="@id/visitInfo"/>
+
+    <TextView
+            android:id="@+id/count"
+            android:text="来访次数"
+            android:textColor="#ff333333"
+            android:textSize="12sp"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/visitName"/>
+
+    <TextView
+            android:id="@+id/visitCount"
+            android:text="20次"
+            android:textColor="#ffff6318"
+            android:textSize="16sp"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/count"
+            />
+
+    <View
+            android:id="@+id/visitDivide"
+            android:background="#FFEFEFEF"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/visitName"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+</androidx.constraintlayout.widget.ConstraintLayout>
+

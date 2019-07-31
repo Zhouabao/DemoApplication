@@ -220,22 +220,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
     }
 
-    /**
-     * 初始化播放音频
-     */
-    // var ijkMediaPlayer: IjkMediaPlayer? = null
-
-//    private fun initAudio() {
-//        ijkMediaPlayer?.release()
-//        ijkMediaPlayer = IjkMediaPlayer()
-//        ijkMediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-//        ijkMediaPlayer!!.setDataSource(this, Uri.parse(squareBean.audio_json?.get(0) ?: ""))
-//
-//
-//
-//    }
-
-
     var mediaPlayer: IjkMediaPlayerUtil? = null
 
     private fun initAudio(position: Int) {
@@ -272,17 +256,19 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                     audioTime
                 ).stop()
                 audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-                mediaPlayer!!.resetMedia()
-                mediaPlayer = null
+
             }
 
             override fun onError(position: Int) {
                 toast("音频播放出错")
-                squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-//                adapter.notifyItemChanged(position)
-                adapter.notifyDataSetChanged()
+                squareBean.isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
+                voicePlayView.stop()
+                UpdateVoiceTimeThread.getInstance(
+                    squareBean.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
+                    audioTime
+                ).stop()
+                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 mediaPlayer!!.resetMedia()
-                mediaPlayer = null
             }
 
             override fun onPrepared(position: Int) {
@@ -312,11 +298,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         audioPlayBtn.setOnClickListener {
             when (squareBean.isPlayAudio) {
+                IjkMediaPlayerUtil.MEDIA_ERROR -> {
+                    initAudio(0)
+                    mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
+                }
                 IjkMediaPlayerUtil.MEDIA_PREPARE -> {//准备中
                     mediaPlayer!!.prepareMedia()
                 }
                 IjkMediaPlayerUtil.MEDIA_STOP -> {//停止就重新准备
-                    mediaPlayer!!.prepareMedia()
+                    initAudio(0)
+                    mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
                 }
                 IjkMediaPlayerUtil.MEDIA_PLAY -> {//播放点击就暂停
                     mediaPlayer!!.pausePlay()
@@ -506,7 +497,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             R.id.squareZhuanfaLl -> {
                 showTranspondDialog()
             }
-            //todo  取消点赞后台有问题
             R.id.squareDianzanlL -> {
                 val params = hashMapOf(
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
@@ -569,6 +559,27 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             moreActionDialog!!.collect.text = "取消收藏"
             moreActionDialog!!.collectBtn.setImageResource(R.drawable.icon_collectt)
         }
+
+        if (squareBean.accid == UserManager.getAccid()) {
+            moreActionDialog!!.llDelete.visibility = View.VISIBLE
+            moreActionDialog!!.llJubao.visibility = View.GONE
+            moreActionDialog!!.llCollect.visibility = View.GONE
+        } else {
+            moreActionDialog!!.llDelete.visibility = View.GONE
+            moreActionDialog!!.llJubao.visibility = View.VISIBLE
+            moreActionDialog!!.llCollect.visibility = View.VISIBLE
+        }
+        moreActionDialog!!.llDelete.onClick {
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "square_id" to squareBean.id!!
+            )
+            mPresenter.removeMySquare(params)
+            moreActionDialog!!.dismiss()
+
+        }
+
         moreActionDialog!!.llCollect.onClick {
             //发起收藏请求
             val params = hashMapOf(
@@ -591,11 +602,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 hashMapOf(
                     "accid" to UserManager.getAccid(),
                     "token" to UserManager.getToken(),
-                    "type" to if (squareBean.iscollected == 0) {
-                        1
-                    } else {
-                        2
-                    },
                     "square_id" to squareBean.id!!,
                     "_timestamp" to System.currentTimeMillis()
                 )
@@ -610,6 +616,15 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             moreActionDialog = null
         }
 
+    }
+
+    override fun onRemoveMySquareResult(result: Boolean) {
+        if (result) {
+            toast("动态删除成功!")
+            finish()
+        } else {
+            toast("动态删除失败！")
+        }
     }
 
     var commentActionDialog: CommentActionDialog? = null
@@ -723,7 +738,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
         if (showCommentEt.isFocused)
             resetCommentEt()
-//        squareUserVideo.release()
     }
 
     override fun onBackPressed() {

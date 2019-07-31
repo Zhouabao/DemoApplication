@@ -123,4 +123,56 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                 }
             })
     }
+
+
+    /**
+     * 广场删除
+     */
+    fun removeMySquare(params: HashMap<String, Any>, position: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .removeMySquare(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onRemoveMySquareResult(true, position)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onRemoveMySquareResult(false, position)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                    mView.onRemoveMySquareResult(false, position)
+                }
+            })
+    }
+
+    /**
+     * 广场举报
+     */
+    fun getSquareReport(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getSquareReport(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onGetSquareReport(true)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGetSquareReport(false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onGetSquareReport(false)
+//                    mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
+
 }

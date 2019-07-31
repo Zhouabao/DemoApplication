@@ -27,4 +27,5 @@ interface SquareDetailView : BaseView {
     fun onGetSquareReport(data: BaseResp<Any?>?)
 
     fun onAddCommentResult(data: BaseResp<Any?>?, result: Boolean)
+    fun onRemoveMySquareResult(b: Boolean)
 }

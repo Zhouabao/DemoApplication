@@ -6,17 +6,12 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * 介绍：参考人人影视 最多排列四个
- * 重叠卡片布局
- * 作者：zhangxutong
- * 邮箱：mcxtzhang@163.com
- * 主页：http://blog.csdn.net/zxt0601
- * 时间： 16/12/15.
+ *
  */
 
 public class OverLayCardLayoutManager extends RecyclerView.LayoutManager {
     private static final String TAG = "swipecard";
-    public static int MAX_SHOW_COUNT = 4;
+    public static int MAX_SHOW_COUNT = 5;
     public static float SCALE_GAP = 0.05f;
     public static int TRANS_Y_GAP;
     public int mTopOffset = 0;

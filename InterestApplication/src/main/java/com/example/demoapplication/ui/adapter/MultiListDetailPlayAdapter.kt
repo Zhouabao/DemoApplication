@@ -6,9 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
@@ -175,34 +173,37 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                     .into(holder.itemView.audioFl)
                 GlideUtil.loadImg(context, item.avatar ?: "", holder.itemView.detailPlayAudioBg)
 
-                val rotateAnimation =
-                    RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
-                rotateAnimation.interpolator = LinearInterpolator()
-                rotateAnimation.duration = 4000
-                rotateAnimation.repeatCount = Animation.INFINITE
+
+
                 //设定动画作用于的控件，以及什么动画，旋转的开始角度和结束角度
                 val objAnim = ObjectAnimator.ofFloat(holder.itemView.detailPlayAudioBg, "rotation", 0.0f, 360.0f);
                 //设定动画的旋转周期
-                objAnim.setDuration(20000);
+                objAnim.duration = (item.audio_json?.get(0)?.duration ?: 0) * 1000L
                 //设置动画的插值器，这个为匀速旋转
-                objAnim.setInterpolator(LinearInterpolator());
+                objAnim.interpolator = LinearInterpolator()
                 //设置动画为无限重复
-                objAnim.setRepeatCount(-1);
-                //设置动画重复模式
-                objAnim.setRepeatMode(ObjectAnimator.RESTART);
+                objAnim.repeatCount = 0
 
-                if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) {
-                    if (objAnim.isStarted) {
+                if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) { //播放中
+                    if (objAnim.isPaused) {
                         objAnim.resume()
                     } else {
+                        objAnim.start()
                     }
-                    objAnim.start()
                     holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_pause_white)
-//
-                } else {
+                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {//暂停中
                     holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_play_white)
                     objAnim.pause()
+                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_STOP || item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {//停止中
+                    holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_play_white)
+                    objAnim.end()
+                    objAnim.cancel()
+                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
+                    holder.itemView.detailPlayBtn.setImageResource(R.drawable.icon_play_white)
+                    objAnim.end()
                 }
+
+
             }
         }
 

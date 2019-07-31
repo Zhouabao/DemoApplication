@@ -5,13 +5,29 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
-import com.bigkoo.convenientbanner.ConvenientBanner
-import com.bigkoo.convenientbanner.holder.CBViewHolderCreator
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
-import com.example.demoapplication.model.BannerBean
-import com.example.demoapplication.ui.adapter.BannerHolderView
-import com.kotlin.base.ext.onClick
+import com.example.demoapplication.api.Api
+import com.example.demoapplication.model.ChargeWayBean
+import com.example.demoapplication.model.ChargeWayBeans
+import com.example.demoapplication.model.PaywayBean
+import com.example.demoapplication.model.VipDescr
+import com.example.demoapplication.ui.adapter.VipBannerAdapter
+import com.example.demoapplication.ui.adapter.VipChargeAdapter
+import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.widgets.DividerItemDecoration
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.rx.BaseSubscriber
 import kotlinx.android.synthetic.main.dialog_charge_vip.*
 
 /**
@@ -21,12 +37,14 @@ import kotlinx.android.synthetic.main.dialog_charge_vip.*
  *    version: 1.0
  */
 class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
+    private var payways: MutableList<PaywayBean> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_charge_vip)
         initWindow()
         initView()
+        initChargeWay()
     }
 
 
@@ -40,64 +58,127 @@ class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
     }
 
 
-    private fun initData(): MutableList<BannerBean> {
-        return mutableListOf(
-            BannerBean("无限滑动次数", R.drawable.img_avatar_01, "滑动次数不设限，散播更多你更多的爱"),
-            BannerBean("会员标识", R.drawable.img_avatar_02, "用户名后追加会员标识，更容易获取配对"),
-            BannerBean("独享筛选", R.drawable.img_avatar_03, "筛选你身边的用户找到最对的人"),
-            BannerBean("看过我的", R.drawable.img_avatar_04, "看到所有看过你的人"),
-            BannerBean("招呼次数x2", R.drawable.img_avatar_05, "24小时打招呼次数翻倍，畅所欲言吧"),
-            BannerBean("对我感兴趣的", R.drawable.img_avatar_06, "查看对你感兴趣的人，直接反选配对")
-        )
+    private val vipChargeAdapter by lazy { VipChargeAdapter() }
+    /**
+     * 设置支付价格的数据
+     */
+    private fun setChargeWayData(chargeWays: MutableList<ChargeWayBean>) {
+        vipChargeAdapter.setNewData(chargeWays)
     }
 
 
-    private var position: Int = -1
+    /**
+     * 设置VIP的权益广告栏
+     */
+    private val vipBannerAdapter by lazy { VipBannerAdapter() }
+    public var position: Int = 0
+    public fun setCurrent(position: Int) {
+        bannerVip.setCurrentItem(position, true)
+    }
+
+    //权益栏
+    private fun initVipPowerData(banners: MutableList<VipDescr>) {
+        bannerVip.adapter = vipBannerAdapter
+        vipBannerAdapter.setNewData(banners)
+        if (vipBannerAdapter.data.size > 0) {
+            val size = vipBannerAdapter.data.size
+            for (i in 0 until size) {
+                val indicator = RadioButton(context)
+                indicator.width = SizeUtils.dp2px(5F)
+                indicator.height = SizeUtils.dp2px(5F)
+                indicator.buttonDrawable = null
+                indicator.background = context.resources.getDrawable(R.drawable.selector_circle_indicator)
+
+                indicator.layoutParams =
+                    LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
+                layoutParams.setMargins(0, 0, SizeUtils.dp2px(6f), 0)
+                indicator.layoutParams = layoutParams
+                indicator.isEnabled = false
+                indicator.isChecked = i == 0
+                bannerIndicator.addView(indicator)
+            }
+        }
+        bannerVip.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                for (child in 0 until bannerIndicator.childCount)
+                    (bannerIndicator.getChildAt(child) as RadioButton).isChecked = position == child
+            }
+        })
+        bannerVip.setCurrentItem(position, true)
+    }
+
+
     private fun initView() {
-        (bannerVip as ConvenientBanner<BannerBean>).setPages(object : CBViewHolderCreator {
-            override fun createHolder(itemView: View): BannerHolderView {
-                return BannerHolderView(itemView, context)
+        //支付价格
+        vipChargeRv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        vipChargeRv.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL_LIST,
+                SizeUtils.dp2px(8F),
+                context.resources.getColor(R.color.colorWhite)
+            )
+        )
+        vipChargeRv.adapter = vipChargeAdapter
+        vipChargeAdapter.setOnItemClickListener { _, _, position ->
+            for (data in vipChargeAdapter.data.withIndex()) {
+                data.value.check = data.index == position
             }
-
-            override fun getLayoutId(): Int {
-                return R.layout.item_vip_banner
-            }
-
-        }, initData())
-            .setPageIndicator(intArrayOf(R.drawable.shape_oval_gray, R.drawable.shape_oval_white))
-            .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL)
-            .startTurning(2000)
-
-
-
-        vipOneMonth.onClick {
-            if (position != 0) {
-                vipOneMonth.setBackgroundResource(R.drawable.shape_rectangle_orange)
-                vipThreeMonth.setBackgroundResource(R.drawable.shape_rectangle_gray_vip)
-                vipOneYear.setBackgroundResource(R.drawable.shape_rectangle_gray_vip)
-                position = 0
-            }
+            vipChargeAdapter.notifyDataSetChanged()
+            ToastUtils.showShort("${position}")
         }
-
-        vipThreeMonth.onClick {
-            if (position != 1) {
-                vipThreeMonth.setBackgroundResource(R.drawable.shape_rectangle_orange)
-                vipOneMonth.setBackgroundResource(R.drawable.shape_rectangle_gray_vip)
-                vipOneYear.setBackgroundResource(R.drawable.shape_rectangle_gray_vip)
-                position = 1
-            }
-        }
-
-        vipOneYear.onClick {
-            if (position != 2) {
-                vipOneYear.setBackgroundResource(R.drawable.shape_rectangle_orange)
-                vipOneMonth.setBackgroundResource(R.drawable.shape_rectangle_gray_vip)
-                vipThreeMonth.setBackgroundResource(R.drawable.shape_rectangle_gray_vip)
-                position = 2
-            }
-        }
-
-
     }
 
+    /**
+     * 请求支付方式
+     */
+    private fun initChargeWay() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .productLists(
+                hashMapOf(
+                    "token" to UserManager.getToken(),
+                    "accid" to UserManager.getAccid(),
+                    "_sign" to "",
+                    "_timestamp" to System.currentTimeMillis()
+                )
+            )
+            .excute(object : BaseSubscriber<BaseResp<ChargeWayBeans?>>(null) {
+                override fun onNext(it: BaseResp<ChargeWayBeans?>) {
+                    if (it.data != null) {
+                        it.data!!.list?.get(0)?.check = true
+                        setChargeWayData(it.data!!.list ?: mutableListOf())
+                        initVipPowerData(it.data!!.icon_list ?: mutableListOf())
+                        payways.addAll(it.data!!.paylist ?: mutableListOf())
+                        initPayWay()
+                        loading.visibility = View.GONE
+                        dialogView.visibility = View.VISIBLE
+                    }
+                }
+            })
+    }
+
+    private fun initPayWay() {
+        for (payway in payways) {
+            if (payway.id == 1) {
+                zhiPayBtn.visibility = View.VISIBLE
+            }
+            if (payway.id == 2) {
+                wechatPayBtn.visibility = View.VISIBLE
+            }
+            if (payway.id == 3) {
+                balancePayBtn.visibility = View.VISIBLE
+            }
+        }
+    }
+
+
+    /**
+     * 支付
+     */
+    private fun chargeVip() {
+        setCancelable(false)
+        setCanceledOnTouchOutside(false)
+
+    }
 }

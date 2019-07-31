@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+    <TextView
+            android:id="@+id/vpTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="23dp"
+            android:text="打招呼次数翻倍🙋‍♂️"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp"
+            />
+
+    <TextView
+            android:id="@+id/vpMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="17dp"
+            android:text="营造更多机会，配对更容易"
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp"
+            />
+</LinearLayout>

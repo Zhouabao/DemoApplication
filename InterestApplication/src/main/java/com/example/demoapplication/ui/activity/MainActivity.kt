@@ -46,6 +46,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Li
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import java.util.*
 
@@ -81,6 +82,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun initView() {
         filterBtn.setOnClickListener(this)
         notificationBtn.setOnClickListener(this)
+        ivUserFace.setOnClickListener(this)
         mPresenter = MainPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -143,6 +145,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 showFilterDialog()
             }
             R.id.notificationBtn -> {
+            }
+            R.id.ivUserFace -> {
+                startActivity<UserCenterActivity>()
             }
         }
     }

@@ -18,19 +18,16 @@ import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
 import kotlinx.android.synthetic.main.activity_labels.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import org.jetbrains.anko.startActivity
 
-
-/**
- * 目前存在的问题是从发布进入标签选择要默认展开和选中已经选过的标签及其子级
- */
 class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnClickListener {
-
 
     private lateinit var adapter: LabelAdapter
     //拿一个集合来存储所有的标签
@@ -64,6 +61,11 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
     }
 
     private fun initView() {
+        stateview.retryBtn.onClick {
+            stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+            getLabel()
+        }
+
         btnBack.onClick {
             finish()
         }
@@ -100,6 +102,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
      * 获取标签数据
      */
     override fun onGetLabelsResult(labels: MutableList<LabelBean>) {
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
             saveLabels.addAll(UserManager.getSpLabels())
             var index = 0
@@ -135,25 +138,6 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
         }
     }
 
-
-    /**
-     * 第一次进入页面进行标签默认选中状态整理
-     */
-    private fun checkFirstInTags(tags: MutableList<LabelBean>): MutableList<LabelBean> {
-        for (i in 0 until tags.size) {
-            for (j in 0 until saveLabels.size) {
-                if (tags[i].id == saveLabels[j].id && !tags.contains(saveLabels[j])) {
-                    tags[i].checked = true
-                    updateCheckedLabels(tags[i])
-                    tags.addAll(i + 1, tags[i].son ?: mutableListOf())
-                    checkFirstInTags(tags[i].son ?: mutableListOf<LabelBean>())
-                }
-            }
-        }
-        return tags
-    }
-
-
     /**
      * 添加父级标签的子标签
      */
@@ -184,7 +168,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
     /**
      * 此处判断标签最少选择三个
      */
-    fun updateCheckedLabels(label: LabelBean) {
+    private fun updateCheckedLabels(label: LabelBean) {
         if (label.checked) {
             if (!checkedLabels.contains(label)) {
                 checkedLabels.add(label)
@@ -223,7 +207,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                 UserManager.saveUserInfo(data)
             }
             if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity"
-                        || intent.getStringExtra("from") == "publish")
+                        || intent.getStringExtra("from") == "publish" || intent.getStringExtra("from") == "usercenter")
             ) {
                 setResult(Activity.RESULT_OK, intent)
                 finish()
@@ -249,6 +233,16 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                 Log.i("params", "${android.os.Build.BRAND},${android.os.Build.HOST},${android.os.Build.PRODUCT}")
                 mPresenter.uploadLabels(params, checkIds)
             }
+        }
+    }
+
+    override fun onError(text: String) {
+        super.onError(text)
+        stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+        stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
+            getString(R.string.retry_load_error)
+        } else {
+            getString(R.string.retry_net_error)
         }
     }
 }

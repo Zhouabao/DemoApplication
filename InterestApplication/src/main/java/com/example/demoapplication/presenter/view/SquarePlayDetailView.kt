@@ -18,5 +18,7 @@ interface SquarePlayDetailView : BaseView {
     fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>)
 
     fun onAddCommentResult(position: Int, data: BaseResp<Any?>)
+    fun onRemoveMySquareResult(b: Boolean, position: Int)
+    fun onGetSquareReport(t: Boolean)
 
 }
