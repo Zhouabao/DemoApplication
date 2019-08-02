@@ -6,7 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import com.example.demoapplication.model.CommentBean
+import com.example.demoapplication.model.MyCommentBean
 import com.kotlin.base.common.BaseApplication.Companion.context
 import kotlinx.android.synthetic.main.item_comment_child.view.*
 import kotlinx.android.synthetic.main.item_comment_parent.view.*
@@ -17,9 +17,9 @@ import kotlinx.android.synthetic.main.item_comment_parent.view.*
  *    desc   :
  *    version: 1.0
  */
-class MyCommentAdapter : BaseQuickAdapter<CommentBean, BaseViewHolder>(R.layout.item_comment_parent) {
+class MyCommentAdapter : BaseQuickAdapter<MyCommentBean, BaseViewHolder>(R.layout.item_comment_parent) {
 
-    override fun convert(holder: BaseViewHolder, item: CommentBean) {
+    override fun convert(holder: BaseViewHolder, item: MyCommentBean) {
 
         if (holder.layoutPosition == mData.size - 1) {
             holder.itemView.commentDivider.visibility = View.GONE

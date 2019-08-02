@@ -3,7 +3,7 @@ package com.example.demoapplication.presenter
 import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
-import com.example.demoapplication.model.AllCommentBean
+import com.example.demoapplication.model.MyCommentList
 import com.example.demoapplication.presenter.view.MyCommentView
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
@@ -21,20 +21,18 @@ import com.kotlin.base.rx.BaseSubscriber
 class MyCommentPresenter : BasePresenter<MyCommentView>() {
 
 
-
     /**
      * 获取评论列表
      */
-    fun getCommentList(params: HashMap<String, Any>, refresh: Boolean) {
+    fun myCommentList(params: HashMap<String, Any>, refresh: Boolean) {
         RetrofitFactory.instance.create(Api::class.java)
-            .getCommentLists(params)
-            .excute(object : BaseSubscriber<BaseResp<AllCommentBean?>>(mView) {
+            .myCommentList(params)
+            .excute(object : BaseSubscriber<BaseResp<MyCommentList?>>(mView) {
                 override fun onStart() {
                     super.onStart()
-                    //todo showLoading
                 }
 
-                override fun onNext(t: BaseResp<AllCommentBean?>) {
+                override fun onNext(t: BaseResp<MyCommentList?>) {
                     super.onNext(t)
                     if (t.code == 200 && t.data != null) {
                         mView.onGetCommentListResult(t.data!!, refresh)
@@ -52,4 +50,27 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
             })
     }
 
+    /**
+     * 删除评论
+     */
+    fun deleteComment(params: HashMap<String, Any>, position: Int) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .destoryComment(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onDeleteCommentResult(t, position)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onDeleteCommentResult(t, position)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onDeleteCommentResult(null, position)
+                }
+            })
+    }
 }

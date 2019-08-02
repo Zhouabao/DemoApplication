@@ -33,6 +33,12 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.MyJobActivity">
+        </activity>
+        <activity android:name=".ui.activity.NickNameActivity">
+        </activity>
+        <activity android:name=".ui.activity.UserInfoSettingsActivity">
+        </activity>
         <activity android:name=".ui.activity.MyCommentActivity">
         </activity>
         <activity android:name=".ui.activity.MyVisitActivity">

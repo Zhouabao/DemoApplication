@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+    <com.example.baselibrary.widgets.RoundImageView
+            android:id="@+id/userImg"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:borderRadius="5dp"
+            app:type="round"/>
+
+
+    <TextView
+            android:id="@+id/isAvator"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="头像"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:background="@drawable/black_bottom_radius_bg"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"/>
+
+
+</RelativeLayout>

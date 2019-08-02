@@ -24,7 +24,6 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
         setContentView(R.layout.activity_user_birth)
 
         initView()
-
     }
 
     private fun initView() {

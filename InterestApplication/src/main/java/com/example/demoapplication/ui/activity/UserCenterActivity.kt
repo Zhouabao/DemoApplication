@@ -43,6 +43,7 @@ import org.jetbrains.anko.startActivityForResult
 class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterView, View.OnClickListener {
     companion object {
         const val REQUEST_LABEL_CODE = 10
+        const val REQUEST_INFO_SETTING = 11
     }
 
     //用户标签adapter
@@ -257,6 +258,16 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LABEL_CODE) {
                 getTagData()
+            } else if (requestCode == REQUEST_INFO_SETTING) {
+                multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
+                mPresenter.getMemberInfo(
+                    hashMapOf(
+                        "accid" to UserManager.getAccid(),
+                        "token" to UserManager.getToken(),
+                        "_sign" to "",
+                        "_timestamp" to System.currentTimeMillis()
+                    )
+                )
             }
         }
     }
@@ -273,6 +284,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //个人信息设置
             R.id.userInfoSettingBtn -> {
+                startActivityForResult<UserInfoSettingsActivity>(REQUEST_INFO_SETTING)
 
             }
             //会员问题
@@ -299,6 +311,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //我的评论
             R.id.userComment -> {
+                startActivity<MyCommentActivity>()
             }
             //我的来访
             R.id.userVisit -> {
@@ -314,12 +327,12 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //推荐给朋友
             R.id.userRecommend -> {
-                startActivity<MyCommentActivity>()
             }
             //认证中心
             R.id.userVerifyBtn -> {
             }
         }
     }
+
 
 }

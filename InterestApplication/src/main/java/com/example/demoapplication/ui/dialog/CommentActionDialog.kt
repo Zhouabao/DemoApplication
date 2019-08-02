@@ -38,7 +38,7 @@ class CommentActionDialog(context: Context, val from: String) : Dialog(context, 
         val window = this.window
         window?.setGravity(Gravity.CENTER)
         val params = window?.attributes
-        params?.width = WindowManager.LayoutParams.MATCH_PARENT
+        params?.width = WindowManager.LayoutParams.WRAP_CONTENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         window?.attributes = params
         //点击外部可取消

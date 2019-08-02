@@ -1,6 +1,7 @@
 package com.example.demoapplication.presenter.view
 
-import com.example.demoapplication.model.AllCommentBean
+import com.example.demoapplication.model.MyCommentList
+import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
 
 /**
@@ -10,5 +11,6 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface MyCommentView : BaseView {
-    fun onGetCommentListResult(data: AllCommentBean?, refresh: Boolean)
+    fun onGetCommentListResult(data: MyCommentList?, refresh: Boolean)
+    fun onDeleteCommentResult(t: BaseResp<Any?>?, position: Int)
 }

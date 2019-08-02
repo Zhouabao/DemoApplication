@@ -1,5 +1,7 @@
 package com.example.demoapplication.model
 
+import com.chad.library.adapter.base.entity.MultiItemEntity
+
 /**
  *    author : ZFM
  *    date   : 2019/7/3014:31
@@ -50,3 +52,49 @@ data class VisitorBean(
     val nickname: String? = "",
     val visitcount: Int? = 0
 )
+
+/**
+ * 我评论过的
+ */
+data class MyCommentBean(
+    val avatar: String? = "",
+    val content: String? = "",
+    val create_time: String? = "",
+    val id: Int? = 0,
+    val nickname: String? = "",
+    val reply_content: String? = "",
+    val replyed_nickname: String? = "",
+    val square_id: Int? = 0
+)
+
+
+data class MyCommentList(
+    val list: MutableList<MyCommentBean>? = mutableListOf()
+)
+
+
+/**
+ * 个人中心信息
+ */
+data class UserInfoSettingBean(
+    val avatar: String? = "",
+    val birth: String? = "",
+    val gender: Int? = 0,
+    val job: String? = "",
+    val nickname: String? = "",
+    val photos: MutableList<String>? = mutableListOf(),
+    val qiniu_domain: String? = "",
+    val sign: String? = ""
+)
+
+
+data class MyPhotoBean(val type: Int, val url: String) : MultiItemEntity {
+    override fun getItemType(): Int {
+        return type
+    }
+
+    companion object {
+        const val COVER = 1
+        const val PHOTO = 2
+    }
+}

@@ -285,6 +285,46 @@ interface Api {
     fun myVisitedList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<VisitorBean>?>>
 
 
+    /**
+     * 我的评论
+     */
+    @FormUrlEncoded
+    @POST("square/myCommentList${Constants.END_BASE_URL}")
+    fun myCommentList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyCommentList?>>
+
+
+    /**
+     * 个人信息
+     */
+    @FormUrlEncoded
+    @POST("memberInfo/personalInfo${Constants.END_BASE_URL}")
+    fun personalInfo(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<UserInfoSettingBean?>>
+
+
+    /**
+     * 修改个人信息
+     */
+    @FormUrlEncoded
+    @POST("memberInfo/savePersonal${Constants.END_BASE_URL}")
+    fun savePersonal(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 修改个人信息
+     */
+    @FormUrlEncoded
+    @POST("memberInfo/addPhotos${Constants.END_BASE_URL}")
+    fun addPhotos(@Field("token") token: String, @Field("accid") accid: String, @Field("photos[]") tagList: Array<String?>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 获取职业列表
+     */
+    @FormUrlEncoded
+    @POST("jobs/getJobList${Constants.END_BASE_URL}")
+    fun getJobList(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<MutableList<LabelBean>?>>
+
+
     @GET
     fun getFileFromNet(@Url url: String): Observable<ResponseBody>
 

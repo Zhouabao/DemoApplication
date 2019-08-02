@@ -1,0 +1,117 @@
+package com.example.demoapplication.presenter
+
+import android.app.Activity
+import android.util.Log
+import com.blankj.utilcode.util.SPUtils
+import com.example.demoapplication.api.Api
+import com.example.demoapplication.common.Constants
+import com.example.demoapplication.model.UserInfoSettingBean
+import com.example.demoapplication.presenter.view.UserInfoSettingsView
+import com.example.demoapplication.utils.QNUploadManager
+import com.example.demoapplication.utils.UserManager
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseSubscriber
+
+/**
+ *    author : ZFM
+ *    date   : 2019/8/110:05
+ *    desc   :
+ *    version: 1.0
+ */
+class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
+
+    /**
+     * 获取个人信息
+     */
+    fun personalInfo(params: HashMap<String, String>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .personalInfo(params)
+            .excute(object : BaseSubscriber<BaseResp<UserInfoSettingBean?>>(mView) {
+                override fun onNext(t: BaseResp<UserInfoSettingBean?>) {
+                    if (t.code == 200) {
+                        mView.onPersonalInfoResult(t.data)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onError("")
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError("")
+                }
+            })
+    }
+
+
+    /**
+     * 保存个人信息
+     */
+    fun savePersonal(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .savePersonal(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        mView.onSavePersonalResult(true,1)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onSavePersonalResult(false,1)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onSavePersonalResult(false,1)
+                }
+            })
+    }
+
+    /**
+     * 保存头像
+     */
+    fun addPhotos(token: String, accid: String, photos: Array<String?>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .addPhotos(token, accid, photos)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        mView.onSavePersonalResult(true,2)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onSavePersonalResult(false,2)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onSavePersonalResult(false,2)
+                }
+            })
+    }
+
+    /**
+     * 上传照片
+     * imagePath 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
+     */
+    fun uploadProfile(filePath: String, imagePath: String) {
+        if (!checkNetWork()) {
+            return
+        }
+
+        QNUploadManager.getInstance().put(
+            filePath, imagePath, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
+            { key, info, response ->
+                Log.d("OkHttp", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
+                Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
+                if (info != null) {
+                    mView.uploadImgResult(info.isOK, key)
+                }
+            }, null
+        )
+    }
+
+}

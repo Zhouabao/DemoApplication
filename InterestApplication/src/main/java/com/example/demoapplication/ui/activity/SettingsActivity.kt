@@ -1,23 +1,34 @@
 package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import android.widget.CompoundButton
-import androidx.appcompat.app.AppCompatActivity
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.example.demoapplication.R
+import com.example.demoapplication.presenter.SetInfoPresenter
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_settings.*
+import java.io.File
 
 /**
  * 系统设置
  */
-class SettingsActivity : AppCompatActivity(), CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnCheckedChangeListener,
+    View.OnClickListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         initView()
+        initData()
+    }
+
+    private fun initData() {
+        val totalCache =
+            CacheDiskUtils.getInstance().cacheSize + CacheDoubleUtils.getInstance().cacheDiskSize + CacheMemoryUtils.getInstance().cacheCount
+        cacheDataSize.text = "${totalCache / 1024 / 1024}M"
     }
 
     private fun initView() {
@@ -77,6 +88,20 @@ class SettingsActivity : AppCompatActivity(), CompoundButton.OnCheckedChangeList
             }
             //清理缓存
             R.id.clearData -> {
+                CleanUtils.cleanInternalCache()//清除内部文件
+                CleanUtils.cleanExternalCache()//外部缓存
+                CleanUtils.cleanCustomDir(
+                    File(
+                        Environment.getExternalStorageDirectory().absolutePath.plus(File.separator).plus(
+                            "demoapplicaiton"
+                        )
+                    )
+                )
+                val totalCache =
+                    CacheDiskUtils.getInstance().cacheSize + CacheDoubleUtils.getInstance().cacheDiskSize + CacheMemoryUtils.getInstance().cacheCount
+                cacheDataSize.text = "${totalCache / 1024 / 1024}M"
+                ToastUtils.showShort("缓存清理成功")
+
             }
             //退出登录
             R.id.loginOutBtn -> {
