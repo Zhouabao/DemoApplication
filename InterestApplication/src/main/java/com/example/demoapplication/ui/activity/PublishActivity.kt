@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.services.core.PoiItem
 import com.blankj.utilcode.util.*
+import com.example.baselibrary.emoj.EmojiSource
 import com.example.baselibrary.glide.GlideUtil
 import com.example.baselibrary.utils.RandomUtils
 import com.example.demoapplication.R
@@ -36,6 +37,7 @@ import com.example.demoapplication.player.UpdateVoiceTimeThread
 import com.example.demoapplication.presenter.PublishPresenter
 import com.example.demoapplication.presenter.view.PublishView
 import com.example.demoapplication.ui.adapter.ChoosePhotosAdapter
+import com.example.demoapplication.ui.adapter.EmojAdapter
 import com.example.demoapplication.ui.adapter.PublishLabelAdapter
 import com.example.demoapplication.utils.AMapManager
 import com.example.demoapplication.utils.UriUtils
@@ -132,12 +134,33 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         publishContent.addTextChangedListener(this)
         publishBtn.setOnClickListener(this)
         locationCity.setOnClickListener(this)
+        btn_emo.setOnClickListener(this)
 
         initTags()
         initPhotos()
         initVideos()
         initAudioLl()
         initPickedRv()
+        initEmojRv()
+    }
+
+    /**************设置表情包******************/
+    private val emojAdapter by lazy { EmojAdapter() }
+
+    private fun initEmojRv() {
+        emojRv.layoutManager = GridLayoutManager(this, 10, RecyclerView.VERTICAL, false)
+        emojRv.adapter = emojAdapter
+
+        emojAdapter.addData(EmojiSource.people.toMutableList())
+        emojAdapter.addData(EmojiSource.objects.toMutableList())
+        emojAdapter.addData(EmojiSource.nature.toMutableList())
+        emojAdapter.addData(EmojiSource.places.toMutableList())
+        emojAdapter.addData(EmojiSource.symbol.toMutableList())
+        emojAdapter.setOnItemClickListener { _, view, position ->
+            publishContent.append(emojAdapter.data[position])
+            publishContent.setSelection(publishContent.length())
+        }
+
     }
 
 
@@ -652,6 +675,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     private var currentWayId: Int = R.id.publishPhotos
 
     override fun onCheckedChanged(radioGroup: RadioGroup, checkedId: Int) {
+        if (emojRv.visibility == View.VISIBLE)
+            emojRv.visibility = View.GONE
         when (checkedId) {
             R.id.publishPhotos -> {
                 if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.VIDEO || audioPath.isNotEmpty()) {
@@ -745,7 +770,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     override fun onBackPressed() {
         if (publishContent.text.toString().isNotEmpty()) {
-            SPUtils.getInstance(Constants.SPNAME).put("draft",publishContent.text.toString())
+            SPUtils.getInstance(Constants.SPNAME).put("draft", publishContent.text.toString())
         }
         if (imageBigPreview.visibility == View.VISIBLE) {
             imageBigPreview.visibility = View.GONE
@@ -755,12 +780,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         } else
             super.onBackPressed()
     }
-
-
     private var positionItem: PoiItem? = null
     override fun onClick(view: View) {
         when (view.id) {
             R.id.publishBtn -> {
+                if (emojRv.visibility == View.VISIBLE)
+                    emojRv.visibility = View.GONE
                 if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//文本
                     publish()
                 } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//音频
@@ -787,9 +812,13 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 finish()
             }
             R.id.locationCity -> {
+                if (emojRv.visibility == View.VISIBLE)
+                    emojRv.visibility = View.GONE
                 startActivityForResult<LocationActivity>(REQUEST_CODE_MAP)
             }
             R.id.startRecordBtn -> {
+                if (emojRv.visibility == View.VISIBLE)
+                    emojRv.visibility = View.GONE
                 if (currentActionState == ACTION_RECORDING) {
                     if (totalSecond < 5) {
                         ToastUtils.showShort("再录制长一点吧")
@@ -802,10 +831,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 switchActionState()
             }
             R.id.deleteRecord -> {
+                if (emojRv.visibility == View.VISIBLE)
+                    emojRv.visibility = View.GONE
                 mMediaRecorderHelper.cancel()
                 changeToNormalState()
             }
             R.id.finishRecord -> { //录制完成
+                if (emojRv.visibility == View.VISIBLE)
+                    emojRv.visibility = View.GONE
                 //如果下面在预览播放，那么就先释放资源，停止播放
                 MediaPlayerHelper.realese()
                 mPreviewTimeThread?.stop()
@@ -837,6 +870,16 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 }
                 isTopPreview = true
                 switchActionState()
+            }
+            R.id.btn_emo -> {
+                if (emojRv.visibility == View.VISIBLE) {
+                    emojRv.visibility = View.GONE
+                } else {
+//                    allPhotosRv.visibility = View.GONE
+//                    videosRv.visibility = View.GONE
+//                    audioLl.visibility = View.GONE
+                    emojRv.visibility = View.VISIBLE
+                }
             }
         }
     }
