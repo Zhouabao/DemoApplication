@@ -98,7 +98,7 @@ public class ScrollCalculatorHelper {
             }
             runnable = new PlayRunnable(gsyBaseVideoPlayer);
             //降低频率
-            playHandler.postDelayed(runnable, 400);
+            playHandler.postDelayed(runnable, 100);
         }
 
 
@@ -126,8 +126,8 @@ public class ScrollCalculatorHelper {
                     inPosition = true;
                 }
                 if (inPosition) {
-                    startPlayLogic(gsyBaseVideoPlayer, gsyBaseVideoPlayer.getContext());
-                    //gsyBaseVideoPlayer.startPlayLogic();
+//                    startPlayLogic(gsyBaseVideoPlayer, gsyBaseVideoPlayer.getContext());
+                    gsyBaseVideoPlayer.startPlayLogic();
                 }
             }
         }
