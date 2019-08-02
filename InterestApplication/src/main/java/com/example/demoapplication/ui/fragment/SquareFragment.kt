@@ -25,7 +25,6 @@ import com.example.demoapplication.presenter.SquarePresenter
 import com.example.demoapplication.presenter.view.SquareView
 import com.example.demoapplication.ui.activity.PublishActivity
 import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
-import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import com.example.demoapplication.ui.adapter.SquareFriendsAdapter
@@ -558,20 +557,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
-                if (data != null) {
-                    val position = data!!.getIntExtra("position", -1)
-                    val playState = data!!.getIntExtra("playState", -1)
-                    val playPosition = data!!.getIntExtra("playPosition", -1)
-//                    adapter.data[position].clloneState = true
-//                    adapter.notifyItemChanged(position)
-
-                    GSYVideoManager.releaseAllVideos()
-                    adapter.playState = playState
-                    adapter.playPosition = playPosition
-                    adapter.notifyItemChanged(position)
-                }
-            }
         }
     }
 }
