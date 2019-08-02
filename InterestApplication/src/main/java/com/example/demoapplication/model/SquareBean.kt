@@ -24,7 +24,6 @@ data class SquareListBean(
  * 广场列表数据
  */
 data class SquareBean(
-    var clloneState: Boolean = false,
     var isPlayAudio: Int = 0, //0未播放  1 播放中 2暂停  3 停止
     var isvip: Int?,//是否会员 1是 0 不是
     var icon: String?,

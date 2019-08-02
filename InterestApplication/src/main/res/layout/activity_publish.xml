@@ -300,7 +300,6 @@
                 app:layout_constraintRight_toRightOf="parent">
 
 
-
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/allPhotosRv"
                     android:layout_width="match_parent"

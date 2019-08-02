@@ -780,6 +780,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         } else
             super.onBackPressed()
     }
+
     private var positionItem: PoiItem? = null
     override fun onClick(view: View) {
         when (view.id) {
@@ -977,9 +978,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             else if (requestCode == REQUEST_CODE_MAP) {
                 if (data?.getParcelableExtra<PoiItem>("poiItem") != null) {
                     positionItem = data!!.getParcelableExtra("poiItem") as PoiItem
-                    locationCity.text =
-                        positionItem!!.title + (positionItem!!.cityName ?: "") + (positionItem!!.adName
-                            ?: "") + (positionItem!!.businessArea ?: "") + (positionItem!!.snippet ?: "")
+                    locationCity.text = positionItem!!.title + (positionItem!!.cityName ?: "") + (positionItem!!.adName
+                        ?: "") + (positionItem!!.businessArea ?: "") + (positionItem!!.snippet ?: "")
                 }
             }
         }
