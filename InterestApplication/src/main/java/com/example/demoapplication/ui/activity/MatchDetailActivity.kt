@@ -211,7 +211,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //用户照片
         detailPhotosVp.adapter = photosAdapter
 
-        //fixme 这里要删除加进去的照片内容
         if (matchBean!!.photos == null || matchBean!!.photos!!.isEmpty())
             photos.add(matchBean!!.avatar ?: "")
         photos.addAll(matchBean!!.photos ?: mutableListOf())

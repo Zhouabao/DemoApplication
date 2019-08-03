@@ -305,7 +305,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             }
 
             override fun onPrepared(position: Int) {
-                //todo  异步准备 准备好了才会实现播放。
 //                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
 //                adapter.notifyItemChanged(position)
 //                adapter.notifyDataSetChanged()
@@ -559,7 +558,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     }
 
 
-    //todo  在这里更新一下视频的播放
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNotifyEvent(event: NotifyEvent) {
         val pos = event.position

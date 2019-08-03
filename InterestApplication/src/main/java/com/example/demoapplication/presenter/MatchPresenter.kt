@@ -30,7 +30,6 @@ class MatchPresenter : BasePresenter<MatchView>() {
             .excute(object : BaseSubscriber<BaseResp<MatchListBean?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()
-                    //todo showloading
                 }
                 override fun onNext(t: BaseResp<MatchListBean?>) {
                     if (t.code == 200) {

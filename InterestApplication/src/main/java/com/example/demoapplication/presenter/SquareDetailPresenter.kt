@@ -29,7 +29,6 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
             .excute(object : BaseSubscriber<BaseResp<AllCommentBean?>>(mView) {
                 override fun onStart() {
                     super.onStart()
-                    //todo showLoading
                 }
 
                 override fun onNext(t: BaseResp<AllCommentBean?>) {

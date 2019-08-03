@@ -272,7 +272,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
 
             override fun onPrepared(position: Int) {
-                //todo  异步准备 准备好了才会实现播放。
                 mediaPlayer!!.startPlay()
             }
 

@@ -162,7 +162,6 @@ class SquarePresenter : BasePresenter<SquareView>() {
             .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
                 override fun onStart() {
                     super.onStart()
-                    //todo  showloading
                 }
 
                 override fun onNext(t: BaseResp<SquareListBean?>) {
