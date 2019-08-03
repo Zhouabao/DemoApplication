@@ -26,9 +26,11 @@ class NickNameActivity : BaseActivity() {
         btnBack.onClick { onBackPressed() }
 
         if (type == 1) {
+            hotT1.text= "更改昵称"
             changeHint.text = "好名字可以让你的朋友更容易记住你"
             changeEt.filters = arrayOf(InputFilter.LengthFilter(10))
         } else {
+            hotT1.text= "更改签名"
             changeHint.text = "说点什么吧"
             changeEt.filters = arrayOf(InputFilter.LengthFilter(50))
         }

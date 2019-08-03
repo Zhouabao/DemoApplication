@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -12,7 +11,10 @@ import android.widget.RelativeLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback
 import com.chad.library.adapter.base.listener.OnItemDragListener
 import com.example.baselibrary.utils.RandomUtils
@@ -54,7 +56,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     }
 
     val params by lazy { hashMapOf("token" to UserManager.getToken(), "accid" to UserManager.getAccid()) }
-
+    private var isChange = false
     private var photos: MutableList<MyPhotoBean> = mutableListOf()
     private val adapter by lazy { UserPhotoAdapter(datas = mutableListOf()) }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,9 +144,6 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 photos.add(MyPhotoBean(MyPhotoBean.PHOTO, url))
             }
             adapter.setNewData(photos)
-            adapter.data.forEach {
-                Log.d("OkHttp", "old=========${it.toString()}")
-            }
             if ((data.photos ?: mutableListOf()).size < IMAGE_SIZE) {
                 adapter.addData(MyPhotoBean(MyPhotoBean.COVER, ""))
             }
@@ -178,7 +177,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
         dialog.show()
         dialog.lldelete.onClick {
-            //todo delete
+            isChange = true
             adapter.remove(position)
             adapter.notifyDataSetChanged()
             refreshLayout()
@@ -197,6 +196,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     override fun onItemDragEnd(holder: RecyclerView.ViewHolder?, position: Int) {
         toPos = position
         if (fromPos != toPos && fromPos != -1 && toPos != -1) {
+            isChange = true
             Collections.swap(photos, fromPos, toPos)
             Collections.swap(adapter.data, fromPos, toPos)
             adapter.notifyDataSetChanged()
@@ -258,6 +258,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     override fun uploadImgResult(b: Boolean, key: String) {
         if (b) {
+            isChange = true
             adapter.addData(choosePosition, MyPhotoBean(MyPhotoBean.PHOTO, key))
             if (adapter.data.size == IMAGE_SIZE + 1) {
                 adapter.remove(IMAGE_SIZE)
@@ -275,11 +276,8 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     override fun onSavePersonalResult(result: Boolean, type: Int) {
         if (type == 2) {
             if (result) {
-                ToastUtils.showShort("修改头像成功")
                 setResult(Activity.RESULT_OK)
                 finish()
-            } else {
-                ToastUtils.showShort("修改头像成功")
             }
         }
     }
@@ -363,16 +361,17 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     }
 
     override fun onBackPressed() {
-        val photos = arrayOfNulls<String>(10)
-        for (data in adapter.data.withIndex()) {
-            if (data.value.type == MyPhotoBean.PHOTO) {
-                photos[data.index] = data.value.url
+        if (isChange) {
+            val photos = arrayOfNulls<String>(10)
+            for (data in adapter.data.withIndex()) {
+                if (data.value.type == MyPhotoBean.PHOTO) {
+                    photos[data.index] = data.value.url
+                }
             }
+            mPresenter.addPhotos(UserManager.getToken(), UserManager.getAccid(), photos)
+        } else {
+            finish()
         }
 
-        photos.forEach {
-            Log.d("OkHttp", "new=========${it.toString()}")
-        }
-        mPresenter.addPhotos(UserManager.getToken(), UserManager.getAccid(), photos)
     }
 }
