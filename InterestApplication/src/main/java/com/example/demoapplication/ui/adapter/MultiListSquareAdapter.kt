@@ -118,17 +118,14 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>, var playState: Int =
                 holder.itemView.squareUserVideo.thumbImageView = imageview
 
                 holder.itemView.squareUserVideo.detail_btn.setOnClickListener {
-                    if (holder.itemView.squareUserVideo.isInPlayingState) {
-                        SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
-                        holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(holder.itemView.squareUserVideo)
-                        SquarePlayDetailActivity.startActivity(
-                            mContext as Activity,
-                            holder.itemView.squareUserVideo,
-                            item,
-                            holder.layoutPosition
-                        )
-                        item.clloneState = true
-                    }
+                    SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
+                    holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(holder.itemView.squareUserVideo)
+                    SquarePlayDetailActivity.startActivity(
+                        mContext as Activity,
+                        holder.itemView.squareUserVideo,
+                        item,
+                        holder.layoutPosition
+                    )
                 }
                 holder.itemView.squareUserVideo.playTag = TAG
                 holder.itemView.squareUserVideo.playPosition = holder.layoutPosition
@@ -156,8 +153,7 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>, var playState: Int =
                 SwitchUtil.optionPlayer(
                     holder.itemView.squareUserVideo,
                     item.video_json?.get(0)?.url ?: "",
-                    false,
-                    ""
+                    true
                 )
                 holder.itemView.squareUserVideo.setUp(
                     item.video_json?.get(0)?.url ?: "",

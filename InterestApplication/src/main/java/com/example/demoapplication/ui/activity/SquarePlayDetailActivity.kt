@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
@@ -87,12 +89,20 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         detailPlayContent.setOnClickListener(this)
         //發送評論
         detailPlayCommentSend.setOnClickListener(this)
+        //增加封面
+        val imageview = ImageView(this)
+        imageview.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        GlideUtil.loadImg(this, squareBean.cover_url ?: "", imageview)
+        if (imageview.parent != null) {
+            val vg = imageview.parent as ViewGroup
+            vg.removeView(imageview)
+        }
+        detailPlayVideo.thumbImageView = imageview
 
         SwitchUtil.optionPlayer(
             detailPlayVideo,
             squareBean.video_json?.get(0)?.url ?: "",
-            false,
-            ""
+            true
         )
 
         SwitchUtil.clonePlayState(detailPlayVideo)
@@ -325,11 +335,12 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
 
     override fun onBackPressed() {
-//        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.listener())
-//        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.lastListener())
-//
-//        SwitchUtil.savePlayState(detailPlayVideo)
+        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.listener())
+
+        SwitchUtil.savePlayState(detailPlayVideo)
+        detailPlayVideo.gsyVideoManager.setLastListener(detailPlayVideo)
 //        supportFinishAfterTransition()
+        setResult(Activity.RESULT_OK,intent)
         super.onBackPressed()
     }
 
@@ -345,11 +356,11 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onDestroy() {
         super.onDestroy()
-        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.lastListener())
-        detailPlayVideo.gsyVideoManager.setLastListener(null)
-        detailPlayVideo.release()
-        GSYVideoManager.releaseAllVideos()
-        SwitchUtil.release()
+//        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.lastListener())
+//        detailPlayVideo.gsyVideoManager.setLastListener(null)
+//        detailPlayVideo.release()
+//        GSYVideoManager.releaseAllVideos()
+//        SwitchUtil.release()
     }
 
 

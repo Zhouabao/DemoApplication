@@ -1,8 +1,6 @@
 package com.example.demoapplication.ui.fragment
 
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +13,8 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.NotifyEvent
+import com.example.demoapplication.event.RefreshEvent
 import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.FriendBean
 import com.example.demoapplication.model.SquareBean
@@ -23,6 +23,8 @@ import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.OnPlayingListener
 import com.example.demoapplication.presenter.SquarePresenter
 import com.example.demoapplication.presenter.view.SquareView
+import com.example.demoapplication.switchplay.SwitchUtil
+import com.example.demoapplication.switchplay.SwitchVideo
 import com.example.demoapplication.ui.activity.PublishActivity
 import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
@@ -41,7 +43,10 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_ERROR
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_square.*
@@ -149,6 +154,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
         squareDynamicRv.layoutManager = layoutManager
         squareDynamicRv.adapter = adapter
+        adapter.bindToRecyclerView(squareDynamicRv)
         adapter.addHeaderView(initFriendsView())
         adapter.setEmptyView(R.layout.empty_layout, squareDynamicRv)
         adapter.setHeaderAndEmpty(false)
@@ -423,7 +429,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     override fun onResume() {
         super.onResume()
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
-//        GSYVideoManager.onResume(false)
+        GSYVideoManager.onResume(false)
     }
 
 
@@ -542,6 +548,65 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         mPresenter.getSquareList(listParams, true, true)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshEvent(event: RefreshEvent) {
+        //这个地方还要默认设置选中第一个标签来更新数据
+        val params = UserManager.getFilterConditions()
+        params.forEach {
+            listParams[it.key] = it.value
+        }
+        mPresenter.getSquareList(listParams, true, false)
+    }
+
+
+    //todo  在这里更新一下视频的播放
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNotifyEvent(event: NotifyEvent) {
+        val pos = event.position
+        GSYVideoManager.releaseAllVideos()
+
+//        adapter.notifyDataSetChanged()
+        //静音
+        val switchVideo = adapter.getViewByPosition(pos, R.id.squareUserVideo) as SwitchVideo
+        SwitchUtil.clonePlayState(switchVideo)
+        val state = switchVideo.currentState
+//        switchVideo.isStartAfterPrepared = false
+        //延迟加2S
+        switchVideo.seekOnStart = switchVideo.gsyVideoManager.currentPosition + 2000
+        switchVideo.startPlayLogic()
+        switchVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+            override fun onStartPrepared(url: String?, vararg objects: Any?) {
+                super.onStartPrepared(url, *objects)
+                GSYVideoManager.instance().isNeedMute = true
+            }
+
+            override fun onPrepared(url: String?, vararg objects: Any?) {
+                super.onPrepared(url, *objects)
+                GSYVideoManager.instance().isNeedMute = true
+                if (state == GSYVideoView.CURRENT_STATE_PAUSE) {
+                    switchVideo.onVideoPause()
+                } else if (state == GSYVideoView.CURRENT_STATE_AUTO_COMPLETE || state == CURRENT_STATE_ERROR) {
+                    SwitchUtil.release()
+                    GSYVideoManager.releaseAllVideos()
+                }
+            }
+
+            override fun onClickResume(url: String?, vararg objects: Any?) {
+                super.onClickResume(url, *objects)
+                switchVideo.onVideoResume()
+            }
+
+            override fun onAutoComplete(url: String?, vararg objects: Any?) {
+                super.onAutoComplete(url, *objects)
+                SwitchUtil.release()
+                GSYVideoManager.releaseAllVideos()
+                adapter.notifyItemChanged(pos)
+
+            }
+        })
+
+    }
+
     override fun onClick(view: View) {
         when (view.id) {
             R.id.squareEdit -> {
@@ -554,10 +619,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         stateview.viewState = MultiStateView.VIEW_STATE_LOADING
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-        }
-    }
+
 }
 
