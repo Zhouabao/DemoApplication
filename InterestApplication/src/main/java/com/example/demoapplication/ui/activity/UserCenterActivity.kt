@@ -11,9 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
+import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.RefreshEvent
+import com.example.demoapplication.event.UpdateAvatorEvent
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.UserInfoBean
 import com.example.demoapplication.presenter.UserCenterPresenter
@@ -34,6 +38,7 @@ import kotlinx.android.synthetic.main.activity_user_center.*
 import kotlinx.android.synthetic.main.dialog_charge_vip.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.item_not_vip_viewpager.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 
@@ -84,8 +89,12 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     }
 
     private fun initData() {
+        //更新了信息之后更新本地缓存
+        SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean.userinfo?.avatar)
+        EventBus.getDefault().post(UpdateAvatorEvent(true))
         getTagData()
-//        coverAdapter.setNewData(userInfoBean.squarelist?.list ?: mutableListOf())
+        coverAdapter.setNewData(userInfoBean.squarelist?.list ?: mutableListOf())
+        visitsAdapter.setNewData(userInfoBean.visitlist ?: mutableListOf())
         GlideUtil.loadAvatorImg(this, userInfoBean.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean.userinfo?.nickname ?: ""
         userSquareCount.text = "我的动态 ${userInfoBean.squarelist?.count}"
@@ -232,6 +241,14 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         coverAdapter.emptyView.onClick {
             startActivity<PublishActivity>()
         }
+
+        //我的访客封面
+        val visitLayoutmanager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        visitLayoutmanager.stackFromEnd = true
+        userVisitRv.layoutManager = visitLayoutmanager
+        userVisitRv.adapter = visitsAdapter
+
+
         //初始化vipDialog
         vipDialog = ChargeVipDialog(this)
     }
@@ -276,7 +293,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnBack -> {
-                finish()
+                onBackPressed()
             }
             //设置
             R.id.settingBtn -> {
@@ -289,6 +306,8 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //会员问题
             R.id.isVipProblem -> {
+                //todo 下标的popupwindow
+
             }
             //会员权益
             R.id.isVipPowerBtn -> {
@@ -334,5 +353,9 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         }
     }
 
+    override fun onBackPressed() {
+        EventBus.getDefault().post(RefreshEvent(true))
+        super.onBackPressed()
+    }
 
 }

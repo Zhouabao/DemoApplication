@@ -129,6 +129,11 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
      */
     private fun setData(data: UserInfoSettingBean?) {
         if (data != null) {
+            //更新本地缓存
+            SPUtils.getInstance(Constants.SPNAME).put("nickname", data.nickname!!)
+            SPUtils.getInstance(Constants.SPNAME).put("gender", data.gender!!)
+            SPUtils.getInstance(Constants.SPNAME).put("birth", data.birth!!)
+
             userNickName.text = "${data.nickname}"
             userNickSign.text = "${data.sign}"
             userGender.text = if (data.gender == 1) {
@@ -250,7 +255,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             .previewImage(true)
             .isCamera(true)
             .enableCrop(true)
-            .withAspectRatio(3, 4)
+            .withAspectRatio(9, 16)
             .compress(true)
             .openClickSound(true)
             .forResult(PictureConfig.CHOOSE_REQUEST)

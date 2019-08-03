@@ -110,6 +110,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 .setNegativeButton("否") { _, _ ->
                     SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
                 }
+                .setOnDismissListener {
+                    SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
+                }
                 .show()
         }
     }
@@ -121,9 +124,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         }
 
         //主动弹起键盘
-        publishContent.postDelayed(
-            { KeyboardUtils.showSoftInput(publishContent) }, 100L
-        )
+//        publishContent.postDelayed(
+//            { KeyboardUtils.showSoftInput(publishContent) }, 100L
+//        )
 
 
         mPresenter = PublishPresenter()
@@ -755,6 +758,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         if (videoPreview.isPlaying) videoPreview.stopPlayback()
         countTimeThread?.cancel()
         mPreviewTimeThread?.stop()
+        if (KeyboardUtils.isSoftInputVisible(this)) {
+            KeyboardUtils.showSoftInput(publishContent)
+        }
     }
 
     override fun onPause() {

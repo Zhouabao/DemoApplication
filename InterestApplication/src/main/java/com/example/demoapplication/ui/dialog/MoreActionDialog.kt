@@ -48,7 +48,7 @@ class MoreActionDialog(context: Context, val from: String) : Dialog(context, R.s
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.WRAP_CONTENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.y = SizeUtils.dp2px(40F)
+        params?.y = SizeUtils.dp2px(20F)
         window?.attributes = params
         //点击外部可取消
         setCanceledOnTouchOutside(true)

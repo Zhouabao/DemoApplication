@@ -109,6 +109,20 @@
             android:layout_width="48dp"
             android:layout_height="24dp"
             android:showText="false"
+
+            app:layout_constraintEnd_toEndOf="@id/filterAge"
+            app:layout_constraintTop_toTopOf="@id/tv4"/>
+
+    <TextView
+            android:id="@+id/btnGoVip"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:text="开通会员"
+            android:gravity="center_vertical"
+            android:background="@color/colorWhite"
+            android:textColor="@color/colorOrange"
+            android:textSize="12sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv4"/>
 
@@ -151,6 +165,8 @@
             android:layout_height="24dp"
             android:checked="true"
             android:showText="false"
+            android:thumb="@drawable/switch_button_thumb"
+            android:track="@drawable/selector_switch_ios_track"
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv6"/>
 
@@ -172,6 +188,8 @@
             android:layout_height="24dp"
             android:checked="true"
             android:showText="false"
+            android:thumb="@drawable/switch_button_thumb"
+            android:track="@drawable/selector_switch_ios_track"
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv7"/>
 

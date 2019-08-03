@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import com.blankj.utilcode.util.SPUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.RefreshEvent
 import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.MatchListBean
@@ -253,10 +254,29 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         switch = false
     }
 
+
+    /**
+     * 通过全局的标签来更新数据
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
         matchParams["tagid"] = event.label.id
         //这个地方还要默认设置选中第一个标签来更新数据
         mPresenter.getMatchList(matchParams)
     }
+
+
+    /**
+     * 通过本地的筛选条件类更新数据
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshEvent(event: RefreshEvent) {
+        matchUserAdapter.data.clear()
+        val params = UserManager.getFilterConditions()
+        params.forEach {
+            matchParams[it.key] = it.value
+        }
+        mPresenter.getMatchList(matchParams)
+    }
+
 }

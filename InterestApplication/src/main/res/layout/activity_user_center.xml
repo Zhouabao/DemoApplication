@@ -199,7 +199,7 @@
                                 android:id="@+id/isVipProblem"
                                 android:layout_marginLeft="5dp"
                                 android:text="\?"
-                                android:background="@drawable/shape_oval_white"
+                                android:background="@drawable/shape_oval_light_orange"
                                 android:layout_width="16dp"
                                 android:layout_height="0dp"
                                 android:textSize="10sp"
@@ -347,12 +347,12 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/userVisitRv"
-                        android:layout_marginRight="18dp"
+                        android:layout_marginRight="33dp"
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="24dp"
                         app:layout_constraintBottom_toBottomOf="@id/userVisit"
-                        app:layout_constraintRight_toRightOf="@id/userVisit"
+                        app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="@id/userVisit">
 
                 </androidx.recyclerview.widget.RecyclerView>
@@ -364,10 +364,11 @@
                         android:textSize="16sp"
                         android:layout_width="0dp"
                         android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
                         android:gravity="center_vertical"
                         android:drawableRight="@drawable/icon_more_right"
-                        android:layout_height="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_marginBottom="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="@id/userAvator"
                         app:layout_constraintRight_toRightOf="@id/userInfoSettingBtn"
                         app:layout_constraintTop_toBottomOf="@id/userCollection"/>

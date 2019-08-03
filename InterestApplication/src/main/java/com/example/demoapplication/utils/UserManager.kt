@@ -8,6 +8,7 @@ import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.ui.activity.LoginActivity
 import com.kotlin.base.common.AppManager
 import org.jetbrains.anko.startActivity
+import java.util.*
 
 /**
  *    author : ZFM
@@ -45,10 +46,12 @@ object UserManager {
         }
         SPUtils.getInstance(Constants.SPNAME).put("checkedLabels", savaLabels)
         if (data.userinfo != null) {
-            SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo!!.nickname!!)
-            SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo!!.avatar!!)
-            SPUtils.getInstance(Constants.SPNAME).put("gender", data.userinfo!!.gender!!)
-            SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo!!.birth!!)
+            SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo.nickname)
+            SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
+            data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
+            SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
+            data.userinfo.isvip?.let { SPUtils.getInstance(Constants.SPNAME).put("isvip", it) }
+            data.userinfo.isverify?.let { SPUtils.getInstance(Constants.SPNAME).put("verify", it) }
         }
     }
 
@@ -59,7 +62,7 @@ object UserManager {
         return !(SPUtils.getInstance(Constants.SPNAME).getString("nickname").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
-                SPUtils.getInstance(Constants.SPNAME).getInt("birth") == 0)
+                SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty())
     }
 
 
@@ -145,6 +148,50 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getString("avatar")
     }
 
+    /**
+     * 判断用户是否是vip
+     */
+    fun isUserVip(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("isvip", 0) == 1
+    }
+
+    /**
+     * 判断用户是否是认证
+     */
+    fun isUserVerify(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("verify", 0) == 1
+    }
+
+
+    /**
+     * 判断用户是否添加了筛选条件
+     *
+     *     /**
+     * 展示筛选条件对话框
+     * //最小年龄  limit_age_low
+     * //最大年龄  limit_age_high
+     * //标签id
+     * //是否同城筛选 1否 2是 local_only
+     * //选择了同城 传递城市id city_code
+     * //是否筛选认证会员1不用 2需要筛选 audit_only
+     * //1男 2女 3不限 gender
+     * //toto  这里需要判断是否认证
+    */
+     */
+    fun getFilterConditions(): HashMap<String, Any> {
+        var parmas = hashMapOf<String, Any>()
+        val sp = SPUtils.getInstance(Constants.SPNAME)
+        parmas["limit_age_low"] = sp.getInt("limit_age_low", 18)
+        parmas["limit_age_high"] = sp.getInt("limit_age_high", 30)
+        parmas["local_only"] = sp.getInt("local_only", 1)
+        parmas["city_code"] = sp.getInt("city_code", 0)
+        parmas["audit_only"] = sp.getInt("audit_only", 1)
+        parmas["gender"] = sp.getInt("gender", 3)
+
+        return parmas
+    }
+
+
     fun getSpLabels(): MutableList<LabelBean> {
         val tempLabels = mutableListOf<LabelBean>()
         if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
@@ -152,6 +199,7 @@ object UserManager {
                 tempLabels.add(SharedPreferenceUtil.String2Object(it) as LabelBean)
             }
         }
+        tempLabels.sortWith(Comparator { p0, p1 -> p0.id.compareTo(p1.id) })
         return tempLabels
     }
 }

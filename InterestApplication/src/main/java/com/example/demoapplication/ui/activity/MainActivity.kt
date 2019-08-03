@@ -12,18 +12,19 @@ import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.event.NewMsgEvent
-import com.example.demoapplication.event.UpdateLabelEvent
+import com.example.demoapplication.event.*
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.presenter.MainPresenter
 import com.example.demoapplication.presenter.view.MainView
 import com.example.demoapplication.ui.adapter.MainPagerAdapter
 import com.example.demoapplication.ui.adapter.MatchLabelAdapter
+import com.example.demoapplication.ui.dialog.ChargeVipDialog
 import com.example.demoapplication.ui.dialog.FilterUserDialog
 import com.example.demoapplication.ui.fragment.MatchFragment1
 import com.example.demoapplication.ui.fragment.SquareFragment
@@ -106,21 +107,73 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
     //筛选对话框
-    private val filterUserDialog: FilterUserDialog by lazy {
-        FilterUserDialog(
-            this
-        )
-    }
+    private val filterUserDialog: FilterUserDialog by lazy { FilterUserDialog(this) }
 
 
     /**
      * 展示筛选条件对话框
+     * //最小年龄  limit_age_low
+     * //最大年龄  limit_age_high
+     * //标签id
+     * //是否同城筛选 1否 2是 local_only
+     * //选择了同城 传递城市id city_code
+     * //是否筛选认证会员1不用 2需要筛选 audit_only
+     * //1男 2女 3不限 gender
+     * //toto  这里需要判断是否认证
      */
     private fun showFilterDialog() {
+        val sp = SPUtils.getInstance(Constants.SPNAME)
+        var params = hashMapOf<String, Any>()
         filterUserDialog.show()
-        filterUserDialog.btnCompleteFilter.onClick {
-            //TODO("发起网络请求，并关闭对话框")
+        if (UserManager.isUserVip()) {
+            filterUserDialog.btnGoVip.visibility = View.GONE
+            filterUserDialog.switchSameCity.visibility = View.VISIBLE
+        } else {
+            filterUserDialog.btnGoVip.visibility = View.VISIBLE
+            filterUserDialog.switchSameCity.visibility = View.GONE
+        }
 
+        if (UserManager.isUserVerify()) {
+            filterUserDialog.btnVerify.visibility = View.GONE
+            filterUserDialog.switchShowVerify.visibility = View.VISIBLE
+        } else {
+            filterUserDialog.btnVerify.visibility = View.VISIBLE
+            filterUserDialog.switchShowVerify.visibility = View.GONE
+        }
+
+        filterUserDialog.switchSameCity.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                sp.put("local_only", 2)
+                sp.put("city_code", UserManager.getCityCode())
+            } else {
+                sp.put("local_only", 1)
+            }
+        }
+        filterUserDialog.switchSexMan.setOnCheckedChangeListener { compoundButton, b ->
+            if ((!b && !filterUserDialog.switchSexWoman.isChecked) || (b && filterUserDialog.switchSexWoman.isChecked))
+                sp.put("gender", 3)
+            else if (!b && filterUserDialog.switchSexWoman.isChecked)
+                sp.put("gender", 2)
+            else if (b) {
+                sp.put("gender", 1)
+            }
+        }
+        filterUserDialog.switchSexWoman.setOnCheckedChangeListener { compoundButton, b ->
+            if ((!b && !filterUserDialog.switchSexMan.isChecked) || (b && filterUserDialog.switchSexMan.isChecked))
+                sp.put("gender", 3)
+            else if (!b && filterUserDialog.switchSexMan.isChecked)
+                sp.put("gender", 1)
+            else if (b) {
+                sp.put("gender", 2)
+
+            }
+        }
+
+        filterUserDialog.btnGoVip.onClick {
+            ChargeVipDialog(this).show()
+        }
+        filterUserDialog.btnVerify.onClick {
+            ToastUtils.showShort("去认证")
         }
         filterUserDialog.seekBarAge.setOnRangeChangedListener(object : OnRangeChangedListener {
             override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
@@ -129,12 +182,20 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
             override fun onRangeChanged(view: RangeSeekBar?, leftValue: Float, rightValue: Float, isFromUser: Boolean) {
                 filterUserDialog.filterAge.text = "${leftValue.toInt()}-${rightValue.toInt()}岁"
+                sp.put("limit_age_high", rightValue.toInt())
+                sp.put("limit_age_low", leftValue.toInt())
             }
 
             override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
             }
 
         })
+
+        filterUserDialog.btnCompleteFilter.onClick {
+            EventBus.getDefault().post(RefreshEvent(true))
+            filterUserDialog.dismiss()
+        }
+
 
     }
 
@@ -215,8 +276,14 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             })
             .delay(1000)
             .playOn(llMsgCount)
+    }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateAvatorEvent(event: UpdateAvatorEvent) {
+        if (event.update) {
+            GlideUtil.loadAvatorImg(this, SPUtils.getInstance(Constants.SPNAME).getString("avatar"), ivUserFace)
+        }
     }
 
 
@@ -296,6 +363,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 }
                 labelList = list
                 labelAdapter.setData(labelList)
+            } else if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
+                EventBus.getDefault().post(NotifyEvent(data!!.getIntExtra("position", -1)))
             }
         }
     }
@@ -336,5 +405,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         tabMain.navigator = commonNavigator
         ViewPagerHelper.bind(tabMain, vpMain)
     }
+
 
 }

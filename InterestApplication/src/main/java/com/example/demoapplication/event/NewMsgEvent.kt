@@ -7,3 +7,6 @@ package com.example.demoapplication.event
  *    version: 1.0
  */
 class NewMsgEvent(var likeCount: Int,var  squareCount: Int,var HiCount: Int, var chatCount: Int)
+
+
+class UpdateAvatorEvent(val update: Boolean)

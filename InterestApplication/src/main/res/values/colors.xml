@@ -26,5 +26,6 @@
     <color name="colorBlueSky">#52C2DC</color>
     <color name="colorGradientOrange">#FF7F42</color>
     <color name="colorGradientRed">#FF003E</color>
+    <color name="colorLightOrange">#FFFFBC91</color>
 
 </resources>

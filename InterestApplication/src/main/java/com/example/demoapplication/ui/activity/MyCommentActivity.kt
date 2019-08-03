@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
@@ -23,6 +24,8 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_my_comment.*
+import kotlinx.android.synthetic.main.activity_my_comment.btnBack
+import kotlinx.android.synthetic.main.activity_publish.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.jetbrains.anko.toast
@@ -161,6 +164,13 @@ class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, 
             getString(R.string.retry_load_error)
         } else {
             getString(R.string.retry_net_error)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (KeyboardUtils.isSoftInputVisible(this)) {
+            KeyboardUtils.showSoftInput(publishContent)
         }
     }
 

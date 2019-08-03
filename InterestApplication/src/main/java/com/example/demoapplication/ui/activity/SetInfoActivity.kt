@@ -159,7 +159,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             .previewImage(true)
             .isCamera(true)
             .enableCrop(true)
-            .withAspectRatio(3, 4)
+            .withAspectRatio(9, 16)
             .compress(true)
             .openClickSound(true)
             .forResult(PictureConfig.CHOOSE_REQUEST)
