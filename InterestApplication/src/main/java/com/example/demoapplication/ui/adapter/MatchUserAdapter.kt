@@ -1,8 +1,6 @@
 package com.example.demoapplication.ui.adapter
 
-import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
@@ -32,9 +30,12 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         //为了防止indicator重复 每次先给他remove了
         holder.itemView.vpIndicator.removeAllViews()
         holder.itemView.vpPhotos.setScrollable(false)
-        holder.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(mContext, if (item.photos.isNullOrEmpty()) mutableListOf(item.avatar ?: "") else item.photos!!)
+        holder.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(
+            mContext,
+            if (item.photos.isNullOrEmpty()) mutableListOf(item.avatar ?: "") else item.photos!!
+        )
         holder.itemView.vpPhotos.currentItem = 0
-        holder.itemView.vpPhotos.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+        holder.itemView.vpPhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             }
 
@@ -76,14 +77,17 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             for (i in 0 until size) {
                 val indicator = RadioButton(mContext)
                 indicator.width = ((ScreenUtils.getScreenWidth()
-                        - SizeUtils.applyDimension(15F, TypedValue.COMPLEX_UNIT_DIP) * 2
-                        - (SizeUtils.applyDimension(6F, TypedValue.COMPLEX_UNIT_DIP) * (size - 1))) / size).toInt()
+                        - SizeUtils.dp2px(15F) * 4
+                        - (SizeUtils.dp2px(6F) * (size - 1))) * 1F / size).toInt()
                 indicator.height = SizeUtils.dp2px(5F)
                 indicator.buttonDrawable = null
                 indicator.background = mContext.resources.getDrawable(R.drawable.selector_round_indicator)
 
                 indicator.layoutParams =
-                    LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
                 val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(
                     if (i == 0) {
@@ -93,7 +97,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                     }, 0, if (i == size - 1) {
                         SizeUtils.dp2px(15F)
                     } else {
-                        SizeUtils.dp2px(6f)
+                        SizeUtils.dp2px(6F)
                     }, 0
                 )
                 indicator.layoutParams = layoutParams
@@ -104,11 +108,17 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         }
 
         /*设置封面图片recyclerview*/
-        holder.itemView.matchUserDynamicThumbRv.layoutManager =
-            LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-        val adapter = DetailThumbAdapter(mContext)
-        adapter.setData(item.square ?: mutableListOf())
-        holder.itemView.matchUserDynamicThumbRv.adapter = adapter
+        if (!item.square.isNullOrEmpty()) {
+            holder.itemView.matchUserDynamicThumbRv.visibility = View.VISIBLE
+            holder.itemView.matchUserDynamicThumbRv.layoutManager =
+                LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+            val adapter = DetailThumbAdapter(mContext)
+            adapter.setData(item.square ?: mutableListOf())
+            holder.itemView.matchUserDynamicThumbRv.adapter = adapter
+        } else {
+            holder.itemView.matchUserDynamicThumbRv.visibility = View.GONE
+        }
+
 
         //点击切换上一张图片
         holder.itemView.lastImgBtn.onClick {

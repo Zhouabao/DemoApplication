@@ -45,6 +45,7 @@ import org.jetbrains.anko.support.v4.toast
  */
 class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
     private var switch = false
+    private var hasMore = false
 
     override fun onCardDisappeared(view: View?, position: Int) {
     }
@@ -56,17 +57,20 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         }
     }
 
+    //此时已经飞出去了
     override fun onCardSwiped(direction: Direction?) {
         if (direction == Direction.Left) {
-            params["target_accid"] = matchUserAdapter.data[manager.topPosition].accid ?: ""
+            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {
-            params["target_accid"] = matchUserAdapter.data[manager.topPosition].accid ?: ""
+            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
             mPresenter.likeUser(params)
         }
 
         //如果已经只剩5张了就请求数据
-        if (manager.topPosition == matchUserAdapter.data.size - 5) {
+        if (hasMore && manager.topPosition == matchUserAdapter.data.size - 5) {
+            page++
+            matchParams["page"] = page
             mPresenter.getMatchList(matchParams)
         }
     }
@@ -128,6 +132,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
         initialize()
         mPresenter.getMatchList(matchParams)
+        matchUserAdapter.setEmptyView(R.layout.empty_layout, card_stack_view)
         matchUserAdapter.setOnItemClickListener { _, view, position ->
             //保持始终是顶部item被点击到
             if (position == matchUserAdapter.data.size - 1) {
@@ -199,6 +204,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
+            hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == Constants.PAGESIZE
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
                 stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
             } else {
@@ -260,6 +266,10 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
+        matchUserAdapter.data.clear()
+        page = 1
+        matchParams["page"] = page
+        hasMore = false
         matchParams["tagid"] = event.label.id
         //这个地方还要默认设置选中第一个标签来更新数据
         mPresenter.getMatchList(matchParams)
@@ -272,6 +282,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: RefreshEvent) {
         matchUserAdapter.data.clear()
+        page = 1
+        matchParams["page"] = page
+        hasMore = false
         val params = UserManager.getFilterConditions()
         params.forEach {
             matchParams[it.key] = it.value
