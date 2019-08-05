@@ -7,7 +7,7 @@
         android:layout_gravity="center"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/shape_rectangle_gray_white_9dp">
+        android:background="@drawable/shape_filter_dialog_gray_white_9dp">
 
     <TextView
             android:id="@+id/tv1"
@@ -148,50 +148,114 @@
             app:layout_constraintStart_toStartOf="@id/tv1"
             app:layout_constraintTop_toBottomOf="@id/tv4"/>
 
-    <TextView
-            android:id="@+id/tv6"
-            android:layout_width="wrap_content"
+    <RadioGroup
+            android:id="@+id/rbSexAll"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:background="@drawable/shape_radio_sex_btn"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="男性"
-            android:textColor="#ff000000"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/tv5"/>
+            app:layout_constraintLeft_toLeftOf="@id/tv1"
+            app:layout_constraintRight_toRightOf="@id/filterAge"
+            app:layout_constraintTop_toBottomOf="@id/tv5">
 
-    <Switch
-            android:id="@+id/switchSexMan"
-            android:layout_width="48dp"
-            android:layout_height="24dp"
-            android:checked="true"
-            android:showText="false"
-            android:thumb="@drawable/switch_button_thumb"
-            android:track="@drawable/selector_switch_ios_track"
-            app:layout_constraintEnd_toEndOf="@id/filterAge"
-            app:layout_constraintTop_toTopOf="@id/tv6"/>
+        <RadioButton
+                android:id="@+id/switchSexMan"
+                android:background="@drawable/selector_filter_sex_rb"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_filter_man_btn"
+                android:text="男性"
+                android:paddingLeft="20dp"
+                android:drawablePadding="10dp"
+                android:gravity="left|center_vertical"
+                android:checked="false"
+                android:textColor="@color/sex_color_selector"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:layout_width="105dp"
+                android:layout_height="40dp"/>
 
 
-    <TextView
-            android:id="@+id/tv7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="女性"
-            android:textColor="#ff000000"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/tv6"/>
+        <RadioButton
+                android:id="@+id/switchSexWoman"
+                android:background="@drawable/selector_filter_sex_rb"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_filter_woman_btn"
+                android:text="女性"
+                android:paddingLeft="20dp"
+                android:drawablePadding="10dp"
+                android:gravity="left|center_vertical"
+                android:checked="false"
+                android:textSize="16sp"
+                android:textColor="@color/sex_color_selector"
+                android:layout_weight="1"
+                android:layout_width="105dp"
+                android:layout_height="40dp"/>
 
-    <Switch
-            android:id="@+id/switchSexWoman"
-            android:layout_width="48dp"
-            android:layout_height="24dp"
-            android:checked="true"
-            android:showText="false"
-            android:thumb="@drawable/switch_button_thumb"
-            android:track="@drawable/selector_switch_ios_track"
-            app:layout_constraintEnd_toEndOf="@id/filterAge"
-            app:layout_constraintTop_toTopOf="@id/tv7"/>
+
+        <RadioButton
+                android:id="@+id/switchSexAll"
+                android:textSize="16sp"
+                android:background="@drawable/selector_filter_sex_rb"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_filter_sexall_btn"
+                android:text="不限"
+                android:drawablePadding="10dp"
+                android:paddingLeft="20dp"
+                android:gravity="left|center_vertical"
+                android:checked="true"
+                android:textColor="@color/sex_color_selector"
+                android:layout_weight="1"
+                android:layout_width="105dp"
+                android:layout_height="40dp"/>
+
+
+    </RadioGroup>
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv6"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="18dp"-->
+    <!--android:text="男性"-->
+    <!--android:textColor="#ff000000"-->
+    <!--android:textSize="16sp"-->
+    <!--app:layout_constraintStart_toStartOf="@id/tv1"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/tv5"/>-->
+
+    <!--<Switch-->
+    <!--android:id="@+id/switchSexMan"-->
+    <!--android:layout_width="48dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:checked="true"-->
+    <!--android:showText="false"-->
+    <!--android:thumb="@drawable/switch_button_thumb"-->
+    <!--android:track="@drawable/selector_switch_ios_track"-->
+    <!--app:layout_constraintEnd_toEndOf="@id/filterAge"-->
+    <!--app:layout_constraintTop_toTopOf="@id/tv6"/>-->
+
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv7"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="18dp"-->
+    <!--android:text="女性"-->
+    <!--android:textColor="#ff000000"-->
+    <!--android:textSize="16sp"-->
+    <!--app:layout_constraintStart_toStartOf="@id/tv1"-->
+    <!--app:layout_constraintTop_toBottomOf="@id/tv6"/>-->
+
+    <!--<Switch-->
+    <!--android:id="@+id/switchSexWoman"-->
+    <!--android:layout_width="48dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:checked="true"-->
+    <!--android:showText="false"-->
+    <!--android:thumb="@drawable/switch_button_thumb"-->
+    <!--android:track="@drawable/selector_switch_ios_track"-->
+    <!--app:layout_constraintEnd_toEndOf="@id/filterAge"-->
+    <!--app:layout_constraintTop_toTopOf="@id/tv7"/>-->
 
 
     <TextView
@@ -205,7 +269,7 @@
             android:textColor="#ff000000"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/tv7"/>
+            app:layout_constraintTop_toBottomOf="@id/rbSexAll"/>
 
 
     <TextView

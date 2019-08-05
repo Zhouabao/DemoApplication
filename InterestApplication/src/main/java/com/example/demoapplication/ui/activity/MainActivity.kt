@@ -123,11 +123,26 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
      */
     private fun showFilterDialog() {
         val sp = SPUtils.getInstance(Constants.SPNAME)
-        var params = hashMapOf<String, Any>()
         filterUserDialog.show()
+
+        filterUserDialog.seekBarAge.setProgress(
+            sp.getInt("limit_age_low", 18).toFloat(),
+            sp.getInt("limit_age_high", 30).toFloat()
+        )
+        filterUserDialog.filterAge.text =
+            "${filterUserDialog.seekBarAge.leftSeekBar.progress.toInt()}-${filterUserDialog.seekBarAge.rightSeekBar.progress.toInt()}岁"
+        filterUserDialog.rbSexAll.check(
+            when (sp.getInt("gender", 30)) {
+                1 -> R.id.switchSexMan
+                2 -> R.id.switchSexWoman
+                else -> R.id.switchSexAll
+            }
+        )
+
         if (UserManager.isUserVip()) {
             filterUserDialog.btnGoVip.visibility = View.GONE
             filterUserDialog.switchSameCity.visibility = View.VISIBLE
+            filterUserDialog.switchSameCity.isChecked = sp.getInt("local_only", 1) == 2
         } else {
             filterUserDialog.btnGoVip.visibility = View.VISIBLE
             filterUserDialog.switchSameCity.visibility = View.GONE
@@ -136,37 +151,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (UserManager.isUserVerify()) {
             filterUserDialog.btnVerify.visibility = View.GONE
             filterUserDialog.switchShowVerify.visibility = View.VISIBLE
+            filterUserDialog.switchShowVerify.isChecked = sp.getInt("audit_only", 1) == 2
+
         } else {
             filterUserDialog.btnVerify.visibility = View.VISIBLE
             filterUserDialog.switchShowVerify.visibility = View.GONE
-        }
-
-        filterUserDialog.switchSameCity.setOnCheckedChangeListener { compoundButton, b ->
-            if (b) {
-                sp.put("local_only", 2)
-                sp.put("city_code", UserManager.getCityCode())
-            } else {
-                sp.put("local_only", 1)
-            }
-        }
-        filterUserDialog.switchSexMan.setOnCheckedChangeListener { compoundButton, b ->
-            if ((!b && !filterUserDialog.switchSexWoman.isChecked) || (b && filterUserDialog.switchSexWoman.isChecked))
-                sp.put("gender", 3)
-            else if (!b && filterUserDialog.switchSexWoman.isChecked)
-                sp.put("gender", 2)
-            else if (b) {
-                sp.put("gender", 1)
-            }
-        }
-        filterUserDialog.switchSexWoman.setOnCheckedChangeListener { compoundButton, b ->
-            if ((!b && !filterUserDialog.switchSexMan.isChecked) || (b && filterUserDialog.switchSexMan.isChecked))
-                sp.put("gender", 3)
-            else if (!b && filterUserDialog.switchSexMan.isChecked)
-                sp.put("gender", 1)
-            else if (b) {
-                sp.put("gender", 2)
-
-            }
         }
 
         filterUserDialog.btnGoVip.onClick {
@@ -177,13 +166,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
         filterUserDialog.seekBarAge.setOnRangeChangedListener(object : OnRangeChangedListener {
             override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
-
             }
 
             override fun onRangeChanged(view: RangeSeekBar?, leftValue: Float, rightValue: Float, isFromUser: Boolean) {
                 filterUserDialog.filterAge.text = "${leftValue.toInt()}-${rightValue.toInt()}岁"
-                sp.put("limit_age_high", rightValue.toInt())
-                sp.put("limit_age_low", leftValue.toInt())
             }
 
             override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
@@ -192,6 +178,31 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         })
 
         filterUserDialog.btnCompleteFilter.onClick {
+            sp.put("limit_age_high", filterUserDialog.seekBarAge.rightSeekBar.progress.toInt())
+            sp.put("limit_age_low", filterUserDialog.seekBarAge.leftSeekBar.progress.toInt())
+            when (filterUserDialog.rbSexAll.checkedRadioButtonId) {
+                R.id.switchSexMan -> {
+                    sp.put("gender", 1)
+                }
+                R.id.switchSexWoman -> {
+                    sp.put("gender", 2)
+                }
+                R.id.switchSexAll -> {
+                    sp.put("gender", 3)
+                }
+            }
+            if (filterUserDialog.switchSameCity.isChecked) {
+                sp.put("local_only", 2)
+                sp.put("city_code", UserManager.getCityCode())
+            } else {
+                sp.put("local_only", 1)
+            }
+            if (filterUserDialog.switchShowVerify.isChecked) {
+                sp.put("audit_only", 2)
+            } else {
+                sp.put("audit_only", 1)
+            }
+
             EventBus.getDefault().post(RefreshEvent(true))
             filterUserDialog.dismiss()
         }
