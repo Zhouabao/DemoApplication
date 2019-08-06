@@ -1,5 +1,6 @@
 package com.example.demoapplication.presenter.view
 
+import com.example.demoapplication.model.MessageListBean1
 import com.kotlin.base.presenter.view.BaseView
 
 /**
@@ -9,4 +10,5 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface MessageListView:BaseView {
+    fun onMessageCensusResult(data: MessageListBean1?)
 }

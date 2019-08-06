@@ -4,7 +4,7 @@ import android.app.Activity
 import com.blankj.utilcode.util.SPUtils
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.model.SquareMsgListBean
+import com.example.demoapplication.model.LikeMeListBean
 import com.example.demoapplication.presenter.view.MessageLikeMeView
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
@@ -24,8 +24,8 @@ class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
     fun likeLists(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .likeLists(params)
-            .excute(object : BaseSubscriber<BaseResp<SquareMsgListBean?>>(mView) {
-                override fun onNext(t: BaseResp<SquareMsgListBean?>) {
+            .excute(object : BaseSubscriber<BaseResp<LikeMeListBean?>>(mView) {
+                override fun onNext(t: BaseResp<LikeMeListBean?>) {
                     if (t.code == 200) {
                         SPUtils.getInstance(Constants.SPNAME).put("isvip", t.data?.isvip ?: 0)
                         mView.onLikeListsResult(t.data?.list ?: mutableListOf())

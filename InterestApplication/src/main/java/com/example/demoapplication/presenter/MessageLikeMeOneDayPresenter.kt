@@ -3,6 +3,7 @@ package com.example.demoapplication.presenter
 import android.app.Activity
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.LikeMeBean
+import com.example.demoapplication.model.LikeMeOneDayBean
 import com.example.demoapplication.presenter.view.MessageLikeMeOneDayView
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
@@ -22,8 +23,8 @@ class MessageLikeMeOneDayPresenter : BasePresenter<MessageLikeMeOneDayView>() {
     fun likeListsCategory(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .likeListsCategory(params)
-            .excute(object : BaseSubscriber<BaseResp<MutableList<LikeMeBean>?>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<LikeMeBean>?>) {
+            .excute(object : BaseSubscriber<BaseResp<MutableList<LikeMeOneDayBean>?>>(mView) {
+                override fun onNext(t: BaseResp<MutableList<LikeMeOneDayBean>?>) {
                     if (t.code == 200) {
                         mView.onLikeListResult(t.data ?: mutableListOf())
                     } else if (t.code == 403) {

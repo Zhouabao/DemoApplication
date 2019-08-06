@@ -20,8 +20,9 @@
 
     <TextView
             android:id="@+id/likeMeCount"
+            android:gravity="center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="30dp"
             android:text="3 人对你感兴趣"
             android:textColor="#ff9b9b9b"
             android:textSize="14sp"
@@ -46,5 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/likeMeCount"/>
+            app:layout_constraintTop_toBottomOf="@id/likeMeCount"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

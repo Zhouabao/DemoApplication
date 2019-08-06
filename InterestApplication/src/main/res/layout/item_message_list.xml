@@ -39,7 +39,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
-                android:id="@+id/msgLatelyTime"
+                android:id="@+id/latelyTime"
                 android:text="2分钟前"
                 android:textColor="#ff999999"
                 android:textSize="12sp"
@@ -50,7 +50,7 @@
                 app:layout_constraintTop_toTopOf="@id/msgTitle"/>
 
         <TextView
-                android:id="@+id/msgText"
+                android:id="@+id/text"
                 android:layout_marginTop="6dp"
                 android:layout_width="0dp"
                 android:layout_height="20dp"
@@ -61,12 +61,12 @@
                 android:textSize="14sp"
                 android:layout_marginRight="30dp"
                 app:layout_constraintLeft_toLeftOf="@id/msgTitle"
-                app:layout_constraintRight_toLeftOf="@id/msgNewCount"
+                app:layout_constraintRight_toLeftOf="@id/newCount"
                 app:layout_constraintTop_toBottomOf="@id/msgTitle"
                 />
 
         <TextView
-                android:id="@+id/msgNewCount"
+                android:id="@+id/newCount"
                 android:text="2"
                 android:textColor="@color/colorWhite"
                 android:textSize="12sp"
@@ -80,7 +80,7 @@
                 android:textStyle="bold"
                 android:background="@drawable/orange_bg_rectangle"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/msgText"/>
+                app:layout_constraintTop_toTopOf="@id/text"/>
 
 
         <View
@@ -92,7 +92,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="@id/msgTitle"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/msgText"/>
+                app:layout_constraintTop_toBottomOf="@id/text"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
@@ -110,8 +110,7 @@
                 android:scaleType="centerInside"
                 android:layout_height="50dp"
                 android:layout_marginLeft="15dp"
-                android:src="@drawable/icon_wechat"
-                android:background="@drawable/shape_oval_gray_3300"
+                android:src="@drawable/icon_top_msg"
                 />
 
         <ImageView
@@ -120,10 +119,9 @@
                 android:layout_width="50dp"
                 android:scaleType="centerInside"
                 android:layout_height="50dp"
-                android:src="@drawable/icon_wechat"
+                android:src="@drawable/icon_delete_msg"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/shape_oval_orange"
                 />
     </LinearLayout>
 </com.guanaj.easyswipemenulibrary.EasySwipeMenuLayout>

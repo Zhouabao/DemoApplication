@@ -7,9 +7,9 @@
         android:layout_height="wrap_content">
 
     <com.example.baselibrary.widgets.RoundImageView
-            android:id="@+id/likeMeAvator"
-            android:layout_width="180dp"
-            android:layout_height="320dp"
+            android:id="@+id/likeMeOneDayAvator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:src="@drawable/img_avatar_01"
             app:borderRadius="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -18,7 +18,7 @@
 
 
     <ImageView
-            android:id="@+id/likeMeType"
+            android:id="@+id/likeMeOneDayType"
             android:scaleType="centerInside"
             android:background="@drawable/shape_oval_white"
             android:src="@drawable/icon_like"
@@ -26,8 +26,8 @@
             android:layout_marginTop="10dp"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            app:layout_constraintRight_toRightOf="@id/likeMeAvator"
-            app:layout_constraintTop_toTopOf="@id/likeMeAvator"/>
+            app:layout_constraintRight_toRightOf="@id/likeMeOneDayAvator"
+            app:layout_constraintTop_toTopOf="@id/likeMeOneDayAvator"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

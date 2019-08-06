@@ -21,12 +21,12 @@ class MessageSquareAdapter : BaseQuickAdapter<SquareMsgBean, BaseViewHolder>(R.l
     override fun convert(holder: BaseViewHolder, item: SquareMsgBean) {
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.msgIcon)
         holder.itemView.msgTitle.text = item.nickname ?: ""
-        holder.itemView.msgText.text = when (item.type) {
+        holder.itemView.text.text = when (item.type) {
             1 -> {
                 "赞了你的动态"
             }
             2 -> {
-                SpanUtils.with(holder.itemView.msgText)
+                SpanUtils.with(holder.itemView.text)
                     .append("评论\t\t")
                     .setForegroundColor(mContext.resources.getColor(R.color.colorBlack99))
                     .append(item.content ?: "")

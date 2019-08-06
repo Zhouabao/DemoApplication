@@ -338,7 +338,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tidings/messageCensus${Constants.END_BASE_URL}")
-    fun messageCensus(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<MutableList<HiMessageBean>?>>
+    fun messageCensus(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<MessageListBean1?>>
 
     /**
      * 广场消息列表
@@ -352,14 +352,21 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("relationship/likeLists${Constants.END_BASE_URL}")
-    fun likeLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareMsgListBean?>>
+    fun likeLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LikeMeListBean?>>
 
     /**
      * 喜欢我的列表（某一天的）
      */
     @FormUrlEncoded
     @POST("relationship/likeListsCategory${Constants.END_BASE_URL}")
-    fun likeListsCategory(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LikeMeBean>?>>
+    fun likeListsCategory(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LikeMeOneDayBean>?>>
+
+    /**
+     * 获取通讯录
+     */
+    @FormUrlEncoded
+    @POST("relationship/getLists${Constants.END_BASE_URL}")
+    fun getContactLists(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<ContactDataBean?>>
 
     @GET
     fun getFileFromNet(@Url url: String): Observable<ResponseBody>

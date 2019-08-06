@@ -50,10 +50,12 @@
             app:layout_constraintTop_toBottomOf="@id/llTitle"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            app:msv_viewState="content">
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/refreshLayout"
+                app:srlEnableRefresh="false"
+                app:srlEnableLoadMoreWhenContentNotFull="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -79,7 +81,6 @@
                         android:text="3 人对你感兴趣"
                         android:textColor="#ff9b9b9b"
                         android:textSize="14sp"
-                        android:drawableRight="@drawable/icon_more_right"
                         app:layout_constraintLeft_toLeftOf="@id/likeDate"
                         app:layout_constraintTop_toBottomOf="@id/likeDate"
                         />
@@ -99,7 +100,9 @@
                         android:layout_width="0dp"
                         android:layout_marginTop="8dp"
                         android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="@id/likeDate"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/likeCount"/>
             </androidx.constraintlayout.widget.ConstraintLayout>

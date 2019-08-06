@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.model.LikeMeBean
+import com.example.demoapplication.model.LikeMeOneDayBean
 import com.example.demoapplication.presenter.MessageLikeMeOneDayPresenter
 import com.example.demoapplication.presenter.view.MessageLikeMeOneDayView
 import com.example.demoapplication.ui.adapter.LikeMeOneDayGirdAdapter
@@ -60,6 +60,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
 
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
+        refreshLayout.setEnableAutoLoadMore(true)
 
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -77,11 +78,16 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         )
         likeRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, likeRv)
+
+
+        likeCount.text = "${intent.getIntExtra("count", 0)} 人对你感兴趣"
+        likeDate.text = "${intent.getStringExtra("date")}"
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
         params["page"] = page
+        mPresenter.likeListsCategory(params)
 
     }
 
@@ -89,12 +95,16 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         page = 1
         params["page"] = page
         adapter.data.clear()
+        refreshLayout.setNoMoreData(false)
+        mPresenter.likeListsCategory(params)
     }
 
-    override fun onLikeListResult(datas: MutableList<LikeMeBean>) {
+    override fun onLikeListResult(datas: MutableList<LikeMeOneDayBean>) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (datas.isNullOrEmpty()) {
             refreshLayout.finishLoadMoreWithNoMoreData()
+        } else {
+            refreshLayout.finishLoadMore(true)
         }
         adapter.addData(datas)
         refreshLayout.finishRefresh(true)
@@ -102,6 +112,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
 
     override fun onError(text: String) {
         stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+        refreshLayout.finishLoadMore(false)
         stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
             getString(R.string.retry_load_error)
         } else {

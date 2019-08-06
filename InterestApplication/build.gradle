@@ -106,12 +106,19 @@ dependencies {
     implementation 'com.amap.api:search:latest.integration'
     //卡片模式
     implementation "com.yuyakaido.android:card-stack-view:2.3.4"
+    //伸缩的TextView
     implementation 'com.github.MZCretin:ExpandableTextView:v1.6.1'
+    //跑马灯
     implementation 'com.github.385841539:MarqueeView:1.0.0'
+    //带索引的通讯录
+    implementation 'com.github.mcxtzhang:SuspensionIndexBar:V1.0.0'
+//    compile 'com.github.nanchen2251:WaveSideBar:1.0.6'
 
     // 添加依赖。注意，版本号必须一致。
     // 基础功能 (必需)
     implementation 'com.netease.nimlib:basesdk:6.1.1'
     // 音视频需要
     implementation 'com.netease.nimlib:avchat:6.1.1'
+    implementation files('libs\\pinyin4j-2.5.0.jar')
+
 }

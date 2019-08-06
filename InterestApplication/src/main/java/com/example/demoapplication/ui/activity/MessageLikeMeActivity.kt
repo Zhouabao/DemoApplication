@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.LikeMeBean
 import com.example.demoapplication.presenter.MessageLikeMePresenter
 import com.example.demoapplication.presenter.view.MessageLikeMeView
 import com.example.demoapplication.ui.adapter.LikeMeAdapter
+import com.example.demoapplication.ui.dialog.ChargeVipDialog
 import com.example.demoapplication.utils.UserManager
-import com.example.demoapplication.widgets.DividerItemDecoration
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -27,7 +26,8 @@ import org.jetbrains.anko.startActivity
  * 对我感兴趣的
  */
 class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), MessageLikeMeView, OnRefreshListener,
-    OnLoadMoreListener {
+    OnLoadMoreListener, View.OnClickListener {
+
 
     private var page = 1
     private val params by lazy {
@@ -53,6 +53,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
             finish()
         }
 
+        lockToSee.setOnClickListener(this)
         lockToSee.visibility = if (UserManager.isUserVip()) {
             View.GONE
         } else {
@@ -68,19 +69,18 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         refreshLayout.setEnableAutoLoadMore(true)
 
         likeMeRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        likeMeRv.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.HORIZONTAL_LIST,
-                SizeUtils.dp2px(20F),
-                this.resources.getColor(R.color.colorWhite)
-            )
-        )
         likeMeRv.adapter = adapter
 
 
-        adapter.setOnItemClickListener { _, view, position ->
-            startActivity<MessageLikeMeOneDayActivity>("date" to "${adapter.data[position].date}")
+        adapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.likeMeCount -> {
+                    startActivity<MessageLikeMeOneDayActivity>(
+                        "date" to "${adapter.data[position].date}",
+                        "count" to adapter.data[position].count
+                    )
+                }
+            }
         }
     }
 
@@ -103,10 +103,11 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
     override fun onLikeListsResult(data: MutableList<LikeMeBean>) {
         if (data.size < Constants.PAGESIZE) {
             refreshLayout.finishLoadMoreWithNoMoreData()
+        } else {
+            refreshLayout.finishLoadMore(true)
         }
         adapter.addData(data)
         refreshLayout.finishRefresh()
-        refreshLayout.finishLoadMore()
     }
 
     override fun onError(text: String) {
@@ -116,5 +117,15 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         } else {
             getString(R.string.retry_net_error)
         }
+    }
+
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.lockToSee->{
+                ChargeVipDialog(this).show()
+            }
+        }
+
+
     }
 }

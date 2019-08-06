@@ -53,6 +53,9 @@
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/refreshLayout"
+                app:srlEnableRefresh="false"
+                app:srlEnableLoadMore="true"
+                app:srlEnableLoadMoreWhenContentNotFull="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

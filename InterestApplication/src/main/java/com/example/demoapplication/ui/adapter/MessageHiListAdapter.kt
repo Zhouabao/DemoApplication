@@ -17,10 +17,10 @@ class MessageHiListAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.l
     override fun convert(holder: BaseViewHolder, item: HiMessageBean) {
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.msgIcon)
         holder.itemView.msgTitle.text = item.nickname ?: ""
-        holder.itemView.msgText.text = item.content ?: ""
-        holder.itemView.msgLatelyTime.text = item.create_time ?: ""
-        holder.itemView.msgNewCount.text = "${item.count}"
-        holder.itemView.msgText.text = "有${item.count}个人对你感兴趣，快来看看吧"
+        holder.itemView.text.text = item.content ?: ""
+        holder.itemView.latelyTime.text = item.create_time ?: ""
+        holder.itemView.newCount.text = "${item.count}"
+        holder.itemView.text.text = "有${item.count}个人对你感兴趣，快来看看吧"
     }
 
 }

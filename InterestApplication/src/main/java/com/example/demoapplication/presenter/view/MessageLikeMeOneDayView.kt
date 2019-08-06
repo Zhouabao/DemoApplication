@@ -1,6 +1,6 @@
 package com.example.demoapplication.presenter.view
 
-import com.example.demoapplication.model.LikeMeBean
+import com.example.demoapplication.model.LikeMeOneDayBean
 import com.kotlin.base.presenter.view.BaseView
 
 /**
@@ -10,5 +10,5 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface MessageLikeMeOneDayView:BaseView {
-    fun onLikeListResult(datas: MutableList<LikeMeBean>)
+    fun onLikeListResult(datas: MutableList<LikeMeOneDayBean>)
 }

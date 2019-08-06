@@ -32,9 +32,9 @@ class MessageListAdapter : BaseQuickAdapter<MessageListBean, BaseViewHolder>(R.l
             }
         )
         holder.itemView.msgTitle.text = item.title
-        holder.itemView.msgText.text = item.msg
-        holder.itemView.msgLatelyTime.text = item.time
-        holder.itemView.msgNewCount.text = "${item.count}"
+        holder.itemView.text.text = item.msg
+        holder.itemView.latelyTime.text = item.time
+        holder.itemView.newCount.text = "${item.count}"
     }
 
 }
