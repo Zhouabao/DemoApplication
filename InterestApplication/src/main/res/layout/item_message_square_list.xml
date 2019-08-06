@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:background="@color/colorWhite"
+        android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/msgIcon"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/img_avatar_01"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/msgTitle"
+            android:layout_marginLeft="7dp"
+            android:text="发现"
+            android:textColor="#ff222222"
+            android:textSize="16sp"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/msgIcon"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+            android:id="@+id/msgText"
+            android:layout_marginTop="6dp"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="有XX个人对你感兴趣，快来看看吧"
+            android:textColor="#ff999999"
+            android:textSize="14sp"
+            android:layout_marginRight="30dp"
+            app:layout_constraintLeft_toLeftOf="@id/msgTitle"
+            app:layout_constraintTop_toBottomOf="@id/msgTitle"
+            />
+
+    <TextView
+            android:visibility="gone"
+            android:id="@+id/squareContent"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:ellipsize="end"
+            android:background="@drawable/shape_rectangle_gray_5dp"
+            android:text="随便打点文字还是没有问题的最…四排"
+            android:textColor="#ff333333"
+            android:textSize="8sp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.example.baselibrary.widgets.RoundImageView
+            android:id="@+id/squareImg"
+            android:visibility="invisible"
+            android:layout_marginRight="15dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/img_avatar_01"
+            app:borderRadius="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:type="round"/>
+
+    <ImageView
+            android:id="@+id/squareType"
+            android:layout_width="28dp"
+            android:layout_height="18dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_play_white"
+            app:layout_constraintBottom_toBottomOf="@id/squareImg"
+            app:layout_constraintLeft_toLeftOf="@id/squareImg"
+            app:layout_constraintRight_toRightOf="@id/squareImg"
+            app:layout_constraintTop_toTopOf="@id/squareImg"
+            />
+
+
+    <View
+            android:id="@+id/msgDivider"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/msgTitle"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/msgText"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

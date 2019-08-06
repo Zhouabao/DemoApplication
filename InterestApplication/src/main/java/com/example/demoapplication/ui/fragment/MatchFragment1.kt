@@ -150,7 +150,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         hashMapOf<String, Any>(
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
-            "target_accid" to ""
+            "target_accid" to "",
+            "tag_id" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
         )
     }
 
@@ -237,10 +238,10 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     //todo  这里应该还要传参数
     override fun onGetLikeResult(success: Boolean, data: StatusBean?) {
         if (success) {
-            matchUserAdapter.data.removeAt(matchUserAdapter.data.size - 1)
             if (data != null && data.status == 2) {
-                startActivity<MatchSucceedActivity>()
+                startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[matchUserAdapter.data.size - 1])
             }
+            matchUserAdapter.remove(matchUserAdapter.data.size - 1)
         } else {
             matchUserAdapter.data.add(
                 matchUserAdapter.data.size - 1,
@@ -266,6 +267,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
+        params["tag_id"] = event.label.id
         matchUserAdapter.data.clear()
         page = 1
         matchParams["page"] = page

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.MessageHiActivity">
+
+    <LinearLayout
+            android:id="@+id/llTitle"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="24dp"
+                android:src="@drawable/icon_return"
+                android:layout_height="24dp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/hotT1"
+                android:layout_marginLeft="12dp"
+                android:text="招呼列表"
+                android:textColor="@color/colorBlackTitle"
+                android:textSize="20sp"
+                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+
+
+        <Button
+                android:id="@+id/tagAllRead"
+                android:text="全部已读"
+                android:background="@drawable/selector_confirm_btn_15dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="86dp"
+                android:enabled="false"
+                android:textColor="@color/complete_btn_color_selector"
+                android:textSize="14sp"
+                android:layout_marginRight="15dp"
+                android:layout_height="30dp"/>
+    </LinearLayout>
+
+    <com.kennyc.view.MultiStateView
+            android:id="@+id/stateview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTitle"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout">
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                app:srlDisableContentWhenLoading="true"
+                app:srlEnableLoadMoreWhenContentNotFull="false"
+                android:id="@+id/refreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/messageHiRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.kennyc.view.MultiStateView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

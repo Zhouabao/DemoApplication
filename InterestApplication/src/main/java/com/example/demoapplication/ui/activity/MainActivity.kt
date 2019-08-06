@@ -217,9 +217,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             R.id.filterBtn -> {
                 showFilterDialog()
             }
-            R.id.notificationBtn -> {
+            R.id.notificationBtn -> {//点击通知，进入消息列表
+                startActivity<MessageListActivity>()
             }
-            R.id.ivUserFace -> {
+            R.id.ivUserFace -> {//点击头像，进入个人中心
                 startActivity<UserCenterActivity>()
             }
         }

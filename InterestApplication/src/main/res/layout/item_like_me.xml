@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <TextView
+            android:id="@+id/likeMeDate"
+            android:text="2019.08.01"
+            android:textColor="#ff333333"
+            android:textSize="18sp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/likeMeCount"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="3 人对你感兴趣"
+            android:textColor="#ff9b9b9b"
+            android:textSize="14sp"
+            android:drawablePadding="6dp"
+            android:drawableRight="@drawable/icon_more_right"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeDate"
+            app:layout_constraintTop_toBottomOf="@id/likeMeDate"
+            />
+
+    <View
+            android:id="@+id/likeMeNew"
+            android:layout_marginLeft="2dp"
+            android:background="@drawable/shape_oval_orange"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            app:layout_constraintLeft_toRightOf="@id/likeMeDate"
+            app:layout_constraintTop_toTopOf="@id/likeMeDate"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/likeOneDayRv"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/likeMeCount"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

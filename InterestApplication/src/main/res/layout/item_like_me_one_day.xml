@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content">
+
+    <com.example.baselibrary.widgets.RoundImageView
+            android:id="@+id/likeMeAvator"
+            android:layout_width="180dp"
+            android:layout_height="320dp"
+            android:src="@drawable/img_avatar_01"
+            app:borderRadius="5dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:type="round"/>
+
+
+    <ImageView
+            android:id="@+id/likeMeType"
+            android:scaleType="centerInside"
+            android:background="@drawable/shape_oval_white"
+            android:src="@drawable/icon_like"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintRight_toRightOf="@id/likeMeAvator"
+            app:layout_constraintTop_toTopOf="@id/likeMeAvator"/>
+
+    <TextView
+            android:id="@+id/likeMeTag"
+            android:text="游戏"
+            android:background="@drawable/shape_rectangle_gray_white_15dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="10sp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/likeMeNickname"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeInfo"/>
+
+    <View
+            android:id="@+id/view"
+            android:background="@drawable/shape_oval_orange"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/likeMeNickname"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeInfo"
+            app:layout_constraintTop_toTopOf="@id/likeMeNickname"/>
+
+    <TextView
+            android:id="@+id/likeMeNickname"
+            android:layout_marginBottom="3dp"
+            android:text="这大概就是这大概就是"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="#ffffffff"
+            android:textSize="14sp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/likeMeInfo"
+            app:layout_constraintLeft_toRightOf="@id/view"/>
+
+
+    <TextView
+            android:id="@+id/likeMeInfo"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="22 / 女 / 巨蟹座 / 18.85km / 产品 "
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp"
+            android:layout_width="0dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeAvator"
+            app:layout_constraintRight_toRightOf="@id/likeMeAvator"
+            app:layout_goneMarginBottom="10dp"/>
+
+
+    <TextView
+            android:id="@+id/likeMeTagCover"
+            android:visibility="gone"
+            android:background="@drawable/shape_rectangle_gray_white_15dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/likeMeTag"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeTag"
+            app:layout_constraintRight_toRightOf="@id/likeMeTag"
+            app:layout_constraintTop_toTopOf="@id/likeMeTag"/>
+
+
+    <TextView
+            android:id="@+id/likeMeNicknameCover"
+            android:visibility="gone"
+            android:layout_marginBottom="3dp"
+            android:background="@color/colorWhite"
+            android:textSize="14sp"
+            android:layout_width="0dp"
+            android:layout_height="17dp"
+            app:layout_constraintBottom_toBottomOf="@id/likeMeNickname"
+            app:layout_constraintLeft_toLeftOf="@id/view"
+            app:layout_constraintRight_toRightOf="@id/likeMeNickname"
+            app:layout_constraintTop_toTopOf="@id/likeMeNickname"/>
+
+    <TextView
+            android:id="@+id/likeMeInfoCover"
+            android:visibility="gone"
+            android:background="#CCC"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/likeMeInfo"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeInfo"
+            app:layout_constraintRight_toRightOf="@id/likeMeInfo"
+            app:layout_constraintTop_toTopOf="@id/likeMeInfo"
+            />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

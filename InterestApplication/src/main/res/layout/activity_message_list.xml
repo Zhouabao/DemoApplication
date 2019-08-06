@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.MessageListActivity">
+
+    <LinearLayout
+            android:id="@+id/llTitle"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="24dp"
+                android:src="@drawable/icon_return"
+                android:layout_height="24dp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/hotT1"
+                android:layout_marginLeft="12dp"
+                android:text="消息"
+                android:textColor="@color/colorBlackTitle"
+                android:textSize="20sp"
+                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+
+        <ImageView
+                android:id="@+id/contactBoockBtn"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/icon_setting"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+    </LinearLayout>
+
+    <com.kennyc.view.MultiStateView
+            android:id="@+id/stateview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTitle"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/messageListRv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </com.kennyc.view.MultiStateView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

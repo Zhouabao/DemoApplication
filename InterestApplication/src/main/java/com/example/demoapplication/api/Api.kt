@@ -324,6 +324,42 @@ interface Api {
     @POST("jobs/getJobList${Constants.END_BASE_URL}")
     fun getJobList(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<MutableList<LabelBean>?>>
 
+    /****************************消息************************************/
+    /**
+     * 给我打招呼的列表
+     */
+    @FormUrlEncoded
+    @POST("tidings/greatLists${Constants.END_BASE_URL}")
+    fun greatLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<HiMessageBean>?>>
+
+
+    /**
+     * 所有的消息列表
+     */
+    @FormUrlEncoded
+    @POST("Tidings/messageCensus${Constants.END_BASE_URL}")
+    fun messageCensus(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<MutableList<HiMessageBean>?>>
+
+    /**
+     * 广场消息列表
+     */
+    @FormUrlEncoded
+    @POST("tidings/squareLists${Constants.END_BASE_URL}")
+    fun squareLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareLitBean?>>
+
+    /**
+     * 喜欢我的列表（所有日期的）
+     */
+    @FormUrlEncoded
+    @POST("relationship/likeLists${Constants.END_BASE_URL}")
+    fun likeLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareMsgListBean?>>
+
+    /**
+     * 喜欢我的列表（某一天的）
+     */
+    @FormUrlEncoded
+    @POST("relationship/likeListsCategory${Constants.END_BASE_URL}")
+    fun likeListsCategory(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LikeMeBean>?>>
 
     @GET
     fun getFileFromNet(@Url url: String): Observable<ResponseBody>

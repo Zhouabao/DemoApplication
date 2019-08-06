@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:id="@+id/content"
+android:layout_width="match_parent"
+android:background="@color/colorWhite"
+android:layout_height="wrap_content">
+
+<de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/msgIcon"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/img_avatar_01"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+<TextView
+        android:id="@+id/msgTitle"
+        android:layout_marginLeft="7dp"
+        android:text="发现"
+        android:textColor="#ff222222"
+        android:textSize="16sp"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/msgIcon"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+<TextView
+        android:layout_marginLeft="15dp"
+        android:text="24:00:00"
+        android:textColor="@color/colorWhite"
+        android:textSize="8sp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:background="@drawable/gradient_message_hi_time_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/msgTitle"
+        app:layout_constraintLeft_toRightOf="@id/msgTitle"
+        app:layout_constraintTop_toTopOf="@id/msgTitle"/>
+
+<TextView
+        android:id="@+id/msgLatelyTime"
+        android:text="2分钟前"
+        android:textColor="#ff999999"
+        android:textSize="12sp"
+        android:layout_marginRight="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/msgTitle"/>
+
+<TextView
+        android:id="@+id/msgText"
+        android:layout_marginTop="6dp"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="有XX个人对你感兴趣，快来看看吧"
+        android:textColor="#ff999999"
+        android:textSize="14sp"
+        android:layout_marginRight="30dp"
+        app:layout_constraintLeft_toLeftOf="@id/msgTitle"
+        app:layout_constraintRight_toLeftOf="@id/msgNewCount"
+        app:layout_constraintTop_toBottomOf="@id/msgTitle"
+        />
+
+<TextView
+        android:id="@+id/msgNewCount"
+        android:text="2"
+        android:textColor="@color/colorWhite"
+        android:textSize="12sp"
+        android:layout_marginRight="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:textStyle="bold"
+        android:background="@drawable/orange_bg_rectangle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/msgText"/>
+
+
+<View
+        android:id="@+id/msgDivider"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/msgTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/msgText"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

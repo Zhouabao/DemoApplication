@@ -18,6 +18,7 @@
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:srlEnableLoadMoreWhenContentNotFull="false"
             android:background="@color/colorWhite"
             tools:context=".ui.fragment.SquareFragment">
 

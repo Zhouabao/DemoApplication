@@ -108,4 +108,10 @@ dependencies {
     implementation "com.yuyakaido.android:card-stack-view:2.3.4"
     implementation 'com.github.MZCretin:ExpandableTextView:v1.6.1'
     implementation 'com.github.385841539:MarqueeView:1.0.0'
+
+    // 添加依赖。注意，版本号必须一致。
+    // 基础功能 (必需)
+    implementation 'com.netease.nimlib:basesdk:6.1.1'
+    // 音视频需要
+    implementation 'com.netease.nimlib:avchat:6.1.1'
 }

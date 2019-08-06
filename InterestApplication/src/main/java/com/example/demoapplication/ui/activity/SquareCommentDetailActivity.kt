@@ -47,7 +47,9 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import kotlinx.android.synthetic.main.activity_square_comment_detail.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
@@ -723,7 +725,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onResume() {
         super.onResume()
-//        squareUserVideo.onVideoResume(false)
+        squareUserVideo.onVideoResume(false)
         if (mediaPlayer != null)
             mediaPlayer!!.resumePlay()
 //        squareUserVideo.onVideoResume()
@@ -784,6 +786,49 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                             }
                         })
                 }
+            }
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
+                GSYVideoManager.releaseAllVideos()
+                SwitchUtil.clonePlayState(squareUserVideo)
+                val state = squareUserVideo.currentState
+                //延迟加2S
+                squareUserVideo.seekOnStart = squareUserVideo.gsyVideoManager.currentPosition + 1000
+                squareUserVideo.startPlayLogic()
+                squareUserVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+                    override fun onStartPrepared(url: String?, vararg objects: Any?) {
+                        super.onStartPrepared(url, *objects)
+                        GSYVideoManager.instance().isNeedMute = true
+                    }
+
+                    override fun onPrepared(url: String?, vararg objects: Any?) {
+                        super.onPrepared(url, *objects)
+                        GSYVideoManager.instance().isNeedMute = true
+                        if (state == GSYVideoView.CURRENT_STATE_PAUSE) {
+                            squareUserVideo.onVideoPause()
+                        } else if (state == GSYVideoView.CURRENT_STATE_AUTO_COMPLETE || state == GSYVideoView.CURRENT_STATE_ERROR) {
+                            SwitchUtil.release()
+                            GSYVideoManager.releaseAllVideos()
+                        }
+                    }
+
+                    override fun onClickResume(url: String?, vararg objects: Any?) {
+                        super.onClickResume(url, *objects)
+                        squareUserVideo.onVideoResume()
+                    }
+
+                    override fun onAutoComplete(url: String?, vararg objects: Any?) {
+                        super.onAutoComplete(url, *objects)
+                        SwitchUtil.release()
+                        GSYVideoManager.releaseAllVideos()
+                    }
+                })
             }
         }
     }
