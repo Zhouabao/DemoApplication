@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+            android:id="@+id/tv_time"
+            android:text="13:24"
+            android:textColor="#ffd2d2d2"
+            android:textSize="12sp"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/targetAvator"
+            android:src="@drawable/img_avatar_01"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_time"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/targetLabels"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/targetAvator"/>
+
+    <ImageView
+            android:id="@+id/targetMatchIv"
+            android:src="@drawable/icon_like_small"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="4dp"
+            app:layout_constraintRight_toLeftOf="@id/targetMatchWay"
+            app:layout_constraintTop_toTopOf="@id/targetMatchWay"/>
+
+    <TextView
+            android:id="@+id/targetMatchWay"
+            android:text="通过「王者荣耀」匹配"
+            android:textColor="#ff333333"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/targetLabels"/>
+
+    <TextView
+            android:layout_marginTop="5dp"
+            android:text="找到一样的人了就和他聊聊天吧"
+            android:textColor="#ff6d7278"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/targetMatchWay"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

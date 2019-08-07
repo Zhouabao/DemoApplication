@@ -21,7 +21,7 @@ class RoundTopImageView @JvmOverloads constructor(context: Context, attrs: Attri
 
     init {
         val array = context.obtainStyledAttributes(attrs, R.styleable.RoundTopImageView)
-        val mRadius = array.getDimension(R.styleable.RoundTopImageView_radius, 10f)
+        val mRadius = array.getDimension(R.styleable.RoundTopImageView_topRadius, 10f)
         rids[0] = mRadius
         rids[1] = mRadius
         rids[2] = mRadius

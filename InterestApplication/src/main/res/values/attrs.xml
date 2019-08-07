@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="RoundTopImageView">
-        <attr name="radius" format="reference|dimension" />
+        <attr name="topRadius" format="dimension" />
     </declare-styleable>
 
 <!--验证码框-->

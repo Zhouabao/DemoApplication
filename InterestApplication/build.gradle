@@ -38,7 +38,8 @@ android {
         }
         ndk {
             //设置支持的SO库架构
-            abiFilters 'armeabi', 'armeabi-v7a', 'x86'
+//            abiFilters 'armeabi', 'armeabi-v7a', 'x86'
+            abiFilters "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
         }
 
     }
@@ -49,6 +50,23 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    packagingOptions {
+        pickFirst 'lib/armeabi-v7a/libRSSupport.so'
+        pickFirst 'lib/arm64-v8a/libRSSupport.so'
+        pickFirst 'lib/x86_64/libRSSupport.so'
+        pickFirst 'lib/x86/libRSSupport.so'
+        pickFirst 'lib/arm64-v8a/librsjni.so'
+        pickFirst 'lib/x86/librsjni.so'
+        pickFirst 'lib/x86_64/librsjni.so'
+        pickFirst 'lib/armeabi-v7a/librsjni.so'
+        pickFirst 'lib/x86_64/librsjni_androidx.so'
+        pickFirst 'lib/armeabi-v7a/librsjni_androidx.so'
+        pickFirst 'lib/x86/librsjni_androidx.so'
+        pickFirst 'lib/arm64-v8a/librsjni_androidx.so'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+
     }
 }
 
@@ -116,9 +134,10 @@ dependencies {
 
     // 添加依赖。注意，版本号必须一致。
     // 基础功能 (必需)
-    implementation 'com.netease.nimlib:basesdk:6.1.1'
+//    implementation 'com.netease.nimlib:basesdk:6.1.1'
+
+    implementation project(path: ':NIM_Android_UIKit-master')
     // 音视频需要
-    implementation 'com.netease.nimlib:avchat:6.1.1'
-    implementation files('libs\\pinyin4j-2.5.0.jar')
+//    implementation 'com.netease.nimlib:avchat:6.1.1'
 
 }
