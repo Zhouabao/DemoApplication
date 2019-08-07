@@ -7,19 +7,17 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.netease.nim.uikit.common.ToastHelper;
-
+import androidx.viewpager.widget.ViewPager;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.business.session.constant.Extras;
 import com.netease.nim.uikit.business.session.constant.RequestCode;
+import com.netease.nim.uikit.common.ToastHelper;
 import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nim.uikit.common.media.picker.adapter.ImagePagerAdapterInImageSwitch;
 import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialog;
@@ -200,7 +198,7 @@ public class PreviewImageFromLocalActivity extends UI {
      */
     private void initViewPager() {
         imageViewPager = (ViewPager) findViewById(R.id.viewPagerImage);
-        imageViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+        imageViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrollStateChanged(int arg0) {
             }

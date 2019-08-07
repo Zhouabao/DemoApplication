@@ -5,24 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import com.netease.nim.uikit.common.ToastHelper;
-
+import android.widget.*;
+import androidx.core.view.MenuItemCompat;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.wrapper.NimToolBarOptions;
 import com.netease.nim.uikit.business.contact.core.item.AbsContactItem;
@@ -40,6 +29,7 @@ import com.netease.nim.uikit.business.contact.selector.adapter.ContactSelectAdap
 import com.netease.nim.uikit.business.contact.selector.adapter.ContactSelectAvatarAdapter;
 import com.netease.nim.uikit.business.contact.selector.viewholder.ContactsMultiSelectHolder;
 import com.netease.nim.uikit.business.contact.selector.viewholder.ContactsSelectHolder;
+import com.netease.nim.uikit.common.ToastHelper;
 import com.netease.nim.uikit.common.activity.ToolBarOptions;
 import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nim.uikit.common.ui.liv.LetterIndexView;
@@ -54,7 +44,7 @@ import java.util.List;
  * <p/>
  * Created by huangjun on 2015/3/3.
  */
-public class ContactSelectActivity extends UI implements View.OnClickListener, android.support.v7.widget.SearchView.OnQueryTextListener {
+public class ContactSelectActivity extends UI implements View.OnClickListener, SearchView.OnQueryTextListener {
 
     public static final String EXTRA_DATA = "EXTRA_DATA"; // 请求数据：Option
     public static final String RESULT_DATA = "RESULT_DATA"; // 返回结果

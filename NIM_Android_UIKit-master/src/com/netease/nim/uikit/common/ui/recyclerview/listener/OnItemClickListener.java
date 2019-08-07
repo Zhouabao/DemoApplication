@@ -1,7 +1,6 @@
 package com.netease.nim.uikit.common.ui.recyclerview.listener;
 
 import android.view.View;
-
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.IRecyclerView;
 
 

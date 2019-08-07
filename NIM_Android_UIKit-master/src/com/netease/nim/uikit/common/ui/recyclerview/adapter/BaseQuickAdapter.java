@@ -17,13 +17,6 @@ package com.netease.nim.uikit.common.ui.recyclerview.adapter;
 
 import android.animation.Animator;
 import android.content.Context;
-import android.support.annotation.IntDef;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutParams;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +24,13 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-
-import com.netease.nim.uikit.common.ui.recyclerview.animation.AlphaInAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.BaseAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.ScaleInAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.SlideInBottomAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.SlideInLeftAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.SlideInRightAnimation;
+import androidx.annotation.IntDef;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import com.netease.nim.uikit.common.ui.recyclerview.animation.*;
 import com.netease.nim.uikit.common.ui.recyclerview.entity.IExpandable;
 import com.netease.nim.uikit.common.ui.recyclerview.holder.BaseViewHolder;
 import com.netease.nim.uikit.common.ui.recyclerview.loadmore.LoadMoreView;
@@ -733,10 +726,10 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
             mHeaderLayout = new LinearLayout(header.getContext());
             if (orientation == LinearLayout.VERTICAL) {
                 mHeaderLayout.setOrientation(LinearLayout.VERTICAL);
-                mHeaderLayout.setLayoutParams(new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+                mHeaderLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
             } else {
                 mHeaderLayout.setOrientation(LinearLayout.HORIZONTAL);
-                mHeaderLayout.setLayoutParams(new LayoutParams(WRAP_CONTENT, MATCH_PARENT));
+                mHeaderLayout.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, MATCH_PARENT));
             }
         }
         index = index >= mHeaderLayout.getChildCount() ? -1 : index;
@@ -772,7 +765,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         if (mFooterLayout == null) {
             mFooterLayout = new LinearLayout(footer.getContext());
             mFooterLayout.setOrientation(LinearLayout.VERTICAL);
-            mFooterLayout.setLayoutParams(new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+            mFooterLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
         }
         index = index >= mFooterLayout.getChildCount() ? -1 : index;
         mFooterLayout.addView(footer, index);
@@ -878,7 +871,7 @@ public abstract class BaseQuickAdapter<T, K extends BaseViewHolder> extends Recy
         boolean insert = false;
         if (mEmptyView == null) {
             mEmptyView = new FrameLayout(emptyView.getContext());
-            mEmptyView.setLayoutParams(new LayoutParams(MATCH_PARENT, MATCH_PARENT));
+            mEmptyView.setLayoutParams(new FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
             insert = true;
         }
         mEmptyView.removeAllViews();

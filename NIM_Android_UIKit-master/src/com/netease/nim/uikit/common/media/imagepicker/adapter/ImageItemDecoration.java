@@ -3,9 +3,8 @@ package com.netease.nim.uikit.common.media.imagepicker.adapter;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
+import androidx.recyclerview.widget.RecyclerView;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.common.util.sys.ScreenUtil;

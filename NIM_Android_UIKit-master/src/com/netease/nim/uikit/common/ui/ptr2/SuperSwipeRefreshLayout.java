@@ -13,22 +13,10 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.WindowManager;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
@@ -36,6 +24,11 @@ import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 
 public class SuperSwipeRefreshLayout extends ViewGroup {
@@ -597,7 +590,7 @@ public class SuperSwipeRefreshLayout extends ViewGroup {
         }
         if (mTarget instanceof RecyclerView) {
             RecyclerView recyclerView = (RecyclerView) mTarget;
-            LayoutManager layoutManager = recyclerView.getLayoutManager();
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
             int count = recyclerView.getAdapter().getItemCount();
             if (layoutManager instanceof LinearLayoutManager && count > 0) {
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;

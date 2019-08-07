@@ -2,13 +2,12 @@ package com.netease.nim.uikit.business.session.module.list;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import androidx.recyclerview.widget.RecyclerView;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.business.session.emoji.MoonUtil;
 import com.netease.nim.uikit.business.session.helper.TeamNotificationHelper;

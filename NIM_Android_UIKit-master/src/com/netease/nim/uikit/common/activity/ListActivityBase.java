@@ -1,20 +1,18 @@
 package com.netease.nim.uikit.common.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.wrapper.NimToolBarOptions;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseQuickAdapter;
 import com.netease.nim.uikit.common.ui.recyclerview.decoration.DividerItemDecoration;
 import com.netease.nim.uikit.common.ui.recyclerview.holder.BaseViewHolder;
 import com.netease.nim.uikit.common.ui.recyclerview.listener.OnItemClickListener;
+import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 import java.util.List;
-
-import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 /**
  * 列表Activity抽象类

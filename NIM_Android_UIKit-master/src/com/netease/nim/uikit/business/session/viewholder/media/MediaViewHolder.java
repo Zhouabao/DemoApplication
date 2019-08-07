@@ -1,9 +1,8 @@
 package com.netease.nim.uikit.business.session.viewholder.media;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-
+import androidx.recyclerview.widget.RecyclerView;
 import com.netease.nim.uikit.R;
 
 /**

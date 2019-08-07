@@ -1,15 +1,17 @@
 package com.netease.nim.uikit.common.adapter;
 
-import android.arch.lifecycle.GenericLifecycleObserver;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.LifecycleRegistry;
-import android.support.v7.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
 import android.view.ViewGroup;
+import androidx.lifecycle.GenericLifecycleObserver;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class LifecycleViewHolder<T> extends BaseViewHolder<T>
         implements RecyclerView.RecyclerListener, LifecycleOwner {
-
+    @SuppressLint("RestrictedApi")
     public LifecycleViewHolder(ViewGroup parent, int layoutId, LifecycleOwner outerLifecycleOwner) {
         super(parent, layoutId);
 

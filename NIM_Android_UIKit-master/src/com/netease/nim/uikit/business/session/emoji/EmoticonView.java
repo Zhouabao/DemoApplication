@@ -1,9 +1,6 @@
 package com.netease.nim.uikit.business.session.emoji;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -13,7 +10,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.common.util.log.LogUtil;
 
@@ -59,7 +57,7 @@ public class EmoticonView {
         this.pageNumberLayout = pageNumberLayout;
         this.emotPager = mCurPage;
 
-        emotPager.setOnPageChangeListener(new OnPageChangeListener() {
+        emotPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {

@@ -1,8 +1,7 @@
 package com.netease.nim.uikit.common.ui.recyclerview.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-
+import androidx.recyclerview.widget.RecyclerView;
 import com.netease.nim.uikit.common.ui.recyclerview.entity.SectionEntity;
 import com.netease.nim.uikit.common.ui.recyclerview.holder.BaseViewHolder;
 

@@ -3,26 +3,17 @@ package com.netease.nim.uikit.common.media.imagepicker.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PointF;
-import android.graphics.RectF;
-import android.graphics.Region;
-import android.graphics.Shader;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
-
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.view.ViewCompat;
 import com.netease.nim.uikit.R;
 
 import java.io.File;
@@ -33,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public abstract class CropImageView extends android.support.v7.widget.AppCompatImageView {
+public abstract class CropImageView extends AppCompatImageView {
 
     /******************************** 中间的FocusView绘图相关的参数 *****************************/
     public enum Style {

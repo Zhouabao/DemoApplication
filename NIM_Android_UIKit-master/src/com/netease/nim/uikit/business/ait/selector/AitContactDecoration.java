@@ -1,8 +1,7 @@
 package com.netease.nim.uikit.business.ait.selector;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-
+import androidx.recyclerview.widget.RecyclerView;
 import com.netease.nim.uikit.common.ui.recyclerview.decoration.DividerItemDecoration;
 
 import java.util.HashSet;

@@ -2,12 +2,6 @@ package com.netease.nim.uikit.common.ui.recyclerview.adapter;
 
 import android.animation.Animator;
 import android.content.Context;
-import android.support.annotation.IntDef;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutParams;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +9,12 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
-
-import com.netease.nim.uikit.common.ui.recyclerview.animation.AlphaInAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.BaseAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.ScaleInAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.SlideInBottomAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.SlideInLeftAnimation;
-import com.netease.nim.uikit.common.ui.recyclerview.animation.SlideInRightAnimation;
+import androidx.annotation.IntDef;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import com.netease.nim.uikit.common.ui.recyclerview.animation.*;
 import com.netease.nim.uikit.common.ui.recyclerview.holder.BaseViewHolder;
 import com.netease.nim.uikit.common.ui.recyclerview.loadmore.LoadMoreView;
 import com.netease.nim.uikit.common.ui.recyclerview.loadmore.SimpleLoadMoreView;
@@ -846,7 +839,7 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
         boolean insert = false;
         if (mEmptyView == null) {
             mEmptyView = new FrameLayout(emptyView.getContext());
-            mEmptyView.setLayoutParams(new LayoutParams(MATCH_PARENT, MATCH_PARENT));
+            mEmptyView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
             insert = true;
         }
         mEmptyView.removeAllViews();

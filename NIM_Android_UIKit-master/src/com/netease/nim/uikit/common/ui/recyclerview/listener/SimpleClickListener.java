@@ -1,13 +1,12 @@
 package com.netease.nim.uikit.common.ui.recyclerview.listener;
 
 import android.os.Build;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
-
+import androidx.core.view.GestureDetectorCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.IRecyclerView;
 import com.netease.nim.uikit.common.ui.recyclerview.holder.BaseViewHolder;
 

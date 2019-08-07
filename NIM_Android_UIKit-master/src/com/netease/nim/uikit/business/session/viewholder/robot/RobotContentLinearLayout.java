@@ -1,12 +1,11 @@
 package com.netease.nim.uikit.business.session.viewholder.robot;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
+import androidx.annotation.Nullable;
 import com.netease.nim.uikit.business.robot.model.RobotBotContent;
 import com.netease.nim.uikit.business.robot.model.RobotResponseContent;
 import com.netease.nim.uikit.business.robot.parser.elements.base.Element;
