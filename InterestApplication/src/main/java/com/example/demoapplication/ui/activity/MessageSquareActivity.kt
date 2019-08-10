@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.SquareLitBean
+import com.example.demoapplication.nim.activity.ChatActivity
 import com.example.demoapplication.presenter.MessageSquarePresenter
 import com.example.demoapplication.presenter.view.MessageSquareView
 import com.example.demoapplication.ui.adapter.MessageSquareAdapter
@@ -15,6 +16,7 @@ import com.example.demoapplication.utils.UserManager
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nim.uikit.impl.customization.DefaultP2PSessionCustomization
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -73,6 +75,10 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         headNewView.headTitle.text = "未读消息"
         adapter.addHeaderView(headNewView)
         adapter.headerLayout.visibility = View.GONE
+        adapter.setOnItemClickListener { _, view, position ->
+            ChatActivity.start(this, adapter.data[position].accid ?: "", DefaultP2PSessionCustomization(), null)
+//            startActivity<ChatActivity>("accid" to (adapter.data[position].accid ?: ""))
+        }
 
 
         messageSquareHistoryRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)

@@ -1,10 +1,13 @@
 package com.example.demoapplication.ui.adapter
 
 import android.view.View
+import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import com.example.demoapplication.model.MessageListBean
+import com.netease.nim.uikit.business.uinfo.UserInfoHelper
+import com.netease.nimlib.sdk.msg.model.RecentContact
 import kotlinx.android.synthetic.main.item_message_list.view.*
 
 /**
@@ -13,28 +16,30 @@ import kotlinx.android.synthetic.main.item_message_list.view.*
  *    desc   :
  *    version: 1.0
  */
-class MessageListAdapter : BaseQuickAdapter<MessageListBean, BaseViewHolder>(R.layout.item_message_list) {
-    override fun convert(holder: BaseViewHolder, item: MessageListBean) {
+class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.layout.item_message_list) {
+    override fun convert(holder: BaseViewHolder, item: RecentContact) {
         holder.addOnClickListener(R.id.menuTop)
         holder.addOnClickListener(R.id.menuDetele)
         holder.addOnClickListener(R.id.content)
-        if (holder.layoutPosition == data.size - 1) {
+        if (holder.layoutPosition == data.size) {
             holder.itemView.msgDivider.visibility = View.INVISIBLE
         } else {
             holder.itemView.msgDivider.visibility = View.VISIBLE
         }
 
-        holder.itemView.msgIcon.setImageResource(
-            if (holder.layoutPosition % 2 == 0) {
-                R.drawable.img_avatar_01
-            } else {
-                R.drawable.icon_default_avator
-            }
-        )
-        holder.itemView.msgTitle.text = item.title
-        holder.itemView.text.text = item.msg
-        holder.itemView.latelyTime.text = item.time
-        holder.itemView.newCount.text = "${item.count}"
+        if (item.contactId != null) {
+            holder.itemView.msgTitle.text = UserInfoHelper.getUserDisplayName(item.contactId)
+        }
+        GlideUtil.loadCircleImg(mContext, UserInfoHelper.getAvatar(item.contactId), holder.itemView.msgIcon)
+
+        holder.itemView.text.text = item.content
+        holder.itemView.latelyTime.text = TimeUtils.getFriendlyTimeSpanByNow(item.time)
+        if (item.unreadCount == 0) {
+            holder.itemView.newCount.visibility = View.GONE
+        } else {
+            holder.itemView.newCount.text = "${item.unreadCount}"
+            holder.itemView.newCount.visibility = View.VISIBLE
+        }
     }
 
 }

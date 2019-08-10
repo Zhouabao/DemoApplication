@@ -50,7 +50,7 @@ public class WatchPicAndVideoMenuActivity extends UI {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nim_watch_pic_video_menu_activity);
 
-        ToolBarOptions options = new NimToolBarOptions();
+        ToolBarOptions options = new NimToolBarOptions(0);
         options.titleId = R.string.pic_and_video;
         options.navigateId = R.drawable.nim_actionbar_white_back_icon;
         setToolBar(R.id.toolbar, options);

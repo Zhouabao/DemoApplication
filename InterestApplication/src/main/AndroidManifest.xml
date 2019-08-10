@@ -48,7 +48,16 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.ChatActivity">
+        <activity android:name=".nim.activity.DisplayMessageActivity"/>
+        <activity android:name=".nim.location.activity.LocationAmapActivity"/>
+        <activity android:name=".nim.location.activity.NavigationAmapActivity"/>
+        <activity android:name=".nim.activity.MessageInfoActivity">
+        </activity>
+        <activity android:name=".nim.activity.SearchMessageActivity">
+        </activity>
+        <activity android:name=".nim.activity.MessageHistoryActivity">
+        </activity>
+        <activity android:name=".nim.activity.ChatActivity">
         </activity>
         <activity android:name=".ui.activity.ContactBookActivity">
         </activity>

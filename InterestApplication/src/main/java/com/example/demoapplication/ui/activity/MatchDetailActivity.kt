@@ -1,5 +1,6 @@
 package com.example.demoapplication.ui.activity
 
+import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
@@ -447,5 +448,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     override fun onDestroy() {
         super.onDestroy()
         detailScrollView.destroy()
+    }
+
+    companion object {
+        @JvmStatic
+        fun start(context: Context, fromAccount: String) {
+            context.startActivity<MatchDetailActivity>("target_accid" to fromAccount)
+        }
     }
 }

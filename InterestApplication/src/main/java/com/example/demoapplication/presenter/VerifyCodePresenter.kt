@@ -10,6 +10,9 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
+import com.netease.nim.uikit.api.NimUIKit
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.auth.LoginInfo
 
 class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
 
@@ -62,6 +65,30 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 }
             })
 
+
+    }
+
+
+    /**
+     * 登录IM
+     */
+    fun loginIM(info: LoginInfo) {
+        val callback =object :RequestCallback<LoginInfo>{
+            override fun onSuccess(param: LoginInfo) {
+                mView.onIMLoginResult(param,true)
+            }
+
+            override fun onFailed(code: Int) {
+                Log.d("OkHttp","${code}")
+                mView.onIMLoginResult(null,false)
+            }
+
+            override fun onException(exception: Throwable?) {
+
+            }
+
+        }
+        NimUIKit.login(info,callback)
 
     }
 }

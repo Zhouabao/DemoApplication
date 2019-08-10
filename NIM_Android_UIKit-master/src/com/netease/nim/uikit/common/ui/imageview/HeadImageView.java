@@ -124,8 +124,8 @@ public class HeadImageView extends CircleImageView {
                             if (TextUtils.isEmpty(result)) {
                                 result = url;
                             }
-                            final String thumbUrl = makeAvatarThumbNosUrl(result, thumbSize);
-                            loadImage(thumbUrl, defaultResId, thumbSize);
+                            //final String thumbUrl = makeAvatarThumbNosUrl(result, thumbSize);
+                            loadImage(result, defaultResId, thumbSize);
                         }
                     });
         }

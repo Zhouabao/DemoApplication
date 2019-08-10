@@ -51,6 +51,17 @@ public class UserInfoHelper {
         }
     }
 
+
+    // 获取用户原本头像
+    public static String getAvatar(String account) {
+        UserInfo userInfo = NimUIKit.getUserInfoProvider().getUserInfo(account);
+        if (userInfo != null && !TextUtils.isEmpty(userInfo.getAvatar())) {
+            return userInfo.getAvatar();
+        } else {
+            return account;
+        }
+    }
+
     /**
      * @param account         账号
      * @param selfNameDisplay 如果是自己，则显示内容

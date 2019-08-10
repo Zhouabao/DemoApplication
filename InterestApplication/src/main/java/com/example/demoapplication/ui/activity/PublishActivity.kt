@@ -745,7 +745,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             ToastUtils.showShort("字数超长啦~")
         }
         publishBtn.isEnabled =
-            (publishContent.text.isNotEmpty() && publishContent.text.length <= 200) || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()
+            (publishContent.text.isNotEmpty() && (publishContent.text.length <= 200 || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()))
     }
 
     override fun onResume() {

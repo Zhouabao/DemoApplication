@@ -8,6 +8,8 @@ import com.blankj.utilcode.util.*
 import com.example.demoapplication.R
 import com.example.demoapplication.presenter.SetInfoPresenter
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.auth.AuthService
 import kotlinx.android.synthetic.main.activity_settings.*
 import java.io.File
 
@@ -103,8 +105,10 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
                 ToastUtils.showShort("缓存清理成功")
 
             }
-            //退出登录
+            //退出登录，同时退出IM和服务器
             R.id.loginOutBtn -> {
+
+                NIMClient.getService(AuthService::class.java).logout()
             }
             //返回
             R.id.btnBack -> {

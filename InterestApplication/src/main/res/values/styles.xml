@@ -21,16 +21,16 @@
         <item name="android:windowContentOverlay">@null</item>//是否有遮盖
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:fitsSystemWindows">true</item>
-        <item name="android:clipToPadding">false</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorWhite</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">@color/colorLightGray</item>
-        <!--<item name="android:windowNoTitle">true</item>//无标题-->
-        <!--<item name="android:windowActionBar">false</item>//无ActionBar-->
-    </style>
+    <!--<style name="AppTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">-->
+        <!--<item name="android:fitsSystemWindows">true</item>-->
+        <!--<item name="android:clipToPadding">false</item>-->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorWhite</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+        <!--<item name="android:statusBarColor">@color/colorLightGray</item>-->
+        <!--&lt;!&ndash;<item name="android:windowNoTitle">true</item>//无标题&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:windowActionBar">false</item>//无ActionBar&ndash;&gt;-->
+    <!--</style>-->
 
 
     <!-- window 透明的-->

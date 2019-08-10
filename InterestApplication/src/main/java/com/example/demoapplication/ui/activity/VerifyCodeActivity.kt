@@ -7,16 +7,16 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.LoginBean
+import com.example.demoapplication.nim.DemoCache
 import com.example.demoapplication.presenter.VerifyCodePresenter
 import com.example.demoapplication.presenter.view.VerifyCodeView
-import com.example.demoapplication.utils.SharedPreferenceUtil
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.auth.LoginInfo
 import kotlinx.android.synthetic.main.activity_verify_code.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -26,6 +26,8 @@ import org.jetbrains.anko.toast
  * 填写验证码界面
  */
 class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeView, View.OnClickListener {
+
+
     private lateinit var verifyCode: String
     private val phone by lazy { intent.getStringExtra("phone") }
 
@@ -103,32 +105,21 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
         }
     }
 
+    /**
+     * 此时登录成功
+     *      // SDK初始化（启动后台服务，若已经存在用户登录信息， SDK 将完成自动登录）
+    NIMClient.init(this, loginInfo(), options())
+     */
+    private var data: LoginBean? = null
+
     override fun onConfirmVerifyCode(data: LoginBean, isRight: Boolean) {
         if (!isRight) {
 //            toast("验证码输入不正确！")
             onChangeVerifyButtonStatus(false)
         } else if (isRight) {
-            SPUtils.getInstance(Constants.SPNAME).put("qntoken", data.qntk)
-            SPUtils.getInstance(Constants.SPNAME).put("token", data.token)
-            SPUtils.getInstance(Constants.SPNAME).put("accid", data.accid)
+            this.data = data
+            mPresenter.loginIM(LoginInfo(data.accid, data.extra_data?.im_token))
 
-            if (data.userinfo != null && data.userinfo.nickname.isNullOrEmpty()) {
-                startActivity<SetInfoActivity>()
-            } else {
-                UserManager.saveUserInfo(data)
-                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
-                        Constants.SPNAME
-                    ).getStringSet("checkedLabels").isEmpty()
-                ) {
-                    startActivity<LabelsActivity>()
-                } else {
-
-
-                    AppManager.instance.finishAllActivity()
-                    startActivity<MainActivity>()
-
-                }
-            }
         }
     }
 
@@ -139,4 +130,35 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
         onCountTime()
     }
 
+
+    /**
+     * IM登录
+     */
+    override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
+        if (success) {
+            SPUtils.getInstance(Constants.SPNAME).put("imToken", nothing?.token)
+            SPUtils.getInstance(Constants.SPNAME).put("imAccid", nothing?.account)
+
+
+            SPUtils.getInstance(Constants.SPNAME).put("qntoken", data?.qntk)
+            SPUtils.getInstance(Constants.SPNAME).put("token", data?.token)
+            SPUtils.getInstance(Constants.SPNAME).put("accid", data?.accid)
+
+            if (data != null && data!!.userinfo != null && data!!.userinfo!!.nickname.isNullOrEmpty()) {
+                startActivity<SetInfoActivity>()
+            } else {
+                UserManager.saveUserInfo(data!!)
+                DemoCache.setAccount(nothing?.account)
+                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
+                        Constants.SPNAME
+                    ).getStringSet("checkedLabels").isEmpty()
+                ) {
+                    startActivity<LabelsActivity>()
+                } else {
+                    AppManager.instance.finishAllActivity()
+                    startActivity<MainActivity>()
+                }
+            }
+        }
+    }
 }

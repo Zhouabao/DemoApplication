@@ -137,6 +137,10 @@ dependencies {
 //    implementation 'com.netease.nimlib:basesdk:6.1.1'
 
     implementation project(path: ':NIM_Android_UIKit-master')
+    // ViewModel and LiveData
+//    implementation "android.arch.lifecycle:extensions:1.1.0"
+    // Java8 support for Lifecycles
+//    implementation "android.arch.lifecycle:common-java8:1.1.0"
     // 音视频需要
 //    implementation 'com.netease.nimlib:avchat:6.1.1'
 

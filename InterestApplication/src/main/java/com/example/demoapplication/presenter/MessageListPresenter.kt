@@ -10,6 +10,11 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallbackWrapper
+import com.netease.nimlib.sdk.ResponseCode
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.model.RecentContact
 
 /**
  *    author : ZFM
@@ -19,12 +24,15 @@ import com.kotlin.base.rx.BaseSubscriber
  */
 class MessageListPresenter : BasePresenter<MessageListView>() {
 
+    /**
+     * 获取消息中心的内容
+     */
     fun messageCensus(params: HashMap<String, String>) {
         RetrofitFactory.instance.create(Api::class.java)
             .messageCensus(params)
             .excute(object : BaseSubscriber<BaseResp<MessageListBean1?>>(mView) {
                 override fun onNext(t: BaseResp<MessageListBean1?>) {
-                    if (t.code == 200 && t.data != null) {
+                    if (t.code == 200 ) {
                         mView.onMessageCensusResult(t.data)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
@@ -36,6 +44,21 @@ class MessageListPresenter : BasePresenter<MessageListView>() {
                 override fun onError(e: Throwable?) {
                     mView.onError("")
                 }
+            })
+    }
+
+
+    fun getRecentContacts() {
+        NIMClient.getService(MsgService::class.java)
+            .queryRecentContacts()
+            .setCallback(object : RequestCallbackWrapper<MutableList<RecentContact>>() {
+                override fun onResult(code: Int, result: MutableList<RecentContact>?, exception: Throwable?) {
+                    if (code != ResponseCode.RES_SUCCESS.toInt() || result == null) {
+                        return
+                    }
+                    mView.onGetRecentContactResults(result)
+                }
+
             })
     }
 }

@@ -3,6 +3,7 @@ package com.example.demoapplication.presenter.view
 import com.example.demoapplication.model.LoginBean
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
+import com.netease.nimlib.sdk.auth.LoginInfo
 
 interface VerifyCodeView : BaseView {
 
@@ -23,5 +24,7 @@ interface VerifyCodeView : BaseView {
 
     //获取手机号码
     fun onGetPhoneNum()
+
+    fun onIMLoginResult(nothing: LoginInfo?, success: Boolean)
 
 }

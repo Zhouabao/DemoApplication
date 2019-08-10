@@ -204,7 +204,7 @@ public class P2PMessageActivity extends BaseMessageActivity {
 
     @Override
     protected void initToolBar() {
-        ToolBarOptions options = new NimToolBarOptions();
+        ToolBarOptions options = new NimToolBarOptions(0);
         setToolBar(R.id.toolbar, options);
     }
 

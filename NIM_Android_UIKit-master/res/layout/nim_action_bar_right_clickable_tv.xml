@@ -10,12 +10,10 @@
 
     <TextView
         android:id="@+id/action_bar_right_clickable_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/nim_message_button_bottom_send_selector"
+        android:layout_width="50dp"
+        android:layout_height="28dp"
+        android:background="@drawable/selector_confirm_btn_15dp"
         android:gravity="center"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip"
         android:textColor="@color/color_green_text_view_selector"
         android:textSize="14sp" />
 

@@ -46,6 +46,7 @@ class WelcomeActivity : BaseActivity() {
             AMapManager.initLocation(this)
         }
 
+
         //判断是否有登录
         if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
             if (UserManager.isUserInfoMade()) {//是否填写过用户信息

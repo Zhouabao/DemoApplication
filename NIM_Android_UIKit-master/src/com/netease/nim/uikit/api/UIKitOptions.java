@@ -30,12 +30,12 @@ public class UIKitOptions {
     /**
      * 开启@功能
      */
-    public boolean aitEnable = true;
+    public boolean aitEnable = false;
 
     /**
      * 支持@群成员
      */
-    public boolean aitTeamMember = true;
+    public boolean aitTeamMember = false;
 
     /**
      * 支持在 IM 聊天中@机器人
@@ -116,7 +116,7 @@ public class UIKitOptions {
     /**
      * 文本框最大输入字符数目
      */
-    public int maxInputTextLength = 5000;
+    public int maxInputTextLength = 1000;
 
     /**
      * 录音类型，默认aac
@@ -126,7 +126,7 @@ public class UIKitOptions {
     /**
      * 录音时长限制，单位秒，默认最长120s
      */
-    public int audioRecordMaxTime = 120;
+    public int audioRecordMaxTime = 60;
 
     /**
      * 不显示语音消息未读红点

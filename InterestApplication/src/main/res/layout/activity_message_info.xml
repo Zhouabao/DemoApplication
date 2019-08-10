@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        tools:context=".nim.activity.MessageInfoActivity">
+
+    <LinearLayout
+            android:id="@+id/llTitle"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            >
+
+        <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="24dp"
+                android:src="@drawable/icon_return"
+                android:layout_height="24dp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/chatName"
+                android:layout_marginLeft="12dp"
+                android:text="Javer"
+                android:textColor="#ff222222"
+                android:textSize="18sp"
+                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+
+        <TextView
+                android:id="@+id/chatDetailBtn"
+                android:textColor="#ff222222"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="TA的主页"
+                android:background="@drawable/shape_rectangle_black22_white_15dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="88dp"
+                android:layout_height="32dp"/>
+
+    </LinearLayout>
+
+    <View
+            android:background="@color/colorDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            />
+
+    <LinearLayout
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+        <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="22dp"
+                android:text="星标好友"
+                android:textColor="#ff222222"
+                android:textSize="16sp"/>
+
+        <Switch
+                android:id="@+id/friendStar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+        <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="22dp"
+                android:text="消息免打扰"
+                android:textColor="#ff222222"
+                android:textSize="16sp"/>
+
+        <Switch
+                android:id="@+id/friendNoBother"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+        <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="22dp"
+                android:text="查找聊天记录"
+                android:textColor="#ff222222"
+                android:textSize="16sp"/>
+
+        <ImageView
+                android:id="@+id/friendHistory"
+                android:scaleType="center"
+                android:src="@drawable/icon_more_right"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+        <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="22dp"
+                android:text="清空聊天记录"
+                android:textColor="#ff222222"
+                android:textSize="16sp"/>
+
+        <ImageView
+                android:id="@+id/friendHistoryClean"
+                android:scaleType="center"
+                android:src="@drawable/icon_more_right"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+        <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="22dp"
+                android:text="投诉举报"
+                android:textColor="#ff222222"
+                android:textSize="16sp"/>
+
+        <ImageView
+                android:id="@+id/friendReport"
+                android:scaleType="center"
+                android:src="@drawable/icon_more_right"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+        <TextView
+                android:id="@+id/deleteTv"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="22dp"
+                android:text="删除好友"
+                android:textColor="#ff222222"
+                android:textSize="16sp"/>
+
+        <ImageView
+                android:id="@+id/friendDelete"
+                android:scaleType="center"
+                android:src="@drawable/icon_more_right"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

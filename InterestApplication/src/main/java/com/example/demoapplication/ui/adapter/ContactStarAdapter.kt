@@ -3,6 +3,7 @@ package com.example.demoapplication.ui.adapter
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.ContactBean
 import kotlinx.android.synthetic.main.item_contact_book.view.*
@@ -24,7 +25,7 @@ class ContactStarAdapter(var star: Boolean = true) :
             helper.itemView.tv_index.visibility = View.GONE
         }
 
-//        GlideUtil.loadCircleImg(mContext, item.avator, helper.itemView.friendIcon)
+        GlideUtil.loadCircleImg(mContext, item.avatar ?: "", helper.itemView.friendIcon)
         helper.itemView.friendName.text = item.nickname
     }
 

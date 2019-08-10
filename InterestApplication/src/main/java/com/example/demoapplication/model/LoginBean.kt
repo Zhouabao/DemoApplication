@@ -2,23 +2,30 @@ package com.example.demoapplication.model
 
 data class LoginBean(
     val accid: String?,
-    val phoneCheck: Boolean?,
+    val phone_check: Boolean?,
     val qntk: String?,
     val taglist: List<TagBean>?,
     val token: String?,
     val userinfo: Userinfo?,
-    val err_type: String?
+    val err_type: String?,
+    val register: Boolean?,
+    val info_check: Boolean?,
+    val qn_prefix: List<String>?,
+    val extra_data: IMBean?
 )
 
+data class IMBean(val im_token: String)
+
+
 data class Userinfo(
-    val birth: String? = "",
+    val nickname: String? = "",
+    val avatar: String? = "",
     val gender: Int? = 0,
+    val birth: String? = "",
     val accid: String? = "",
     val allvisit: Int? = 0,
-    val avatar: String? = "",
     val face_audit_state: Int? = 0,
     val isvip: Int? = 0,
-    val nickname: String? = "",
     val todayvisit: Int? = 0,
     val vip_express: String? = "",
     val isverify: Int? = 0
