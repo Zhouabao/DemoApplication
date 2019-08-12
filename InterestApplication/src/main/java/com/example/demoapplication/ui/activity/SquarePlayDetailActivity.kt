@@ -42,6 +42,9 @@ import org.jetbrains.anko.toast
  */
 class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
     View.OnClickListener {
+    override fun onGetSquareInfoResults(mutableList: SquareBean?) {
+
+    }
 
     private val squareBean: SquareBean by lazy { intent.getSerializableExtra("squareBean") as SquareBean }
 

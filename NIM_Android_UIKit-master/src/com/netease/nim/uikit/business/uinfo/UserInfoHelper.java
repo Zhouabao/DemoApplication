@@ -13,7 +13,7 @@ public class UserInfoHelper {
     public static String getUserTitleName(String id, SessionTypeEnum sessionType) {
         if (sessionType == SessionTypeEnum.P2P) {
             if (NimUIKit.getAccount().equals(id)) {
-                return "我的电脑";
+                return "我";
             } else {
                 return getUserDisplayName(id);
             }

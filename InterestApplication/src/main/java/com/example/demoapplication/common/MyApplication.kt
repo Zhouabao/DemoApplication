@@ -3,12 +3,16 @@ package com.example.demoapplication.common
 import android.annotation.SuppressLint
 import android.os.Environment
 import com.blankj.utilcode.util.CrashUtils
+import com.example.demoapplication.nim.DemoCache
+import com.example.demoapplication.nim.NIMInitManager
 import com.example.demoapplication.nim.NimSDKOptionConfig
 import com.example.demoapplication.nim.session.NimDemoLocationProvider
 import com.example.demoapplication.nim.session.SessionHelper
+import com.example.demoapplication.nim.sp.UserPreferences
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.common.BaseApplication
 import com.mob.MobSDK
+import com.netease.nim.uikit.R
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.UIKitOptions
 import com.netease.nimlib.sdk.NIMClient
@@ -42,8 +46,8 @@ class MyApplication : BaseApplication() {
         configUnits()
         configPlayer()
 
+        DemoCache.setContext(this)
         NIMClient.init(this, UserManager.loginInfo(), UserManager.options(this))
-
         initUIKit()
 
     }
@@ -69,16 +73,20 @@ class MyApplication : BaseApplication() {
             NimUIKit.init(this, buildUIKitOptions())
             // 设置地理位置提供者。如果需要发送地理位置消息，该参数必须提供。如果不需要，可以忽略。
             NimUIKit.setLocationProvider(NimDemoLocationProvider())
-
-
             // IM 会话窗口的定制初始化。
             SessionHelper.init()
+            //初始化消息提醒
+            NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
+            //云信相关业务初始化
+            NIMInitManager.getInstance().init(true)
         }
     }
 
     private fun buildUIKitOptions(): UIKitOptions? {
         val options = UIKitOptions()
         options.appCacheDir = NimSDKOptionConfig.getAppCacheDir(this) + "/demoApplication"
+        options.messageLeftBackground = R.drawable.shape_rectangle_share_square_bg_left
+        options.messageRightBackground = R.drawable.shape_rectangle_share_square_bg
         return options
     }
 }

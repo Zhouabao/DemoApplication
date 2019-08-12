@@ -45,8 +45,6 @@ data class MatchBean(
 ) : Serializable
 
 
-
-
 /**
  * 广场封面
  */
@@ -94,10 +92,10 @@ data class MatchUserDetailBean(
  * 用戶標簽
  */
 data class Tag(
-    var icon: String?,
-    var id: Int?,
-    var title: String?,
-    var sameLabel: Boolean?
+    var icon: String = "",
+    var id: Int = 0,
+    var title: String = "",
+    var sameLabel: Boolean = false
 )
 
 //九宫格相册

@@ -8,6 +8,8 @@ import android.view.View
 import android.view.WindowManager
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.ui.activity.ContactBookActivity
 import kotlinx.android.synthetic.main.dialog_transpond.*
 
 /**
@@ -16,7 +18,8 @@ import kotlinx.android.synthetic.main.dialog_transpond.*
  *    desc   : 转发动态对话框
  *    version: 1.0
  */
-class TranspondDialog(context: Context) : Dialog(context, R.style.MyDialog), View.OnClickListener {
+class TranspondDialog(context: Context, var squareBean: SquareBean? = null) : Dialog(context, R.style.MyDialog),
+    View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +51,12 @@ class TranspondDialog(context: Context) : Dialog(context, R.style.MyDialog), Vie
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.transpondFriend -> {
+            R.id.transpondFriend -> {//转发到好友
+                if (squareBean != null) {
+                    ContactBookActivity.start(context, squareBean!!)
+                    dismiss()
+                }
+
                 ToastUtils.showShort(transpondFriend.text.toString())
             }
             R.id.transpondWebo -> {
@@ -72,6 +80,10 @@ class TranspondDialog(context: Context) : Dialog(context, R.style.MyDialog), Vie
 
             }
         }
+
+    }
+
+    private fun sendTransPondMessage() {
 
     }
 

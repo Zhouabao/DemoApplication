@@ -183,7 +183,9 @@ public class MessageListPanelEx {
         initFetchLoadListener(anchor);
         messageListView.setAdapter(adapter);
         messageListView.addOnItemTouchListener(listener);
+
     }
+
 
     private OnItemClickListener listener = new OnItemClickListener() {
         @Override
@@ -851,26 +853,26 @@ public class MessageListPanelEx {
 
             MessageAudioControl.getInstance(container.activity).stopAudio();
 
-            // 0 EarPhoneMode
+            // 0 EarPhoneMode 扬声器
             longClickItemEarPhoneMode(alertDialog, msgType);
-            // 1 resend
+            // 1 resend 重新发送
             longClickItemResend(selectedItem, alertDialog);
-            // 2 copy
+            // 2 copy 复制文本
             longClickItemCopy(selectedItem, alertDialog, msgType);
-            // 3 revoke
+            // 3 revoke 撤回
             if (enableRevokeButton(selectedItem)) {
                 longClickRevokeMsg(selectedItem, alertDialog);
             }
-            // 4 delete
+            // 4 delete 删除
             longClickItemDelete(selectedItem, alertDialog);
-            // 5 trans
-            longClickItemVoidToText(selectedItem, alertDialog, msgType);
+            // 5 trans 语音转文字
+//            longClickItemVoidToText(selectedItem, alertDialog, msgType);
 
             if (!NimUIKitImpl.getMsgForwardFilter().shouldIgnore(selectedItem) && !recordOnly) {
                 // 6 forward to person
                 longClickItemForwardToPerson(selectedItem, alertDialog);
                 // 7 forward to team
-                longClickItemForwardToTeam(selectedItem, alertDialog);
+//                longClickItemForwardToTeam(selectedItem, alertDialog);
             }
             // 7 cancel upload attachment
             longClickItemCancelUpload(selectedItem, alertDialog);

@@ -117,9 +117,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         return inputPanel.collapse(true) || messageListPanel.onBackPressed();
     }
 
-    public void refreshMessageList() {
-        messageListPanel.refreshMessageList();
-    }
 
     private void parseIntent() {
         Bundle arguments = getArguments();
@@ -135,6 +132,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         } else {
             messageListPanel.reload(container, anchor);
         }
+
 
         if (inputPanel == null) {
             inputPanel = new ChatInputPanel(container, rootView, getActionList());
@@ -153,6 +151,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             messageListPanel.setChattingBackground(customization.backgroundUri, customization.backgroundColor);
         }
     }
+
+
 
     private void initAitManager() {
         UIKitOptions options = NimUIKitImpl.getOptions();
@@ -380,11 +380,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         actions.add(new MyLocationAction()); //位置
         actions.add(new PhoneCallAction()); //语音通话
         actions.add(new ChatPickImageAction()); //图片
-//        actions.add(new VideoAction()); //视频
 
-//        if (customization != null && customization.actions != null) {
-//            actions.addAll(customization.actions);
-//        }
         return actions;
     }
 

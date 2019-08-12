@@ -29,7 +29,6 @@ import com.netease.nim.uikit.common.CommonUtil
 import com.netease.nim.uikit.common.ui.drop.DropCover
 import com.netease.nim.uikit.common.ui.drop.DropManager
 import com.netease.nim.uikit.impl.NimUIKitImpl
-import com.netease.nim.uikit.impl.customization.DefaultP2PSessionCustomization
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MsgService
@@ -102,33 +101,16 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                 R.id.menuDetele -> {
                     // 删除会话，删除后，消息历史被一起删除
                     NIMClient.getService(MsgService::class.java).deleteRecentContact(recentContact)
-                    NIMClient.getService(MsgService::class.java)
-                        .clearChattingHistory(recentContact.contactId, recentContact.sessionType)
+                    NIMClient.getService(MsgService::class.java).clearChattingHistory(recentContact.contactId, recentContact.sessionType)
                     adapter.remove(position)
                     refreshMessages()
                 }
                 R.id.content -> {
-//                    NimUIKit.startP2PSession(this, adapter.data[position].contactId)
-                    ChatActivity.start(this, adapter.data[position].contactId, DefaultP2PSessionCustomization(), null)
+                    ChatActivity.start(this, adapter.data[position].contactId)
                 }
             }
         }
 
-        // initData()
-
-    }
-
-    private fun initData() {
-        val msgList = mutableListOf<MessageListBean>()
-        msgList.add(MessageListBean("官方助手", "助手推送消息内容", 3, "2分钟前"))
-        msgList.add(MessageListBean("发现", "javer 赞了你的动态", 3, "1小时前"))
-        msgList.add(MessageListBean("对我感兴趣的", "有XX个人对你感兴趣，快来看看吧", 99, "昨天"))
-        msgList.add(MessageListBean("xx", "javer 赞了你的动态", 3, "1小时前"))
-        msgList.add(MessageListBean("javer", "有XX个人对你感兴趣，快来看看吧", 99, "昨天"))
-        msgList.add(MessageListBean("sisi", "XX 发表了新动态，去看看吧", 3, "2分钟前"))
-        msgList.add(MessageListBean("cll", "javer 赞了你的动态", 3, "1小时前"))
-        msgList.add(MessageListBean("zfm", "有XX个人对你感兴趣，快来看看吧", 99, "昨天"))
-//        adapter.setNewData(msgList)
     }
 
 

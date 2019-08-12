@@ -12,10 +12,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/bubble_time_layout_margin_bottom"
         android:layout_marginTop="@dimen/bubble_time_layout_margin_top"
-        android:background="@drawable/nim_bg_message_tip"
         android:paddingLeft="7dip"
         android:paddingRight="7dip"
-        android:textColor="#ffffff"
+        android:textColor="#FFD2D2D2"
         android:textSize="12sp"
         android:textStyle="bold"
         android:visibility="gone" />

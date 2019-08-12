@@ -14,6 +14,7 @@ data class ChargeWayBeans(
 )
 
 
+
 data class PaywayBean(
     val comments: String? = "",
     val id: Int? = 0,//支付类型 1支付宝 2微信支付 3余额支付

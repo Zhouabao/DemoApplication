@@ -21,6 +21,12 @@ public class CustomAttachParser implements MsgAttachmentParser {
             int type = object.getInteger(KEY_TYPE);
             JSONObject data = object.getJSONObject(KEY_DATA);
             switch (type) {
+                case CustomAttachmentType.ChatHiHead:
+                    attachment = new ChatHiAttachment();
+                    break;
+                case CustomAttachmentType.ShareSquare:
+                    attachment = new ShareSquareAttachment();
+                    break;
                 default:
                     attachment = new DefaultCustomAttachment();
                     break;

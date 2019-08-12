@@ -13,6 +13,8 @@ import com.kotlin.base.presenter.view.BaseView
 interface SquarePlayDetailView : BaseView {
     fun onGetRecentlySquaresResults(mutableList: MutableList<SquareBean?>)
 
+    fun onGetSquareInfoResults(mutableList: SquareBean?)
+
     fun onGetSquareLikeResult(position: Int, result: Boolean)
 
     fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>)

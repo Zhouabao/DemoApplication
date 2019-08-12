@@ -53,7 +53,7 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
         containerView = findViewById(R.id.message_item_audio_container);
         unreadIndicator = findViewById(R.id.message_item_audio_unread_indicator);
         animationView = findViewById(R.id.message_item_audio_playing_animation);
-        animationView.setBackgroundResource(0);
+//        animationView.setBackgroundResource(0);
         audioControl = MessageAudioControl.getInstance(context);
     }
 
@@ -96,7 +96,7 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
 
             containerView.setBackgroundResource(NimUIKitImpl.getOptions().messageLeftBackground);
             containerView.setPadding(ScreenUtil.dip2px(15), ScreenUtil.dip2px(8), ScreenUtil.dip2px(10), ScreenUtil.dip2px(8));
-            animationView.setBackgroundResource(R.drawable.nim_audio_animation_list_left);
+            animationView.setBackgroundResource(R.drawable.icon_voice);
             durationLabel.setTextColor(Color.BLACK);
 
         } else {

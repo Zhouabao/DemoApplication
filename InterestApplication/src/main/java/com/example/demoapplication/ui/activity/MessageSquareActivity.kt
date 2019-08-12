@@ -16,7 +16,6 @@ import com.example.demoapplication.utils.UserManager
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nim.uikit.impl.customization.DefaultP2PSessionCustomization
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -76,8 +75,7 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         adapter.addHeaderView(headNewView)
         adapter.headerLayout.visibility = View.GONE
         adapter.setOnItemClickListener { _, view, position ->
-            ChatActivity.start(this, adapter.data[position].accid ?: "", DefaultP2PSessionCustomization(), null)
-//            startActivity<ChatActivity>("accid" to (adapter.data[position].accid ?: ""))
+            ChatActivity.start(this, adapter.data[position].accid ?: "")
         }
 
 

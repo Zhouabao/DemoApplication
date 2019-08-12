@@ -24,6 +24,8 @@ import com.example.demoapplication.event.BlockDataEvent
 import com.example.demoapplication.event.ListDataEvent
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.StatusBean
+import com.example.demoapplication.nim.activity.ChatActivity
+import com.example.demoapplication.nim.extension.ChatHiAttachment
 import com.example.demoapplication.presenter.MatchDetailPresenter
 import com.example.demoapplication.presenter.view.MatchDetailView
 import com.example.demoapplication.ui.adapter.DetailThumbAdapter
@@ -43,18 +45,28 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nim.uikit.business.session.module.Container
+import com.netease.nim.uikit.business.session.module.ModuleProxy
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import kotlinx.android.synthetic.main.activity_match_detail1.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import java.util.*
 
 /**
  * 匹配详情页
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
-    View.OnClickListener {
+    View.OnClickListener, ModuleProxy {
 
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
@@ -390,9 +402,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
             //todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
             R.id.detailUserChatBtn -> {
-                if (matchBean!!.isvip != 1) {
+                if (UserManager.isUserVip()) {
                     val dialog = ChargeVipDialog(this)
                     dialog.show()
+                } else {
+                    sendChatHiMessage()
+
                 }
             }
 
@@ -402,6 +417,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
     }
+
 
     /**
      * 拉黑、举报、取消配对（判断对方是否为好友）、取消
@@ -456,4 +472,60 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             context.startActivity<MatchDetailActivity>("target_accid" to fromAccount)
         }
     }
+
+
+    /*--------------------------消息代理------------------------*/
+
+    private fun sendChatHiMessage() {
+        val container = Container(this, matchBean?.accid, SessionTypeEnum.P2P, this, true)
+        val chatHiAttachment = ChatHiAttachment(
+            UserManager.getGlobalLabelName(),
+            matchBean?.tags ?: mutableListOf(),
+            matchBean?.avatar ?: ""
+        )
+        val message = MessageBuilder.createCustomMessage(
+            matchBean?.accid,
+            SessionTypeEnum.P2P,
+            "",
+            chatHiAttachment,
+            CustomMessageConfig()
+        )
+        container.proxy.sendMessage(message)
+    }
+
+    override fun sendMessage(msg: IMMessage): Boolean {
+        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
+            RequestCallback<Void?> {
+            override fun onSuccess(param: Void?) {
+                ChatActivity.start(this@MatchDetailActivity, matchBean?.accid ?: "")
+
+            }
+
+            override fun onFailed(code: Int) {
+                toast("$code")
+            }
+
+            override fun onException(exception: Throwable) {
+                toast(exception.message ?: "")
+            }
+        })
+        return true
+    }
+
+    override fun onInputPanelExpand() {
+
+    }
+
+    override fun shouldCollapseInputPanel() {
+
+    }
+
+    override fun isLongClickEnabled(): Boolean {
+        return false
+    }
+
+    override fun onItemFooterClick(message: IMMessage?) {
+
+    }
+
 }

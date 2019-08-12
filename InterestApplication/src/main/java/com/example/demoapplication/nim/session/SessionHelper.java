@@ -10,8 +10,7 @@ import com.example.demoapplication.R;
 import com.example.demoapplication.nim.DemoCache;
 import com.example.demoapplication.nim.activity.MessageInfoActivity;
 import com.example.demoapplication.nim.activity.SearchMessageActivity;
-import com.example.demoapplication.nim.extension.CustomAttachParser;
-import com.example.demoapplication.nim.extension.StickerAttachment;
+import com.example.demoapplication.nim.extension.*;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.model.recent.RecentCustomization;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -235,6 +234,12 @@ public class SessionHelper {
 
                 @Override
                 public String getDefaultDigest(RecentContact recent) {
+                    if (recent.getAttachment() instanceof ChatHiAttachment) {
+                        return "[打招呼]";
+                    } else if (recent.getAttachment() instanceof ShareSquareAttachment) {
+                        return "[转发动态]";
+
+                    }
                     return super.getDefaultDigest(recent);
                 }
             };
@@ -245,9 +250,12 @@ public class SessionHelper {
 
     //自定义消息界面
     private static void registerViewHolders() {
-       // NimUIKit.registerMsgItemViewHolder(FileAttachment.class, MsgViewHolderFile.class);
+        NimUIKit.registerMsgItemViewHolder(ChatHiAttachment.class, MsgViewHolderChatHi.class);
+        NimUIKit.registerMsgItemViewHolder(ShareSquareAttachment.class, MsgViewHolderShareSquare.class);
+        // NimUIKit.registerMsgItemViewHolder(FileAttachment.class, MsgViewHolderFile.class);
 //        NimUIKit.registerMsgItemViewHolder(CustomAttachment.class, MsgViewHolderDefCustom.class);
     }
+
 
     private static void setSessionListener() {
         SessionEventListener listener = new SessionEventListener() {
@@ -313,7 +321,7 @@ public class SessionHelper {
                     // 发给我的电脑 不允许撤回
                     return true;
                 }
-                return true;
+                return false;
             }
         });
     }

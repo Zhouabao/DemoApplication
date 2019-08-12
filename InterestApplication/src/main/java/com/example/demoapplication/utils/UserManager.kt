@@ -222,6 +222,21 @@ object UserManager {
         return tempLabels
     }
 
+    fun getGlobalLabelId(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId", 0)
+    }
+
+    fun getGlobalLabelName(): String {
+        val labels = getSpLabels()
+        val id = getGlobalLabelId()
+        for (label in labels) {
+            if (label.id == id) {
+                return label.title
+            }
+        }
+        return ""
+    }
+
 
     // 如果已经存在IM用户登录信息，返回LoginInfo，否则返回null即可
     fun loginInfo(): LoginInfo? {
@@ -239,6 +254,9 @@ object UserManager {
     }
 
 
+    /**
+     * 清除登录信息
+     */
     fun clearLoginData() {
         //IM信息
         SPUtils.getInstance(Constants.SPNAME).remove("imToken")

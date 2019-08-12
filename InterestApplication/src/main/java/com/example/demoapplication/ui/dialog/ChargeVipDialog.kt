@@ -146,7 +146,9 @@ class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             .excute(object : BaseSubscriber<BaseResp<ChargeWayBeans?>>(null) {
                 override fun onNext(it: BaseResp<ChargeWayBeans?>) {
                     if (it.data != null) {
-                        it.data!!.list?.get(0)?.check = true
+                        if (!it.data!!.list.isNullOrEmpty()) {
+                            it.data!!.list?.get(0)?.check = true
+                        }
                         setChargeWayData(it.data!!.list ?: mutableListOf())
                         initVipPowerData(it.data!!.icon_list ?: mutableListOf())
                         payways.addAll(it.data!!.paylist ?: mutableListOf())

@@ -3,6 +3,7 @@ package com.example.demoapplication.presenter
 import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
+import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.SquareRecentlyListBean
 import com.example.demoapplication.presenter.view.SquarePlayDetailView
 import com.example.demoapplication.utils.UserManager
@@ -34,6 +35,31 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                         if (t != null && t.data != null && t.data!!.list != null && t.data!!.list!!.size > 0) {
                             mView.onGetRecentlySquaresResults(t.data!!.list!!)
                         }
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onError(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
+
+
+    /**
+     * 获取某一广场详情
+     */
+    fun getSquareInfo(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getSquareInfo(params)
+            .excute(object : BaseSubscriber<BaseResp<SquareBean?>>(mView) {
+                override fun onNext(t: BaseResp<SquareBean?>) {
+                    super.onNext(t)
+                    if (t.code == 200) {
+                        mView.onGetSquareInfoResults(t.data)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {

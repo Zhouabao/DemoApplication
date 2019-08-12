@@ -19,6 +19,7 @@ import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.FriendBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.SquareListBean
+import com.example.demoapplication.nim.activity.ChatActivity
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.OnPlayingListener
 import com.example.demoapplication.presenter.SquarePresenter
@@ -200,7 +201,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             val squareBean = adapter.data[position]
             when (view.id) {
                 R.id.squareChatBtn1 -> {
-                    toast("聊天呗$position")
+                    ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
                 }
                 R.id.squareCommentBtn1 -> {
                     startActivity<SquareCommentDetailActivity>(
@@ -227,7 +228,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                     mPresenter.getSquareLike(params, position)
                 }
                 R.id.squareZhuanfaBtn1 -> {
-                    showTranspondDialog()
+                    showTranspondDialog(adapter.data[position])
                 }
                 R.id.squareMoreBtn1 -> {
                     showMoreDialog(position)
@@ -327,13 +328,13 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     }
 
 
-    private val transpondDialog by lazy { TranspondDialog(activity!!) }
     /**
      * 展示转发动态对话框
      */
-    private fun showTranspondDialog() {
-        if (transpondDialog != null && !transpondDialog.isShowing)
-            transpondDialog.show()
+    private fun showTranspondDialog(squareBean: SquareBean) {
+        val transpondDialog = TranspondDialog(activity!!, squareBean)
+        transpondDialog.show()
+//        transpondDialog.squareBean = squareBean
     }
 
 

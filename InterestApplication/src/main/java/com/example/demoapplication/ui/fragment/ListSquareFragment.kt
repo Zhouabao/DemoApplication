@@ -18,6 +18,7 @@ import com.example.demoapplication.event.ListDataEvent
 import com.example.demoapplication.model.FriendBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.SquareListBean
+import com.example.demoapplication.nim.activity.ChatActivity
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.OnPlayingListener
 import com.example.demoapplication.presenter.SquarePresenter
@@ -139,7 +140,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             val squareBean = adapter.data[position]
             when (view.id) {
                 R.id.squareChatBtn1 -> {
-                    toast("聊天呗$position")
+                    ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
                 }
                 R.id.squareCommentBtn1 -> {
                     startActivity<SquareCommentDetailActivity>(

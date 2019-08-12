@@ -25,16 +25,16 @@ data class SquareListBean(
  */
 data class SquareBean(
     var isPlayAudio: Int = 0, //0未播放  1 播放中 2暂停  3 停止
-    var isvip: Int?,//是否会员 1是 0 不是
-    var icon: String?,
-    var accid: String?,
+    var isvip: Int = -1,//是否会员 1是 0 不是
+    var icon: String = "",
+    var accid: String = "",
     var audio_json: MutableList<VideoJson>?,
-    var avatar: String?,
-    var city_name: String?,
-    var comment_cnt: Int?,
-    var comment: String? = null,
-    var create_time: String?,
-    var descr: String?,
+    var avatar: String = "",
+    var city_name: String = "",
+    var comment_cnt: String = "",
+    var comment: String = "",
+    var create_time: String = "",
+    var descr: String = "",
     var id: Int?,
     var isliked: Int?,
     var iscollected: Int?,//0没收藏 1收藏
@@ -66,6 +66,7 @@ data class SquareBean(
         const val AUDIO = 3
     }
 }
+
 
 data class VideoJson(
     val duration: Int? = 0,

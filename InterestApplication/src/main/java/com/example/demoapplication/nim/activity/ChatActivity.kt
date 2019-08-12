@@ -15,6 +15,7 @@ import com.netease.nim.uikit.api.model.user.UserInfoObserver
 import com.netease.nim.uikit.business.session.constant.Extras
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
 import com.netease.nim.uikit.impl.NimUIKitImpl
+import com.netease.nim.uikit.impl.customization.DefaultP2PSessionCustomization
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
@@ -27,14 +28,17 @@ import kotlinx.android.synthetic.main.activity_chat.*
 /**
  * 点对点聊天界面
  *
- *
- * Created by huangjun on 2015/2/1.
  */
 class ChatActivity : ChatBaseMessageActivity() {
     private var isResume = false
 
     companion object {
-        fun start(context: Context, contactId: String, customization: SessionCustomization, anchor: IMMessage?) {
+        fun start(
+            context: Context,
+            contactId: String,
+            customization: SessionCustomization = DefaultP2PSessionCustomization(),
+            anchor: IMMessage? = null
+        ) {
             val intent = Intent()
             intent.putExtra(Extras.EXTRA_ACCOUNT, contactId)
             intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
@@ -158,10 +162,8 @@ class ChatActivity : ChatBaseMessageActivity() {
             if (id == 1) {
                 // 正在输入
                 inputTip.text = "对方正在输入..."
-//                ToastHelper.showToastLong(this@ChatActivity, "对方正在输入...")
             } else {
                 inputTip.text = ""
-//                ToastHelper.showToast(this@ChatActivity, "command: $content")
             }
         } catch (ignored: Exception) {
 

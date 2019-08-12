@@ -94,6 +94,14 @@ interface Api {
 
 
     /**
+     * 获取某一广场详情
+     */
+    @FormUrlEncoded
+    @POST("square/squareInfo${Constants.END_BASE_URL}")
+    fun getSquareInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareBean?>>
+
+
+    /**
      * 广场点赞/取消点赞
      */
     @FormUrlEncoded

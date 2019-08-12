@@ -6,6 +6,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
+import com.example.demoapplication.nim.extension.ChatHiAttachment
+import com.example.demoapplication.nim.extension.ShareSquareAttachment
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import kotlinx.android.synthetic.main.item_message_list.view.*
@@ -32,7 +34,13 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
         }
         GlideUtil.loadCircleImg(mContext, UserInfoHelper.getAvatar(item.contactId), holder.itemView.msgIcon)
 
-        holder.itemView.text.text = item.content
+        if (item.attachment is ChatHiAttachment) {
+            holder.itemView.text.text = "[招呼消息]"
+        } else if (item.attachment is ShareSquareAttachment) {
+            holder.itemView.text.text = "[动态分享内容]"
+        } else {
+            holder.itemView.text.text = item.content
+        }
         holder.itemView.latelyTime.text = TimeUtils.getFriendlyTimeSpanByNow(item.time)
         if (item.unreadCount == 0) {
             holder.itemView.newCount.visibility = View.GONE

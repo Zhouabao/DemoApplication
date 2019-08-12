@@ -1,6 +1,7 @@
 package com.example.demoapplication.ui.activity
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -35,12 +36,19 @@ import org.jetbrains.anko.toast
 /**
  * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
  */
-class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
+public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
     View.OnClickListener {
+
 
     //广场列表内容适配器
     private val adapter by lazy { MultiListDetailPlayAdapter(this, mutableListOf()) }
     private val squareBean: SquareBean by lazy { intent.getSerializableExtra("item") as SquareBean }
+
+    companion object {
+        public fun start(context: Context, id: Int) {
+            context.startActivity<SquarePlayListDetailActivity>("id" to id)
+        }
+    }
 
 
     var mediaPlayer: IjkMediaPlayerUtil? = null
@@ -108,10 +116,20 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
             rvLast.visibility = View.GONE
             rvNext.visibility = View.GONE
             adapter.addData(squareBean)
+        } else if (intent.getIntExtra("id", -1) != -1) {
+            rvLast.visibility = View.GONE
+            rvNext.visibility = View.GONE
+            mPresenter.getSquareInfo(
+                hashMapOf(
+                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                    "square_id" to intent.getIntExtra("id", -1)
+                )
+            )
+
         } else {
             rvLast.visibility = View.VISIBLE
             rvNext.visibility = View.VISIBLE
-
             mPresenter.getRencentlySquares(
                 hashMapOf(
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
@@ -343,6 +361,18 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
             transpondDialog.show()
     }
 
+    override fun onGetSquareInfoResults(mutableList: SquareBean?) {
+        if (mutableList != null) {
+            mutableList.type = when {
+                !mutableList.video_json.isNullOrEmpty() -> SquareBean.VIDEO
+                !mutableList.audio_json.isNullOrEmpty() -> SquareBean.AUDIO
+                !mutableList.photo_json.isNullOrEmpty() ||
+                        (mutableList.photo_json.isNullOrEmpty() && mutableList.audio_json.isNullOrEmpty() && mutableList.video_json.isNullOrEmpty()) -> SquareBean.PIC
+                else -> SquareBean.PIC
+            }
+            adapter.addData(mutableList)
+        }
+    }
 
     override fun onGetRecentlySquaresResults(data: MutableList<SquareBean?>) {
 //        data.addAll(data)
@@ -469,6 +499,5 @@ class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>()
                 }
             }
         }
-
     }
 }
