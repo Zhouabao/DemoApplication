@@ -57,7 +57,6 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
             .getSquareInfo(params)
             .excute(object : BaseSubscriber<BaseResp<SquareBean?>>(mView) {
                 override fun onNext(t: BaseResp<SquareBean?>) {
-                    super.onNext(t)
                     if (t.code == 200) {
                         mView.onGetSquareInfoResults(t.data)
                     } else if (t.code == 403) {

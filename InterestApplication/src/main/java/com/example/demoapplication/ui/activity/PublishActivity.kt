@@ -28,6 +28,7 @@ import com.example.baselibrary.glide.GlideUtil
 import com.example.baselibrary.utils.RandomUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.MediaBean
 import com.example.demoapplication.player.MediaPlayerHelper
@@ -49,7 +50,9 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_publish.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.toast
 import java.io.File
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -1108,6 +1111,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      */
     override fun onSquareAnnounceResult(success: Boolean) {
         if (success) {
+            toast("动态发布成功！")
+            EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
             if (!this.isFinishing)
                 finish()
         }

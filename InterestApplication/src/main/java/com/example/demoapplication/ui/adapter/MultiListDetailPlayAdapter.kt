@@ -23,7 +23,6 @@ import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.VideoJson
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.ui.adapter.SquareDetailImgsAdaper
-import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.view.*
@@ -209,12 +208,6 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 
     }
 
-    /**
-     * 展示转发动态对话框
-     */
-    private fun showTranspondDialog() {
-        TranspondDialog(context).show()
-    }
 
     var onTextChangeListener: OnTextChangeListener? = null
 

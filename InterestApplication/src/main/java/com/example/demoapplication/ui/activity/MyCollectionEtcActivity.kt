@@ -186,7 +186,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                     mPresenter.getSquareLike(params, position)
                 }
                 R.id.squareZhuanfaBtn1 -> {
-                    showTranspondDialog()
+                    showTranspondDialog(squareBean)
                 }
                 R.id.squareMoreBtn1 -> {
                     showMoreDialog(position)
@@ -281,13 +281,12 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
     }
 
 
-    private val transpondDialog by lazy { TranspondDialog(this) }
     /**
      * 展示转发动态对话框
      */
-    private fun showTranspondDialog() {
-        if (transpondDialog != null && !transpondDialog.isShowing)
-            transpondDialog.show()
+    private fun showTranspondDialog(squareBean: SquareBean) {
+        val transpondDialog = TranspondDialog(this, squareBean)
+        transpondDialog.show()
     }
 
 

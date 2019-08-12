@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:background="@color/colorWhite"
+        android:layout_height="wrap_content">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/hiAvator"
+            android:layout_width="57dp"
+            android:layout_height="57dp"
+            android:src="@drawable/img_avatar_01"
+            app:layout_constraintBottom_toBottomOf="@id/countTimer"
+            app:layout_constraintLeft_toLeftOf="@id/countTimer"
+            app:layout_constraintRight_toRightOf="@id/countTimer"
+            app:layout_constraintTop_toTopOf="@id/countTimer"/>
+
+    <com.example.demoapplication.widgets.MsgTimerProgress
+            android:id="@+id/countTimer"
+            android:layout_marginLeft="15dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/hiAvatorMask"
+            android:layout_width="57dp"
+            android:layout_height="57dp"
+            android:visibility="gone"
+            android:background="@drawable/shape_oval_gray_3300"
+            app:layout_constraintBottom_toBottomOf="@id/hiAvator"
+            app:layout_constraintLeft_toLeftOf="@id/hiAvator"
+            app:layout_constraintRight_toRightOf="@id/hiAvator"
+            app:layout_constraintTop_toTopOf="@id/hiAvator"
+            />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

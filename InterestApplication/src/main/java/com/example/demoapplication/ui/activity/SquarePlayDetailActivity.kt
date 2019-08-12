@@ -191,7 +191,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         }
 
         moreActionDialog.llShare.onClick {
-            showTranspondDialog(position)
+            showTranspondDialog()
         }
         moreActionDialog.llCollect.onClick {
 
@@ -253,9 +253,9 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     /**
      * 展示转发动态对话框
      */
-    private fun showTranspondDialog(position: Int) {
-        if (transpondDialog != null && !transpondDialog.isShowing)
-            transpondDialog.show()
+    private fun showTranspondDialog() {
+        val transpondDialog = TranspondDialog(this,squareBean)
+        transpondDialog.show()
     }
 
 
@@ -343,7 +343,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         SwitchUtil.savePlayState(detailPlayVideo)
         detailPlayVideo.gsyVideoManager.setLastListener(detailPlayVideo)
 //        supportFinishAfterTransition()
-        setResult(Activity.RESULT_OK,intent)
+        setResult(Activity.RESULT_OK, intent)
         super.onBackPressed()
     }
 

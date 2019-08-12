@@ -126,7 +126,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         commentList.adapter = adapter
 
         btnBack.onClick {
-            finish()
+            onBackPressed()
         }
 
         when {
@@ -534,13 +534,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
 
-    private val transpondDialog by lazy { TranspondDialog(this) }
     /**
      * 展示转发动态对话框
      */
     private fun showTranspondDialog() {
-        if (transpondDialog != null && !transpondDialog.isShowing)
-            transpondDialog.show()
+        val transpondDialog = TranspondDialog(this, squareBean)
+        transpondDialog.show()
     }
 
 
@@ -742,12 +741,18 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     override fun onBackPressed() {
-        //释放所有
-        GSYVideoManager.releaseAllVideos()
         if (showCommentEt.isFocused) {
             resetCommentEt()
-        } else
+        } else {
+            //释放所有
+            squareUserVideo.gsyVideoManager.setListener(squareUserVideo.gsyVideoManager.lastListener())
+            squareUserVideo.gsyVideoManager.setLastListener(null)
+            squareUserVideo.release()
+            GSYVideoManager.releaseAllVideos()
+            SwitchUtil.release()
             super.onBackPressed()
+        }
+
     }
 
     /**

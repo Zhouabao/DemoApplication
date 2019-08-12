@@ -21,6 +21,7 @@ import com.example.demoapplication.presenter.view.SquarePlayDetailView
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.example.demoapplication.utils.UserManager
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -30,6 +31,7 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType.SCREEN_MATCH_FULL
 import kotlinx.android.synthetic.main.activity_square_play_detail.btnBack
 import kotlinx.android.synthetic.main.activity_square_play_list_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
@@ -39,6 +41,8 @@ import org.jetbrains.anko.toast
 public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
     View.OnClickListener {
 
+    //确定内容的来源地  1好友列表 2广场列表 3聊天跳转
+    private var from = -1
 
     //广场列表内容适配器
     private val adapter by lazy { MultiListDetailPlayAdapter(this, mutableListOf()) }
@@ -108,35 +112,41 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     }
 
 
+    private val fromChatParams by lazy {
+        hashMapOf(
+            "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+            "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+            "square_id" to intent.getIntExtra("id", -1)
+        )
+    }
+
+    private val fromFriendsParams by lazy {
+        hashMapOf<String, Any>(
+            "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+            "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+            "target_accid" to intent.getStringExtra("target_accid")
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_square_play_list_detail)
         initView()
         if (intent.getSerializableExtra("item") != null) {
+            from = 2
             rvLast.visibility = View.GONE
             rvNext.visibility = View.GONE
             adapter.addData(squareBean)
         } else if (intent.getIntExtra("id", -1) != -1) {
+            from = 3
             rvLast.visibility = View.GONE
             rvNext.visibility = View.GONE
-            mPresenter.getSquareInfo(
-                hashMapOf(
-                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                    "square_id" to intent.getIntExtra("id", -1)
-                )
-            )
-
+            mPresenter.getSquareInfo(fromChatParams)
         } else {
+            from = 1
             rvLast.visibility = View.VISIBLE
             rvNext.visibility = View.VISIBLE
-            mPresenter.getRencentlySquares(
-                hashMapOf(
-                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                    "target_accid" to intent.getStringExtra("target_accid")
-                )
-            )
+            mPresenter.getRencentlySquares(fromFriendsParams)
         }
     }
 
@@ -149,11 +159,20 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     }
 
     private fun initView() {
+        btnBack.onClick { finish() }
         GSYVideoType.setShowType(SCREEN_MATCH_FULL)
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
         mPresenter.context = this
-        btnBack.onClick { finish() }
+
+        stateview.retryBtn.onClick {
+            stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+            if (from == 1) {
+                mPresenter.getRencentlySquares(fromFriendsParams)
+            } else if (from == 3) {
+                mPresenter.getSquareInfo(fromChatParams)
+            }
+        }
 
 
         friendSquareList.layoutManager = layoutmanager
@@ -293,10 +312,9 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
 
         moreActionDialog.llShare.onClick {
-            showTranspondDialog(position)
+            showTranspondDialog(adapter.data[position])
         }
         moreActionDialog.llCollect.onClick {
-
             //发起收藏请求
             val params = hashMapOf(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
@@ -351,17 +369,17 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     }
 
 
-    private val transpondDialog by lazy { TranspondDialog(this) }
-
     /**
      * 展示转发动态对话框
      */
-    private fun showTranspondDialog(position: Int) {
+    private fun showTranspondDialog(squareBean: SquareBean) {
+        val transpondDialog = TranspondDialog(this, squareBean)
         if (transpondDialog != null && !transpondDialog.isShowing)
             transpondDialog.show()
     }
 
     override fun onGetSquareInfoResults(mutableList: SquareBean?) {
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (mutableList != null) {
             mutableList.type = when {
                 !mutableList.video_json.isNullOrEmpty() -> SquareBean.VIDEO
@@ -375,6 +393,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     }
 
     override fun onGetRecentlySquaresResults(data: MutableList<SquareBean?>) {
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
 //        data.addAll(data)
         for (tempData in 0 until data.size) {
 
@@ -448,6 +467,15 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
             mediaPlayer = null
+        }
+    }
+
+    override fun onError(text: String) {
+        stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+        stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
+            getString(R.string.retry_load_error)
+        } else {
+            getString(R.string.retry_net_error)
         }
     }
 

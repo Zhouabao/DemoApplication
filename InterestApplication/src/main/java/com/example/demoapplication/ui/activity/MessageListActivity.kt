@@ -53,7 +53,6 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_list)
-
         initView()
         registerObservers(true)
         registerDropCompletedListener(true)
@@ -81,7 +80,8 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         messageListRv.adapter = adapter
         adapter.bindToRecyclerView(messageListRv)
 //        adapter.setEmptyView(R.layout.empty_layout, messageListRv)
-        adapter.addHeaderView(initHeadsView())
+        adapter.addHeaderView(initFriendsView(), 0)
+        adapter.addHeaderView(initHeadsView(), 1)
 
         adapter.setOnItemChildClickListener { _, view, position ->
             val recentContact = adapter.data[position]
@@ -101,7 +101,8 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                 R.id.menuDetele -> {
                     // 删除会话，删除后，消息历史被一起删除
                     NIMClient.getService(MsgService::class.java).deleteRecentContact(recentContact)
-                    NIMClient.getService(MsgService::class.java).clearChattingHistory(recentContact.contactId, recentContact.sessionType)
+                    NIMClient.getService(MsgService::class.java)
+                        .clearChattingHistory(recentContact.contactId, recentContact.sessionType)
                     adapter.remove(position)
                     refreshMessages()
                 }
@@ -122,9 +123,12 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         friendsView.headRv.layoutManager = linearLayoutManager
         friendsView.headRv.adapter = hiAdapter
+        friendsView.friendTv.onClick {
+            startActivity<MessageHiActivity>()
+        }
         hiAdapter.setOnItemClickListener { adapter, view, position ->
         }
-
+        hiAdapter.addData(mutableListOf(""))
         return friendsView
     }
 
@@ -143,7 +147,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         headAdapter.setOnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {
-                    startActivity<MessageHiActivity>()
+
                 }
                 1 -> {
                     startActivity<MessageSquareActivity>()

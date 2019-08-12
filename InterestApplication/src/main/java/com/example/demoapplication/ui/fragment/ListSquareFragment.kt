@@ -167,7 +167,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                     mPresenter.getSquareLike(params, position)
                 }
                 R.id.squareZhuanfaBtn1 -> {
-                    showTranspondDialog()
+                    showTranspondDialog(adapter.data[position])
                 }
                 R.id.squareMoreBtn1 -> {
                     showMoreDialog(position)
@@ -359,13 +359,12 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         }).getInstance()
     }
 
-    private val transpondDialog by lazy { TranspondDialog(activity!!) }
     /**
      * 展示转发动态对话框
      */
-    private fun showTranspondDialog() {
-        if (transpondDialog != null && !transpondDialog.isShowing)
-            transpondDialog.show()
+    private fun showTranspondDialog(squareBean: SquareBean) {
+        val transpondDialog = TranspondDialog(activity!!, squareBean)
+        transpondDialog.show()
     }
 
 

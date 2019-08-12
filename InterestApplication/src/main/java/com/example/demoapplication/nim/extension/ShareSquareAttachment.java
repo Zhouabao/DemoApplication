@@ -13,25 +13,25 @@ public class ShareSquareAttachment extends CustomAttachment {
     private final String KEY_CONTENT = "content";//分享的文本内容
     private final String KEY_TYPE = "shareType";//分享的类型
     private final String KEY_IMG = "img";//分享的图片
-    private final String KEY_ID = "id";//分享的图片
+    private final String KEY_ID = "squareId";//分享的图片
 
     private String desc;//匹配的标签
     private String content;//分享的文本内容
     private int shareType;//分享的类型 1图片 2视频 3语音
     private String img;//分享的图片
-    private int id;//分享的广场id
+    private int squareId;//分享的广场id
 
     ShareSquareAttachment() {
         super(CustomAttachmentType.ShareSquare);
     }
 
-    public ShareSquareAttachment(String desc, String content, int shareType, String img, int id) {
+    public ShareSquareAttachment(String desc, String content, int shareType, String img, int squareId) {
         super(CustomAttachmentType.ShareSquare);
         this.desc = desc;
         this.content = content;
         this.shareType = shareType;
         this.img = img;
-        this.id = id;
+        this.squareId = squareId;
     }
 
     public String getDesc() {
@@ -67,11 +67,11 @@ public class ShareSquareAttachment extends CustomAttachment {
     }
 
     public int getId() {
-        return id;
+        return squareId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.squareId = id;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ShareSquareAttachment extends CustomAttachment {
         content = data.getString(KEY_CONTENT);
         img = data.getString(KEY_IMG);
         shareType = data.getInteger(KEY_TYPE);
-        id = data.getInteger(KEY_ID);
+        squareId = data.getInteger(KEY_ID);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class ShareSquareAttachment extends CustomAttachment {
         data.put(KEY_CONTENT, content);
         data.put(KEY_IMG, img);
         data.put(KEY_TYPE, shareType);
-        data.put(KEY_ID, id);
+        data.put(KEY_ID, squareId);
         return data;
     }
 }
