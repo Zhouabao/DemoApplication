@@ -56,8 +56,6 @@ class TranspondDialog(context: Context, var squareBean: SquareBean? = null) : Di
                     ContactBookActivity.start(context, squareBean!!)
                     dismiss()
                 }
-
-                ToastUtils.showShort(transpondFriend.text.toString())
             }
             R.id.transpondWebo -> {
                 ToastUtils.showShort(transpondWebo.text.toString())

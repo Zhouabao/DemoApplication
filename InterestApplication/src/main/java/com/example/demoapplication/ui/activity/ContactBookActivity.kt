@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.model.ContactBean
 import com.example.demoapplication.model.ContactDataBean
 import com.example.demoapplication.model.LetterComparator
 import com.example.demoapplication.model.SquareBean
@@ -22,12 +23,13 @@ import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.sortcontacts.Cn2Spell
 import com.example.demoapplication.widgets.sortcontacts.PinnedHeaderDecoration
 import com.example.demoapplication.widgets.sortcontacts.WaveSideBarView
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_contact_book.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.headerview_label.view.*
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 import java.util.*
 
 /**
@@ -63,10 +65,17 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         btnBack.onClick {
             finish()
         }
-
+        if (intent != null && intent.getSerializableExtra("square") != null) {
+            hotT1.text = "选择好友"
+        }
         mPresenter = ContactBookPresenter()
         mPresenter.mView = this
         mPresenter.context = this
+
+        stateview.retryBtn.onClick {
+            stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.getContactLists(params)
+        }
 
         val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         contactsRv.layoutManager = manager
@@ -95,18 +104,16 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
 
         })
         adapter.setOnItemClickListener { _, view, position ->
-            chatOrShare(position)
+            chatOrShare(adapter.data[position])
         }
 
         searchContactsRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         searchContactsRv.adapter = searchAdapter
-        searchAdapter.setOnItemClickListener { adapter, view, position ->
-            //todo 聊天
-            toast("${position}")
+        searchAdapter.setOnItemClickListener { _, view, position ->
+            chatOrShare(searchAdapter.data[position])
             searchContactsRv.visibility = View.GONE
             KeyboardUtils.hideSoftInput(searchView)
             searchView.clearFocus()
-
         }
 
 
@@ -158,25 +165,25 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         headView.headRv.layoutManager = linearLayoutManager
         headView.headRv.adapter = headAdapter
         headAdapter.setOnItemClickListener { _, view, position ->
-            //todo  跳转到聊天界面
-            chatOrShare(position)
+            chatOrShare(headAdapter.data[position])
         }
 
         return headView
     }
 
-    private fun chatOrShare(position: Int) {
+    private fun chatOrShare(squareBean: ContactBean) {
         if (intent != null && intent.getSerializableExtra("square") != null) {
+            hotT1.text = "选择好友"
             sqauareBean = intent.getSerializableExtra("square") as SquareBean
             ShareToFriendsDialog(
                 this@ContactBookActivity,
-                adapter.data[position].avatar,
-                adapter.data[position].nickname,
-                adapter.data[position].accid,
+                squareBean.avatar,
+                squareBean.nickname,
+                squareBean.accid,
                 sqauareBean!!
             ).show()
         } else {
-            ChatActivity.start(this, adapter.data[position].accid ?: "")
+            ChatActivity.start(this, squareBean.accid ?: "")
         }
     }
 
@@ -185,6 +192,7 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
      * 这里只是为了做演示，实际上数据应该从服务器获取
      */
     override fun onGetContactListResult(data: ContactDataBean?) {
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (data != null) {
             if (!data.list.isNullOrEmpty()) {
                 for (data in data.list!!) {
@@ -203,6 +211,14 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
                 headAdapter.addData(data.asterisk!!)
             }
         }
+    }
 
+    override fun onError(text: String) {
+        stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+        stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
+            getString(R.string.retry_load_error)
+        } else {
+            getString(R.string.retry_net_error)
+        }
     }
 }

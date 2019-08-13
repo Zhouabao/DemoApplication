@@ -65,7 +65,7 @@
             app:layout_constraintTop_toBottomOf="@id/friendImg"/>
 
 
-    <com.example.baselibrary.widgets.RoundImageView
+    <ImageView
             android:id="@+id/friendShareImg"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
@@ -74,11 +74,10 @@
             android:layout_width="wrap_content"
             android:layout_height="140dp"
             android:layout_gravity="center_horizontal"
-            app:borderRadius="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/friendImg"
-            app:type="round"/>
+            />
 
 
     <EditText

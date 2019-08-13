@@ -21,6 +21,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.baselibrary.R;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import java.io.File;
 
@@ -67,7 +68,6 @@ public class GlideUtil {
     }
 
 
-
     /**
      * 返回的图片路径为Object类型，由于不能确定你到底使用的那种图片加载器，
      * 传输的到的是什么格式，那么这种就使用Object接收和返回，你只需要强转成你传输的类型就行，
@@ -103,12 +103,17 @@ public class GlideUtil {
      * @param context
      * @param url
      * @param tartgetImg
+     * @param scale 是否缩放 0.0-1.0F
      */
-    public static void loadRoundImg(Context context, String url, ImageView tartgetImg) {
+    public static void loadRoundImg(Context context, String url, ImageView tartgetImg, float scale, int radius) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions())
+                .priority(Priority.NORMAL)
+                .centerInside()
+                .thumbnail(scale)
+                .transform(new RoundedCornersTransformation(radius, 0))
                 .into(tartgetImg);
+
     }
 
 

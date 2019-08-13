@@ -64,7 +64,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val matchFragment by lazy { MatchFragment1() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
-    private val titles = arrayOf("匹配", "发布")
+    private val titles = arrayOf("匹配", "发现")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

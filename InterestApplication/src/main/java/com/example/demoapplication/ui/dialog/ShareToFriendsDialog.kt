@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import android.widget.LinearLayout
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -61,19 +62,20 @@ class ShareToFriendsDialog @JvmOverloads constructor(
                 friendShareImg.visibility = View.GONE
                 friendShareContent.visibility = View.VISIBLE
             } else {
-                val array = getImgWH(squareBean.photo_json?.get(0)?.url ?: "")
-                if (array[0] != -1 && array[1] != -1) {
-                    val params = friendImg.layoutParams
-                    params.width = (SizeUtils.dp2px(140F) * 1F * array[0] / array[1]).toInt()
-                    params.height = SizeUtils.dp2px(140F)
-                    friendImg.layoutParams = params
-                }
-                GlideUtil.loadImg(context, squareBean.photo_json?.get(0)?.url ?: "", friendShareImg)
+                val params = friendShareImg.layoutParams
+                params.height = SizeUtils.dp2px(140F)
+                params.width = LinearLayout.LayoutParams.WRAP_CONTENT
+                friendShareImg.layoutParams = params
+                GlideUtil.loadRoundImg(context, squareBean.photo_json?.get(0)?.url ?: "", friendShareImg, 0.1F, 5)
                 friendShareImg.visibility = View.VISIBLE
                 friendShareContent.visibility = View.GONE
             }
         } else if (squareBean.type == SquareBean.VIDEO) {
-            GlideUtil.loadImg(context, squareBean.cover_url ?: "", friendShareImg)
+            val params = friendShareImg.layoutParams
+            params.height = SizeUtils.dp2px(140F)
+            params.width = LinearLayout.LayoutParams.WRAP_CONTENT
+            friendShareImg.layoutParams = params
+            GlideUtil.loadRoundImg(context, squareBean.cover_url ?: "", friendShareImg, 0.1F, 5)
             friendShareImg.visibility = View.VISIBLE
             friendShareContent.visibility = View.GONE
         } else if (squareBean.type == SquareBean.AUDIO) {
