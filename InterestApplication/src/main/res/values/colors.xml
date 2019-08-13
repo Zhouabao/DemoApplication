@@ -25,7 +25,9 @@
     <color name="colorBlack66">#666666</color>
     <color name="colorBlackC9">#C9C9C9</color>
     <color name="colorBlueSky">#52C2DC</color>
-    <color name="colorGradientOrange">#FF7F42</color>
+    <color name="colorGradientOrange">#FF7F32</color>
+    <color name="colorGradientOrangeB">#80FF7F32</color>
+    <color name="colorGradientRedB">#80FF003E</color>
     <color name="colorGradientRed">#FF003E</color>
     <color name="colorLightOrange">#FFFFBC91</color>
 

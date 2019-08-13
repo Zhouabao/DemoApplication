@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.model.HiMessageBean
 import com.example.demoapplication.model.MessageListBean
 import com.example.demoapplication.model.MessageListBean1
 import com.example.demoapplication.nim.activity.ChatActivity
@@ -16,6 +18,7 @@ import com.example.demoapplication.ui.adapter.MessageListAdapter
 import com.example.demoapplication.ui.adapter.MessageListFriensAdapter
 import com.example.demoapplication.ui.adapter.MessageListHeadAdapter
 import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.widgets.DividerItemDecoration
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -37,7 +40,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import kotlinx.android.synthetic.main.activity_message_list.*
-import kotlinx.android.synthetic.main.headerview_label.view.*
+import kotlinx.android.synthetic.main.headerview_hi.view.*
 import org.jetbrains.anko.startActivity
 import java.util.*
 
@@ -116,19 +119,27 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 
 
     //创建打招呼好友布局
-    private val hiAdapter by lazy { MessageListFriensAdapter() }
-
+    private var hiDatas = mutableListOf<HiMessageBean>()
+    private val hiAdapter by lazy { MessageListFriensAdapter(hiDatas) }
     private fun initFriendsView(): View {
         val friendsView = LayoutInflater.from(this).inflate(R.layout.headerview_hi, messageListRv, false)
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         friendsView.headRv.layoutManager = linearLayoutManager
         friendsView.headRv.adapter = hiAdapter
+        friendsView.headRv.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL_LIST,
+                SizeUtils.dp2px(20f),
+                resources.getColor(R.color.colorWhite)
+            )
+        )
         friendsView.friendTv.onClick {
             startActivity<MessageHiActivity>()
         }
         hiAdapter.setOnItemClickListener { adapter, view, position ->
         }
-        hiAdapter.addData(mutableListOf(""))
+//        hiAdapter.addData(mutableListOf(""))
         return friendsView
     }
 
@@ -140,7 +151,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 
     private fun initHeadsView(): View {
         val headView = LayoutInflater.from(this).inflate(R.layout.headerview_hi, messageListRv, false)
-        headView.friendTv.visibility = View.GONE
+        headView.rlFriend.visibility = View.GONE
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         headView.headRv.layoutManager = linearLayoutManager
         headView.headRv.adapter = headAdapter
@@ -198,6 +209,12 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         headAdapter.addData(ass)
         headAdapter.addData(squa)
         headAdapter.addData(like)
+        if (data?.greet != null && data?.greet.isNotEmpty()) {
+            adapter.headerLayout.hiCount.text = "${data?.greet.size}"
+        } else {
+            adapter.headerLayout.hiCount.visibility = View.GONE
+        }
+        hiAdapter.setNewData(data?.greet ?: mutableListOf())
     }
 
 

@@ -337,7 +337,7 @@ interface Api {
      * 给我打招呼的列表
      */
     @FormUrlEncoded
-    @POST("tidings/greatLists${Constants.END_BASE_URL}")
+    @POST("tidings/greetLists${Constants.END_BASE_URL}")
     fun greatLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<HiMessageBean>?>>
 
 

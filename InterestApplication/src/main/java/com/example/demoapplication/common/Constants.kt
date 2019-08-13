@@ -20,4 +20,15 @@ object Constants {
     const val TOKEN = "368b7cbd9de3ee4dc1f90f1c24ff3a10"
     const val ACCID = "664eb259a43464123843abbc7488b02b"
     const val QNTOKEN = "qntoken"
+
+    const val ANTI_ALIAS = true
+    const val DEFAULT_SIZE = 150F
+    const val DEFAULT_START_ANGLE = 270
+    const val DEFAULT_SWEEP_ANGLE = 360
+    const val DEFAULT_ANIM_TIME = 1000
+    const val DEFAULT_MAX_VALUE = 100
+    const val DEFAULT_VALUE = 0
+    const val DEFAULT_VALUE_SIZE = 7
+    const val DEFAULT_ARC_WIDTH = 10
+
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="RoundTopImageView">
-        <attr name="topRadius" format="dimension" />
+        <attr name="topRadius" format="dimension"/>
     </declare-styleable>
 
-<!--验证码框-->
+    <!--验证码框-->
     <declare-styleable name="VerificationView">
         <attr name="vTextSize" format="dimension"/>
         <attr name="vIsTextBold" format="boolean"/>
@@ -18,10 +18,10 @@
 
     <!--频谱-->
     <declare-styleable name="voisePlayingIconAttr">
-        <attr name="pointer_color" format="color" />
-        <attr name="pointer_num" format="integer" />
-        <attr name="pointer_width" format="float" />
-        <attr name="pointer_speed" format="integer" />
+        <attr name="pointer_color" format="color"/>
+        <attr name="pointer_num" format="integer"/>
+        <attr name="pointer_width" format="float"/>
+        <attr name="pointer_speed" format="integer"/>
     </declare-styleable>
 
 
@@ -76,12 +76,27 @@
         <attr name="sidebar_text_alignment" format="enum">
             <enum name="center" value="0"/>
             <enum name="left" value="1"/>
-            <enum name="right" value="2" />
+            <enum name="right" value="2"/>
         </attr>
     </declare-styleable>
 
     <!--自定义搜索框-->
     <declare-styleable name="SearchEditText">
-        <attr name="drawableDel" format="reference" />
+        <attr name="drawableDel" format="reference"/>
+    </declare-styleable>
+
+    <!--水波纹外扩效果-->
+    <declare-styleable name="WaterRippleView">
+        <attr name="rippleSpacing" format="dimension|reference"/>
+        <attr name="rippleCount" format="integer|reference"/>
+        <attr name="rippleColor" format="color|reference"/>
+        <attr name="rippleCenterIcon" format="reference"/>
+        <attr name="rippleAutoRunning" format="boolean"/>
+    </declare-styleable>
+
+    <!--水波纹外扩效果-->
+    <declare-styleable name="MsgTimerProgress">
+        <attr name="timerWidth" format="integer|reference"/>
+        <attr name="bitmapWidth" format="integer|reference"/>
     </declare-styleable>
 </resources>
