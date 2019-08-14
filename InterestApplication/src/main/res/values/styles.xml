@@ -22,14 +22,14 @@
     </style>
 
     <!--<style name="AppTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">-->
-        <!--<item name="android:fitsSystemWindows">true</item>-->
-        <!--<item name="android:clipToPadding">false</item>-->
-        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
-        <!--<item name="colorPrimaryDark">@color/colorWhite</item>-->
-        <!--<item name="colorAccent">@color/colorAccent</item>-->
-        <!--<item name="android:statusBarColor">@color/colorLightGray</item>-->
-        <!--&lt;!&ndash;<item name="android:windowNoTitle">true</item>//无标题&ndash;&gt;-->
-        <!--&lt;!&ndash;<item name="android:windowActionBar">false</item>//无ActionBar&ndash;&gt;-->
+    <!--<item name="android:fitsSystemWindows">true</item>-->
+    <!--<item name="android:clipToPadding">false</item>-->
+    <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+    <!--<item name="colorPrimaryDark">@color/colorWhite</item>-->
+    <!--<item name="colorAccent">@color/colorAccent</item>-->
+    <!--<item name="android:statusBarColor">@color/colorLightGray</item>-->
+    <!--&lt;!&ndash;<item name="android:windowNoTitle">true</item>//无标题&ndash;&gt;-->
+    <!--&lt;!&ndash;<item name="android:windowActionBar">false</item>//无ActionBar&ndash;&gt;-->
     <!--</style>-->
 
 
@@ -67,6 +67,12 @@
         <item name="android:windowIsTranslucent">false</item>
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
+
+    </style>
+
+    <style name="MyDialogBottomAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_bottom_exit</item>
     </style>
 
 

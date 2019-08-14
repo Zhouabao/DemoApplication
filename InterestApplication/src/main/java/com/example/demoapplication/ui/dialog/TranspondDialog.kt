@@ -35,6 +35,8 @@ class TranspondDialog(context: Context, var squareBean: SquareBean? = null) : Di
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params?.windowAnimations = R.style.MyDialogBottomAnimation
+
         window?.attributes = params
     }
 

@@ -54,6 +54,9 @@ class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params?.windowAnimations = R.style.MyDialogBottomAnimation
+//        params?.y = SizeUtils.dp2px(20F)
+
         window?.attributes = params
     }
 

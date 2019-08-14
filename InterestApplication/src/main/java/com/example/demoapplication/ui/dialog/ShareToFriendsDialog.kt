@@ -100,7 +100,8 @@ class ShareToFriendsDialog @JvmOverloads constructor(
         val params = window?.attributes
         params?.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
-//        params?.y = SizeUtils.dp2px(20F)
+        params?.windowAnimations = R.style.MyDialogBottomAnimation
+
         window?.attributes = params
         //点击外部可取消
         setCanceledOnTouchOutside(false)
