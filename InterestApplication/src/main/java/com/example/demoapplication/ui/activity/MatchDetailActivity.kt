@@ -1,6 +1,8 @@
 package com.example.demoapplication.ui.activity
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
@@ -22,6 +24,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.CommonFunction
 import com.example.demoapplication.event.BlockDataEvent
 import com.example.demoapplication.event.ListDataEvent
+import com.example.demoapplication.event.NotifyEvent
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.nim.activity.ChatActivity
@@ -204,11 +207,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         //已感兴趣不做操作
         if (matchBean!!.isliked == 1) {
-            detailUserLikeBtn.visibility  =View.GONE
+            detailUserLikeBtn.visibility = View.GONE
             detailUserLikeBtn.isEnabled = false
             detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
         } else {
-            detailUserLikeBtn.visibility  =View.VISIBLE
+            detailUserLikeBtn.visibility = View.VISIBLE
             detailUserLikeBtn.isEnabled = true
             detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_blue)
         }
@@ -465,6 +468,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         super.onDestroy()
         detailScrollView.destroy()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK)
+            if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
+                EventBus.getDefault().post(NotifyEvent(data!!.getIntExtra("position", -1)))
+            }
+    }
+
 
     companion object {
         @JvmStatic

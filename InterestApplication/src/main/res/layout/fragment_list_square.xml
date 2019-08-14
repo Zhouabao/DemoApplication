@@ -7,7 +7,8 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         app:srlEnableLoadMore="true"
-        app:srlEnableLoadMoreWhenContentNotFull="true"
+        app:srlEnableAutoLoadMore="true"
+        app:srlEnableLoadMoreWhenContentNotFull="false"
         app:srlEnableRefresh="false">
 
     <androidx.recyclerview.widget.RecyclerView

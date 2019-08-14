@@ -14,6 +14,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.ListDataEvent
+import com.example.demoapplication.event.NotifyEvent
 import com.example.demoapplication.model.FriendBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.SquareListBean
@@ -22,6 +23,8 @@ import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.OnPlayingListener
 import com.example.demoapplication.presenter.SquarePresenter
 import com.example.demoapplication.presenter.view.SquareView
+import com.example.demoapplication.switchplay.SwitchUtil
+import com.example.demoapplication.switchplay.SwitchVideo
 import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import com.example.demoapplication.ui.dialog.MoreActionDialog
@@ -34,7 +37,10 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.fragment_list_square.*
 import kotlinx.android.synthetic.main.item_list_square_pic.*
@@ -91,6 +97,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 //        listSquareRv.isNestedScrollingEnabled = false
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
+        adapter.bindToRecyclerView(listSquareRv)
         adapter.setEmptyView(R.layout.empty_layout, listSquareRv)
         adapter.setOnItemChildClickListener { adapter, view, position ->
             if (view == squareUserPics1)
@@ -462,14 +469,13 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
     override fun onResume() {
         super.onResume()
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
-
-//        GSYVideoManager.onResume(false)
+        GSYVideoManager.onResume(false)
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-//        GSYVideoManager.releaseAllVideos()
+        GSYVideoManager.releaseAllVideos()
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
             mediaPlayer = null
@@ -478,4 +484,51 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         EventBus.getDefault().unregister(this)
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNotifyEvent(event: NotifyEvent) {
+        val pos = event.position
+        GSYVideoManager.releaseAllVideos()
+
+//        adapter.notifyDataSetChanged()
+        //静音
+        val switchVideo = adapter.getViewByPosition(pos, R.id.squareUserVideo) as SwitchVideo
+        SwitchUtil.clonePlayState(switchVideo)
+        val state = switchVideo.currentState
+//        switchVideo.isStartAfterPrepared = false
+        //延迟加2S
+        switchVideo.seekOnStart = switchVideo.gsyVideoManager.currentPosition
+        switchVideo.startPlayLogic()
+        switchVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+            override fun onStartPrepared(url: String?, vararg objects: Any?) {
+                super.onStartPrepared(url, *objects)
+                GSYVideoManager.instance().isNeedMute = true
+            }
+
+            override fun onPrepared(url: String?, vararg objects: Any?) {
+                super.onPrepared(url, *objects)
+                GSYVideoManager.instance().isNeedMute = true
+                if (state == GSYVideoView.CURRENT_STATE_PAUSE) {
+                    switchVideo.onVideoPause()
+                } else if (state == GSYVideoView.CURRENT_STATE_AUTO_COMPLETE || state == GSYVideoView.CURRENT_STATE_ERROR) {
+                    SwitchUtil.release()
+                    GSYVideoManager.releaseAllVideos()
+                }
+            }
+
+            override fun onClickResume(url: String?, vararg objects: Any?) {
+                super.onClickResume(url, *objects)
+                switchVideo.onVideoResume()
+            }
+
+            override fun onAutoComplete(url: String?, vararg objects: Any?) {
+                super.onAutoComplete(url, *objects)
+                SwitchUtil.release()
+                GSYVideoManager.releaseAllVideos()
+                adapter.notifyItemChanged(pos)
+
+            }
+        })
+
+    }
 }
