@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,9 +10,7 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        android:background="@color/colorWhite"
-
-        app:msv_viewState="content">
+        app:msv_viewState="loading">
 
     <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,6 +21,7 @@
             android:descendantFocusability="blocksDescendants"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorWhite"
             tools:context=".ui.activity.MatchDetailActivity">
 
         <com.example.demoapplication.widgets.BounceScrollView
@@ -132,7 +130,7 @@
 
                 <ImageView
                         android:id="@+id/moreBtn"
-                        android:background="@drawable/shape_oval_gray_3300"
+                        android:background="@drawable/shape_oval_gray1_3300"
                         android:src="@drawable/icon_more_white"
                         android:layout_width="26dp"
                         android:scaleType="centerInside"
@@ -227,6 +225,7 @@
                 <TextView
                         android:id="@+id/allT2"
                         android:text="发现"
+                        android:textStyle="bold"
                         android:textColor="@color/colorBlackTitle"
                         android:textSize="16sp"
                         android:layout_marginTop="17dp"
@@ -234,6 +233,17 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintLeft_toLeftOf="@id/detailUserName"
                         app:layout_constraintTop_toBottomOf="@id/view1"/>
+
+                <ImageView
+                        android:id="@+id/detailSquareFilter"
+                        android:src="@drawable/icon_arrow_right"
+                        android:layout_marginLeft="6dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:scaleType="center"
+                        app:layout_constraintBottom_toBottomOf="@id/allT2"
+                        app:layout_constraintLeft_toRightOf="@id/allT2"
+                        app:layout_constraintTop_toTopOf="@id/allT2"/>
 
                 <RadioGroup
                         android:id="@+id/detailSquareSwitchRg"
@@ -260,6 +270,18 @@
                             android:layout_height="24dp"/>
                 </RadioGroup>
 
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/detailSquareFilterLabelRv"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/allT2"/>
+
                 <FrameLayout
                         android:id="@+id/detail_content_fragment"
                         android:layout_marginTop="20dp"
@@ -271,81 +293,74 @@
 
         </com.example.demoapplication.widgets.BounceScrollView>
 
-        <RelativeLayout
-                android:id="@+id/detailUserChatBtn"
-                android:layout_marginLeft="15dp"
-                android:background="@drawable/gradient_match_detail_red_bg"
+        <LinearLayout
+                android:layout_centerHorizontal="true"
+                android:layout_width="match_parent"
                 android:orientation="horizontal"
-                android:layout_width="168dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginBottom="20dp"
+                android:gravity="center"
                 android:layout_alignParentBottom="true"
-                android:layout_height="50dp">
+                android:layout_height="wrap_content">
 
-            <ImageView
-                    android:layout_marginLeft="17dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/icon_flash_white"
-                    android:layout_width="13dp"
-                    android:layout_height="27dp"/>
+            <RelativeLayout
+                    android:id="@+id/detailUserLikeBtn"
+                    android:background="@drawable/shape_rectangle_solid_blue"
+                    android:layout_width="50dp"
+                    android:visibility="gone"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="50dp">
 
-            <TextView
+                <ImageView
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/icon_like_white"
+                        android:layout_width="24dp"
+                        android:layout_height="21dp"/>
 
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="@color/colorWhite"
-                    android:text="打个招呼"
-                    android:gravity="center"
-                    android:layout_centerInParent="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
 
-            <TextView
-                    android:id="@+id/detailUserLeftChatCount"
-                    android:layout_marginRight="17dp"
-                    android:layout_alignParentRight="true"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="@color/colorOrange"
-                    android:background="@drawable/shape_oval_white"
-                    android:gravity="center"
-                    android:layout_centerInParent="true"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
-                    tools:text="3"/>
-        </RelativeLayout>
+            </RelativeLayout>
 
-        <RelativeLayout
-                android:id="@+id/detailUserLikeBtn"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="20dp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/shape_rectangle_solid_blue"
-                android:orientation="horizontal"
-                android:layout_width="168dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="400dp"
-                android:layout_height="50dp">
+            <RelativeLayout
+                    android:id="@+id/detailUserChatBtn"
+                    android:background="@drawable/gradient_match_detail_red_bg"
+                    android:orientation="horizontal"
+                    android:layout_width="168dp"
+                    android:layout_height="50dp">
 
-            <ImageView
-                    android:layout_marginLeft="17dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/icon_like_white"
-                    android:layout_width="24dp"
-                    android:layout_height="21dp"/>
+                <ImageView
+                        android:layout_marginLeft="17dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_flash_white"
+                        android:layout_width="13dp"
+                        android:layout_height="27dp"/>
 
-            <TextView
-                    android:id="@+id/detailUserLikeTv"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="@color/colorWhite"
-                    android:text="感兴趣"
-                    android:gravity="center"
-                    android:layout_centerInParent="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <TextView
 
-        </RelativeLayout>
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorWhite"
+                        android:text="打个招呼"
+                        android:gravity="center"
+                        android:layout_centerInParent="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/detailUserLeftChatCount"
+                        android:layout_marginRight="17dp"
+                        android:layout_alignParentRight="true"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorOrange"
+                        android:background="@drawable/shape_oval_white"
+                        android:gravity="center"
+                        android:layout_centerInParent="true"
+                        android:layout_width="21dp"
+                        android:layout_height="21dp"
+                        tools:text="3"/>
+            </RelativeLayout>
+
+        </LinearLayout>
 
 
     </RelativeLayout>

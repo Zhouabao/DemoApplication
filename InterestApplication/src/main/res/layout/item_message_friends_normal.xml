@@ -3,10 +3,11 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/content"
-        android:layout_width="64dp"
+        android:layout_width="73dp"
+        android:layout_height="73dp"
         android:layout_gravity="center_vertical"
         android:background="@color/colorWhite"
-        android:layout_height="64dp">
+        >
 
 
     <de.hdodenhof.circleimageview.CircleImageView

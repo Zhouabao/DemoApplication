@@ -87,6 +87,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         mPresenter.context = this
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
+        refreshLayout.setEnableAutoLoadMore(true)
 
         btnBack.onClick { finish() }
         collectionTitle.text = when (type) {
@@ -395,6 +396,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
+        refreshLayout.setNoMoreData(false)
         page = 1
         params["page"] = page
         adapter.data.clear()

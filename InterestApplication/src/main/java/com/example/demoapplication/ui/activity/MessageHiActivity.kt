@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.HiMessageBean
 import com.example.demoapplication.presenter.MessageHiPresenter
 import com.example.demoapplication.presenter.view.MessageHiView
@@ -21,6 +22,9 @@ import kotlinx.android.synthetic.main.activity_message_hi.*
 import kotlinx.android.synthetic.main.activity_message_hi.stateview
 import kotlinx.android.synthetic.main.activity_message_list.btnBack
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 打招呼列表
@@ -41,6 +45,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_hi)
+        EventBus.getDefault().register(this)
         initView()
         mPresenter.greatLists(params)
     }
@@ -110,6 +115,19 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         } else {
             getString(R.string.retry_net_error)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateHiEvent(event: UpdateHiEvent) {
+        page = 1
+        params["page"] = page
+        adapter.data.clear()
+        mPresenter.greatLists(params)
     }
 
 }

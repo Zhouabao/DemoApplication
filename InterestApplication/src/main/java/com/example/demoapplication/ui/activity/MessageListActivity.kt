@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.HiMessageBean
 import com.example.demoapplication.model.MessageListBean
 import com.example.demoapplication.model.MessageListBean1
@@ -41,6 +42,9 @@ import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import kotlinx.android.synthetic.main.activity_message_list.*
 import kotlinx.android.synthetic.main.headerview_hi.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import java.util.*
 
@@ -56,6 +60,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_list)
+        EventBus.getDefault().register(this)
         initView()
         registerObservers(true)
         registerDropCompletedListener(true)
@@ -130,7 +135,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             DividerItemDecoration(
                 this,
                 DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(20f),
+                SizeUtils.dp2px(10f),
                 resources.getColor(R.color.colorWhite)
             )
         )
@@ -175,7 +180,6 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     override fun onMessageCensusResult(data: MessageListBean1?) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         val ass = MessageListBean("官方助手", "助手推送消息内容", 1, "2分钟前", R.drawable.icon_assistant)
-
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
         val squa = MessageListBean(
             "发现", when (data?.square_type) {
@@ -206,6 +210,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             R.drawable.icon_like_msg
         )
 
+        headAdapter.data.clear()
         headAdapter.addData(ass)
         headAdapter.addData(squa)
         headAdapter.addData(like)
@@ -461,5 +466,15 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     override fun onDestroy() {
         super.onDestroy()
         registerObservers(false)
+        EventBus.getDefault().unregister(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateHiEvent(event :UpdateHiEvent) {
+        mPresenter.messageCensus(params)
     }
 }

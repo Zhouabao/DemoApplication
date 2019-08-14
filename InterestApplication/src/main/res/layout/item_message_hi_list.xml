@@ -9,8 +9,8 @@
 
     <RelativeLayout
             android:id="@+id/iconLl"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_marginLeft="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -126,7 +126,7 @@
             android:layout_height="20dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:text="有XX个人对你感兴趣，快来看看吧"
+            android:text="对方向您打了一个招呼"
             android:textColor="#ff999999"
             android:textSize="14sp"
             android:layout_marginRight="30dp"

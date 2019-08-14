@@ -5,11 +5,13 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
+import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.HiMessageBean
-import kotlinx.android.synthetic.main.item_message_friends_list.view.*
+import kotlinx.android.synthetic.main.item_message_friends_list_countdown.view.*
 import kotlinx.android.synthetic.main.item_message_friends_list_notify.view.*
 import kotlinx.android.synthetic.main.item_message_friends_normal.view.*
 import kotlinx.android.synthetic.main.item_message_friends_outtime.view.*
+import org.greenrobot.eventbus.EventBus
 
 
 /**
@@ -26,12 +28,10 @@ import kotlinx.android.synthetic.main.item_message_friends_outtime.view.*
  */
 class MessageListFriensAdapter(data: MutableList<HiMessageBean>) :
     BaseMultiItemQuickAdapter<HiMessageBean, BaseViewHolder>(data) {
-    private var time = 0
-
 
     init {
         addItemType(1, R.layout.item_message_friends_list_notify)
-        addItemType(2, R.layout.item_message_friends_list)
+        addItemType(2, R.layout.item_message_friends_list_countdown)
         addItemType(3, R.layout.item_message_friends_normal)
         addItemType(4, R.layout.item_message_friends_outtime)
     }
@@ -41,32 +41,34 @@ class MessageListFriensAdapter(data: MutableList<HiMessageBean>) :
         // *    1，新消息 2，倒计时 3，普通样式 4 过期
         when (holder.itemViewType) {
             1 -> {
-                GlideUtil.loadCircleImg(mContext, item.avatar ?: "", holder.itemView.nofityAvator)
+                GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.nofityAvator)
             }
             2 -> {
-                GlideUtil.loadCircleImg(mContext, item.avatar ?: "", holder.itemView.countAvator)
+                GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.countAvator)
                 holder.itemView.countTimer.setMaxStepNum(item.countdown_total ?: 0)
-
                 if (item.countdown_total != null && item.countdown_total > 0) {
                     holder.itemView.countTimer.update((item.countdown_total - (item.countdown ?: 0)).toLong(), 100)
+                    object : CountDownTimer((item.countdown ?: 0).toLong() * 1000, 1000) {
+                        override fun onFinish() {
+                            EventBus.getDefault().post(UpdateHiEvent())
+                        }
+
+                        override fun onTick(p0: Long) {
+                            item.timer++
+                            holder.itemView.countTimer.update(
+                                (item.countdown_total - (item.countdown ?: 0) + item.timer).toLong(), 100
+                            )
+                        }
+
+                    }.start()
                 }
-                object : CountDownTimer((item.countdown ?: 0).toLong(), 1000) {
-                    override fun onFinish() {
 
-                    }
-
-                    override fun onTick(p0: Long) {
-                        time++
-                        holder.itemView.countTimer.update(time.toLong(), 100)
-                    }
-
-                }.start()
             }
             3 -> {
-                GlideUtil.loadCircleImg(mContext, item.avatar ?: "", holder.itemView.normalAvator)
+                GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.normalAvator)
             }
             else -> {
-                GlideUtil.loadCircleImg(mContext, item.avatar ?: "", holder.itemView.outtimeAvator)
+                GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.outtimeAvator)
             }
 
         }

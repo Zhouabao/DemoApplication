@@ -31,39 +31,33 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp"/>
 
+            <com.yuyakaido.android.cardstackview.CardStackView
+                    android:id="@+id/card_stack_view"
+                    android:clipToPadding="false"
+                    android:layout_above="@id/actionCl"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_width="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:layout_above="@id/actionCl"
+                    android:layout_marginBottom="34dp"
                     android:clipChildren="false"
                     android:layout_height="wrap_content">
 
-                <ImageView
-                        android:id="@+id/btnDislike"
-                        android:scaleType="center"
-                        android:background="@drawable/shape_oval_white"
-                        android:src="@drawable/icon_dislike"
-                        android:layout_width="60dp"
-                        android:elevation="2dp"
-                        android:layout_marginRight="24dp"
-                        android:layout_height="60dp"
-                        app:layout_constraintBottom_toBottomOf="@id/btnChat"
-                        app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@id/btnChat"
-                        app:layout_constraintTop_toTopOf="@id/btnChat"/>
 
                 <ImageView
                         android:id="@+id/btnChat"
                         android:src="@drawable/icon_flash"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
-                        app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintLeft_toRightOf="@id/btnDislike"
-                        app:layout_constraintRight_toLeftOf="@id/btnLike"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tvLeftChatTime"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         />
 
                 <TextView
@@ -76,35 +70,13 @@
                         android:textSize="12sp"
                         android:text="3"
                         android:layout_height="20dp"
-                        app:layout_constraintBottom_toBottomOf="@id/btnChat"
-                        app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintLeft_toLeftOf="@id/btnChat"
-                        app:layout_constraintRight_toRightOf="@id/btnChat"/>
-
-                <ImageView
-                        android:id="@+id/btnLike"
-                        android:layout_marginLeft="24dp"
-                        android:background="@drawable/shape_oval_white"
-                        android:src="@drawable/icon_like"
-                        android:layout_width="60dp"
-                        android:scaleType="center"
-                        android:elevation="2dp"
-                        android:layout_height="60dp"
-                        app:layout_constraintBottom_toBottomOf="@id/btnChat"
-                        app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintLeft_toRightOf="@id/btnChat"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/btnChat"/>
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <com.yuyakaido.android.cardstackview.CardStackView
-                    android:id="@+id/card_stack_view"
-                    android:clipToPadding="false"
-                    android:layout_above="@id/actionCl"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
         </RelativeLayout>
 
 

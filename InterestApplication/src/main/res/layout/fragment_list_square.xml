@@ -1,33 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<com.kennyc.view.MultiStateView
+<com.scwang.smartrefresh.layout.SmartRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/stateview"
-        android:layout_width="match_parent"
+        android:id="@+id/listRefresh"
+        android:background="@color/colorWhite"
         android:layout_height="match_parent"
-        app:msv_emptyView="@layout/empty_layout"
-        app:msv_errorView="@layout/error_layout"
-        app:msv_viewState="content">
+        android:layout_width="match_parent"
+        app:srlEnableLoadMore="true"
+        app:srlEnableLoadMoreWhenContentNotFull="true"
+        app:srlEnableRefresh="false">
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/listRefresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorWhite"
-            app:srlEnableLoadMore="true"
-            app:srlEnableLoadMoreWhenContentNotFull="true"
-            app:srlEnableRefresh="false">
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listSquareRv"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/listSquareRv"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
 
-        </androidx.recyclerview.widget.RecyclerView>
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-</com.kennyc.view.MultiStateView>

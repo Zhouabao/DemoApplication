@@ -7,19 +7,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
-import com.example.demoapplication.common.CommonFunction
 import com.example.demoapplication.event.BlockDataEvent
 import com.example.demoapplication.model.Photos
 import com.example.demoapplication.presenter.BlockSquarePresenter
 import com.example.demoapplication.presenter.view.BlockSquareView
 import com.example.demoapplication.ui.adapter.BlockAdapter
 import com.example.demoapplication.utils.UserManager
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_block_square.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -54,10 +50,10 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
         blockRv.layoutManager = GridLayoutManager(activity, 3, RecyclerView.VERTICAL, false)
         blockRv.adapter = blockAdapter
 
-        stateview.retryBtn.onClick {
-            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-            mPresenter.squarePhotosList(params)
-        }
+//        stateview.retryBtn.onClick {
+//            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+//            mPresenter.squarePhotosList(params)
+//        }
 
     }
 
@@ -70,20 +66,20 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
 
     override fun getBlockSquareResult(success: Boolean, data: MutableList<Photos>?) {
         if (success) {
-            if (blockAdapter.data.isNullOrEmpty() && data.isNullOrEmpty()) {
-                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
-            } else {
-                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-            }
+//            if (blockAdapter.data.isNullOrEmpty() && data.isNullOrEmpty()) {
+//                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
+//            } else {
+//                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+//            }
             if (data.isNullOrEmpty()) {
                 refreshBlock.finishLoadMoreWithNoMoreData()
             }
             blockAdapter.addData(data ?: mutableListOf())
         } else {
-            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
-            blockAdapter.data.clear()
-            page = 1
+//            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+//            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
+//            blockAdapter.data.clear()
+//            page = 1
         }
     }
 

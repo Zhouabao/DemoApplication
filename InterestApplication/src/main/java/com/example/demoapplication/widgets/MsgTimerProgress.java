@@ -67,9 +67,9 @@ public class MsgTimerProgress extends View {
         mCircleStrokeWidth = SizeUtils.dp2px(2f);// 圆弧的宽度
 
         mFinishWheelPaint = new Paint();
-        mFinishWheelPaint.setColor(Color.rgb(255, 255, 255));
+        mFinishWheelPaint.setColor(Color.WHITE);
         mFinishWheelPaint.setStyle(Paint.Style.STROKE);// 空心
-        mFinishWheelPaint.setStrokeCap(Paint.Cap.ROUND);// 圆角画笔
+        mFinishWheelPaint.setStrokeCap(Paint.Cap.BUTT);// 圆角画笔
         mFinishWheelPaint.setAntiAlias(true);// 去锯齿
         mFinishWheelPaint.setStrokeWidth(mCircleStrokeWidth);
 

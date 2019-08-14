@@ -6,7 +6,7 @@
         android:orientation="vertical"
         app:msv_loadingView="@layout/loading_layout"
         app:msv_errorView="@layout/error_layout"
-        app:msv_viewState="content"
+        app:msv_viewState="loading"
         android:id="@+id/stateview"
         app:msv_animateViewChanges="true"
         android:layout_width="match_parent"

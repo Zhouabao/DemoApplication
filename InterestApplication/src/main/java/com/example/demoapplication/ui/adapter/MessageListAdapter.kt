@@ -32,7 +32,7 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
         if (item.contactId != null) {
             holder.itemView.msgTitle.text = UserInfoHelper.getUserDisplayName(item.contactId)
         }
-        GlideUtil.loadCircleImg(mContext, UserInfoHelper.getAvatar(item.contactId), holder.itemView.msgIcon)
+        GlideUtil.loadAvatorImg(mContext, UserInfoHelper.getAvatar(item.contactId), holder.itemView.msgIcon)
 
         if (item.attachment is ChatHiAttachment) {
             holder.itemView.text.text = "[招呼消息]"

@@ -26,6 +26,7 @@ data class MatchBean(
     var isdislike: Int? = 0,
     var isliked: Int? = 0,
     var isvip: Int? = 0,
+    var isverify: Int? = 0,
     var lightning: Int? = 0,
     var member_level: Int? = 0,
     var nickname: String? = null,

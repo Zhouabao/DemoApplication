@@ -49,6 +49,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/llTitle"
             app:msv_errorView="@layout/error_layout"
+            app:msv_viewState="loading"
             app:msv_loadingView="@layout/loading_layout">
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout

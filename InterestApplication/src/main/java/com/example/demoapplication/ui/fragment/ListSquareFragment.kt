@@ -12,7 +12,6 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
-import com.example.demoapplication.common.CommonFunction
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.ListDataEvent
 import com.example.demoapplication.model.FriendBean
@@ -30,7 +29,6 @@ import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.example.demoapplication.utils.ScrollCalculatorHelper
 import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.CommonItemDecoration
-import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
@@ -38,7 +36,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.dialog_more_action.*
-import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_list_square.*
 import kotlinx.android.synthetic.main.item_list_square_pic.*
 import org.greenrobot.eventbus.EventBus
@@ -56,7 +53,9 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
     //音频当前播放位置
     private var currPlayIndex = -1
 
-    private val adapter by lazy { MultiListSquareAdapter(mutableListOf()) }
+    private val adapter by lazy { MultiListSquareAdapter(mutableListOf()).apply {
+        chat = false
+    } }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -77,11 +76,11 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         listRefresh.setOnLoadMoreListener(this)
         EventBus.getDefault().register(this)
 
-        stateview.retryBtn.onClick {
-            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-            params["page"] = page
-            mPresenter.getSomeoneSquare(params)
-        }
+//        stateview.retryBtn.onClick {
+//            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+//            params["page"] = page
+//            mPresenter.getSomeoneSquare(params)
+//        }
 
         val linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         val itemdecoration = CommonItemDecoration(activity!!, DividerItemDecoration.VERTICAL)
@@ -92,6 +91,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 //        listSquareRv.isNestedScrollingEnabled = false
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
+        adapter.setEmptyView(R.layout.empty_layout, listSquareRv)
         adapter.setOnItemChildClickListener { adapter, view, position ->
             if (view == squareUserPics1)
                 startActivity<SquareCommentDetailActivity>()
@@ -227,11 +227,11 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean?) {
         if (result) {
-            if ((data == null || data.list.isNullOrEmpty()) && adapter.data.isNullOrEmpty()) {
-                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
-            } else {
-                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-            }
+//            if ((data == null || data.list.isNullOrEmpty()) && adapter.data.isNullOrEmpty()) {
+//                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
+//            } else {
+//                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+//            }
 
             if (data == null || data.list == null || data!!.list!!.size == 0) {
                 listRefresh.setNoMoreData(true)
@@ -248,10 +248,10 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                 listRefresh.finishLoadMore(true)
             }
         } else {
-            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
-            adapter.data.clear()
-            page = 1
+//            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+//            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
+//            adapter.data.clear()
+//            page = 1
         }
     }
 

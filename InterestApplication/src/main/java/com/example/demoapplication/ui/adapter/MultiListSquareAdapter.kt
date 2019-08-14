@@ -14,9 +14,11 @@ import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.UpdateVoiceTimeThread
 import com.example.demoapplication.switchplay.SwitchUtil
+import com.example.demoapplication.ui.activity.MatchDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.utils.UriUtils
+import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.ext.onClick
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -37,11 +39,17 @@ import org.jetbrains.anko.startActivity
  *     playState:Int = -1  //0停止  1播放中  2暂停
  *     playPosition播放的进度
  */
-class MultiListSquareAdapter(data: MutableList<SquareBean>, var playState: Int = -1, var playPosition: Int = 0) :
+class MultiListSquareAdapter(
+    data: MutableList<SquareBean>,
+    var playState: Int = -1,
+    var playPosition: Int = 0
+) :
     BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
     companion object {
         val TAG = "RecyclerView2List"
     }
+
+    var chat: Boolean = true
 
     init {
         addItemType(SquareBean.PIC, R.layout.item_list_square_pic)
@@ -54,6 +62,12 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>, var playState: Int =
             mContext.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.squareDianzanBtn1.setCompoundDrawables(drawable1, null, null, null)
+
+        if (UserManager.getAccid() == item.accid || !chat) {
+            holder.itemView.squareChatBtn1.visibility = View.INVISIBLE
+        } else {
+            holder.itemView.squareChatBtn1.visibility = View.VISIBLE
+        }
 
         //todo 点赞
         holder.addOnClickListener(R.id.squareDianzanBtn1)
@@ -85,7 +99,10 @@ class MultiListSquareAdapter(data: MutableList<SquareBean>, var playState: Int =
         }
         GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.squareUserIv1)
         holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus("\t\t").plus(item.out_time)
-
+        holder.itemView.squareUserIv1.onClick {
+            if (!(UserManager.getAccid() == item.accid || !chat))
+                mContext.startActivity<MatchDetailActivity>("target_accid" to item.accid)
+        }
 
         when (holder.itemViewType) {
             SquareBean.PIC -> {

@@ -28,6 +28,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
     BaseQuickAdapter<MatchBean, BaseViewHolder>(R.layout.item_match_user, data) {
     override fun convert(holder: BaseViewHolder, item: MatchBean) {
         //为了防止indicator重复 每次先给他remove了
+        holder.addOnClickListener(R.id.v1)
         holder.itemView.vpIndicator.removeAllViews()
         holder.itemView.vpPhotos.setScrollable(false)
         holder.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(
@@ -49,21 +50,21 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 when (position) {
                     0 -> {
                         holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
-                        holder.itemView.matchUserIntroduce.visibility = View.GONE
-                        holder.itemView.matchUserDynamicLl.visibility = View.GONE
+                        holder.itemView.matchUserIntroduce.visibility = View.INVISIBLE
+                        holder.itemView.matchUserDynamicLl.visibility = View.INVISIBLE
                     }
                     1 -> {
-                        holder.itemView.matchUserInfoCl.visibility = View.GONE
+                        holder.itemView.matchUserInfoCl.visibility = View.INVISIBLE
                         holder.itemView.matchUserIntroduce.visibility = if (item.sign.isNullOrEmpty()) {
-                            View.GONE
+                            View.INVISIBLE
                         } else {
                             View.VISIBLE
                         }
-                        holder.itemView.matchUserDynamicLl.visibility = View.GONE
+                        holder.itemView.matchUserDynamicLl.visibility = View.INVISIBLE
                     }
                     2 -> {
-                        holder.itemView.matchUserInfoCl.visibility = View.GONE
-                        holder.itemView.matchUserIntroduce.visibility = View.GONE
+                        holder.itemView.matchUserInfoCl.visibility = View.INVISIBLE
+                        holder.itemView.matchUserIntroduce.visibility = View.INVISIBLE
                         holder.itemView.matchUserDynamicLl.visibility = View.VISIBLE
                     }
                 }
@@ -117,6 +118,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             holder.itemView.matchUserDynamicThumbRv.adapter = adapter
         } else {
             holder.itemView.matchUserDynamicThumbRv.visibility = View.GONE
+            holder.itemView.matchUserDynamicThumbTitle.visibility = View.GONE
         }
 
 
@@ -141,22 +143,23 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         } else {
             View.GONE
         }
+
+        holder.itemView.ivVerify.visibility = if (item.isverify == 1) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
         holder.itemView.matchUserIntroduce.text = item.sign ?: ""
 
-        holder.itemView.matchUserLightCount.visibility = if (item.square_count == null || item.square_count == 0) {
-            View.GONE
-        } else {
-            holder.itemView.matchUserLightCount.text = "${item.square_count}"
-            View.VISIBLE
-        }
+
         holder.itemView.matchUserLabelsLikeCount.visibility = if (item.tagcount == null || item.tagcount == 0) {
-            View.GONE
+            View.INVISIBLE
         } else {
-            holder.itemView.matchUserLabelsLikeCount.text = "${item.tagcount}"
+            holder.itemView.matchUserLabelsLikeCount.text = "${item.tagcount}个标签重合"
             View.VISIBLE
         }
         holder.itemView.matchUserJob.visibility = if (item.job.isNullOrEmpty()) {
-            View.GONE
+            View.INVISIBLE
         } else {
             holder.itemView.matchUserJob.text = item.job ?: ""
             View.VISIBLE

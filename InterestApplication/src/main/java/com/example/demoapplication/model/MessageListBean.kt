@@ -32,6 +32,7 @@ data class HiMessageBean(
     val id: Int? = 0,
     val read_time: String? = "",//	倒计时 总时长（秒）
     val countdown_total: Int? = 0,//	倒计时秒剩余时长（秒）
+    var timer: Int =0,
     val type: Int? = 0//	1，新消息 2，倒计时 3，普通样式 4 过期
 ) : MultiItemEntity {
     override fun getItemType(): Int {

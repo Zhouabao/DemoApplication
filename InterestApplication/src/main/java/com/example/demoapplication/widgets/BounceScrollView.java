@@ -75,7 +75,7 @@ public class BounceScrollView extends NestedScrollView {
     private void init() {
         mInterpolator = new OvershootInterpolator();
         mAnimator = new ValueAnimator();
-        mAnimator.setDuration(500).setInterpolator(mInterpolator);
+        mAnimator.setDuration(1000).setInterpolator(mInterpolator);
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -123,7 +123,7 @@ public class BounceScrollView extends NestedScrollView {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                if (canPullDown || canPullUp) {
+                if (canPullDown || canPullUp && mChild != null) {
                     final int scrollY = mChild.getTop();
                     mLastFrameValue = scrollY;
                     mAnimator.setIntValues(scrollY, 0);

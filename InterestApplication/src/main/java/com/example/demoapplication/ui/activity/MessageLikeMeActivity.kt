@@ -101,6 +101,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
 
 
     override fun onLikeListsResult(data: MutableList<LikeMeBean>) {
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (data.size < Constants.PAGESIZE) {
             refreshLayout.finishLoadMoreWithNoMoreData()
         } else {

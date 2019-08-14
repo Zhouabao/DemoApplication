@@ -204,12 +204,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         //已感兴趣不做操作
         if (matchBean!!.isliked == 1) {
+            detailUserLikeBtn.visibility  =View.GONE
             detailUserLikeBtn.isEnabled = false
-            detailUserLikeTv.text = "已感兴趣"
             detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
         } else {
+            detailUserLikeBtn.visibility  =View.VISIBLE
             detailUserLikeBtn.isEnabled = true
-            detailUserLikeTv.text = "感兴趣"
             detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_blue)
         }
 
@@ -382,7 +382,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             ToastUtils.showShort(statusBean.msg)
             if (statusBean!!.data?.status == 1) {  //喜欢成功
                 detailUserLikeBtn.isEnabled = false
-                detailUserLikeTv.text = "已感兴趣"
+                detailUserLikeBtn.visibility = View.GONE
                 detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
             } else if (statusBean!!.data?.status == 2) {//匹配成功
                 startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)

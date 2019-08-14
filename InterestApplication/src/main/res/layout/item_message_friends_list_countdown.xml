@@ -4,15 +4,15 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/content"
         android:layout_gravity="center_vertical"
-        android:layout_width="64dp"
         android:background="@color/colorWhite"
-        android:layout_height="64dp">
+        android:layout_width="73dp"
+        android:layout_height="73dp">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/countAvator"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="57dp"
+            android:layout_height="57dp"
             android:src="@drawable/img_avatar_01"
             app:layout_constraintBottom_toBottomOf="@id/countTimer"
             app:layout_constraintLeft_toLeftOf="@id/countTimer"
@@ -23,24 +23,12 @@
             android:id="@+id/countTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:timerWidth="81"
             app:bitmapWidth="16"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-    <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/hiAvatorMask"
-            android:layout_width="57dp"
-            android:layout_height="57dp"
-            android:visibility="gone"
-            android:background="@drawable/shape_oval_gray_3300"
-            app:layout_constraintBottom_toBottomOf="@id/countAvator"
-            app:layout_constraintLeft_toLeftOf="@id/countAvator"
-            app:layout_constraintRight_toRightOf="@id/countAvator"
-            app:layout_constraintTop_toTopOf="@id/countAvator"
-            />
+            app:layout_constraintTop_toTopOf="parent"
+            app:timerWidth="73"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
