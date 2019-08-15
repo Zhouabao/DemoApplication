@@ -67,7 +67,7 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
             SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
-            data.userinfo.isvip?.let { SPUtils.getInstance(Constants.SPNAME).put("isvip", it) }
+            data.userinfo.isvip?.let { saveUserVip(it) }
             data.userinfo.isverify?.let { SPUtils.getInstance(Constants.SPNAME).put("verify", it) }
         }
     }
@@ -170,6 +170,10 @@ object UserManager {
      */
     fun isUserVip(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getInt("isvip", 0) == 1
+    }
+
+    fun saveUserVip(vip: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("isvip", vip)
     }
 
     /**

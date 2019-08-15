@@ -204,8 +204,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             isChange = true
             Collections.swap(photos, fromPos, toPos)
             Collections.swap(adapter.data, fromPos, toPos)
-            adapter.notifyItemChanged(0)
-            adapter.notifyItemChanged(position)
+            adapter.notifyDataSetChanged()
         } else {
             fromPos = -1
             toPos = -1

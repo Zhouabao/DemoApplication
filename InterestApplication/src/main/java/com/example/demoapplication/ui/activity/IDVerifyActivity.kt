@@ -1,5 +1,7 @@
 package com.example.demoapplication.ui.activity
 
+import android.app.Activity
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,13 +12,23 @@ import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.baidu.idl.face.platform.ui.FaceLivenessActivity
 import com.baidu.idl.face.platform.utils.Base64Utils
 import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.SPUtils
+import com.example.baselibrary.utils.RandomUtils
+import com.example.demoapplication.api.Api
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.common.MyApplication
 import com.example.demoapplication.model.AccessTokenBean
 import com.example.demoapplication.model.MatchFaceBean
 import com.example.demoapplication.ui.dialog.LoadingDialog
+import com.example.demoapplication.utils.QNUploadManager
 import com.example.demoapplication.utils.UserManager
 import com.google.gson.Gson
+import com.kotlin.base.common.BaseApplication.Companion.context
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.rx.BaseSubscriber
+import com.kotlin.base.utils.NetWorkUtils
 import com.zhy.http.okhttp.OkHttpUtils
 import com.zhy.http.okhttp.callback.Callback
 import okhttp3.Call
@@ -53,12 +65,10 @@ class IDVerifyActivity : FaceLivenessActivity() {
         FaceSDKManager.getInstance().initialize(this, Constants.licenseID, Constants.licenseFileName)
         setFaceConfig()
 
-        loadingDialog.show()
-
         //获取accesstoken
-        getAccessToken()
+//        getAccessToken()
         //获取图片的base64
-        Thread(runnable).start()
+//        Thread(runnable).start()
     }
 
     private fun setFaceConfig() {
@@ -100,22 +110,89 @@ class IDVerifyActivity : FaceLivenessActivity() {
     ) {
         super.onLivenessCompletion(status, message, images)
         if (status == FaceStatusEnum.OK && mIsCompletion) {
-            toast("检测成功")
-            //todo 去比對拿到用戶的頭像去比對
-            if (images != null && images.size > 0)
-                matchFace(avatorString, images.values.first())
+            loadingDialog.show()
+            if (images != null && images.size > 0) {
+                val fileKey =
+                    "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
+                        "accid"
+                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                        16
+                    )}.jpg"
+
+                uploadProfile(bitmap2Bytes(mILivenessStrategy.bestFaceImage), fileKey)
+            }
         } else if (status == FaceStatusEnum.Error_DetectTimeout
             || status == FaceStatusEnum.Error_LivenessTimeout ||
             status == FaceStatusEnum.Error_Timeout
         ) {
-            toast("采集超时~")
+            toast("采集超时,请退出重试")
         }
     }
 
 
+    /*-------------------by服务端-----------------------*/
+
+    /**
+     * 上传照片
+     * imagePath 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
+     */
+    private fun uploadProfile(filePath: ByteArray, imagePath: String) {
+        if (!NetWorkUtils.isNetWorkAvailable(this)) {
+            return
+        }
+        QNUploadManager.getInstance().put(
+            filePath, imagePath, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
+            { key, info, response ->
+                Log.d("OkHttp", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
+                Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
+                if (info != null && info.isOK) {
+                    savePersonal(
+                        hashMapOf(
+                            "token" to UserManager.getToken(),
+                            "accid" to UserManager.getAccid(),
+                            "face" to key
+                        )
+                    )
+                } else {
+                    toast("认证审核提交失败，请重新进入认证")
+                }
+            }, null
+        )
+    }
+
+    /**
+     * 保存个人信息
+     */
+    private fun savePersonal(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .savePersonal(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    loadingDialog.dismiss()
+                    when {
+                        t.code == 200 -> {
+                            toast("审核提交成功")
+                            finish()
+                        }
+                        t.code == 403 -> UserManager.startToLogin(context as Activity)
+                        else -> {
+                            toast("认证审核提交失败，请重新进入认证")
+                        }
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    loadingDialog.dismiss()
+                    toast("认证审核提交失败，请重新进入认证")
+                }
+            })
+
+    }
+
+
+    /*-------------------by客户端-----------------------*/
     private var accessToken = ""
     private var avatorString: String? = null
-
     /**
      * 获取人脸验证的token
      * https://aip.baidubce.com/oauth/2.0/token
@@ -204,7 +281,6 @@ class IDVerifyActivity : FaceLivenessActivity() {
 
                     Log.d("OkHttp", response.toString())
                     if (response?.result?.score != null && response?.result.score >= 80) {
-                        //todo 告诉服务器验证成功
                         loadingDialog.dismiss()
                         toast("认证成功！")
                         finish()
@@ -241,7 +317,7 @@ class IDVerifyActivity : FaceLivenessActivity() {
      * @return base64编码
      * @throws Exception
      */
-    val runnable = Runnable {
+    private val runnable = Runnable {
         try {
             val u = URL(UserManager.getAvator())
             // 打开图片路径
@@ -269,6 +345,16 @@ class IDVerifyActivity : FaceLivenessActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+
+    /**
+     * 将图片转变为字节数组
+     */
+    private fun bitmap2Bytes(base64Url: String): ByteArray {
+        val baos = ByteArrayOutputStream()
+        base64ToBitmap(base64Url).compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray()
     }
 
 

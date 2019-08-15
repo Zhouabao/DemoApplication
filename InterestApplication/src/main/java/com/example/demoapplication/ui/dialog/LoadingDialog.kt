@@ -17,7 +17,7 @@ class LoadingDialog(context: Context) : Dialog(context, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initWindow()
-        setContentView(R.layout.loading_layout)
+        setContentView(R.layout.loading_dialog_layout)
     }
 
     private fun initWindow() {
@@ -25,7 +25,7 @@ class LoadingDialog(context: Context) : Dialog(context, R.style.MyDialog) {
         window?.setGravity(Gravity.CENTER)
         val params = window?.attributes
         // 设置窗口背景透明度
-        params?.alpha = 0.3f
+//        params?.alpha = 0.5f
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.MATCH_PARENT
         window?.attributes = params

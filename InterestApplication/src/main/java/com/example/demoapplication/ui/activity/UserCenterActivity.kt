@@ -125,6 +125,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     private fun checkVip() {
         //是否会员
         if (userInfoBean.userinfo?.isvip == 1) {
+            UserManager.saveUserVip(userInfoBean.userinfo?.isvip ?: 0)
             userVip.visibility = View.VISIBLE
             isVipCl.visibility = View.VISIBLE
             isVipTimeout.text = "到期时间\t\t${userInfoBean.userinfo?.vip_express ?: ""}"

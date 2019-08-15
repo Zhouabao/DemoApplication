@@ -516,7 +516,7 @@ public class FaceLivenessActivity extends Activity implements
         }
     }
 
-    private static Bitmap base64ToBitmap(String base64Data) {
+    public static Bitmap base64ToBitmap(String base64Data) {
         byte[] bytes = Base64Utils.decode(base64Data, Base64Utils.NO_WRAP);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
