@@ -82,7 +82,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("square/squareLists${Constants.END_BASE_URL}")
-    fun getSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean>>
+    fun getSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
 
 
     /**

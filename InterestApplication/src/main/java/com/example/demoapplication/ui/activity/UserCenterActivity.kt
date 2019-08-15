@@ -99,6 +99,9 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         GlideUtil.loadAvatorImg(this, userInfoBean.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean.userinfo?.nickname ?: ""
         userSquareCount.text = "我的动态 ${userInfoBean.squarelist?.count}"
+        UserManager.saveUserVip(userInfoBean.userinfo?.isvip ?: 0)
+        UserManager.saveUserVerify(userInfoBean.userinfo?.isfaced ?: 0)
+
         // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
         checkVerify()
         checkVip()
@@ -112,12 +115,16 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
 
     //是否认证 1认证 2未认证
     private fun checkVerify() {
-        if (userInfoBean.userinfo?.face_audit_state == 1) {
-            userVerify.setImageResource(R.drawable.icon_verify_small)
+        if (userInfoBean.userinfo?.isfaced == 1) {
+            userVerify.setImageResource(R.drawable.icon_verify)
             userVerifyTip.visibility = View.GONE
+            userVerifyBtn.text = "已认证"
+            userVerifyBtn.isEnabled = false
         } else {
             userVerify.setImageResource(R.drawable.icon_verify_gray)
             userVerifyTip.visibility = View.VISIBLE
+            userVerifyBtn.text = "立即认证"
+            userVerifyBtn.isEnabled = true
         }
     }
 
@@ -125,7 +132,6 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     private fun checkVip() {
         //是否会员
         if (userInfoBean.userinfo?.isvip == 1) {
-            UserManager.saveUserVip(userInfoBean.userinfo?.isvip ?: 0)
             userVip.visibility = View.VISIBLE
             isVipCl.visibility = View.VISIBLE
             isVipTimeout.text = "到期时间\t\t${userInfoBean.userinfo?.vip_express ?: ""}"

@@ -203,7 +203,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     "checkedLabels" to checkTags as Serializable
                 )
             } else {//其他时候点击就删除标签
-                if (publishLabelAdapter.data.size <= 1) {
+                if (publishLabelAdapter.data.size <= 2) {
                     ToastUtils.showShort("至少要选择一个标签哦")
                     return@setOnItemClickListener
                 } else {
@@ -1047,6 +1047,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             } else {
                 positionItem!!.cityCode ?: ""
             }),
+            "puber_address" to locationCity.text.toString(),
             //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
             "type" to type,
             //上传音频、视频的时间，精确到秒
@@ -1112,7 +1113,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     override fun onSquareAnnounceResult(success: Boolean) {
         if (success) {
             toast("动态发布成功！")
-            EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
+            EventBus.getDefault()
+                .post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
             if (!this.isFinishing)
                 finish()
         }

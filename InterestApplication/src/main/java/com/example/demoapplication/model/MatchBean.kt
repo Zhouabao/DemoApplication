@@ -10,13 +10,17 @@ import java.io.Serializable
  */
 data class MatchListBean(
     var list: MutableList<MatchBean>?,
-    var lightningcnt: Int?
+    var lightningcnt: Int?,
+    var isvip: Int = 0,    //是否会员 true是 false不是
+    var isfaced: Int = 0    //是否认证 true 是 false 不是
 )
 
 /**
  * 匹配用户
  */
 data class MatchBean(
+    var isvip: Int = 0,    //是否会员 true是 false不是
+    var isfaced: Int = 0,  //是否认证 true 是 false 不是
     var accid: String? = null,
     var age: Int? = 0,
     var avatar: String? = null,
@@ -25,8 +29,6 @@ data class MatchBean(
     var id: Int? = 0,
     var isdislike: Int? = 0,
     var isliked: Int? = 0,
-    var isvip: Int? = 0,
-    var isverify: Int? = 0,
     var lightning: Int? = 0,
     var member_level: Int? = 0,
     var nickname: String? = null,
@@ -108,6 +110,6 @@ data class BlockListBean(
  * 用户照片
  */
 data class Photos(
-    var type: Int?,
+    val square_id: Int? = 0,
     var url: String?
 )

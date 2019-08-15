@@ -68,7 +68,7 @@ object UserManager {
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
             SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
             data.userinfo.isvip?.let { saveUserVip(it) }
-            data.userinfo.isverify?.let { SPUtils.getInstance(Constants.SPNAME).put("verify", it) }
+            data.userinfo.isfaced?.let { saveUserVerify(it) }
         }
     }
 
@@ -173,7 +173,7 @@ object UserManager {
     }
 
     fun saveUserVip(vip: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("isvip", vip)
+        SPUtils.getInstance(Constants.SPNAME).put("isvip",vip)
     }
 
     /**
@@ -184,6 +184,9 @@ object UserManager {
     }
 
 
+    fun saveUserVerify(verify: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("verify",verify)
+    }
     /**
      * 判断用户是否添加了筛选条件
      *

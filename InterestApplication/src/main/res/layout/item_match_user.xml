@@ -43,7 +43,7 @@
             android:id="@+id/vpIndicator"
             android:layout_marginTop="20dp"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top|center_horizontal"/>
 
@@ -79,7 +79,8 @@
             android:id="@+id/v1"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_width="match_parent"
-            android:layout_marginBottom="20dp"
+            android:paddingBottom="20dp"
+            android:background="@drawable/icon_match_fragment_content_bg"
             android:layout_height="wrap_content">
 
         <ImageView
@@ -118,7 +119,7 @@
                 android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Username"/>
@@ -126,10 +127,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/matchUserInfoCl"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_width="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_height="61dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="@id/matchUserName"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/matchUserName">
@@ -185,11 +185,10 @@
 
         <LinearLayout
                 android:id="@+id/matchUserDynamicLl"
-                android:layout_marginTop="10dp"
                 android:layout_width="0dp"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:orientation="vertical"
-                android:layout_height="61dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="@id/matchUserName"
                 app:layout_constraintRight_toRightOf="parent"
@@ -200,7 +199,7 @@
                     android:elevation="2dp"
                     android:gravity="center"
                     android:layout_width="wrap_content"
-                    android:text="最近发布动态"
+                    android:text="在该板块下发布内容"
                     android:drawableLeft="@drawable/icon_dynamic_small"
                     android:drawablePadding="6dp"
                     android:textSize="12sp"
@@ -221,14 +220,13 @@
 
         <TextView
                 android:id="@+id/matchUserIntroduce"
-                android:visibility="invisible"
-                android:layout_marginTop="7dp"
+                android:visibility="gone"
                 android:layout_width="0dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp"
                 android:layout_marginRight="16dp"
                 android:lineSpacingMultiplier="1.25"
-                android:layout_height="61dp"
+                android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="3"
                 app:layout_constraintLeft_toLeftOf="@id/matchUserName"

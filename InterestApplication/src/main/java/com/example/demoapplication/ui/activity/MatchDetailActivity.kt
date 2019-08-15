@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
@@ -261,19 +259,16 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         if (photos.size > 1) {
             for (i in 0 until photos.size) {
+                val width = ((ScreenUtils.getScreenWidth()
+                        - SizeUtils.dp2px(15F) * 4
+                        - (SizeUtils.dp2px(6F) * (photos.size - 1))) * 1F / photos.size).toInt()
+                val height = SizeUtils.dp2px(5F)
+
                 val indicator = RadioButton(this)
-                indicator.width = ((ScreenUtils.getScreenWidth()
-                        - SizeUtils.applyDimension(15F, TypedValue.COMPLEX_UNIT_DIP) * 2
-                        - (SizeUtils.applyDimension(
-                    6F,
-                    TypedValue.COMPLEX_UNIT_DIP
-                ) * (photos.size - 1))) / photos.size).toInt()
-                indicator.height = SizeUtils.dp2px(5F)
                 indicator.buttonDrawable = null
                 indicator.background = resources.getDrawable(R.drawable.selector_round_indicator)
 
-                indicator.layoutParams =
-                    LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                indicator.layoutParams = LinearLayout.LayoutParams(width, height)
                 val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(
                     if (i == 0) {

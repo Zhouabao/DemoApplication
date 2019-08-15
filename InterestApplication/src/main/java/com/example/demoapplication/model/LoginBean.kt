@@ -28,7 +28,7 @@ data class Userinfo(
     val isvip: Int? = 0,
     val todayvisit: Int? = 0,
     val vip_express: String? = "",
-    val isverify: Int? = 0
+    val isfaced: Int? = 0
 )
 
 data class TagBean(

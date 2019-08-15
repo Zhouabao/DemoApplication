@@ -49,6 +49,9 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
 
         blockRv.layoutManager = GridLayoutManager(activity, 3, RecyclerView.VERTICAL, false)
         blockRv.adapter = blockAdapter
+        blockAdapter.setOnItemClickListener { _, view, position ->
+
+        }
 
 //        stateview.retryBtn.onClick {
 //            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT

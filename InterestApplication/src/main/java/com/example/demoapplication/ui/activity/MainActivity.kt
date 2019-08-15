@@ -211,7 +211,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
-    //TODO("联动") https://blog.csdn.net/YANGWEIQIAO/article/details/78959968
     override fun onClick(view: View) {
         when (view.id) {
             R.id.filterBtn -> {

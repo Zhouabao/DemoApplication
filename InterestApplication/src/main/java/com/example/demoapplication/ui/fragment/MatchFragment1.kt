@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.blankj.utilcode.util.SPUtils
@@ -37,13 +38,13 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.support.v4.toast
 
 /**
  * 匹配页面(新版)
  * //todo 探探是把用戶存在本地數據庫的
  */
 class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
-    private var switch = false
     private var hasMore = false
 
 
@@ -99,8 +100,10 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
-                R.id.v1->{
-                    startActivity<MatchDetailActivity>("target_accid" to (matchUserAdapter.data[manager.topPosition].accid ?: ""))
+                R.id.v1 -> {
+                    startActivity<MatchDetailActivity>(
+                        "target_accid" to (matchUserAdapter.data[manager.topPosition].accid ?: "")
+                    )
                 }
             }
         }
@@ -123,7 +126,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         when (view.id) {
             R.id.btnChat -> {
                 if (lightCount == 0) {
-                    ChargeVipDialog(activity!!).show()
+                    chargeVipDialog.show()
                 } else {
                     ToastUtils.showShort("打招呼")
 
@@ -136,6 +139,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
+            hasMore = true
             hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == Constants.PAGESIZE
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
                 stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
@@ -143,8 +147,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                 stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             }
             matchUserAdapter.addData(matchBeans!!.list ?: mutableListOf<MatchBean>())
-
             lightCount = matchBeans.lightningcnt ?: 0
+            UserManager.saveUserVip(matchBeans.isvip)
+            UserManager.saveUserVerify(matchBeans.isfaced)
             tvLeftChatTime.text = "${matchBeans.lightningcnt}"
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -176,6 +181,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     //status :1.喜欢成功  2.匹配成功
     override fun onGetLikeResult(success: Boolean, data: StatusBean?) {
         if (success) {
+            switch = false
             if (data != null && data.status == 2) {
                 startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[matchUserAdapter.data.size - 1])
             }
@@ -199,7 +205,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     override fun onResume() {
         super.onResume()
-        switch = false
     }
 
 
@@ -276,24 +281,49 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     }
 
-    override fun onCardDragging(direction: Direction, ratio: Float) {
-        /*if (direction == Direction.Top && ratio > 0.7F && !switch) {
-            startActivity<MatchDetailActivity>("target_accid" to matchUserAdapter.data[manager.topPosition].accid)
-            switch = true
-        }*/
-        Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
+    var switch = false
+    private val chargeVipDialog by lazy {
+        ChargeVipDialog(activity!!).apply {
+            setOnDismissListener {
+                switch = false
+            }
+        }
+    }
 
+    override fun onCardDragging(direction: Direction, ratio: Float) {
+        //向上超级喜欢(会员就超级喜欢 否则弹起收费窗)
+        if (direction == Direction.Top && ratio > 0.5F && !switch) {
+            switch = true
+            if (!UserManager.isUserVip()) {
+                chargeVipDialog.show()
+            } else {
+                val setting = SwipeAnimationSetting.Builder()
+                    .setDirection(Direction.Right)
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator(AccelerateInterpolator())
+                    .build()
+                manager.setSwipeAnimationSetting(setting)
+                card_stack_view.swipe()
+//                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+//                mPresenter.likeUser(params)
+                switch = false
+            }
+        }
+        Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
 
     //此时已经飞出去了
     override fun onCardSwiped(direction: Direction?) {
+        switch = false
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
         if (direction == Direction.Left) {
-            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-            mPresenter.dislikeUser(params)
+            toast("不喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
+//            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+//            mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {
-            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-            mPresenter.likeUser(params)
+            toast("喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
+//            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+//            mPresenter.likeUser(params)
         }
 
         //如果已经只剩5张了就请求数据
@@ -301,6 +331,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             page++
             matchParams["page"] = page
             mPresenter.getMatchList(matchParams)
+        } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
+            stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
         }
     }
 

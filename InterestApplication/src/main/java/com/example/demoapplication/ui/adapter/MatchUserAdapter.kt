@@ -49,23 +49,58 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 }
                 when (position) {
                     0 -> {
-                        holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
-                        holder.itemView.matchUserIntroduce.visibility = View.INVISIBLE
-                        holder.itemView.matchUserDynamicLl.visibility = View.INVISIBLE
+                        if (item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
+                            holder.itemView.matchUserIntroduce.visibility = View.GONE
+                            holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
+                        } else {
+                            holder.itemView.matchUserDynamicLl.visibility = View.VISIBLE
+                            holder.itemView.matchUserIntroduce.visibility = View.GONE
+                            holder.itemView.matchUserInfoCl.visibility = View.GONE
+                        }
                     }
                     1 -> {
-                        holder.itemView.matchUserInfoCl.visibility = View.INVISIBLE
-                        holder.itemView.matchUserIntroduce.visibility = if (item.sign.isNullOrEmpty()) {
-                            View.INVISIBLE
+                        if (item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                            holder.itemView.matchUserInfoCl.visibility = View.GONE
+                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
                         } else {
-                            View.VISIBLE
+                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
+                            holder.itemView.matchUserIntroduce.visibility = View.GONE
+                            holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
                         }
-                        holder.itemView.matchUserDynamicLl.visibility = View.INVISIBLE
                     }
                     2 -> {
-                        holder.itemView.matchUserInfoCl.visibility = View.INVISIBLE
-                        holder.itemView.matchUserIntroduce.visibility = View.INVISIBLE
-                        holder.itemView.matchUserDynamicLl.visibility = View.VISIBLE
+                        if (item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                            holder.itemView.matchUserInfoCl.visibility = View.GONE
+                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
+                        } else {
+                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
+                            if (item.sign.isNullOrEmpty()) {
+                                holder.itemView.matchUserIntroduce.visibility = View.GONE
+                                holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
+                            } else {
+                                holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                                holder.itemView.matchUserInfoCl.visibility = View.GONE
+                            }
+                        }
+                    }
+                    else -> {
+                        if (item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                            holder.itemView.matchUserInfoCl.visibility = View.GONE
+                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
+                        } else {
+                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
+                            if (item.sign.isNullOrEmpty()) {
+                                holder.itemView.matchUserIntroduce.visibility = View.GONE
+                                holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
+                            } else {
+                                holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                                holder.itemView.matchUserInfoCl.visibility = View.GONE
+                            }
+                        }
                     }
                 }
             }
@@ -76,19 +111,15 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         if ((item.photos ?: mutableListOf<MatchBean>()).size > 1) {
             val size = (item.photos ?: mutableListOf<MatchBean>()).size
             for (i in 0 until size) {
-                val indicator = RadioButton(mContext)
-                indicator.width = ((ScreenUtils.getScreenWidth()
+                val width = ((ScreenUtils.getScreenWidth()
                         - SizeUtils.dp2px(15F) * 4
                         - (SizeUtils.dp2px(6F) * (size - 1))) * 1F / size).toInt()
-                indicator.height = SizeUtils.dp2px(5F)
+                val height = SizeUtils.dp2px(5F)
+                val indicator = RadioButton(mContext)
                 indicator.buttonDrawable = null
                 indicator.background = mContext.resources.getDrawable(R.drawable.selector_round_indicator)
 
-                indicator.layoutParams =
-                    LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
+                indicator.layoutParams = LinearLayout.LayoutParams(width, height)
                 val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(
                     if (i == 0) {
@@ -109,16 +140,19 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         }
 
         /*设置封面图片recyclerview*/
-        if (!item.square.isNullOrEmpty()) {
-            holder.itemView.matchUserDynamicThumbRv.visibility = View.VISIBLE
+        if (item.square.isNullOrEmpty()) {
+            holder.itemView.matchUserDynamicLl.visibility = View.GONE
+            holder.itemView.matchUserIntroduce.visibility = View.GONE
+            holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
+        } else {
+            holder.itemView.matchUserDynamicLl.visibility = View.VISIBLE
             holder.itemView.matchUserDynamicThumbRv.layoutManager =
                 LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
             val adapter = DetailThumbAdapter(mContext)
             adapter.setData(item.square ?: mutableListOf())
             holder.itemView.matchUserDynamicThumbRv.adapter = adapter
-        } else {
-            holder.itemView.matchUserDynamicThumbRv.visibility = View.GONE
-            holder.itemView.matchUserDynamicThumbTitle.visibility = View.GONE
+            holder.itemView.matchUserIntroduce.visibility = View.GONE
+            holder.itemView.matchUserInfoCl.visibility = View.GONE
         }
 
 
@@ -144,7 +178,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             View.GONE
         }
 
-        holder.itemView.ivVerify.visibility = if (item.isverify == 1) {
+        holder.itemView.ivVerify.visibility = if (item.isfaced == 1) {
             View.VISIBLE
         } else {
             View.GONE
@@ -153,13 +187,13 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
 
 
         holder.itemView.matchUserLabelsLikeCount.visibility = if (item.tagcount == null || item.tagcount == 0) {
-            View.INVISIBLE
+            View.GONE
         } else {
             holder.itemView.matchUserLabelsLikeCount.text = "${item.tagcount}个标签重合"
             View.VISIBLE
         }
         holder.itemView.matchUserJob.visibility = if (item.job.isNullOrEmpty()) {
-            View.INVISIBLE
+            View.GONE
         } else {
             holder.itemView.matchUserJob.text = item.job ?: ""
             View.VISIBLE

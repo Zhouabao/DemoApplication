@@ -42,6 +42,7 @@ data class SquareBean(
     var member_level: Int?,
     var nickname: String?,
     var out_time: String?,
+    var puber_address: String?,
     var photo_json: MutableList<VideoJson>?,
     var province_name: String?,
     var share_cnt: Int?,
@@ -52,6 +53,7 @@ data class SquareBean(
     var video_json: MutableList<VideoJson>?,
     var type: Int = 1,
     var duration: Long = 0L
+
 ) :
     Serializable, MultiItemEntity {
 
@@ -66,6 +68,34 @@ data class SquareBean(
         const val AUDIO = 3
     }
 }
+
+
+data class V1(
+    val accid: String? = "",
+    val audio_json: List<Any?>? = listOf(),
+    val avatar: String? = "",
+    val city_name: String? = "",
+    val comment_cnt: Int? = 0,
+    val cover_url: String? = "",
+    val create_time: String? = "",
+    val descr: String? = "",
+    val id: Int? = 0,
+    val iscollected: Int? = 0,
+    val isliked: Int? = 0,
+    val isvip: Int? = 0,
+    val like_cnt: Int? = 0,
+    val member_level: Int? = 0,
+    val nickname: String? = "",
+    val out_time: String? = "",
+    val photo_json: List<Any?>? = listOf(),
+    val province_name: String? = "",
+    val puber_address: String? = "",
+    val share_cnt: Int? = 0,
+    val tag_id: Int? = 0,
+    val tags: List<String?>? = listOf(),
+    val title: Int? = 0,
+    val video_json: List<VideoJson?>? = listOf()
+)
 
 
 data class VideoJson(
