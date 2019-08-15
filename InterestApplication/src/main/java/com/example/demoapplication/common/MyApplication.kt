@@ -2,6 +2,7 @@ package com.example.demoapplication.common
 
 import android.annotation.SuppressLint
 import android.os.Environment
+import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.CrashUtils
 import com.example.demoapplication.nim.DemoCache
 import com.example.demoapplication.nim.NIMInitManager
@@ -35,6 +36,13 @@ class MyApplication : BaseApplication() {
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context, layout ->
             ClassicsFooter(context).setDrawableSize(20F)
         }
+
+    }
+
+    companion object {
+        public var livenessList = mutableListOf<LivenessTypeEnum>()
+        public var isLivewnessRandom = false
+
     }
 
 

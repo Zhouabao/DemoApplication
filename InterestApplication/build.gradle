@@ -7,17 +7,24 @@ apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
     signingConfigs {
+
+        def password = "123456"
+        def alias = "key"
+//        def filePath = "D:/AndroidProjects/FaceSDK-Collect-WithLiveness-Android/facesdk.jks"  //如  ../facesharp.jks//签名文件路径
+        def filePath = "C:/Users/Admin/AndroidStudioProjects/DemoApplication/demoapp.jks"  //如  ../facesharp.jks//签名文件路径
+
+
         debug {
-            storeFile file('C:\\Users\\Admin\\AndroidStudioProjects\\DemoApplication\\demoapp.jks')
-            storePassword '123456'
-            keyAlias = 'key'
-            keyPassword '123456'
+            storeFile file(filePath)
+            storePassword password
+            keyAlias = alias
+            keyPassword password
         }
         release {
-            storeFile file('C:\\Users\\Admin\\AndroidStudioProjects\\DemoApplication\\demoapp.jks')
-            storePassword '123456'
-            keyAlias = 'key'
-            keyPassword '123456'
+            storeFile file(filePath)
+            storePassword password
+            keyAlias = alias
+            keyPassword password
         }
     }
     compileSdkVersion compile_sdk_version
@@ -137,6 +144,8 @@ dependencies {
 //    implementation 'com.netease.nimlib:basesdk:6.1.1'
 
     implementation project(path: ':NIM_Android_UIKit-master')
+    implementation project(path: ':faceplatform-ui')
+//    implementation project(path: ':faceplatform')
     // ViewModel and LiveData
 //    implementation "android.arch.lifecycle:extensions:1.1.0"
     // Java8 support for Lifecycles

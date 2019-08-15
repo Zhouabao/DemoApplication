@@ -36,7 +36,6 @@
     <string name="nim_status_bar_hidden_msg_content">你收到一条新消息</string>
 
 
-
     <string name="message_history_query">云消息记录</string>
     <string name="message_search_title">搜索本地消息记录</string>
     <string name="message_clear">清空本地消息记录</string>

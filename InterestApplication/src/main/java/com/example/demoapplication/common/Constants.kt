@@ -31,4 +31,12 @@ object Constants {
     const val DEFAULT_VALUE_SIZE = 7
     const val DEFAULT_ARC_WIDTH = 10
 
+
+    //    // 为了apiKey,secretKey为您调用百度人脸在线接口的，如注册，比对等。
+    //    // 为了的安全，建议放在您的服务端，端把人脸传给服务器，在服务端端
+    //    // license为调用sdk的人脸检测功能使用，人脸识别 = 人脸检测（sdk功能）  + 人脸比对（服务端api）
+    var apiKey = "FCcKnV8g5FeocjHFrdbQsB58"
+    var secretKey = "xtPYk95nmUFR48GVDzCxFZW8qMI6MnBs"
+    var licenseID = "demoapplication-face-face-android"
+    var licenseFileName = "idl-license.face-android"
 }

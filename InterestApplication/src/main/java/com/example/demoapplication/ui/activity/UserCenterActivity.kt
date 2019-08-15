@@ -239,7 +239,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         userSquaresRv.layoutManager = squareManager
         userSquaresRv.adapter = coverAdapter
         val headView = LayoutInflater.from(this).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
-        coverAdapter.addHeaderView(headView,0,LinearLayout.HORIZONTAL)
+        coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
         coverAdapter.headerLayout.onClick {
             startActivity<PublishActivity>()
         }
@@ -351,6 +351,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //认证中心
             R.id.userVerifyBtn -> {
+                startActivity<IDVerifyActivity>()
             }
         }
     }
