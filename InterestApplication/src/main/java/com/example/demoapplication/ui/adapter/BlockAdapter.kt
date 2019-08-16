@@ -1,5 +1,6 @@
 package com.example.demoapplication.ui.adapter
 
+import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
@@ -17,7 +18,7 @@ class BlockAdapter : BaseQuickAdapter<Photos, BaseViewHolder>(R.layout.item_bloc
 
     override fun convert(holder: BaseViewHolder, item: Photos) {
 
-        GlideUtil.loadImg(mContext, item.url ?: "", holder.itemView.ivSquare)
+        GlideUtil.loadRoundImgCenterCrop(mContext, item.url ?: "", holder.itemView.ivSquare,  SizeUtils.dp2px(5F))
     }
 
 }

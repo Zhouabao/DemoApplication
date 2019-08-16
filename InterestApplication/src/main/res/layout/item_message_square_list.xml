@@ -7,6 +7,23 @@
         android:background="@color/colorWhite"
         android:layout_height="wrap_content">
 
+    <TextView
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:paddingLeft="15dp"
+            android:id="@+id/headTitle"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:text="未读消息"
+            android:gravity="center_vertical"
+            android:textColor="#ff999999"
+            android:layout_marginBottom="15dp"
+            android:textSize="12sp"
+            />
+
+
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/msgIcon"
             android:layout_width="46dp"
@@ -15,7 +32,7 @@
             android:src="@drawable/img_avatar_01"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/msgTitle"/>
 
     <TextView
             android:id="@+id/msgTitle"
@@ -23,11 +40,11 @@
             android:text="发现"
             android:textColor="#ff222222"
             android:textSize="16sp"
-            android:layout_marginTop="15dp"
             android:layout_width="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/headTitle"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toRightOf="@id/msgIcon"
-            app:layout_constraintTop_toTopOf="parent"/>
+            />
 
 
     <TextView

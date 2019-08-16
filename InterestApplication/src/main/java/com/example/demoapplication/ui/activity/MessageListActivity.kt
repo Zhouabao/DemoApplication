@@ -7,6 +7,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.HiMessageBean
@@ -143,6 +144,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             startActivity<MessageHiActivity>()
         }
         hiAdapter.setOnItemClickListener { adapter, view, position ->
+
         }
 //        hiAdapter.addData(mutableListOf(""))
         return friendsView
@@ -160,16 +162,25 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         headView.headRv.layoutManager = linearLayoutManager
         headView.headRv.adapter = headAdapter
+        //初始化第一个项目
+        headAdapter.addData(MessageListBean())
         headAdapter.setOnItemClickListener { adapter, view, position ->
             when (position) {
-                0 -> {
-
+                0 -> {//官方助手
+                    ChatActivity.start(this, "9b6ab1ce76756a5c243c713aaf45ab5e")
+                    headAdapter.data[0].count = 0
+                    headAdapter.notifyItemChanged(0)
                 }
-                1 -> {
+                1 -> {//广场消息
                     startActivity<MessageSquareActivity>()
+                    headAdapter.data[1].count = 0
+                    headAdapter.notifyItemChanged(1)
                 }
-                2 -> {
+                2 -> {//喜欢我的消息
                     startActivity<MessageLikeMeActivity>()
+                    headAdapter.data[2].count = 0
+                    headAdapter.notifyItemChanged(2)
+
                 }
             }
         }
@@ -179,7 +190,6 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 
     override fun onMessageCensusResult(data: MessageListBean1?) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-        val ass = MessageListBean("官方助手", "助手推送消息内容", 1, "2分钟前", R.drawable.icon_assistant)
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
         val squa = MessageListBean(
             "发现", when (data?.square_type) {
@@ -227,21 +237,40 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     override fun updateOfflineContactAited(recentAited: MutableList<RecentContact>) {
     }
 
+    //官方助手
+    var ass = MessageListBean("官方助手", "", 0, "", R.drawable.icon_assistant)
+
     //获取最近会话（但是要获取最近的联系人列表）
     override fun onGetRecentContactResults(result: MutableList<RecentContact>) {
+        for (loadedRecent in result) {
+            if (loadedRecent.contactId == "9b6ab1ce76756a5c243c713aaf45ab5e") {
+                ass = MessageListBean(
+                    "官方助手",
+                    loadedRecent.content,
+                    loadedRecent.unreadCount,
+                    TimeUtils.getFriendlyTimeSpanByNow(loadedRecent.time),
+                    R.drawable.icon_assistant,
+                    loadedRecent.contactId
+                )
+                headAdapter.setData(0,ass)
+                headAdapter.notifyItemChanged(0)
+                result.remove(loadedRecent)
+                break
+            }
+        }
         adapter.data.clear()
         adapter.setNewData(result)
         refreshMessages()
 
         //初次加载，更新离线的消息中是否有@我的消息
-        var recentAited = mutableListOf<RecentContact>()
-        for (loadedRecent in result) {
-            if (loadedRecent.sessionType == SessionTypeEnum.Team) {
-                recentAited.add(loadedRecent)
-            }
-        }
-        if (recentAited.size > 0)
-            mPresenter.mView.updateOfflineContactAited(recentAited)
+//        var recentAited = mutableListOf<RecentContact>()
+//        for (loadedRecent in result) {
+//            if (loadedRecent.sessionType == SessionTypeEnum.Team) {
+//                recentAited.add(loadedRecent)
+//            }
+//        }
+//        if (recentAited.size > 0)
+//            mPresenter.mView.updateOfflineContactAited(recentAited)
     }
 
 
@@ -343,7 +372,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             }
         }
 
-    internal var messageObserver: Observer<List<RecentContact>> =
+    internal var messageObserver: Observer<MutableList<RecentContact>> =
         Observer { recentContacts ->
             if (!DropManager.getInstance().isTouchable) {
                 // 正在拖拽红点，缓存数据
@@ -355,14 +384,26 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             onRecentContactChanged(recentContacts)
         }
 
-    private fun onRecentContactChanged(recentContacts: List<RecentContact>) {
+    private fun onRecentContactChanged(recentContacts: MutableList<RecentContact>) {
         var index: Int
         for (r in recentContacts) {
+            if (r.contactId == "9b6ab1ce76756a5c243c713aaf45ab5e") {
+                ass = MessageListBean(
+                    "官方助手",
+                    r.content,
+                    r.unreadCount,
+                    TimeUtils.getFriendlyTimeSpanByNow(r.time),
+                    R.drawable.icon_assistant,
+                    r.contactId
+                )
+                headAdapter.setData(0,ass)
+                headAdapter.notifyItemChanged(0)
+                recentContacts.remove(r)
+                break
+            }
             index = -1
             for (i in adapter.data.indices) {
-                if (r.contactId == adapter.data.get(i).getContactId() && r.sessionType == adapter.data.get(i)
-                        .getSessionType()
-                ) {
+                if (r.contactId == adapter.data.get(i).getContactId() && r.sessionType == adapter.data.get(i).getSessionType()) {
                     index = i
                     break
                 }
@@ -474,7 +515,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateHiEvent(event :UpdateHiEvent) {
+    fun onUpdateHiEvent(event: UpdateHiEvent) {
         mPresenter.messageCensus(params)
     }
 }

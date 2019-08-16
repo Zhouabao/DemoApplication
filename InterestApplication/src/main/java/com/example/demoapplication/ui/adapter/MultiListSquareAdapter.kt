@@ -100,8 +100,10 @@ class MultiListSquareAdapter(
         GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.squareUserIv1)
         holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus("\t\t").plus(item.out_time)
         holder.itemView.squareUserIv1.onClick {
-            if (!(UserManager.getAccid() == item.accid || !chat))
-                mContext.startActivity<MatchDetailActivity>("target_accid" to item.accid)
+            if (!(UserManager.getAccid() == item.accid || !chat)) {
+                MatchDetailActivity.start(mContext, item.accid)
+
+            }
         }
 
         when (holder.itemViewType) {

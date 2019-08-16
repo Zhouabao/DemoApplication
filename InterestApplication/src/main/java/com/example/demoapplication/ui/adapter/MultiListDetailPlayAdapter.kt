@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
@@ -22,8 +23,13 @@ import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.VideoJson
 import com.example.demoapplication.player.IjkMediaPlayerUtil
+import com.example.demoapplication.switchplay.SwitchUtil
+import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
+import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import com.example.demoapplication.ui.adapter.SquareDetailImgsAdaper
+import com.kotlin.base.ext.onClick
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.view.*
 import kotlinx.android.synthetic.main.item_square_play_detail_audio.view.*
@@ -137,32 +143,46 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 
             }
             SquareBean.VIDEO -> {
-                Glide.with(context)
-                    .load(item.avatar!!)
-                    .apply(bitmapTransform(BlurTransformation(25)))
-                    .into(holder.itemView.videoFl)
+                holder.itemView.btnBack.onClick {
+                    (mContext as SquarePlayListDetailActivity).onBackPressed()
+                }
+                //增加封面
+                val imageview = ImageView(mContext)
+                imageview.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                GlideUtil.loadImg(mContext, item.cover_url ?: "", imageview)
+                if (imageview.parent != null) {
+                    val vg = imageview.parent as ViewGroup
+                    vg.removeView(imageview)
+                }
+                holder.itemView.detailPlayVideo.thumbImageView = imageview
+                holder.itemView.detailPlayVideo.playTag = MultiListSquareAdapter.TAG
+                holder.itemView.detailPlayVideo.playPosition = holder.layoutPosition
+                SwitchUtil.optionPlayer(
+                    holder.itemView.detailPlayVideo,
+                    item.video_json?.get(0)?.url ?: "",
+                    true
+                )
+                holder.itemView.detailPlayVideo.setUp(
+                    item.video_json?.get(0)?.url ?: "",
+                    false,
+                    null,
+                    null,
+                    ""
+                )
 
 
-                gsyVideoOptionBuilder.setIsTouchWiget(false)
-//                    .setThumbImageView()
-                    .setUrl(item.video_json?.get(0)?.url ?: "")
-//                    .setUrl("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4")
-                    .setCacheWithPlay(false)
-                    .setRotateViewAuto(false)
-                    .setLockLand(false)
-                    .setPlayTag(TAG)
-                    .setPlayPosition(holder.layoutPosition)
-                    .setShowFullAnimation(true)
-                    .build(holder.itemView.detailPlayVideo)
-
-                holder.itemView.detailPlayVideo.backButton.visibility = View.GONE
-                holder.itemView.detailPlayVideo.fullscreenButton.visibility = View.GONE
-//                holder.itemView.squareUserVideo.fullscreenButton.onClick {
-//                    holder.itemView.squareUserVideo.startWindowFullscreen(context, false, true)
-//                }
-//                holder.itemView.squareUserVideo.isReleaseWhenLossAudio = false
-//                holder.itemView.squareUserVideo.setIsTouchWiget(false)
-//                holder.itemView.squareUserVideo.isShowFullAnimation = true
+                holder.itemView.detailPlayVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+                    override fun onClickBlank(url: String?, vararg objects: Any?) {
+                        super.onClickBlank(url, *objects)
+                        if (holder.itemView.videoCover.visibility == View.VISIBLE) {
+                            holder.itemView.videoCover.visibility = View.GONE
+                            holder.itemView.btnBack.visibility = View.GONE
+                        } else {
+                            holder.itemView.videoCover.visibility = View.VISIBLE
+                            holder.itemView.btnBack.visibility = View.VISIBLE
+                        }
+                    }
+                })
             }
             SquareBean.AUDIO -> {
                 holder.addOnClickListener(R.id.detailPlayBtn)
@@ -171,7 +191,6 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                     .apply(bitmapTransform(BlurTransformation(25)))
                     .into(holder.itemView.audioFl)
                 GlideUtil.loadImg(context, item.avatar ?: "", holder.itemView.detailPlayAudioBg)
-
 
 
                 //设定动画作用于的控件，以及什么动画，旋转的开始角度和结束角度

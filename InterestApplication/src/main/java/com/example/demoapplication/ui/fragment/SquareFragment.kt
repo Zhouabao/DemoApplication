@@ -189,8 +189,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             }
         })
 
-        adapter.setOnItemClickListener { adapter, view, position ->
-            startActivity<SquareCommentDetailActivity>("squareBean" to adapter.data[position])
+        adapter.setOnItemClickListener { _, view, position ->
+            SquareCommentDetailActivity.start(activity!!, adapter.data[position])
             if (mediaPlayer != null) {
                 mediaPlayer!!.resetMedia()
                 mediaPlayer = null
@@ -204,10 +204,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                     ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
                 }
                 R.id.squareCommentBtn1 -> {
-                    startActivity<SquareCommentDetailActivity>(
-                        "squareBean" to squareBean,
-                        "enterPosition" to "comment"
-                    )
+                    SquareCommentDetailActivity.start(activity!!, adapter.data[position],enterPosition = "comment")
                     if (mediaPlayer != null) {
                         mediaPlayer!!.resetMedia()
                         mediaPlayer = null
@@ -571,7 +568,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         val state = switchVideo.currentState
 //        switchVideo.isStartAfterPrepared = false
         //延迟加2S
-        switchVideo.seekOnStart = switchVideo.gsyVideoManager.currentPosition + 2000
+        switchVideo.seekOnStart = switchVideo.gsyVideoManager.currentPosition
         switchVideo.startPlayLogic()
         switchVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
             override fun onStartPrepared(url: String?, vararg objects: Any?) {

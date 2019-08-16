@@ -48,14 +48,14 @@ class SquarePresenter : BasePresenter<SquareView>() {
     fun getSquareList(params: HashMap<String, Any>, isRefresh: Boolean, firstIn: Boolean = false) {
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareList(params)
-            .excute(object : BaseSubscriber<BaseResp<SquareListBean>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
                 override fun onStart() {
                     if (firstIn) {
                         mView.showLoading()
                     }
                 }
 
-                override fun onNext(t: BaseResp<SquareListBean>) {
+                override fun onNext(t: BaseResp<SquareListBean?>) {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetSquareListResult(t.data, true, isRefresh)

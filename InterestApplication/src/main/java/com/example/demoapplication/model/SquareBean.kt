@@ -25,7 +25,7 @@ data class SquareListBean(
  */
 data class SquareBean(
     var isPlayAudio: Int = 0, //0未播放  1 播放中 2暂停  3 停止
-    var isvip: Int = -1,//是否会员 1是 0 不是
+    var isvip: Int = 0,//是否会员 1是 0 不是
     var icon: String = "",
     var accid: String = "",
     var audio_json: MutableList<VideoJson>?,

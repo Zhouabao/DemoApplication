@@ -12,4 +12,6 @@ import com.kotlin.base.presenter.view.BaseView
  */
 interface MessageHiView:BaseView {
     fun onGreatListResult(t: BaseResp<MutableList<HiMessageBean>?>)
+
+    fun onDelTimeoutGreetResult(t: Boolean)
 }

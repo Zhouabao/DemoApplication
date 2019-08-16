@@ -1,6 +1,6 @@
 package com.example.demoapplication.ui.adapter
 
-import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -21,11 +21,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
         val itemView = holder.itemView
         itemView.likeMeDate.text = item.date ?: ""
         itemView.likeMeCount.text = "${item.count} 人对你感兴趣"
-        itemView.likeMeNew.visibility = if (item.count == null || item.count == 0) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+        itemView.likeMeNew.isVisible = item.hasread ?: false
 
         itemView.likeOneDayRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
         val adapter = LikeMeOneDayAdapter()

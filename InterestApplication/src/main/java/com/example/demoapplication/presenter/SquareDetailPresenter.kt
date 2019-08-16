@@ -4,6 +4,7 @@ import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.AllCommentBean
+import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.presenter.view.SquareDetailView
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
@@ -19,6 +20,29 @@ import com.kotlin.base.rx.BaseSubscriber
  *    version: 1.0
  */
 class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
+    /**
+     * 获取某一广场详情
+     */
+    fun getSquareInfo(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getSquareInfo(params)
+            .excute(object : BaseSubscriber<BaseResp<SquareBean?>>(mView) {
+                override fun onNext(t: BaseResp<SquareBean?>) {
+                    if (t.code == 200) {
+                        mView.onGetSquareInfoResults(t.data)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGetSquareInfoResults(null)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
+
 
     /**
      * 获取评论列表

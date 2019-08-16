@@ -5,13 +5,12 @@
                 android:layout_width="83dp"
                 android:layout_height="83dp">
 
-    <com.example.baselibrary.widgets.RoundImageView
+    <ImageView
             android:id="@+id/choosePhoto"
             android:layout_width="match_parent"
             android:visibility="visible"
             android:layout_height="match_parent"
-            gs:borderRadius="5dp"
-            gs:type="round"/>
+            />
 
 
     <ImageView

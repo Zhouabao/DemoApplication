@@ -1,14 +1,12 @@
 package com.example.demoapplication.ui.adapter
 
 import android.content.Context
-import android.util.TypedValue
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
-import com.example.baselibrary.widgets.RoundImageView
 import com.example.demoapplication.R
 import com.example.demoapplication.model.VideoJson
 import kotlinx.android.synthetic.main.item_match_detail_img.view.*
@@ -28,33 +26,40 @@ class ListSquareImgsAdapter(
 
     override fun convert(holder: BaseViewHolder, item: VideoJson) {
         val position = holder.layoutPosition
-        val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
         if (!fullScreenWidth) {
             if (datas.size == 1) {
-                holder.itemView.ivUser.setType(RoundImageView.TYPE_NORMAL)
+                val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
+//                holder.itemView.ivUser.setType(RoundImageView.TYPE_NORMAL)
                 layoutParams.width = ScreenUtils.getScreenWidth()
-                layoutParams.height = SizeUtils.applyDimension(252F, TypedValue.COMPLEX_UNIT_DIP).toInt()
+                layoutParams.height = SizeUtils.dp2px(252F)
                 holder.itemView.ivUser.layoutParams = layoutParams
+                GlideUtil.loadRoundImgCenterCrop(mContext, datas[position].url, holder.itemView.ivUser, 0)
 
             } else {
-                holder.itemView.ivUser.setmBorderRadius(20)
-                holder.itemView.ivUser.setType(RoundImageView.TYPE_ROUND)
-                layoutParams.width = SizeUtils.applyDimension(270F, TypedValue.COMPLEX_UNIT_DIP).toInt()
-                layoutParams.height = SizeUtils.applyDimension(252F, TypedValue.COMPLEX_UNIT_DIP).toInt()
-                layoutParams.leftMargin = SizeUtils.applyDimension(10F, TypedValue.COMPLEX_UNIT_DIP).toInt()
+//                holder.itemView.ivUser.setmBorderRadius(20)
+//                holder.itemView.ivUser.setType(RoundImageView.TYPE_ROUND)
+                val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
+                layoutParams.width = SizeUtils.dp2px(270F)
+                layoutParams.height = SizeUtils.dp2px(252F)
+                layoutParams.leftMargin = SizeUtils.dp2px(10F)
                 if (position == datas.size - 1) {
-                    layoutParams.rightMargin = SizeUtils.applyDimension(10F, TypedValue.COMPLEX_UNIT_DIP).toInt()
+                    layoutParams.rightMargin = SizeUtils.dp2px(10F)
                 }
                 holder.itemView.ivUser.layoutParams = layoutParams
+                GlideUtil.loadRoundImgCenterCrop(mContext, datas[position].url, holder.itemView.ivUser, SizeUtils.dp2px(5F))
+
             }
 
         } else {
-            holder.itemView.ivUser.setType(RoundImageView.TYPE_NORMAL)
+            val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
+
+//            holder.itemView.ivUser.setType(RoundImageView.TYPE_NORMAL)
             layoutParams.width = ScreenUtils.getScreenWidth()
             layoutParams.height = ScreenUtils.getScreenHeight()
             holder.itemView.ivUser.layoutParams = layoutParams
+            GlideUtil.loadRoundImgCenterCrop(mContext, datas[position].url, holder.itemView.ivUser, 0)
+
         }
-        GlideUtil.loadImg(context, datas[position].url, holder.itemView.ivUser)
     }
 
 }

@@ -29,13 +29,38 @@ class MessageHiPresenter : BasePresenter<MessageHiView>() {
                 override fun onNext(t: BaseResp<MutableList<HiMessageBean>?>) {
                     when {
                         t.code == 200 -> mView.onGreatListResult(t)
-                        t.code==403 -> UserManager.startToLogin(context as Activity)
+                        t.code == 403 -> UserManager.startToLogin(context as Activity)
                         else -> mView.onError(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
                     mView.onError("")
+                }
+            })
+    }
+
+
+    /**
+     * 删除过期消息
+     */
+    fun delTimeoutGreet(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .delTimeoutGreet(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200)
+                        mView.onDelTimeoutGreetResult(true)
+                    else if (t.code == 302) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onDelTimeoutGreetResult(false)
+                    }
+                }
+
+
+                override fun onError(e: Throwable?) {
+                    mView.onDelTimeoutGreetResult(false)
                 }
             })
     }

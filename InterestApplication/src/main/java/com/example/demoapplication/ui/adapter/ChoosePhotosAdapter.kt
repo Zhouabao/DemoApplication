@@ -59,7 +59,7 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
                         helper.itemView.choosePhotoIndex.text = "${index + 1}"
                     }
                 }
-                GlideUtil.loadImg(mContext, item.filePath, helper.itemView.choosePhoto)
+                GlideUtil.loadRoundImgCenterCrop(mContext, item.filePath, helper.itemView.choosePhoto, SizeUtils.dp2px(5F))
 
             }
         } else if (type == 1) {//1:选中的相册

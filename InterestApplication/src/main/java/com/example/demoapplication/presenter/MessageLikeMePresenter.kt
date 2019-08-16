@@ -29,6 +29,7 @@ class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
                     if (t.code == 200) {
                         SPUtils.getInstance(Constants.SPNAME).put("isvip", t.data?.isvip ?: 0)
                         mView.onLikeListsResult(t.data?.list ?: mutableListOf())
+                        markLikeRead(params)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
@@ -38,6 +39,22 @@ class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.onError("")
+                }
+            })
+    }
+
+
+    /**
+     * 标记喜欢我的为已读
+     */
+    fun markLikeRead(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .markLikeRead(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                }
+
+                override fun onError(e: Throwable?) {
                 }
             })
     }

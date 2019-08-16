@@ -68,8 +68,6 @@ import java.util.*
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
     View.OnClickListener, ModuleProxy {
-
-
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
     private val thumbAdapter by lazy { DetailThumbAdapter(this) }
@@ -96,6 +94,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             "_sign" to "",
             "_timestamp" to System.currentTimeMillis()
         )
+    }
+
+    companion object {
+        @JvmStatic
+        fun start(context: Context, fromAccount: String) {
+            context.startActivity<MatchDetailActivity>("target_accid" to fromAccount)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -472,13 +477,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
     }
 
-
-    companion object {
-        @JvmStatic
-        fun start(context: Context, fromAccount: String) {
-            context.startActivity<MatchDetailActivity>("target_accid" to fromAccount)
-        }
-    }
 
 
     /*--------------------------消息代理------------------------*/

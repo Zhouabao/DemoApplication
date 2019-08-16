@@ -2,21 +2,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_height="wrap_content">
 
-    <com.example.baselibrary.widgets.RoundImageView
+    <ImageView
             android:id="@+id/likeMeAvator"
             android:layout_width="180dp"
             android:layout_height="320dp"
-            android:src="@drawable/img_avatar_01"
-            app:borderRadius="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:type="round"/>
+          />
 
 
     <ImageView
@@ -33,7 +32,7 @@
 
     <TextView
             android:id="@+id/likeMeTag"
-            android:text="游戏"
+            tools:text="游戏"
             android:background="@drawable/shape_rectangle_gray_white_15dp"
             android:paddingRight="8dp"
             android:paddingLeft="8dp"
@@ -52,6 +51,7 @@
             android:background="@drawable/shape_oval_orange"
             android:layout_width="5dp"
             android:layout_height="5dp"
+            android:layout_marginRight="5dp"
             app:layout_constraintBottom_toBottomOf="@id/likeMeNickname"
             app:layout_constraintLeft_toLeftOf="@id/likeMeInfo"
             app:layout_constraintTop_toTopOf="@id/likeMeNickname"/>
@@ -59,7 +59,7 @@
     <TextView
             android:id="@+id/likeMeNickname"
             android:layout_marginBottom="3dp"
-            android:text="这大概就是这大概就是"
+            tools:text="这大概就是这大概就是"
             android:singleLine="true"
             android:ellipsize="end"
             android:textColor="#ffffffff"
@@ -75,7 +75,7 @@
             android:id="@+id/likeMeInfo"
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
-            android:text="22 / 女 / 巨蟹座 / 18.85km / 产品 "
+            tools:text="22 / 女 / 巨蟹座 / 18.85km / 产品 "
             android:textColor="@color/colorWhite"
             android:textSize="10sp"
             android:layout_width="0dp"

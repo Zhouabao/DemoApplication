@@ -1,6 +1,7 @@
 package com.example.demoapplication.ui.adapter
 
 import android.view.View
+import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
@@ -23,8 +24,7 @@ class UserCenterCoverAdapter :
         } else {
             holder.itemView.squareVideoType.visibility = View.GONE
         }
-
-        GlideUtil.loadImg(mContext, item.cover_url ?: "", holder.itemView.ivSquare)
+        GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", holder.itemView.ivSquare,  SizeUtils.dp2px(5F))
     }
 
 }

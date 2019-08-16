@@ -9,11 +9,12 @@ import com.chad.library.adapter.base.entity.MultiItemEntity
  *    version: 1.0
  */
 data class MessageListBean(
-    var title: String,
-    val msg: String,
-    val count: Int,
-    val time: String,
-    val icon: Int? = 0
+    var title: String = "",
+    var msg: String = "",
+    var count: Int = 0,
+    var time: String = "",
+    var icon: Int = 0,
+    var id: String = ""
 )
 
 /**
@@ -32,7 +33,7 @@ data class HiMessageBean(
     val id: Int? = 0,
     val read_time: String? = "",//	倒计时 总时长（秒）
     val countdown_total: Int? = 0,//	倒计时秒剩余时长（秒）
-    var timer: Int =0,
+    var timer: Int = 0,
     val type: Int? = 0//	1，新消息 2，倒计时 3，普通样式 4 过期
 ) : MultiItemEntity {
     override fun getItemType(): Int {
@@ -83,6 +84,7 @@ data class LikeMeListBean(
 data class LikeMeBean(
     val count: Int? = 0,
     val date: String? = "",
+    val hasread: Boolean? = false,    //是否有未读 true 有 （标红）false 没有（）
     val list: MutableList<LikeMeOneDayBean>? = mutableListOf()
 )
 
@@ -98,7 +100,8 @@ data class LikeMeOneDayBean(
     val job: String? = "",
     val nickname: String? = "",
     val sign: String? = "",
-    val tag_title: String? = ""
+    val tag_title: String? = "",
+    val is_read: Boolean? = false//是有已读 true已经 false 未读（标红）
 )
 
 
@@ -109,7 +112,6 @@ data class LikeMeOneDayBean(
  */
 data class SquareLitBean(
     val newest: MutableList<SquareMsgBean>? = mutableListOf(),
-    val history: MutableList<SquareMsgBean>? = mutableListOf(),
     val current_page: Int? = 0,
     val last_page: Int? = 0,
     val per_page: Int? = 0,
@@ -120,6 +122,7 @@ data class SquareLitBean(
  * 广场消息
  */
 data class SquareMsgBean(
+    var pos: Int = -1,
     val accid: String? = "",
     val avatar: String? = "",
     val content: String? = "",//	type为2 评论的内容
@@ -128,7 +131,8 @@ data class SquareMsgBean(
     val nickname: String? = "",
     val cover_url: String? = "",
     val type: Int? = 0,//类型 1，广场点赞 2，评论我的 3。我的评论点赞的 4 @我的
-    val category: Int? = 0 //类型 1，广场点赞 2，评论我的 3。我的评论点赞的 4 @我的
+    val category: Int? = 0,//	0文本 1图片 2视频 3 语音
+    val is_read: Boolean? = false//是有已读 true已经 false 未读（标红）
 )
 
 /****************联系人*******************/

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SizeUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.Square
@@ -27,7 +28,8 @@ class DetailThumbAdapter(context: Context) : BaseRecyclerViewAdapter<Square, Det
         super.onBindViewHolder(holder, position)
         val item: Square = dataList[position]
 //        GlideUtil.loadImg(mContext, if (item.photo_json.isNullOrEmpty()) { item.video_json } else { item.photo_json }, holder.itemView.ivThumb)
-        GlideUtil.loadImg(mContext, item.cover_url, holder.itemView.ivThumb)
+        GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url, holder.itemView.ivThumb, SizeUtils.dp2px(5F))
+
     }
 
 

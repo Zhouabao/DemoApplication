@@ -5,6 +5,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.example.baselibrary.glide.GlideUtil
@@ -27,8 +28,8 @@ class MatchSucceedActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        GlideUtil.loadImg(this, UserManager.getAvator(), iconMine)
-        GlideUtil.loadImg(this, matchBean.avatar ?: "",iconOther)
+        GlideUtil.loadRoundImgCenterinside(this, UserManager.getAvator(), iconMine, 0.1F, SizeUtils.dp2px(10F))
+        GlideUtil.loadRoundImgCenterinside(this, matchBean.avatar ?: "", iconOther, 0.1F, SizeUtils.dp2px(10F))
 
     }
 

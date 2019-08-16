@@ -1,6 +1,7 @@
 package com.example.demoapplication.presenter.view
 
 import com.example.demoapplication.model.AllCommentBean
+import com.example.demoapplication.model.SquareBean
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
 
@@ -27,5 +28,8 @@ interface SquareDetailView : BaseView {
     fun onGetSquareReport(data: BaseResp<Any?>?)
 
     fun onAddCommentResult(data: BaseResp<Any?>?, result: Boolean)
+
     fun onRemoveMySquareResult(b: Boolean)
+
+    fun onGetSquareInfoResults(data: SquareBean?)
 }

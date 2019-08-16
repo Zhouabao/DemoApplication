@@ -11,7 +11,7 @@
     <LinearLayout
             android:id="@+id/llTitle"
             android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="56dp"
             android:gravity="center_vertical"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -55,32 +55,16 @@
                 android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:srlEnableAutoLoadMore="true"
                 app:srlEnableLoadMore="true"
-                app:srlEnableRefresh="false">
-
-           <androidx.core.widget.NestedScrollView
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content">
-               <LinearLayout
-                       android:orientation="vertical"
-                       android:layout_width="match_parent"
-                       android:layout_height="match_parent">
-
-                   <androidx.recyclerview.widget.RecyclerView
-                           android:id="@+id/messageSquareNewRv"
-                           android:layout_marginTop="15dp"
-                           android:layout_width="match_parent"
-                           android:layout_height="wrap_content"/>
+                app:srlEnableRefresh="true">
 
 
-                   <androidx.recyclerview.widget.RecyclerView
-                           android:id="@+id/messageSquareHistoryRv"
-                           android:layout_marginTop="15dp"
-                           android:layout_width="match_parent"
-                           android:layout_height="wrap_content"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/messageSquareNewRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
-               </LinearLayout>
-           </androidx.core.widget.NestedScrollView>
 
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     </com.kennyc.view.MultiStateView>

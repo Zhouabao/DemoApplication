@@ -3,6 +3,7 @@ package com.example.demoapplication.ui.activity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.UpdateHiEvent
@@ -57,6 +58,16 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
             finish()
         }
 
+        //删除过期消息
+        tagAllRead.onClick {
+            mPresenter.delTimeoutGreet(
+                hashMapOf(
+                    "token" to UserManager.getToken(),
+                    "accid" to UserManager.getAccid()
+                )
+            )
+        }
+
         mPresenter = MessageHiPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -90,6 +101,14 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         }
         refreshLayout.finishRefresh(true)
         adapter.addData(t.data ?: mutableListOf())
+        tagAllRead.isEnabled = adapter.data.isNotEmpty()
+    }
+
+    override fun onDelTimeoutGreetResult(t: Boolean) {
+        if (t)
+            refreshLayout.autoRefresh()
+        else
+            ToastUtils.showShort("删除超时消息失败！")
     }
 
 
@@ -98,7 +117,6 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         params["page"] = page
         adapter.data.clear()
         mPresenter.greatLists(params)
-
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {

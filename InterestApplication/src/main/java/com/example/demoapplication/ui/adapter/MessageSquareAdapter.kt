@@ -1,6 +1,7 @@
 package com.example.demoapplication.ui.adapter
 
 import android.view.View
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -19,6 +20,18 @@ import kotlinx.android.synthetic.main.item_message_square_list.view.*
  */
 class MessageSquareAdapter : BaseQuickAdapter<SquareMsgBean, BaseViewHolder>(R.layout.item_message_square_list) {
     override fun convert(holder: BaseViewHolder, item: SquareMsgBean) {
+        holder.addOnClickListener(R.id.msgIcon)
+        //未读
+        if (item.is_read == false && item.pos == 0) {
+            holder.itemView.headTitle.text = "未读消息"
+            holder.itemView.headTitle.isVisible = true
+        } else if (item.is_read == true && item.pos == 0) {
+            holder.itemView.headTitle.text = "历史消息"
+            holder.itemView.headTitle.isVisible = true
+        } else {
+            holder.itemView.headTitle.isVisible = false
+        }
+
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.msgIcon)
         holder.itemView.msgTitle.text = item.nickname ?: ""
         holder.itemView.text.text = when (item.type) {
@@ -72,7 +85,6 @@ class MessageSquareAdapter : BaseQuickAdapter<SquareMsgBean, BaseViewHolder>(R.l
                 holder.itemView.squareType.setImageResource(R.drawable.icon_record_normal)
             }
         }
-
 
     }
 

@@ -34,7 +34,6 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.activity_square_play_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -317,7 +316,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             }
             //点击内容跳转到评论详情页面
             R.id.detailPlayContent -> {
-                startActivity<SquareCommentDetailActivity>("squareBean" to squareBean)
+                SquareCommentDetailActivity.start(this,squareBean)
             }
             R.id.detailPlayCommentSend -> {
                 if (!detailPlayComment.text.toString().isEmpty())

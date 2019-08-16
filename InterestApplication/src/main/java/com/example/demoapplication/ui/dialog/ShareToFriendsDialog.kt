@@ -66,7 +66,7 @@ class ShareToFriendsDialog @JvmOverloads constructor(
                 params.height = SizeUtils.dp2px(140F)
                 params.width = LinearLayout.LayoutParams.WRAP_CONTENT
                 friendShareImg.layoutParams = params
-                GlideUtil.loadRoundImg(context, squareBean.photo_json?.get(0)?.url ?: "", friendShareImg, 0.1F, 5)
+                GlideUtil.loadRoundImgCenterinside(context, squareBean.photo_json?.get(0)?.url ?: "", friendShareImg, 0.1F, SizeUtils.dp2px(5F))
                 friendShareImg.visibility = View.VISIBLE
                 friendShareContent.visibility = View.GONE
             }
@@ -75,7 +75,7 @@ class ShareToFriendsDialog @JvmOverloads constructor(
             params.height = SizeUtils.dp2px(140F)
             params.width = LinearLayout.LayoutParams.WRAP_CONTENT
             friendShareImg.layoutParams = params
-            GlideUtil.loadRoundImg(context, squareBean.cover_url ?: "", friendShareImg, 0.1F, 5)
+            GlideUtil.loadRoundImgCenterinside(context, squareBean.cover_url ?: "", friendShareImg, 0.1F, SizeUtils.dp2px(5F))
             friendShareImg.visibility = View.VISIBLE
             friendShareContent.visibility = View.GONE
         } else if (squareBean.type == SquareBean.AUDIO) {

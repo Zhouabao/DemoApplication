@@ -1,6 +1,6 @@
 package com.example.demoapplication.presenter.view
 
-import com.example.demoapplication.model.SquareLitBean
+import com.example.demoapplication.model.SquareMsgBean
 import com.kotlin.base.presenter.view.BaseView
 
 /**
@@ -10,5 +10,5 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface MessageSquareView : BaseView {
-    fun onSquareListsResult(data: SquareLitBean?)
+    fun onSquareListsResult(data: MutableList<SquareMsgBean>?)
 }

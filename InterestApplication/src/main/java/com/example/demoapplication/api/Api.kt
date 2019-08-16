@@ -340,6 +340,13 @@ interface Api {
     @POST("tidings/greetLists${Constants.END_BASE_URL}")
     fun greatLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<HiMessageBean>?>>
 
+    /**
+     * 删除过时消息
+     */
+    @FormUrlEncoded
+    @POST("Tidings/delTimeoutGreet${Constants.END_BASE_URL}")
+    fun delTimeoutGreet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
 
     /**
      * 所有的消息列表
@@ -353,7 +360,13 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("tidings/squareLists${Constants.END_BASE_URL}")
-    fun squareLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareLitBean?>>
+    fun squareLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareMsgBean>?>>
+    /**
+     * 广场消息列表
+     */
+    @FormUrlEncoded
+    @POST("Tidings/markSquareRead${Constants.END_BASE_URL}")
+    fun markSquareRead(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**
      * 喜欢我的列表（所有日期的）
@@ -361,6 +374,13 @@ interface Api {
     @FormUrlEncoded
     @POST("relationship/likeLists${Constants.END_BASE_URL}")
     fun likeLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LikeMeListBean?>>
+
+    /**
+     * 标记喜欢列表为已读
+     */
+    @FormUrlEncoded
+    @POST("Tidings/markLikeRead${Constants.END_BASE_URL}")
+    fun markLikeRead(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**
      * 喜欢我的列表（某一天的）

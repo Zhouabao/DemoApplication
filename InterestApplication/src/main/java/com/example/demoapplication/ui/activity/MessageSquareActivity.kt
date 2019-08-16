@@ -1,29 +1,25 @@
 package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.model.SquareLitBean
-import com.example.demoapplication.nim.activity.ChatActivity
+import com.example.demoapplication.model.SquareMsgBean
 import com.example.demoapplication.presenter.MessageSquarePresenter
 import com.example.demoapplication.presenter.view.MessageSquareView
 import com.example.demoapplication.ui.adapter.MessageSquareAdapter
 import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.widgets.DividerItemDecoration
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
-import kotlinx.android.synthetic.main.activity_message_list.btnBack
 import kotlinx.android.synthetic.main.activity_message_square.*
-import kotlinx.android.synthetic.main.activity_message_square.stateview
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.item_square_headview.view.*
 
 /**
  * 发现消息列表
@@ -42,17 +38,17 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         )
     }
     private val adapter by lazy { MessageSquareAdapter() }
-    private val historyAdapter by lazy { MessageSquareAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_square)
         initView()
         mPresenter.squareLists(params)
+        mPresenter.markSquareRead(params)
     }
 
     private fun initView() {
-        btnBack.onClick {
+        llTitle.onClick {
             finish()
         }
         mPresenter = MessageSquarePresenter()
@@ -68,24 +64,37 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         }
 
         messageSquareNewRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        messageSquareNewRv.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.HORIZONTAL_LIST,
+                SizeUtils.dp2px(10F),
+                resources.getColor(R.color.colorWhite)
+            )
+        )
         messageSquareNewRv.adapter = adapter
-//        headTitle
-        val headNewView = LayoutInflater.from(this).inflate(R.layout.item_square_headview, messageSquareNewRv, false)
-        headNewView.headTitle.text = "未读消息"
-        adapter.addHeaderView(headNewView)
-        adapter.headerLayout.visibility = View.GONE
+        adapter.setEmptyView(R.layout.empty_layout, messageSquareNewRv)
+
+        //val type: Int? = 0,//类型 1，广场点赞 2，评论我的 3。我的评论点赞的 4 @我的
         adapter.setOnItemClickListener { _, view, position ->
-            ChatActivity.start(this, adapter.data[position].accid ?: "")
+            val item = adapter.data[position]
+            when (item.type) {
+                1 -> {//点击点赞跳转动态详情
+                    SquarePlayListDetailActivity.start(this, item.id ?: 0)
+                }
+                2,3 -> {//点击评论进入评论详情
+                    SquareCommentDetailActivity.start(this, squareId =  item.id ?: 0, enterPosition = "comment")
+                }
+            }
         }
 
-
-        messageSquareHistoryRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        messageSquareHistoryRv.adapter = historyAdapter
-        val headHisView =
-            LayoutInflater.from(this).inflate(R.layout.item_square_headview, messageSquareHistoryRv, false)
-        headHisView.headTitle.text = "历史消息"
-        historyAdapter.addHeaderView(headHisView)
-        historyAdapter.headerLayout.visibility = View.GONE
+        adapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.msgIcon -> {
+                    MatchDetailActivity.start(this, adapter.data[position].accid ?: "")
+                }
+            }
+        }
 
 
     }
@@ -97,35 +106,43 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
+        adapter.data.clear()
+        his = -1
+        unread = -1
         page = 1
         params["page"] = page
         mPresenter.squareLists(params)
     }
 
-    override fun onSquareListsResult(data: SquareLitBean?) {
+    private var unread = -1
+    private var his = -1
+    override fun onSquareListsResult(data: MutableList<SquareMsgBean>?) {
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (data != null) {
-            if (adapter.data.size == 0 && data.newest.isNullOrEmpty()) {
-                adapter.headerLayout.visibility = View.GONE
-            } else {
-                adapter.headerLayout.visibility = View.VISIBLE
-            }
-            if (historyAdapter.data.size == 0 && data.history.isNullOrEmpty()) {
-                historyAdapter.headerLayout.visibility = View.GONE
-            } else {
-                historyAdapter.headerLayout.visibility = View.VISIBLE
-            }
-            if (data.history.isNullOrEmpty() && data.newest.isNullOrEmpty()) {
+            refreshLayout.finishRefresh(true)
+            if (data.isNullOrEmpty()) {
                 refreshLayout.finishLoadMoreWithNoMoreData()
             } else {
                 refreshLayout.finishLoadMore(true)
+                for (msg in data.withIndex()) {
+                    if (msg.value.is_read == false && unread == -1) {
+                        msg.value.pos = 0
+                        unread = 0
+                    }
+                    if (msg.value.is_read == true && his == -1) {
+                        msg.value.pos = 0
+                        his = 0
+                    }
+                }
+                adapter.addData(data)
             }
-            adapter.addData(data.newest ?: mutableListOf())
-            historyAdapter.addData(data.history ?: mutableListOf())
         }
-        refreshLayout.finishRefresh(true)
     }
 
     override fun onError(text: String) {
+        refreshLayout.finishRefresh(false)
+        refreshLayout.finishLoadMore(false)
+
         stateview.viewState = MultiStateView.VIEW_STATE_ERROR
         stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
             getString(R.string.retry_load_error)

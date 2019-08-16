@@ -27,7 +27,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
-import com.shuyu.gsyvideoplayer.utils.GSYVideoType.SCREEN_MATCH_FULL
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType.SCREEN_TYPE_FULL
 import kotlinx.android.synthetic.main.activity_square_play_detail.btnBack
 import kotlinx.android.synthetic.main.activity_square_play_list_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
@@ -37,6 +37,7 @@ import org.jetbrains.anko.toast
 
 /**
  * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
+ *    from 确定内容的来源地  1好友列表 2广场列表 3聊天跳转
  */
 public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
     View.OnClickListener {
@@ -132,17 +133,18 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_square_play_list_detail)
         initView()
-        if (intent.getSerializableExtra("item") != null) {
+        if (intent.getSerializableExtra("item") != null) {//广场列表
             from = 2
             rvLast.visibility = View.GONE
             rvNext.visibility = View.GONE
             adapter.addData(squareBean)
-        } else if (intent.getIntExtra("id", -1) != -1) {
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+        } else if (intent.getIntExtra("id", -1) != -1) {//好友聊天
             from = 3
             rvLast.visibility = View.GONE
             rvNext.visibility = View.GONE
             mPresenter.getSquareInfo(fromChatParams)
-        } else {
+        } else {//好友列表
             from = 1
             rvLast.visibility = View.VISIBLE
             rvNext.visibility = View.VISIBLE
@@ -160,7 +162,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
     private fun initView() {
         btnBack.onClick { finish() }
-        GSYVideoType.setShowType(SCREEN_MATCH_FULL)
+        GSYVideoType.setShowType(SCREEN_TYPE_FULL)
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -246,7 +248,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 }
                 //点击内容跳转到评论详情页面
                 R.id.detailPlayContent -> {
-                    startActivity<SquareCommentDetailActivity>("squareBean" to adapter.data[position])
+                    SquareCommentDetailActivity.start(this, adapter.data[position])
                 }
 
             }
@@ -260,7 +262,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     }
 
 
-    private var currentIndex = -1
+    private var currentIndex = 0
     private fun moveToPosition(manager: LinearLayoutManager, mRecyclerView: RecyclerView, currentIndex: Int) {
         val firstItem = manager.findFirstVisibleItemPosition()
         val lastItem = manager.findLastVisibleItemPosition()
@@ -389,6 +391,9 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 else -> SquareBean.PIC
             }
             adapter.addData(mutableList)
+        } else {
+            ToastUtils.showLong("该动态已经被删除了")
+            finish()
         }
     }
 
@@ -463,6 +468,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
     override fun onDestroy() {
         super.onDestroy()
+        //释放所有
         GSYVideoManager.releaseAllVideos()
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
@@ -481,6 +487,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
     override fun onClick(view: View) {
         when (view.id) {
+            //上一个
             R.id.rvLast -> {
                 if (currentIndex > 0) {
                     currentIndex--

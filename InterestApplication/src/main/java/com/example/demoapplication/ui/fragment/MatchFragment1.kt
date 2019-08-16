@@ -101,9 +101,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.v1 -> {
-                    startActivity<MatchDetailActivity>(
-                        "target_accid" to (matchUserAdapter.data[manager.topPosition].accid ?: "")
-                    )
+                    MatchDetailActivity.start(activity!!, (matchUserAdapter.data[manager.topPosition].accid ?: ""))
                 }
             }
         }

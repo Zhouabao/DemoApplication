@@ -42,11 +42,12 @@
 
         <Button
                 android:id="@+id/tagAllRead"
-                android:text="全部已读"
+                android:text="删除超时"
                 android:background="@drawable/selector_confirm_btn_15dp"
                 android:layout_gravity="center_vertical"
                 android:layout_width="86dp"
                 android:enabled="false"
+                android:visibility="visible"
                 android:textColor="@color/complete_btn_color_selector"
                 android:textSize="14sp"
                 android:layout_marginRight="15dp"

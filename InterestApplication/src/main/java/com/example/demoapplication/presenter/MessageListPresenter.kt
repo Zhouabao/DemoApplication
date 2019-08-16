@@ -48,6 +48,9 @@ class MessageListPresenter : BasePresenter<MessageListView>() {
     }
 
 
+    /**
+     * 获取云信最近联系人
+     */
     fun getRecentContacts() {
         NIMClient.getService(MsgService::class.java)
             .queryRecentContacts()

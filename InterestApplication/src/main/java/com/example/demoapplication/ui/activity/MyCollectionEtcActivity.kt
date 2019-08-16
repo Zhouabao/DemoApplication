@@ -36,7 +36,6 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.activity_my_collection_etc.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -148,8 +147,8 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
             }
         })
 
-        adapter.setOnItemClickListener { adapter, view, position ->
-            startActivity<SquareCommentDetailActivity>("squareBean" to adapter.data[position])
+        adapter.setOnItemClickListener { _, view, position ->
+            SquareCommentDetailActivity.start(this, adapter.data[position])
             if (mediaPlayer != null) {
                 mediaPlayer!!.resetMedia()
                 mediaPlayer = null
@@ -163,10 +162,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                     toast("聊天呗$position")
                 }
                 R.id.squareCommentBtn1 -> {
-                    startActivity<SquareCommentDetailActivity>(
-                        "squareBean" to squareBean,
-                        "enterPosition" to "comment"
-                    )
+                    SquareCommentDetailActivity.start(this, adapter.data[position], enterPosition = "comment")
                     if (mediaPlayer != null) {
                         mediaPlayer!!.resetMedia()
                         mediaPlayer = null

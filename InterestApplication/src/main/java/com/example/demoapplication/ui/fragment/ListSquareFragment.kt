@@ -43,11 +43,9 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.fragment_list_square.*
-import kotlinx.android.synthetic.main.item_list_square_pic.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
 
 
@@ -59,9 +57,11 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
     //音频当前播放位置
     private var currPlayIndex = -1
 
-    private val adapter by lazy { MultiListSquareAdapter(mutableListOf()).apply {
-        chat = false
-    } }
+    private val adapter by lazy {
+        MultiListSquareAdapter(mutableListOf()).apply {
+            chat = false
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -99,11 +99,6 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         listSquareRv.adapter = adapter
         adapter.bindToRecyclerView(listSquareRv)
         adapter.setEmptyView(R.layout.empty_layout, listSquareRv)
-        adapter.setOnItemChildClickListener { adapter, view, position ->
-            if (view == squareUserPics1)
-                startActivity<SquareCommentDetailActivity>()
-        }
-
 
         //取消动画，主要是闪烁
 //        (listSquareRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
@@ -135,8 +130,8 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             }
         })
 
-        adapter.setOnItemClickListener { adapter, view, position ->
-            startActivity<SquareCommentDetailActivity>("squareBean" to adapter.data[position])
+        adapter.setOnItemClickListener { _, view, position ->
+            SquareCommentDetailActivity.start(activity!!, adapter.data[position])
             if (mediaPlayer != null) {
                 mediaPlayer!!.resetMedia()
                 mediaPlayer = null
@@ -150,10 +145,8 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                     ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
                 }
                 R.id.squareCommentBtn1 -> {
-                    startActivity<SquareCommentDetailActivity>(
-                        "squareBean" to squareBean,
-                        "enterPosition" to "comment"
-                    )
+                    SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
+
                     if (mediaPlayer != null) {
                         mediaPlayer!!.resetMedia()
                         mediaPlayer = null

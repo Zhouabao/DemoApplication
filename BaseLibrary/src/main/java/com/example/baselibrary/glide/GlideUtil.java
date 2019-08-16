@@ -12,8 +12,11 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.NotificationTarget;
@@ -98,20 +101,38 @@ public class GlideUtil {
 
 
     /**
-     * 加载圆角图片
+     * 加载圆角图片内部居中
      *
      * @param context
      * @param url
      * @param tartgetImg
-     * @param scale 是否缩放 0.0-1.0F
+     * @param scale      是否缩放 0.0-1.0F
      */
-    public static void loadRoundImg(Context context, String url, ImageView tartgetImg, float scale, int radius) {
+    public static void loadRoundImgCenterinside(Context context, String url, ImageView tartgetImg, float scale, int radius) {
+        MultiTransformation multiTransformation = new MultiTransformation(new CenterInside(), new RoundedCornersTransformation(radius, 0));
         Glide.with(context)
                 .load(url)
                 .priority(Priority.NORMAL)
-                .centerInside()
                 .thumbnail(scale)
-                .transform(new RoundedCornersTransformation(radius, 0))
+                .transform(multiTransformation)
+                .into(tartgetImg);
+
+    }
+
+    /**
+     * 加载圆角图片铺满居中
+     *
+     * @param context
+     * @param url
+     * @param tartgetImg
+     */
+    public static void loadRoundImgCenterCrop(Context context, String url, ImageView tartgetImg, int radius) {
+        MultiTransformation multiTransformation = new MultiTransformation(new CenterCrop(), new RoundedCornersTransformation(radius, 0));
+        Glide.with(context)
+                .load(url)
+                .priority(Priority.NORMAL)
+                .thumbnail(0.5F)
+                .transform(multiTransformation)
                 .into(tartgetImg);
 
     }
