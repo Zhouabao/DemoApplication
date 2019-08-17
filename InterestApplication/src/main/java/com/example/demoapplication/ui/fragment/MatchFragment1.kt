@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -15,9 +16,12 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.RefreshEvent
 import com.example.demoapplication.event.UpdateLabelEvent
+import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.MatchListBean
 import com.example.demoapplication.model.StatusBean
+import com.example.demoapplication.nim.activity.ChatActivity
+import com.example.demoapplication.nim.attachment.ChatHiAttachment
 import com.example.demoapplication.presenter.MatchPresenter
 import com.example.demoapplication.presenter.view.MatchView
 import com.example.demoapplication.ui.activity.MatchDetailActivity
@@ -28,6 +32,15 @@ import com.example.demoapplication.utils.UserManager
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.netease.nim.uikit.business.session.module.Container
+import com.netease.nim.uikit.business.session.module.ModuleProxy
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_match.btnChat
@@ -44,7 +57,9 @@ import org.jetbrains.anko.support.v4.toast
  * 匹配页面(新版)
  * //todo 探探是把用戶存在本地數據庫的
  */
-class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
+class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener,
+    ModuleProxy {
+
     private var hasMore = false
 
 
@@ -120,17 +135,77 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     private var lightCount = 0
 
+
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnChat -> {
-                if (lightCount == 0) {
-                    chargeVipDialog.show()
-                } else {
-                    ToastUtils.showShort("打招呼")
+//                val matchBean = matchUserAdapter.data[manager.topPosition]
 
-                }
+//                ChatActivity.start(activity!!, matchBean.accid ?: "")
 
+                mPresenter.greetState(
+                    hashMapOf(
+                        "token" to UserManager.getToken(),
+                        "accid" to UserManager.getAccid(),
+                        "target_accid" to (matchUserAdapter.data[manager.topPosition].accid ?: "")
+                    )
+                )
             }
+        }
+    }
+
+
+    /**
+     *  点击聊天
+     *  1. 好友 直接聊天 已经匹配过了 ×
+     *
+     *  2. 不是好友 判断是否打过招呼
+     *
+     *     2.1 打过招呼 且没有过期  直接直接聊天
+     *
+     *     2.2 未打过招呼 判断招呼剩余次数
+     *
+     *         2.2.1 有次数 直接打招呼
+     *
+     *         2.2.2 无次数 其他操作--如:请求充值会员
+     */
+    override fun onGreetStateResult(greetBean: GreetBean?) {
+        if (greetBean != null) {
+            if (greetBean.isfriend || (!greetBean.isfriend && greetBean.isgreet)) {
+                ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition].accid ?: "")
+            } else {
+                if (!greetBean.isgreet) {
+                    if (greetBean.lightningcnt > 0) {
+                        mPresenter.greet(
+                            hashMapOf(
+                                "token" to UserManager.getToken(),
+                                "accid" to UserManager.getAccid(),
+                                "target_accid" to (matchUserAdapter.data[manager.topPosition].accid ?: "")
+                            )
+                        )
+                    } else {
+                        if (UserManager.isUserVip()) {
+                            ToastUtils.showShort("次数用尽，请充值。")
+                        } else {
+                            ChargeVipDialog(activity!!).show()
+                        }
+                    }
+                }
+            }
+        } else {
+            ToastUtils.showShort("请求失败，请重试")
+        }
+    }
+
+
+    /**
+     * 打招呼结果（先请求服务器）
+     */
+    override fun onGreetSResult(greetBean: Boolean) {
+        if (greetBean) {
+            sendChatHiMessage()
+        } else {
+            ToastUtils.showShort("打招呼失败，重新试一次吧")
         }
     }
 
@@ -141,8 +216,12 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == Constants.PAGESIZE
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
                 stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
+                btnChat.isVisible = false
+                tvLeftChatTime.isVisible = false
             } else {
                 stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+                btnChat.isVisible = true
+                tvLeftChatTime.isVisible = true
             }
             matchUserAdapter.addData(matchBeans!!.list ?: mutableListOf<MatchBean>())
             lightCount = matchBeans.lightningcnt ?: 0
@@ -158,6 +237,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             }
         }
     }
+
 
     override fun onGetDislikeResult(success: Boolean) {
         if (success) {
@@ -331,6 +411,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             mPresenter.getMatchList(matchParams)
         } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
             stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
+            btnChat.isVisible = false
+            tvLeftChatTime.isVisible = false
         }
     }
 
@@ -349,5 +431,65 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     }
 
+
+    /*--------------------------消息代理------------------------*/
+
+    private fun sendChatHiMessage() {
+        val matchBean = matchUserAdapter.data[manager.topPosition]
+        Log.d("OkHttp",matchBean.accid?:"")
+        val container = Container(activity!!, matchBean?.accid, SessionTypeEnum.P2P, this, true)
+//        val chatHiAttachment = ChatMatchAttachment(
+//            UserManager.getGlobalLabelName(),
+//            matchBean?.tags ?: mutableListOf(),
+//            matchBean?.avatar ?: ""
+//        )
+        val chatHiAttachment = ChatHiAttachment(
+            UserManager.getGlobalLabelName(),
+            ChatHiAttachment.CHATHI_HI
+        )
+        val message = MessageBuilder.createCustomMessage(
+            matchBean?.accid,
+            SessionTypeEnum.P2P,
+            "",
+            chatHiAttachment,
+            CustomMessageConfig()
+        )
+        container.proxy.sendMessage(message)
+    }
+
+    override fun sendMessage(msg: IMMessage): Boolean {
+        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
+            RequestCallback<Void?> {
+            override fun onSuccess(param: Void?) {
+                ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition]?.accid ?: "")
+
+            }
+
+            override fun onFailed(code: Int) {
+                toast("$code")
+            }
+
+            override fun onException(exception: Throwable) {
+                toast(exception.message ?: "")
+            }
+        })
+        return true
+    }
+
+    override fun onInputPanelExpand() {
+
+    }
+
+    override fun shouldCollapseInputPanel() {
+
+    }
+
+    override fun isLongClickEnabled(): Boolean {
+        return false
+    }
+
+    override fun onItemFooterClick(message: IMMessage?) {
+
+    }
 
 }

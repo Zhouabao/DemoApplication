@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.UpdateLabelEvent
+import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.MatchListBean
 import com.example.demoapplication.model.StatusBean
@@ -41,6 +42,15 @@ import org.jetbrains.anko.support.v4.toast
  */
 class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener,
     RenRenCallback.OnSwipeListener {
+    override fun onGreetSResult(greetBean: Boolean) {
+
+
+    }
+
+    override fun onGreetStateResult(greetBean: GreetBean?) {
+
+
+    }
 
 
     //用户适配器

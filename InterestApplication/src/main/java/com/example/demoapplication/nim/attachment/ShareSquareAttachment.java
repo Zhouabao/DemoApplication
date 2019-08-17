@@ -1,6 +1,7 @@
-package com.example.demoapplication.nim.extension;
+package com.example.demoapplication.nim.attachment;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demoapplication.nim.extension.CustomAttachmentType;
 
 /**
  * author : ZFM
@@ -17,11 +18,11 @@ public class ShareSquareAttachment extends CustomAttachment {
 
     private String desc;//匹配的标签
     private String content;//分享的文本内容
-    private int shareType;//分享的类型 1图片 2视频 3语音
+    private int shareType;//分享的类型 1图片 2视 频 3语音
     private String img;//分享的图片
     private int squareId;//分享的广场id
 
-    ShareSquareAttachment() {
+    public ShareSquareAttachment() {
         super(CustomAttachmentType.ShareSquare);
     }
 

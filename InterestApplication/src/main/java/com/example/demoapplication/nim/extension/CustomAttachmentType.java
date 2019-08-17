@@ -5,7 +5,8 @@ package com.example.demoapplication.nim.extension;
  */
 public interface CustomAttachmentType {
     // 多端统一
-    int Sticker = 1;
-    int ChatHiHead =2;
-    int ShareSquare = 3;
+    int ChatMatch = 2;//匹配
+    int ShareSquare = 1;//分享
+    int ChatHi = 0;//打招呼
+    int Sticker = 3;
 }

@@ -1,6 +1,7 @@
-package com.example.demoapplication.nim.extension;
+package com.example.demoapplication.nim.attachment;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demoapplication.nim.extension.CustomAttachParser;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 
 /**

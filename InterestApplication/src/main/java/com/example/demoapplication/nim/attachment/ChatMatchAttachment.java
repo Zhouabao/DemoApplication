@@ -1,8 +1,9 @@
-package com.example.demoapplication.nim.extension;
+package com.example.demoapplication.nim.attachment;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demoapplication.model.Tag;
+import com.example.demoapplication.nim.extension.CustomAttachmentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +11,10 @@ import java.util.List;
 /**
  * author : ZFM
  * date   : 2019/8/1014:48
- * desc   : 打招呼的attachment
+ * desc   : 匹配的attachment
  * version: 1.0
  */
-public class ChatHiAttachment extends CustomAttachment {
+public class ChatMatchAttachment extends CustomAttachment {
     private final String KEY_MATCH_TAG = "matchtag";
     private final String KEY_TAGS = "tags";
     private final String KEY_AVATOR = "avator";
@@ -22,12 +23,12 @@ public class ChatHiAttachment extends CustomAttachment {
     private String avator;//头像
     private List<Tag> tags = new ArrayList<>();//用户所拥有的标签
 
-    ChatHiAttachment() {
-        super(CustomAttachmentType.ChatHiHead);
+    public ChatMatchAttachment() {
+        super(CustomAttachmentType.ChatMatch);
     }
 
-    public ChatHiAttachment(String matchTag, List<Tag> tags, String avator) {
-        super(CustomAttachmentType.ChatHiHead);
+    public ChatMatchAttachment(String matchTag, List<Tag> tags, String avator) {
+        super(CustomAttachmentType.ChatMatch);
         this.matchTag = matchTag;
         this.tags = tags;
         this.avator = avator;

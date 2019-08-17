@@ -26,7 +26,7 @@ import com.example.demoapplication.event.NotifyEvent
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.nim.activity.ChatActivity
-import com.example.demoapplication.nim.extension.ChatHiAttachment
+import com.example.demoapplication.nim.attachment.ChatMatchAttachment
 import com.example.demoapplication.presenter.MatchDetailPresenter
 import com.example.demoapplication.presenter.view.MatchDetailView
 import com.example.demoapplication.ui.adapter.DetailThumbAdapter
@@ -483,7 +483,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     private fun sendChatHiMessage() {
         val container = Container(this, matchBean?.accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(
+        val chatHiAttachment = ChatMatchAttachment(
             UserManager.getGlobalLabelName(),
             matchBean?.tags ?: mutableListOf(),
             matchBean?.avatar ?: ""

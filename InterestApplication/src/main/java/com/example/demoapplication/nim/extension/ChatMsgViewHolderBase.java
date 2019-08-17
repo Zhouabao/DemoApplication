@@ -1,18 +1,13 @@
-package com.netease.nim.uikit.business.session.viewholder;
+package com.example.demoapplication.nim.extension;
 
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
+import android.widget.*;
+import com.example.demoapplication.nim.adapter.ChatMsgAdapter;
 import com.netease.nim.uikit.R;
-import com.netease.nim.uikit.business.session.module.list.MsgAdapter;
 import com.netease.nim.uikit.business.team.helper.TeamHelper;
 import com.netease.nim.uikit.common.ui.imageview.HeadImageView;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
@@ -33,9 +28,9 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
  * 会话窗口消息列表项的ViewHolder基类，负责每个消息项的外层框架，包括头像，昵称，发送/接收进度条，重发按钮等。<br>
  * 具体的消息展示项可继承该基类，然后完成具体消息内容展示即可。
  */
-public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItemFetchLoadAdapter, BaseViewHolder, IMMessage> {
+public abstract class ChatMsgViewHolderBase extends RecyclerViewHolder<BaseMultiItemFetchLoadAdapter, BaseViewHolder, IMMessage> {
 
-    public MsgViewHolderBase(BaseMultiItemFetchLoadAdapter adapter) {
+    public ChatMsgViewHolderBase(BaseMultiItemFetchLoadAdapter adapter) {
         super(adapter);
         this.adapter = adapter;
     }
@@ -122,8 +117,8 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
     }
 
     /// -- 以下接口可由子类调用
-    protected final MsgAdapter getMsgAdapter() {
-        return (MsgAdapter) adapter;
+    protected final ChatMsgAdapter getMsgAdapter() {
+        return (ChatMsgAdapter) adapter;
     }
 
     protected boolean shouldDisplayNick() {
@@ -205,7 +200,7 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         setOnClickListener();
         setLongClickListener();
         setContent();
-//        setReadReceipt();
+        setReadReceipt();
         setAckMsg();
 
         bindContentView();

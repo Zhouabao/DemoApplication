@@ -10,7 +10,13 @@ import com.example.demoapplication.R;
 import com.example.demoapplication.nim.DemoCache;
 import com.example.demoapplication.nim.activity.MessageInfoActivity;
 import com.example.demoapplication.nim.activity.SearchMessageActivity;
-import com.example.demoapplication.nim.extension.*;
+import com.example.demoapplication.nim.attachment.ChatHiAttachment;
+import com.example.demoapplication.nim.attachment.ChatMatchAttachment;
+import com.example.demoapplication.nim.attachment.ShareSquareAttachment;
+import com.example.demoapplication.nim.attachment.StickerAttachment;
+import com.example.demoapplication.nim.extension.CustomAttachParser;
+import com.example.demoapplication.nim.viewholder.MsgViewHolderChatHi;
+import com.example.demoapplication.nim.viewholder.MsgViewHolderShareSquare;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.model.recent.RecentCustomization;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -234,7 +240,7 @@ public class SessionHelper {
 
                 @Override
                 public String getDefaultDigest(RecentContact recent) {
-                    if (recent.getAttachment() instanceof ChatHiAttachment) {
+                    if (recent.getAttachment() instanceof ChatMatchAttachment) {
                         return "[打招呼]";
                     } else if (recent.getAttachment() instanceof ShareSquareAttachment) {
                         return "[转发动态]";
@@ -250,8 +256,9 @@ public class SessionHelper {
 
     //自定义消息界面
     private static void registerViewHolders() {
-        NimUIKit.registerMsgItemViewHolder(ChatHiAttachment.class, MsgViewHolderChatHi.class);
+//        NimUIKit.registerMsgItemViewHolder(ChatMatchAttachment.class, MsgViewHolderMatch.class);
         NimUIKit.registerMsgItemViewHolder(ShareSquareAttachment.class, MsgViewHolderShareSquare.class);
+        NimUIKit.registerMsgItemViewHolder(ChatHiAttachment.class, MsgViewHolderChatHi.class);
         // NimUIKit.registerMsgItemViewHolder(FileAttachment.class, MsgViewHolderFile.class);
 //        NimUIKit.registerMsgItemViewHolder(CustomAttachment.class, MsgViewHolderDefCustom.class);
     }

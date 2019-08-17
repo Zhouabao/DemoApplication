@@ -14,7 +14,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
-import com.example.demoapplication.nim.extension.ShareSquareAttachment
+import com.example.demoapplication.nim.attachment.ShareSquareAttachment
 import com.kotlin.base.ext.onClick
 import com.netease.nim.uikit.business.session.module.Container
 import com.netease.nim.uikit.business.session.module.ModuleProxy

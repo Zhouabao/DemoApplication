@@ -5,8 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import com.alibaba.fastjson.JSON
 import com.example.demoapplication.R
+import com.example.demoapplication.api.Api
+import com.example.demoapplication.event.NimHeadEvent
+import com.example.demoapplication.model.NimBean
 import com.example.demoapplication.nim.fragment.ChatMessageFragment
+import com.example.demoapplication.utils.UserManager
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
 import com.netease.nim.uikit.api.model.main.OnlineStateChangeObserver
@@ -23,6 +31,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import kotlinx.android.synthetic.main.activity_chat.*
+import org.greenrobot.eventbus.EventBus
 
 
 /**
@@ -30,6 +39,26 @@ import kotlinx.android.synthetic.main.activity_chat.*
  *
  */
 class ChatActivity : ChatBaseMessageActivity() {
+    public fun getTargetInfo(target_accid: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getTargetInfo(
+                hashMapOf(
+                    "accid" to UserManager.getAccid(),
+                    "token" to UserManager.getToken(),
+                    "target_accid" to target_accid
+                )
+            )
+            .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
+                override fun onNext(t: BaseResp<NimBean?>) {
+                    super.onNext(t)
+                    if (t.code == 200 && t.data!=null) {
+                        EventBus.getDefault().post(NimHeadEvent(t.data!!))
+                    }
+                }
+            })
+    }
+
+
     private var isResume = false
 
     companion object {
@@ -60,7 +89,7 @@ class ChatActivity : ChatBaseMessageActivity() {
         if (sessionId != message.sessionId || message.sessionType != SessionTypeEnum.P2P) {
             return@Observer
         }
-        showCommandMessage(message)
+        //showCommandMessage(message)
     }
 
     /**
@@ -111,6 +140,7 @@ class ChatActivity : ChatBaseMessageActivity() {
         requestBuddyInfo()
         displayOnlineState()
         registerObservers(true)
+        getTargetInfo(sessionId)
     }
 
     override fun onDestroy() {

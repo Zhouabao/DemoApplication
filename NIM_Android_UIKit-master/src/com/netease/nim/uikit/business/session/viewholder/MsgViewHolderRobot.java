@@ -2,7 +2,6 @@ package com.netease.nim.uikit.business.session.viewholder;
 
 import android.view.View;
 import android.widget.TextView;
-
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.business.robot.model.RobotResponseContent;
 import com.netease.nim.uikit.business.session.viewholder.robot.RobotContentLinearLayout;

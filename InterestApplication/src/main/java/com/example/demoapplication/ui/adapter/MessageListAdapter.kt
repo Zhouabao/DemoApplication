@@ -6,8 +6,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import com.example.demoapplication.nim.extension.ChatHiAttachment
-import com.example.demoapplication.nim.extension.ShareSquareAttachment
+import com.example.demoapplication.nim.attachment.ChatMatchAttachment
+import com.example.demoapplication.nim.attachment.ShareSquareAttachment
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import kotlinx.android.synthetic.main.item_message_list.view.*
@@ -34,7 +34,7 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
         }
         GlideUtil.loadAvatorImg(mContext, UserInfoHelper.getAvatar(item.contactId), holder.itemView.msgIcon)
 
-        if (item.attachment is ChatHiAttachment) {
+        if (item.attachment is ChatMatchAttachment) {
             holder.itemView.text.text = "[招呼消息]"
         } else if (item.attachment is ShareSquareAttachment) {
             holder.itemView.text.text = "[动态分享内容]"

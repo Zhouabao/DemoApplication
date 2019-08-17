@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.event.NimCountDownEvent
 import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.HiMessageBean
 import com.example.demoapplication.model.MessageListBean
@@ -143,7 +144,17 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         friendsView.friendTv.onClick {
             startActivity<MessageHiActivity>()
         }
-        hiAdapter.setOnItemClickListener { adapter, view, position ->
+        hiAdapter.setOnItemClickListener { _, view, position ->
+            //发送通知告诉剩余时间，并且开始倒计时
+//            if (hiAdapter.data[position].type == 2)
+
+            EventBus.getDefault().post(
+                NimCountDownEvent(
+                    hiAdapter.data[position].countdown_total ?: 0,
+                    hiAdapter.data[position].countdown ?: 0
+                )
+            )
+            ChatActivity.start(this, hiAdapter.data[position].accid ?: "")
 
         }
 //        hiAdapter.addData(mutableListOf(""))
@@ -252,7 +263,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                     R.drawable.icon_assistant,
                     loadedRecent.contactId
                 )
-                headAdapter.setData(0,ass)
+                headAdapter.setData(0, ass)
                 headAdapter.notifyItemChanged(0)
                 result.remove(loadedRecent)
                 break
@@ -396,7 +407,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                     R.drawable.icon_assistant,
                     r.contactId
                 )
-                headAdapter.setData(0,ass)
+                headAdapter.setData(0, ass)
                 headAdapter.notifyItemChanged(0)
                 recentContacts.remove(r)
                 break

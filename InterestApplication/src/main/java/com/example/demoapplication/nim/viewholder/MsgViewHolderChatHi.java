@@ -1,21 +1,16 @@
-package com.example.demoapplication.nim.extension;
+package com.example.demoapplication.nim.viewholder;
 
 import android.view.Gravity;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
-import com.example.baselibrary.glide.GlideUtil;
 import com.example.demoapplication.R;
-import com.example.demoapplication.ui.adapter.MatchDetailLabelAdapter;
-import com.google.android.flexbox.AlignItems;
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexWrap;
-import com.google.android.flexbox.FlexboxLayoutManager;
+import com.example.demoapplication.nim.attachment.ChatHiAttachment;
+import com.example.demoapplication.utils.UserManager;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.netease.nim.uikit.common.util.sys.ScreenUtil;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * author : ZFM
@@ -25,10 +20,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class MsgViewHolderChatHi extends MsgViewHolderBase {
 
-    private TextView chatHiMatch; //匹配的标签
-    private CircleImageView chatHiAvator;//头像
-    private RecyclerView chatHiTags;//对方所有的标签
-    private ConstraintLayout targetCl;//对方所有的标签
+    private TextView chatHiMatch,//匹配的标签
+            targetMatchContent;
+    private ImageView targetMatchIv;
+    private ConstraintLayout targetCl;
 
     public MsgViewHolderChatHi(BaseMultiItemFetchLoadAdapter adapter) {
         super(adapter);
@@ -36,15 +31,15 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
 
     @Override
     protected int getContentResId() {
-        return R.layout.item_chat_head;
+        return R.layout.item_chat_hi;
     }
 
     @Override
     protected void inflateContentView() {
         //初始化数据
         chatHiMatch = findViewById(R.id.targetMatchWay);
-        chatHiAvator = findViewById(R.id.targetAvator);
-        chatHiTags = findViewById(R.id.targetLabels);
+        targetMatchContent = findViewById(R.id.targetMatchContent);
+        targetMatchIv = findViewById(R.id.targetMatchIv);
         targetCl = findViewById(R.id.targetCl);
         setLayoutParams(ScreenUtil.screenWidth, FrameLayout.LayoutParams.WRAP_CONTENT, targetCl);
         setGravity(targetCl, Gravity.CENTER);
@@ -53,18 +48,27 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
     @Override
     protected void bindContentView() {
         ChatHiAttachment attachment = (ChatHiAttachment) message.getAttachment();
-        //匹配的标签
-        chatHiMatch.setText("通过「" + attachment.getMatchTag() + "」匹配");
-        //头像
-        GlideUtil.loadAvatorImg(context, attachment.getAvator(), chatHiAvator);
-        //用户标签
-        FlexboxLayoutManager manager = new FlexboxLayoutManager(context, FlexDirection.ROW, FlexWrap.WRAP);
-        manager.setAlignItems(AlignItems.STRETCH);
-        chatHiTags.setLayoutManager(manager);
-        MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(context);
-        chatHiTags.setAdapter(adapter);
-        if (attachment.getTags() != null && attachment.getTags().size() > 0) {
-            adapter.setData(attachment.getTags());
+        //匹配的标签 1.匹配  2.招呼 3.好友
+        if (attachment.getShowType() == 1) {
+            chatHiMatch.setText("通过「" + attachment.getTag() + "」匹配");
+            targetMatchContent.setText("找到一样的人了就和他聊聊天吧");
+            targetMatchIv.setImageResource(R.drawable.icon_like);
+        } else if (attachment.getShowType() == 2) {
+            targetMatchIv.setImageResource(R.drawable.icon_flash_small);
+            if (message.getFromAccount().equals(UserManager.INSTANCE.getAccid())) {
+                chatHiMatch.setText("你向对方打了个招呼");
+            } else {
+                chatHiMatch.setText("对方向你打了个招呼");
+            }
+            targetMatchContent.setText("好好表现争取赢个好友位吧");
+        } else {
+            targetMatchIv.setImageResource(R.drawable.icon_like);
+            if (message.getFromAccount().equals(UserManager.INSTANCE.getAccid())) {
+                chatHiMatch.setText("你已添加对方为好友");
+            } else {
+                chatHiMatch.setText("对方已添加你为好友");
+            }
+            targetMatchContent.setText("快多和他聊聊天吧");
         }
     }
 
@@ -90,13 +94,11 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
 
     @Override
     protected boolean isShowHeadImage() {
-
         return false;
     }
 
     @Override
     protected boolean isShowBubble() {
-
         return false;
     }
 }

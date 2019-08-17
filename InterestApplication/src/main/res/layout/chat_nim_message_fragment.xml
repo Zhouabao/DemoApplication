@@ -22,14 +22,22 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-            <include
-                    android:id="@+id/team_notify_bar_panel"
-                    layout="@layout/item_chat_head"
-                    android:visibility="gone"
+            <LinearLayout
+                    android:background="#fff1f1f1"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    />
+                    android:layout_height="27dp">
+
+                <ProgressBar
+                        android:id="@+id/outdateTime"
+                        android:minHeight="27dp"
+                        android:maxHeight="27dp"
+                        android:max="100"
+                        android:indeterminate="true"
+                        android:background="@drawable/outtime_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="27dp"/>
+            </LinearLayout>
+
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/messageListView"
@@ -38,7 +46,32 @@
                     android:layout_height="match_parent"/>
         </LinearLayout>
 
+        <com.example.demoapplication.widgets.TimeRunTextView
+                android:id="@+id/outdateTimeText"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:text="08:23后消息过期"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"/>
 
+        <TextView
+                android:id="@+id/btnMakeFriends"
+                android:text="成为好友"
+                android:background="@drawable/make_friend_bg"
+                android:layout_gravity="right"
+                android:layout_width="107dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="85dp"
+                android:drawablePadding="10dp"
+                android:paddingLeft="10dp"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/icon_like_white"
+                android:layout_height="35dp"/>
     </FrameLayout>
 
     <include layout="@layout/chat_nim_message_activity_bottom_layout"/>

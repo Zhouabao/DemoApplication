@@ -113,3 +113,13 @@ data class Photos(
     val square_id: Int? = 0,
     var url: String?
 )
+
+
+/**
+ * 获取打招呼次数和好友关系的model
+ */
+data class GreetBean(
+    val isfriend: Boolean = false,//是否好友
+    val isgreet: Boolean = false,//是否打过招呼
+    val lightningcnt: Int = 0//剩余招呼次数
+)

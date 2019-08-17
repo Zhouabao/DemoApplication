@@ -1,4 +1,4 @@
-package com.example.demoapplication.nim.extension;
+package com.example.demoapplication.nim.viewholder;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -7,6 +7,7 @@ import com.example.baselibrary.glide.GlideUtil;
 import com.example.baselibrary.widgets.RoundImageView;
 import com.example.demoapplication.R;
 import com.example.demoapplication.model.SquareBean;
+import com.example.demoapplication.nim.attachment.ShareSquareAttachment;
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;

@@ -3,7 +3,6 @@ package com.netease.nim.uikit.business.session.viewholder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.common.ui.imageview.MsgThumbImageView;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;

@@ -1,5 +1,6 @@
 package com.example.demoapplication.presenter.view
 
+import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchListBean
 import com.example.demoapplication.model.StatusBean
 import com.kotlin.base.presenter.view.BaseView
@@ -17,4 +18,9 @@ interface MatchView : BaseView {
     fun onGetDislikeResult(success: Boolean)
 
     fun onGetLikeResult(success: Boolean,data:StatusBean?)
+
+    fun onGreetStateResult(greetBean: GreetBean?)
+
+
+    fun onGreetSResult(greetBean: Boolean)
 }

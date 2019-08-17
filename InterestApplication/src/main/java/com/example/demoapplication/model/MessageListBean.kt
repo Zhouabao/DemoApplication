@@ -29,10 +29,10 @@ data class HiMessageBean(
     val nickname: String? = "",
     val out_time: String? = "",
     val timeout_time: Int? = 0,
-    val countdown: Int? = 0,
+    val countdown: Int? = 0,//	倒计时秒剩余时长（秒）
     val id: Int? = 0,
-    val read_time: String? = "",//	倒计时 总时长（秒）
-    val countdown_total: Int? = 0,//	倒计时秒剩余时长（秒）
+    val read_time: String? = "",
+    val countdown_total: Int? = 0,//	倒计时 总时长（秒）
     var timer: Int = 0,
     val type: Int? = 0//	1，新消息 2，倒计时 3，普通样式 4 过期
 ) : MultiItemEntity {

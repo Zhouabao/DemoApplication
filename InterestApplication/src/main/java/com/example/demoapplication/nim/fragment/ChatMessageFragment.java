@@ -8,8 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.demoapplication.R;
+import com.example.demoapplication.api.Api;
+import com.example.demoapplication.model.NimBean;
+import com.example.demoapplication.nim.extension.ChatMessageListPanelEx;
 import com.example.demoapplication.nim.panel.ChatInputPanel;
 import com.example.demoapplication.nim.session.*;
+import com.example.demoapplication.utils.UserManager;
+import com.kotlin.base.data.net.RetrofitFactory;
+import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.api.UIKitOptions;
 import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -17,7 +23,6 @@ import com.netease.nim.uikit.business.ait.AitManager;
 import com.netease.nim.uikit.business.session.constant.Extras;
 import com.netease.nim.uikit.business.session.module.Container;
 import com.netease.nim.uikit.business.session.module.ModuleProxy;
-import com.netease.nim.uikit.business.session.module.list.MessageListPanelEx;
 import com.netease.nim.uikit.common.CommonUtil;
 import com.netease.nim.uikit.common.fragment.TFragment;
 import com.netease.nim.uikit.impl.NimUIKitImpl;
@@ -38,8 +43,11 @@ import com.netease.nimlib.sdk.msg.model.MessageReceipt;
 import com.netease.nimlib.sdk.robot.model.NimRobotInfo;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.netease.nimlib.sdk.robot.model.RobotMsgType;
+import org.greenrobot.eventbus.EventBus;
+import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +57,37 @@ import java.util.Map;
  * Created by huangjun on 2015/2/1.
  */
 public class ChatMessageFragment extends TFragment implements ModuleProxy {
+    public void getTargetInfo(String target_accid) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("token", UserManager.INSTANCE.getToken());
+        params.put("accid", UserManager.INSTANCE.getAccid());
+        params.put("target_accid", target_accid);
+        RetrofitFactory.Companion.getInstance()
+                .create(Api.class)
+                .getTargetInfo(params)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(new rx.Observer<BaseResp<NimBean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
+                        if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
+                            EventBus.getDefault().post(nimBeanBaseResp);
+                        }
+                    }
+                });
+
+    }
+
 
     private View rootView;
 
@@ -63,7 +102,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     // modules
     protected ChatInputPanel inputPanel;
-    protected MessageListPanelEx messageListPanel;
+    protected ChatMessageListPanelEx messageListPanel;
 
     protected AitManager aitManager;
 
@@ -128,7 +167,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         Container container = new Container(getActivity(), sessionId, sessionType, this, true);
 
         if (messageListPanel == null) {
-            messageListPanel = new MessageListPanelEx(container, rootView, anchor, false, false);
+            messageListPanel = new ChatMessageListPanelEx(container, rootView, anchor, false, false);
         } else {
             messageListPanel.reload(container, anchor);
         }
@@ -150,8 +189,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (customization != null) {
             messageListPanel.setChattingBackground(customization.backgroundUri, customization.backgroundColor);
         }
-    }
 
+        //获取对方用户的信息
+        getTargetInfo(sessionId);
+    }
 
 
     private void initAitManager() {

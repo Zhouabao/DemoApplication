@@ -21,7 +21,7 @@ import rx.schedulers.Schedulers
 /*
     扩展Observable执行
  */
-fun <T> Observable<T>.excute(subscriber: BaseSubscriber<T>) {
+public fun <T> Observable<T>.excute(subscriber: BaseSubscriber<T>) {
     this.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(subscriber)

@@ -3,6 +3,7 @@ package com.example.demoapplication.presenter
 import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
+import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchListBean
 import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.presenter.view.MatchView
@@ -101,6 +102,58 @@ class MatchPresenter : BasePresenter<MatchView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
+
+
+
+    /**
+     * 喜欢
+     */
+    fun greet(params: HashMap<String, Any>) {
+        if (!checkNetWork()){
+            return
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .greet(params)
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
+                    if (t.code == 200) {
+                        mView.onGreetSResult(true)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGreetSResult(false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
+
+
+    fun greetState(params: HashMap<String, String>) {
+        if (!checkNetWork()){
+            return
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .greetState(params)
+            .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
+                override fun onNext(t: BaseResp<GreetBean?>) {
+                    if (t.code == 200) {
+                        mView.onGreetStateResult(t.data)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGreetStateResult(t.data)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onGreetStateResult(null)
                 }
             })
     }

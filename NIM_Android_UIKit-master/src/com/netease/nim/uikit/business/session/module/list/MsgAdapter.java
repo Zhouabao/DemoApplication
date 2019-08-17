@@ -26,7 +26,7 @@ public class MsgAdapter extends BaseMultiItemFetchLoadAdapter<IMMessage, BaseVie
     private String messageId;
     private Container container;
 
-    MsgAdapter(RecyclerView recyclerView, List<IMMessage> data, Container container) {
+    public MsgAdapter(RecyclerView recyclerView, List<IMMessage> data, Container container) {
         super(recyclerView, data);
 
         timedItems = new HashSet<>();

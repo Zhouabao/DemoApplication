@@ -182,7 +182,14 @@ interface Api {
 
 
     /**
-     * 匹配首页数据
+     * 打招呼还是聊天判断
+     */
+    @FormUrlEncoded
+    @POST("Relationship/greetState${Constants.END_BASE_URL}")
+    fun greetState(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<GreetBean?>>
+
+    /**
+     * 匹配详情数据
      */
     @FormUrlEncoded
     @POST("member_info/usrinfo${Constants.END_BASE_URL}")
@@ -203,6 +210,14 @@ interface Api {
     @FormUrlEncoded
     @POST("relationship/addLike${Constants.END_BASE_URL}")
     fun addLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
+
+
+    /**
+     * 打招呼、上滑
+     */
+    @FormUrlEncoded
+    @POST("relationship/greet${Constants.END_BASE_URL}")
+    fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
 
 
     /**
@@ -361,6 +376,7 @@ interface Api {
     @FormUrlEncoded
     @POST("tidings/squareLists${Constants.END_BASE_URL}")
     fun squareLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareMsgBean>?>>
+
     /**
      * 广场消息列表
      */
@@ -396,10 +412,23 @@ interface Api {
     @POST("relationship/getLists${Constants.END_BASE_URL}")
     fun getContactLists(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<ContactDataBean?>>
 
+    /**
+     * 聊天界面获取信息
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/getTargetInfo${Constants.END_BASE_URL}")
+    fun getTargetInfo(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<NimBean?>>
+
+    /**
+     * 聊天界面添加好友
+     */
+    @FormUrlEncoded
+    @POST("Relationship/addFriend${Constants.END_BASE_URL}")
+    fun addFriend(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
+
+
     @GET
     fun getFileFromNet(@Url url: String): Observable<ResponseBody>
-
-
 
 
 }

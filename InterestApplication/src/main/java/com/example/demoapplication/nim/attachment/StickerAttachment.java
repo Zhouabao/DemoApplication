@@ -1,6 +1,7 @@
-package com.example.demoapplication.nim.extension;
+package com.example.demoapplication.nim.attachment;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demoapplication.nim.extension.CustomAttachmentType;
 import com.netease.nim.uikit.common.util.file.FileUtil;
 
 /**

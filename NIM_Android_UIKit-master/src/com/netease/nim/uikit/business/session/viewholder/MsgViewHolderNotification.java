@@ -3,7 +3,6 @@ package com.netease.nim.uikit.business.session.viewholder;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
-
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.business.session.emoji.MoonUtil;
 import com.netease.nim.uikit.business.session.helper.TeamNotificationHelper;

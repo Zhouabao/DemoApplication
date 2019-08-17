@@ -1,4 +1,4 @@
-package com.example.demoapplication.nim.extension;
+package com.example.demoapplication.nim.attachment;
 
 import com.alibaba.fastjson.JSONObject;
 

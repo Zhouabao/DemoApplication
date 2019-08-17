@@ -65,6 +65,7 @@ public abstract class ChatBaseMessageActivity extends UI {
         if (enableSensor()) {
             initSensor();
         }
+
     }
 
     @Override

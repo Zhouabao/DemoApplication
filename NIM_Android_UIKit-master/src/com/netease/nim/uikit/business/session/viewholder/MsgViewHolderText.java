@@ -5,7 +5,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.TextView;
-
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.business.session.emoji.MoonUtil;

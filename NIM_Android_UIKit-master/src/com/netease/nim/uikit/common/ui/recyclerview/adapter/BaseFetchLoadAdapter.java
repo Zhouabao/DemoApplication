@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import androidx.annotation.IntDef;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends RecyclerView.Adapter<K> implements IRecyclerView {
 
@@ -42,7 +44,7 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
     private boolean mFetchMoreEnable = false;
     private boolean mNextFetchEnable = false;
     private boolean mFirstFetchSuccess = true;
-    private int mAutoFetchMoreSize = 1; // 距离顶部多少条就开始拉取数据了
+    private int mAutoFetchMoreSize = 2; // 距离顶部多少条就开始拉取数据了
     private RequestFetchMoreListener mRequestFetchMoreListener;
     private LoadMoreView mFetchMoreView = new SimpleLoadMoreView();
 
@@ -69,6 +71,11 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
     // @AnimationType
     private BaseAnimation mCustomAnimation;
     private BaseAnimation mSelectAnimation = new AlphaInAnimation();
+
+
+    //header footer
+    private LinearLayout mHeaderLayout;
+    private LinearLayout mFooterLayout;
 
     // empty
     private FrameLayout mEmptyView;
@@ -147,10 +154,6 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
         RecyclerViewUtil.changeItemAnimation(recyclerView, false);
     }
 
-    @Override
-    public int getHeaderLayoutCount() {
-        return getFetchMoreViewCount();
-    }
 
     /**
      * *********************************** fetch more 顶部下拉加载 ***********************************
@@ -609,7 +612,7 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
         if (getEmptyViewCount() == 1) {
             count = 1;
         } else {
-            count = getFetchMoreViewCount() + mData.size() + getLoadMoreViewCount();
+            count = getHeaderLayoutCount() + mData.size() + getLoadMoreViewCount();
         }
         return count;
     }
@@ -619,17 +622,22 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
         if (getEmptyViewCount() == 1) {
             return EMPTY_VIEW;
         }
-
-        // fetch
+        // fetch  0
         autoRequestFetchMoreData(position);
+        //head   1
+        boolean head = mHeaderLayout != null && mHeaderLayout.getChildCount() > 0;
         // load
         autoRequestLoadMoreData(position);
         int fetchMoreCount = getFetchMoreViewCount();
         if (position < fetchMoreCount) {
-            Log.d(TAG, "FETCH pos=" + position);
+            Log.d(TAG, "FETCHING_VIEW pos=" + position);
             return FETCHING_VIEW;
+        } else if (head && position < getHeaderLayoutCount()) {
+            Log.d(TAG, "HEADER_VIEW pos=" + position);
+
+            return HEADER_VIEW;
         } else {
-            int adjPosition = position - fetchMoreCount;
+            int adjPosition = position - (getHeaderLayoutCount());
             int adapterCount = mData.size();
             if (adjPosition < adapterCount) {
                 Log.d(TAG, "DATA pos=" + position);
@@ -659,10 +667,12 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
             case FETCHING_VIEW:
                 mFetchMoreView.convert(holder);
                 break;
+            case HEADER_VIEW:
+                break;
             case EMPTY_VIEW:
                 break;
             default:
-                convert(holder, mData.get(holder.getLayoutPosition() - getFetchMoreViewCount()), positions, isScrolling);
+                convert(holder, mData.get(holder.getLayoutPosition() - getHeaderLayoutCount()), positions, isScrolling);
                 break;
         }
     }
@@ -710,6 +720,9 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
             case FETCHING_VIEW:
                 baseViewHolder = getFetchingView(parent);
                 break;
+            case HEADER_VIEW:
+                baseViewHolder = createBaseViewHolder(mHeaderLayout);
+                break;
             case LOADING_VIEW:
                 baseViewHolder = getLoadingView(parent);
                 break;
@@ -731,12 +744,13 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
             public void onClick(View v) {
                 if (mLoadMoreView.getLoadMoreStatus() == LoadMoreView.STATUS_FAIL) {
                     mLoadMoreView.setLoadMoreStatus(LoadMoreView.STATUS_DEFAULT);
-                    notifyItemChanged(getFetchMoreViewCount() + mData.size());
+                    notifyItemChanged(getHeaderViewPosition() + mData.size());
                 }
             }
         });
         return holder;
     }
+
 
     private K getFetchingView(ViewGroup parent) {
         View view = getItemView(mFetchMoreView.getLayoutId(), parent);
@@ -764,7 +778,7 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
     public void onViewAttachedToWindow(K holder) {
         super.onViewAttachedToWindow(holder);
         int type = holder.getItemViewType();
-        if (type == EMPTY_VIEW || type == LOADING_VIEW || type == FETCHING_VIEW) {
+        if (type == EMPTY_VIEW || type == HEADER_VIEW || type == LOADING_VIEW || type == FETCHING_VIEW) {
             setFullSpan(holder);
         } else {
             addAnimation(holder);
@@ -797,9 +811,9 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
                 public int getSpanSize(int position) {
                     int type = getItemViewType(position);
                     if (mSpanSizeLookup == null) {
-                        return (type == EMPTY_VIEW || type == LOADING_VIEW || type == FETCHING_VIEW) ? gridManager.getSpanCount() : 1;
+                        return (type == EMPTY_VIEW || type == HEADER_VIEW || type == LOADING_VIEW || type == FETCHING_VIEW) ? gridManager.getSpanCount() : 1;
                     } else {
-                        return (type == EMPTY_VIEW || type == LOADING_VIEW || type == FETCHING_VIEW) ? gridManager
+                        return (type == EMPTY_VIEW || type == HEADER_VIEW || type == LOADING_VIEW || type == FETCHING_VIEW) ? gridManager
                                 .getSpanCount() : mSpanSizeLookup.getSpanSize(gridManager, position - getFetchMoreViewCount());
                     }
                 }
@@ -871,6 +885,100 @@ public abstract class BaseFetchLoadAdapter<T, K extends BaseViewHolder> extends 
     public View getEmptyView() {
         return mEmptyView;
     }
+
+    /**
+     * *********************************** HEADLAYOUT ***********************************
+     */
+    public void addHeaderView(View header) {
+        addHeaderView(header, -1);
+    }
+
+    /**
+     * Add header view to mHeaderLayout and set header view position in mHeaderLayout.
+     * When index = -1 or index >= child count in mHeaderLayout,
+     * the effect of this method is the same as that of {@link #addHeaderView(View)}.
+     *
+     * @param header
+     * @param index  the position in mHeaderLayout of this header.
+     *               When index = -1 or index >= child count in mHeaderLayout,
+     *               the effect of this method is the same as that of {@link #addHeaderView(View)}.
+     */
+    public void addHeaderView(View header, int index) {
+        addHeaderView(header, index, LinearLayout.VERTICAL);
+    }
+
+    /**
+     * @param header
+     * @param index
+     * @param orientation
+     */
+    public void addHeaderView(View header, int index, int orientation) {
+        if (mHeaderLayout == null) {
+            mHeaderLayout = new LinearLayout(header.getContext());
+            if (orientation == LinearLayout.VERTICAL) {
+                mHeaderLayout.setOrientation(LinearLayout.VERTICAL);
+                mHeaderLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+            } else {
+                mHeaderLayout.setOrientation(LinearLayout.HORIZONTAL);
+                mHeaderLayout.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, MATCH_PARENT));
+            }
+        }
+        index = index >= mHeaderLayout.getChildCount() ? -1 : index;
+        mHeaderLayout.addView(header, index);
+        if (mHeaderLayout.getChildCount() == 1) {
+            int position = getHeaderViewPosition();
+            if (position != -1) {
+                notifyItemInserted(position);
+            }
+        }
+    }
+
+    private boolean mHeadAndEmptyEnable;
+
+    /**
+     * set emptyView show if adapter is empty and want to show headview and footview
+     * Call before {@link RecyclerView#setAdapter(RecyclerView.Adapter)}
+     *
+     * @param isHeadAndEmpty
+     */
+    public void setHeaderFooterEmpty(boolean isHeadAndEmpty) {
+        mHeadAndEmptyEnable = isHeadAndEmpty;
+    }
+
+    private int getHeaderViewPosition() {
+        //Return to header view notify position
+        if (getEmptyViewCount() == 1) {
+            if (mHeadAndEmptyEnable) {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+        return -1;
+    }
+
+    /**
+     * if addHeaderView will be return 1, if not will be return 0
+     */
+    @Override
+    public int getHeaderLayoutCount() {
+        if (mHeaderLayout == null || mHeaderLayout.getChildCount() == 0) {
+            return getFetchMoreViewCount();
+        }
+        return getFetchMoreViewCount() + 1;
+
+    }
+
+    /**
+     * if addFooterView will be return 1, if not will be return 0
+     */
+    public int getFooterLayoutCount() {
+        if (mFooterLayout == null || mFooterLayout.getChildCount() == 0) {
+            return 0;
+        }
+        return 1;
+    }
+
 
     /**
      * *********************************** 动画 ***********************************
