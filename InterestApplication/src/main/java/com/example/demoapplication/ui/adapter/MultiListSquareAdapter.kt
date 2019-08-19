@@ -6,20 +6,43 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.NetworkUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
+import com.example.demoapplication.api.Api
+import com.example.demoapplication.model.GreetBean
+import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.model.StatusBean
+import com.example.demoapplication.nim.activity.ChatActivity
+import com.example.demoapplication.nim.attachment.ChatHiAttachment
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.UpdateVoiceTimeThread
 import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.activity.MatchDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
+import com.example.demoapplication.ui.dialog.ChargeVipDialog
 import com.example.demoapplication.utils.UriUtils
 import com.example.demoapplication.utils.UserManager
+import com.kotlin.base.common.BaseApplication.Companion.context
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseSubscriber
+import com.netease.nim.uikit.business.session.module.Container
+import com.netease.nim.uikit.business.session.module.ModuleProxy
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import kotlinx.android.synthetic.main.item_list_square_audio.view.*
@@ -44,7 +67,7 @@ class MultiListSquareAdapter(
     var playState: Int = -1,
     var playPosition: Int = 0
 ) :
-    BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
+    BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data), ModuleProxy {
     companion object {
         val TAG = "RecyclerView2List"
     }
@@ -56,6 +79,8 @@ class MultiListSquareAdapter(
         addItemType(SquareBean.VIDEO, R.layout.item_list_square_video)
         addItemType(SquareBean.AUDIO, R.layout.item_list_square_audio)
     }
+
+    private var clickPos = -1
 
     override fun convert(holder: BaseViewHolder, item: SquareBean) {
         val drawable1 =
@@ -69,18 +94,20 @@ class MultiListSquareAdapter(
             holder.itemView.squareChatBtn1.visibility = View.VISIBLE
         }
 
-        //todo 点赞
         holder.addOnClickListener(R.id.squareDianzanBtn1)
         //点击转发
         holder.addOnClickListener(R.id.squareZhuanfaBtn1)
-        //todo 评论
         holder.addOnClickListener(R.id.squareCommentBtn1)
-        //todo 展开举报啊啥的
         holder.addOnClickListener(R.id.squareMoreBtn1)
-        //todo 跳转到聊天界面
-        holder.addOnClickListener(R.id.squareChatBtn1)
+//        holder.addOnClickListener(R.id.squareChatBtn1)
 
-        //todo 此处要点击展开所有内容
+
+        //todo 进入聊天界面
+        holder.itemView.squareChatBtn1.onClick {
+            clickPos = holder.layoutPosition
+            ChatActivity.start(mContext!!, item.accid ?: "")
+        }
+
         if (item.descr.isNullOrEmpty()) {
             holder.itemView.squareContent1.visibility = View.GONE
         } else {
@@ -220,6 +247,165 @@ class MultiListSquareAdapter(
                 }
             }
         }
+
+    }
+
+
+
+    /*----------------------------打招呼请求逻辑--------------------------------*/
+
+    /**
+     * 判断当前能否打招呼
+     */
+    fun greetState(token: String, accid: String, target_accid: String, matchBean: MatchBean) {
+        if (! NetworkUtils.isConnected()) {
+            ToastUtils.showShort("请连接网络！")
+            return
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .greetState(token, accid, target_accid)
+            .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(null) {
+                override fun onNext(t: BaseResp<GreetBean?>) {
+                    if (t.code == 200) {
+                        onGreetStateResult(t.data, matchBean)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        onGreetStateResult(t.data, matchBean)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    onGreetStateResult(null, matchBean)
+                }
+            })
+    }
+
+    /** todo
+     *  点击聊天
+     *  1. 好友 直接聊天 已经匹配过了 ×
+     *
+     *  2. 不是好友 判断是否打过招呼
+     *
+     *     2.1 打过招呼 且没有过期  直接直接聊天
+     *
+     *     2.2 未打过招呼 判断招呼剩余次数
+     *
+     *         2.2.1 有次数 直接打招呼
+     *
+     *         2.2.2 无次数 其他操作--如:请求充值会员
+     */
+    fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean) {
+        if (greetBean != null) {
+            if (greetBean.isfriend) {
+                ChatActivity.start(mContext!!, matchBean.accid ?: "")
+            } else {
+                if (greetBean.lightningcnt > 0) {
+                    greet(UserManager.getToken(), UserManager.getAccid(), (matchBean.accid ?: ""))
+                } else {
+                    if (UserManager.isUserVip()) {
+                        ToastUtils.showShort("次数用尽，请充值。")
+                    } else {
+                        ChargeVipDialog(mContext!!).show()
+                    }
+                }
+            }
+        } else {
+            ToastUtils.showShort("请求失败，请重试")
+        }
+    }
+    /**
+     * 打招呼
+     */
+    fun greet(token: String, accid: String, target_accid: String) {
+        if (! NetworkUtils.isConnected()) {
+            ToastUtils.showShort("请连接网络！")
+            return
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .greet(token, accid, target_accid,UserManager.getGlobalLabelId())
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
+                    if (t.code == 200) {
+                        onGreetSResult(true)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        onGreetSResult(false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    ToastUtils.showShort(mContext.getString(R.string.service_error))
+                }
+            })
+    }
+
+    /**
+     * 打招呼结果（先请求服务器）
+     */
+     fun onGreetSResult(greetBean: Boolean) {
+        if (greetBean) {
+            sendChatHiMessage(mData[clickPos])
+        } else {
+            ToastUtils.showShort("打招呼失败，重新试一次吧")
+        }
+    }
+
+    /*--------------------------消息代理------------------------*/
+
+    private fun sendChatHiMessage(squareBean: SquareBean) {
+        val container = Container(mContext as Activity, squareBean?.accid, SessionTypeEnum.P2P, this, true)
+//        val chatHiAttachment = ChatMatchAttachment(
+//            UserManager.getGlobalLabelName(),
+//            matchBean?.tags ?: mutableListOf(),
+//            matchBean?.avatar ?: ""
+//        )
+        val chatHiAttachment = ChatHiAttachment(
+            UserManager.getGlobalLabelName(),
+            ChatHiAttachment.CHATHI_HI
+        )
+        val message = MessageBuilder.createCustomMessage(
+            squareBean.accid,
+            SessionTypeEnum.P2P,
+            "",
+            chatHiAttachment,
+            CustomMessageConfig()
+        )
+        container.proxy.sendMessage(message)
+    }
+
+    override fun sendMessage(msg: IMMessage): Boolean {
+        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
+            RequestCallback<Void?> {
+            override fun onSuccess(param: Void?) {
+                ChatActivity.start(mContext as Activity, mData[clickPos].accid ?: "")
+            }
+
+            override fun onFailed(code: Int) {
+                ToastUtils.showShort("$code")
+            }
+
+            override fun onException(exception: Throwable) {
+                ToastUtils.showShort(exception.message ?: "")
+            }
+        })
+        return true
+    }
+
+    override fun onInputPanelExpand() {
+
+    }
+
+    override fun shouldCollapseInputPanel() {
+
+    }
+
+    override fun isLongClickEnabled(): Boolean {
+        return false
+    }
+
+    override fun onItemFooterClick(message: IMMessage?) {
 
     }
 

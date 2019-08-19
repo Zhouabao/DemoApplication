@@ -225,7 +225,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("relationship/greet${Constants.END_BASE_URL}")
-    fun greet(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<StatusBean?>>
+    fun greet(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String, @Field("tag_id") tag_id: Int): Observable<BaseResp<StatusBean?>>
 
 
     /**
