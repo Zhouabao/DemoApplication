@@ -129,4 +129,9 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
 
 
     }
+
+    override fun onBackPressed() {
+        mPresenter.markLikeRead(params)
+        super.onBackPressed()
+    }
 }

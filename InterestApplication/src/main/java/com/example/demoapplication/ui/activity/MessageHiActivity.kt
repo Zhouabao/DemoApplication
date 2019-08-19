@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.NimCountDownEvent
 import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.HiMessageBean
+import com.example.demoapplication.nim.activity.ChatActivity
 import com.example.demoapplication.presenter.MessageHiPresenter
 import com.example.demoapplication.presenter.view.MessageHiView
 import com.example.demoapplication.ui.adapter.MessageHiListAdapter
@@ -87,9 +89,17 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         adapter.setEmptyView(R.layout.empty_layout, messageHiRv)
 
         adapter.setOnItemClickListener { _, view, position ->
+            //发送通知告诉剩余时间，并且开始倒计时
+            if (adapter.data[position].type == 2)
+                EventBus.getDefault().postSticky(
+                    NimCountDownEvent(
+                        adapter.data[position].countdown_total ?: 0,
+                        adapter.data[position].countdown ?: 0
+                    )
+                )
 
+            ChatActivity.start(this, adapter.data[position].accid ?: "")
         }
-
     }
 
 
@@ -101,7 +111,16 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         }
         refreshLayout.finishRefresh(true)
         adapter.addData(t.data ?: mutableListOf())
-        tagAllRead.isEnabled = adapter.data.isNotEmpty()
+        if (adapter.data.isNullOrEmpty()) {
+            tagAllRead.isEnabled = false
+        } else {
+            for (tempdata in t.data!!) {
+                if (tempdata.type == 4) {
+                    tagAllRead.isEnabled = true
+                    break
+                }
+            }
+        }
     }
 
     override fun onDelTimeoutGreetResult(t: Boolean) {

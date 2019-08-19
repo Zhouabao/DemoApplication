@@ -1,5 +1,6 @@
 package com.example.demoapplication.ui.dialog
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -13,9 +14,15 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
+import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.nim.attachment.ShareSquareAttachment
+import com.example.demoapplication.utils.UserManager
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.business.session.module.Container
 import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nimlib.sdk.NIMClient
@@ -35,13 +42,13 @@ import java.net.URL
  *    desc   : 转发到某个好友弹窗
  *    version: 1.0
  */
-class ShareToFriendsDialog @JvmOverloads constructor(
-    context: Context,
+class ShareToFriendsDialog constructor(
+    private val myContext: Context,
     private var avator: String?,
     private var nickname: String?,
     private var accid: String?,
     private var squareBean: SquareBean
-) : Dialog(context, R.style.MyDialog),
+) : Dialog(myContext, R.style.MyDialog),
     ModuleProxy {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +61,7 @@ class ShareToFriendsDialog @JvmOverloads constructor(
     //        const val VIDEO = 2
     //        const val AUDIO = 3
     private fun initView() {
-        GlideUtil.loadImg(context, avator ?: "", friendImg)
+        GlideUtil.loadImg(myContext, avator ?: "", friendImg)
         friendNick.text = nickname ?: ""
         if (squareBean.type == SquareBean.PIC) { //图片
             if (squareBean.photo_json.isNullOrEmpty()) {
@@ -66,7 +73,13 @@ class ShareToFriendsDialog @JvmOverloads constructor(
                 params.height = SizeUtils.dp2px(140F)
                 params.width = LinearLayout.LayoutParams.WRAP_CONTENT
                 friendShareImg.layoutParams = params
-                GlideUtil.loadRoundImgCenterinside(context, squareBean.photo_json?.get(0)?.url ?: "", friendShareImg, 0.1F, SizeUtils.dp2px(5F))
+                GlideUtil.loadRoundImgCenterinside(
+                    myContext,
+                    squareBean.photo_json?.get(0)?.url ?: "",
+                    friendShareImg,
+                    0.1F,
+                    SizeUtils.dp2px(5F)
+                )
                 friendShareImg.visibility = View.VISIBLE
                 friendShareContent.visibility = View.GONE
             }
@@ -75,7 +88,13 @@ class ShareToFriendsDialog @JvmOverloads constructor(
             params.height = SizeUtils.dp2px(140F)
             params.width = LinearLayout.LayoutParams.WRAP_CONTENT
             friendShareImg.layoutParams = params
-            GlideUtil.loadRoundImgCenterinside(context, squareBean.cover_url ?: "", friendShareImg, 0.1F, SizeUtils.dp2px(5F))
+            GlideUtil.loadRoundImgCenterinside(
+                myContext,
+                squareBean.cover_url ?: "",
+                friendShareImg,
+                0.1F,
+                SizeUtils.dp2px(5F)
+            )
             friendShareImg.visibility = View.VISIBLE
             friendShareContent.visibility = View.GONE
         } else if (squareBean.type == SquareBean.AUDIO) {
@@ -136,6 +155,26 @@ class ShareToFriendsDialog @JvmOverloads constructor(
         return intArrayOf(-1, -1)
     }
 
+    /*-------------------------分享成功回调----------------------------*/
+    private fun addShare() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .addShare(UserManager.getToken(), UserManager.getAccid(), squareBean.id ?: 0)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    ToastUtils.showShort("转发成功!")
+                    dismiss()
+                    (myContext as Activity).finish()
+                }
+
+                override fun onError(e: Throwable?) {
+                    ToastUtils.showShort("转发成功!")
+                    dismiss()
+                    (myContext as Activity).finish()
+                }
+            })
+    }
+
+
     /*--------------------------消息代理------------------------*/
     private fun sendShareMsg() {
         val container = Container(ownerActivity, accid, SessionTypeEnum.P2P, this, true)
@@ -174,9 +213,8 @@ class ShareToFriendsDialog @JvmOverloads constructor(
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                ToastUtils.showShort("转发成功!")
-                dismiss()
-                ownerActivity?.finish()
+                addShare()
+
             }
 
             override fun onFailed(code: Int) {

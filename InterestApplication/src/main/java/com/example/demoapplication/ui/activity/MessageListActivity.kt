@@ -146,7 +146,6 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         }
         hiAdapter.setOnItemClickListener { _, view, position ->
             //发送通知告诉剩余时间，并且开始倒计时
-
             if (hiAdapter.data[position].type == 2)
                 EventBus.getDefault().postSticky(
                     NimCountDownEvent(

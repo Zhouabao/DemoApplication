@@ -29,7 +29,6 @@ class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
                     if (t.code == 200) {
                         SPUtils.getInstance(Constants.SPNAME).put("isvip", t.data?.isvip ?: 0)
                         mView.onLikeListsResult(t.data?.list ?: mutableListOf())
-                        markLikeRead(params)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
