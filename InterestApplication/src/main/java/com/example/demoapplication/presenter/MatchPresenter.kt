@@ -4,6 +4,7 @@ import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.GreetBean
+import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.MatchListBean
 import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.presenter.view.MatchView
@@ -32,10 +33,12 @@ class MatchPresenter : BasePresenter<MatchView>() {
                 override fun onStart() {
                     mView.showLoading()
                 }
+
                 override fun onNext(t: BaseResp<MatchListBean?>) {
                     if (t.code == 200) {
-                        if (t.data != null && t.data!!.list != null){}
-                            mView.onGetMatchListResult(true, t.data)
+                        if (t.data != null && t.data!!.list != null) {
+                        }
+                        mView.onGetMatchListResult(true, t.data)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
@@ -54,7 +57,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
      * 不喜欢
      */
     fun dislikeUser(params: HashMap<String, Any>) {
-        if (!checkNetWork()){
+        if (!checkNetWork()) {
             return
         }
 
@@ -83,7 +86,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
      * 喜欢
      */
     fun likeUser(params: HashMap<String, Any>) {
-        if (!checkNetWork()){
+        if (!checkNetWork()) {
             return
         }
         RetrofitFactory.instance.create(Api::class.java)
@@ -91,12 +94,12 @@ class MatchPresenter : BasePresenter<MatchView>() {
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
-                        mView.onGetLikeResult(true,t.data?:null)
+                        mView.onGetLikeResult(true, t.data ?: null)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onError(t.msg)
-                        mView.onGetLikeResult(false,null)
+                        mView.onGetLikeResult(false, null)
                     }
                 }
 
@@ -107,16 +110,15 @@ class MatchPresenter : BasePresenter<MatchView>() {
     }
 
 
-
     /**
      * 喜欢
      */
-    fun greet(params: HashMap<String, Any>) {
-        if (!checkNetWork()){
+    fun greet(token: String, accid: String, target_accid: String, tag_id: Int) {
+        if (!checkNetWork()) {
             return
         }
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(params)
+            .greet(token, accid, target_accid,tag_id)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -135,25 +137,25 @@ class MatchPresenter : BasePresenter<MatchView>() {
     }
 
 
-    fun greetState(params: HashMap<String, String>) {
-        if (!checkNetWork()){
-            return
-        }
+    /**
+     * 判断当前能否打招呼
+     */
+    fun greetState(token: String, accid: String, target_accid: String, matchBean: MatchBean) {
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(params)
+            .greetState(token, accid, target_accid)
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {
-                        mView.onGreetStateResult(t.data)
+                        mView.onGreetStateResult(t.data, matchBean)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
-                        mView.onGreetStateResult(t.data)
+                        mView.onGreetStateResult(t.data, matchBean)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onGreetStateResult(null)
+                    mView.onGreetStateResult(null, matchBean)
                 }
             })
     }

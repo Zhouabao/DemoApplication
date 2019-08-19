@@ -47,7 +47,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
 
     }
 
-    override fun onGreetStateResult(greetBean: GreetBean?) {
+    override fun onGreetStateResult(greetBean: GreetBean?,matchBean: MatchBean) {
 
 
     }

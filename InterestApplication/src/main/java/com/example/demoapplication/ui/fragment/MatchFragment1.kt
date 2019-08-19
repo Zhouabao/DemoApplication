@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -134,69 +134,59 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
 
     private var lightCount = 0
-
-
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnChat -> {
-//                val matchBean = matchUserAdapter.data[manager.topPosition]
-
-//                ChatActivity.start(activity!!, matchBean.accid ?: "")
-
                 mPresenter.greetState(
-                    hashMapOf(
-                        "token" to UserManager.getToken(),
-                        "accid" to UserManager.getAccid(),
-                        "target_accid" to (matchUserAdapter.data[manager.topPosition].accid ?: "")
-                    )
+                    UserManager.getToken(),
+                    UserManager.getAccid(),
+                    (matchUserAdapter.data[manager.topPosition].accid ?: ""),
+                    matchUserAdapter.data[manager.topPosition]
                 )
             }
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+
 
     /**
      *  点击聊天
-     *  1. 好友 直接聊天 已经匹配过了 ×
-     *
-     *  2. 不是好友 判断是否打过招呼
-     *
-     *     2.1 打过招呼 且没有过期  直接直接聊天
-     *
-     *     2.2 未打过招呼 判断招呼剩余次数
+     *    未打过招呼 判断招呼剩余次数
      *
      *         2.2.1 有次数 直接打招呼
      *
      *         2.2.2 无次数 其他操作--如:请求充值会员
      */
-    override fun onGreetStateResult(greetBean: GreetBean?) {
+    override fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean) {
         if (greetBean != null) {
-            if (greetBean.isfriend || (!greetBean.isfriend && greetBean.isgreet)) {
-                ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition].accid ?: "")
+            if (greetBean.lightningcnt > 0) {
+                mPresenter.greet(
+                    UserManager.getToken(),
+                    UserManager.getAccid(),
+                    (matchBean.accid ?: ""),
+                    UserManager.getGlobalLabelId()
+                )
             } else {
-                if (!greetBean.isgreet) {
-                    if (greetBean.lightningcnt > 0) {
-                        mPresenter.greet(
-                            hashMapOf(
-                                "token" to UserManager.getToken(),
-                                "accid" to UserManager.getAccid(),
-                                "target_accid" to (matchUserAdapter.data[manager.topPosition].accid ?: "")
-                            )
-                        )
-                    } else {
-                        if (UserManager.isUserVip()) {
-                            ToastUtils.showShort("次数用尽，请充值。")
-                        } else {
-                            ChargeVipDialog(activity!!).show()
-                        }
-                    }
+                card_stack_view.rewind()
+                if (UserManager.isUserVip()) {
+                    //TODO 会员充值
+                    ToastUtils.showShort("次数用尽，请充值。")
+
+                } else {
+                    ChargeVipDialog(activity!!).show()
                 }
             }
         } else {
+            card_stack_view.rewind()
             ToastUtils.showShort("请求失败，请重试")
         }
     }
-
 
     /**
      * 打招呼结果（先请求服务器）
@@ -209,7 +199,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         }
     }
 
-
+    /**
+     * 匹配列表数据
+     */
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
             hasMore = true
@@ -238,24 +230,12 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         }
     }
 
-
+    /**
+     * 左滑不喜欢结果
+     */
     override fun onGetDislikeResult(success: Boolean) {
-        if (success) {
-//            matchUserAdapter.remove(manager.topPosition - 1)
-
-//            matchUserAdapter.data.removeAt(manager.topPosition - 1)
-//            matchUserAdapter.notifyItemRemoved(manager.topPosition - 1)
-        } else {
-//            val data = matchUserAdapter.data[manager.topPosition - 1]
-//            matchUserAdapter.remove(manager.topPosition - 1)
-//            matchUserAdapter.addData(manager.topPosition - 1, data)
-
-//            matchUserAdapter.data.add(manager.topPosition - 1, matchUserAdapter.data.removeAt(manager.topPosition - 1))
-//            matchUserAdapter.notifyItemChanged(manager.topPosition)
-        }
     }
 
-    //todo  这里应该还要传参数
     //status :1.喜欢成功  2.匹配成功
     override fun onGetLikeResult(success: Boolean, data: StatusBean?) {
         if (success) {
@@ -263,28 +243,17 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             if (data != null && data.status == 2) {
                 startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[matchUserAdapter.data.size - 1])
             }
-//            matchUserAdapter.remove(manager.topPosition - 1)
 
-//            matchUserAdapter.remove(matchUserAdapter.data.size - 1)
-        } else {
-//            val data = matchUserAdapter.data[manager.topPosition - 1]
-//            matchUserAdapter.remove(manager.topPosition - 1)
-//            matchUserAdapter.addData(manager.topPosition - 1, data)
-
-//            matchUserAdapter.data.add(manager.topPosition - 1, matchUserAdapter.data.removeAt(manager.topPosition - 1))
-//            matchUserAdapter.notifyItemChanged(manager.topPosition - 1)
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
+
+    override fun onError(text: String) {
+        Log.d("error", text)
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
 
+    /*---------------------事件总线--------------------------------*/
 
     /**
      * 通过全局的标签来更新数据
@@ -318,11 +287,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         mPresenter.getMatchList(matchParams)
     }
 
-
-    override fun onError(text: String) {
-        Log.d("error", text)
-    }
-
     /*---------------------卡片参数和方法------------------------------*/
 
     private fun initialize() {
@@ -339,11 +303,19 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         //横向纵向的旋转角度
         manager.setMaxDegree(5F)
         //滑动的方向
-        manager.setDirections(Direction.HORIZONTAL)
+        manager.setDirections(mutableListOf(Direction.Left, Direction.Right, Direction.Top))
         manager.setCanScrollHorizontal(true)
         manager.setCanScrollVertical(true)
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
+
+        //撤回的动画设置
+        val setting = RewindAnimationSetting.Builder()
+            .setDirection(Direction.Top)
+            .setDuration(Duration.Normal.duration)
+            .setInterpolator(DecelerateInterpolator())
+            .build()
+        manager.setRewindAnimationSetting(setting)
         card_stack_view.layoutManager = manager
         card_stack_view.adapter = matchUserAdapter
         card_stack_view.itemAnimator.apply {
@@ -370,23 +342,23 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
         //向上超级喜欢(会员就超级喜欢 否则弹起收费窗)
-        if (direction == Direction.Top && ratio > 0.5F && !switch) {
-            switch = true
-            if (!UserManager.isUserVip()) {
-                chargeVipDialog.show()
-            } else {
-                val setting = SwipeAnimationSetting.Builder()
-                    .setDirection(Direction.Right)
-                    .setDuration(Duration.Normal.duration)
-                    .setInterpolator(AccelerateInterpolator())
-                    .build()
-                manager.setSwipeAnimationSetting(setting)
-                card_stack_view.swipe()
-//                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-//                mPresenter.likeUser(params)
-                switch = false
-            }
-        }
+//        if (direction == Direction.Top && ratio > 0.5F && !switch) {
+//            switch = true
+//            if (!UserManager.isUserVip()) {
+//                chargeVipDialog.show()
+//            } else {
+//                val setting = SwipeAnimationSetting.Builder()
+//                    .setDirection(Direction.Right)
+//                    .setDuration(Duration.Normal.duration)
+//                    .setInterpolator(AccelerateInterpolator())
+//                    .build()
+//                manager.setSwipeAnimationSetting(setting)
+//                card_stack_view.swipe()
+////                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+////                mPresenter.likeUser(params)
+//                switch = false
+//            }
+//        }
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
 
@@ -402,6 +374,13 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             toast("喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
 //            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
 //            mPresenter.likeUser(params)
+        } else if (direction == Direction.Top) {
+            mPresenter.greetState(
+                UserManager.getToken(),
+                UserManager.getAccid(),
+                (matchUserAdapter.data[manager.topPosition - 1].accid ?: ""),
+                matchUserAdapter.data[manager.topPosition - 1]
+            )
         }
 
         //如果已经只剩5张了就请求数据
@@ -436,13 +415,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     private fun sendChatHiMessage() {
         val matchBean = matchUserAdapter.data[manager.topPosition]
-        Log.d("OkHttp",matchBean.accid?:"")
+        Log.d("OkHttp", matchBean.accid ?: "")
         val container = Container(activity!!, matchBean?.accid, SessionTypeEnum.P2P, this, true)
-//        val chatHiAttachment = ChatMatchAttachment(
-//            UserManager.getGlobalLabelName(),
-//            matchBean?.tags ?: mutableListOf(),
-//            matchBean?.avatar ?: ""
-//        )
         val chatHiAttachment = ChatHiAttachment(
             UserManager.getGlobalLabelName(),
             ChatHiAttachment.CHATHI_HI
