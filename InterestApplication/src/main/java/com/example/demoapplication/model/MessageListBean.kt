@@ -128,6 +128,7 @@ data class SquareMsgBean(
     val content: String? = "",//	type为2 评论的内容
     val create_time: String? = "",
     val id: Int? = 0,
+    val msg_id: Int? = 0,//删除回传
     val nickname: String? = "",
     val cover_url: String? = "",
     val type: Int? = 0,//类型 1，广场点赞 2，评论我的 3。我的评论点赞的 4 @我的

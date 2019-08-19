@@ -11,4 +11,6 @@ import com.kotlin.base.presenter.view.BaseView
  */
 interface MessageSquareView : BaseView {
     fun onSquareListsResult(data: MutableList<SquareMsgBean>?)
+
+    fun onDelSquareMsgResult(success: Boolean)
 }

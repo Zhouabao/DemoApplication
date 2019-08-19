@@ -41,6 +41,9 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
     }
 
 
+    /**
+     * 标记广场消息已读
+     */
     fun markSquareRead(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .markSquareRead(params)
@@ -52,4 +55,26 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
                 }
             })
     }
+
+    /**
+     * 删除广场消息
+     */
+    fun delSquareMsg(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .delSquareMsg(params)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200)
+                        mView.onDelSquareMsgResult(true)
+                    else
+                        mView.onDelSquareMsgResult(false)
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onDelSquareMsgResult(false)
+                }
+            })
+    }
+
+
 }

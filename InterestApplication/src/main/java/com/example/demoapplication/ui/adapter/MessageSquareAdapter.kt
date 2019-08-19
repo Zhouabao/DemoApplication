@@ -2,12 +2,14 @@ package com.example.demoapplication.ui.adapter
 
 import android.view.View
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareMsgBean
+import com.example.demoapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_message_square_list.view.*
 
 /**
@@ -57,32 +59,36 @@ class MessageSquareAdapter : BaseQuickAdapter<SquareMsgBean, BaseViewHolder>(R.l
             }
         }
 
-        when (item.category) {
+        when (item.category) {   //	0文本 1图片 2视频 3 语音
             0 -> {
-                holder.itemView.squareContent.text = item.content ?: ""
+                GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.msgIcon)
+                holder.itemView.squareContent.text = item.cover_url ?: ""
                 holder.itemView.squareContent.visibility = View.VISIBLE
                 holder.itemView.squareImg.visibility = View.GONE
                 holder.itemView.squareType.visibility = View.GONE
             }
             1 -> {
-                GlideUtil.loadAvatorImg(mContext, item.cover_url ?: "", holder.itemView.msgIcon)
+                GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.msgIcon)
+                GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", holder.itemView.squareImg,SizeUtils.dp2px(5F))
                 holder.itemView.squareImg.visibility = View.VISIBLE
                 holder.itemView.squareContent.visibility = View.GONE
                 holder.itemView.squareType.visibility = View.GONE
             }
             2 -> {
-                GlideUtil.loadAvatorImg(mContext, item.cover_url ?: "", holder.itemView.msgIcon)
+                GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.msgIcon)
+                GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", holder.itemView.squareImg,SizeUtils.dp2px(5F))
                 holder.itemView.squareImg.visibility = View.VISIBLE
                 holder.itemView.squareContent.visibility = View.GONE
                 holder.itemView.squareType.visibility = View.VISIBLE
-                holder.itemView.squareType.setImageResource(R.drawable.icon_play_white)
+                holder.itemView.squareType.setImageResource(R.drawable.icon_type_video)
             }
             3 -> {
-                GlideUtil.loadAvatorImg(mContext, item.cover_url ?: "", holder.itemView.msgIcon)
+                GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.msgIcon)
+                GlideUtil.loadRoundImgCenterCrop(mContext, UserManager.getAvator(), holder.itemView.squareImg,SizeUtils.dp2px(5F))
                 holder.itemView.squareImg.visibility = View.VISIBLE
                 holder.itemView.squareContent.visibility = View.GONE
                 holder.itemView.squareType.visibility = View.VISIBLE
-                holder.itemView.squareType.setImageResource(R.drawable.icon_record_normal)
+                holder.itemView.squareType.setImageResource(R.drawable.icon_type_audio)
             }
         }
 

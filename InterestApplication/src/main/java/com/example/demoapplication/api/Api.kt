@@ -110,6 +110,14 @@ interface Api {
 
 
     /**
+     * 分享成功调用
+     */
+    @FormUrlEncoded
+    @POST("square/addShare${Constants.END_BASE_URL}")
+    fun addShare(@Field("token") token: String, @Field("accid") accid: String, @Field("square_id") square_id: Int): Observable<BaseResp<Any?>>
+
+
+    /**
      * 广场评论
      */
     @FormUrlEncoded
@@ -186,7 +194,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Relationship/greetState${Constants.END_BASE_URL}")
-    fun greetState(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<GreetBean?>>
+    fun greetState(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<GreetBean?>>
 
     /**
      * 匹配详情数据
@@ -217,7 +225,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("relationship/greet${Constants.END_BASE_URL}")
-    fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
+    fun greet(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<StatusBean?>>
 
 
     /**
@@ -378,11 +386,19 @@ interface Api {
     fun squareLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareMsgBean>?>>
 
     /**
-     * 广场消息列表
+     * 标记广场消息已读
      */
     @FormUrlEncoded
     @POST("Tidings/markSquareRead${Constants.END_BASE_URL}")
     fun markSquareRead(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 删除广场消息
+     */
+    @FormUrlEncoded
+    @POST("Tidings/delSquareMsg${Constants.END_BASE_URL}")
+    fun delSquareMsg(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**
      * 喜欢我的列表（所有日期的）

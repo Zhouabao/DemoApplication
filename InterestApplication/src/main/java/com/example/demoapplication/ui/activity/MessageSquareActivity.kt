@@ -10,6 +10,7 @@ import com.example.demoapplication.model.SquareMsgBean
 import com.example.demoapplication.presenter.MessageSquarePresenter
 import com.example.demoapplication.presenter.view.MessageSquareView
 import com.example.demoapplication.ui.adapter.MessageSquareAdapter
+import com.example.demoapplication.ui.dialog.SquareDelDialog
 import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.DividerItemDecoration
 import com.kennyc.view.MultiStateView
@@ -19,6 +20,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_message_square.*
+import kotlinx.android.synthetic.main.dialog_square_del.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 
 /**
@@ -44,12 +46,11 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         setContentView(R.layout.activity_message_square)
         initView()
         mPresenter.squareLists(params)
-        mPresenter.markSquareRead(params)
     }
 
     private fun initView() {
         llTitle.onClick {
-            finish()
+            onBackPressed()
         }
         mPresenter = MessageSquarePresenter()
         mPresenter.mView = this
@@ -82,10 +83,14 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
                 1 -> {//点击点赞跳转动态详情
                     SquarePlayListDetailActivity.start(this, item.id ?: 0)
                 }
-                2,3 -> {//点击评论进入评论详情
-                    SquareCommentDetailActivity.start(this, squareId =  item.id ?: 0, enterPosition = "comment")
+                2, 3 -> {//点击评论进入评论详情
+                    SquareCommentDetailActivity.start(this, squareId = item.id ?: 0, enterPosition = "comment")
                 }
             }
+        }
+        adapter.setOnItemLongClickListener { _, view, position ->
+            showDel(position)
+            true
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -95,7 +100,6 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
                 }
             }
         }
-
 
     }
 
@@ -114,16 +118,35 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         mPresenter.squareLists(params)
     }
 
+
+    private fun showDel(position: Int) {
+        val delDialog = SquareDelDialog(this)
+        delDialog.show()
+        delDialog.delSquare.onClick {
+            val squareBean = adapter.data[position]
+            mPresenter.delSquareMsg(
+                hashMapOf(
+                    "accid" to UserManager.getAccid(),
+                    "token" to UserManager.getToken(),
+                    "target_accid" to (squareBean.accid ?: ""),
+                    "msg_id" to (squareBean.msg_id ?: ""),
+                    "type" to (squareBean.type ?: "")
+                )
+            )
+            delDialog.dismiss()
+        }
+    }
+
     private var unread = -1
     private var his = -1
+    /**
+     * 广场列表数据回调
+     */
     override fun onSquareListsResult(data: MutableList<SquareMsgBean>?) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (data != null) {
-            refreshLayout.finishRefresh(true)
             if (data.isNullOrEmpty()) {
                 refreshLayout.finishLoadMoreWithNoMoreData()
             } else {
-                refreshLayout.finishLoadMore(true)
                 for (msg in data.withIndex()) {
                     if (msg.value.is_read == false && unread == -1) {
                         msg.value.pos = 0
@@ -135,9 +158,24 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
                     }
                 }
                 adapter.addData(data)
+                refreshLayout.finishLoadMore(true)
             }
+            refreshLayout.finishRefresh(true)
+        }
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+
+    }
+
+
+    /**
+     * 广场删除回调
+     */
+    override fun onDelSquareMsgResult(success: Boolean) {
+        if (success) {
+            refreshLayout.autoRefresh()
         }
     }
+
 
     override fun onError(text: String) {
         refreshLayout.finishRefresh(false)
@@ -149,5 +187,10 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         } else {
             getString(R.string.retry_net_error)
         }
+    }
+
+    override fun onBackPressed() {
+        mPresenter.markSquareRead(params)
+        super.onBackPressed()
     }
 }

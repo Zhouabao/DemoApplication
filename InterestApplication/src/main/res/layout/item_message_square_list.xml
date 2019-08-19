@@ -82,18 +82,16 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.example.baselibrary.widgets.RoundImageView
+    <ImageView
             android:id="@+id/squareImg"
             android:visibility="invisible"
             android:layout_marginRight="15dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/img_avatar_01"
-            app:borderRadius="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:type="round"/>
+/>
 
     <ImageView
             android:id="@+id/squareType"
