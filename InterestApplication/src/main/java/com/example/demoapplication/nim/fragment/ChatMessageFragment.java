@@ -57,6 +57,7 @@ import java.util.Map;
  * Created by huangjun on 2015/2/1.
  */
 public class ChatMessageFragment extends TFragment implements ModuleProxy {
+    //进入聊天界面 获取对方用户的个人信息
     public void getTargetInfo(String target_accid) {
         HashMap<String, String> params = new HashMap<>();
         params.put("token", UserManager.INSTANCE.getToken());
