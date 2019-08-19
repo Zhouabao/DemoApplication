@@ -432,6 +432,8 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
             }
             adapter.notifyItemChanged(position, "hahah")
+        } else {
+            ToastUtils.showShort("点赞失败！")
         }
     }
 

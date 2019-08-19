@@ -291,10 +291,15 @@ public class ChatMessageListPanelEx {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NimHeadEvent event) {
-        if (event.getNimBean().getIsfriend()) {
+        if (event.getNimBean().getIsfriend()) { //是好友了，按钮消失
             btnMakeFriends.setVisibility(View.GONE);
         } else {
-            btnMakeFriends.setVisibility(View.VISIBLE);
+            if (event.getNimBean().getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
+                btnMakeFriends.setVisibility(View.GONE);
+            } else {//非好友并且是别人发起的招呼,按钮显示
+                btnMakeFriends.setVisibility(View.VISIBLE);
+
+            }
         }
         adapter.addHeaderView(initHeadView(event));
     }
@@ -320,7 +325,7 @@ public class ChatMessageListPanelEx {
             outdateTimeText.setVisibility(View.VISIBLE);
             //文本倒计时
             //todo  文案要修改
-            outdateTimeText.startTime(event.getLeftTime(), "2","后消息过期");
+            outdateTimeText.startTime(event.getLeftTime(), "2", "后消息过期");
 
             countDownProgress.setMax(event.getTotalTime());
             countDownProgress.setProgress(event.getLeftTime());

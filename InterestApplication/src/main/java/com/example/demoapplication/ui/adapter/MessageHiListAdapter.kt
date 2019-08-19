@@ -51,8 +51,8 @@ class MessageHiListAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.l
                 itemView.msgTextTimer.startTime((item.countdown ?: 0).toLong(), "1")
                 itemView.msgCountDown.setMaxStepNum(item.countdown_total ?: 0)
                 if (item.countdown_total != null && item.countdown_total > 0) {
-                    itemView.msgCountDown.update((item.countdown_total - (item.countdown ?: 0)).toLong(), 100)
-                    object : CountDownTimer((item.countdown ?: 0).toLong()*1000, 1000) {
+//                    itemView.msgCountDown.update((item.countdown_total - (item.countdown ?: 0)).toLong(), 100)
+                    object : CountDownTimer((item.countdown ?: 0) * 1000L, 1000) {
                         override fun onFinish() {
                             EventBus.getDefault().post(UpdateHiEvent())
                         }
@@ -81,7 +81,6 @@ class MessageHiListAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.l
                 itemView.msgOuttimeTip.visibility = View.VISIBLE
                 itemView.msgIconMask.visibility = View.VISIBLE
                 itemView.msgOuttimeTip.text = "已超时"
-
             }
 
         }

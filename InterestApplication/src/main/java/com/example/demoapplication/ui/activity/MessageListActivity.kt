@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.NimCountDownEvent
 import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.HiMessageBean
@@ -69,8 +70,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         registerOnlineStateChangeListener(true)
         //获取最近消息
         mPresenter.messageCensus(params)
-        //获取最近联系人列表
-        mPresenter.getRecentContacts()
+
     }
 
     private val adapter by lazy { MessageListAdapter() }
@@ -178,7 +178,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         headAdapter.setOnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {//官方助手
-                    ChatActivity.start(this, "9b6ab1ce76756a5c243c713aaf45ab5e")
+                    ChatActivity.start(this, Constants.ASSISTANT_ACCID)
                     headAdapter.data[0].count = 0
                     headAdapter.notifyItemChanged(0)
                 }
@@ -199,6 +199,9 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     }
 
 
+    /**
+     * 获取消息中心的顶部数据
+     */
     override fun onMessageCensusResult(data: MessageListBean1?) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
@@ -236,11 +239,14 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         headAdapter.addData(squa)
         headAdapter.addData(like)
         if (data?.greet != null && data?.greet.isNotEmpty()) {
-            adapter.headerLayout.hiCount.text = "${data?.greet.size}"
+            adapter.headerLayout.hiCount.text = "${data.greet_cnt}"
         } else {
             adapter.headerLayout.hiCount.visibility = View.GONE
         }
         hiAdapter.setNewData(data?.greet ?: mutableListOf())
+
+        //获取最近联系人列表
+        mPresenter.getRecentContacts()
     }
 
 
@@ -254,7 +260,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     //获取最近会话（但是要获取最近的联系人列表）
     override fun onGetRecentContactResults(result: MutableList<RecentContact>) {
         for (loadedRecent in result) {
-            if (loadedRecent.contactId == "9b6ab1ce76756a5c243c713aaf45ab5e") {
+            if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
                 ass = MessageListBean(
                     "官方助手",
                     loadedRecent.content,
@@ -398,7 +404,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     private fun onRecentContactChanged(recentContacts: MutableList<RecentContact>) {
         var index: Int
         for (r in recentContacts) {
-            if (r.contactId == "9b6ab1ce76756a5c243c713aaf45ab5e") {
+            if (r.contactId == Constants.ASSISTANT_ACCID) {
                 ass = MessageListBean(
                     "官方助手",
                     r.content,

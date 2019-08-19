@@ -59,6 +59,7 @@
                 android:layout_marginTop="85dp"
                 android:drawablePadding="10dp"
                 android:paddingLeft="10dp"
+                android:visibility="gone"
                 android:gravity="center_vertical"
                 android:drawableLeft="@drawable/icon_like_white"
                 android:layout_height="35dp"/>

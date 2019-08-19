@@ -32,6 +32,8 @@ object Constants {
     const val DEFAULT_ARC_WIDTH = 10
 
 
+    const val ASSISTANT_ACCID = "9b6ab1ce76756a5c243c713aaf45ab5e"
+
     //    // 为了apiKey,secretKey为您调用百度人脸在线接口的，如注册，比对等。
     //    // 为了的安全，建议放在您的服务端，端把人脸传给服务器，在服务端端
     //    // license为调用sdk的人脸检测功能使用，人脸识别 = 人脸检测（sdk功能）  + 人脸比对（服务端api）

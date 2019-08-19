@@ -20,6 +20,7 @@ data class MessageListBean(
 /**
  * 给我打招呼的人
  */
+
 data class HiMessageBean(
     val count: Int? = 0,
     val content: String? = "",
