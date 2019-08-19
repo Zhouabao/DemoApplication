@@ -202,8 +202,8 @@ public class ChatMessageListPanelEx {
         ivBackground = rootView.findViewById(R.id.message_activity_background);
 
         //倒计时进度条
-        countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
-        outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
+//        countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
+//        outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
 //        countDownProgress.setVisibility(View.GONE);
 //        outdateTimeText.setVisibility(View.GONE);
         //成为好友
@@ -310,20 +310,26 @@ public class ChatMessageListPanelEx {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onEventMainThread(final NimCountDownEvent event) {
         if (event.getTotalTime() > 0) {
+            //倒计时进度条
+            if (countDownProgress == null)
+                countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
+            if (outdateTimeText == null)
+                outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
+
             countDownProgress.setVisibility(View.VISIBLE);
             outdateTimeText.setVisibility(View.VISIBLE);
             //文本倒计时
             //todo  文案要修改
-            outdateTimeText.startTime(event.getLeftTime(), "1");
+            outdateTimeText.startTime(event.getLeftTime(), "2","后消息过期");
 
             countDownProgress.setMax(event.getTotalTime());
-            countDownProgress.setProgress(event.getTotalTime() - event.getLeftTime());
-            new CountDownTimer(1000, 1000) {
+            countDownProgress.setProgress(event.getLeftTime());
+            new CountDownTimer((event.getLeftTime()) * 1000, 1000) {
 
                 @Override
                 public void onTick(long l) {
                     time++;
-                    countDownProgress.setProgress((event.getTotalTime() - event.getLeftTime() - time));
+                    countDownProgress.setProgress((event.getLeftTime() - time));
                 }
 
                 @Override

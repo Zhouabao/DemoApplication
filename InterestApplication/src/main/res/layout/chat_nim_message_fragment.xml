@@ -22,21 +22,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-            <LinearLayout
-                    android:background="#fff1f1f1"
-                    android:layout_width="match_parent"
-                    android:layout_height="27dp">
-
-                <ProgressBar
-                        android:id="@+id/outdateTime"
-                        android:minHeight="27dp"
-                        android:maxHeight="27dp"
-                        android:max="100"
-                        android:indeterminate="true"
-                        android:background="@drawable/outtime_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="27dp"/>
-            </LinearLayout>
+            <ProgressBar
+                    android:id="@+id/outdateTime"
+                    android:visibility="gone"
+                    style="@style/progressBarHorizontal"
+                    />
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -50,9 +40,9 @@
                 android:id="@+id/outdateTimeText"
                 android:gravity="center"
                 android:textSize="14sp"
-                android:textStyle="bold"
                 android:textColor="@color/colorWhite"
                 android:text="08:23后消息过期"
+                android:visibility="gone"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="27dp"/>

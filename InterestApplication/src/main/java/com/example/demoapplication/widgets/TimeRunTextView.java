@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import com.blankj.utilcode.util.SpanUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,10 +34,12 @@ public class TimeRunTextView extends TextView {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             String getResult = (String) msg.obj;
-            TimeRunTextView.this.setText(getResult);
+            TimeRunTextView.this.setText(SpanUtils.with(TimeRunTextView.this).append(getResult).setBold().append(appendContent).create());
         }
 
     };
+    //在时间后面追加的内容
+    private String appendContent = "";
 
 
     public TimeRunTextView(Context context) {
@@ -55,13 +58,23 @@ public class TimeRunTextView extends TextView {
         this.timeViewListener = timeViewListener;
     }
 
+    public void startTime(long timeCount, String mode, String appendContent) {
+        initTime();//先清空时间的工具类
+        if (!TextUtils.isEmpty(mode)) {
+            this.MODE = mode;
+        }
+        if (!TextUtils.isEmpty(appendContent))
+            this.appendContent = appendContent;
+        startTime(timeCount, mode);
+
+    }
+
     public void startTime(long timeCount, String mode) {
         initTime();//先清空时间的工具类
         if (!TextUtils.isEmpty(mode)) {
             this.MODE = mode;
         }
         startTime(timeCount);
-
     }
 
     public void startTime(long timeCount) {
@@ -157,7 +170,7 @@ public class TimeRunTextView extends TextView {
                 strTime = mHour + "时" + mMin + "分" + mSecond + "秒";
                 break;
             case "2":
-                strTime = mHour + ":" + mMin + ":" + mSecond;
+                strTime = (mHour >= 10 ? mHour : "0" + mHour) + ":" + (mMin >= 10 ? mMin : "0" + mMin) + ":" + (mSecond >= 10 ? mSecond : "0" + mSecond);
                 break;
             default:
                 strTime = mHour + "时" + mMin + "分" + mSecond + "秒";
