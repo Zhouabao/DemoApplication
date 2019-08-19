@@ -6,7 +6,9 @@ import android.os.Bundle
 import com.alibaba.fastjson.JSON
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
+import com.example.demoapplication.event.EnablePicEvent
 import com.example.demoapplication.event.NimHeadEvent
+import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.NimBean
 import com.example.demoapplication.nim.fragment.ChatMessageFragment
 import com.example.demoapplication.utils.UserManager
@@ -51,8 +53,9 @@ class ChatActivity : ChatBaseMessageActivity() {
             .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
                 override fun onNext(t: BaseResp<NimBean?>) {
                     super.onNext(t)
-                    if (t.code == 200 && t.data!=null) {
+                    if (t.code == 200 && t.data != null) {
                         EventBus.getDefault().post(NimHeadEvent(t.data!!))
+                        EventBus.getDefault().post(EnablePicEvent(t.data!!.isfriend))
                     }
                 }
             })
@@ -145,6 +148,7 @@ class ChatActivity : ChatBaseMessageActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        EventBus.getDefault().post(UpdateHiEvent())
         registerObservers(false)
     }
 

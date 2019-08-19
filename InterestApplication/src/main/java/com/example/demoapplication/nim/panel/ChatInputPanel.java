@@ -14,7 +14,9 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.ToastUtils;
 import com.example.demoapplication.R;
+import com.example.demoapplication.event.EnablePicEvent;
 import com.example.demoapplication.nim.session.ChatBaseAction;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.UIKitOptions;
@@ -40,6 +42,8 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.netease.nimlib.sdk.msg.model.CustomNotificationConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.List;
@@ -112,6 +116,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         this.actions = actions;
         this.uiHandler = new Handler();
         this.isTextAudioSwitchShow = isTextAudioSwitchShow;
+        EventBus.getDefault().register(this);
         init();
     }
 
@@ -131,6 +136,8 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         if (audioMessageHelper != null) {
             audioMessageHelper.destroyAudioRecorder();
         }
+        EventBus.getDefault().unregister(this);
+
     }
 
     /**
@@ -339,7 +346,9 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         }
     }
 
-    // 发送文本消息
+    /**
+     * 发送文本消息
+     */
     private void onTextMessageSendButtonPressed() {
         String text = messageEditText.getText().toString();
         IMMessage textMessage = createTextMessage(text);
@@ -787,9 +796,14 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         gridView.setVerticalSpacing(0);
         gridView.setGravity(Gravity.CENTER);
         gridView.setOnItemClickListener(new GridView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (disable) {
+                    if (position != 0 && position != 1) {
+                        ToastUtils.showShort("打招呼仅限语音,文本,表情");
+                        return;
+                    }
+                }
                 for (int i = 0; i < actions.size(); i++) {
                     if (i == position) {
                         actions.get(i).setCheck(!actions.get(i).isCheck());
@@ -817,8 +831,32 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                         hideAudioLayout();
                     }
                 }
+
                 adapter.notifyDataSetChanged();
             }
         });
     }
+
+    //是否禁用图片、定位、
+    private boolean disable = false;
+
+    @Subscribe
+    public void EnablePicEvent(EnablePicEvent event) {
+        if (event.getEnable()) {
+            disable = false;
+        } else {
+            disable = true;
+            actions.get(2).setEnable(false);
+            actions.get(2).setIconResIdDisable(R.drawable.send_location_disable);
+            actions.get(3).setEnable(false);
+            actions.get(3).setIconResIdDisable(R.drawable.send_location_disable);
+            actions.get(4).setEnable(false);
+            actions.get(4).setIconResIdDisable(R.drawable.send_location_disable);
+
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
 }

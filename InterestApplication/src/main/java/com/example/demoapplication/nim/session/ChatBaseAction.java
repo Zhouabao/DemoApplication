@@ -18,9 +18,18 @@ public abstract class ChatBaseAction implements Serializable {
 
     private int iconResId;
     private int iconResIdChoose;
+    private int iconResIdDisable;
 
     public int getIconResIdChoose() {
         return iconResIdChoose;
+    }
+
+    public int getIconResIdDisable() {
+        return iconResIdDisable;
+    }
+
+    public void setIconResIdDisable(int iconResIdDisable) {
+        this.iconResIdDisable = iconResIdDisable;
     }
 
     public void setIconResIdChoose(int iconResIdChoose) {
@@ -29,12 +38,22 @@ public abstract class ChatBaseAction implements Serializable {
 
     private boolean check;
 
+    private boolean enable = true;
+
     private int titleId;
 
     private transient int index;
 
     // Container持有activity ， 防止内存泄露
     private transient WeakReference<Container> containerRef;
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
 
     public boolean isCheck() {
         return check;
@@ -49,7 +68,7 @@ public abstract class ChatBaseAction implements Serializable {
      *
      * @param iconResId 图标 res id
      */
-    protected ChatBaseAction(int iconResIdChoose, int iconResId,int titleId) {
+    protected ChatBaseAction(int iconResIdChoose, int iconResId, int titleId) {
         this.iconResIdChoose = iconResIdChoose;
         this.iconResId = iconResId;
         this.titleId = titleId;
