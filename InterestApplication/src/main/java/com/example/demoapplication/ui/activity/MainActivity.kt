@@ -131,8 +131,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         )
         filterUserDialog.filterAge.text =
             "${filterUserDialog.seekBarAge.leftSeekBar.progress.toInt()}-${filterUserDialog.seekBarAge.rightSeekBar.progress.toInt()}岁"
+
         filterUserDialog.rbSexAll.check(
-            when (sp.getInt("gender", 30)) {
+            when (sp.getInt("filter_gender", 3)) {
                 1 -> R.id.switchSexMan
                 2 -> R.id.switchSexWoman
                 else -> R.id.switchSexAll
@@ -163,6 +164,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
         filterUserDialog.btnVerify.onClick {
             ToastUtils.showShort("去认证")
+            startActivity<IDVerifyActivity>()
         }
         filterUserDialog.seekBarAge.setOnRangeChangedListener(object : OnRangeChangedListener {
             override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
@@ -182,13 +184,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             sp.put("limit_age_low", filterUserDialog.seekBarAge.leftSeekBar.progress.toInt())
             when (filterUserDialog.rbSexAll.checkedRadioButtonId) {
                 R.id.switchSexMan -> {
-                    sp.put("gender", 1)
+                    sp.put("filter_gender", 1)
                 }
                 R.id.switchSexWoman -> {
-                    sp.put("gender", 2)
+                    sp.put("filter_gender", 2)
                 }
                 R.id.switchSexAll -> {
-                    sp.put("gender", 3)
+                    sp.put("filter_gender", 3)
                 }
             }
             if (filterUserDialog.switchSameCity.isChecked) {

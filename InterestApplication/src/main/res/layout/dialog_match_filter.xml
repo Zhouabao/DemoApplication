@@ -104,15 +104,21 @@
             app:layout_constraintStart_toStartOf="@id/tv1"
             app:layout_constraintTop_toBottomOf="@id/tv3"/>
 
+    <!--android:track="":设置开关的轨迹图片
+    android:thumb="":设置开关的图片
+     android:thumb="@drawable/selector_switch_thumb"
+            android:track="@drawable/selector_switch_track"
+    -->
     <Switch
             android:id="@+id/switchSameCity"
             android:layout_width="48dp"
             android:layout_height="24dp"
+            android:checked="false"
             android:showText="false"
-
+            android:thumb="@drawable/switch_ios_thumb"
+            android:track="@drawable/selector_switch_ios_track"
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv4"/>
-
     <TextView
             android:id="@+id/btnGoVip"
             android:layout_width="wrap_content"
@@ -212,51 +218,6 @@
 
     </RadioGroup>
 
-    <!--<TextView-->
-    <!--android:id="@+id/tv6"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="18dp"-->
-    <!--android:text="男性"-->
-    <!--android:textColor="#ff000000"-->
-    <!--android:textSize="16sp"-->
-    <!--app:layout_constraintStart_toStartOf="@id/tv1"-->
-    <!--app:layout_constraintTop_toBottomOf="@id/tv5"/>-->
-
-    <!--<Switch-->
-    <!--android:id="@+id/switchSexMan"-->
-    <!--android:layout_width="48dp"-->
-    <!--android:layout_height="24dp"-->
-    <!--android:checked="true"-->
-    <!--android:showText="false"-->
-    <!--android:thumb="@drawable/switch_button_thumb"-->
-    <!--android:track="@drawable/selector_switch_ios_track"-->
-    <!--app:layout_constraintEnd_toEndOf="@id/filterAge"-->
-    <!--app:layout_constraintTop_toTopOf="@id/tv6"/>-->
-
-
-    <!--<TextView-->
-    <!--android:id="@+id/tv7"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="18dp"-->
-    <!--android:text="女性"-->
-    <!--android:textColor="#ff000000"-->
-    <!--android:textSize="16sp"-->
-    <!--app:layout_constraintStart_toStartOf="@id/tv1"-->
-    <!--app:layout_constraintTop_toBottomOf="@id/tv6"/>-->
-
-    <!--<Switch-->
-    <!--android:id="@+id/switchSexWoman"-->
-    <!--android:layout_width="48dp"-->
-    <!--android:layout_height="24dp"-->
-    <!--android:checked="true"-->
-    <!--android:showText="false"-->
-    <!--android:thumb="@drawable/switch_button_thumb"-->
-    <!--android:track="@drawable/selector_switch_ios_track"-->
-    <!--app:layout_constraintEnd_toEndOf="@id/filterAge"-->
-    <!--app:layout_constraintTop_toTopOf="@id/tv7"/>-->
-
 
     <TextView
             android:id="@+id/tv8"
@@ -287,9 +248,11 @@
             android:id="@+id/switchShowVerify"
             android:layout_width="48dp"
             android:layout_height="24dp"
-            android:thumb="@drawable/switch_button_thumb"
-            android:track="@drawable/selector_switch_ios_track"
             android:visibility="gone"
+            android:checked="false"
+            android:showText="false"
+            android:thumb="@drawable/switch_ios_thumb"
+            android:track="@drawable/selector_switch_ios_track"
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv8"/>
 
