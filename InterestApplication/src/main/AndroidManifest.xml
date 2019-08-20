@@ -71,60 +71,114 @@
             tools:replace="android:name,android:theme,android:icon">
 
 
-        <activity android:name=".ui.activity.IDVerifyActivity">
+        <activity
+                android:name=".ui.activity.IDVerifyActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".nim.activity.DisplayMessageActivity"/>
-        <activity android:name=".nim.location.activity.LocationAmapActivity"/>
-        <activity android:name=".nim.location.activity.NavigationAmapActivity"/>
-        <activity android:name=".nim.activity.MessageInfoActivity">
+        <activity
+                android:name=".nim.activity.DisplayMessageActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".nim.location.activity.LocationAmapActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".nim.location.activity.NavigationAmapActivity"
+                android:screenOrientation="portrait"/>
+        <activity
+                android:name=".nim.activity.MessageInfoActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".nim.activity.SearchMessageActivity">
+        <activity
+                android:name=".nim.activity.SearchMessageActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".nim.activity.MessageHistoryActivity">
+        <activity
+                android:name=".nim.activity.MessageHistoryActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".nim.activity.ChatActivity">
+        <activity
+                android:name=".nim.activity.ChatActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.ContactBookActivity">
+        <activity
+                android:name=".ui.activity.ContactBookActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MessageLikeMeOneDayActivity">
+        <activity
+                android:name=".ui.activity.MessageLikeMeOneDayActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MessageLikeMeActivity">
+        <activity
+                android:name=".ui.activity.MessageLikeMeActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MessageHiActivity">
+        <activity
+                android:name=".ui.activity.MessageHiActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MessageSquareActivity">
+        <activity
+                android:name=".ui.activity.MessageSquareActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MessageListActivity">
+        <activity
+                android:name=".ui.activity.MessageListActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MyJobActivity">
+        <activity
+                android:name=".ui.activity.MyJobActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.NickNameActivity">
+        <activity
+                android:name=".ui.activity.NickNameActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.UserInfoSettingsActivity">
+        <activity
+                android:name=".ui.activity.UserInfoSettingsActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MyCommentActivity">
+        <activity
+                android:name=".ui.activity.MyCommentActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MyVisitActivity">
+        <activity
+                android:name=".ui.activity.MyVisitActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MyCollectionEtcActivity">
+        <activity
+                android:name=".ui.activity.MyCollectionEtcActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.MyQuestionActivity">
+        <activity
+                android:name=".ui.activity.MyQuestionActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.SettingsActivity">
+        <activity
+                android:name=".ui.activity.SettingsActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.UserCenterActivity">
+        <activity
+                android:name=".ui.activity.UserCenterActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.LocationActivity">
+        <activity
+                android:name=".ui.activity.LocationActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.BigImageActivity">
+        <activity
+                android:name=".ui.activity.BigImageActivity"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".ui.activity.PublishActivity"
+                android:screenOrientation="portrait"
                 android:windowSoftInputMode="adjustNothing">
         </activity>
-        <activity android:name=".ui.activity.PublishChooseLabelsActivity"/>
+        <activity
+                android:name=".ui.activity.PublishChooseLabelsActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.SquarePlayListDetailActivity"
+                android:screenOrientation="portrait"
                 android:theme="@style/BlackTheme"
                 android:windowSoftInputMode="adjustPan"/>
         <activity
@@ -138,6 +192,7 @@
                 android:theme="@style/Theme.AppCompat.Transitions"/>
         <activity
                 android:name=".ui.chat.MatchSucceedActivity"
+                android:windowSoftInputMode="adjustResize|stateHidden"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.MatchDetailActivity"

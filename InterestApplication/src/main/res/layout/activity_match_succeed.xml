@@ -75,6 +75,7 @@
                 app:layout_constraintTop_toTopOf="@id/iconMine"/>
 
         <TextView
+                android:id="@+id/matchTip"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:layout_width="198dp"
@@ -89,16 +90,32 @@
                 />
 
         <EditText
-                android:id="@+id/et"
-                android:hint="      说点什么打破僵局吧"
-                android:textColor="#ff9b9b9b"
+                android:id="@+id/etMsg"
+                android:hint="说点什么打破僵局吧"
+                android:textColorHint="#ff9b9b9b"
+                android:textColor="@color/colorBlackText"
                 android:textSize="18sp"
                 android:focusable="true"
+                android:paddingLeft="15dp"
                 android:background="@color/colorWhite"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:paddingRight="60dp"
                 android:layout_height="50dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 />
+
+        <Button
+                android:id="@+id/sendMsg"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/selector_send_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:layout_constraintBottom_toBottomOf="@id/etMsg"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/etMsg"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
