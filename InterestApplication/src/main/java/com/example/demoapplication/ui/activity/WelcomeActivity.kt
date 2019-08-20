@@ -83,6 +83,12 @@ class WelcomeActivity : BaseActivity() {
      */
     private fun requestPermissions() {
         val permissions = arrayOf(
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.READ_LOGS,
+            Manifest.permission.SET_DEBUG_APP,
+            Manifest.permission.SYSTEM_ALERT_WINDOW,
+            Manifest.permission.GET_ACCOUNTS,
+            Manifest.permission.WRITE_APN_SETTINGS,
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,

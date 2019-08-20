@@ -49,11 +49,11 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
     protected void bindContentView() {
         ChatHiAttachment attachment = (ChatHiAttachment) message.getAttachment();
         //匹配的标签 1.匹配  2.招呼 3.好友
-        if (attachment.getShowType() == 1) {
+        if (attachment.getShowType() == ChatHiAttachment.CHATHI_MATCH) {
             chatHiMatch.setText("通过「" + attachment.getTag() + "」匹配");
             targetMatchContent.setText("找到一样的人了就和他聊聊天吧");
             targetMatchIv.setImageResource(R.drawable.icon_like);
-        } else if (attachment.getShowType() == 2) {
+        } else if (attachment.getShowType() == ChatHiAttachment.CHATHI_HI) {
             targetMatchIv.setImageResource(R.drawable.icon_flash_small);
             if (message.getFromAccount().equals(UserManager.INSTANCE.getAccid())) {
                 chatHiMatch.setText("你向对方打了个招呼");
@@ -61,7 +61,7 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
                 chatHiMatch.setText("对方向你打了个招呼");
             }
             targetMatchContent.setText("好好表现争取赢个好友位吧");
-        } else {
+        } else if (attachment.getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
             targetMatchIv.setImageResource(R.drawable.icon_like);
             if (message.getFromAccount().equals(UserManager.INSTANCE.getAccid())) {
                 chatHiMatch.setText("你已添加对方为好友");
@@ -69,6 +69,10 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
                 chatHiMatch.setText("对方已添加你为好友");
             }
             targetMatchContent.setText("快多和他聊聊天吧");
+        } else if (attachment.getShowType() == ChatHiAttachment.CHATHI_OUTTIME) {
+            targetMatchIv.setImageResource(R.drawable.icon_chat_hit_outtime);
+            chatHiMatch.setText("消息已过期");
+            targetMatchContent.setText("Emmmm有缘下次聊吧");
         }
     }
 

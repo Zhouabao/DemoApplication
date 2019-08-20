@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import com.example.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivity
 import com.kotlin.base.common.AppManager
+import com.umeng.message.PushAgent
 import org.jetbrains.anko.find
 
 
@@ -22,6 +23,7 @@ open class BaseActivity : SwipeBackActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppManager.instance.addActivity(this)
+        PushAgent.getInstance(this).onAppStart()
         initSwipeBackFinish()
     }
 

@@ -39,6 +39,7 @@ android {
 
         // 这里添加
         multiDexEnabled true
+        manifestPlaceholders = [qqappid: 'com.example.demoapplication']
         packagingOptions {
             //解决编译时com.android.builder.merge.DuplicateRelativeFileException: More than one file was found with OS independent path 'META-INF/rxjava.properties'这个错误
             exclude 'META-INF/rxjava.properties'
@@ -78,6 +79,7 @@ android {
 }
 
 
+//ShareSdk 社会化分享
 MobSDK {
     appKey "198a047f87d0c"
     appSecret "fdac15d4e51de4590d25293a78da7dc7"
@@ -143,7 +145,9 @@ dependencies {
     // 基础功能 (必需)
 //    implementation 'com.netease.nimlib:basesdk:6.1.1'
 
+    //云信UI库
     implementation project(path: ':NIM_Android_UIKit-master')
+    //人脸认证
     implementation project(path: ':faceplatform-ui')
 //    implementation project(path: ':faceplatform')
     // ViewModel and LiveData

@@ -2,6 +2,7 @@ package com.kotlin.base.common
 
 import android.app.Application
 import android.content.Context
+import androidx.multidex.MultiDex
 
 
 /*
@@ -12,7 +13,7 @@ open class BaseApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        MultiDex.install(this)
 
         context = this
 

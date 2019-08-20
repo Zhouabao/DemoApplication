@@ -34,6 +34,7 @@ object Constants {
 
     const val ASSISTANT_ACCID = "9b6ab1ce76756a5c243c713aaf45ab5e"
 
+    //百度人脸认证
     //    // 为了apiKey,secretKey为您调用百度人脸在线接口的，如注册，比对等。
     //    // 为了的安全，建议放在您的服务端，端把人脸传给服务器，在服务端端
     //    // license为调用sdk的人脸检测功能使用，人脸识别 = 人脸检测（sdk功能）  + 人脸比对（服务端api）
@@ -41,4 +42,14 @@ object Constants {
     var secretKey = "xtPYk95nmUFR48GVDzCxFZW8qMI6MnBs"
     var licenseID = "demoapplication-face-face-android"
     var licenseFileName = "idl-license.face-android"
+
+
+    //友盟配置
+    //key
+    const val UMENG_APPKEY = "5d5a69330cafb26766000a29"
+    //serect Push推送业务的secret
+    const val UMENG_SECRET = "7bc4c2d146e193981b4e7fde5081ffee"
+
+
+
 }
