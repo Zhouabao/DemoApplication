@@ -71,6 +71,8 @@
             android:showText="false"
             android:layout_marginTop="20dp"
             android:layout_marginRight="15dp"
+            android:thumb="@drawable/switch_ios_thumb"
+            android:track="@drawable/selector_switch_ios_track"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/t1"
             />
@@ -92,6 +94,8 @@
             android:layout_height="24dp"
             android:showText="false"
             android:layout_marginTop="20dp"
+            android:thumb="@drawable/switch_ios_thumb"
+            android:track="@drawable/selector_switch_ios_track"
             app:layout_constraintRight_toRightOf="@id/switchContacts"
             app:layout_constraintTop_toBottomOf="@id/switchContacts"
             />

@@ -77,6 +77,9 @@
 
         <Switch
                 android:id="@+id/friendStar"
+                android:showText="false"
+                android:thumb="@drawable/switch_ios_thumb"
+                android:track="@drawable/selector_switch_ios_track"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -98,6 +101,9 @@
                 android:textSize="16sp"/>
 
         <Switch
+                android:showText="false"
+                android:thumb="@drawable/switch_ios_thumb"
+                android:track="@drawable/selector_switch_ios_track"
                 android:id="@+id/friendNoBother"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
