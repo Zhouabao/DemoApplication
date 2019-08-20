@@ -139,12 +139,11 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
             SPUtils.getInstance(Constants.SPNAME).put("imToken", nothing?.token)
             SPUtils.getInstance(Constants.SPNAME).put("imAccid", nothing?.account)
 
-
             SPUtils.getInstance(Constants.SPNAME).put("qntoken", data?.qntk)
             SPUtils.getInstance(Constants.SPNAME).put("token", data?.token)
             SPUtils.getInstance(Constants.SPNAME).put("accid", data?.accid)
 
-            if (data != null && data!!.userinfo != null && data!!.userinfo!!.nickname.isNullOrEmpty()) {
+            if (data != null && data!!.userinfo != null && data!!.userinfo!!.nickname.isNullOrEmpty()) {//个人信息没有填写
                 startActivity<SetInfoActivity>()
             } else {
                 UserManager.saveUserInfo(data!!)
@@ -152,13 +151,15 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
                 if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
                         Constants.SPNAME
                     ).getStringSet("checkedLabels").isEmpty()
-                ) {
+                ) {//标签没有选择
                     startActivity<LabelsActivity>()
-                } else {
+                } else {//跳到主页
                     AppManager.instance.finishAllActivity()
                     startActivity<MainActivity>()
                 }
             }
+        } else {
+            toast("登录失败！请重试")
         }
     }
 }

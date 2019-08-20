@@ -3,6 +3,7 @@ package com.example.demoapplication.presenter
 import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
+import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.presenter.view.MatchDetailView
@@ -82,7 +83,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
     }
 
     /**
-     * 拉黑用户
+     * 举报用户
      */
     fun reportUser(params: HashMap<String, Any>) {
         if (!checkNetWork()) {
@@ -169,6 +170,59 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
+
+
+
+
+    /**
+     * 打招呼
+     */
+    fun greet(token: String, accid: String, target_accid: String, tag_id: Int) {
+        if (!checkNetWork()) {
+            return
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .greet(token, accid, target_accid,tag_id)
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
+                    if (t.code == 200) {
+                        mView.onGreetSResult(true)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGreetSResult(false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
+
+
+    /**
+     * 判断当前能否打招呼
+     */
+    fun greetState(token: String, accid: String, target_accid: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .greetState(token, accid, target_accid)
+            .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
+                override fun onNext(t: BaseResp<GreetBean?>) {
+                    if (t.code == 200) {
+                        mView.onGreetStateResult(t.data)
+                    } else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGreetStateResult(t.data)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onGreetStateResult(null)
                 }
             })
     }

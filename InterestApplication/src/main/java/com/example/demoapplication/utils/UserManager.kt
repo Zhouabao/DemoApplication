@@ -13,9 +13,10 @@ import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.nim.DemoCache
+import com.example.demoapplication.nim.activity.ChatActivity
 import com.example.demoapplication.ui.activity.LoginActivity
-import com.example.demoapplication.ui.activity.WelcomeActivity
 import com.kotlin.base.common.AppManager
+import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nimlib.sdk.SDKOptions
 import com.netease.nimlib.sdk.StatusBarNotificationConfig
 import com.netease.nimlib.sdk.auth.LoginInfo
@@ -173,7 +174,7 @@ object UserManager {
     }
 
     fun saveUserVip(vip: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("isvip",vip)
+        SPUtils.getInstance(Constants.SPNAME).put("isvip", vip)
     }
 
     /**
@@ -185,8 +186,9 @@ object UserManager {
 
 
     fun saveUserVerify(verify: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("verify",verify)
+        SPUtils.getInstance(Constants.SPNAME).put("verify", verify)
     }
+
     /**
      * 判断用户是否添加了筛选条件
      *
@@ -210,7 +212,7 @@ object UserManager {
         parmas["local_only"] = sp.getInt("local_only", 1)
         parmas["city_code"] = sp.getInt("city_code", 0)
         parmas["audit_only"] = sp.getInt("audit_only", 1)
-        parmas["gender"] = sp.getInt("gender", 3)
+        parmas["gender"] = sp.getInt("filter_gender", 3)
 
         return parmas
     }
@@ -286,6 +288,14 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("city")
         SPUtils.getInstance(Constants.SPNAME).remove("district")
         SPUtils.getInstance(Constants.SPNAME).remove("citycode")
+
+        //筛选信息
+        SPUtils.getInstance(Constants.SPNAME).remove("filter_gender")
+        SPUtils.getInstance(Constants.SPNAME).remove("limit_age_high")
+        SPUtils.getInstance(Constants.SPNAME).remove("limit_age_low")
+        SPUtils.getInstance(Constants.SPNAME).remove("local_only")
+        SPUtils.getInstance(Constants.SPNAME).remove("city_code")
+        SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
     }
 
 
@@ -294,7 +304,7 @@ object UserManager {
         val options = SDKOptions()
         //如果将新消息通知提醒托管给SDK完成，需要添加以下配置。否则无需设置
         val config = StatusBarNotificationConfig()
-        config.notificationEntrance = WelcomeActivity::class.java
+        config.notificationEntrance = ChatActivity::class.java
         config.notificationSmallIconId = com.example.demoapplication.R.drawable.icon_notification
         //呼吸灯配置
         config.ledARGB = Color.GREEN
@@ -322,12 +332,13 @@ object UserManager {
         options.userInfoProvider = object : UserInfoProvider {
             override fun getUserInfo(account: String?): UserInfo? {
 
-                return null
+                return NimUIKit.getUserInfoProvider().getUserInfo(account)
             }
 
 
             override fun getAvatarForMessageNotifier(sessionType: SessionTypeEnum?, sessionId: String?): Bitmap? {
-                return null
+                val user = getUserInfo(sessionId)
+                return if (user != null) NimUIKit.getImageLoaderKit().getNotificationBitmapFromCache(user.avatar) else null
             }
 
             override fun getDisplayNameForMessageNotifier(
@@ -335,7 +346,9 @@ object UserManager {
                 sessionId: String?,
                 sessionType: SessionTypeEnum?
             ): String? {
-                return null
+
+                return NimUIKit.getContactProvider().getAlias(account)
+
             }
 
         }

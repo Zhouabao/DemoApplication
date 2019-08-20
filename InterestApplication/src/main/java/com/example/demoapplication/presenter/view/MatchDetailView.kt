@@ -1,5 +1,6 @@
 package com.example.demoapplication.presenter.view
 
+import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.StatusBean
 import com.kotlin.base.data.protocol.BaseResp
@@ -19,4 +20,10 @@ interface MatchDetailView : BaseView {
 
 
     fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?)
+
+    //打招呼结果
+    fun onGreetSResult(success: Boolean)
+
+    //获取打招呼状态
+    fun onGreetStateResult(data: GreetBean?)
 }

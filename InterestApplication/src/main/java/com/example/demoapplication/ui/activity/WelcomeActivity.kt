@@ -3,6 +3,7 @@ package com.example.demoapplication.ui.activity
 import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.app.ActivityCompat
@@ -103,8 +104,8 @@ class WelcomeActivity : BaseActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == 100) {
             if (grantResults.isNotEmpty()) {
-                for (i in 1 until grantResults.size) {
-                    if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                for (i in 0 until grantResults.size) {
+                    if (grantResults[i] == PackageManager.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 23) {
                         AppUtils.exitApp()
                         break
                     }

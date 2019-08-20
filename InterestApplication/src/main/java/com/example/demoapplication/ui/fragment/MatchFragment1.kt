@@ -55,7 +55,6 @@ import org.jetbrains.anko.support.v4.toast
 
 /**
  * 匹配页面(新版)
- * //todo 探探是把用戶存在本地數據庫的
  */
 class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener,
     ModuleProxy {
@@ -153,8 +152,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     }
 
 
-
-
     /**
      *  点击聊天
      *    未打过招呼 判断招呼剩余次数
@@ -193,7 +190,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      */
     override fun onGreetSResult(greetBean: Boolean) {
         if (greetBean) {
-            sendChatHiMessage()
+            sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
         } else {
             ToastUtils.showShort("打招呼失败，重新试一次吧")
         }
@@ -241,6 +238,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         if (success) {
             switch = false
             if (data != null && data.status == 2) {
+                sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                 startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[matchUserAdapter.data.size - 1])
             }
 
@@ -363,18 +361,17 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     }
 
     //此时已经飞出去了
+    //todo 放开注释
     override fun onCardSwiped(direction: Direction?) {
-        switch = false
-        Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
-        if (direction == Direction.Left) {
+        if (direction == Direction.Left) {//左滑不喜欢
             toast("不喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
 //            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
 //            mPresenter.dislikeUser(params)
-        } else if (direction == Direction.Right) {
+        } else if (direction == Direction.Right) {//右滑喜欢
             toast("喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
 //            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
 //            mPresenter.likeUser(params)
-        } else if (direction == Direction.Top) {
+        } else if (direction == Direction.Top) {//上滑打招呼
             mPresenter.greetState(
                 UserManager.getToken(),
                 UserManager.getAccid(),
@@ -413,14 +410,11 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     /*--------------------------消息代理------------------------*/
 
-    private fun sendChatHiMessage() {
+    private fun sendChatHiMessage(type: Int) {
         val matchBean = matchUserAdapter.data[manager.topPosition]
         Log.d("OkHttp", matchBean.accid ?: "")
         val container = Container(activity!!, matchBean?.accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(
-            UserManager.getGlobalLabelName(),
-            ChatHiAttachment.CHATHI_HI
-        )
+        val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), type)
         val message = MessageBuilder.createCustomMessage(
             matchBean?.accid,
             SessionTypeEnum.P2P,
@@ -430,6 +424,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         )
         container.proxy.sendMessage(message)
     }
+
 
     override fun sendMessage(msg: IMMessage): Boolean {
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :

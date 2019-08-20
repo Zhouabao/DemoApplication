@@ -111,7 +111,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
 
 
     /**
-     * 喜欢
+     * 打招呼
      */
     fun greet(token: String, accid: String, target_accid: String, tag_id: Int) {
         if (!checkNetWork()) {

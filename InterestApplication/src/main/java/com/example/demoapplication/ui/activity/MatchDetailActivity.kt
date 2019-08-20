@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.core.widget.NestedScrollView
 import androidx.dynamicanimation.animation.SpringAnimation
@@ -23,10 +25,11 @@ import com.example.demoapplication.common.CommonFunction
 import com.example.demoapplication.event.BlockDataEvent
 import com.example.demoapplication.event.ListDataEvent
 import com.example.demoapplication.event.NotifyEvent
+import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.nim.activity.ChatActivity
-import com.example.demoapplication.nim.attachment.ChatMatchAttachment
+import com.example.demoapplication.nim.attachment.ChatHiAttachment
 import com.example.demoapplication.presenter.MatchDetailPresenter
 import com.example.demoapplication.presenter.view.MatchDetailView
 import com.example.demoapplication.ui.adapter.DetailThumbAdapter
@@ -68,6 +71,8 @@ import java.util.*
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
     View.OnClickListener, ModuleProxy {
+
+
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
     private val thumbAdapter by lazy { DetailThumbAdapter(this) }
@@ -208,8 +213,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
 
-        //已感兴趣不做操作
-        if (matchBean!!.isliked == 1) {
+        //已感兴趣H或者是好友不做操作
+        if (matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
             detailUserLikeBtn.visibility = View.GONE
             detailUserLikeBtn.isEnabled = false
             detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
@@ -217,6 +222,21 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             detailUserLikeBtn.visibility = View.VISIBLE
             detailUserLikeBtn.isEnabled = true
             detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_blue)
+        }
+
+
+        //喜欢过
+        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
+            detailUserChatBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_orange)
+            detailUserChatIv.setImageResource(R.drawable.icon_chat_white)
+            detailUserLeftChatCount.isVisible = false
+            detailUserChatTv.text = "聊天"
+        } else {//不是好友就显示打招呼
+            detailUserChatBtn.setBackgroundResource(R.drawable.gradient_match_detail_red_bg)
+            detailUserChatIv.setImageResource(R.drawable.icon_flash_white)
+            detailUserLeftChatCount.isVisible = true
+            detailUserChatTv.text = "打招呼"
+
         }
 
 //        用户动态封面图片
@@ -347,6 +367,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         transaction.commit()
     }
 
+    /**
+     * 获取用户详情结果
+     */
     override fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchBean?) {
         if (success) {
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -374,6 +397,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (success) {
             if (result == "解除成功!") {
                 matchBean!!.isfriend = 0
+                //更新数据
+                initData()
             }
             ToastUtils.showShort(result)
         }
@@ -390,28 +415,24 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             } else if (statusBean!!.data?.status == 2) {//匹配成功
                 startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
             }
-
         }
     }
 
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.moreBtn -> {
+            R.id.moreBtn -> {//更多
                 showMoreActionDialog()
             }
-            R.id.detailUserLikeBtn -> {
+            R.id.detailUserLikeBtn -> {//感兴趣
                 mPresenter.likeUser(params)
             }
             //todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
-            R.id.detailUserChatBtn -> {
-                if (UserManager.isUserVip()) {
-                    val dialog = ChargeVipDialog(this)
-                    dialog.show()
-                } else {
-                    sendChatHiMessage()
-
-                }
+            //1.首先判断是否有次数，
+            // 若有 就打招呼
+            // 若无 就弹充值
+            R.id.detailUserChatBtn -> {//打个招呼
+                mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), matchBean?.accid ?: "")
             }
 
             R.id.backBtn -> {
@@ -454,6 +475,51 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
     }
 
+    /**
+     *  点击聊天
+     *
+     *  判断是否是好友，如果是好友，直接聊天，
+     *                 若不是好友，判断剩余次数
+     *                                有次数 直接打招呼
+     *                                无次数 其他操作--如:请求充值会员
+     */
+    override fun onGreetStateResult(data: GreetBean?) {
+        if (data != null) {
+            if (data.isfriend) {
+                ChatActivity.start(this, matchBean?.accid ?: "")
+            } else {
+                if (data.lightningcnt > 0) {
+                    mPresenter.greet(
+                        UserManager.getToken(),
+                        UserManager.getAccid(),
+                        (matchBean?.accid ?: ""),
+                        UserManager.getGlobalLabelId()
+                    )
+                } else {
+                    if (UserManager.isUserVip()) {
+                        //TODO 会员充值
+                        ToastUtils.showShort("次数用尽，请充值。")
+                    } else {
+                        ChargeVipDialog(this).show()
+                    }
+                }
+            }
+        } else {
+            ToastUtils.showShort("请求失败，请重试")
+        }
+    }
+
+    /**
+     * 打招呼结果（先请求服务器）
+     */
+    override fun onGreetSResult(success: Boolean) {
+        if (success) {
+            sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
+        } else {
+            ToastUtils.showShort("打招呼失败，重新试一次吧")
+        }
+    }
+
 
     private val springAnim: SpringAnimation by lazy {
         SpringAnimation(
@@ -478,16 +544,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-
     /*--------------------------消息代理------------------------*/
-
-    private fun sendChatHiMessage() {
+    private fun sendChatHiMessage(type: Int) {
+        Log.d("OkHttp", matchBean?.accid ?: "")
         val container = Container(this, matchBean?.accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatMatchAttachment(
-            UserManager.getGlobalLabelName(),
-            matchBean?.tags ?: mutableListOf(),
-            matchBean?.avatar ?: ""
-        )
+        val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), type)
         val message = MessageBuilder.createCustomMessage(
             matchBean?.accid,
             SessionTypeEnum.P2P,
