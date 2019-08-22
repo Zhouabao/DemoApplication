@@ -159,7 +159,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         backBtn.setOnClickListener(this)
 
 
-
         //用户的广场预览界面
         detailThumbRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         //用户标签
@@ -491,7 +490,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     override fun onGreetStateResult(data: GreetBean?) {
         if (data != null) {
             updateLigthCount(data.lightningcnt)
-            if (data.isfriend) {
+            if (data.isfriend || data.isgreet) {
                 ChatActivity.start(this, matchBean?.accid ?: "")
             } else {
                 if (data.lightningcnt > 0) {

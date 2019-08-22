@@ -49,11 +49,7 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
 
         etPhone.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(edit: Editable?) {
-                if (etPhone.text.toString().isNotEmpty() && etPhone.text.toString().length == 11) {
-                    btnVerifyCode.isEnabled = true
-                } else {
-
-                }
+                btnVerifyCode.isEnabled = etPhone.text.toString().isNotEmpty() && etPhone.text.toString().length == 11
 
             }
 

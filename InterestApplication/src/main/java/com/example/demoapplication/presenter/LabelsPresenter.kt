@@ -11,6 +11,7 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 
 class LabelsPresenter : BasePresenter<LabelsView>() {
@@ -26,7 +27,7 @@ class LabelsPresenter : BasePresenter<LabelsView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetLabelsResult(t.data.data)
-                    else if(t.code==403)
+                    else if (t.code == 403)
                         UserManager.startToLogin(context as Activity)
                     else
                         mView.onError(t.msg)
@@ -59,7 +60,10 @@ class LabelsPresenter : BasePresenter<LabelsView>() {
 
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
+                    if (e is BaseException)
+                        UserManager.startToLogin(context as Activity)
+                    else
+                        mView.onError(context.getString(R.string.service_error))
                 }
             })
     }

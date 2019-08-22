@@ -51,12 +51,12 @@ public class ChatActionsGridviewAdapter extends BaseAdapter {
         itemlayout.setEnabled(viewHolder.isEnable());
         if (viewHolder.isEnable()) {
             if (viewHolder.isCheck()) {
-                ((ImageView) itemlayout.findViewById(R.id.imageView)).setBackgroundResource(viewHolder.getIconResIdChoose());
+                ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdChoose());
             } else {
-                ((ImageView) itemlayout.findViewById(R.id.imageView)).setBackgroundResource(viewHolder.getIconResId());
+                ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResId());
             }
         } else {
-            ((ImageView) itemlayout.findViewById(R.id.imageView)).setBackgroundResource(viewHolder.getIconResIdDisable());
+            ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdDisable());
         }
         return itemlayout;
     }
