@@ -921,7 +921,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                 EventBus.getDefault().post(new EnablePicEvent(true));
                                 view.findViewById(com.example.demoapplication.R.id.btnMakeFriends).setVisibility(View.GONE);
                             } else {
-                                if (checkGreetSendBean.getResidue_msg_cnt() > 0) {//次数大于0就发送消息
+                                if (checkGreetSendBean.getResidue_msg_cnt() > 0 || checkGreetSendBean.getIslimit() == false) {//次数大于0就发送消息
                                     if (type == 1) {
                                         onTextMessageSendButtonPressed();
                                     } else if (type == 2) {

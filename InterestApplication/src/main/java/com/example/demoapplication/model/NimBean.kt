@@ -26,5 +26,6 @@ data class NimBean(
  */
 data class CheckGreetSendBean(
     val isfriend: Boolean = false, //	是否好友 时无限
+    val islimit: Boolean = true, //	是否限制发送次数  true限制 false不限制
     val residue_msg_cnt: Int = 0//非好友 当前最新招呼剩余可发消息次数
 )

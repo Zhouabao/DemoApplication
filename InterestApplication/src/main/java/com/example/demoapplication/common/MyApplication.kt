@@ -1,7 +1,6 @@
 package com.example.demoapplication.common
 
 import android.annotation.SuppressLint
-import android.os.Environment
 import android.util.Log
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.CrashUtils
@@ -29,7 +28,6 @@ import com.umeng.message.PushAgent
 import com.umeng.socialize.PlatformConfig
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
-import java.io.File
 
 
 class MyApplication : BaseApplication() {
@@ -60,7 +58,7 @@ class MyApplication : BaseApplication() {
         //初始化Umeng
         initUmeng()
         //崩溃日志
-        CrashUtils.init(File(Environment.getExternalStorageDirectory().absolutePath.plus(File.separator).plus("demoapplicaiton")))
+        CrashUtils.init(NimSDKOptionConfig.getAppCacheDir(this) + "/demoApplication")
         configUnits()
         configPlayer()
 

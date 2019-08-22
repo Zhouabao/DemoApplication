@@ -1,12 +1,13 @@
 package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import android.widget.CompoundButton
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.nim.activity.ChatActivity
 import com.example.demoapplication.presenter.SetInfoPresenter
+import com.example.demoapplication.utils.DataCleanManager
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -14,7 +15,6 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.AuthService
 import kotlinx.android.synthetic.main.activity_settings.*
 import org.jetbrains.anko.startActivity
-import java.io.File
 
 /**
  * 系统设置
@@ -31,9 +31,7 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
     }
 
     private fun initData() {
-        val totalCache =
-            CacheDiskUtils.getInstance().cacheSize + CacheDoubleUtils.getInstance().cacheDiskSize + CacheMemoryUtils.getInstance().cacheCount
-        cacheDataSize.text = "${totalCache / 1024 / 1024}M"
+        cacheDataSize.text = DataCleanManager.getTotalCacheSize(this)
     }
 
     private fun initView() {
@@ -84,6 +82,7 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
             }
             //意见反馈
             R.id.feedBack -> {
+                ChatActivity.start(this, com.example.demoapplication.common.Constants.ASSISTANT_ACCID)
             }
             //进入帮助
             R.id.helpCenter -> {
@@ -93,18 +92,8 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
             }
             //清理缓存
             R.id.clearData -> {
-                CleanUtils.cleanInternalCache()//清除内部文件
-                CleanUtils.cleanExternalCache()//外部缓存
-                CleanUtils.cleanCustomDir(
-                    File(
-                        Environment.getExternalStorageDirectory().absolutePath.plus(File.separator).plus(
-                            "demoapplicaiton"
-                        )
-                    )
-                )
-                val totalCache =
-                    CacheDiskUtils.getInstance().cacheSize + CacheDoubleUtils.getInstance().cacheDiskSize + CacheMemoryUtils.getInstance().cacheCount
-                cacheDataSize.text = "${totalCache / 1024 / 1024}M"
+                DataCleanManager.clearAllCache(this)
+                cacheDataSize.text = DataCleanManager.getTotalCacheSize(this)
                 ToastUtils.showShort("缓存清理成功")
 
             }
