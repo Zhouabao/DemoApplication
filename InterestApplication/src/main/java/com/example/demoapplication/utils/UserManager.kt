@@ -76,7 +76,7 @@ object UserManager {
     /**
      * 登录成功保存用户信息
      */
-    fun isUserInfoMade(): Boolean {
+    public fun isUserInfoMade(): Boolean {
         return !(SPUtils.getInstance(Constants.SPNAME).getString("nickname").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
@@ -87,7 +87,7 @@ object UserManager {
     /**
      * 保存位置信息
      */
-    fun saveLocation(
+    public fun saveLocation(
         latitude: String?,
         longtitude: String?,
         province: String?,
@@ -248,7 +248,7 @@ object UserManager {
 
 
     // 如果已经存在IM用户登录信息，返回LoginInfo，否则返回null即可
-    fun loginInfo(): LoginInfo? {
+    public fun loginInfo(): LoginInfo? {
         if (SPUtils.getInstance(Constants.SPNAME).getString("imToken") != null
             && SPUtils.getInstance(Constants.SPNAME).getString("imAccid") != null
         ) {

@@ -20,6 +20,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.*
 import com.example.demoapplication.model.LabelBean
+import com.example.demoapplication.nim.activity.ChatActivity
 import com.example.demoapplication.presenter.MainPresenter
 import com.example.demoapplication.presenter.view.MainView
 import com.example.demoapplication.ui.adapter.MainPagerAdapter
@@ -35,6 +36,9 @@ import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.NimIntent
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_match_filter.*
@@ -66,12 +70,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val squareFragment by lazy { SquareFragment() }
     private val titles = arrayOf("匹配", "发现")
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         EventBus.getDefault().register(this)
         initView()
-
 
         //如果定位信息没有就重新定位
         if (UserManager.getlatitude().toDouble() == 0.0 || UserManager.getlongtitude().toDouble() == 0.0)
@@ -81,7 +85,33 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        this.intent = intent
+        parseIntents()
+    }
+
+    private fun parseIntents() {
+        // 可以获取消息的发送者，跳转到指定的单聊、群聊界面。
+        if (intent != null && intent.hasExtra(NimIntent.EXTRA_NOTIFY_CONTENT)) {
+            val messages = intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT) as ArrayList<IMMessage>?
+            if (messages != null && messages.size > 0) {
+                val message = messages[0]
+                intent.removeExtra(NimIntent.EXTRA_NOTIFY_CONTENT)
+                when (message.sessionType) {
+                    SessionTypeEnum.P2P -> {
+                        ChatActivity.start(this, message.sessionId)
+                    }
+                }
+            }
+        }
+    }
+
+
     private fun initView() {
+        //首页禁止滑动
+        setSwipeBackEnable(false)
+
         filterBtn.setOnClickListener(this)
         notificationBtn.setOnClickListener(this)
         ivUserFace.setOnClickListener(this)
@@ -236,6 +266,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onResume() {
         super.onResume()
+        parseIntents()
         EventBus.getDefault().post(NewMsgEvent(21, 6, 3, 2))
         //        GSYVideoManager.onResume(false)
 
@@ -311,6 +342,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     companion object {
         const val REQUEST_LABEL_CODE = 2000
+
+        fun start(context: Context, intent: Intent) {
+            context.startActivity(intent.setClass(context, MainActivity::class.java))
+        }
+
     }
 
     private fun initHeadView() {
@@ -418,6 +454,5 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         tabMain.navigator = commonNavigator
         ViewPagerHelper.bind(tabMain, vpMain)
     }
-
 
 }

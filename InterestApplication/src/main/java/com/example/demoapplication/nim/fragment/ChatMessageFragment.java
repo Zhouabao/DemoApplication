@@ -8,9 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.demoapplication.R;
+import com.example.demoapplication.api.Api;
+import com.example.demoapplication.event.EnablePicEvent;
+import com.example.demoapplication.event.NimHeadEvent;
+import com.example.demoapplication.model.NimBean;
 import com.example.demoapplication.nim.extension.ChatMessageListPanelEx;
 import com.example.demoapplication.nim.panel.ChatInputPanel;
 import com.example.demoapplication.nim.session.*;
+import com.example.demoapplication.utils.UserManager;
+import com.kotlin.base.data.net.RetrofitFactory;
+import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.api.UIKitOptions;
 import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -38,8 +45,11 @@ import com.netease.nimlib.sdk.msg.model.MessageReceipt;
 import com.netease.nimlib.sdk.robot.model.NimRobotInfo;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.netease.nimlib.sdk.robot.model.RobotMsgType;
+import org.greenrobot.eventbus.EventBus;
+import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +59,42 @@ import java.util.Map;
  * Created by huangjun on 2015/2/1.
  */
 public class ChatMessageFragment extends TFragment implements ModuleProxy {
+
+
+    //进入聊天界面 获取对方用户的个人信息
+    public void getTargetInfo(String target_accid) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("token", UserManager.INSTANCE.getToken());
+        params.put("accid", UserManager.INSTANCE.getAccid());
+        params.put("target_accid", target_accid);
+        RetrofitFactory.Companion.getInstance()
+                .create(Api.class)
+                .getTargetInfo(params)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(new rx.Observer<BaseResp<NimBean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
+                        if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
+                            EventBus.getDefault().post(new NimHeadEvent(nimBeanBaseResp.getData()));
+                            EventBus.getDefault().post(new EnablePicEvent(nimBeanBaseResp.getData().getIsfriend()));
+                        }
+                    }
+                });
+
+    }
+
+
     private View rootView;
 
     private SessionCustomization customization;
@@ -95,6 +141,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public void onResume() {
         super.onResume();
         messageListPanel.onResume();
+        getTargetInfo(sessionId);
         NIMClient.getService(MsgService.class).setChattingAccount(sessionId, sessionType);
         getActivity().setVolumeControlStream(AudioManager.STREAM_VOICE_CALL); // 默认使用听筒播放
     }
@@ -195,7 +242,12 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (CommonUtil.isEmpty(messages)) {
             return;
         }
+        //新消息来了更新消息状态
         messageListPanel.onIncomingMessage(messages);
+
+        //新消息来了请求接口，更新键盘啊头布局等数据。
+        getTargetInfo(sessionId);
+
         // 发送已读回执
         messageListPanel.sendReceipt();
     }

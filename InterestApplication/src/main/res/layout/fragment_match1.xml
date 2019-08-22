@@ -11,7 +11,7 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content">
+        app:msv_viewState="loading">
 
     <LinearLayout
             android:orientation="vertical"

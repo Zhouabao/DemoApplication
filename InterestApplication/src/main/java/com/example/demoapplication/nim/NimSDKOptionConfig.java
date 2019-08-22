@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Environment;
 import android.text.TextUtils;
-import com.example.demoapplication.nim.activity.ChatActivity;
 import com.example.demoapplication.nim.sp.UserPreferences;
+import com.example.demoapplication.ui.activity.MainActivity;
 import com.netease.nim.uikit.api.wrapper.MessageRevokeTip;
 import com.netease.nim.uikit.api.wrapper.NimUserInfoProvider;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderThumbBase;
@@ -135,7 +135,7 @@ public class NimSDKOptionConfig {
     private static StatusBarNotificationConfig loadStatusBarNotificationConfig() {
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
         // 点击通知需要跳转到的界面
-        config.notificationEntrance = ChatActivity.class;
+        config.notificationEntrance = MainActivity.class;
 //        config.notificationSmallIconId = R.drawable.ic_stat_notify_msg;
 //        config.notificationColor = DemoCache.getContext().getResources().getColor(R.color.color_blue_3a9efb);
         // 通知铃声的uri字符串

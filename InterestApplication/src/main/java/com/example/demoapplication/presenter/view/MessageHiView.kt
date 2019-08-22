@@ -3,6 +3,7 @@ package com.example.demoapplication.presenter.view
 import com.example.demoapplication.model.HiMessageBean
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
+import com.netease.nimlib.sdk.msg.model.RecentContact
 
 /**
  *    author : ZFM
@@ -14,4 +15,7 @@ interface MessageHiView:BaseView {
     fun onGreatListResult(t: BaseResp<MutableList<HiMessageBean>?>)
 
     fun onDelTimeoutGreetResult(t: Boolean)
+
+
+    fun onGetRecentContactResults(result: MutableList<RecentContact>,t: BaseResp<MutableList<HiMessageBean>?>)
 }

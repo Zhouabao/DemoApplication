@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.alibaba.fastjson.JSON
+import com.example.baselibrary.widgets.swipeback.SwipeBackLayout
+import com.example.baselibrary.widgets.swipeback.Utils
+import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
+import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.event.EnablePicEvent
@@ -12,6 +16,7 @@ import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.NimBean
 import com.example.demoapplication.nim.fragment.ChatMessageFragment
 import com.example.demoapplication.utils.UserManager
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -32,6 +37,7 @@ import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.greenrobot.eventbus.EventBus
 
@@ -40,7 +46,9 @@ import org.greenrobot.eventbus.EventBus
  * 点对点聊天界面
  *
  */
-class ChatActivity : ChatBaseMessageActivity() {
+class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
+
+
     public fun getTargetInfo(target_accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
             .getTargetInfo(
@@ -139,17 +147,27 @@ class ChatActivity : ChatBaseMessageActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        AppManager.instance.addActivity(this)
+        PushAgent.getInstance(this).onAppStart()
+        mHelper = SwipeBackActivityHelper(this)
+        mHelper.onActivityCreate()
+        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
+
+
         // 单聊特例话数据，包括个人信息，
         requestBuddyInfo()
         displayOnlineState()
         registerObservers(true)
-        getTargetInfo(sessionId)
+//        getTargetInfo(sessionId)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().post(UpdateHiEvent())
         registerObservers(false)
+        AppManager.instance.finishActivity(this)
+
     }
 
     override fun onResume() {
@@ -230,6 +248,30 @@ class ChatActivity : ChatBaseMessageActivity() {
 
     override fun enableSensor(): Boolean {
         return true
+    }
+
+
+
+    /*------------------------侧滑退出-----------------*/
+    private lateinit var mHelper: SwipeBackActivityHelper
+
+    override fun getSwipeBackLayout(): SwipeBackLayout {
+        return mHelper.swipeBackLayout
+    }
+
+    override fun setSwipeBackEnable(enable: Boolean) {
+        swipeBackLayout.setEnableGesture(enable)
+    }
+
+    override fun scrollToFinishActivity() {
+        Utils.convertActivityToTranslucent(this)
+        swipeBackLayout.scrollToFinishActivity()
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        mHelper.onPostCreate()
+
     }
 
 }

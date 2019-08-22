@@ -10,7 +10,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.event.NimCountDownEvent
 import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.HiMessageBean
 import com.example.demoapplication.model.MessageListBean
@@ -68,8 +67,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         registerObservers(true)
         registerDropCompletedListener(true)
         registerOnlineStateChangeListener(true)
-        //获取最近消息
-        mPresenter.messageCensus(params)
+
 
     }
 
@@ -146,14 +144,6 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         }
         hiAdapter.setOnItemClickListener { _, view, position ->
             //发送通知告诉剩余时间，并且开始倒计时
-            if (hiAdapter.data[position].type == 2)
-                EventBus.getDefault().postSticky(
-                    NimCountDownEvent(
-                        hiAdapter.data[position].countdown_total ?: 0,
-                        hiAdapter.data[position].countdown ?: 0
-                    )
-                )
-
             ChatActivity.start(this, hiAdapter.data[position].accid ?: "")
         }
 
@@ -196,6 +186,13 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             }
         }
         return headView
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //获取最近消息
+        mPresenter.messageCensus(params)
+//        setHiData()  模拟数据请求
     }
 
 
@@ -245,6 +242,40 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         }
         hiAdapter.setNewData(data?.greet ?: mutableListOf())
 
+        //获取最近联系人列表
+        mPresenter.getRecentContacts()
+    }
+
+    private fun setHiData() {
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+
+
+        ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
+        val squa = MessageListBean("发现", "赞了你的动态", 0, "", R.drawable.icon_square_msg)
+        val like = MessageListBean("对我感兴趣的", "有0个人对你感兴趣", 0, "", R.drawable.icon_like_msg)
+
+        headAdapter.data.clear()
+        headAdapter.addData(ass)
+        headAdapter.addData(squa)
+        headAdapter.addData(like)
+
+
+            val greet1 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 1)
+            val greet2 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",countdown = 1000, countdown_total = 1200, type = 2)
+            val greet3 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",countdown = 1000, countdown_total = 1200, type = 3)
+            val greet4 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 4)
+            hiAdapter.addData(greet1)
+            hiAdapter.addData(greet2)
+            hiAdapter.addData(greet3)
+            hiAdapter.addData(greet4)
+            val greet11 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 1)
+            val greet21 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",countdown = 1000, countdown_total = 1200, type = 2)
+            val greet31 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",countdown = 1000, countdown_total = 1200, type = 3)
+            val greet41 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 4)
+            hiAdapter.addData(greet11)
+            hiAdapter.addData(greet21)
+            hiAdapter.addData(greet31)
+            hiAdapter.addData(greet41)
         //获取最近联系人列表
         mPresenter.getRecentContacts()
     }
@@ -486,7 +517,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             if (index >= 0 && index < adapter.data.size) {
                 val item = adapter.data.get(index)
                 item.setMsgStatus(message.status)
-                adapter.notifyItemChanged(index)
+                adapter.notifyItemChanged(index + adapter.headerLayoutCount)
             }
         }
 
@@ -525,6 +556,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         super.onDestroy()
         registerObservers(false)
         EventBus.getDefault().unregister(this)
+        hiAdapter.cancelAllTimers()//取消所有的定时器
     }
 
     override fun onStart() {

@@ -225,7 +225,11 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("relationship/greet${Constants.END_BASE_URL}")
-    fun greet(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String, @Field("tag_id") tag_id: Int): Observable<BaseResp<StatusBean?>>
+    fun greet(
+        @Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String, @Field(
+            "tag_id"
+        ) tag_id: Int
+    ): Observable<BaseResp<StatusBean?>>
 
 
     /**
@@ -441,6 +445,25 @@ interface Api {
     @FormUrlEncoded
     @POST("Relationship/addFriend${Constants.END_BASE_URL}")
     fun addFriend(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 发起招呼者 判断剩余消息次数
+     */
+    @FormUrlEncoded
+    @POST("Tidings/checkGreetSendMsg${Constants.END_BASE_URL}")
+    fun checkGreetSendMsg(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<CheckGreetSendBean?>>
+
+
+
+    /**
+     * 发起招呼后发起消息计数器
+     * @param id 招呼id
+     * @param target_accid 被打招呼对象的id
+     */
+    @FormUrlEncoded
+    @POST("Relationship/sendGreetMsg${Constants.END_BASE_URL}")
+    fun sendGreetMsg(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String, @Field("id") id: String=""): Observable<BaseResp<CheckGreetSendBean?>>
 
 
     @GET

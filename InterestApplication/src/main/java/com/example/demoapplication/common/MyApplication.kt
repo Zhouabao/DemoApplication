@@ -65,7 +65,7 @@ class MyApplication : BaseApplication() {
         configPlayer()
 
         DemoCache.setContext(this)
-        NIMClient.init(this, UserManager.loginInfo(), UserManager.options(this))
+        NIMClient.init(this, UserManager.loginInfo(),NimSDKOptionConfig.getSDKOptions(this))
         initUIKit()
 
     }
@@ -140,6 +140,9 @@ class MyApplication : BaseApplication() {
 
     private fun initUIKit() {
         if (NIMUtil.isMainProcess(this)) {
+            // 注册自定义推送消息处理，这个是可选项
+//            Nimpu.registerMixPushMessageHandler(DemoMixPushMessageHandler())
+
             NimUIKit.init(this, buildUIKitOptions())
             // 设置地理位置提供者。如果需要发送地理位置消息，该参数必须提供。如果不需要，可以忽略。
             NimUIKit.setLocationProvider(NimDemoLocationProvider())
@@ -149,6 +152,10 @@ class MyApplication : BaseApplication() {
             NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
             //云信相关业务初始化
             NIMInitManager.getInstance().init(true)
+
+            //在线状态内容提供者
+//            NimUIKit.setOnlineStateContentProvider(DemoOnlineStateContentProvider())
+
         }
     }
 

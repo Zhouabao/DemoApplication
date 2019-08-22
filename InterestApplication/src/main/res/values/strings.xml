@@ -40,7 +40,7 @@
     <string name="message_search_title">搜索本地消息记录</string>
     <string name="message_clear">清空本地消息记录</string>
     <string name="message_p2p_clear">清空点对点历史消息</string>
-    <string name="message_p2p_clear_tips">确定清空点对点历史消息?</string>
+    <string name="message_p2p_clear_tips">确定清空历史消息?</string>
     <string name="sure_keep_roam">确认单保留漫游</string>
     <string name="message_info">聊天信息</string>
     <!-- location -->

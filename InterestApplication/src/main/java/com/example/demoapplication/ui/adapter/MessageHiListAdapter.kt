@@ -1,9 +1,9 @@
 package com.example.demoapplication.ui.adapter
 
 import android.os.CountDownTimer
+import android.util.SparseArray
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.event.UpdateHiEvent
@@ -17,9 +17,24 @@ import org.greenrobot.eventbus.EventBus
  *    desc   : 招呼列表adapter
  *    version: 1.0
  */
-class MessageHiListAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.layout.item_message_hi_list) {
+class MessageHiListAdapter :
+    BaseQuickAdapter<HiMessageBean, MessageListFriensAdapter.MyViewHolder>(R.layout.item_message_hi_list) {
+    private var coundownMap: SparseArray<CountDownTimer> = SparseArray()
 
-    override fun convert(holder: BaseViewHolder, item: HiMessageBean) {
+    /**
+     *  清空资源
+     */
+    public fun cancelAllTimers() {
+        for (i in 0 until coundownMap.size()) {
+            val cdt = coundownMap[coundownMap.keyAt(i)]
+            if (cdt != null) {
+                cdt.cancel()
+            }
+        }
+    }
+
+
+    override fun convert(holder: MessageListFriensAdapter.MyViewHolder, item: HiMessageBean) {
         val itemView = holder.itemView
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.msgIcon)
         holder.itemView.msgTitle.text = item.nickname ?: ""
@@ -43,6 +58,10 @@ class MessageHiListAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.l
                 itemView.msgOuttimeTip.visibility = View.GONE
             }
             2 -> {
+                if (holder.countDownTimer != null) {
+                    holder.countDownTimer!!.cancel()
+                }
+
                 itemView.msgNofitySensor.visibility = View.GONE
                 itemView.msgIconMask.visibility = View.GONE
                 itemView.msgCountDown.visibility = View.VISIBLE
@@ -52,7 +71,7 @@ class MessageHiListAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.l
                 itemView.msgCountDown.setMaxStepNum(item.countdown_total ?: 0)
                 if (item.countdown_total != null && item.countdown_total > 0) {
 //                    itemView.msgCountDown.update((item.countdown_total - (item.countdown ?: 0)).toLong(), 100)
-                    object : CountDownTimer((item.countdown ?: 0) * 1000L, 1000) {
+                    holder.countDownTimer = object : CountDownTimer((item.countdown ?: 0) * 1000L, 1000) {
                         override fun onFinish() {
                             EventBus.getDefault().post(UpdateHiEvent())
                         }
@@ -65,6 +84,8 @@ class MessageHiListAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.l
                         }
 
                     }.start()
+
+                    coundownMap.put(holder.itemView.hashCode(), holder.countDownTimer)
                 }
             }
             3 -> {
@@ -87,4 +108,6 @@ class MessageHiListAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.l
 
 
     }
+
+
 }

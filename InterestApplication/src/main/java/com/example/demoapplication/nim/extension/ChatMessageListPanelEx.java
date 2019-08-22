@@ -21,12 +21,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.ToastUtils;
 import com.example.baselibrary.glide.GlideUtil;
 import com.example.demoapplication.api.Api;
-import com.example.demoapplication.event.NimCountDownEvent;
+import com.example.demoapplication.event.EnablePicEvent;
 import com.example.demoapplication.event.NimHeadEvent;
 import com.example.demoapplication.model.LabelBean;
 import com.example.demoapplication.model.Tag;
 import com.example.demoapplication.nim.adapter.ChatMsgAdapter;
 import com.example.demoapplication.nim.attachment.ChatHiAttachment;
+import com.example.demoapplication.ui.activity.MatchDetailActivity;
 import com.example.demoapplication.ui.adapter.MatchDetailLabelAdapter;
 import com.example.demoapplication.utils.UserManager;
 import com.example.demoapplication.widgets.TimeRunTextView;
@@ -140,6 +141,7 @@ public class ChatMessageListPanelEx {
     private ImageView chatHiAvator;
     private RecyclerView chatHiTags;
     private ConstraintLayout targetCl;
+    private View headView;
 
     public ChatMessageListPanelEx(Container container, View rootView, boolean recordOnly, boolean remote) {
         this(container, rootView, null, recordOnly, remote);
@@ -157,10 +159,12 @@ public class ChatMessageListPanelEx {
 
     public void onResume() {
         setEarPhoneMode(UserPreferences.isEarPhoneModeEnable(), false);
+        pause = false;
     }
 
     public void onPause() {
         MessageAudioControl.getInstance(container.activity).stopAudio();
+        pause = true;
     }
 
     public void onDestroy() {
@@ -230,13 +234,17 @@ public class ChatMessageListPanelEx {
                             @Override
                             public void onNext(BaseResp<Object> objectBaseResp) {
                                 if (objectBaseResp.getCode() == 200) {
+                                    //发送成为好友消息，并且
                                     IMMessage message = MessageBuilder.createCustomMessage(container.account, SessionTypeEnum.P2P, "", new ChatHiAttachment(null, ChatHiAttachment.CHATHI_RFIEND), new CustomMessageConfig());
                                     if (container.proxySend) {
                                         container.proxy.sendMessage(message);
                                     } else {
                                         NIMClient.getService(MsgService.class).sendMessage(message, false);
                                         btnMakeFriends.setVisibility(View.GONE);
+
                                     }
+                                    //发送通知，可以发所有类型的消息
+                                    EventBus.getDefault().post(new EnablePicEvent(true));
                                 } else {
                                     ToastUtils.showShort("添加好友失败哦~");
                                 }
@@ -274,107 +282,6 @@ public class ChatMessageListPanelEx {
 
     }
 
-    private View initHeadView(NimHeadEvent event) {
-        View view = LayoutInflater.from(container.activity).inflate(com.example.demoapplication.R.layout.item_chat_head, messageListView, false);
-        //初始化数据
-        chatHiAvator = view.findViewById(com.example.demoapplication.R.id.targetAvator);
-        chatHiTags = view.findViewById(com.example.demoapplication.R.id.targetLabels);
-        targetCl = view.findViewById(com.example.demoapplication.R.id.targetCl);
-        setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
-        return view;
-    }
-
-    /**
-     * 招呼头布局
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(NimHeadEvent event) {
-        if (event.getNimBean().getIsfriend()) { //是好友了，按钮消失
-            btnMakeFriends.setVisibility(View.GONE);
-        } else {
-            if (event.getNimBean().getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
-                btnMakeFriends.setVisibility(View.GONE);
-            } else {//非好友并且是别人发起的招呼,按钮显示
-                btnMakeFriends.setVisibility(View.VISIBLE);
-
-            }
-        }
-        adapter.addHeaderView(initHeadView(event));
-    }
-
-
-    /**
-     * 时间倒计时
-     *
-     * @param event
-     */
-    private int time = 0;
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onEventMainThread(final NimCountDownEvent event) {
-        if (event.getTotalTime() > 0) {
-            //倒计时进度条
-            if (countDownProgress == null)
-                countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
-            if (outdateTimeText == null)
-                outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
-
-            countDownProgress.setVisibility(View.VISIBLE);
-            outdateTimeText.setVisibility(View.VISIBLE);
-            //文本倒计时
-            //todo  文案要修改
-            outdateTimeText.startTime(event.getLeftTime(), "2", "后消息过期");
-
-            countDownProgress.setMax(event.getTotalTime());
-            countDownProgress.setProgress(event.getLeftTime());
-            new CountDownTimer((event.getLeftTime()) * 1000, 1000) {
-
-                @Override
-                public void onTick(long l) {
-                    time++;
-                    countDownProgress.setProgress((event.getLeftTime() - time));
-                }
-
-                @Override
-                public void onFinish() {
-                    outdateTimeText.setText("消息已过期");
-                    countDownProgress.setProgress(0);
-
-                }
-            }.start();
-
-        }
-    }
-
-
-    public void setHeadData(String avator, ArrayList<Tag> tags) {
-        //头像
-        GlideUtil.loadAvatorImg(container.activity, avator, chatHiAvator);
-        //用户标签
-        FlexboxLayoutManager manager = new FlexboxLayoutManager(container.activity, FlexDirection.ROW, FlexWrap.WRAP);
-        manager.setAlignItems(AlignItems.STRETCH);
-        chatHiTags.setLayoutManager(manager);
-        MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(container.activity);
-        chatHiTags.setAdapter(adapter);
-
-        ArrayList<LabelBean> mytags = (ArrayList<LabelBean>) UserManager.INSTANCE.getSpLabels();
-
-        if (tags != null && tags.size() > 0) {
-            if (mytags.size() > 0)
-                for (int i = 0; i < mytags.size(); i++) {
-                    for (int j = 0; j < tags.size(); j++) {
-                        if (mytags.get(i).getId() == tags.get(j).getId()) {
-                            tags.get(j).setSameLabel(true);
-                        } else {
-                            tags.get(j).setSameLabel(false);
-                        }
-                    }
-                }
-            adapter.setData(tags);
-        }
-    }
 
     private OnItemClickListener listener = new OnItemClickListener() {
         @Override
@@ -1467,4 +1374,138 @@ public class ChatMessageListPanelEx {
 
         return null;
     }
+
+
+    /**
+     * 时间倒计时
+     * 招呼头布局
+     *
+     * @param event
+     */
+    private int time = 0;
+    private boolean pause = false;
+    private CountDownTimer countDownTimer;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(final NimHeadEvent event) {
+        if (event.getNimBean().getIsfriend()) { //是好友了，按钮消失
+            btnMakeFriends.setVisibility(View.GONE);
+        } else {
+            if (event.getNimBean().getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
+                btnMakeFriends.setVisibility(View.GONE);
+            } else {//非好友并且是别人发起的招呼,按钮显示
+                btnMakeFriends.setVisibility(View.VISIBLE);
+            }
+        }
+        if (headView == null) {
+            headView = initHeadView(event);
+            adapter.addHeaderView(headView);
+        }
+
+//        event.getNimBean().setType(4);
+        if (event.getNimBean().getType() == 2) { //倒计时消息
+            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
+            if (event.getNimBean().getCountdown() > 0) {
+                //倒计时进度条
+                if (countDownProgress == null)
+                    countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
+                if (outdateTimeText == null)
+                    outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
+
+                countDownProgress.setVisibility(View.VISIBLE);
+                outdateTimeText.setVisibility(View.VISIBLE);
+                //文本倒计时
+                outdateTimeText.startTime(event.getNimBean().getCountdown(), "2", "后消息过期");
+
+                countDownProgress.setMax(event.getNimBean().getCountdown_total());
+                countDownProgress.setProgress(event.getNimBean().getCountdown());
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                    //防止new出多个导致时间跳动加速
+                    countDownTimer = null;
+                }
+                countDownTimer = new CountDownTimer((event.getNimBean().getCountdown()) * 1000, 1000) {
+
+                    @Override
+                    public void onTick(long l) {
+                        if (!pause) {
+                            time++;
+                            countDownProgress.setProgress((event.getNimBean().getCountdown() - time));
+                        }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        outdateTimeText.setText("消息已过期");
+                        //过期消息不展示消息面板
+                        rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.GONE);
+                        countDownProgress.setProgress(0);
+                    }
+                }.start();
+            }
+        } else if (event.getNimBean().getType() == 4) {//过期消息
+            //过期消息不展示消息面板
+            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.GONE);
+            if (countDownProgress == null)
+                countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
+            if (outdateTimeText == null)
+                outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
+
+            btnMakeFriends.setVisibility(View.GONE);
+            countDownProgress.setVisibility(View.VISIBLE);
+            countDownProgress.setProgress(0);
+            outdateTimeText.setVisibility(View.VISIBLE);
+            outdateTimeText.setText("招呼已于 " + event.getNimBean().getTimeout_time() + " 过期");
+        } else {
+            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    private View initHeadView(NimHeadEvent event) {
+        if (headView == null) {
+            headView = LayoutInflater.from(container.activity).inflate(com.example.demoapplication.R.layout.item_chat_head, messageListView, false);
+            //初始化数据
+            chatHiAvator = headView.findViewById(com.example.demoapplication.R.id.targetAvator);
+            chatHiTags = headView.findViewById(com.example.demoapplication.R.id.targetLabels);
+            targetCl = headView.findViewById(com.example.demoapplication.R.id.targetCl);
+            chatHiAvator.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MatchDetailActivity.start(container.activity, container.account);
+                }
+            });
+        }
+        setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
+        return headView;
+    }
+
+
+    public void setHeadData(String avator, ArrayList<Tag> tags) {
+        //头像
+        GlideUtil.loadAvatorImg(container.activity, avator, chatHiAvator);
+        //用户标签
+        FlexboxLayoutManager manager = new FlexboxLayoutManager(container.activity, FlexDirection.ROW, FlexWrap.WRAP);
+        manager.setAlignItems(AlignItems.STRETCH);
+        chatHiTags.setLayoutManager(manager);
+        MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(container.activity);
+        chatHiTags.setAdapter(adapter);
+
+        ArrayList<LabelBean> mytags = (ArrayList<LabelBean>) UserManager.INSTANCE.getSpLabels();
+
+        if (tags != null && tags.size() > 0) {
+            if (mytags.size() > 0)
+                for (int i = 0; i < mytags.size(); i++) {
+                    for (int j = 0; j < tags.size(); j++) {
+                        if (mytags.get(i).getId() == tags.get(j).getId()) {
+                            tags.get(j).setSameLabel(true);
+                        } else {
+                            tags.get(j).setSameLabel(false);
+                        }
+                    }
+                }
+            adapter.setData(tags);
+        }
+    }
+
 }

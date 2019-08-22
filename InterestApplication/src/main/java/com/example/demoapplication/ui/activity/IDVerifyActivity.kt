@@ -14,6 +14,10 @@ import com.baidu.idl.face.platform.utils.Base64Utils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
 import com.example.baselibrary.utils.RandomUtils
+import com.example.baselibrary.widgets.swipeback.SwipeBackLayout
+import com.example.baselibrary.widgets.swipeback.Utils
+import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
+import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.common.MyApplication
@@ -23,12 +27,14 @@ import com.example.demoapplication.ui.dialog.LoadingDialog
 import com.example.demoapplication.utils.QNUploadManager
 import com.example.demoapplication.utils.UserManager
 import com.google.gson.Gson
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.common.BaseApplication.Companion.context
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.utils.NetWorkUtils
+import com.umeng.message.PushAgent
 import com.zhy.http.okhttp.OkHttpUtils
 import com.zhy.http.okhttp.callback.Callback
 import okhttp3.Call
@@ -43,10 +49,37 @@ import java.net.URL
 /**
  * 身份验证
  */
-class IDVerifyActivity : FaceLivenessActivity() {
+class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
+    private lateinit var mHelper: SwipeBackActivityHelper
+
+    override fun getSwipeBackLayout(): SwipeBackLayout {
+        return mHelper.swipeBackLayout
+    }
+
+    override fun setSwipeBackEnable(enable: Boolean) {
+        swipeBackLayout.setEnableGesture(enable)
+    }
+
+    override fun scrollToFinishActivity() {
+        Utils.convertActivityToTranslucent(this)
+        swipeBackLayout.scrollToFinishActivity()
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        mHelper.onPostCreate()
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppManager.instance.addActivity(this)
+        PushAgent.getInstance(this).onAppStart()
+        mHelper = SwipeBackActivityHelper(this)
+        mHelper.onActivityCreate()
+        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
+
         mImageLayout.visibility = View.GONE
         // 根据需求添加活体动作
         MyApplication.livenessList.clear()
@@ -363,5 +396,7 @@ class IDVerifyActivity : FaceLivenessActivity() {
         if (loadingDialog.isShowing) {
             loadingDialog.dismiss()
         }
+        AppManager.instance.finishActivity(this)
+
     }
 }

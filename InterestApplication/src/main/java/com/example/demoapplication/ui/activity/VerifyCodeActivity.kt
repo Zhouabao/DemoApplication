@@ -9,6 +9,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.nim.DemoCache
+import com.example.demoapplication.nim.sp.UserPreferences
 import com.example.demoapplication.presenter.VerifyCodePresenter
 import com.example.demoapplication.presenter.view.VerifyCodeView
 import com.example.demoapplication.utils.UserManager
@@ -16,6 +17,7 @@ import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import kotlinx.android.synthetic.main.activity_verify_code.*
 import org.jetbrains.anko.startActivity
@@ -142,12 +144,14 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
             SPUtils.getInstance(Constants.SPNAME).put("qntoken", data?.qntk)
             SPUtils.getInstance(Constants.SPNAME).put("token", data?.token)
             SPUtils.getInstance(Constants.SPNAME).put("accid", data?.accid)
+            DemoCache.setAccount(nothing?.account)
+            //初始化消息提醒配置
+            initNotificationConfig()
 
             if (data != null && data!!.userinfo != null && data!!.userinfo!!.nickname.isNullOrEmpty()) {//个人信息没有填写
                 startActivity<SetInfoActivity>()
             } else {
                 UserManager.saveUserInfo(data!!)
-                DemoCache.setAccount(nothing?.account)
                 if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
                         Constants.SPNAME
                     ).getStringSet("checkedLabels").isEmpty()
@@ -161,5 +165,19 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
         } else {
             toast("登录失败！请重试")
         }
+    }
+
+    private fun initNotificationConfig() {
+        // 初始化消息提醒
+        NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
+        // 加载状态栏配置
+        var statusBarNotificationConfig = UserPreferences.getStatusConfig()
+        if (statusBarNotificationConfig == null) {
+            statusBarNotificationConfig = DemoCache.getNotificationConfig()
+            UserPreferences.setStatusConfig(statusBarNotificationConfig)
+        }
+        //更新配置
+        NIMClient.updateStatusBarNotificationConfig(statusBarNotificationConfig)
+
     }
 }

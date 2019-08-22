@@ -241,6 +241,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:scaleType="center"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@id/allT2"
                         app:layout_constraintLeft_toRightOf="@id/allT2"
                         app:layout_constraintTop_toTopOf="@id/allT2"/>

@@ -16,8 +16,14 @@ import android.widget.*;
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ToastUtils;
 import com.example.demoapplication.R;
+import com.example.demoapplication.api.Api;
 import com.example.demoapplication.event.EnablePicEvent;
+import com.example.demoapplication.model.CheckGreetSendBean;
 import com.example.demoapplication.nim.session.ChatBaseAction;
+import com.example.demoapplication.utils.UserManager;
+import com.kotlin.base.data.net.RetrofitFactory;
+import com.kotlin.base.data.protocol.BaseResp;
+import com.kotlin.base.utils.NetWorkUtils;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.UIKitOptions;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -44,6 +50,8 @@ import com.netease.nimlib.sdk.msg.model.CustomNotificationConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import java.io.File;
 import java.util.List;
@@ -315,7 +323,13 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         @Override
         public void onClick(View v) {
             if (v == sendMessageButtonInInputBar) {
-                onTextMessageSendButtonPressed();
+                //检测是否可以发消息
+                if (disable) {
+                    checkGreetSendMsg(1);
+                } else {
+                    onTextMessageSendButtonPressed();
+                }
+
             }
         }
     };
@@ -714,10 +728,21 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         playAudioRecordAnim();
     }
 
+    private long audioLength;
+    private File audioFile;
+
     @Override
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
-        IMMessage audioMessage = MessageBuilder.createAudioMessage(container.account, container.sessionType, audioFile, audioLength);
-        container.proxy.sendMessage(audioMessage);
+        //检测是否可以发消息
+        if (disable) {
+            this.audioFile = audioFile;
+            this.audioLength = audioLength;
+            checkGreetSendMsg(2);
+        } else {
+            IMMessage audioMessage = MessageBuilder.createAudioMessage(container.account, container.sessionType, audioFile, audioLength);
+            container.proxy.sendMessage(audioMessage);
+            resetActions();
+        }
     }
 
     @Override
@@ -785,7 +810,6 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
      * @param view
      * @param actions
      */
-
     public void initBottomActionPanel(View view, final List<ChatBaseAction> actions) {
         GridView gridView = view.findViewById(R.id.viewPager);
         adapter = new ChatActionsGridviewAdapter(view.getContext(), actions);
@@ -842,6 +866,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     @Subscribe
     public void EnablePicEvent(EnablePicEvent event) {
+        //是好友就不禁用,如果不是好友就禁用
         if (event.getEnable()) {
             disable = false;
         } else {
@@ -849,14 +874,75 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
             actions.get(2).setEnable(false);
             actions.get(2).setIconResIdDisable(R.drawable.send_location_disable);
             actions.get(3).setEnable(false);
-            actions.get(3).setIconResIdDisable(R.drawable.send_location_disable);
+            actions.get(3).setIconResIdDisable(R.drawable.icon_send_phone_disable);
             actions.get(4).setEnable(false);
-            actions.get(4).setIconResIdDisable(R.drawable.send_location_disable);
+            actions.get(4).setIconResIdDisable(R.drawable.icon_send_pic_disable);
 
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
         }
     }
+
+
+    /**
+     * 判断剩余打招呼次数
+     *
+     * @param type 1-文本  2-录音
+     */
+    private void checkGreetSendMsg(final int type) {
+        if (!NetWorkUtils.INSTANCE.isNetWorkAvailable(container.activity)) {
+            ToastUtils.showShort("请打开网络");
+            return;
+        }
+        RetrofitFactory.Companion.getInstance().create(Api.class)
+                .checkGreetSendMsg(UserManager.INSTANCE.getToken(), UserManager.INSTANCE.getAccid(), container.account)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new rx.Observer<BaseResp<CheckGreetSendBean>>() {
+
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(BaseResp<CheckGreetSendBean> checkGreetSendBeanBaseResp) {
+                        if (checkGreetSendBeanBaseResp != null && checkGreetSendBeanBaseResp.getData() != null) {
+                            CheckGreetSendBean checkGreetSendBean = checkGreetSendBeanBaseResp.getData();
+                            if (checkGreetSendBean.getIsfriend()) {//是好友，发送好友通知
+                                //todo 发送成为好友通知
+                                //发送通知
+                                EventBus.getDefault().post(new EnablePicEvent(true));
+                                view.findViewById(com.example.demoapplication.R.id.btnMakeFriends).setVisibility(View.GONE);
+                            } else {
+                                if (checkGreetSendBean.getResidue_msg_cnt() > 0) {//次数大于0就发送消息
+                                    if (type == 1) {
+                                        onTextMessageSendButtonPressed();
+                                    } else if (type == 2) {
+                                        if (audioFile != null && audioLength > 0) {
+                                            IMMessage audioMessage = MessageBuilder.createAudioMessage(container.account, container.sessionType, audioFile, audioLength);
+                                            container.proxy.sendMessage(audioMessage);
+                                            audioFile = null;
+                                            audioLength = 0;
+                                            resetActions();
+                                        }
+                                    }
+                                } else if (checkGreetSendBean.getResidue_msg_cnt() == 0) {//次数用尽不能再发消息
+                                    resetActions();
+                                    ToastUtils.showShort("招呼次数已用完！");
+                                }
+                            }
+
+                        }
+                    }
+                });
+    }
+
 
 }

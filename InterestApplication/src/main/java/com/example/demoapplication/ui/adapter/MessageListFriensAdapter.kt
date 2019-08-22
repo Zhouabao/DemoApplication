@@ -1,6 +1,8 @@
 package com.example.demoapplication.ui.adapter
 
 import android.os.CountDownTimer
+import android.util.SparseArray
+import android.view.View
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
@@ -27,7 +29,20 @@ import org.greenrobot.eventbus.EventBus
  *    R.layout.item_message_friends_list_notify)
  */
 class MessageListFriensAdapter(data: MutableList<HiMessageBean>) :
-    BaseMultiItemQuickAdapter<HiMessageBean, BaseViewHolder>(data) {
+    BaseMultiItemQuickAdapter<HiMessageBean, MessageListFriensAdapter.MyViewHolder>(data) {
+    private var coundownMap: SparseArray<CountDownTimer> = SparseArray()
+
+    /**
+     *  清空资源
+     */
+    public fun cancelAllTimers() {
+        for (i in 0 until coundownMap.size()) {
+            val cdt = coundownMap[coundownMap.keyAt(i)]
+            if (cdt != null) {
+                cdt.cancel()
+            }
+        }
+    }
 
     init {
         addItemType(1, R.layout.item_message_friends_list_notify)
@@ -36,19 +51,21 @@ class MessageListFriensAdapter(data: MutableList<HiMessageBean>) :
         addItemType(4, R.layout.item_message_friends_outtime)
     }
 
-    override fun convert(holder: BaseViewHolder, item: HiMessageBean) {
-
+    override fun convert(holder: MyViewHolder, item: HiMessageBean) {
         // *    1，新消息 2，倒计时 3，普通样式 4 过期
         when (holder.itemViewType) {
             1 -> {
                 GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.nofityAvator)
             }
             2 -> {
+                if (holder.countDownTimer != null) {
+                    holder.countDownTimer!!.cancel()
+                }
                 GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.countAvator)
                 holder.itemView.countTimer.setMaxStepNum(item.countdown_total ?: 0)
                 if (item.countdown_total != null && item.countdown_total > 0) {
                     holder.itemView.countTimer.update((item.countdown_total - (item.countdown ?: 0)).toLong(), 100)
-                    object : CountDownTimer((item.countdown ?: 0).toLong() * 1000, 1000) {
+                    holder.countDownTimer = object : CountDownTimer((item.countdown ?: 0).toLong() * 1000, 1000) {
                         override fun onFinish() {
                             EventBus.getDefault().post(UpdateHiEvent())
                         }
@@ -61,6 +78,7 @@ class MessageListFriensAdapter(data: MutableList<HiMessageBean>) :
                         }
 
                     }.start()
+                    coundownMap.put(holder.itemView.hashCode(), holder.countDownTimer)
                 }
 
             }
@@ -72,6 +90,12 @@ class MessageListFriensAdapter(data: MutableList<HiMessageBean>) :
             }
 
         }
+
+    }
+
+
+    public class MyViewHolder(view: View) : BaseViewHolder(view) {
+        public var countDownTimer: CountDownTimer? = null
 
     }
 

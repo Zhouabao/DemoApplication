@@ -10,7 +10,12 @@ import android.widget.AbsListView
 import android.widget.AdapterView
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.size
+import com.example.baselibrary.widgets.swipeback.SwipeBackLayout
+import com.example.baselibrary.widgets.swipeback.Utils
+import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
+import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.example.demoapplication.R
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
 import com.netease.nim.uikit.common.activity.UI
@@ -21,13 +26,14 @@ import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.activity_search_message.*
 import org.jetbrains.anko.startActivity
 
 /**
  * 查找聊天记录
  */
-class SearchMessageActivity : UI() {
+class SearchMessageActivity : UI(),SwipeBackActivityBase {
     private lateinit var account: String
 
     companion object {
@@ -55,6 +61,18 @@ class SearchMessageActivity : UI() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_message)
+
+
+
+        AppManager.instance.addActivity(this)
+        PushAgent.getInstance(this).onAppStart()
+        mHelper = SwipeBackActivityHelper(this)
+        mHelper.onActivityCreate()
+        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
+
+
+
+
         initView()
         initSearchListView()
         handleIntent()
@@ -220,4 +238,31 @@ class SearchMessageActivity : UI() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        AppManager.instance.finishActivity(this)
+    }
+
+
+    /*------------------------侧滑退出-----------------*/
+    private lateinit var mHelper: SwipeBackActivityHelper
+
+    override fun getSwipeBackLayout(): SwipeBackLayout {
+        return mHelper.swipeBackLayout
+    }
+
+    override fun setSwipeBackEnable(enable: Boolean) {
+        swipeBackLayout.setEnableGesture(enable)
+    }
+
+    override fun scrollToFinishActivity() {
+        Utils.convertActivityToTranslucent(this)
+        swipeBackLayout.scrollToFinishActivity()
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        mHelper.onPostCreate()
+
+    }
 }

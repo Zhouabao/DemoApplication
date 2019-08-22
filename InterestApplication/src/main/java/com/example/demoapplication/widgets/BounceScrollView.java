@@ -26,10 +26,10 @@ import java.lang.annotation.Target;
  * version: 1.0
  */
 public class BounceScrollView extends NestedScrollView {
-    private static final int ENABLED_ALL = 0;//默认
-    private static final int ENABLED_TOP = 1;
-    private static final int ENABLED_BOTTOM = 2;
-    private static final int ENABLED_NONE = 3;
+    public static final int ENABLED_ALL = 0;//默认
+    public static final int ENABLED_TOP = 1;
+    public static final int ENABLED_BOTTOM = 2;
+    public static final int ENABLED_NONE = 3;
 
     private static final float arg = 1.01F;//加重阻尼效果，辅助手段
 

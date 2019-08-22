@@ -1,6 +1,7 @@
 package com.example.demoapplication.presenter
 
 import android.app.Activity
+import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.GreetBean
@@ -175,8 +176,6 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
     }
 
 
-
-
     /**
      * 打招呼
      */
@@ -185,7 +184,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
             return
         }
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(token, accid, target_accid,tag_id)
+            .greet(token, accid, target_accid, tag_id)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -193,7 +192,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                     } else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
-                        mView.onGreetSResult(false)
+                        ToastUtils.showShort(t.msg)
                     }
                 }
 

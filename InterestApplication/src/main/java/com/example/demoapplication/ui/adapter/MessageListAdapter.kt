@@ -6,7 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
-import com.example.demoapplication.nim.attachment.ChatMatchAttachment
+import com.example.demoapplication.nim.attachment.ChatHiAttachment
 import com.example.demoapplication.nim.attachment.ShareSquareAttachment
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
 import com.netease.nimlib.sdk.msg.model.RecentContact
@@ -34,8 +34,20 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
         }
         GlideUtil.loadAvatorImg(mContext, UserInfoHelper.getAvatar(item.contactId), holder.itemView.msgIcon)
 
-        if (item.attachment is ChatMatchAttachment) {
-            holder.itemView.text.text = "[招呼消息]"
+        if (item.attachment is ChatHiAttachment) {
+            holder.itemView.text.text =
+                if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
+                    "[招呼消息]"
+                } else if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) {
+                    "[匹配消息]"
+                } else if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND) {
+                    "[好友消息]"
+                } else if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME) {
+                    "[消息过期]"
+                } else {
+                    ""
+                }
+
         } else if (item.attachment is ShareSquareAttachment) {
             holder.itemView.text.text = "[动态分享内容]"
         } else {

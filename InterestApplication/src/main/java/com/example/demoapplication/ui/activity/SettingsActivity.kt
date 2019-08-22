@@ -7,10 +7,13 @@ import android.widget.CompoundButton
 import com.blankj.utilcode.util.*
 import com.example.demoapplication.R
 import com.example.demoapplication.presenter.SetInfoPresenter
+import com.example.demoapplication.utils.UserManager
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.AuthService
 import kotlinx.android.synthetic.main.activity_settings.*
+import org.jetbrains.anko.startActivity
 import java.io.File
 
 /**
@@ -107,8 +110,10 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
             }
             //退出登录，同时退出IM和服务器
             R.id.loginOutBtn -> {
-
+                UserManager.clearLoginData()
                 NIMClient.getService(AuthService::class.java).logout()
+                AppManager.instance.finishAllActivity()
+                startActivity<WelcomeActivity>()
             }
             //返回
             R.id.btnBack -> {

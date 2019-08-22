@@ -11,12 +11,14 @@ import com.example.demoapplication.nim.DemoCache;
 import com.example.demoapplication.nim.activity.MessageInfoActivity;
 import com.example.demoapplication.nim.activity.SearchMessageActivity;
 import com.example.demoapplication.nim.attachment.ChatHiAttachment;
-import com.example.demoapplication.nim.attachment.ChatMatchAttachment;
 import com.example.demoapplication.nim.attachment.ShareSquareAttachment;
 import com.example.demoapplication.nim.attachment.StickerAttachment;
 import com.example.demoapplication.nim.extension.CustomAttachParser;
 import com.example.demoapplication.nim.viewholder.MsgViewHolderChatHi;
 import com.example.demoapplication.nim.viewholder.MsgViewHolderShareSquare;
+import com.example.demoapplication.ui.activity.MatchDetailActivity;
+import com.example.demoapplication.ui.activity.UserCenterActivity;
+import com.example.demoapplication.utils.UserManager;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.model.recent.RecentCustomization;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -240,8 +242,17 @@ public class SessionHelper {
 
                 @Override
                 public String getDefaultDigest(RecentContact recent) {
-                    if (recent.getAttachment() instanceof ChatMatchAttachment) {
-                        return "[打招呼]";
+                    if (recent.getAttachment() instanceof ChatHiAttachment) {
+                        if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_HI) {
+                            return "[打招呼]";
+                        } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_MATCH) {
+                            return "[匹配消息]";
+                        } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
+                            return "[好友消息]";
+                        } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_OUTTIME) {
+                            return "[消息过期]";
+                        }
+
                     } else if (recent.getAttachment() instanceof ShareSquareAttachment) {
                         return "[转发动态]";
 
@@ -276,7 +287,13 @@ public class SessionHelper {
 //                        return;
 //                    }
 //                }
-//                MatchDetailActivity.start(context, message.getFromAccount());
+                if (message.getFromAccount().equals(UserManager.INSTANCE.loginInfo().getAccount())) {
+                    context.startActivity(new Intent(context, UserCenterActivity.class));
+                } else {
+                    MatchDetailActivity.start(context, message.getFromAccount());
+                }
+
+
             }
 
             @Override

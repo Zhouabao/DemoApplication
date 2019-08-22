@@ -43,9 +43,6 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.fragment_match.btnChat
-import kotlinx.android.synthetic.main.fragment_match.stateview
-import kotlinx.android.synthetic.main.fragment_match.tvLeftChatTime
 import kotlinx.android.synthetic.main.fragment_match1.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

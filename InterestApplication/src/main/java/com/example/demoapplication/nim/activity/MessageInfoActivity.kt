@@ -8,15 +8,29 @@ import android.view.View
 import android.widget.CompoundButton
 import android.widget.Switch
 import com.blankj.utilcode.util.ToastUtils
+import com.example.baselibrary.widgets.swipeback.SwipeBackLayout
+import com.example.baselibrary.widgets.swipeback.Utils
+import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
+import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.example.demoapplication.R
+import com.example.demoapplication.api.Api
 import com.example.demoapplication.nim.DemoCache
+import com.example.demoapplication.nim.attachment.ChatHiAttachment
 import com.example.demoapplication.nim.sp.UserPreferences
 import com.example.demoapplication.ui.activity.MatchDetailActivity
+import com.example.demoapplication.utils.UserManager
+import com.kotlin.base.common.AppManager
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
 import com.netease.nim.uikit.business.recent.RecentContactsFragment
 import com.netease.nim.uikit.business.session.helper.MessageListPanelHelper
+import com.netease.nim.uikit.business.session.module.Container
+import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
 import com.netease.nim.uikit.common.CommonUtil
 import com.netease.nim.uikit.common.ToastHelper
@@ -34,15 +48,19 @@ import com.netease.nimlib.sdk.friend.FriendServiceObserve
 import com.netease.nimlib.sdk.friend.constant.VerifyType
 import com.netease.nimlib.sdk.friend.model.AddFriendData
 import com.netease.nimlib.sdk.friend.model.MuteListChangedNotify
+import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.activity_message_info.*
 import org.jetbrains.anko.startActivity
 
 /**
  * 好友信息界面
  */
-class MessageInfoActivity : UI(), CompoundButton.OnCheckedChangeListener {
+class MessageInfoActivity : UI(), CompoundButton.OnCheckedChangeListener, SwipeBackActivityBase, ModuleProxy {
 
     private var account: String? = null
 
@@ -64,12 +82,21 @@ class MessageInfoActivity : UI(), CompoundButton.OnCheckedChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_info)
-        account = intent.getStringExtra(EXTRA_ACCOUNT)
 
+
+        AppManager.instance.addActivity(this)
+        PushAgent.getInstance(this).onAppStart()
+        mHelper = SwipeBackActivityHelper(this)
+        mHelper.onActivityCreate()
+        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
+
+
+        account = intent.getStringExtra(EXTRA_ACCOUNT)
         initView()
         registerObserver(true)
 
     }
+
 
     private fun initView() {
         btnBack.onClick { finish() }
@@ -81,15 +108,15 @@ class MessageInfoActivity : UI(), CompoundButton.OnCheckedChangeListener {
                 onRemoveFriend()
             } else {
                 //通过验证添加好友
-                onAddFriendByVerify()
+//                onAddFriendByVerify()
                 //直接添加好友
-//                doAddFriend(null,true)
+                doAddFriend(null, true)
             }
         }
 
         //查找聊天记录
         friendHistory.onClick {
-//            MessageHistoryActivity.start(this, account ?: "", SessionTypeEnum.P2P)//查看聊天记录
+            //            MessageHistoryActivity.start(this, account ?: "", SessionTypeEnum.P2P)//查看聊天记录
             SearchMessageActivity.start(this, account ?: "", SessionTypeEnum.P2P)//搜索聊天记录
 
         }
@@ -100,18 +127,18 @@ class MessageInfoActivity : UI(), CompoundButton.OnCheckedChangeListener {
             val alertDialog = CustomAlertDialog(this)
             alertDialog.setTitle(title)
             alertDialog.addItem("确定") {
-                NIMClient.getService(MsgService::class.java).clearServerHistory(
-                    account ?: "", SessionTypeEnum.P2P
-                )
+                NIMClient.getService(MsgService::class.java)
+                    .clearServerHistory(account ?: "", SessionTypeEnum.P2P, true)
                 MessageListPanelHelper.getInstance().notifyClearMessages(account ?: "")
             }
-            val itemText = resources.getString(R.string.sure_keep_roam)
-            alertDialog.addItem(itemText) {
-                NIMClient.getService(MsgService::class.java).clearServerHistory(
-                    account ?: "", SessionTypeEnum.P2P, false
-                )
-                MessageListPanelHelper.getInstance().notifyClearMessages(account)
-            }
+            //漫游
+//            val itemText = resources.getString(R.string.sure_keep_roam)
+//            alertDialog.addItem(itemText) {
+//                NIMClient.getService(MsgService::class.java).clearServerHistory(
+//                    account ?: "", SessionTypeEnum.P2P, false
+//                )
+//                MessageListPanelHelper.getInstance().notifyClearMessages(account)
+//            }
             alertDialog.addItem(
                 "取消"
             ) { }
@@ -225,6 +252,8 @@ class MessageInfoActivity : UI(), CompoundButton.OnCheckedChangeListener {
         btn.isChecked = isChecked
     }
 
+    /*// 以不接收testAccount帐号消息为例
+    NIMClient.getService(FriendService.class).setMessageNotify("testAccount", false).setCallback(new RequestCallback<Void>() {});*/
 
     private fun registerObserver(register: Boolean) {
         NimUIKit.getContactChangedObservable().registerObserver(friendDataChangedObserver, register)
@@ -252,13 +281,11 @@ class MessageInfoActivity : UI(), CompoundButton.OnCheckedChangeListener {
         if (DemoCache.getAccount() != null && !DemoCache.getAccount().equals(account)) {
             //黑名单
             val black = NIMClient.getService(FriendService::class.java).isInBlackList(account)
-            //消息通知
-            val notice = NIMClient.getService(FriendService::class.java).isNeedMessageNotify(account)
 
 //            setToggleBtn(friendReport, black)
 
             //消息提醒
-            setToggleBtn(friendNoBother, !notice)
+            setToggleBtn(friendNoBother, !NIMClient.getService(FriendService::class.java).isNeedMessageNotify(account))
 
             if (NIMClient.getService(FriendService::class.java).isMyFriend(account)) {
                 val recentContact =
@@ -390,5 +417,90 @@ class MessageInfoActivity : UI(), CompoundButton.OnCheckedChangeListener {
     override fun onDestroy() {
         super.onDestroy()
         registerObserver(false)
+        AppManager.instance.finishActivity(this)
+    }
+
+    /*8-------------------------------添加好友------------------------*/
+    private fun addFriend() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .addFriend(UserManager.getToken(), UserManager.getAccid(), account ?: "")
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
+                override fun onNext(objectBaseResp: BaseResp<Any?>) {
+                    if (objectBaseResp.code == 200) {
+                        sendChatHiMessage(ChatHiAttachment.CHATHI_RFIEND)
+                    } else {
+                        ToastUtils.showShort("添加好友失败哦~")
+                    }
+                }
+            })
+    }
+
+
+    /*--------------------------消息代理------------------------*/
+    private fun sendChatHiMessage(type: Int) {
+        val container = Container(this, account, SessionTypeEnum.P2P, this, true)
+        val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), type)
+        val message = MessageBuilder.createCustomMessage(
+            account,
+            SessionTypeEnum.P2P,
+            "",
+            chatHiAttachment,
+            CustomMessageConfig()
+        )
+        container.proxy.sendMessage(message)
+    }
+
+    override fun sendMessage(msg: IMMessage): Boolean {
+        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
+            RequestCallback<Void?> {
+            override fun onSuccess(param: Void?) {
+                ToastUtils.showShort("添加好友成功！")
+            }
+
+            override fun onFailed(code: Int) {
+            }
+
+            override fun onException(exception: Throwable) {
+            }
+        })
+        return true
+    }
+
+    override fun onInputPanelExpand() {
+
+    }
+
+    override fun shouldCollapseInputPanel() {
+
+    }
+
+    override fun isLongClickEnabled(): Boolean {
+        return false
+    }
+
+    override fun onItemFooterClick(message: IMMessage?) {
+
+    }
+
+
+    /*------------------------侧滑退出-----------------*/
+    private lateinit var mHelper: SwipeBackActivityHelper
+
+    override fun getSwipeBackLayout(): SwipeBackLayout {
+        return mHelper.swipeBackLayout
+    }
+
+    override fun setSwipeBackEnable(enable: Boolean) {
+        swipeBackLayout.setEnableGesture(enable)
+    }
+
+    override fun scrollToFinishActivity() {
+        Utils.convertActivityToTranslucent(this)
+        swipeBackLayout.scrollToFinishActivity()
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        mHelper.onPostCreate()
     }
 }

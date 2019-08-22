@@ -10,6 +10,11 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallbackWrapper
+import com.netease.nimlib.sdk.ResponseCode
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.model.RecentContact
 
 /**
  *    author : ZFM
@@ -62,6 +67,24 @@ class MessageHiPresenter : BasePresenter<MessageHiView>() {
                 override fun onError(e: Throwable?) {
                     mView.onDelTimeoutGreetResult(false)
                 }
+            })
+    }
+
+
+    /**
+     * 获取云信最近联系人
+     */
+    fun getRecentContacts(t: BaseResp<MutableList<HiMessageBean>?>) {
+        NIMClient.getService(MsgService::class.java)
+            .queryRecentContacts()
+            .setCallback(object : RequestCallbackWrapper<MutableList<RecentContact>>() {
+                override fun onResult(code: Int, result: MutableList<RecentContact>?, exception: Throwable?) {
+                    if (code != ResponseCode.RES_SUCCESS.toInt() || result == null) {
+                        return
+                    }
+                    mView.onGetRecentContactResults(result, t)
+                }
+
             })
     }
 }

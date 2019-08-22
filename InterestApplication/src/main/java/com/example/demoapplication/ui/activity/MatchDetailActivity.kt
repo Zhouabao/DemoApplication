@@ -41,6 +41,7 @@ import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.fragment.BlockSquareFragment
 import com.example.demoapplication.ui.fragment.ListSquareFragment
 import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.widgets.BounceScrollView
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -126,6 +127,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             finish()
         }
 
+        //向下拉
+        detailScrollView.bounceType = BounceScrollView.ENABLED_TOP
 
         //设置图片的宽度占满屏幕，宽高比3:4
         val layoutParams = detailPhotosVp.layoutParams
@@ -200,7 +203,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             "${matchBean!!.age} / ${if (matchBean!!.gender == 1) "男" else "女"} / ${matchBean!!.constellation} / ${matchBean!!.distance}"
         detailUserJob.text = "${matchBean!!.jobname}"
         detailUserSign.text = "${matchBean!!.sign}"
-        detailUserLeftChatCount.text = "${matchBean!!.lightningcnt}"
+        updateLigthCount(matchBean!!.lightningcnt ?: 0)
         detailUserJob.visibility = if (matchBean!!.jobname.isNullOrEmpty()) {
             View.GONE
         } else {
@@ -485,6 +488,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      */
     override fun onGreetStateResult(data: GreetBean?) {
         if (data != null) {
+            updateLigthCount(data.lightningcnt)
             if (data.isfriend) {
                 ChatActivity.start(this, matchBean?.accid ?: "")
             } else {
@@ -509,14 +513,18 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
     }
 
+    private fun updateLigthCount(lightningcnt: Int) {
+        matchBean?.lightningcnt = lightningcnt
+        detailUserLeftChatCount.text = "${matchBean?.lightningcnt}"
+    }
+
     /**
      * 打招呼结果（先请求服务器）
      */
     override fun onGreetSResult(success: Boolean) {
         if (success) {
+            updateLigthCount(matchBean?.lightningcnt?.minus(1) ?: 0)
             sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
-        } else {
-            ToastUtils.showShort("打招呼失败，重新试一次吧")
         }
     }
 
