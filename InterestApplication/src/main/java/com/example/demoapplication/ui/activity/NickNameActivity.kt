@@ -65,4 +65,14 @@ class NickNameActivity : BaseActivity() {
         super.onBackPressed()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        KeyboardUtils.hideSoftInput(changeEt)
+    }
+
+    override fun finish() {
+        super.finish()
+        KeyboardUtils.hideSoftInput(changeEt)
+    }
+
 }

@@ -16,9 +16,8 @@
 
     <TextView
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textColor="@color/colorBlackTitle"
-            android:layout_marginLeft="12dp"
             android:text="选择标签"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

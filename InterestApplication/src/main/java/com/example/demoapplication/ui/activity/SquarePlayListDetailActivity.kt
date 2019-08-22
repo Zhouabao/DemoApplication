@@ -478,6 +478,17 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         }
     }
 
+
+    override fun finish() {
+        super.finish()
+        //释放所有
+        GSYVideoManager.releaseAllVideos()
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+    }
+
     override fun onError(text: String) {
         stateview.viewState = MultiStateView.VIEW_STATE_ERROR
         stateview.errorMsg.text = if (mPresenter.checkNetWork()) {

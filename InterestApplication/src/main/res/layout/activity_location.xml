@@ -15,15 +15,13 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-            android:layout_marginLeft="6dp"
             android:layout_width="wrap_content"
             android:layout_height="28dp"
             android:text="选择地址"
             android:gravity="center"
             android:textColor="@color/colorBlackTitle"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textFontWeight="700"
             app:layout_constraintBottom_toBottomOf="@id/btnBack"
             app:layout_constraintLeft_toRightOf="@id/btnBack"
             app:layout_constraintTop_toTopOf="@id/btnBack"

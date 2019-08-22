@@ -839,6 +839,17 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             resetCommentEt()
     }
 
+
+    override fun finish() {
+        super.finish()
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+        if (showCommentEt.isFocused)
+            resetCommentEt()
+    }
+
     override fun onBackPressed() {
         if (showCommentEt.isFocused) {
             resetCommentEt()

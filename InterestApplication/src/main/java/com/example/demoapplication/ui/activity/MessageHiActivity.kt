@@ -130,10 +130,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
             ToastUtils.showShort("删除超时消息失败！")
     }
 
-    override fun onGetRecentContactResults(
-        recentContacts: MutableList<RecentContact>,
-        t: BaseResp<MutableList<HiMessageBean>?>
-    ) {
+    override fun onGetRecentContactResults(contacts: MutableList<RecentContact>, t: BaseResp<MutableList<HiMessageBean>?>) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (t.data.isNullOrEmpty()) {
             refreshLayout.finishLoadMoreWithNoMoreData()
@@ -142,7 +139,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         }
         refreshLayout.finishRefresh(true)
 
-        for (recentContactt in recentContacts) {
+        for (recentContactt in contacts) {
             for (data in t.data ?: mutableListOf()) {
                 if (recentContactt.contactId == data.accid) {
                     if (recentContactt.attachment is ChatHiAttachment) {

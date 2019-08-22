@@ -26,6 +26,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.ui.adapter.LocationAdapter
 import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.DividerItemDecoration
+import com.kotlin.base.ext.onClick
 import kotlinx.android.synthetic.main.activity_location.*
 
 /**
@@ -63,6 +64,10 @@ class LocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener, Vie
 
     private val adapter by lazy { LocationAdapter() }
     private fun initView() {
+        btnBack.onClick {
+            finish()
+        }
+
         locationBtn.setOnClickListener(this)
 
         locationRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
