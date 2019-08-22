@@ -1,13 +1,13 @@
 package com.kotlin.base.data.net
 
 import com.blankj.utilcode.util.AppUtils
+import com.example.baselibrary.retrofit.MyGsonConverterFactory
 import com.kotlin.base.common.BaseConstant
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 /*
@@ -44,7 +44,7 @@ class RetrofitFactory private constructor() {
         //Retrofit实例化
         retrofit = Retrofit.Builder()
             .baseUrl(BaseConstant.SERVER_ADDRESS)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MyGsonConverterFactory.create())
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .client(initClient())
             .build()
