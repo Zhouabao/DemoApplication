@@ -123,12 +123,28 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         mPresenter = MatchDetailPresenter()
         mPresenter.mView = this
         mPresenter.context = this
+
         detailScrollView.setOnBounceListener {
             finish()
         }
-
         //向下拉
         detailScrollView.bounceType = BounceScrollView.ENABLED_TOP
+
+        //刚度 默认1200 值越大回弹的速度越快
+        springAnim.spring.stiffness = 100.0f
+        //阻尼 默认0.5 值越小，回弹之后来回的次数越多
+        springAnim.spring.dampingRatio = 0.80f
+        detailScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            if (scrollY < 0) {
+                springAnim.start()
+            } else if (scrollY < -100) {
+                springAnim.cancel()
+                finish()
+            } else {
+                springAnim.cancel()
+            }
+        }
+
 
         //设置图片的宽度占满屏幕，宽高比3:4
         val layoutParams = detailPhotosVp.layoutParams
@@ -142,20 +158,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailUserChatBtn.setOnClickListener(this)
         backBtn.setOnClickListener(this)
 
-        //刚度 默认1200 值越大回弹的速度越快
-        springAnim.spring.stiffness = 800.0f
-        //阻尼 默认0.5 值越小，回弹之后来回的次数越多
-        springAnim.spring.dampingRatio = 0.50f
-        detailScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-            if (scrollY < 0) {
-                springAnim.start()
-            } else if (scrollY < -100) {
-                springAnim.cancel()
-                finish()
-            } else {
-                springAnim.cancel()
-            }
-        }
 
 
         //用户的广场预览界面

@@ -8,9 +8,13 @@
         android:layout_width="match_parent"
         app:srlEnableLoadMore="true"
         app:srlEnableAutoLoadMore="true"
-        app:srlEnableLoadMoreWhenContentNotFull="false"
+        app:srlEnableLoadMoreWhenContentNotFull="true"
+        app:srlEnableNestedScrolling="false"
         app:srlEnableRefresh="false">
 
+
+    <!-- android:focusable="false"
+            android:focusableInTouchMode="false"-->
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listSquareRv"
             android:focusable="false"

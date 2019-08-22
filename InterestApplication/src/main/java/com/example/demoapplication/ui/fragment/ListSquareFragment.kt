@@ -233,8 +233,8 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 //                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
 //            }
 
-            if (data == null || data.list == null || data!!.list!!.size == 0) {
-                listRefresh.setNoMoreData(true)
+            if (data == null || data.list == null || data!!.list!!.size == 0 ) {
+                listRefresh.finishLoadMoreWithNoMoreData()
             } else {
                 for (tempData in 0 until data!!.list!!.size) {
                     data.list!![tempData].type = when {
