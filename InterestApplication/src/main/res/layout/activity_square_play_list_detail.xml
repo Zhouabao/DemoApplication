@@ -3,13 +3,13 @@
 <com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/stateview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
-        android:id="@+id/stateview"
-        app:msv_viewState="loading"
-        app:msv_loadingView="@layout/loading_layout">
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,11 +29,13 @@
         <ImageView
                 android:id="@+id/btnBack"
                 android:scaleType="center"
-                android:layout_marginLeft="9dp"
+                android:paddingLeft="9dp"
                 android:src="@drawable/icon_back_white"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingRight="9dp"
+                android:paddingBottom="20dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />

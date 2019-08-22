@@ -29,12 +29,7 @@
 
             <ImageView
                     android:id="@+id/btnBack"
-                    android:src="@drawable/icon_return"
-                    android:paddingLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="56dp"
-                    android:paddingRight="12dp"
-                    android:scaleType="fitCenter"
+                    style="@style/BckBtnStyle"
                     />
 
             <TextView

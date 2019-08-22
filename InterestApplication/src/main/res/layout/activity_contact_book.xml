@@ -30,11 +30,7 @@
 
             <ImageView
                     android:id="@+id/btnBack"
-                    android:layout_width="24dp"
-                    android:src="@drawable/icon_return"
-                    android:layout_height="24dp"
-                    android:scaleType="fitCenter"
-                    android:layout_marginLeft="10dp"
+                    style="@style/BckBtnStyle"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
