@@ -3,10 +3,12 @@ package com.example.demoapplication.presenter
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.UserInfoBean
 import com.example.demoapplication.presenter.view.UserCenterView
+import com.example.demoapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 
 /**
@@ -26,15 +28,17 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
             .myInfo(params)
             .excute(object : BaseSubscriber<BaseResp<UserInfoBean?>>(mView) {
                 override fun onNext(t: BaseResp<UserInfoBean?>) {
-                    mView.onGetMyInfoResult(t.data)
+                        mView.onGetMyInfoResult(t.data)
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError("")
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError("")
                 }
             })
     }
-
 
 
 }

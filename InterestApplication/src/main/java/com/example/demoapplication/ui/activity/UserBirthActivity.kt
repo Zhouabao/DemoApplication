@@ -124,20 +124,20 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
         }
         when (month) {
             1, 3, 5, 7, 8, 10, 12 ->
-                if (day > 31) {
+                if (day > 31 || day == 0) {
                     return false
                 }
             4, 6, 9, 11 -> {
-                if (day > 30) {
+                if (day > 30 || day == 0) {
                     return false
                 }
             }
             2 -> {
                 if (year!!.toInt() % 4 == 0 && year!!.toInt() % 100 != 0 || year!!.toInt() % 400 == 0) {
-                    if (day > 29) {
+                    if (day > 29 || day == 0) {
                         return false
                     }
-                } else if (day > 28) {
+                } else if (day > 28 || day == 0) {
                     return false
                 }
             }

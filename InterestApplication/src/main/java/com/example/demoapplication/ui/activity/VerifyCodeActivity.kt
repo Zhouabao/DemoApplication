@@ -99,6 +99,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
                     return
                 } else {
                     mPresenter.checkVerifyCode(phone, verifyCode)
+                    onChangeVerifyButtonStatus(false)
                 }
             }
             R.id.countVerifyCodeTime -> {
@@ -115,9 +116,11 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
     private var data: LoginBean? = null
 
     override fun onConfirmVerifyCode(data: LoginBean, isRight: Boolean) {
+        onChangeVerifyButtonStatus(true)
+
         if (!isRight) {
-//            toast("验证码输入不正确！")
-            onChangeVerifyButtonStatus(false)
+            toast("验证码输入不正确！")
+//            onChangeVerifyButtonStatus(false)
         } else if (isRight) {
             this.data = data
             mPresenter.loginIM(LoginInfo(data.accid, data.extra_data?.im_token))

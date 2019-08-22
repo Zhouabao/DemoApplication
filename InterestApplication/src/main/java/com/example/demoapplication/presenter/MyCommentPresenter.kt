@@ -1,15 +1,15 @@
 package com.example.demoapplication.presenter
 
-import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.MyCommentList
 import com.example.demoapplication.presenter.view.MyCommentView
-import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 
 /**
@@ -36,16 +36,19 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
                     super.onNext(t)
                     if (t.code == 200 && t.data != null) {
                         mView.onGetCommentListResult(t.data!!, refresh)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
+                    } else  {
                         mView.onError(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetCommentListResult(null, refresh)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetCommentListResult(null, refresh)
+                    }
                 }
             })
     }
@@ -61,15 +64,16 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onDeleteCommentResult(t, position)
-                    else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
+                    else  {
                         mView.onDeleteCommentResult(t, position)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onDeleteCommentResult(null, position)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onDeleteCommentResult(null, position)
                 }
             })
     }

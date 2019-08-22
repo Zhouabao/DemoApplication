@@ -1,14 +1,14 @@
 package com.example.demoapplication.presenter
 
-import android.app.Activity
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.SquareMsgBean
 import com.example.demoapplication.presenter.view.MessageSquareView
-import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 
 /**
@@ -28,14 +28,15 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
                 override fun onNext(t: BaseResp<MutableList<SquareMsgBean>?>) {
                     if (t.code == 200)
                         mView.onSquareListsResult(t.data ?: null)
-                    else if (t.code == 403)
-                        UserManager.startToLogin(context as Activity)
                     else
                         mView.onError("")
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError("")
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError("")
                 }
             })
     }
@@ -52,6 +53,9 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
                 }
 
                 override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    }
                 }
             })
     }
@@ -71,7 +75,10 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onDelSquareMsgResult(false)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onDelSquareMsgResult(false)
                 }
             })
     }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:background="@color/colorTransparent"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:background="@drawable/shape_rectangle_white"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_height="200dp"
+            >
+
+        <TextView
+                android:id="@+id/t1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorBlack22"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_above="@id/t2"
+                android:text="您的账号已在其它设备登录"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/t2"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorBlack22"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="请注意账号安全"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <View
+                android:id="@+id/view"
+                android:layout_above="@id/confirm"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+        <TextView
+                android:id="@+id/confirm"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:textSize="18sp"
+                android:textColor="@color/colorOrange"
+                android:text="确定"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:background="@color/colorWhite"
+                android:layout_width="100dp"
+                android:layout_height="50dp"/>
+
+
+    </RelativeLayout>
+
+</LinearLayout>

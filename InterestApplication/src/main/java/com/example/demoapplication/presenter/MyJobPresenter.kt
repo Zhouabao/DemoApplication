@@ -4,11 +4,13 @@ import android.app.Activity
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.presenter.view.MyJobView
+import com.example.demoapplication.ui.dialog.TickDialog
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 
 /**
@@ -25,8 +27,6 @@ class MyJobPresenter : BasePresenter<MyJobView>() {
                 override fun onNext(t: BaseResp<MutableList<LabelBean>?>) {
                     if (t.code == 200) {
                         mView.onGetJobListResult(t.data ?: mutableListOf())
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onError("")
                     }
@@ -34,7 +34,10 @@ class MyJobPresenter : BasePresenter<MyJobView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError("")
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError("")
                 }
             })
     }
@@ -50,8 +53,6 @@ class MyJobPresenter : BasePresenter<MyJobView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         mView.onSavePersonal(true)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onSavePersonal(false)
                     }

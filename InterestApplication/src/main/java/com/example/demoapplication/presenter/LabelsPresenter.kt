@@ -1,12 +1,11 @@
 package com.example.demoapplication.presenter
 
-import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.Labels
 import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.presenter.view.LabelsView
-import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -28,14 +27,17 @@ class LabelsPresenter : BasePresenter<LabelsView>() {
                     if (t.code == 200)
                         mView.onGetLabelsResult(t.data.data)
                     else if (t.code == 403)
-                        UserManager.startToLogin(context as Activity)
+                        TickDialog(context).show()
                     else
                         mView.onError(t.msg)
                 }
 
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError(context.getString(R.string.service_error))
                 }
             })
     }
@@ -53,16 +55,15 @@ class LabelsPresenter : BasePresenter<LabelsView>() {
                     super.onNext(t)
                     if (t.code == 200) {
                         mView.onUploadLabelsResult(true, t.data)
-                    } else {
-                        mView.onError(t.msg)
                     }
                 }
 
 
                 override fun onError(e: Throwable?) {
-                    if (e is BaseException)
-                        UserManager.startToLogin(context as Activity)
-                    else
+
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
                         mView.onError(context.getString(R.string.service_error))
                 }
             })

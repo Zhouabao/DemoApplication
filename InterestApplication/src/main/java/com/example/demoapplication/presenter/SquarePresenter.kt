@@ -6,11 +6,13 @@ import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.FriendListBean
 import com.example.demoapplication.model.SquareListBean
 import com.example.demoapplication.presenter.view.SquareView
+import com.example.demoapplication.ui.dialog.TickDialog
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 
 /**
@@ -31,9 +33,6 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     super.onNext(t)
                     if (t.code == 200 && t.data != null)
                         mView.onGetFriendsListResult(t.data!!.list ?: mutableListOf())
-                    else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    }
                 }
 
                 override fun onError(e: Throwable?) {
@@ -59,15 +58,16 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetSquareListResult(t.data, true, isRefresh)
-                    else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
+                    else  {
                         mView.onGetSquareListResult(t.data, false, isRefresh)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onGetSquareListResult(null, false, isRefresh)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onGetSquareListResult(null, false, isRefresh)
                 }
             })
     }
@@ -86,7 +86,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     if (t.code == 200) {
                         mView.onGetSquareLikeResult(position, true)
                     } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
+                        TickDialog(context).show()
                     } else {
                         mView.onGetSquareLikeResult(position, false)
                     }
@@ -94,8 +94,12 @@ class SquarePresenter : BasePresenter<SquareView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetSquareLikeResult(position, false)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetSquareLikeResult(position, false)
+                    }
                 }
             })
     }
@@ -113,15 +117,19 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     if (t.code == 200)
                         mView.onGetSquareCollectResult(position, t)
                     else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
+                        TickDialog(context).show()
                     } else {
                         mView.onGetSquareCollectResult(position, t)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetSquareCollectResult(position, null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetSquareCollectResult(position, null)
+                    }
                 }
             })
     }
@@ -139,15 +147,19 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     if (t.code == 200)
                         mView.onGetSquareReport(t, position)
                     else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
+                        TickDialog(context).show()
                     } else {
                         mView.onGetSquareReport(t, position)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetSquareReport(null, position)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetSquareReport(null, position)
+                    }
                 }
             })
     }
@@ -176,8 +188,12 @@ class SquarePresenter : BasePresenter<SquareView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError("服务器错误~")
-                    mView.onGetSquareListResult(null, false)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError("服务器错误~")
+                        mView.onGetSquareListResult(null, false)
+                    }
                 }
             })
     }
@@ -202,8 +218,12 @@ class SquarePresenter : BasePresenter<SquareView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onRemoveMySquareResult(false, position)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onRemoveMySquareResult(false, position)
+                    }
                 }
             })
     }

@@ -1,15 +1,15 @@
 package com.example.demoapplication.presenter
 
-import android.app.Activity
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.SquareListBean
 import com.example.demoapplication.presenter.view.MyCollectionView
-import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 
 /**
@@ -27,15 +27,16 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                 override fun onNext(t: BaseResp<SquareListBean?>) {
                     if (t.code == 200) {
                         mView.onGetSquareListResult(t.data)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onError("")
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError("")
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError("")
                 }
             })
     }
@@ -53,8 +54,6 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                     super.onNext(t)
                     if (t.code == 200) {
                         mView.onGetSquareLikeResult(position, true)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onGetSquareLikeResult(position, false)
                     }
@@ -62,8 +61,12 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetSquareLikeResult(position, false)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetSquareLikeResult(position, false)
+                    }
                 }
             })
     }
@@ -80,16 +83,19 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetSquareCollectResult(position, t)
-                    else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
+                    else  {
                         mView.onGetSquareCollectResult(position, t)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetSquareCollectResult(position, null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetSquareCollectResult(position, null)
+                    }
                 }
             })
     }
@@ -106,16 +112,19 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetSquareReport(t, position)
-                    else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
+                    else  {
                         mView.onGetSquareReport(t, position)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetSquareReport(null, position)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetSquareReport(null, position)
+                    }
                 }
             })
     }
@@ -131,16 +140,18 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onRemoveMySquareResult(true, position)
-                    else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
+                    else  {
                         mView.onRemoveMySquareResult(false, position)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onRemoveMySquareResult(false, position)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onRemoveMySquareResult(false, position)
+                    }
                 }
             })
     }

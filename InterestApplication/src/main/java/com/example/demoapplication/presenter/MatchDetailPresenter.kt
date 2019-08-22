@@ -1,6 +1,5 @@
 package com.example.demoapplication.presenter
 
-import android.app.Activity
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
@@ -8,11 +7,12 @@ import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.presenter.view.MatchDetailView
-import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 
 /**
@@ -37,15 +37,16 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<MatchBean?>) {
                     if (t.code == 200) {
                         mView.onGetMatchDetailResult(true, t.data)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onGetMatchDetailResult(false, null)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onGetMatchDetailResult(false, null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onGetMatchDetailResult(false, null)
                 }
             })
 
@@ -67,8 +68,6 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         mView.onGetUserActionResult(true, t.msg)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onError(t.msg)
                         mView.onGetUserActionResult(false, "")
@@ -76,8 +75,12 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetUserActionResult(false, null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetUserActionResult(false, null)
+                    }
                 }
             })
 
@@ -99,17 +102,20 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         mView.onGetUserActionResult(true, t.msg)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
+                    }else {
                         mView.onError(t.msg)
                         mView.onGetUserActionResult(false, null)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetUserActionResult(false, null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetUserActionResult(false, null)
+                    }
                 }
             })
 
@@ -131,8 +137,6 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         mView.onGetUserActionResult(true, t.msg)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onError(t.msg)
                         mView.onGetUserActionResult(false, null)
@@ -140,8 +144,12 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
-                    mView.onGetUserActionResult(false, null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError(context.getString(R.string.service_error))
+                        mView.onGetUserActionResult(false, null)
+                    }
                 }
             })
 
@@ -161,16 +169,17 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
                         mView.onGetLikeResult(true, t)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
+                    }else {
                         mView.onError(t.msg)
                         mView.onGetLikeResult(false, null)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError(context.getString(R.string.service_error))
                 }
             })
     }
@@ -189,15 +198,16 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
                         mView.onGreetSResult(true)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
                     } else {
                         ToastUtils.showShort(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError(context.getString(R.string.service_error))
                 }
             })
     }
@@ -213,15 +223,16 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {
                         mView.onGreetStateResult(t.data)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onGreetStateResult(t.data)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onGreetStateResult(null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onGreetStateResult(null)
                 }
             })
     }
