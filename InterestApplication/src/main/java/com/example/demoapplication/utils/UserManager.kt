@@ -180,8 +180,8 @@ object UserManager {
     /**
      * 判断用户是否是认证
      */
-    fun isUserVerify(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("verify", 0) == 1
+    fun isUserVerify(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("verify", 0)
     }
 
 
