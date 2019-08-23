@@ -12,7 +12,6 @@ import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.example.baselibrary.glide.GlideUtil
@@ -54,6 +53,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.toast
 import java.util.*
 
 //在支持路由的页面上添加注解（必选）
@@ -179,12 +179,17 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             filterUserDialog.switchSameCity.visibility = View.GONE
         }
 
-        if (UserManager.isUserVerify()) {
+        if (UserManager.isUserVerify() == 1) {
             filterUserDialog.btnVerify.visibility = View.GONE
             filterUserDialog.switchShowVerify.visibility = View.VISIBLE
             filterUserDialog.switchShowVerify.isChecked = sp.getInt("audit_only", 1) == 2
 
         } else {
+            if (UserManager.isUserVerify() == 2) {
+                filterUserDialog.btnVerify.text = "认证中"
+            } else {
+                filterUserDialog.btnVerify.text = "未认证"
+            }
             filterUserDialog.btnVerify.visibility = View.VISIBLE
             filterUserDialog.switchShowVerify.visibility = View.GONE
         }
@@ -193,8 +198,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             ChargeVipDialog(this).show()
         }
         filterUserDialog.btnVerify.onClick {
-            ToastUtils.showShort("去认证")
-            startActivity<IDVerifyActivity>()
+            if (UserManager.isUserVerify() == 2) {
+                toast("认证正在审核中，请耐心等待哦~")
+            } else {
+                startActivity<IDVerifyActivity>()
+            }
         }
         filterUserDialog.seekBarAge.setOnRangeChangedListener(object : OnRangeChangedListener {
             override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
