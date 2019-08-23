@@ -12,7 +12,7 @@ data class MatchListBean(
     var list: MutableList<MatchBean>?,
     var lightningcnt: Int?,
     var isvip: Int = 0,    //是否会员 true是 false不是
-    var isfaced: Int = 0    //是否认证 true 是 false 不是
+    var isfaced: Int = 0    //0未认证/认证不成功     1认证通过     2认证中
 )
 
 /**
@@ -20,7 +20,7 @@ data class MatchListBean(
  */
 data class MatchBean(
     var isvip: Int = 0,    //是否会员 true是 false不是
-    var isfaced: Int = 0,  //是否认证 true 是 false 不是
+    var isfaced: Int = 0,  //0未认证/认证不成功     1认证通过     2认证中
     var accid: String? = null,
     var age: Int? = 0,
     var avatar: String? = null,
