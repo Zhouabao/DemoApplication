@@ -64,7 +64,7 @@ final class MyGsonResponseBodyConverter<T> implements Converter<ResponseBody, T>
         InputStream inputStream = new ByteArrayInputStream(response.getBytes());
         JsonReader jsonReader = gson.newJsonReader(new InputStreamReader(inputStream, charset));
 
-        if (code != 200) {
+        if (code == 403) {
             value.close();
             throw new BaseException(code, msg);
         }
