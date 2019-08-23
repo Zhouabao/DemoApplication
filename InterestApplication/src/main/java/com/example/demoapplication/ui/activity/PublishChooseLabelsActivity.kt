@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.example.demoapplication.R
+import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.presenter.LabelsPresenter
 import com.example.demoapplication.ui.adapter.LabelAdapter
@@ -86,6 +87,13 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
             if (index >= labels.size) {
                 break
             }
+
+            //移除精选标签
+            if (labels[index].id == Constants.RECOMMEND_TAG_ID) {
+                labels.remove(labels[index])
+            }
+
+
             for (j in 0 until saveLabels.size) {
                 if (labels[index].id == saveLabels[j].id) {
                     labels[index].checked = true
@@ -96,6 +104,7 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
             }
             index++
         }
+
 
         adapter.setNewData(labels)
     }
@@ -147,14 +156,11 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
             completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_unable_btn_15dp)
             completeLabelBtn.setTextColor(resources.getColor(R.color.colorBlackText))
             iconChecked.visibility = View.GONE
-            completeLabelBtn.text =
-                "再选1个"
             completeLabelLL.isEnabled = false
         } else {
             completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_enable_btn_15dp)
             completeLabelLL.isEnabled = true
             completeLabelBtn.setTextColor(resources.getColor(R.color.colorWhite))
-            completeLabelBtn.text = "完成"
             iconChecked.visibility = View.VISIBLE
         }
     }

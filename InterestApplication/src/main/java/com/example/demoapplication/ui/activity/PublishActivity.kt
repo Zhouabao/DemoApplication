@@ -189,7 +189,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         val checkedId = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
         val myTags: MutableList<LabelBean> = UserManager.getSpLabels()
         for (tag in myTags) {
-            if (checkedId == tag.id) {
+            if (checkedId == tag.id && checkedId != Constants.RECOMMEND_TAG_ID) {
                 publishLabelAdapter.addData(tag)
                 checkTags.add(tag)
             }
@@ -744,11 +744,25 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      * 检查发布按钮是否可用
      */
     private fun checkCompleteBtnEnable() {
-        if (publishContent.text.length > 200) {
-            ToastUtils.showShort("字数超长啦~")
-        }
-        publishBtn.isEnabled =
-            (publishContent.text.isNotEmpty() && (publishContent.text.length <= 200 || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()))
+//        if (publishContent.text.isNullOrEmpty()) {
+//            ToastUtils.showShort("内容是必需的哦~")
+//            return
+//        }
+//        if (publishContent.text.length > 200) {
+//            ToastUtils.showShort("字数超长啦~")
+//            return
+//        }
+//        if (checkTags.size <= 0) {
+//            ToastUtils.showShort("标签是必选项哦~")
+//            return
+//        }
+//
+//        if ((publishContent.text.isNullOrEmpty() || publishContent.text.length > 200) && pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+//            ToastUtils.showShort("文本、语音、图片、视频至少要选择一种发布哦~")
+//            return
+//        }
+
+        publishBtn.isEnabled = (publishContent.text.isNotEmpty() && (publishContent.text.length <= 200 || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) && checkTags.size > 0)
     }
 
     override fun onResume() {
@@ -794,8 +808,13 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     override fun onClick(view: View) {
         when (view.id) {
             R.id.publishBtn -> {
-                if (emojRv.visibility == View.VISIBLE)
+
+
+
+
+                if (emojRv.visibility == View.VISIBLE) {
                     emojRv.visibility = View.GONE
+                }
                 if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//文本
                     publish()
                 } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//音频
@@ -982,6 +1001,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 checkTags = data!!.getSerializableExtra("checkedLabels") as MutableList<LabelBean>
                 publishLabelAdapter.setNewData(data!!.getSerializableExtra("checkedLabels") as MutableList<LabelBean>)
                 publishLabelAdapter.addData(0, LabelBean("添加标签"))
+                checkCompleteBtnEnable()
             }
             //地图返回
             else if (requestCode == REQUEST_CODE_MAP) {

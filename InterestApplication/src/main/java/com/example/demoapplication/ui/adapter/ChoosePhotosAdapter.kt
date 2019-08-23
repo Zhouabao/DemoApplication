@@ -59,13 +59,18 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
                         helper.itemView.choosePhotoIndex.text = "${index + 1}"
                     }
                 }
-                GlideUtil.loadRoundImgCenterCrop(mContext, item.filePath, helper.itemView.choosePhoto, SizeUtils.dp2px(5F))
+                GlideUtil.loadRoundImgCenterCrop(
+                    mContext,
+                    item.filePath,
+                    helper.itemView.choosePhoto,
+                    SizeUtils.dp2px(5F)
+                )
 
             }
         } else if (type == 1) {//1:选中的相册
             helper.itemView.chooseVideoDuration.visibility = View.GONE
             helper.itemView.choosePhotoIndex.visibility = View.GONE
-            GlideUtil.loadImg(mContext, item.filePath, helper.itemView.choosePhoto)
+            GlideUtil.loadRoundImgCenterCrop(mContext, item.filePath, helper.itemView.choosePhoto, SizeUtils.dp2px(5F))
             helper.itemView.choosePhotoDel.visibility = if (item.ischecked) {
                 helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_delete)
                 View.VISIBLE
@@ -92,7 +97,12 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
                         helper.itemView.choosePhotoIndex.text = "${index + 1}"
                     }
                 }
-                GlideUtil.loadImg(mContext, item.filePath, helper.itemView.choosePhoto)
+                GlideUtil.loadRoundImgCenterCrop(
+                    mContext,
+                    item.filePath,
+                    helper.itemView.choosePhoto,
+                    SizeUtils.dp2px(5F)
+                )
                 helper.itemView.chooseCamera.visibility = View.GONE
                 helper.itemView.choosePhoto.visibility = View.VISIBLE
                 helper.itemView.chooseVideoDuration.visibility = View.VISIBLE

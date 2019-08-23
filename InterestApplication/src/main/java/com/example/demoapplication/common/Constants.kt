@@ -32,7 +32,11 @@ object Constants {
     const val DEFAULT_ARC_WIDTH = 10
 
 
+    //官方助手id
     const val ASSISTANT_ACCID = "9b6ab1ce76756a5c243c713aaf45ab5e"
+    //精选标签id
+    const val RECOMMEND_TAG_ID = 1
+
 
     //百度人脸认证
     //    // 为了apiKey,secretKey为您调用百度人脸在线接口的，如注册，比对等。
