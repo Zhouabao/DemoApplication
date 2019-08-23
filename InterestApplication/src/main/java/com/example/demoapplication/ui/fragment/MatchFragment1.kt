@@ -313,6 +313,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         manager.setRewindAnimationSetting(setting)
         card_stack_view.layoutManager = manager
         card_stack_view.adapter = matchUserAdapter
+        matchUserAdapter.bindToRecyclerView(card_stack_view)
         card_stack_view.itemAnimator.apply {
             if (this is DefaultItemAnimator) {
                 supportsChangeAnimations = false
