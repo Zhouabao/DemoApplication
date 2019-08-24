@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.ListDataEvent
@@ -105,30 +103,30 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         listSquareRv.itemAnimator?.changeDuration = 0
 
         //限定范围为屏幕一半的上下偏移180
-        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
-        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
-        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
-        listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            var firstVisibleItem = 0
-            var lastVisibleItem = 0
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                scrollCalculatorHelper.onScrollStateChanged(recyclerView, newState)
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition()
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
-                //滑动自动播放
-                scrollCalculatorHelper.onScroll(
-                    recyclerView,
-                    firstVisibleItem,
-                    lastVisibleItem,
-                    lastVisibleItem - firstVisibleItem
-                )
-            }
-        })
+//        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
+//        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
+//        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
+//        listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            var firstVisibleItem = 0
+//            var lastVisibleItem = 0
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                scrollCalculatorHelper.onScrollStateChanged(recyclerView, newState)
+//            }
+//
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition()
+//                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
+//                //滑动自动播放
+//                scrollCalculatorHelper.onScroll(
+//                    recyclerView,
+//                    firstVisibleItem,
+//                    lastVisibleItem,
+//                    lastVisibleItem - firstVisibleItem
+//                )
+//            }
+//        })
 
         adapter.setOnItemClickListener { _, view, position ->
             SquareCommentDetailActivity.start(activity!!, adapter.data[position])

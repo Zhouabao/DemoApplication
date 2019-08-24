@@ -273,17 +273,18 @@
                             android:layout_height="24dp"/>
                 </RadioGroup>
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/detailSquareFilterLabelRv"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        android:layout_width="0dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/allT2"/>
+                <!--<androidx.recyclerview.widget.RecyclerView-->
+                        <!--android:id="@+id/detailSquareFilterLabelRv"-->
+                        <!--android:layout_marginTop="10dp"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_marginRight="10dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="5dp"-->
+                        <!--android:visibility="gone"-->
+                        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                        <!--app:layout_constraintRight_toRightOf="parent"-->
+                        <!--app:layout_constraintTop_toBottomOf="@id/allT2"/>-->
 
                 <FrameLayout
                         android:id="@+id/detail_content_fragment"

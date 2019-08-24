@@ -128,7 +128,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             finish()
         }
         //向下拉
-        detailScrollView.bounceType = BounceScrollView.ENABLED_ALL
+        detailScrollView.bounceType = BounceScrollView.ENABLED_TOP
 
         //刚度 默认1200 值越大回弹的速度越快
         springAnim.spring.stiffness = 100.0f
