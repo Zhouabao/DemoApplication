@@ -12,6 +12,7 @@ import com.example.demoapplication.api.Api;
 import com.example.demoapplication.common.Constants;
 import com.example.demoapplication.event.EnablePicEvent;
 import com.example.demoapplication.event.NimHeadEvent;
+import com.example.demoapplication.event.StarEvent;
 import com.example.demoapplication.model.NimBean;
 import com.example.demoapplication.nim.extension.ChatMessageListPanelEx;
 import com.example.demoapplication.nim.panel.ChatInputPanel;
@@ -88,6 +89,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
                         if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
                             EventBus.getDefault().postSticky(new NimHeadEvent(nimBeanBaseResp.getData()));
+                            EventBus.getDefault().postSticky(new StarEvent(nimBeanBaseResp.getData().getStared(),nimBeanBaseResp.getData().getIsfriend()));
                             EventBus.getDefault().postSticky(new EnablePicEvent(nimBeanBaseResp.getData().getIsfriend()));
                         }
                     }

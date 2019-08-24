@@ -10,6 +10,7 @@ package com.example.demoapplication.model
 data class NimBean(
     val avatar: String? = "",
     val isfriend: Boolean = false,//	是否好友 true 是  false 不是
+    val stared: Boolean = false,//	是否是星标好友 true 是  false 不是
     val isinitiated: Boolean = false,//是否自己发起的 true自己发起的 false 他人发起
     val taglist: ArrayList<Tag>? = arrayListOf(),
     var type: Int = 0,//类型1，新消息 2，倒计时 3，普通样式 4 过期
@@ -17,6 +18,7 @@ data class NimBean(
     val countdown_total: Int = 0,//总倒计时
     val countdown: Int = 0,//剩余时间
     val residue_msg_cnt: Int = 0//	该条招呼的剩余发起消息次数
+
 
 )
 

@@ -56,6 +56,7 @@
             />
 
     <LinearLayout
+            android:id="@+id/llstar"
             android:gravity="center"
             android:layout_gravity="center"
             android:paddingRight="15dp"
@@ -97,10 +98,10 @@
                 android:textSize="16sp"/>
 
         <Switch
+                android:id="@+id/friendNoBother"
                 android:showText="false"
                 android:thumb="@drawable/switch_ios_thumb"
                 android:track="@drawable/selector_switch_ios_track"
-                android:id="@+id/friendNoBother"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -108,7 +109,6 @@
     <LinearLayout
             android:gravity="center"
             android:layout_gravity="center"
-            android:paddingRight="15dp"
             android:paddingLeft="15dp"
             android:layout_width="match_parent"
             android:layout_height="50dp">
@@ -124,15 +124,16 @@
         <ImageView
                 android:id="@+id/friendHistory"
                 android:scaleType="center"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
                 android:src="@drawable/icon_more_right"
-                android:layout_width="24dp"
-                android:layout_height="24dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
     </LinearLayout>
 
     <LinearLayout
             android:gravity="center"
             android:layout_gravity="center"
-            android:paddingRight="15dp"
             android:paddingLeft="15dp"
             android:layout_width="match_parent"
             android:layout_height="50dp">
@@ -148,16 +149,17 @@
         <ImageView
                 android:id="@+id/friendHistoryClean"
                 android:scaleType="center"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
                 android:src="@drawable/icon_more_right"
-                android:layout_width="24dp"
-                android:layout_height="24dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
     </LinearLayout>
 
 
     <LinearLayout
             android:gravity="center"
             android:layout_gravity="center"
-            android:paddingRight="15dp"
             android:paddingLeft="15dp"
             android:layout_width="match_parent"
             android:layout_height="50dp">
@@ -173,16 +175,17 @@
         <ImageView
                 android:id="@+id/friendReport"
                 android:scaleType="center"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
                 android:src="@drawable/icon_more_right"
-                android:layout_width="24dp"
-                android:layout_height="24dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
     </LinearLayout>
 
 
     <LinearLayout
             android:gravity="center"
             android:layout_gravity="center"
-            android:paddingRight="15dp"
             android:paddingLeft="15dp"
             android:layout_width="match_parent"
             android:layout_height="50dp">
@@ -199,9 +202,11 @@
         <ImageView
                 android:id="@+id/friendDelete"
                 android:scaleType="center"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
                 android:src="@drawable/icon_more_right"
-                android:layout_width="24dp"
-                android:layout_height="24dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
     </LinearLayout>
 
 

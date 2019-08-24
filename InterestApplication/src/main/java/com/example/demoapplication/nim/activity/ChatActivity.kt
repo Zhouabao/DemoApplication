@@ -258,6 +258,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     }
 
 
+
     /*------------------------侧滑退出-----------------*/
     private lateinit var mHelper: SwipeBackActivityHelper
 

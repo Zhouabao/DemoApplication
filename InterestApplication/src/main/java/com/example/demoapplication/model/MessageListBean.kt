@@ -147,6 +147,7 @@ data class ContactDataBean(
 
 data class ContactBean(
     var nickname: String? = "",
+    var stared: Boolean = false,
     var accid: String? = "",
     var avatar: String? = "",
     var member_level: Int? = 0,

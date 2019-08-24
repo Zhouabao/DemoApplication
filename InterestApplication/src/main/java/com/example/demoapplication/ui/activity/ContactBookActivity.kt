@@ -196,7 +196,13 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         if (data != null) {
             if (!data.list.isNullOrEmpty()) {
                 for (data in data.list!!) {
-                    data.index = Cn2Spell.getPinYinFirstLetter(data.nickname)
+                    data.index = Cn2Spell.getPinYinFirstLetter(
+                        if (data.nickname.isNullOrEmpty()) {
+                            "#"
+                        } else {
+                            data.nickname
+                        }
+                    )
                 }
 
                 adapter.addData(data.list!!)
@@ -205,7 +211,13 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
             }
             if (!data.asterisk.isNullOrEmpty()) {
                 for (data in data.asterisk!!) {
-                    data.index = Cn2Spell.getPinYinFirstLetter(data.nickname)
+                    data.index = Cn2Spell.getPinYinFirstLetter(
+                        if (data.nickname.isNullOrEmpty()) {
+                            "#"
+                        } else {
+                            data.nickname
+                        }
+                    )
                 }
                 Collections.sort(data.asterisk, LetterComparator())
                 headAdapter.addData(data.asterisk!!)

@@ -461,6 +461,29 @@ interface Api {
     @POST("Relationship/addFriend${Constants.END_BASE_URL}")
     fun addFriend(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
 
+    /**
+     * 添加星标好友
+     */
+    @FormUrlEncoded
+    @POST("Relationship/addStarTarget${Constants.END_BASE_URL}")
+    fun addStarTarget(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 移除星标好友
+     */
+    @FormUrlEncoded
+    @POST("Relationship/removeStarTarget${Constants.END_BASE_URL}")
+    fun removeStarTarget(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 删除招呼
+     */
+    @FormUrlEncoded
+    @POST("Relationship/removeGreet${Constants.END_BASE_URL}")
+    fun removeGreet(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
+
 
     /**
      * 发起招呼者 判断剩余消息次数
