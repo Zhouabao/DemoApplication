@@ -49,6 +49,8 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
 
         blockRv.layoutManager = GridLayoutManager(activity, 3, RecyclerView.VERTICAL, false)
         blockRv.adapter = blockAdapter
+        blockAdapter.setEmptyView(R.layout.empty_layout, blockRv)
+
         blockAdapter.setOnItemClickListener { _, view, position ->
 
         }

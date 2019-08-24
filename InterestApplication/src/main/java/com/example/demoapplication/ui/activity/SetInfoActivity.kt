@@ -57,7 +57,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initState()
+//        initState()
         setContentView(R.layout.activity_set_info)
 
         initView()

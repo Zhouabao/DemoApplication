@@ -14,6 +14,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
@@ -71,6 +72,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
 
     private fun initView() {
+        ScreenUtils.setFullScreen(this)
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_FULL)
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
@@ -235,6 +237,8 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         if (b) {
             ToastUtils.showShort("删除动态成功！")
             finish()
+        } else {
+            ToastUtils.showShort("删除动态失败！")
         }
 
     }

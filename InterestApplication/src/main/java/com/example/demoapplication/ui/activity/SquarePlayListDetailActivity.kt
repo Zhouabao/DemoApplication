@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoap.MultiListDetailPlayAdapter
 import com.example.demoapplication.R
@@ -159,8 +160,11 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             }
         }
     }
+    //音频当前播放位置
+    private var currPlayIndex = -1
 
     private fun initView() {
+        ScreenUtils.setFullScreen(this)
         btnBack.onClick { finish() }
         GSYVideoType.setShowType(SCREEN_TYPE_FULL)
         mPresenter = SquarePlayDetaiPresenter()
@@ -193,10 +197,11 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             when (view.id) {
                 //播放
                 R.id.detailPlayBtn -> {
-                    if (mediaPlayer == null && currentIndex != position) {
+                    if (mediaPlayer == null || currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
                         initAudio(position)
                         //todo  还原播放器
                         mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
+                        currPlayIndex = position
                     }
 
                     for (index in 0 until adapter.data.size) {
@@ -253,6 +258,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
             }
         }
+
 
         //上一个
         rvLast.setOnClickListener(this)
@@ -364,9 +370,18 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     }
 
     override fun onRemoveMySquareResult(result: Boolean, position: Int) {
+
         if (result) {
-            adapter.data.removeAt(position)
-            adapter.notifyItemRemoved(position)
+            toast("删除动态成功！")
+            if (adapter.data.size == 1) {
+                finish()
+            } else {
+                adapter.remove(position)
+            }
+
+
+        } else {
+            toast("删除动态失败！")
         }
     }
 

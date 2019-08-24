@@ -1243,6 +1243,7 @@ public class ChatMessageListPanelEx {
      * 收到已读回执（更新VH的已读label）
      */
     public void receiveReceipt() {
+        Log.d("OkHttp", "===========已读===========");
         updateReceipt(items);
         refreshMessageList();
     }
@@ -1388,77 +1389,96 @@ public class ChatMessageListPanelEx {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(final NimHeadEvent event) {
+        if (headView == null) {
+            headView = initHeadView(event);
+            adapter.addHeaderView(headView);
+        } else {
+            setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
+        }
+
+
         if (event.getNimBean().getIsfriend()) { //是好友了，按钮消失
             btnMakeFriends.setVisibility(View.GONE);
+            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
         } else {
             if (event.getNimBean().getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
                 btnMakeFriends.setVisibility(View.GONE);
             } else {//非好友并且是别人发起的招呼,按钮显示
                 btnMakeFriends.setVisibility(View.VISIBLE);
             }
-        }
-        if (headView == null) {
-            headView = initHeadView(event);
-            adapter.addHeaderView(headView);
-        }
 
-//        event.getNimBean().setType(4);
-        if (event.getNimBean().getType() == 2) { //倒计时消息
-            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
-            if (event.getNimBean().getCountdown() > 0) {
-                //倒计时进度条
+            //1，新消息 2，倒计时 3，普通样式 4 过期
+            if (event.getNimBean().getType() == 2) { //倒计时消息
+                rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
+                if (event.getNimBean().getCountdown() > 0) {
+                    //倒计时进度条
+                    if (countDownProgress == null)
+                        countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
+                    if (outdateTimeText == null)
+                        outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
+
+                    countDownProgress.setVisibility(View.VISIBLE);
+                    outdateTimeText.setVisibility(View.VISIBLE);
+                    //文本倒计时
+                    if (!pause) {
+                        outdateTimeText.startTime(event.getNimBean().getCountdown(), "2", "后消息过期");
+                    }
+                    countDownProgress.setMax(event.getNimBean().getCountdown_total());
+                    countDownProgress.setProgress(event.getNimBean().getCountdown());
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        //防止new出多个导致时间跳动加速
+                        countDownTimer = null;
+                    }
+                    countDownTimer = new CountDownTimer((event.getNimBean().getCountdown()) * 1000, 1000) {
+
+                        @Override
+                        public void onTick(long l) {
+                            if (!pause) {
+                                time++;
+                                countDownProgress.setProgress((event.getNimBean().getCountdown() - time));
+                            }
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            outdateTimeText.setText("消息已过期");
+                            //过期消息不展示消息面板
+                            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.GONE);
+                            countDownProgress.setProgress(0);
+                        }
+                    }.start();
+                }
+            } else if (event.getNimBean().getType() == 4) {//过期消息
+                //过期消息不展示消息面板
+                rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.GONE);
                 if (countDownProgress == null)
                     countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
                 if (outdateTimeText == null)
                     outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
 
+                btnMakeFriends.setVisibility(View.GONE);
                 countDownProgress.setVisibility(View.VISIBLE);
+                countDownProgress.setProgress(0);
                 outdateTimeText.setVisibility(View.VISIBLE);
-                //文本倒计时
-                outdateTimeText.startTime(event.getNimBean().getCountdown(), "2", "后消息过期");
-
-                countDownProgress.setMax(event.getNimBean().getCountdown_total());
-                countDownProgress.setProgress(event.getNimBean().getCountdown());
-                if (countDownTimer != null) {
-                    countDownTimer.cancel();
-                    //防止new出多个导致时间跳动加速
-                    countDownTimer = null;
+                outdateTimeText.setText("招呼已于 " + event.getNimBean().getTimeout_time() + " 过期");
+            } else {
+                if (countDownProgress == null) {
+                    countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
                 }
-                countDownTimer = new CountDownTimer((event.getNimBean().getCountdown()) * 1000, 1000) {
-
-                    @Override
-                    public void onTick(long l) {
-                        if (!pause) {
-                            time++;
-                            countDownProgress.setProgress((event.getNimBean().getCountdown() - time));
-                        }
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        outdateTimeText.setText("消息已过期");
-                        //过期消息不展示消息面板
-                        rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.GONE);
-                        countDownProgress.setProgress(0);
-                    }
-                }.start();
+                countDownProgress.setVisibility(View.GONE);
+                if (outdateTimeText == null) {
+                    outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
+                }
+                outdateTimeText.setVisibility(View.GONE);
+                btnMakeFriends.setVisibility(View.GONE);
+                rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
             }
-        } else if (event.getNimBean().getType() == 4) {//过期消息
-            //过期消息不展示消息面板
-            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.GONE);
-            if (countDownProgress == null)
-                countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
-            if (outdateTimeText == null)
-                outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
 
-            btnMakeFriends.setVisibility(View.GONE);
-            countDownProgress.setVisibility(View.VISIBLE);
-            countDownProgress.setProgress(0);
-            outdateTimeText.setVisibility(View.VISIBLE);
-            outdateTimeText.setText("招呼已于 " + event.getNimBean().getTimeout_time() + " 过期");
-        } else {
-            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
         }
+
+
+//
     }
 
 

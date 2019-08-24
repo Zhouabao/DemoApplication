@@ -76,6 +76,7 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
         when (view.id) {
             //黑名单
             R.id.blackListBtn -> {
+                startActivity<BlackListActivity>()
             }
             //消息提醒
             R.id.msgNotificate -> {

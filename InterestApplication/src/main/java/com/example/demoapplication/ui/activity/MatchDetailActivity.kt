@@ -128,7 +128,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             finish()
         }
         //向下拉
-        detailScrollView.bounceType = BounceScrollView.ENABLED_TOP
+        detailScrollView.bounceType = BounceScrollView.ENABLED_ALL
 
         //刚度 默认1200 值越大回弹的速度越快
         springAnim.spring.stiffness = 100.0f
@@ -436,7 +436,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             // 若有 就打招呼
             // 若无 就弹充值
             R.id.detailUserChatBtn -> {//打个招呼
-                mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), matchBean?.accid ?: "")
+                if (matchBean!!.isfriend == 1) {
+                    ChatActivity.start(this, matchBean?.accid ?: "")
+                } else
+                    mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), matchBean?.accid ?: "")
             }
 
             R.id.backBtn -> {

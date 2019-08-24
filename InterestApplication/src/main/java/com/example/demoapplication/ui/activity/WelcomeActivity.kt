@@ -56,10 +56,11 @@ class WelcomeActivity : BaseActivity() {
                 } else {
                     startActivity<MainActivity>()
                 }
+                finish()
             } else {
-                startActivity<SetInfoActivity>()
+                UserManager.clearLoginData()
+//                startActivity<SetInfoActivity>()
             }
-            finish()
         }
 
 

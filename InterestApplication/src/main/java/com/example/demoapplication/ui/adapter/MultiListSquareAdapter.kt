@@ -14,7 +14,6 @@ import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.GreetBean
-import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.nim.activity.ChatActivity
@@ -26,6 +25,7 @@ import com.example.demoapplication.ui.activity.MatchDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.ui.dialog.ChargeVipDialog
+import com.example.demoapplication.ui.dialog.TickDialog
 import com.example.demoapplication.utils.UriUtils
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.common.BaseApplication.Companion.context
@@ -33,6 +33,7 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.business.session.module.Container
 import com.netease.nim.uikit.business.session.module.ModuleProxy
@@ -104,15 +105,16 @@ class MultiListSquareAdapter(
 
         //todo 进入聊天界面
         holder.itemView.squareChatBtn1.onClick {
+            greetState(UserManager.getToken(), UserManager.getAccid(), item.accid)
             clickPos = holder.layoutPosition
-            ChatActivity.start(mContext!!, item.accid ?: "")
+            ChatActivity.start(mContext!!, item.accid)
         }
 
         if (item.descr.isNullOrEmpty()) {
             holder.itemView.squareContent1.visibility = View.GONE
         } else {
             holder.itemView.squareContent1.visibility = View.VISIBLE
-            holder.itemView.squareContent1.setContent(item.descr ?: "")
+            holder.itemView.squareContent1.setContent(item.descr)
         }
 
         holder.itemView.squareUserName1.text = item.nickname ?: ""
@@ -251,14 +253,16 @@ class MultiListSquareAdapter(
     }
 
 
-
     /*----------------------------打招呼请求逻辑--------------------------------*/
-
+//todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
+    //1.首先判断是否有次数，
+    // 若有 就打招呼
+    // 若无 就弹充值
     /**
      * 判断当前能否打招呼
      */
-    fun greetState(token: String, accid: String, target_accid: String, matchBean: MatchBean) {
-        if (! NetworkUtils.isConnected()) {
+    fun greetState(token: String, accid: String, target_accid: String) {
+        if (!NetworkUtils.isConnected()) {
             ToastUtils.showShort("请连接网络！")
             return
         }
@@ -267,16 +271,34 @@ class MultiListSquareAdapter(
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(null) {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {
-                        onGreetStateResult(t.data, matchBean)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
+                        val greetBean = t.data
+                        if (greetBean != null) {
+                            if (greetBean.isfriend || greetBean.isgreet) {
+                                ChatActivity.start(mContext as Activity, target_accid ?: "")
+                            } else {
+                                if (greetBean.lightningcnt > 0) {
+                                    greet(UserManager.getToken(), UserManager.getAccid(), (target_accid ?: ""))
+                                } else {
+                                    if (UserManager.isUserVip()) {
+                                        //TODO 会员充值
+                                        ToastUtils.showShort("次数用尽，请充值。")
+                                    } else {
+                                        ChargeVipDialog(mContext).show()
+                                    }
+                                }
+                            }
+                        } else {
+                            ToastUtils.showShort(t.msg)
+                        }
                     } else {
-                        onGreetStateResult(t.data, matchBean)
+                        ToastUtils.showShort(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    onGreetStateResult(null, matchBean)
+                    if (e is BaseException) {
+                        TickDialog(mContext).show()
+                    }
                 }
             })
     }
@@ -295,35 +317,17 @@ class MultiListSquareAdapter(
      *
      *         2.2.2 无次数 其他操作--如:请求充值会员
      */
-    fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean) {
-        if (greetBean != null) {
-            if (greetBean.isfriend) {
-                ChatActivity.start(mContext!!, matchBean.accid ?: "")
-            } else {
-                if (greetBean.lightningcnt > 0) {
-                    greet(UserManager.getToken(), UserManager.getAccid(), (matchBean.accid ?: ""))
-                } else {
-                    if (UserManager.isUserVip()) {
-                        ToastUtils.showShort("次数用尽，请充值。")
-                    } else {
-                        ChargeVipDialog(mContext!!).show()
-                    }
-                }
-            }
-        } else {
-            ToastUtils.showShort("请求失败，请重试")
-        }
-    }
+
     /**
      * 打招呼
      */
     fun greet(token: String, accid: String, target_accid: String) {
-        if (! NetworkUtils.isConnected()) {
+        if (!NetworkUtils.isConnected()) {
             ToastUtils.showShort("请连接网络！")
             return
         }
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(token, accid, target_accid,UserManager.getGlobalLabelId())
+            .greet(token, accid, target_accid, UserManager.getGlobalLabelId())
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -344,7 +348,7 @@ class MultiListSquareAdapter(
     /**
      * 打招呼结果（先请求服务器）
      */
-     fun onGreetSResult(greetBean: Boolean) {
+    fun onGreetSResult(greetBean: Boolean) {
         if (greetBean) {
             sendChatHiMessage(mData[clickPos])
         } else {
@@ -356,11 +360,6 @@ class MultiListSquareAdapter(
 
     private fun sendChatHiMessage(squareBean: SquareBean) {
         val container = Container(mContext as Activity, squareBean?.accid, SessionTypeEnum.P2P, this, true)
-//        val chatHiAttachment = ChatMatchAttachment(
-//            UserManager.getGlobalLabelName(),
-//            matchBean?.tags ?: mutableListOf(),
-//            matchBean?.avatar ?: ""
-//        )
         val chatHiAttachment = ChatHiAttachment(
             UserManager.getGlobalLabelName(),
             ChatHiAttachment.CHATHI_HI

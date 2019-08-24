@@ -9,7 +9,7 @@
         app:srlEnableLoadMore="true"
         app:srlEnableAutoLoadMore="true"
         app:srlEnableLoadMoreWhenContentNotFull="true"
-        app:srlEnableNestedScrolling="false"
+        app:srlEnableNestedScrolling="true"
         app:srlEnableRefresh="false">
 
 

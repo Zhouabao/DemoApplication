@@ -50,6 +50,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     companion object {
         const val REQUEST_LABEL_CODE = 10
         const val REQUEST_INFO_SETTING = 11
+        const val REQUEST_MY_SQUARE = 12
     }
 
     //用户标签adapter
@@ -75,18 +76,11 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
                 "_timestamp" to System.currentTimeMillis()
             )
         )
+    }
 
-        multiStateView.retryBtn.onClick {
-            multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.getMemberInfo(
-                hashMapOf(
-                    "accid" to UserManager.getAccid(),
-                    "token" to UserManager.getToken(),
-                    "_sign" to "",
-                    "_timestamp" to System.currentTimeMillis()
-                )
-            )
-        }
+    override fun onResume() {
+        super.onResume()
+
     }
 
     private fun initData() {
@@ -289,7 +283,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LABEL_CODE) {
                 getTagData()
-            } else if (requestCode == REQUEST_INFO_SETTING) {
+            } else if (requestCode == REQUEST_INFO_SETTING || requestCode == REQUEST_MY_SQUARE) {
                 multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
                 mPresenter.getMemberInfo(
                     hashMapOf(
@@ -332,7 +326,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //我的动态 1,我的所有动态 2我点过赞的 3 我收藏的
             R.id.userSquareCount -> {
-                startActivity<MyCollectionEtcActivity>("type" to 1)
+                startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to 1)
             }
             //我的收藏
             R.id.userCollection -> {

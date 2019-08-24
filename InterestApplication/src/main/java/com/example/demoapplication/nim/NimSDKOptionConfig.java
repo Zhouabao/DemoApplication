@@ -118,6 +118,7 @@ public class NimSDKOptionConfig {
         if (userConfig == null) {
             userConfig = config;
         } else {
+
             // 新增的 UserPreferences 存储项更新，兼容 3.4 及以前版本
             // 新增 notificationColor 存储，兼容3.6以前版本
             // APP默认 StatusBarNotificationConfig 配置修改后，使其生效

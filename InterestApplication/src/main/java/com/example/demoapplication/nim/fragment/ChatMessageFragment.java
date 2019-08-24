@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.demoapplication.R;
 import com.example.demoapplication.api.Api;
+import com.example.demoapplication.common.Constants;
 import com.example.demoapplication.event.EnablePicEvent;
 import com.example.demoapplication.event.NimHeadEvent;
 import com.example.demoapplication.model.NimBean;
@@ -86,8 +87,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     @Override
                     public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
                         if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
-                            EventBus.getDefault().post(new NimHeadEvent(nimBeanBaseResp.getData()));
-                            EventBus.getDefault().post(new EnablePicEvent(nimBeanBaseResp.getData().getIsfriend()));
+                            EventBus.getDefault().postSticky(new NimHeadEvent(nimBeanBaseResp.getData()));
+                            EventBus.getDefault().postSticky(new EnablePicEvent(nimBeanBaseResp.getData().getIsfriend()));
                         }
                     }
                 });
@@ -131,7 +132,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void onPause() {
         super.onPause();
-
         NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, SessionTypeEnum.None);
         inputPanel.onPause();
         messageListPanel.onPause();
@@ -140,8 +140,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void onResume() {
         super.onResume();
+        inputPanel.onResume();
         messageListPanel.onResume();
-        getTargetInfo(sessionId);
+        if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
+            getTargetInfo(sessionId);
+        } else {
+            rootView.findViewById(R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
+        }
         NIMClient.getService(MsgService.class).setChattingAccount(sessionId, sessionType);
         getActivity().setVolumeControlStream(AudioManager.STREAM_VOICE_CALL); // 默认使用听筒播放
     }
@@ -246,7 +251,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         messageListPanel.onIncomingMessage(messages);
 
         //新消息来了请求接口，更新键盘啊头布局等数据。
-        getTargetInfo(sessionId);
+        if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
+            getTargetInfo(sessionId);
+        } else {
+            rootView.findViewById(R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
+        }
 
         // 发送已读回执
         messageListPanel.sendReceipt();
@@ -258,7 +267,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private Observer<List<MessageReceipt>> messageReceiptObserver = new Observer<List<MessageReceipt>>() {
         @Override
         public void onEvent(List<MessageReceipt> messageReceipts) {
+            //收到已读回执
             messageListPanel.receiveReceipt();
+            //收到已读回执,调用接口,改变此时招呼或者消息的状态
+            getTargetInfo(sessionId);
         }
     };
 

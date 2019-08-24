@@ -88,7 +88,9 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         refreshLayout.setOnLoadMoreListener(this)
         refreshLayout.setEnableAutoLoadMore(true)
 
-        btnBack.onClick { finish() }
+        btnBack.onClick {
+            finish()
+        }
         collectionTitle.text = when (type) {
             1 -> {
                 "我的动态"
@@ -103,6 +105,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                 ""
             }
         }
+
 
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -390,6 +393,10 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         }
     }
 
+    override fun finish() {
+        setResult(Activity.RESULT_OK,intent)
+        super.finish()
+    }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         refreshLayout.setNoMoreData(false)

@@ -203,7 +203,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             "男"
         } else {
             "女"
-        }}\t" + "/\t${item.job ?: ""}\t" + "/\t${item.distance ?: ""}"
+        }}\t" + "/\t${item.constellation ?: ""}\t" + "/\t${item.distance ?: ""}"
 
     }
 

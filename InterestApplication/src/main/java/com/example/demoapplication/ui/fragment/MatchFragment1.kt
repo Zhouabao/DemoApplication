@@ -1,6 +1,7 @@
 package com.example.demoapplication.ui.fragment
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.blankj.utilcode.util.SPUtils
@@ -44,6 +48,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_match1.*
+import kotlinx.android.synthetic.main.loading_layout_match.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -88,6 +93,27 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         super.onViewCreated(view, savedInstanceState)
 
         initView()
+        initLoading()
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun initLoading() {
+        //        stateview.webloading
+//        stateview.webloading
+
+        val settings = stateview.webloading.settings
+        settings.javaScriptEnabled = true
+        settings.javaScriptCanOpenWindowsAutomatically = true
+        settings.setSupportMultipleWindows(true)
+        stateview.webloading.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                view?.loadUrl(request?.url?.toString())
+                return true
+            }
+
+        }
+        stateview.webloading.loadUrl("file:///android_asset/match_loading.html")
+
     }
 
     private val manager by lazy { CardStackLayoutManager(activity!!, this) }
@@ -107,7 +133,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
         initialize()
         mPresenter.getMatchList(matchParams)
-//        matchUserAdapter.setEmptyView(R.layout.empty_layout, card_stack_view)
 
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
@@ -128,6 +153,13 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         )
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun onResume() {
+        super.onResume()
+
+        stateview.webloading.settings.javaScriptEnabled = true
+        stateview.webloading.onResume()
+    }
 
     private var lightCount = 0
     override fun onClick(view: View) {
@@ -146,6 +178,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+        stateview.webloading.destroy()
     }
 
 
@@ -314,6 +347,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         card_stack_view.layoutManager = manager
         card_stack_view.adapter = matchUserAdapter
         matchUserAdapter.bindToRecyclerView(card_stack_view)
+//        matchUserAdapter.setEmptyView(R.layout.loading_layout_match, card_stack_view)
         card_stack_view.itemAnimator.apply {
             if (this is DefaultItemAnimator) {
                 supportsChangeAnimations = false
@@ -337,6 +371,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     }
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
+        Log.d("CardStackView", "${ratio}")
         //向上超级喜欢(会员就超级喜欢 否则弹起收费窗)
 //        if (direction == Direction.Top && ratio > 0.5F && !switch) {
 //            switch = true

@@ -29,8 +29,10 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/detailScrollView"
+                android:scrollbars="none"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -299,10 +301,11 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_alignParentLeft="true"
-                android:layout_marginBottom="20dp"
                 android:gravity="center"
+                android:elevation="10dp"
+                android:background="@drawable/shape_rectangle_white_shadow"
                 android:layout_alignParentBottom="true"
-                android:layout_height="wrap_content">
+                android:layout_height="70dp">
 
             <RelativeLayout
                     android:id="@+id/detailUserLikeBtn"
@@ -352,14 +355,16 @@
                         android:layout_marginRight="17dp"
                         android:layout_alignParentRight="true"
                         android:textStyle="bold"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textColor="@color/colorOrange"
                         android:background="@drawable/shape_oval_white"
                         android:gravity="center"
                         android:layout_centerInParent="true"
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
-                        tools:text="3"/>
+                        android:layout_width="wrap_content"
+                        android:minWidth="21dp"
+                        android:minHeight="21dp"
+                        android:layout_height="wrap_content"
+                        tools:text="31"/>
             </RelativeLayout>
 
         </LinearLayout>

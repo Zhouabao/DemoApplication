@@ -244,8 +244,16 @@ interface Api {
      * 拉黑用户
      */
     @FormUrlEncoded
-    @POST("relationship/shieldingFriend${Constants.END_BASE_URL}")
+    @POST("StrageBlock/blockMember${Constants.END_BASE_URL}")
     fun shieldingFriend(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 解除拉黑
+     */
+    @FormUrlEncoded
+    @POST("StrageBlock/removeBlock${Constants.END_BASE_URL}")
+    fun removeBlock(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -433,6 +441,13 @@ interface Api {
     fun getContactLists(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<ContactDataBean?>>
 
     /**
+     * 获取黑名单
+     */
+    @FormUrlEncoded
+    @POST("StrageBlock/blackList${Constants.END_BASE_URL}")
+    fun myShieldingList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<BlackBean>?>>
+
+    /**
      * 聊天界面获取信息
      */
     @FormUrlEncoded
@@ -455,7 +470,6 @@ interface Api {
     fun checkGreetSendMsg(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<CheckGreetSendBean?>>
 
 
-
     /**
      * 发起招呼后发起消息计数器
      * @param id 招呼id
@@ -463,7 +477,11 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Relationship/sendGreetMsg${Constants.END_BASE_URL}")
-    fun sendGreetMsg(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String, @Field("id") id: String=""): Observable<BaseResp<CheckGreetSendBean?>>
+    fun sendGreetMsg(
+        @Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String, @Field(
+            "id"
+        ) id: String = ""
+    ): Observable<BaseResp<CheckGreetSendBean?>>
 
 
     @GET

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,6 +6,8 @@
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
+        android:background="?attr/selectableItemBackground"
+        android:foreground="?attr/selectableItemBackground"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="15dp"
@@ -112,7 +113,6 @@
 
         <TextView
                 android:id="@+id/matchUserName"
-                android:maxLength="10"
                 android:textColor="@color/colorWhite"
                 android:textSize="24sp"
                 android:layout_marginLeft="25dp"
@@ -138,7 +138,7 @@
                     android:id="@+id/matchUserAge"
                     android:elevation="2dp"
                     android:gravity="center"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:textColor="@color/colorWhite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                     android:id="@+id/matchUserJob"
                     android:gravity="center"
                     android:layout_width="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:layout_marginTop="5dp"
                     android:drawableLeft="@drawable/icon_job"
                     android:textColor="@color/colorWhite"
@@ -169,7 +169,7 @@
                     android:id="@+id/matchUserLabelsLikeCount"
                     android:gravity="center"
                     android:layout_width="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:layout_marginRight="30dp"
                     android:layout_marginTop="5dp"
                     android:drawableLeft="@drawable/icon_label_small"
@@ -202,7 +202,7 @@
                     android:text="在该板块下发布内容"
                     android:drawableLeft="@drawable/icon_dynamic_small"
                     android:drawablePadding="6dp"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:textColor="@color/colorWhite"
                     android:layout_height="wrap_content"
                     />
@@ -240,22 +240,27 @@
 
     <ImageView
             android:id="@+id/left_overlay"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/icon_dislike"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="100dp"
-            android:layout_gravity="right"/>
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/icon_dislike_with_circle"
+            android:layout_gravity="right|center_vertical"/>
 
 
     <ImageView
             android:id="@+id/right_overlay"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/icon_like"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="100dp"
-            android:layout_gravity="left"/>
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/icon_like_with_circle"
+            android:layout_gravity="left|center_vertical"/>
+
+    <ImageView
+            android:id="@+id/bottom_overlay"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            android:src="@drawable/icon_hi_with_circle"
+            android:layout_gravity="center_horizontal|bottom"/>
 
 
 </androidx.cardview.widget.CardView>

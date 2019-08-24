@@ -186,11 +186,12 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
             }
             SquareBean.AUDIO -> {
                 holder.addOnClickListener(R.id.detailPlayBtn)
-                Glide.with(context)
+                Glide.with(mContext)
                     .load(item.avatar!!)
                     .apply(bitmapTransform(BlurTransformation(25)))
                     .into(holder.itemView.audioFl)
-                GlideUtil.loadImg(context, item.avatar ?: "", holder.itemView.detailPlayAudioBg)
+                holder.itemView.audioFl.alpha = 0.5F
+                GlideUtil.loadImg(mContext, item.avatar ?: "", holder.itemView.detailPlayAudioBg)
 
 
                 //设定动画作用于的控件，以及什么动画，旋转的开始角度和结束角度

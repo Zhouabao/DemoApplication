@@ -34,6 +34,8 @@ import java.util.*
  *    version: 1.0
  */
 object UserManager {
+    var lightingcount = 0
+
 
     /**
      * 跳至登录界面
@@ -280,6 +282,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("isvip")
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
         SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
+        SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
 
         //位置信息
         SPUtils.getInstance(Constants.SPNAME).remove("latitude")

@@ -137,6 +137,12 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         if (audioMessageHelper != null) {
             onEndAudioRecord(true);
         }
+        collapse(false);
+    }
+
+
+    public void onResume() {
+        switchToTextLayout(true);
     }
 
     public void onDestroy() {
@@ -339,8 +345,6 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         hideEmojiLayout();
         hideAudioLayout();
         resetActions();
-
-        audioAnimLayout.setVisibility(View.GONE);
 
         messageInputBar.setVisibility(View.VISIBLE);
 
@@ -574,10 +578,10 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
                 @Override
                 public void run() {
-                    resetActions();
                     hideInputMethod();
                     hideEmojiLayout();
                     hideAudioLayout();
+                    resetActions();
                 }
             };
         }
@@ -838,10 +842,10 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                 if (actions.get(position).isCheck()) {
                     if (position == 0) {//表情
                         toggleEmojiLayout();
-                        hideAudioLayout();
+//                        hideAudioLayout();
                     } else if (position == 1) {
                         switchToAudioLayout();
-                        hideEmojiLayout();
+//                        hideEmojiLayout();
                     } else {//定位
                         actions.get(position).onClick();
                         actions.get(position).setCheck(false);
@@ -867,7 +871,13 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
     @Subscribe
     public void EnablePicEvent(EnablePicEvent event) {
         //是好友就不禁用,如果不是好友就禁用
-        if (event.getEnable()) {
+        updateActionsState(event.getEnable());
+    }
+
+
+    //是好友就不禁用,如果不是好友就禁用
+    private void updateActionsState(boolean enable) {
+        if (enable) {
             disable = false;
         } else {
             disable = true;
@@ -890,6 +900,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
      *
      * @param type 1-文本  2-录音
      */
+
     private void checkGreetSendMsg(final int type) {
         if (!NetWorkUtils.INSTANCE.isNetWorkAvailable(container.activity)) {
             ToastUtils.showShort("请打开网络");
@@ -918,7 +929,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                             if (checkGreetSendBean.getIsfriend()) {//是好友，发送好友通知
                                 //todo 发送成为好友通知
                                 //发送通知
-                                EventBus.getDefault().post(new EnablePicEvent(true));
+                                updateActionsState(true);
                                 view.findViewById(com.example.demoapplication.R.id.btnMakeFriends).setVisibility(View.GONE);
                             } else {
                                 if (checkGreetSendBean.getResidue_msg_cnt() > 0 || checkGreetSendBean.getIslimit() == false) {//次数大于0就发送消息

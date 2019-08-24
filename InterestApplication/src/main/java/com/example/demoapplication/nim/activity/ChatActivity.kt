@@ -10,6 +10,7 @@ import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
 import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
+import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.EnablePicEvent
 import com.example.demoapplication.event.NimHeadEvent
 import com.example.demoapplication.event.UpdateHiEvent
@@ -21,6 +22,7 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.ext.setVisible
 import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
@@ -62,8 +64,8 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                 override fun onNext(t: BaseResp<NimBean?>) {
                     super.onNext(t)
                     if (t.code == 200 && t.data != null) {
-                        EventBus.getDefault().post(NimHeadEvent(t.data!!))
-                        EventBus.getDefault().post(EnablePicEvent(t.data!!.isfriend))
+                        EventBus.getDefault().postSticky(NimHeadEvent(t.data!!))
+                        EventBus.getDefault().postSticky(EnablePicEvent(t.data!!.isfriend))
                     }
                 }
             })
@@ -181,6 +183,11 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     }
 
     private fun requestBuddyInfo() {
+        if (sessionId == Constants.ASSISTANT_ACCID) {
+            chatMore.setVisible(false)
+        } else {
+            chatMore.setVisible(true)
+        }
         chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)
     }
 
@@ -249,7 +256,6 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     override fun enableSensor(): Boolean {
         return true
     }
-
 
 
     /*------------------------侧滑退出-----------------*/

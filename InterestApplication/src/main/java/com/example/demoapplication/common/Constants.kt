@@ -33,7 +33,7 @@ object Constants {
 
 
     //官方助手id
-    const val ASSISTANT_ACCID = "9b6ab1ce76756a5c243c713aaf45ab5e"
+    const val ASSISTANT_ACCID = "01"
     //精选标签id
     const val RECOMMEND_TAG_ID = 1
 

@@ -153,12 +153,12 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         itemdecoration.setDrawable(activity!!.resources.getDrawable(R.drawable.recycler_divider))
         squareDynamicRv.addItemDecoration(itemdecoration)
 
+        adapter.setHeaderAndEmpty(true)
         squareDynamicRv.layoutManager = layoutManager
         squareDynamicRv.adapter = adapter
         adapter.bindToRecyclerView(squareDynamicRv)
         adapter.addHeaderView(initFriendsView())
         adapter.setEmptyView(R.layout.empty_layout, squareDynamicRv)
-        adapter.setHeaderAndEmpty(false)
         //取消动画，主要是闪烁
 //        (squareDynamicRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         squareDynamicRv.itemAnimator?.changeDuration = 0
@@ -542,7 +542,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
         listParams["tagid"] = event.label.id
         //这个地方还要默认设置选中第一个标签来更新数据
-        mPresenter.getSquareList(listParams, true, true)
+        refreshLayout.autoRefresh()
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -552,7 +553,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         params.forEach {
             listParams[it.key] = it.value
         }
-        mPresenter.getSquareList(listParams, true, false)
+        refreshLayout.autoRefresh()
     }
 
 

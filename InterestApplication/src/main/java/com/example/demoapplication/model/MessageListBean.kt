@@ -29,7 +29,7 @@ data class HiMessageBean(
     var create_time: String = "",
     var nickname: String = "",
     var out_time: String = "",
-    var timeout_time: Int= 0,
+    var timeout_time: Int = 0,
     var countdown: Int = 0,//	倒计时秒剩余时长（秒）
     var id: Int = 0,
     var read_time: String = "",
@@ -152,4 +152,16 @@ data class ContactBean(
     var member_level: Int? = 0,
     var index: String? = ""
 //    var index: String? = Cn2Spell.getPinYinFirstLetter(nickname).toUpperCase()
+)
+
+
+/****************黑名单*******************/
+data class BlackBean(
+    val accid: String = "",
+    val age: Int = 0,
+    val avatar: String = "",
+    val constellation: String = "",
+    val gender: Int = 0,
+    val isvip: Int = 0,
+    val nickname: String = ""
 )

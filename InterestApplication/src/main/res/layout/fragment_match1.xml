@@ -7,10 +7,10 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:msv_animateViewChanges="true"
-        app:msv_emptyView="@layout/empty_layout"
+        app:msv_animateViewChanges="false"
+        app:msv_emptyView="@layout/loading_layout_match"
         app:msv_errorView="@layout/error_layout"
-        app:msv_loadingView="@layout/loading_layout"
+        app:msv_loadingView="@layout/loading_layout_match"
         app:msv_viewState="loading">
 
     <LinearLayout
