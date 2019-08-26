@@ -3,8 +3,6 @@ package com.example.demoapplication.utils;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
-import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.lucene.LuceneService;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -25,7 +23,7 @@ public class DataCleanManager {
             cacheSize += getFolderSize(context.getExternalCacheDir());
             Log.v(TAG, "cacheSize2==" + getFolderSize(context.getExternalCacheDir()));
         }
-        cacheSize += NIMClient.getService(LuceneService.class).getCacheSize();//云信缓存数据
+//        cacheSize += NIMClient.getService(LuceneService.class).getCacheSize();//云信缓存数据
         return getFormatSize(cacheSize);
     }
 
@@ -36,7 +34,7 @@ public class DataCleanManager {
             deleteDir(context.getExternalCacheDir());
         }
 
-        NIMClient.getService(LuceneService.class).clearCache();
+//        NIMClient.getService(LuceneService.class).clearCache();
     }
 
     private static boolean deleteDir(File dir) {
