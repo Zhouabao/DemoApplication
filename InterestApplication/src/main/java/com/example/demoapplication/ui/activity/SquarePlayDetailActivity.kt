@@ -3,8 +3,6 @@ package com.example.demoapplication.ui.activity
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +10,6 @@ import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
-import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -141,16 +138,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         detailPlaydianzan.text = "${squareBean.like_cnt}"
 
-        videoFl.background = BitmapDrawable(
-            ImageUtils.fastBlur(
-                BitmapFactory.decodeResource(
-                    resources,
-                    R.drawable.img_avatar_01
-                ),
-                1f,
-                25f
-            )
-        )
     }
 
 

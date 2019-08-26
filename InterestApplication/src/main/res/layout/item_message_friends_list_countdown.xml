@@ -13,7 +13,6 @@
             android:id="@+id/countAvator"
             android:layout_width="57dp"
             android:layout_height="57dp"
-            android:src="@drawable/img_avatar_01"
             app:layout_constraintBottom_toBottomOf="@id/countTimer"
             app:layout_constraintLeft_toLeftOf="@id/countTimer"
             app:layout_constraintRight_toRightOf="@id/countTimer"

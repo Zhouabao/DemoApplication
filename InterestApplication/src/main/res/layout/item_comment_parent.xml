@@ -9,7 +9,6 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/commentUser"
-            android:src="@drawable/img_avatar_02"
             android:layout_width="40dp"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="15dp"

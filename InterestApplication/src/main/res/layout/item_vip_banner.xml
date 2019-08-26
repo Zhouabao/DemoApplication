@@ -21,7 +21,6 @@
     <ImageView
             android:id="@+id/banner_img"
             android:scaleType="centerCrop"
-            android:src="@drawable/img_avatar_01"
             android:layout_width="164dp"
             android:layout_height="133dp"/>
 

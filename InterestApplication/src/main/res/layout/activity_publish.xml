@@ -62,7 +62,6 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="12dp"
                 android:layout_height="50dp"
-                android:src="@drawable/img_avatar_02"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />

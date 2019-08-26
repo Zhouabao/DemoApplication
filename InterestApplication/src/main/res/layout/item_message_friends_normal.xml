@@ -14,7 +14,6 @@
             android:id="@+id/normalAvator"
             android:layout_width="57dp"
             android:layout_height="57dp"
-            android:src="@drawable/img_avatar_01"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

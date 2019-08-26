@@ -7,7 +7,6 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/friendsIv"
-            android:src="@drawable/img_avatar_01"
             android:layout_width="57dp"
             android:layout_marginTop="10dp"
             android:layout_height="57dp"/>

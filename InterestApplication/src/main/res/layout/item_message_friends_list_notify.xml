@@ -29,7 +29,6 @@
             android:layout_width="57dp"
             android:layout_height="57dp"
             android:visibility="visible"
-            android:src="@drawable/img_avatar_01"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
