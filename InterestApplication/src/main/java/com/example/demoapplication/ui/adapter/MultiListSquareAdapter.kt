@@ -276,6 +276,7 @@ class MultiListSquareAdapter(
                             if (greetBean.isfriend || greetBean.isgreet) {
                                 ChatActivity.start(mContext as Activity, target_accid ?: "")
                             } else {
+                                UserManager.saveLightingCount(greetBean.lightningcnt)
                                 if (greetBean.lightningcnt > 0) {
                                     greet(UserManager.getToken(), UserManager.getAccid(), (target_accid ?: ""))
                                 } else {

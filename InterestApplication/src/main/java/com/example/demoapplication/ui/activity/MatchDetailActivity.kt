@@ -204,7 +204,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             "${matchBean!!.age} / ${if (matchBean!!.gender == 1) "男" else "女"} / ${matchBean!!.constellation} / ${matchBean!!.distance}"
         detailUserJob.text = "${matchBean!!.jobname}"
         detailUserSign.text = "${matchBean!!.sign}"
-        updateLigthCount(matchBean!!.lightningcnt ?: 0)
+        updateLightCount(matchBean!!.lightningcnt ?: 0)
         detailUserJob.visibility = if (matchBean!!.jobname.isNullOrEmpty()) {
             View.GONE
         } else {
@@ -492,7 +492,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      */
     override fun onGreetStateResult(data: GreetBean?) {
         if (data != null) {
-            updateLigthCount(data.lightningcnt)
+            updateLightCount(data.lightningcnt)
             if (data.isfriend || data.isgreet) {
                 ChatActivity.start(this, matchBean?.accid ?: "")
             } else {
@@ -517,9 +517,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
     }
 
-    private fun updateLigthCount(lightningcnt: Int) {
-        matchBean?.lightningcnt = lightningcnt
-        detailUserLeftChatCount.text = "${matchBean?.lightningcnt}"
+    /**
+     * 更新本地的招呼次数
+     */
+    private fun updateLightCount(lightningcnt: Int) {
+        UserManager.saveLightingCount(lightningcnt)
+        detailUserLeftChatCount.text = "${UserManager.getLightingCount()}"
     }
 
     /**
@@ -527,7 +530,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      */
     override fun onGreetSResult(success: Boolean) {
         if (success) {
-            updateLigthCount(matchBean?.lightningcnt?.minus(1) ?: 0)
+            updateLightCount(UserManager.getLightingCount() - 1)
             sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
         }
     }

@@ -118,7 +118,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             userVerify.setImageResource(R.drawable.icon_verify_gray)
             userVerifyTip.visibility = View.VISIBLE
             userVerifyBtn.text = "认证中"
-            userVerifyBtn.isEnabled = true
+            userVerifyBtn.isEnabled = false
         } else {
             userVerify.setImageResource(R.drawable.icon_verify_gray)
             userVerifyTip.visibility = View.VISIBLE

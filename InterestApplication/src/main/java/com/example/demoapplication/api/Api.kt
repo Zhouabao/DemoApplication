@@ -3,7 +3,6 @@ package com.example.demoapplication.api
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.model.*
 import com.kotlin.base.data.protocol.BaseResp
-import okhttp3.ResponseBody
 import retrofit2.http.*
 import rx.Observable
 
@@ -440,6 +439,7 @@ interface Api {
     @POST("relationship/getLists${Constants.END_BASE_URL}")
     fun getContactLists(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<ContactDataBean?>>
 
+
     /**
      * 获取黑名单
      */
@@ -447,13 +447,11 @@ interface Api {
     @POST("StrageBlock/blackList${Constants.END_BASE_URL}")
     fun myShieldingList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<BlackBean>?>>
 
-    /**
-     * 聊天界面获取信息
-     */
-    @FormUrlEncoded
-    @POST("MemberInfo/getTargetInfo${Constants.END_BASE_URL}")
-    fun getTargetInfo(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<NimBean?>>
 
+
+
+
+    /*---------------------聊天界面请求--------------------------------*/
     /**
      * 聊天界面添加好友
      */
@@ -485,30 +483,22 @@ interface Api {
     fun removeGreet(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
 
 
+
+
+    /**
+     * 聊天界面获取信息
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/getTargetInfo${Constants.END_BASE_URL}")
+    fun getTargetInfo(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<NimBean?>>
+
+
+
     /**
      * 发起招呼者 判断剩余消息次数
      */
     @FormUrlEncoded
     @POST("Tidings/checkGreetSendMsg${Constants.END_BASE_URL}")
     fun checkGreetSendMsg(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<CheckGreetSendBean?>>
-
-
-    /**
-     * 发起招呼后发起消息计数器
-     * @param id 招呼id
-     * @param target_accid 被打招呼对象的id
-     */
-    @FormUrlEncoded
-    @POST("Relationship/sendGreetMsg${Constants.END_BASE_URL}")
-    fun sendGreetMsg(
-        @Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String, @Field(
-            "id"
-        ) id: String = ""
-    ): Observable<BaseResp<CheckGreetSendBean?>>
-
-
-    @GET
-    fun getFileFromNet(@Url url: String): Observable<ResponseBody>
-
 
 }

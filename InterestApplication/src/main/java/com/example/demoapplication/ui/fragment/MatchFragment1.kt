@@ -6,15 +6,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.RefreshEvent
+import com.example.demoapplication.event.ShakeEvent
 import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchBean
@@ -88,28 +92,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         super.onViewCreated(view, savedInstanceState)
 
         initView()
-//        initLoading()
     }
 
-//    @SuppressLint("SetJavaScriptEnabled")
-//    private fun initLoading() {
-//        //        stateview.webloading
-////        stateview.webloading
-//
-//        val settings = stateview.webloading.settings
-//        settings.javaScriptEnabled = true
-//        settings.javaScriptCanOpenWindowsAutomatically = true
-//        settings.setSupportMultipleWindows(true)
-//        stateview.webloading.webViewClient = object : WebViewClient() {
-//            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-//                view?.loadUrl(request?.url?.toString())
-//                return true
-//            }
-//
-//        }
-//        stateview.webloading.loadUrl("file:///android_asset/match_loading.html")
-//
-//    }
 
     private val manager by lazy { CardStackLayoutManager(activity!!, this) }
 
@@ -148,24 +132,17 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         )
     }
 
-//    @SuppressLint("SetJavaScriptEnabled")
-//    override fun onResume() {
-//        super.onResume()
-//
-//        stateview.webloading.settings.javaScriptEnabled = true
-//        stateview.webloading.onResume()
-//    }
 
-    private var lightCount = 0
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnChat -> {
-                mPresenter.greetState(
-                    UserManager.getToken(),
-                    UserManager.getAccid(),
-                    (matchUserAdapter.data[manager.topPosition].accid ?: ""),
-                    matchUserAdapter.data[manager.topPosition]
-                )
+                card_stack_view.swipe()
+//                mPresenter.greetState(
+//                    UserManager.getToken(),
+//                    UserManager.getAccid(),
+//                    (matchUserAdapter.data[manager.topPosition].accid ?: ""),
+//                    matchUserAdapter.data[manager.topPosition]
+//                )
             }
         }
     }
@@ -173,7 +150,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
-//        stateview.webloading.destroy()
     }
 
 
@@ -217,6 +193,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         if (greetBean) {
             sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
         } else {
+            card_stack_view.rewind()
             ToastUtils.showShort("打招呼失败，重新试一次吧")
         }
     }
@@ -238,10 +215,13 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                 tvLeftChatTime.isVisible = true
             }
             matchUserAdapter.addData(matchBeans!!.list ?: mutableListOf<MatchBean>())
-            lightCount = matchBeans.lightningcnt ?: 0
+            //保存剩余招呼次数
+            UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
+            //保存 VIP信息
             UserManager.saveUserVip(matchBeans.isvip)
+            //保存认证信息
             UserManager.saveUserVerify(matchBeans.isfaced)
-            tvLeftChatTime.text = "${matchBeans.lightningcnt}"
+            tvLeftChatTime.text = "${UserManager.getLightingCount()}"
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
             stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
@@ -283,6 +263,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
+        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+
         params["tag_id"] = event.label.id
         matchUserAdapter.data.clear()
         page = 1
@@ -299,6 +281,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: RefreshEvent) {
+        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+
         matchUserAdapter.data.clear()
         page = 1
         matchParams["page"] = page
@@ -308,6 +292,17 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             matchParams[it.key] = it.value
         }
         mPresenter.getMatchList(matchParams)
+    }
+
+    /**
+     * 震动动画
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onShakeEvent(event: ShakeEvent) {
+        YoYo.with(Techniques.Shake)
+            .duration(500)
+            .repeat(0)
+            .playOn(card_stack_view)
     }
 
     /*---------------------卡片参数和方法------------------------------*/
@@ -331,6 +326,14 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         manager.setCanScrollVertical(true)
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
+
+        //向上的动画设置
+        val swipeTopSetting = SwipeAnimationSetting.Builder()
+            .setDirection(Direction.Top)
+            .setDuration(Duration.Fast.duration)
+            .setInterpolator(AccelerateInterpolator())
+            .build()
+        manager.setSwipeAnimationSetting(swipeTopSetting)
 
         //撤回的动画设置
         val setting = RewindAnimationSetting.Builder()
@@ -366,7 +369,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     }
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
-        Log.d("CardStackView", "${ratio}")
         //向上超级喜欢(会员就超级喜欢 否则弹起收费窗)
 //        if (direction == Direction.Top && ratio > 0.5F && !switch) {
 //            switch = true
@@ -408,7 +410,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             )
         }
 
-        //如果已经只剩5张了就请求数据
+        //如果已经只剩5张了就请求数据(预加载)
         if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
             page++
             matchParams["page"] = page
@@ -459,15 +461,21 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
                 ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition]?.accid ?: "")
+                /*manager.topPosition*/
+                //打招呼成功，就减少招呼次数
+                if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
+                    UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
+                    tvLeftChatTime.text = "${UserManager.getLightingCount()}"
+                }
 
             }
 
             override fun onFailed(code: Int) {
-                toast("$code")
+                card_stack_view.rewind()
             }
 
             override fun onException(exception: Throwable) {
-                toast(exception.message ?: "")
+                card_stack_view.rewind()
             }
         })
         return true

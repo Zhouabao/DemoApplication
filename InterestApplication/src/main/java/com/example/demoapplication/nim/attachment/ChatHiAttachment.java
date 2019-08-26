@@ -11,7 +11,7 @@ import com.example.demoapplication.nim.extension.CustomAttachmentType;
  */
 public class ChatHiAttachment extends CustomAttachment {
     private String matchTag;//匹配下的标签
-    private int showType;//是什么方式  1.匹配  2.招呼 3.好友
+    private int showType;//是什么方式  1.匹配  2.招呼 3.好友 4.过期
     public static int CHATHI_MATCH = 1;
     public static int CHATHI_HI = 2;
     public static int CHATHI_RFIEND = 3;
