@@ -186,6 +186,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                     lastVisibleItem,
                     lastVisibleItem - firstVisibleItem
                 )
+                if (lastVisibleItem >= adapter.itemCount - 5) {
+                    refreshLayout.autoLoadMore()
+                }
             }
         })
 
@@ -204,7 +207,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                     ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
                 }
                 R.id.squareCommentBtn1 -> {
-                    SquareCommentDetailActivity.start(activity!!, adapter.data[position],enterPosition = "comment")
+                    SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
                     if (mediaPlayer != null) {
                         mediaPlayer!!.resetMedia()
                         mediaPlayer = null
