@@ -55,6 +55,8 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
             if (complete) {
                 this.verifyCode = verifyCode
                 onChangeVerifyButtonStatus(true)
+            } else {
+                onChangeVerifyButtonStatus(false)
             }
         }
 
@@ -82,8 +84,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
             }
 
         }.start()
-
-
     }
 
     override fun onGetPhoneNum() {
@@ -130,7 +130,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
 
 
     override fun onGetVerifyCode(data: BaseResp<Any?>) {
-        tvPhone.text = "已发送至 $phone"
+        tvPhone.text = "已发送至+86 $phone"
         countVerifyCodeTime.isEnabled = false
         onCountTime()
     }

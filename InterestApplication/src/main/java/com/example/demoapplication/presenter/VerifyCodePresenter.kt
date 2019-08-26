@@ -79,12 +79,12 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
             }
 
             override fun onFailed(code: Int) {
-                Log.d("OkHttp","${code}")
+                Log.d("OkHttp","=====$code")
                 mView.onIMLoginResult(null,false)
             }
 
             override fun onException(exception: Throwable?) {
-
+                Log.d("OkHttp",exception.toString())
             }
 
         }

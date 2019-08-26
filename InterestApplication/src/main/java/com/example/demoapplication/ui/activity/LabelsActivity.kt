@@ -84,15 +84,18 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
         labelRecyclerview.itemAnimator = ScaleInLeftAnimator()
 
         adapter.setOnItemClickListener { _, view, position ->
-            adapter.data[position].checked = !adapter.data[position].checked
-            adapter.notifyItemChanged(position)
-            updateCheckedLabels(adapter.data[position])
-            if (adapter.data[position].checked) {
-                mPresenter.mView.onGetSubLabelsResult(adapter.data[position].son, position)
-            } else {
-                //反选就清除父标签的所有子标签
-                mPresenter.mView.onRemoveSubLablesResult(adapter.data[position], position)
+            if (adapter.data[position].id != Constants.RECOMMEND_TAG_ID) {
+                adapter.data[position].checked = !adapter.data[position].checked
+                adapter.notifyItemChanged(position)
+                updateCheckedLabels(adapter.data[position])
+                if (adapter.data[position].checked) {
+                    mPresenter.mView.onGetSubLabelsResult(adapter.data[position].son, position)
+                } else {
+                    //反选就清除父标签的所有子标签
+                    mPresenter.mView.onRemoveSubLablesResult(adapter.data[position], position)
+                }
             }
+
         }
 
 
@@ -124,8 +127,9 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
 
         } else {
             if (labels != null && labels.size > 0) {
-                //默认设置选中第一个标签，并加载其子标签
-                labels[0].checked = true
+                //默认设置选中精选标签，并加载其子标签
+                for (label in labels)
+                    label.checked = label.id == Constants.RECOMMEND_TAG_ID
                 adapter.setNewData(labels)
                 allLabels = labels
                 //默认选中之后加载子标签

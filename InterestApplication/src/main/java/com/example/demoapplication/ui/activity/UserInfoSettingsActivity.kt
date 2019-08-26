@@ -255,9 +255,13 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             .previewImage(true)
             .isCamera(true)
             .enableCrop(true)
+            .circleDimmedLayer(true)
+            .showCropFrame(false)
+            .showCropGrid(false)
+            .rotateEnabled(false)
             .withAspectRatio(9, 16)
             .compress(true)
-            .openClickSound(true)
+            .openClickSound(false)
             .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 

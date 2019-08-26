@@ -159,9 +159,13 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             .previewImage(true)
             .isCamera(true)
             .enableCrop(true)
+            .circleDimmedLayer(true)
+            .showCropFrame(false)
+            .showCropGrid(false)
+            .rotateEnabled(false)
             .withAspectRatio(9, 16)
             .compress(true)
-            .openClickSound(true)
+            .openClickSound(false)
             .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
@@ -238,7 +242,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
 
     private fun checkConfirmBtnEnable() {
-        confirmBtn.isEnabled =
-            !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty() && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
+        confirmBtn.isEnabled = !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty() && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
     }
 }

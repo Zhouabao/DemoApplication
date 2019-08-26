@@ -14,7 +14,7 @@ data class LoginBean(
     val extra_data: IMBean?
 )
 
-data class IMBean(val im_token: String)
+data class IMBean(val im_token: String = "", val code: Int = 0, val msg: String = "")
 
 
 data class Userinfo(
