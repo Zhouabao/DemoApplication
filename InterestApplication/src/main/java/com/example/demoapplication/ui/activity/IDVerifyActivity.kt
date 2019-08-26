@@ -32,6 +32,7 @@ import com.kotlin.base.common.BaseApplication.Companion.context
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.utils.NetWorkUtils
 import com.umeng.message.PushAgent
@@ -205,6 +206,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     when {
                         t.code == 200 -> {
                             toast("审核提交成功")
+                            setResult(Activity.RESULT_OK, intent.putExtra("verify", true))
                             finish()
                         }
                         t.code == 403 -> UserManager.startToLogin(context as Activity)
@@ -215,6 +217,9 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                 }
 
                 override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+
+                    }
                     loadingDialog.dismiss()
                     toast("认证审核提交失败，请重新进入认证")
                 }

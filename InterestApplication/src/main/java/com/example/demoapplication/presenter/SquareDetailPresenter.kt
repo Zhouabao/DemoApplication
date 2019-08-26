@@ -3,7 +3,9 @@ package com.example.demoapplication.presenter
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.model.AllCommentBean
+import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.model.StatusBean
 import com.example.demoapplication.presenter.view.SquareDetailView
 import com.example.demoapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
@@ -289,6 +291,62 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                         mView.onRemoveMySquareResult(false)
                         mView.onError(context.getString(R.string.service_error))
                     }
+                }
+            })
+    }
+
+
+
+
+
+    /**
+     * 打招呼
+     */
+    fun greet(token: String, accid: String, target_accid: String, tag_id: Int) {
+        if (!checkNetWork()) {
+            return
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .greet(token, accid, target_accid, tag_id)
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
+                    if (t.code == 200) {
+                        mView.onGreetSResult(true)
+                    } else {
+                        mView.onGreetSResult(false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
+
+
+    /**
+     * 判断当前能否打招呼
+     */
+    fun greetState(token: String, accid: String, target_accid: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .greetState(token, accid, target_accid)
+            .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
+                override fun onNext(t: BaseResp<GreetBean?>) {
+                    if (t.code == 200) {
+                        mView.onGreetStateResult(t.data)
+                    } else {
+                        mView.onGreetStateResult(t.data)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onGreetStateResult(null)
                 }
             })
     }

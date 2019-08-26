@@ -137,6 +137,23 @@ public class GlideUtil {
 
     }
 
+    /**
+     * 加载圆角图片铺满居中
+     *
+     * @param context
+     * @param url
+     * @param tartgetImg
+     */
+    public static void loadImgCenterCrop(Context context, String url, ImageView tartgetImg) {
+        Glide.with(context)
+                .load(url)
+                .priority(Priority.NORMAL)
+                .thumbnail(0.1F)
+                .transform(new CenterInside())
+                .into(tartgetImg);
+
+    }
+
 
     /**
      * 根据资源ID加载图片

@@ -152,6 +152,7 @@ dependencies {
 
     //lottie
     implementation "com.airbnb.android:lottie:$lottieVersion"
+    //查看长图
 
 //    implementation project(path: ':faceplatform')
     // ViewModel and LiveData

@@ -79,6 +79,10 @@ class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, 
             showCommentDialog(position)
             true
         }
+        //点击跳转到广场详情
+        adapter.setOnItemClickListener { _, view, position ->
+            SquareCommentDetailActivity.start(this, squareId = adapter.data[position].square_id ?: 0)
+        }
     }
 
     var commentActionDialog: CommentActionDialog? = null

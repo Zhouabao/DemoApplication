@@ -69,7 +69,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         holder.itemView.detailPlayContent.text = item.descr ?: ""
 
         val drawable1 =
-            context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+            context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         holder.itemView.detailPlaydianzan.text = "${item.like_cnt}"

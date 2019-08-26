@@ -13,6 +13,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
+import com.example.demoapplication.event.UpdateHiCountEvent
 import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.StatusBean
@@ -52,6 +53,7 @@ import kotlinx.android.synthetic.main.item_list_square_video.view.*
 import kotlinx.android.synthetic.main.layout_square_list_bottom.view.*
 import kotlinx.android.synthetic.main.layout_square_list_top.view.*
 import kotlinx.android.synthetic.main.switch_video.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 
@@ -105,9 +107,8 @@ class MultiListSquareAdapter(
 
         //todo 进入聊天界面
         holder.itemView.squareChatBtn1.onClick {
-            greetState(UserManager.getToken(), UserManager.getAccid(), item.accid)
             clickPos = holder.layoutPosition
-            ChatActivity.start(mContext!!, item.accid)
+            greetState(UserManager.getToken(), UserManager.getAccid(), item.accid)
         }
 
         if (item.descr.isNullOrEmpty()) {
@@ -127,7 +128,13 @@ class MultiListSquareAdapter(
             View.GONE
         }
         GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.squareUserIv1)
-        holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus("\t\t").plus(item.out_time)
+        holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus(
+            if (item.city_name.isNullOrEmpty()) {
+                ""
+            } else {
+                "\t\t"
+            }
+        ).plus(item.out_time)
         holder.itemView.squareUserIv1.onClick {
             if (!(UserManager.getAccid() == item.accid || !chat)) {
                 MatchDetailActivity.start(mContext, item.accid)
@@ -380,6 +387,8 @@ class MultiListSquareAdapter(
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
                 ChatActivity.start(mContext as Activity, mData[clickPos].accid ?: "")
+                //发送通知修改招呼次数
+                EventBus.getDefault().postSticky(UpdateHiCountEvent())
             }
 
             override fun onFailed(code: Int) {

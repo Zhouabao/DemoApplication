@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
@@ -51,6 +52,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         const val REQUEST_LABEL_CODE = 10
         const val REQUEST_INFO_SETTING = 11
         const val REQUEST_MY_SQUARE = 12
+        const val REQUEST_ID_VERIFY = 13
     }
 
     //用户标签adapter
@@ -112,16 +114,18 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         if (userInfoBean.userinfo?.isfaced == 1) {
             userVerify.setImageResource(R.drawable.icon_verify)
             userVerifyTip.visibility = View.GONE
+            userVerifyBtn.isVisible = true
             userVerifyBtn.text = "已认证"
             userVerifyBtn.isEnabled = false
         } else if (userInfoBean.userinfo?.isfaced == 2) {
             userVerify.setImageResource(R.drawable.icon_verify_gray)
             userVerifyTip.visibility = View.VISIBLE
-            userVerifyBtn.text = "认证中"
-            userVerifyBtn.isEnabled = false
+            userVerifyBtn.isVisible = false
+            userVerifyTip.text = "认证审核中"
         } else {
             userVerify.setImageResource(R.drawable.icon_verify_gray)
             userVerifyTip.visibility = View.VISIBLE
+            userVerifyBtn.isVisible = true
             userVerifyBtn.text = "立即认证"
             userVerifyBtn.isEnabled = true
         }
@@ -293,6 +297,8 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
                         "_timestamp" to System.currentTimeMillis()
                     )
                 )
+            } else if (requestCode == REQUEST_ID_VERIFY) {
+
             }
         }
     }
@@ -357,7 +363,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //认证中心
             R.id.userVerifyBtn -> {
-                startActivity<IDVerifyActivity>()
+                startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
             }
         }
     }

@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.ListDataEvent
@@ -29,7 +29,7 @@ import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
 import com.example.demoapplication.utils.ScrollCalculatorHelper
 import com.example.demoapplication.utils.UserManager
-import com.example.demoapplication.widgets.CommonItemDecoration
+import com.example.demoapplication.widgets.DividerItemDecoration
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
@@ -80,26 +80,14 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         listRefresh.setOnLoadMoreListener(this)
         EventBus.getDefault().register(this)
 
-//        stateview.retryBtn.onClick {
-//            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-//            params["page"] = page
-//            mPresenter.getSomeoneSquare(params)
-//        }
-
         val linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        val itemdecoration = CommonItemDecoration(activity!!, DividerItemDecoration.VERTICAL)
-        itemdecoration.setDrawable(activity!!.resources.getDrawable(R.drawable.recycler_divider))
-        listSquareRv.addItemDecoration(itemdecoration)
-//        val manager1 = MyLinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-//        manager1.setScrollEnabled(false)
-//        listSquareRv.isNestedScrollingEnabled = false
+        listSquareRv.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.HORIZONTAL_LIST, SizeUtils.dp2px(10F), resources.getColor(R.color.colorWhite)))
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
         adapter.bindToRecyclerView(listSquareRv)
         adapter.setEmptyView(R.layout.empty_layout, listSquareRv)
 
         //取消动画，主要是闪烁
-//        (listSquareRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         listSquareRv.itemAnimator?.changeDuration = 0
 
         //限定范围为屏幕一半的上下偏移180

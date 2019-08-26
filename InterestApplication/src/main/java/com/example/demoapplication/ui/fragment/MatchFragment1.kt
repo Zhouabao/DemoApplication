@@ -19,6 +19,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.RefreshEvent
 import com.example.demoapplication.event.ShakeEvent
+import com.example.demoapplication.event.UpdateHiCountEvent
 import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.MatchBean
@@ -303,6 +304,12 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             .duration(500)
             .repeat(0)
             .playOn(card_stack_view)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateHiCountEvent(event: UpdateHiCountEvent) {
+        tvLeftChatTime.text = "${UserManager.getLightingCount()}"
     }
 
     /*---------------------卡片参数和方法------------------------------*/

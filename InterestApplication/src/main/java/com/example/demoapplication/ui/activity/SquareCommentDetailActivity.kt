@@ -26,10 +26,13 @@ import com.blankj.utilcode.util.ToastUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.UpdateHiCountEvent
 import com.example.demoapplication.model.AllCommentBean
 import com.example.demoapplication.model.CommentBean
+import com.example.demoapplication.model.GreetBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.nim.activity.ChatActivity
+import com.example.demoapplication.nim.attachment.ChatHiAttachment
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.OnPlayingListener
 import com.example.demoapplication.player.UpdateVoiceTimeThread
@@ -48,6 +51,15 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nim.uikit.business.session.module.Container
+import com.netease.nim.uikit.business.session.module.ModuleProxy
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -60,6 +72,7 @@ import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.switch_video.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.util.*
@@ -69,7 +82,7 @@ import java.util.*
  * 广场详情页 包含内容详情以及点赞评论信息
  */
 class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView, View.OnClickListener,
-    OnRefreshListener, OnLoadMoreListener {
+    OnRefreshListener, OnLoadMoreListener, ModuleProxy {
 
 
     //评论数据
@@ -178,8 +191,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         btnChat.isVisible = !(UserManager.getAccid() == squareBean!!.accid)
         btnChat.onClick {
-            if (UserManager.isUserVip()) {
-                ChatActivity.start(this, squareBean!!.accid)
+            if (UserManager.getLightingCount() > 0) {
+                mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid?:"")
             } else {
                 ChargeVipDialog(this).show()
             }
@@ -516,7 +529,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             refreshLayout.finishLoadMore(true)
         }
     }
-
 
     override fun onGetSquareCollectResult(data: BaseResp<Any?>?) {
         if (data != null) {
@@ -981,6 +993,122 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
 
         return super.dispatchTouchEvent(ev)
+    }
+    /*--------------------------消息代理------------------------*/
+
+    /** todo
+     *  点击聊天
+     *  1. 好友 直接聊天 已经匹配过了 ×
+     *
+     *  2. 不是好友 判断是否打过招呼
+     *
+     *     2.1 打过招呼 且没有过期  直接直接聊天
+     *
+     *     2.2 未打过招呼 判断招呼剩余次数
+     *
+     *         2.2.1 有次数 直接打招呼
+     *
+     *         2.2.2 无次数 其他操作--如:请求充值会员
+     */
+
+    override fun onGreetSResult(b: Boolean) {
+        if (b) {
+            sendChatHiMessage()
+        } else {
+            toast("打招呼失败！")
+        }
+    }
+
+
+    //todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
+    //1.首先判断是否有次数，
+    // 若有 就打招呼
+    // 若无 就弹充值
+    /**
+     * 判断当前能否打招呼
+     */
+    override fun onGreetStateResult(greetBean: GreetBean?) {
+        if (greetBean != null) {
+            if (greetBean.isfriend || greetBean.isgreet) {
+                ChatActivity.start(this, squareBean?.accid ?: "")
+            } else {
+                UserManager.saveLightingCount(greetBean.lightningcnt)
+                if (greetBean.lightningcnt > 0) {
+                    mPresenter.greet(
+                        UserManager.getToken(),
+                        UserManager.getAccid(),
+                        (squareBean?.accid ?: ""),
+                        UserManager.getGlobalLabelId()
+                    )
+                } else {
+                    if (UserManager.isUserVip()) {
+                        //TODO 会员充值
+                        ToastUtils.showShort("次数用尽，请充值。")
+                    } else {
+                        ChargeVipDialog(this).show()
+                    }
+                }
+            }
+        }
+
+
+    }
+
+
+
+
+
+
+    private fun sendChatHiMessage() {
+        val container = Container(this, squareBean?.accid, SessionTypeEnum.P2P, this, true)
+        val chatHiAttachment = ChatHiAttachment(
+            UserManager.getGlobalLabelName(),
+            ChatHiAttachment.CHATHI_HI
+        )
+        val message = MessageBuilder.createCustomMessage(
+            squareBean?.accid,
+            SessionTypeEnum.P2P,
+            "",
+            chatHiAttachment,
+            CustomMessageConfig()
+        )
+        container.proxy.sendMessage(message)
+    }
+
+    override fun sendMessage(msg: IMMessage): Boolean {
+        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
+            RequestCallback<Void?> {
+            override fun onSuccess(param: Void?) {
+                ChatActivity.start(this@SquareCommentDetailActivity, squareBean?.accid ?: "")
+                //发送通知修改招呼次数
+                EventBus.getDefault().postSticky(UpdateHiCountEvent())
+            }
+
+            override fun onFailed(code: Int) {
+                ToastUtils.showShort("$code")
+            }
+
+            override fun onException(exception: Throwable) {
+                ToastUtils.showShort(exception.message ?: "")
+            }
+        })
+        return true
+    }
+
+    override fun onInputPanelExpand() {
+
+    }
+
+    override fun shouldCollapseInputPanel() {
+
+    }
+
+    override fun isLongClickEnabled(): Boolean {
+        return false
+    }
+
+    override fun onItemFooterClick(message: IMMessage?) {
+
     }
 
 }

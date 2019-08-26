@@ -95,7 +95,7 @@
             android:id="@+id/tv4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="20dp"
             android:drawableLeft="@drawable/icon_vip"
             android:drawablePadding="5dp"
             android:text="仅同城"
@@ -132,21 +132,12 @@
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv4"/>
 
-    <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="24dp"
-            android:background="#EBEBEB"
-            app:layout_constraintEnd_toEndOf="@id/switchSameCity"
-            app:layout_constraintStart_toStartOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/tv4"/>
-
 
     <TextView
             android:id="@+id/tv5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="20dp"
             android:text="向我展示"
             android:textColor="@color/colorBlack26"
             android:textSize="18sp"
@@ -223,7 +214,7 @@
             android:id="@+id/tv8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="20dp"
             android:drawableLeft="@drawable/icon_verify"
             android:drawablePadding="5dp"
             android:text="仅展示认证用户"
@@ -258,9 +249,9 @@
 
     <Button
             android:id="@+id/btnCompleteFilter"
-            android:layout_width="300dp"
+            android:layout_width="0dp"
             android:layout_height="46dp"
-            android:layout_marginTop="23dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/selector_confirm_btn"
             android:text="确认"
