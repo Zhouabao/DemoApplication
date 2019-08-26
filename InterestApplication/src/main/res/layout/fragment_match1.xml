@@ -11,7 +11,7 @@
         app:msv_emptyView="@layout/loading_layout_match_lottie"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout_match_lottie"
-        app:msv_viewState="loading">
+        app:msv_viewState="content">
 
     <LinearLayout
             android:orientation="vertical"
@@ -55,9 +55,9 @@
                         android:src="@drawable/icon_flash"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="@id/tvLeftChatTime"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         />
 
                 <TextView
@@ -70,11 +70,36 @@
                         android:textSize="12sp"
                         android:text="3"
                         android:layout_height="20dp"
-                        app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                    android:id="@+id/animation_like"
+                    android:alpha="0"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/icon_like_with_circle"
+                    android:layout_width="50dp"
+                    android:layout_centerVertical="true"
+                    android:layout_height="50dp"/>
+
+            <ImageView
+                    android:id="@+id/animation_dislike"
+                    android:alpha="0"
+                    android:src="@drawable/icon_dislike_with_circle"
+                    android:layout_width="0dp"
+                    android:layout_centerVertical="true"
+                    android:layout_height="0dp"/>
+
+            <ImageView
+                    android:id="@+id/animation_chathi"
+                    android:alpha="0"
+                    android:src="@drawable/icon_flash"
+                    android:layout_width="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="50dp"/>
 
 
         </RelativeLayout>

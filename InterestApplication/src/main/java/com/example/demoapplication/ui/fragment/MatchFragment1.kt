@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import android.widget.RelativeLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
@@ -324,7 +327,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         //最大的缩放间隔
         manager.setScaleInterval(0.95f)
         //卡片滑出飞阈值
-        manager.setSwipeThreshold(0.3f)
+        manager.setSwipeThreshold(0.6f)
         //横向纵向的旋转角度
         manager.setMaxDegree(5F)
         //滑动的方向
@@ -377,29 +380,103 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
         //向上超级喜欢(会员就超级喜欢 否则弹起收费窗)
-//        if (direction == Direction.Top && ratio > 0.5F && !switch) {
-//            switch = true
-//            if (!UserManager.isUserVip()) {
-//                chargeVipDialog.show()
-//            } else {
-//                val setting = SwipeAnimationSetting.Builder()
-//                    .setDirection(Direction.Right)
-//                    .setDuration(Duration.Normal.duration)
-//                    .setInterpolator(AccelerateInterpolator())
-//                    .build()
-//                manager.setSwipeAnimationSetting(setting)
-//                card_stack_view.swipe()
-////                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-////                mPresenter.likeUser(params)
-//                switch = false
-//            }
-//        }
+        when (direction) {
+            //左滑时加载动画
+            Direction.Left -> {
+                //重置右边、上边的距离
+                animation_like.alpha = 0F
+                val paramsLike = animation_like.layoutParams as RelativeLayout.LayoutParams
+                paramsLike.width = 0
+                paramsLike.height = 0
+                animation_like.layoutParams = paramsLike
+
+                animation_chathi.alpha = 0F
+                val paramsChathi = animation_chathi.layoutParams as RelativeLayout.LayoutParams
+                paramsChathi.width = 0
+                paramsChathi.height = 0
+                animation_chathi.layoutParams = paramsChathi
+
+
+
+                animation_dislike.alpha = ratio
+                val params = animation_dislike.layoutParams as RelativeLayout.LayoutParams
+//                params.width = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
+//                params.height = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
+                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.leftMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                animation_dislike.layoutParams = params
+
+            }
+            //右滑时加载动画
+            Direction.Right -> {
+                //重置左边、上边的距离
+                val paramsLike = animation_dislike.layoutParams as RelativeLayout.LayoutParams
+                paramsLike.width = 0
+                paramsLike.height = 0
+                animation_dislike.layoutParams = paramsLike
+                animation_dislike.alpha = 0F
+
+
+                val paramsChathi = animation_chathi.layoutParams as RelativeLayout.LayoutParams
+                paramsChathi.width = 0
+                paramsChathi.height = 0
+                animation_chathi.layoutParams = paramsChathi
+                animation_chathi.alpha = 0F
+
+
+
+                animation_like.alpha = ratio
+                val params = animation_like.layoutParams as RelativeLayout.LayoutParams
+//                params.width = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
+//                params.height = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
+                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                animation_like.layoutParams = params
+            }
+            //上滑时加载动画
+            Direction.Top -> {
+                //重置左边、上边的距离
+                val paramsDisLike = animation_dislike.layoutParams as RelativeLayout.LayoutParams
+                paramsDisLike.width = 0
+                paramsDisLike.height = 0
+                animation_dislike.layoutParams = paramsDisLike
+                animation_dislike.alpha = 0F
+
+                val paramsLike = animation_like.layoutParams as RelativeLayout.LayoutParams
+                paramsLike.width = 0
+                paramsLike.height = 0
+                animation_like.layoutParams = paramsLike
+                animation_like.alpha = 0F
+
+
+
+
+                animation_chathi.alpha = ratio
+                val params = animation_chathi.layoutParams as RelativeLayout.LayoutParams
+//                params.width = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
+//                params.height = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
+                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.topMargin = ((ScreenUtils.getScreenHeight() / 2F * ratio) - SizeUtils.dp2px(126F) - params.height / 2F).toInt()
+                Log.d(
+                    "CardStackView",
+                    "topMargin= ${params.topMargin}, getScreenHeight = ${ScreenUtils.getScreenHeight()}"
+                )
+
+                animation_chathi.layoutParams = params
+
+            }
+
+        }
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
 
     //此时已经飞出去了
     //todo 放开注释
     override fun onCardSwiped(direction: Direction?) {
+        resetAnimation()
         if (direction == Direction.Left) {//左滑不喜欢
             toast("不喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
 //            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
@@ -430,8 +507,29 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     }
 
     override fun onCardCanceled() {
+        resetAnimation()
         Log.d("CardStackView", "onCardCanceled: ${manager.topPosition}")
 
+    }
+
+    private fun resetAnimation() {
+        val params = animation_chathi.layoutParams
+        params.width = 0
+        params.height = 0
+        animation_chathi.alpha = 0F
+        animation_chathi.layoutParams = params
+
+        val params1 = animation_like.layoutParams
+        params1.width = 0
+        params1.height = 0
+        animation_like.alpha = 0F
+        animation_like.layoutParams = params1
+
+        val params2 = animation_dislike.layoutParams
+        params2.width = 0
+        params2.height = 0
+        animation_dislike.alpha = 0F
+        animation_dislike.layoutParams = params2
     }
 
     override fun onCardAppeared(view: View?, position: Int) {
@@ -448,7 +546,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     /*--------------------------消息代理------------------------*/
 
     private fun sendChatHiMessage(type: Int) {
-        val matchBean = matchUserAdapter.data[manager.topPosition]
+        val matchBean = matchUserAdapter.data[manager.topPosition - 1]
         Log.d("OkHttp", matchBean.accid ?: "")
         val container = Container(activity!!, matchBean?.accid, SessionTypeEnum.P2P, this, true)
         val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), type)
@@ -467,7 +565,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition]?.accid ?: "")
+                ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition - 1]?.accid ?: "")
                 /*manager.topPosition*/
                 //打招呼成功，就减少招呼次数
                 if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
