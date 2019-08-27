@@ -12,6 +12,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -118,9 +119,43 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         mPresenter.getMatchList(matchParams)
 
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
+            val item = matchUserAdapter.data[manager.topPosition]
             when (view.id) {
                 R.id.v1 -> {
                     MatchDetailActivity.start(activity!!, (matchUserAdapter.data[manager.topPosition].accid ?: ""))
+                }
+                R.id.nextImgBtn -> {
+                    val itemView = manager.topView
+                    if (itemView != null) {
+                        val vpPhotos = itemView.findViewById<ViewPager>(R.id.vpPhotos)
+                        if (vpPhotos.currentItem < (item.photos ?: mutableListOf<MatchBean>()).size - 1) {
+                            val index = vpPhotos.currentItem
+                            vpPhotos.setCurrentItem(index + 1, true)
+                        } else {
+//                            EventBus.getDefault().post(ShakeEvent(true))
+                            YoYo.with(Techniques.Shake)
+                                .duration(300)
+                                .repeat(0)
+                                .playOn(itemView)
+                        }
+
+                    }
+                }
+                R.id.lastImgBtn -> {
+                    val itemView = manager.topView
+                    if (itemView != null) {
+                        val vpPhotos = itemView.findViewById<ViewPager>(R.id.vpPhotos)
+                        if (vpPhotos.currentItem > 0) {
+                            val index = vpPhotos.currentItem
+                            vpPhotos.setCurrentItem(index - 1, true)
+                        } else {
+                            YoYo.with(Techniques.Shake)
+                                .duration(300)
+                                .repeat(0)
+                                .playOn(itemView)
+//                            EventBus.getDefault().post(ShakeEvent(true))
+                        }
+                    }
                 }
             }
         }
@@ -304,7 +339,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onShakeEvent(event: ShakeEvent) {
         YoYo.with(Techniques.Shake)
-            .duration(500)
+            .duration(400)
             .repeat(0)
             .playOn(card_stack_view)
     }
@@ -459,7 +494,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 //                params.height = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.topMargin = ((ScreenUtils.getScreenHeight() / 2F * ratio) - SizeUtils.dp2px(126F) - params.height / 2F).toInt()
+                params.topMargin =
+                    ((ScreenUtils.getScreenHeight() / 2F * ratio) - SizeUtils.dp2px(126F) - params.height / 2F).toInt()
                 Log.d(
                     "CardStackView",
                     "topMargin= ${params.topMargin}, getScreenHeight = ${ScreenUtils.getScreenHeight()}"

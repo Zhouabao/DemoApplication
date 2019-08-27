@@ -13,11 +13,8 @@ import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.demoapplication.R
-import com.example.demoapplication.event.ShakeEvent
 import com.example.demoapplication.model.MatchBean
-import com.kotlin.base.ext.onClick
 import kotlinx.android.synthetic.main.item_match_user.view.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -33,6 +30,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.addOnClickListener(R.id.v1)
         holder.itemView.vpIndicator.removeAllViews()
         holder.itemView.vpPhotos.setScrollable(false)
+        holder.itemView.vpPhotos.tag = holder.layoutPosition
         holder.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(
             mContext,
             if (item.photos.isNullOrEmpty()) mutableListOf(item.avatar ?: "") else item.photos!!
@@ -157,26 +155,30 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             holder.itemView.matchUserInfoCl.visibility = View.GONE
         }
 
+        //点击切换上一张图片
+        holder.addOnClickListener(R.id.lastImgBtn)
+        //点击切换下一张图片
+        holder.addOnClickListener(R.id.nextImgBtn)
 
         //点击切换上一张图片
-        holder.itemView.lastImgBtn.onClick {
-            if (holder.itemView.vpPhotos.currentItem > 0) {
-                val index = holder.itemView.vpPhotos.currentItem
-                holder.itemView.vpPhotos.setCurrentItem(index - 1, true)
-            } else {
-                EventBus.getDefault().post(ShakeEvent(true))
-            }
-        }
+//        holder.itemView.lastImgBtn.onClick {
+//            if (holder.itemView.vpPhotos.currentItem > 0) {
+//                val index = holder.itemView.vpPhotos.currentItem
+//                holder.itemView.vpPhotos.setCurrentItem(index - 1, true)
+//            } else {
+//                EventBus.getDefault().post(ShakeEvent(true))
+//            }
+//        }
 
         //点击切换下一张图片
-        holder.itemView.nextImgBtn.onClick {
-            if (holder.itemView.vpPhotos.currentItem < (item.photos ?: mutableListOf<MatchBean>()).size - 1) {
-                val index = holder.itemView.vpPhotos.currentItem
-                holder.itemView.vpPhotos.setCurrentItem(index + 1, true)
-            } else {
-               EventBus.getDefault().post(ShakeEvent(false))
-            }
-        }
+//        holder.itemView.nextImgBtn.onClick {
+//            if (holder.itemView.vpPhotos.currentItem < (item.photos ?: mutableListOf<MatchBean>()).size - 1) {
+//                val index = holder.itemView.vpPhotos.currentItem
+//                holder.itemView.vpPhotos.setCurrentItem(index + 1, true)
+//            } else {
+//                EventBus.getDefault().post(ShakeEvent(false))
+//            }
+//        }
 
         holder.itemView.ivVip.visibility = if (item.isvip == 1) {
             View.VISIBLE

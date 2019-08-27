@@ -120,6 +120,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     private fun initView() {
+        ScreenUtils.setFullScreen(this)
+
         mPresenter = MatchDetailPresenter()
         mPresenter.mView = this
         mPresenter.context = this

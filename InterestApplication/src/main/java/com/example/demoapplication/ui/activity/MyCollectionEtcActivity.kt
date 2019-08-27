@@ -64,8 +64,6 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_collection_etc)
         initView()
-        mPresenter.getMySquare(params)
-
     }
 
 
@@ -381,6 +379,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         super.onResume()
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
 //        GSYVideoManager.onResume(false)
+        refreshLayout.autoRefresh()
     }
 
 

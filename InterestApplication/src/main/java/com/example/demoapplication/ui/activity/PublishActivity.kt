@@ -139,6 +139,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         mPresenter.context = applicationContext
 
         tabPublishWay.setOnCheckedChangeListener(this)
+        tabPublishWay.check(currentWayId)//默认选中图片
         publishContent.addTextChangedListener(this)
         publishBtn.setOnClickListener(this)
         locationCity.setOnClickListener(this)

@@ -149,25 +149,29 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
 
     private fun initViewPager() {
         /*生成indicator*/
-        if ((userInfoBean.vip_descr ?: mutableListOf<MatchBean>()).size > 1) {
-            val size = (userInfoBean.vip_descr ?: mutableListOf<MatchBean>()).size
-            for (i in 0 until size) {
-                val indicator = RadioButton(this)
-                indicator.width = SizeUtils.dp2px(5F)
-                indicator.height = SizeUtils.dp2px(5F)
-                indicator.buttonDrawable = null
-                indicator.background = resources.getDrawable(R.drawable.selector_circle_indicator)
+        if (notVipPowerIndicator.childCount == 0)
+            if ((userInfoBean.vip_descr ?: mutableListOf<MatchBean>()).size > 1) {
+                val size = (userInfoBean.vip_descr ?: mutableListOf<MatchBean>()).size
+                for (i in 0 until size) {
+                    val indicator = RadioButton(this)
+                    indicator.width = SizeUtils.dp2px(5F)
+                    indicator.height = SizeUtils.dp2px(5F)
+                    indicator.buttonDrawable = null
+                    indicator.background = resources.getDrawable(R.drawable.selector_circle_indicator)
 
-                indicator.layoutParams =
-                    LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
-                layoutParams.setMargins(0, 0, SizeUtils.dp2px(6f), 0)
-                indicator.layoutParams = layoutParams
-                indicator.isEnabled = false
-                indicator.isChecked = i == 0
-                notVipPowerIndicator.addView(indicator)
+                    indicator.layoutParams =
+                        LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                    val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
+                    layoutParams.setMargins(0, 0, SizeUtils.dp2px(6f), 0)
+                    indicator.layoutParams = layoutParams
+                    indicator.isEnabled = false
+                    indicator.isChecked = i == 0
+                    notVipPowerIndicator.addView(indicator)
+                }
             }
-        }
 
         notVipPowerVp.adapter = object : PagerAdapter() {
             override fun isViewFromObject(view: View, `object`: Any): Boolean {
