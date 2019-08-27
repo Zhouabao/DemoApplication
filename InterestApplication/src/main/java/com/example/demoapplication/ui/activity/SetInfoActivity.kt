@@ -18,6 +18,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.presenter.SetInfoPresenter
 import com.example.demoapplication.presenter.view.SetInfoView
+import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
@@ -179,6 +180,10 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             }
             //点击跳转到标签选择页
             R.id.confirmBtn -> {
+                params["city_code"] = UserManager.getCityCode()
+                params["lat"] = UserManager.getlatitude()
+                params["lng"] = UserManager.getlongtitude()
+
                 params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
                 params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
                 params["avatar"] = userProfile.toString()

@@ -1,11 +1,12 @@
 package com.example.demoapplication.ui.adapter
 
+import android.widget.LinearLayout
+import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.VipDescr
-import com.kotlin.base.common.BaseApplication.Companion.context
 import kotlinx.android.synthetic.main.item_vip_banner.view.*
 
 /**
@@ -18,6 +19,11 @@ class VipBannerAdapter : BaseQuickAdapter<VipDescr, BaseViewHolder>(R.layout.ite
     override fun convert(holder: BaseViewHolder, data: VipDescr) {
         holder.itemView.banner_name.text = "${data.title}"
         holder.itemView.banner_content.text = "${data.rule}"
-        GlideUtil.loadImg(context, data.url ?: "", holder.itemView.banner_img)
+
+        val params = holder.itemView.banner_img.layoutParams
+        params.height = SizeUtils.dp2px(130F)
+        params.width = LinearLayout.LayoutParams.WRAP_CONTENT
+        holder.itemView.banner_img.layoutParams = params
+        GlideUtil.loadRoundImgCenterinside(mContext, data.url ?: "", holder.itemView.banner_img, 0.1F, 0)
     }
 }

@@ -23,7 +23,6 @@ import com.example.demoapplication.model.VipDescr
 import com.example.demoapplication.ui.adapter.VipBannerAdapter
 import com.example.demoapplication.ui.adapter.VipChargeAdapter
 import com.example.demoapplication.utils.UserManager
-import com.example.demoapplication.widgets.DividerItemDecoration
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -115,14 +114,7 @@ class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
     private fun initView() {
         //支付价格
         vipChargeRv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        vipChargeRv.addItemDecoration(
-            DividerItemDecoration(
-                context,
-                DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(8F),
-                context.resources.getColor(R.color.colorWhite)
-            )
-        )
+
         vipChargeRv.adapter = vipChargeAdapter
         vipChargeAdapter.setOnItemClickListener { _, _, position ->
             for (data in vipChargeAdapter.data.withIndex()) {

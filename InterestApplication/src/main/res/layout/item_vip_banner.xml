@@ -21,7 +21,7 @@
     <ImageView
             android:id="@+id/banner_img"
             android:scaleType="centerCrop"
-            android:layout_width="164dp"
+            android:layout_width="wrap_content"
             android:layout_height="133dp"/>
 
     <TextView

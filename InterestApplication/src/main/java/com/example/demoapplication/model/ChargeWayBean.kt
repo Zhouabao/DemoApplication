@@ -30,5 +30,6 @@ data class ChargeWayBean(
     val limited_price: Float? = 0f,
     val original_price: Float? = 0f,
     val title: String? = "",
+    val descr: String? = "",//限时折扣文案
     val type: Int?//	1 原价售卖 2折扣价售卖 3限时折扣
 )
