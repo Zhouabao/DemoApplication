@@ -85,7 +85,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
         adapter.bindToRecyclerView(listSquareRv)
-        adapter.setEmptyView(R.layout.empty_layout, listSquareRv)
+        adapter.setEmptyView(R.layout.empty_layout_block, listSquareRv)
 
         //取消动画，主要是闪烁
         listSquareRv.itemAnimator?.changeDuration = 0

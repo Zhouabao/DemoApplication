@@ -26,6 +26,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_message_hi.*
 import kotlinx.android.synthetic.main.activity_message_hi.stateview
 import kotlinx.android.synthetic.main.activity_message_list.btnBack
+import kotlinx.android.synthetic.main.empty_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -88,35 +89,13 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         messageHiRv.adapter = adapter
         adapter.bindToRecyclerView(messageHiRv)
         adapter.setEmptyView(R.layout.empty_layout, messageHiRv)
+        adapter.emptyView.emptyTip.text = "还没有消息哦，不如主动出击？"
 
         adapter.setOnItemClickListener { _, view, position ->
             //发送通知告诉剩余时间，并且开始倒计时
             ChatActivity.start(this, adapter.data[position].accid ?: "")
         }
     }
-
-
-    private fun setData() {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-
-        val greet1 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 1)
-        val greet2 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",countdown = 1000, countdown_total = 1200, type = 2)
-        val greet3 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",countdown = 1000, countdown_total = 1200, type = 3)
-        val greet4 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 4)
-        adapter.addData(greet1)
-        adapter.addData(greet2)
-        adapter.addData(greet3)
-        adapter.addData(greet4)
-        val greet11 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 1)
-        val greet21 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",countdown = 1000, countdown_total = 1200, type = 2)
-        val greet31 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",countdown = 1000, countdown_total = 1200, type = 3)
-        val greet41 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 4)
-        adapter.addData(greet11)
-        adapter.addData(greet21)
-        adapter.addData(greet31)
-        adapter.addData(greet41)
-    }
-
 
     override fun onGreatListResult(t: BaseResp<MutableList<HiMessageBean>?>) {
         //获取最近联系人列表
@@ -130,7 +109,10 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
             ToastUtils.showShort("删除超时消息失败！")
     }
 
-    override fun onGetRecentContactResults(contacts: MutableList<RecentContact>, t: BaseResp<MutableList<HiMessageBean>?>) {
+    override fun onGetRecentContactResults(
+        contacts: MutableList<RecentContact>,
+        t: BaseResp<MutableList<HiMessageBean>?>
+    ) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (t.data.isNullOrEmpty()) {
             refreshLayout.finishLoadMoreWithNoMoreData()
@@ -218,12 +200,8 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateHiEvent(event: UpdateHiEvent) {
-        page = 1
-        params["page"] = page
-        adapter.data.clear()
-        mPresenter.greatLists(params)
+        refreshLayout.autoRefresh()
     }
-
 
 
 }

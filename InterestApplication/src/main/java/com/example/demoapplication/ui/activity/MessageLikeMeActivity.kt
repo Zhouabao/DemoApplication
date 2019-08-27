@@ -2,6 +2,7 @@ package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
@@ -19,7 +20,9 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_message_like_me.*
+import kotlinx.android.synthetic.main.empty_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.error_layout.view.emptyImg
 import org.jetbrains.anko.startActivity
 
 /**
@@ -54,12 +57,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         }
 
         lockToSee.setOnClickListener(this)
-        lockToSee.visibility = if (UserManager.isUserVip()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
-
+        lockToSee.isVisible = !UserManager.isUserVip()
         mPresenter = MessageLikeMePresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -70,6 +68,9 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
 
         likeMeRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         likeMeRv.adapter = adapter
+        adapter.setEmptyView(R.layout.empty_layout, likeMeRv)
+        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_like_me)
+        adapter.emptyView.emptyTip.text="更新下个人信息，会有人出现的"
 
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -102,12 +103,13 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
 
     override fun onLikeListsResult(data: MutableList<LikeMeBean>) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-        if (data.size < Constants.PAGESIZE) {
+        adapter.addData(data)
+        lockToSee.isVisible = !UserManager.isUserVip() && adapter.data.size > 0
+        if (adapter.data.size < Constants.PAGESIZE * page) {
             refreshLayout.finishLoadMoreWithNoMoreData()
         } else {
             refreshLayout.finishLoadMore(true)
         }
-        adapter.addData(data)
         refreshLayout.finishRefresh()
     }
 
@@ -122,7 +124,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.lockToSee->{
+            R.id.lockToSee -> {
                 ChargeVipDialog(this).show()
             }
         }

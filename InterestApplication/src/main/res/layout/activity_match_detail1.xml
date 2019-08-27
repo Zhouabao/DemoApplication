@@ -45,7 +45,7 @@
                 <com.example.demoapplication.widgets.NoScrollViewPager
                         android:id="@+id/detailPhotosVp"
                         android:layout_width="match_parent"
-                        android:layout_height="250dp"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
@@ -149,7 +149,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="17dp"
                         android:textColor="@color/colorGrayText"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         app:layout_constraintStart_toStartOf="@id/detailUserName"
                         app:layout_constraintTop_toBottomOf="@id/detailUserName"
                         tools:text="24 / 女 / 天秤座 / 100km"/>
@@ -160,7 +160,7 @@
                         android:layout_height="17dp"
                         android:drawableLeft="@drawable/icon_job_gray"
                         android:textColor="@color/colorGrayText"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         android:layout_marginTop="5dp"
                         android:drawablePadding="6dp"
                         app:layout_constraintStart_toStartOf="@id/detailUserName"
@@ -175,7 +175,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorBlack4a"
                         android:lineSpacingMultiplier="1.4"
-                        android:textSize="12sp"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@id/detailUserName"
                         app:layout_constraintTop_toBottomOf="@id/detailUserJob"
@@ -220,7 +220,7 @@
                         android:background="@color/colorDivider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginTop="9dp"
+                        android:layout_marginTop="19dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/detailLabelRv"/>
@@ -275,17 +275,17 @@
                 </RadioGroup>
 
                 <!--<androidx.recyclerview.widget.RecyclerView-->
-                        <!--android:id="@+id/detailSquareFilterLabelRv"-->
-                        <!--android:layout_marginTop="10dp"-->
-                        <!--android:orientation="horizontal"-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_marginRight="10dp"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="5dp"-->
-                        <!--android:visibility="gone"-->
-                        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                        <!--app:layout_constraintRight_toRightOf="parent"-->
-                        <!--app:layout_constraintTop_toBottomOf="@id/allT2"/>-->
+                <!--android:id="@+id/detailSquareFilterLabelRv"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:visibility="gone"-->
+                <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                <!--app:layout_constraintRight_toRightOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/allT2"/>-->
 
                 <FrameLayout
                         android:id="@+id/detail_content_fragment"

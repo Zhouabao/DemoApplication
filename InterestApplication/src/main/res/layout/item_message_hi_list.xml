@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:background="@color/colorWhite"
@@ -63,7 +64,7 @@
     <TextView
             android:id="@+id/msgTitle"
             android:layout_marginLeft="7dp"
-            android:text="发现"
+            tools:text="13477测试账号"
             android:textColor="#ff222222"
             android:textSize="16sp"
             android:layout_marginTop="15dp"
@@ -75,7 +76,7 @@
     <com.example.demoapplication.widgets.TimeRunTextView
             android:id="@+id/msgTextTimer"
             android:layout_marginLeft="15dp"
-            android:text="24:00:00"
+            tools:text="24:00:00"
             android:textColor="@color/colorWhite"
             android:textSize="8sp"
             android:paddingLeft="5dp"
@@ -93,7 +94,7 @@
             android:id="@+id/msgOuttimeTip"
             android:visibility="gone"
             android:layout_marginLeft="15dp"
-            android:text="未回复"
+            tools:text="未回复"
             android:textColor="@color/colorBlack4a"
             android:textSize="8sp"
             android:paddingLeft="5dp"
@@ -109,7 +110,7 @@
 
     <TextView
             android:id="@+id/latelyTime"
-            android:text="2分钟前"
+            tools:text="2018-12-31 12:00:00"
             android:textColor="#ff999999"
             android:textSize="12sp"
             android:layout_marginRight="15dp"
@@ -125,7 +126,7 @@
             android:layout_height="20dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:text="对方向您打了一个招呼"
+            tools:text="对方向您打了一个招呼"
             android:textColor="#ff999999"
             android:textSize="14sp"
             android:layout_marginRight="30dp"

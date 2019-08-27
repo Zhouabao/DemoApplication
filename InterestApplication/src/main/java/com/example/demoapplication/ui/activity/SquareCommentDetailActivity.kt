@@ -193,7 +193,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         btnChat.isVisible = !(UserManager.getAccid() == squareBean!!.accid)
         btnChat.onClick {
             if (UserManager.getLightingCount() > 0) {
-                mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid?:"")
+                mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid ?: "")
             } else {
                 ChargeVipDialog(this).show()
             }
@@ -223,10 +223,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
-        refreshLayout.setEnableLoadMoreWhenContentNotFull(false)
 
         commentList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         commentList.adapter = adapter
+        adapter.setEmptyView(R.layout.empty_layout_comment, commentList)
 
         btnBack.onClick {
             onBackPressed()
@@ -308,6 +308,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
         }
     }
+
 
     var mediaPlayer: IjkMediaPlayerUtil? = null
 
@@ -498,8 +499,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                     }
                     adapter.addData(allCommentBean.hotlist!!)
                 }
-                adapter.addData(CommentBean(content = "所有评论", type = 0))
                 if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
+                    adapter.addData(CommentBean(content = "所有评论", type = 0))
                     for (i in 0 until allCommentBean.list!!.size) {
                         allCommentBean.list!![i]!!.type = 1
                     }
@@ -1054,10 +1055,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
     }
-
-
-
-
 
 
     private fun sendChatHiMessage() {

@@ -146,11 +146,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
 
-        //设置图片的宽度占满屏幕，宽高比3:4
+        //设置图片的宽度占满屏幕，宽高比9:16
         val layoutParams = detailPhotosVp.layoutParams
         layoutParams.width = ScreenUtils.getScreenWidth()
-        layoutParams.height = (4 / 3.0F * layoutParams.width).toInt()
+        layoutParams.height = (16 / 9.0F * layoutParams.width).toInt()
         detailPhotosVp.layoutParams = layoutParams
+
 
 
         moreBtn.setOnClickListener(this)

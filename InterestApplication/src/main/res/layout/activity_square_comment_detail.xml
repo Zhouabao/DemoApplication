@@ -7,8 +7,7 @@
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-
-        app:msv_viewState="content">
+        app:msv_viewState="loading">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -54,6 +53,10 @@
                 android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                app:srlEnableLoadMoreWhenContentNotFull="false"
+                app:srlEnableRefresh="true"
+                app:srlEnableLoadMore="true"
+                app:srlEnableAutoLoadMore="true"
                 app:layout_constraintBottom_toTopOf="@id/showCommentLl"
                 app:layout_constraintTop_toBottomOf="@id/rlTitle">
 

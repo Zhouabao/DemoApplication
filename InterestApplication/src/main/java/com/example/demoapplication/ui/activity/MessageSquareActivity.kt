@@ -21,6 +21,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_message_square.*
 import kotlinx.android.synthetic.main.dialog_square_del.*
+import kotlinx.android.synthetic.main.empty_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 
 /**
@@ -75,6 +76,7 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         )
         messageSquareNewRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, messageSquareNewRv)
+        adapter.emptyView.emptyTip.text = "暂时没有消息"
 
         //val type: Int? = 0,//类型 1，广场点赞 2，评论我的 3。我的评论点赞的 4 @我的
         adapter.setOnItemClickListener { _, view, position ->

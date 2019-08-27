@@ -46,9 +46,16 @@ class MessageHiListAdapter :
         } else {
             holder.itemView.newCount.visibility = View.GONE
         }
-        holder.itemView.text.text = item.content ?: ""
+        holder.itemView.text.text = if (item.content.isEmpty()) {
+            "对方向您打了一个招呼"
+        } else {
+            item.content
+        }
 
         // *    1，新消息 2，倒计时 3，普通样式 4 过期
+        if (holder.countDownTimer != null) {
+            holder.countDownTimer!!.cancel()
+        }
         when (item.type) {
             1 -> {
                 itemView.msgNofitySensor.visibility = View.VISIBLE
@@ -58,10 +65,6 @@ class MessageHiListAdapter :
                 itemView.msgOuttimeTip.visibility = View.GONE
             }
             2 -> {
-                if (holder.countDownTimer != null) {
-                    holder.countDownTimer!!.cancel()
-                }
-
                 itemView.msgNofitySensor.visibility = View.GONE
                 itemView.msgIconMask.visibility = View.GONE
                 itemView.msgCountDown.visibility = View.VISIBLE
