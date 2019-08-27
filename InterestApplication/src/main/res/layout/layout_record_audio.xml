@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/audioRecordLl"
+        android:background="@drawable/gradient_audio_bg"
+        android:gravity="center_vertical"
+        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:visibility="gone"
+        >
+
+    <ImageView
+            android:id="@+id/audioPlayBtn"
+            android:background="@drawable/shape_oval_white"
+            android:layout_gravity="center"
+            android:layout_height="26dp"
+            android:layout_width="26dp"
+            android:src="@drawable/icon_play_audio"/>
+
+    <TextView
+            android:id="@+id/audioTime"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:textColor="#ffffffff"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="00:30"/>
+
+    <!--<com.example.demoapplication.player.VoisePlayingIcon
+            android:id="@+id/audioPreAnim"
+            android:layout_width="160dp"
+            android:layout_height="22dp"
+            android:background="@color/transparent"
+            android:layout_marginLeft="12dp"
+            app:pointer_color="@color/colorWhite"
+            app:pointer_num="11"
+            app:pointer_width="3"
+            />
+    -->
+
+    <com.airbnb.lottie.LottieAnimationView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/voicePlayView"
+            android:layout_width="160dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="12dp"
+            app:lottie_autoPlay="false"
+            app:lottie_fileName="yinzhu.json"
+            app:lottie_loop="true"/>
+
+    <ImageView
+            android:id="@+id/recordDelete"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:scaleType="center"
+            android:visibility="gone"
+            android:src="@drawable/icon_delete"/>
+
+
+</LinearLayout>
+

@@ -71,6 +71,7 @@ import kotlinx.android.synthetic.main.activity_square_comment_detail.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_record_audio.*
 import kotlinx.android.synthetic.main.switch_video.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
@@ -170,7 +171,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 initVideo()
             }
             else -> {
-                squareUserAudio.visibility = View.VISIBLE
+                audioRecordLl.visibility = View.VISIBLE
 //                initAudio()
                 initAudio(0)
                 mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
@@ -318,7 +319,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         mediaPlayer = IjkMediaPlayerUtil(this, position, object : OnPlayingListener {
             override fun onPlay(position: Int) {
                 squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
-                voicePlayView.start()
+                voicePlayView.playAnimation()
                 UpdateVoiceTimeThread.getInstance(
                     squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
                     audioTime
@@ -328,7 +329,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
             override fun onPause(position: Int) {
                 squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
-                voicePlayView.stop()
+                voicePlayView.cancelAnimation()
                 UpdateVoiceTimeThread.getInstance(
                     squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
                     audioTime
@@ -338,7 +339,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
             override fun onStop(position: Int) {
                 squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                voicePlayView.stop()
+                voicePlayView.cancelAnimation()
                 UpdateVoiceTimeThread.getInstance(
                     squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
                     audioTime
@@ -350,7 +351,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             override fun onError(position: Int) {
                 toast("音频播放出错")
                 squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
-                voicePlayView.stop()
+                voicePlayView.cancelAnimation()
                 UpdateVoiceTimeThread.getInstance(
                     squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
                     audioTime
@@ -364,7 +365,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
 
             override fun onPreparing(position: Int) {
-                voicePlayView.stop()
+                voicePlayView.cancelAnimation()
                 UpdateVoiceTimeThread.getInstance(
                     squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
                     audioTime

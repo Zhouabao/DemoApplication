@@ -18,6 +18,7 @@ import android.widget.MediaController
 import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,6 +51,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_publish.*
+import kotlinx.android.synthetic.main.layout_record_audio.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
@@ -224,16 +226,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     private var videoPath: String = ""
     private var audioPath: String = ""
 
-    private val allPhotoAdapter by lazy { ChoosePhotosAdapter(0, pickedPhotos) }
-    private val pickedPhotoAdapter by lazy { ChoosePhotosAdapter(1) }
-    private val allVideoThumbAdapter by lazy { ChoosePhotosAdapter(2) }
+    private val allPhotoAdapter by lazy { ChoosePhotosAdapter(0, pickedPhotos) } //全部照片
+    private val pickedPhotoAdapter by lazy { ChoosePhotosAdapter(1) }//选中的封面
+    private val allVideoThumbAdapter by lazy { ChoosePhotosAdapter(2) }//全部视频封面
     private var videoCheckIndex = -1
 
     private fun initPickedRv() {
-//        pickedPhotosRv.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
         pickedPhotosRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        //垂直+水平分割线
-//        pickedPhotosRv.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.BOTH_SET, SizeUtils.dp2px(4F), resources.getColor(R.color.colorWhite)))
+        //垂直分割线
         pickedPhotosRv.addItemDecoration(
             DividerItemDecoration(
                 this,
@@ -247,24 +247,25 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         pickedPhotoAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.choosePhoto -> {
-                    showBigImagePreview(pickedPhotoAdapter.data[position])
+                    //showBigImagePreview(pickedPhotoAdapter.data[position])
                 }
                 R.id.choosePhotoDel -> {
                     val mediaBean = pickedPhotoAdapter.data[position]
                     val type = mediaBean.fileType
-                    for (bean in allPhotoAdapter.data) {
-                        if (bean.id == mediaBean.id) {
-                            bean.ischecked = false
-                            break
-                        }
-                    }
+
                     pickedPhotos.remove(mediaBean)
+                    pickedPhotoAdapter.notifyDataSetChanged()
+//                    pickedPhotoAdapter.notifyItemRemoved(position)
                     if (type == MediaBean.TYPE.IMAGE) {
+                        for (bean in allPhotoAdapter.data) {
+                            if (bean.id == mediaBean.id) {
+                                bean.ischecked = false
+                                break
+                            }
+                        }
                         allPhotoAdapter.notifyDataSetChanged()
-                        pickedPhotoAdapter.notifyItemRemoved(position)
                         checkCompleteBtnEnable()
                     } else {
-
                         allVideoThumbAdapter.data[videoCheckIndex].ischecked = false
                         allVideoThumbAdapter.notifyItemChanged(videoCheckIndex)
                     }
@@ -302,7 +303,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             when (view.id) {
                 //点击查看大图
                 R.id.choosePhoto -> {
-                    showBigImagePreview(allPhotoAdapter.data[position])
+//                    showBigImagePreview(allPhotoAdapter.data[position])
                 }
                 //点击选中
                 R.id.choosePhotoDel -> {
@@ -368,7 +369,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         allVideoThumbAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.choosePhoto -> {
-                    showVideoPreview(allVideoThumbAdapter.data[position])
+//                    showVideoPreview(allVideoThumbAdapter.data[position])
                 }
                 R.id.chooseCamera -> {
                     go2TakeVideo()
@@ -538,7 +539,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         finishRecord.setOnClickListener(this)
         //上面预览状态变更
         recordDelete.setOnClickListener(this)
-        audioPlayPreBtn.setOnClickListener(this)
+        audioPlayBtn.setOnClickListener(this)
 
         deleteRecord.setVisible(false)
         finishRecord.setVisible(false)
@@ -595,9 +596,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             currentActionState = ACTION_PLAYING
             //开启预览倒计时
             if (isTopPreview) {
-                mPreviewTimeThread = UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), audioPreTime)
-                audioPlayPreBtn.setImageResource(R.drawable.icon_pause_audio)
-                audioPreAnim.start()
+                mPreviewTimeThread = UpdateVoiceTimeThread.getInstance(UriUtils.getShowTime(totalSecond), audioTime)
+                audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
+                voicePlayView.playAnimation()
             } else {
                 //预览播放录音
                 recordTv.text = "播放中.."
@@ -613,8 +614,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 recordProgress.update(0, 100)
                 if (isTopPreview) {
                     currentActionState = ACTION_COMMPLETE
-                    audioPlayPreBtn.setImageResource(R.drawable.icon_play_audio)
-                    audioPreAnim.stop()
+                    audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+                    voicePlayView.cancelAnimation()
                 } else {
                     currentActionState = ACTION_COMMPLETE
                     recordTime.text = UriUtils.getShowTime(totalSecond)
@@ -626,8 +627,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             currentActionState = ACTION_PAUSE
             mPreviewTimeThread?.pause()
             if (isTopPreview) {
-                audioPreAnim.stop()
-                audioPlayPreBtn.setImageResource(R.drawable.icon_play_audio)
+                voicePlayView.cancelAnimation()
+                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
             } else {
                 recordTv.text = "暂停"
                 startRecordBtn.setImageResource(R.drawable.icon_record_start)
@@ -639,8 +640,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             //开启预览计时线程
             mPreviewTimeThread?.start()
             if (isTopPreview) {
-                audioPlayPreBtn.setImageResource(R.drawable.icon_play_audio)
-                audioPreAnim.start()
+                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+                voicePlayView.playAnimation()
             } else {
                 recordTv.text = "播放中.."
                 startRecordBtn.setImageResource(R.drawable.icon_record_pause)
@@ -657,7 +658,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     //恢复成未录制状态
     private fun changeToNormalState() {
         click = false
-        publishAudioLL.visibility = View.GONE
+        audioRecordLl.visibility = View.GONE
         recordTime.visibility = View.VISIBLE
         recordProgress.visibility = View.VISIBLE
         mIsPreview = false
@@ -666,7 +667,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         MediaPlayerHelper.realese()
         currentActionState = ACTION_NORMAL
         startRecordBtn.setImageResource(R.drawable.icon_record_normal)
-        audioPlayPreBtn.setImageResource(R.drawable.icon_play_audio)
+        audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
         totalSecond = 0
         recordTv.text = "点击录音"
         recordTime.text = "00:00"
@@ -882,8 +883,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 recordProgress.visibility = View.GONE
                 startRecordBtn.setImageResource(R.drawable.icon_record_delete)
 
-                audioPreTime.text = UriUtils.getShowTime(totalSecond)
-                publishAudioLL.visibility = View.VISIBLE
+                audioTime.text = UriUtils.getShowTime(totalSecond)
+                audioRecordLl.visibility = View.VISIBLE
+                recordDelete.isVisible = true
 
                 //changeToNormalState()
             }
@@ -892,7 +894,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 mMediaRecorderHelper.cancel()
                 changeToNormalState()
             }
-            R.id.audioPlayPreBtn -> {
+            R.id.audioPlayBtn -> {
                 if (!click) {
                     currentActionState = ACTION_COMMPLETE
                     click = true

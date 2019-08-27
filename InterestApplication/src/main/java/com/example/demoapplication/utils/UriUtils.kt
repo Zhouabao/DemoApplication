@@ -129,7 +129,7 @@ object UriUtils {
     /**
      * 获取手机中所有视频的信息
      */
-     fun getAllVideoInfos(context: Context) :MutableList<MediaBean>{
+    fun getAllVideoInfos(context: Context): MutableList<MediaBean> {
         val medias = mutableListOf<MediaBean>()
         Thread(Runnable {
             val mediaBeen = ArrayList<MediaBean>()
@@ -143,10 +143,9 @@ object UriUtils {
                 MediaStore.Video.Media.DATE_MODIFIED
             )
             val mCursor = context.contentResolver.query(
-                mImageUri,
-                proj,null,null,
-//                MediaStore.Video.Media.MIME_TYPE + "=?",
-//                arrayOf("video/mp4"),
+                mImageUri, proj, null, null,
+                //                MediaStore.Video.Media.MIME_TYPE + "=?",
+                //                arrayOf("video/mp4"),
                 MediaStore.Video.Media.DATE_MODIFIED + " desc"
             )
             if (mCursor != null) {
@@ -161,10 +160,20 @@ object UriUtils {
                         Log.e("dml", "this video size < 0 $path")
                         size = File(path).length() / 1024
                     }
-                    val displayName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME))
+                    val displayName =
+                        if (mCursor.getString(mCursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME)) != null) {
+                            mCursor.getString(mCursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME))
+                        } else {
+                            ""
+                        }
 
                     //提前生成缩略图，再获取：http://stackoverflow.com/questions/27903264/how-to-get-the-video-thumbnail-path-and-not-the-bitmap
-                    MediaStore.Video.Thumbnails.getThumbnail(context.contentResolver, videoId.toLong(), MediaStore.Video.Thumbnails.MICRO_KIND, null)
+                    MediaStore.Video.Thumbnails.getThumbnail(
+                        context.contentResolver,
+                        videoId.toLong(),
+                        MediaStore.Video.Thumbnails.MICRO_KIND,
+                        null
+                    )
                     val projection = arrayOf(MediaStore.Video.Thumbnails._ID, MediaStore.Video.Thumbnails.DATA)
                     val cursor = context.contentResolver.query(
                         MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
@@ -178,17 +187,18 @@ object UriUtils {
                         thumbPath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Thumbnails.DATA))
                     }
                     cursor.close()
-                    mediaBeen.add(
-                        MediaBean(
-                            videoId,
-                            MediaBean.TYPE.VIDEO,
-                            path,
-                            displayName,
-                            thumbPath,
-                            duration,
-                            size
+                    if (duration > 0)
+                        mediaBeen.add(
+                            MediaBean(
+                                videoId,
+                                MediaBean.TYPE.VIDEO,
+                                path,
+                                displayName,
+                                thumbPath,
+                                duration,
+                                size
+                            )
                         )
-                    )
 
                 }
                 mCursor.close()

@@ -26,6 +26,10 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
             val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
             params.leftMargin = SizeUtils.dp2px(15F)
             helper.itemView.layoutParams = params
+        } else {
+            val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
+            params.leftMargin = SizeUtils.dp2px(0f)
+            helper.itemView.layoutParams = params
         }
         helper.addOnClickListener(R.id.choosePhoto)
         helper.addOnClickListener(R.id.choosePhotoDel)

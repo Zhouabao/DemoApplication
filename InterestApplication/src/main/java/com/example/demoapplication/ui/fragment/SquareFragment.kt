@@ -2,6 +2,7 @@ package com.example.demoapplication.ui.fragment
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -186,18 +187,15 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                     lastVisibleItem,
                     lastVisibleItem - firstVisibleItem
                 )
-                if (lastVisibleItem >= adapter.itemCount - 5) {
-                    refreshLayout.autoLoadMore()
-                }
+//                if (lastVisibleItem >= adapter.itemCount - 5) {
+//                    refreshLayout.autoLoadMore()
+//                }
             }
         })
 
         adapter.setOnItemClickListener { _, view, position ->
             SquareCommentDetailActivity.start(activity!!, adapter.data[position])
-            if (mediaPlayer != null) {
-                mediaPlayer!!.resetMedia()
-                mediaPlayer = null
-            }
+            resetAudio()
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -208,10 +206,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 }
                 R.id.squareCommentBtn1 -> {
                     SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
-                    if (mediaPlayer != null) {
-                        mediaPlayer!!.resetMedia()
-                        mediaPlayer = null
-                    }
+                    resetAudio()
                 }
                 R.id.squareDianzanBtn1 -> {
                     val params = hashMapOf(
@@ -241,7 +236,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                         currPlayIndex = position
                     }
                     for (index in 0 until adapter.data.size) {
-                        if (index != position && adapter.data[index].type == 3) {
+                        if (index != currPlayIndex && adapter.data[index].type == 3) {
                             adapter.data[index].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
                         }
                     }
@@ -267,10 +262,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     var mediaPlayer: IjkMediaPlayerUtil? = null
 
     private fun initAudio(position: Int) {
-        if (mediaPlayer != null) {
-            mediaPlayer!!.resetMedia()
-            mediaPlayer = null
-        }
+        resetAudio()
         mediaPlayer = IjkMediaPlayerUtil(activity!!, position, object : OnPlayingListener {
 
             override fun onPlay(position: Int) {
@@ -288,21 +280,16 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
             override fun onStop(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                currPlayIndex = -1
-//                adapter.notifyItemChanged(position)
+                resetAudio()
                 adapter.notifyDataSetChanged()
-                mediaPlayer!!.resetMedia()
-                mediaPlayer = null
             }
 
             override fun onError(position: Int) {
                 toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
 //                adapter.notifyItemChanged(position)
-                currPlayIndex = -1
+                resetAudio()
                 adapter.notifyDataSetChanged()
-                mediaPlayer!!.resetMedia()
-                mediaPlayer = null
             }
 
             override fun onPrepared(position: Int) {
@@ -325,6 +312,15 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             }
 
         }).getInstance()
+    }
+
+    private fun resetAudio() {
+        currPlayIndex = -1
+        //                adapter.notifyItemChanged(position)
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
     }
 
 
@@ -423,6 +419,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onPause() {
         super.onPause()
+        Log.d("SquareFragment", "onPause")
 //        GSYVideoManager.onPause()
     }
 
@@ -430,16 +427,17 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         super.onResume()
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
         GSYVideoManager.onResume(false)
+        Log.d("SquareFragment", "onResume")
+
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
         GSYVideoManager.releaseAllVideos()
-        if (mediaPlayer != null) {
-            mediaPlayer!!.resetMedia()
-            mediaPlayer = null
-        }
+        resetAudio()
+        Log.d("SquareFragment", "onDestroy")
+
         //反注册eventbus
         EventBus.getDefault().unregister(this)
     }
@@ -448,10 +446,16 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
         listParams["page"] = page
+
+        resetAudio()
+
         adapter.data.clear()
-        mPresenter.getSquareList(listParams, true)
         friendsAdapter.data.clear()
+        refreshLayout.setNoMoreData(false)
+        mPresenter.getSquareList(listParams, true)
         mPresenter.getFrinedsList(friendsParams)
+
+
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
@@ -475,9 +479,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     }
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, refresh: Boolean?) {
-        if (refresh == true) {
-            adapter.data.clear()
-        }
         if (result) {
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data!!.list != null && data!!.list!!.size > 0) {

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieComposition
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
@@ -47,9 +48,10 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
-import kotlinx.android.synthetic.main.item_list_square_audio.view.*
 import kotlinx.android.synthetic.main.item_list_square_pic.view.*
 import kotlinx.android.synthetic.main.item_list_square_video.view.*
+import kotlinx.android.synthetic.main.layout_record_audio.view.*
+
 import kotlinx.android.synthetic.main.layout_square_list_bottom.view.*
 import kotlinx.android.synthetic.main.layout_square_list_top.view.*
 import kotlinx.android.synthetic.main.switch_video.view.*
@@ -65,12 +67,12 @@ import org.jetbrains.anko.startActivity
  *     playState:Int = -1  //0停止  1播放中  2暂停
  *     playPosition播放的进度
  */
-class MultiListSquareAdapter(
-    data: MutableList<SquareBean>,
-    var playState: Int = -1,
-    var playPosition: Int = 0
-) :
+class MultiListSquareAdapter(data: MutableList<SquareBean>, var playState: Int = -1, var playPosition: Int = 0) :
     BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data), ModuleProxy {
+
+    private val composition: LottieComposition? = null
+
+
     companion object {
         val TAG = "RecyclerView2List"
     }
@@ -222,36 +224,48 @@ class MultiListSquareAdapter(
             SquareBean.AUDIO -> {
                 //点击播放
                 holder.addOnClickListener(R.id.audioPlayBtn)
+                holder.itemView.voicePlayView.setAnimation("yinzhu.json")
+
                 if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) { //播放中
-                    holder.itemView.voicePlayView.start()
+                    if (!holder.itemView.voicePlayView.isAnimating) {
+                        holder.itemView.voicePlayView.loop(true)
+                        holder.itemView.voicePlayView.playAnimation()
+                    } else {
+                        holder.itemView.voicePlayView.resumeAnimation()
+                    }
+
                     UpdateVoiceTimeThread.getInstance(
                         item.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
                         holder.itemView.audioTime
                     ).start()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
                 } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {//暂停中
-                    holder.itemView.voicePlayView.stop()
+                    holder.itemView.voicePlayView.pauseAnimation()
                     UpdateVoiceTimeThread.getInstance(
                         item.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
                         holder.itemView.audioTime
                     ).pause()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_STOP || item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {//停止中
-                    holder.itemView.voicePlayView.stop()
+                    holder.itemView.voicePlayView.loop(false)
+                    holder.itemView.voicePlayView.cancelAnimation()
+
                     UpdateVoiceTimeThread.getInstance(
                         item.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
                         holder.itemView.audioTime
                     ).stop()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
-                    holder.itemView.voicePlayView.stop()
+                    holder.itemView.voicePlayView.loop(false)
+                    holder.itemView.voicePlayView.cancelAnimation()
+
                     UpdateVoiceTimeThread.getInstance(
                         item.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
                         holder.itemView.audioTime
                     ).stop()
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 }
-                holder.itemView.squareUserAudio.onClick {
+                holder.itemView.audioRecordLl.onClick {
                     mContext.startActivity<SquarePlayListDetailActivity>("item" to item, "from" to "squareFragment")
                 }
             }
