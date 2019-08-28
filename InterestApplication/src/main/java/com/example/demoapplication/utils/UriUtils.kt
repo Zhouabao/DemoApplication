@@ -35,7 +35,7 @@ object UriUtils {
 
 
     //录音展示时间格式化
-     fun getShowTime(countTime: Int): String {
+    fun getShowTime(countTime: Int): String {
         var result = ""
         if (countTime < 10)
             result = "00:0$countTime"
@@ -60,6 +60,12 @@ object UriUtils {
     }
 
 
+    //录音展示时间格式化
+    fun stringToTimeInt(countTime: String): Int {
+        var result = countTime.split(":")
+        return result[0].toInt() * 60 + result[1].toInt()
+    }
+
 
     fun ms2HMS(longMills: Int): String {
         var mills = longMills
@@ -83,6 +89,8 @@ object UriUtils {
         HMStime = "$hourStr:$mintStr:$sedStr"
         return HMStime
     }
+
+
     /**
      * 读取手机中所有图片信息
      */
@@ -123,7 +131,6 @@ object UriUtils {
 
         return medias
     }
-
 
 
     /**

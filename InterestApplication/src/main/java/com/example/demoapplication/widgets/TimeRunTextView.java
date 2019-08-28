@@ -172,6 +172,9 @@ public class TimeRunTextView extends TextView {
             case "2":
                 strTime = (mHour >= 10 ? mHour : "0" + mHour) + ":" + (mMin >= 10 ? mMin : "0" + mMin) + ":" + (mSecond >= 10 ? mSecond : "0" + mSecond);
                 break;
+            case "3":
+                strTime = (mHour > 0 ? (mHour >= 10 ? mHour : "0" + mHour) + ":" : "") + (mMin >= 10 ? mMin : "0" + mMin) + ":" + (mSecond >= 10 ? mSecond : "0" + mSecond);
+                break;
             default:
                 strTime = mHour + "时" + mMin + "分" + mSecond + "秒";
                 break;

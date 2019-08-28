@@ -485,7 +485,11 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 for (tempData in 0 until data!!.list!!.size) {
                     data!!.list!![tempData].type = when {
                         !data!!.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
-                        !data!!.list!![tempData].audio_json.isNullOrEmpty() -> SquareBean.AUDIO
+                        !data!!.list!![tempData].audio_json.isNullOrEmpty() -> {
+                            data!!.list!![tempData].audio_json?.get(0)?.leftTime =
+                                data!!.list!![tempData].audio_json?.get(0)?.duration ?: 0
+                            SquareBean.AUDIO
+                        }
                         !data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
                         else -> SquareBean.PIC
                     }

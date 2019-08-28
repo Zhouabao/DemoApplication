@@ -15,7 +15,7 @@ import androidx.core.view.size
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions.bitmapTransform
+import com.bumptech.glide.Priority
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
@@ -187,15 +187,17 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
             SquareBean.AUDIO -> {
                 holder.addOnClickListener(R.id.detailPlayBtn)
                 Glide.with(mContext)
-                    .load(item.avatar!!)
-                    .apply(bitmapTransform(BlurTransformation(25)))
+                    .load(item.avatar)
+                    .thumbnail(0.5F)
+                    .priority(Priority.NORMAL)
+                    .transform(BlurTransformation(25))
                     .into(holder.itemView.audioFl)
-                holder.itemView.audioFl.alpha = 0.5F
-                GlideUtil.loadImg(mContext, item.avatar ?: "", holder.itemView.detailPlayAudioBg)
+//                holder.itemView.audioFl.alpha = 0.1F
+                GlideUtil.loadImg(mContext, item.avatar, holder.itemView.detailPlayAudioBg)
 
 
                 //设定动画作用于的控件，以及什么动画，旋转的开始角度和结束角度
-                val objAnim = ObjectAnimator.ofFloat(holder.itemView.detailPlayAudioBg, "rotation", 0.0f, 360.0f);
+                val objAnim = ObjectAnimator.ofFloat(holder.itemView.detailPlayAudioBg, "rotation", 0.0f, 360.0f)
                 //设定动画的旋转周期
                 objAnim.duration = (item.audio_json?.get(0)?.duration ?: 0) * 1000L
                 //设置动画的插值器，这个为匀速旋转
