@@ -64,6 +64,7 @@
     <string name="add_friend_self_tip">不能添加自己为好友</string>
     <string name="add_friend_verify_tip">好友验证请求</string>
     <string name="black_list_tip">你不会接收到列表中联系人的任何消息</string>
+    <string name="title_activity_wxpay_entry">WXPayEntryActivity</string>
 
 
     <!--拍摄照片时的滤镜    -->

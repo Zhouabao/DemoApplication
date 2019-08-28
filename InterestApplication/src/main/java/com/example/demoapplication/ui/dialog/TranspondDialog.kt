@@ -106,15 +106,23 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
     private fun shareToThirdParty(platformConfig: SHARE_MEDIA) {
         if (squareBean?.type == SquareBean.PIC) {
             //多图上传,需要带文字描述
-            if (squareBean?.photo_json.isNullOrEmpty()) {
+            if (!squareBean?.photo_json.isNullOrEmpty()) {
                 val images = arrayOfNulls<UMImage>((squareBean?.photo_json ?: mutableListOf()).size)
                 for (img in (squareBean?.photo_json ?: mutableListOf()).withIndex()) {
                     val image = UMImage(myContext, img.value.url)//网络图片
+                    image.title = "${squareBean?.nickname} 在积糖发了一张照片"
+                    image.description = if (!squareBean?.descr.isNullOrEmpty()) {
+                        squareBean?.descr
+                    } else "「你先抓紧看看这个」"
                     images[img.index] = image
                 }
                 ShareAction(myContext as Activity)
                     .setPlatform(platformConfig)
-                    .withText(squareBean?.descr ?: "")//分享内容
+                    .withText(
+                        if (!squareBean?.descr.isNullOrEmpty()) {
+                            squareBean?.descr
+                        } else "「你先抓紧看看这个」"
+                    )//分享内容
                     .withMedias(*images)//多张图片
                     .setCallback(callback)
                     .share()
@@ -136,14 +144,23 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
             thumbImg.compressStyle = UMImage.CompressStyle.SCALE
             thumbImg.compressFormat = Bitmap.CompressFormat.PNG
             video.setThumb(thumbImg)
+            video.title = "${squareBean?.nickname} 在积糖发了一段视频"
+            video.description = if (!squareBean?.descr.isNullOrEmpty()) {
+                squareBean?.descr
+            } else "「你先抓紧看看这个」"
             ShareAction(myContext as Activity)
                 .setPlatform(platformConfig)
-                .withText(squareBean?.descr ?: "")
                 .withMedia(video)
                 .setCallback(callback)
                 .share()
         } else if (squareBean?.type == SquareBean.AUDIO) {
             val audio = UMusic(squareBean?.audio_json?.get(0)?.url)
+            audio.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))
+//            audio.setmTargetUrl(squareBean?.audio_json?.get(0)?.url)
+            audio.title = "${squareBean?.nickname} 在积糖发了一段语音"
+            audio.description = if (!squareBean?.descr.isNullOrEmpty()) {
+                squareBean?.descr
+            } else "「你先抓紧看看这个」"
             ShareAction(myContext as Activity)
                 .setPlatform(platformConfig)
                 .withText(squareBean?.descr ?: "")
@@ -198,15 +215,11 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
             .addShare(UserManager.getToken(), UserManager.getAccid(), squareBean?.id ?: 0)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
-                    ToastUtils.showShort("分享成功!")
                     dismiss()
-                    (myContext as Activity).finish()
                 }
 
                 override fun onError(e: Throwable?) {
-                    ToastUtils.showShort("分享成功!")
                     dismiss()
-                    (myContext as Activity).finish()
                 }
             })
     }

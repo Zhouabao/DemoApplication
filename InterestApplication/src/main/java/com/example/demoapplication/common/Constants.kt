@@ -51,8 +51,10 @@ object Constants {
     //友盟配置
     //key
     const val UMENG_APPKEY = "5d5a69330cafb26766000a29"
-    //serect Push推送业务的secret
     const val UMENG_SECRET = "7bc4c2d146e193981b4e7fde5081ffee"
+    //微信支付appid
+    const val WECHAT_APP_ID = "wx4a3210c3cc8e44fb"
+    const val WECHAT_APP_KEY = "a6c9ff7bd2cc9029fd47c02ff2e021ab"
 
 
 

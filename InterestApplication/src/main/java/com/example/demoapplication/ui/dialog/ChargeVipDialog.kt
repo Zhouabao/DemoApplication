@@ -16,17 +16,19 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
-import com.example.demoapplication.model.ChargeWayBean
-import com.example.demoapplication.model.ChargeWayBeans
-import com.example.demoapplication.model.PaywayBean
-import com.example.demoapplication.model.VipDescr
+import com.example.demoapplication.common.CommonFunction
+import com.example.demoapplication.common.Constants
+import com.example.demoapplication.model.*
 import com.example.demoapplication.ui.adapter.VipBannerAdapter
 import com.example.demoapplication.ui.adapter.VipChargeAdapter
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
+import com.tencent.mm.opensdk.modelpay.PayReq
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.dialog_charge_vip.*
 
 /**
@@ -35,7 +37,7 @@ import kotlinx.android.synthetic.main.dialog_charge_vip.*
  *    desc   : 充值会员底部对话框
  *    version: 1.0
  */
-class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
+class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
     private var payways: MutableList<PaywayBean> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,11 +88,11 @@ class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             if (vipBannerAdapter.data.size > 0) {
                 val size = vipBannerAdapter.data.size
                 for (i in 0 until size) {
-                    val indicator = RadioButton(context)
+                    val indicator = RadioButton(context1)
                     indicator.width = SizeUtils.dp2px(5F)
                     indicator.height = SizeUtils.dp2px(5F)
                     indicator.buttonDrawable = null
-                    indicator.background = context.resources.getDrawable(R.drawable.selector_circle_indicator)
+                    indicator.background = context1.resources.getDrawable(R.drawable.selector_circle_indicator)
 
                     indicator.layoutParams =
                         LinearLayout.LayoutParams(
@@ -117,7 +119,7 @@ class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
 
     private fun initView() {
         //支付价格
-        vipChargeRv.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        vipChargeRv.layoutManager = LinearLayoutManager(context1, RecyclerView.HORIZONTAL, false)
 
         vipChargeRv.adapter = vipChargeAdapter
         vipChargeAdapter.setOnItemClickListener { _, _, position ->
@@ -127,6 +129,89 @@ class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             vipChargeAdapter.notifyDataSetChanged()
             ToastUtils.showShort("${position}")
         }
+
+        //支付宝支付
+        zhiPayBtn.onClick {
+            createOrder(1)
+        }
+
+        //微信支付
+        wechatPayBtn.onClick {
+            createOrder(2)
+        }
+
+        //余额支付
+        balancePayBtn.onClick {
+            createOrder(3)
+        }
+    }
+
+    //pay_id 	    是	支付方式id	展开
+    //product_id 	是	购买产品id	展开
+    //order_id		是	非必串参数。例如同一商品切换支付方式就需要传
+    //payment_type 支付类型 1支付宝 2微信支付 3余额支付
+    private fun createOrder(payment_type: Int) {
+        val params = hashMapOf<String, Any>()
+        params["token"] = UserManager.getToken()
+        params["accid"] = UserManager.getAccid()
+        for (payway in payways) {
+            if (payway.payment_type == payment_type) {
+                params["pay_id"] = payway.id
+                break
+            }
+        }
+        for (charge in vipChargeAdapter.data) {
+            if (charge.check) {
+                params["product_id"] = charge.id
+                break
+            }
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .createOrder(params)
+            .excute(object : BaseSubscriber<BaseResp<PayBean>>(null) {
+                override fun onNext(t: BaseResp<PayBean>) {
+                    if (t.code == 200) {
+                        //发起微信
+                        start2Pay(payment_type, t.data)
+                    } else {
+                        ToastUtils.showShort(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    ToastUtils.showShort(CommonFunction.getErrorMsg(context1))
+                }
+            })
+    }
+
+    /**
+     * 开始支付
+     *     //payment_type 支付类型 1支付宝 2微信支付 3余额支付
+     */
+    private fun start2Pay(payment_type: Int, data: PayBean) {
+        if (payment_type == 2) {
+            //微信支付注册
+            val wxapi = WXAPIFactory.createWXAPI(context1, null)
+            wxapi.registerApp(Constants.WECHAT_APP_ID)
+            if (!wxapi.isWXAppInstalled) {
+                ToastUtils.showShort("你没有安装微信")
+                return
+            }
+
+            //封装微信支付参数
+            val request = PayReq()//吊起微信APP的对象
+            request.appId = data.wechat?.appid
+            request.prepayId = data.wechat?.prepayid
+            request.partnerId = data.wechat?.partnerid
+            request.nonceStr = data.wechat?.noncestr
+            request.timeStamp = data.wechat?.timestamp
+            request.packageValue = data.wechat?.`package`
+            request.sign = data.wechat?.sign
+
+            //发起微信支付请求
+            wxapi.sendReq(request)
+        }
+
     }
 
     /**
@@ -161,13 +246,13 @@ class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
 
     private fun initPayWay() {
         for (payway in payways) {
-            if (payway.id == 1) {
+            if (payway.payment_type == 1) {
                 zhiPayBtn.visibility = View.VISIBLE
             }
-            if (payway.id == 2) {
+            if (payway.payment_type == 2) {
                 wechatPayBtn.visibility = View.VISIBLE
             }
-            if (payway.id == 3) {
+            if (payway.payment_type == 3) {
                 balancePayBtn.visibility = View.VISIBLE
             }
         }
@@ -180,6 +265,5 @@ class ChargeVipDialog(context: Context) : Dialog(context, R.style.MyDialog) {
     private fun chargeVip() {
         setCancelable(false)
         setCanceledOnTouchOutside(false)
-
     }
 }

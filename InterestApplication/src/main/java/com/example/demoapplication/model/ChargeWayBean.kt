@@ -16,9 +16,9 @@ data class ChargeWayBeans(
 
 
 data class PaywayBean(
-    val comments: String? = "",
-    val id: Int? = 0,//支付类型 1支付宝 2微信支付 3余额支付
-    val payment_type: Int? = 0
+    val comments: String = "",
+    val id: Int = 0,
+    val payment_type: Int = 0//支付类型 1支付宝 2微信支付 3余额支付
 )
 
 data class ChargeWayBean(
@@ -26,10 +26,26 @@ data class ChargeWayBean(
     val discount_price: Float? = 0f,
     val duration: Int? = 0,
     val ename: String? = "",
-    val id: Int? = 0,
+    val id: Int = 0,
     val limited_price: Float? = 0f,
     val original_price: Float? = 0f,
     val title: String? = "",
     val descr: String? = "",//限时折扣文案
     val type: Int?//	1 原价售卖 2折扣价售卖 3限时折扣
+)
+
+data class PayBean(
+    val order_id: String? = "",
+    val otn: String? = "",
+    val wechat: Wechat? = Wechat()
+)
+
+data class Wechat(
+    val `package`: String? = "",
+    val appid: String? = "",
+    val noncestr: String? = "",
+    val partnerid: String? = "",
+    val prepayid: String? = "",
+    val sign: String? = "",
+    val timestamp: String? = ""
 )

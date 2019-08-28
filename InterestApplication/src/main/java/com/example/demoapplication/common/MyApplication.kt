@@ -53,7 +53,9 @@ class MyApplication : BaseApplication() {
     @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
+        //mob分享初始化
         MobSDK.init(this)
+
 
         //初始化Umeng
         initUmeng()
@@ -63,7 +65,7 @@ class MyApplication : BaseApplication() {
         configPlayer()
 
         DemoCache.setContext(this)
-        NIMClient.init(this, UserManager.loginInfo(),NimSDKOptionConfig.getSDKOptions(this))
+        NIMClient.init(this, UserManager.loginInfo(), NimSDKOptionConfig.getSDKOptions(this))
         initUIKit()
 
     }
@@ -114,7 +116,7 @@ class MyApplication : BaseApplication() {
             //微博平台
             PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad", "http://sns.whalecloud.com")
             //微信平台
-            PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0")
+            PlatformConfig.setWeixin(Constants.WECHAT_APP_ID, Constants.WECHAT_APP_KEY)
             //qq空间平台
             PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba")
         }

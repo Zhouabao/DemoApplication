@@ -10,12 +10,16 @@ import androidx.core.app.ActivityCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.utils.AMapManager
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
+import com.tencent.mm.opensdk.modelmsg.SendAuth
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_welcome.*
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import org.jetbrains.anko.startActivity
@@ -74,9 +78,23 @@ class WelcomeActivity : BaseActivity() {
         }
         //微信登录
         wechatLoginBtn.onClick {
-
+            wechatLogin()
         }
 
+    }
+
+    private fun wechatLogin() {
+        val wxapi = WXAPIFactory.createWXAPI(this, null)
+        wxapi.registerApp(Constants.WECHAT_APP_ID)
+        if (!wxapi.isWXAppInstalled) {
+            ToastUtils.showShort("你没有安装微信")
+            return
+        }
+        val  req =  SendAuth.Req()
+        req.scope = "snsapi_userinfo"
+        req.state = "wechat_sdk_demo_test"
+        wxapi.sendReq(req)
+//        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, umAuthListener)
     }
 
 
@@ -118,5 +136,11 @@ class WelcomeActivity : BaseActivity() {
 
     private fun showAlertDialog() {
         dialog.show()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        UMShareAPI.get(this).release()
     }
 }

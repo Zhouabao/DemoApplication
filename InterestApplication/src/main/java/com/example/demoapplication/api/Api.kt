@@ -288,14 +288,6 @@ interface Api {
     fun myInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
 
     /**
-     * 获取会员支付方式
-     */
-    @FormUrlEncoded
-    @POST("pay_order/productLists${Constants.END_BASE_URL}")
-    fun productLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
-
-
-    /**
      * 系统推荐问题
      */
     @FormUrlEncoded
@@ -500,5 +492,26 @@ interface Api {
     @FormUrlEncoded
     @POST("Tidings/checkGreetSendMsg${Constants.END_BASE_URL}")
     fun checkGreetSendMsg(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<CheckGreetSendBean?>>
+
+
+    /*--------------------------------会员充值---------------------------------*/
+
+    /**
+     * 获取会员支付方式
+     */
+    @FormUrlEncoded
+    @POST("pay_order/productLists${Constants.END_BASE_URL}")
+    fun productLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
+
+
+
+    /**
+     * 获取订单信息
+     */
+    @FormUrlEncoded
+    @POST("pay_order/createOrder${Constants.END_BASE_URL}")
+    fun createOrder(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PayBean>>
+
+
 
 }
