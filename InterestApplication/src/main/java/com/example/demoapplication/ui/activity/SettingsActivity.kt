@@ -14,6 +14,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.AuthService
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 
 /**
@@ -46,6 +47,7 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
         clearData.setOnClickListener(this)
         loginOutBtn.setOnClickListener(this)
         btnBack.setOnClickListener(this)
+        hotT1.text = "设置"
 
 
     }

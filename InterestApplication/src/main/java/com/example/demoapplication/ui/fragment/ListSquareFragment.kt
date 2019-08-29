@@ -81,7 +81,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         EventBus.getDefault().register(this)
 
         val linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        listSquareRv.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.HORIZONTAL_LIST, SizeUtils.dp2px(10F), resources.getColor(R.color.colorWhite)))
+        listSquareRv.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.HORIZONTAL_LIST, SizeUtils.dp2px(20F), resources.getColor(R.color.colorWhite)))
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
         adapter.bindToRecyclerView(listSquareRv)

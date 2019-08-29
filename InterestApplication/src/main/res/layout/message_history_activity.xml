@@ -25,8 +25,7 @@
         <TextView
                 android:id="@+id/hotT1"
                 android:textColor="#ff222222"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textSize="20sp"
                 android:gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"

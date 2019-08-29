@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/llTitle"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical">
+
+    <ImageView
+            android:id="@+id/btnBack"
+            style="@style/BckBtnStyle"
+            />
+
+    <TextView
+            android:id="@+id/hotT1"
+            android:text="黑名单"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            />
+
+
+</LinearLayout>
