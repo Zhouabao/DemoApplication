@@ -3,7 +3,9 @@ package com.example.demoapplication.switchplay
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import com.kotlin.base.ext.setVisible
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import kotlinx.android.synthetic.main.switch_video.view.*
 
 
@@ -63,4 +65,19 @@ class SwitchVideo : StandardGSYVideoPlayer {
         cloneParams(switchVideo, this)
     }
 
+
+    override fun updateStartImage() {
+        if (mCurrentState == GSYVideoView.CURRENT_STATE_PLAYING) {
+//            start.setImageResource(com.example.demoapplication.R.drawable.icon_pause_white)
+            start.setVisible(false)
+        } else if (mCurrentState == GSYVideoView.CURRENT_STATE_ERROR || mCurrentState == GSYVideoView.CURRENT_STATE_NORMAL) {
+            start.setImageResource(com.example.demoapplication.R.drawable.icon_play_white)
+            start.setVisible(true)
+
+        } else {
+            start.setVisible(false)
+
+//            start.setImageResource(com.example.demoapplication.R.drawable.icon_play_white)
+        }
+    }
 }

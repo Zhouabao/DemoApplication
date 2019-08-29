@@ -15,6 +15,8 @@ object SwitchUtil {
         gsyVideoPlayer.setIsTouchWiget(false)
 
         gsyVideoPlayer.isShowPauseCover = true
+
+        gsyVideoPlayer.dismissControlTime = 500
         //是否循环播放
 //        gsyVideoPlayer.isLooping = true
 
@@ -25,11 +27,9 @@ object SwitchUtil {
     }
 
 
-
     fun savePlayState(switchVideo: SwitchVideo) {
         sSwitchVideo = switchVideo.saveState()
     }
-
 
 
     fun clonePlayState(switchVideo: SwitchVideo) {

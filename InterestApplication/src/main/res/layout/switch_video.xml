@@ -37,8 +37,8 @@
 
     <ImageView
             android:id="@+id/start"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:visibility="invisible"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
