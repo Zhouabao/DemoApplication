@@ -8,34 +8,9 @@
         android:background="@color/colorWhite"
         tools:context=".ui.activity.SettingsActivity">
 
-    <LinearLayout
-            android:id="@+id/llTitle"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-                android:id="@+id/btnBack"
-                style="@style/BckBtnStyle"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-                android:id="@+id/hotT1"
-                android:text="设置"
-                android:textColor="@color/colorBlackTitle"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                />
-
-    </LinearLayout>
+    <include
+            layout="@layout/layout_actionbar"/>
 
     <TextView
             android:id="@+id/t1"
@@ -106,8 +81,9 @@
             android:layout_marginTop="20dp"
             android:drawableRight="@drawable/icon_more_right"
             android:layout_height="wrap_content"
+            android:paddingRight="15dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/switchDistance"
             />
 
@@ -133,10 +109,11 @@
             android:textSize="16sp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
+            android:paddingRight="15dp"
             android:drawableRight="@drawable/icon_more_right"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/t2"
             />
 
@@ -148,10 +125,12 @@
             android:textSize="16sp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
+            android:paddingRight="15dp"
             android:drawableRight="@drawable/icon_more_right"
+
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/msgNotificate"
             />
 
@@ -165,8 +144,9 @@
             android:layout_marginTop="20dp"
             android:drawableRight="@drawable/icon_more_right"
             android:layout_height="wrap_content"
+            android:paddingRight="15dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/feedBack"
             />
 
@@ -178,16 +158,17 @@
             android:textSize="16sp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
+            android:paddingRight="15dp"
             android:drawableRight="@drawable/icon_more_right"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/helpCenter"
             />
 
     <TextView
-            android:visibility="gone"
             android:id="@+id/newVersionTip"
+            android:visibility="gone"
             android:layout_marginRight="40dp"
             android:text="有版本更新"
             android:textColor="@color/colorOrange"
@@ -206,17 +187,18 @@
             android:textSize="16sp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
+            android:paddingRight="15dp"
             android:drawableRight="@drawable/icon_more_right"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@id/switchDistance"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/aboutUs"
             />
 
     <TextView
             android:id="@+id/cacheDataSize"
             android:layout_marginRight="40dp"
-            android:text="100M"
+            android:text="0M"
             android:textColor="#ffc8c8c8"
             android:textSize="14sp"
             android:layout_width="wrap_content"

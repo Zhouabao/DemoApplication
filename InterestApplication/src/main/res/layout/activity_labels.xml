@@ -15,8 +15,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-            android:textStyle="bold"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textColor="@color/colorBlackTitle"
             android:text="选择标签"
             android:layout_width="wrap_content"

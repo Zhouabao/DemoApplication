@@ -8,35 +8,10 @@
         android:background="@color/colorWhite"
         tools:context=".ui.activity.BlackListActivity">
 
-    <LinearLayout
-            android:id="@+id/llTitle"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-                android:id="@+id/btnBack"
-                style="@style/BckBtnStyle"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-                android:id="@+id/hotT1"
-                android:text="黑名单"
-                android:textColor="@color/colorBlackTitle"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                />
 
 
-    </LinearLayout>
+    <include
+            layout="@layout/layout_actionbar"/>
 
     <com.kennyc.view.MultiStateView
             xmlns:android="http://schemas.android.com/apk/res/android"

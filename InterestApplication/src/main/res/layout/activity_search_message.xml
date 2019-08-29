@@ -27,7 +27,7 @@
                 android:id="@+id/hotT1"
                 android:layout_marginLeft="12dp"
                 android:textColor="#ff222222"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
