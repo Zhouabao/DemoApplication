@@ -287,6 +287,8 @@ object UserManager {
 
         //敏感词
         SPUtils.getInstance(Constants.SPNAME).remove("sensitive")
+        //草稿箱清除
+        SPUtils.getInstance(Constants.SPNAME).remove("draft")
     }
 
 

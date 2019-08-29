@@ -41,6 +41,7 @@ import com.example.demoapplication.presenter.view.PublishView
 import com.example.demoapplication.ui.adapter.ChoosePhotosAdapter
 import com.example.demoapplication.ui.adapter.EmojAdapter
 import com.example.demoapplication.ui.adapter.PublishLabelAdapter
+import com.example.demoapplication.ui.dialog.DeleteDialog
 import com.example.demoapplication.utils.AMapManager
 import com.example.demoapplication.utils.UriUtils
 import com.example.demoapplication.utils.UriUtils.getAllPhotoInfo
@@ -51,6 +52,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_publish.*
+import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
@@ -410,7 +412,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     }
                     pickedPhotoAdapter.notifyDataSetChanged()
                     allVideoThumbAdapter.notifyDataSetChanged()
-                    checkCompleteBtnEnable()
+//                    checkCompleteBtnEnable()
                 }
             }
         }
@@ -652,6 +654,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         } else if (currentActionState == ACTION_DONE) {
             mMediaRecorderHelper.cancel()
             changeToNormalState()
+
+
         }
     }
 
@@ -670,6 +674,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         startRecordBtn.setImageResource(R.drawable.icon_record_normal)
         audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
         totalSecond = 0
+        mPreviewTimeThread?.stop()
         recordTv.text = "点击录音"
         recordTime.text = "00:00"
         recordTime.setTextColor(resources.getColor(R.color.colorBlack22))
@@ -687,7 +692,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             emojRv.visibility = View.GONE
         when (checkedId) {
             R.id.publishPhotos -> {
-                if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.VIDEO || audioPath.isNotEmpty()) {
+                if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.VIDEO || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
                     tabPublishWay.check(currentWayId)
                     ToastUtils.showShort("不支持图片和其他媒体一起上传哦")
                     return
@@ -698,7 +703,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 audioLl.visibility = View.GONE
             }
             R.id.publishVideo -> {
-                if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE || audioPath.isNotEmpty()) {
+                if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
                     tabPublishWay.check(currentWayId)
                     ToastUtils.showShort("不支持视频和其他媒体一起上传哦")
                     return
@@ -711,7 +716,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             R.id.publishAudio -> {
                 if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
                     tabPublishWay.check(currentWayId)
-                    ToastUtils.showShort("不支持音频和其他媒体一起上传哦")
+                    ToastUtils.showShort("不支持语音和其他媒体一起上传哦")
                     return
                 }
                 currentWayId = checkedId
@@ -723,8 +728,13 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     }
 
     /************编辑内容监听**************/
-    override fun afterTextChanged(p0: Editable?) {
-        checkCompleteBtnEnable()
+    override fun afterTextChanged(p0: Editable) {
+        if (p0.length > 200) {
+            publishContent.setText(publishContent.text.subSequence(0, 200))
+            publishContent.setSelection(publishContent.text.length)
+            ToastUtils.showShort("超出字数限制")
+            KeyboardUtils.hideSoftInput(publishContent)
+        }
     }
 
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -746,26 +756,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      * 检查发布按钮是否可用
      */
     private fun checkCompleteBtnEnable() {
-//        if (publishContent.text.isNullOrEmpty()) {
-//            ToastUtils.showShort("内容是必需的哦~")
-//            return
-//        }
-//        if (publishContent.text.length > 200) {
-//            ToastUtils.showShort("字数超长啦~")
-//            return
-//        }
-//        if (checkTags.size <= 0) {
-//            ToastUtils.showShort("标签是必选项哦~")
-//            return
-//        }
-//
-//        if ((publishContent.text.isNullOrEmpty() || publishContent.text.length > 200) && pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-//            ToastUtils.showShort("文本、语音、图片、视频至少要选择一种发布哦~")
-//            return
-//        }
-
-        publishBtn.isEnabled =
-            ((publishContent.text.isNotEmpty() || publishContent.text.length <= 200 || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) && checkTags.size > 0)
+//        publishBtn.isEnabled = ((publishContent.text.isNotEmpty() || publishContent.text.length <= 200 || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) && checkTags.size > 0)
     }
 
     override fun onResume() {
@@ -811,6 +802,25 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     override fun onClick(view: View) {
         when (view.id) {
             R.id.publishBtn -> {
+                if (checkTags.size <= 0) {
+                    ToastUtils.showShort("标签是必选项哦~")
+                    return
+                }
+
+                if (publishContent.text.isNullOrEmpty()) {
+                    ToastUtils.showShort("文本内容是必填的哦~")
+                    return
+                }
+
+                if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+                    ToastUtils.showShort("语音、图片、视频至少要选择一种发布哦~")
+                    return
+                }
+
+                if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != ACTION_COMMPLETE) {
+                    ToastUtils.showShort("请录制完语音再发布")
+                    return
+                }
 
 
                 if (emojRv.visibility == View.VISIBLE) {
@@ -861,10 +871,22 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 switchActionState()
             }
             R.id.deleteRecord -> {
-                if (emojRv.visibility == View.VISIBLE)
-                    emojRv.visibility = View.GONE
-                mMediaRecorderHelper.cancel()
-                changeToNormalState()
+                val dialog = DeleteDialog(this)
+                dialog.show()
+                dialog.tip.text = "确定重新录制？"
+                dialog.confirm.onClick {
+                    if (emojRv.visibility == View.VISIBLE)
+                        emojRv.visibility = View.GONE
+                    mMediaRecorderHelper.cancel()
+                    changeToNormalState()
+                    dialog.dismiss()
+                }
+
+                dialog.cancel.onClick {
+                    dialog.dismiss()
+                }
+
+
             }
             R.id.finishRecord -> { //录制完成
                 if (emojRv.visibility == View.VISIBLE)
@@ -978,24 +1000,28 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     thumCursor.close()
                     cursor.close()
 
-                    pickedPhotos.add(
-                        0,
-                        MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true)
-                    )
-                    //pickedPhotoAdapter.data.add(0,MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true))
-                    allVideoThumbAdapter.data.add(
-                        1,
-                        MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true)
-                    )
-                    videoCheckIndex = 1
-                    pickedPhotoAdapter.notifyDataSetChanged()
-                    allVideoThumbAdapter.notifyDataSetChanged()
-                    pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
-                        View.VISIBLE
+                    if (duration >= 3000) {
+                        pickedPhotos.add(
+                            0,
+                            MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true)
+                        )
+                        //pickedPhotoAdapter.data.add(0,MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true))
+                        allVideoThumbAdapter.data.add(
+                            1,
+                            MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true)
+                        )
+                        videoCheckIndex = 1
+                        pickedPhotoAdapter.notifyDataSetChanged()
+                        allVideoThumbAdapter.notifyDataSetChanged()
+                        pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
+                            View.VISIBLE
+                        } else {
+                            View.INVISIBLE
+                        }
+                        checkCompleteBtnEnable()
                     } else {
-                        View.INVISIBLE
+                        ToastUtils.showShort("视频拍摄最短为3S")
                     }
-                    checkCompleteBtnEnable()
                 }
             }
             //标签返回
@@ -1069,7 +1095,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             } else {
                 positionItem!!.cityCode ?: ""
             }),
-            "puber_address" to locationCity.text.toString(),
+            "puber_address" to if (locationCity.text.toString() == "不显示位置") {
+                ""
+            } else {
+                locationCity.text.toString()
+            },
             //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
             "type" to type,
             //上传音频、视频的时间，精确到秒
