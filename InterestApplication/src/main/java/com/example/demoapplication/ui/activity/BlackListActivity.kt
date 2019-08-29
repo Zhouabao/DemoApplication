@@ -22,6 +22,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_black_list.*
 import kotlinx.android.synthetic.main.dialog_resolve_black.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
  * 黑名单
@@ -52,6 +53,7 @@ class BlackListActivity : BaseMvpActivity<BlackListPresenter>(), BlackListView, 
 
     private fun initView() {
         btnBack.onClick { finish() }
+        hotT1.text = "黑名单"
         mPresenter = BlackListPresenter()
         mPresenter.mView = this
         mPresenter.context = this
