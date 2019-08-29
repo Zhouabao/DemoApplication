@@ -98,7 +98,12 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
                     toast("请输入验证码！")
                     return
                 } else {
-                    mPresenter.checkVerifyCode(phone, verifyCode)
+                    mPresenter.checkVerifyCode(
+                        intent.getStringExtra("wxcode") ?: "",
+                        intent.getStringExtra("type") ?: "1",
+                        phone,
+                        verifyCode
+                    )
                     onChangeVerifyButtonStatus(false)
                 }
             }

@@ -20,20 +20,20 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
     /**
      * 对比验证码是否正确，正确即登录
      */
-    fun checkVerifyCode(phone: String, verifyCode: String) {
+    fun checkVerifyCode(wxcode: String, type: String, phone: String, verifyCode: String) {
         if (!checkNetWork()) {
             return
         }
         RetrofitFactory.instance.create(Api::class.java)
-            .loginOrAlloc(phone, code = verifyCode)
+            .loginOrAlloc(phone, scene = type, code = verifyCode, wxcode = wxcode)
             .excute(object : BaseSubscriber<BaseResp<LoginBean>>(mView) {
                 override fun onNext(t: BaseResp<LoginBean>) {
                     super.onNext(t)
-                     if (t.code == 200) {
+                    if (t.code == 200) {
                         mView.onConfirmVerifyCode(t.data, true)
                     } else {
-                         mView.onError(t.msg)
-                         mView.onConfirmVerifyCode(t.data, false)
+                        mView.onError(t.msg)
+                        mView.onConfirmVerifyCode(t.data, false)
                     }
                 }
 
@@ -73,22 +73,22 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
      * 登录IM
      */
     fun loginIM(info: LoginInfo) {
-        val callback =object :RequestCallback<LoginInfo>{
+        val callback = object : RequestCallback<LoginInfo> {
             override fun onSuccess(param: LoginInfo) {
-                mView.onIMLoginResult(param,true)
+                mView.onIMLoginResult(param, true)
             }
 
             override fun onFailed(code: Int) {
-                Log.d("OkHttp","=====$code")
-                mView.onIMLoginResult(null,false)
+                Log.d("OkHttp", "=====$code")
+                mView.onIMLoginResult(null, false)
             }
 
             override fun onException(exception: Throwable?) {
-                Log.d("OkHttp",exception.toString())
+                Log.d("OkHttp", exception.toString())
             }
 
         }
-        NimUIKit.login(info,callback)
+        NimUIKit.login(info, callback)
 
     }
 }

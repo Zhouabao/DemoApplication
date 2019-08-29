@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -24,8 +25,10 @@ import com.umeng.socialize.UMShareListener
 import com.umeng.socialize.bean.SHARE_MEDIA
 import com.umeng.socialize.media.UMImage
 import com.umeng.socialize.media.UMVideo
+import com.umeng.socialize.media.UMWeb
 import com.umeng.socialize.media.UMusic
 import kotlinx.android.synthetic.main.dialog_transpond.*
+
 
 /**
  *    author : ZFM
@@ -107,15 +110,29 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
         if (squareBean?.type == SquareBean.PIC) {
             //多图上传,需要带文字描述
             if (!squareBean?.photo_json.isNullOrEmpty()) {
-                val images = arrayOfNulls<UMImage>((squareBean?.photo_json ?: mutableListOf()).size)
-                for (img in (squareBean?.photo_json ?: mutableListOf()).withIndex()) {
-                    val image = UMImage(myContext, img.value.url)//网络图片
-                    image.title = "${squareBean?.nickname} 在积糖发了一张照片"
-                    image.description = if (!squareBean?.descr.isNullOrEmpty()) {
-                        squareBean?.descr
-                    } else "「你先抓紧看看这个」"
-                    images[img.index] = image
-                }
+//                val images = arrayOfNulls<UMImage>((squareBean?.photo_json ?: mutableListOf()).size)
+//                for (img in (squareBean?.photo_json ?: mutableListOf()).withIndex()) {
+//                    val image = UMImage(myContext, img.value.url)//
+//                    //大小压缩，默认为大小压缩，适合普通很大的图
+//                    image.compressStyle = UMImage.CompressStyle.SCALE
+//                    image.compressFormat = Bitmap.CompressFormat.JPEG
+//                    image.title = "${squareBean?.nickname} 在积糖发了一张照片"
+//                    image.description = if (!squareBean?.descr.isNullOrEmpty()) {
+//                        squareBean?.descr
+//                    } else "「你先抓紧看看这个」"
+//                    images[img.index] = image
+//                }
+
+                val image = UMImage(myContext, squareBean?.photo_json?.get(0)?.url)//
+                //大小压缩，默认为大小压缩，适合普通很大的图
+                image.compressStyle = UMImage.CompressStyle.SCALE
+                image.compressFormat = Bitmap.CompressFormat.JPEG
+                image.title = "${squareBean?.nickname} 在积糖发了一张照片"
+                image.description = if (!squareBean?.descr.isNullOrEmpty()) {
+                    squareBean?.descr
+                } else "「你先抓紧看看这个」"
+
+
                 ShareAction(myContext as Activity)
                     .setPlatform(platformConfig)
                     .withText(
@@ -123,18 +140,32 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
                             squareBean?.descr
                         } else "「你先抓紧看看这个」"
                     )//分享内容
-                    .withMedias(*images)//多张图片
+                    .withMedia(image)//多张图片
+//                    .withMedias(*images)//多张图片
                     .setCallback(callback)
                     .share()
 
-            }
-            //文本分享
-            else {
-                ShareAction(myContext as Activity)
-                    .setPlatform(platformConfig)
-                    .withText(squareBean?.descr ?: "")
-                    .setCallback(callback)
-                    .share()
+            } else {            //文本分享
+//                http://www.baidu.com
+                val web = UMWeb("http://")
+                web.title = "${squareBean?.nickname} 在积糖发了动态"//标题
+                web.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))  //缩略图
+                web.description = squareBean?.descr ?: ""//描述
+                if (platformConfig == SHARE_MEDIA.QQ) {
+                    ShareAction(myContext as Activity)
+                        .setPlatform(platformConfig)
+                        .withText(squareBean?.descr ?: "")
+                        .withMedia(web)
+                        .setCallback(callback)
+                        .share()
+                } else {
+                    ShareAction(myContext as Activity)
+                        .setPlatform(platformConfig)
+                        .withText(squareBean?.descr ?: "")
+                        .setCallback(callback)
+                        .share()
+                }
+
 
             }
         } else if (squareBean?.type == SquareBean.VIDEO) {//视频分享
@@ -156,7 +187,7 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
         } else if (squareBean?.type == SquareBean.AUDIO) {
             val audio = UMusic(squareBean?.audio_json?.get(0)?.url)
             audio.setThumb(UMImage(myContext, squareBean?.avatar ?: ""))
-//            audio.setmTargetUrl(squareBean?.audio_json?.get(0)?.url)
+            audio.setmTargetUrl(squareBean?.audio_json?.get(0)?.url)
             audio.title = "${squareBean?.nickname} 在积糖发了一段语音"
             audio.description = if (!squareBean?.descr.isNullOrEmpty()) {
                 squareBean?.descr
@@ -194,7 +225,8 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
          * @param platform 平台类型
          * @param t 错误原因
          */
-        override fun onError(p0: SHARE_MEDIA?, p1: Throwable?) {
+        override fun onError(p0: SHARE_MEDIA, p1: Throwable) {
+            Log.d("share===", "${p0.getName()}================${p1.message ?: ""}")
             ToastUtils.showShort("分享失败")
         }
 
@@ -229,5 +261,6 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
         UMShareAPI.get(myContext).release()
 
     }
+
 
 }

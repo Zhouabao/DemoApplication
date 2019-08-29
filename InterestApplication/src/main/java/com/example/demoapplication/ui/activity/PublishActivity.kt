@@ -764,7 +764,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 //            return
 //        }
 
-        publishBtn.isEnabled = (publishContent.text.isNotEmpty() && (publishContent.text.length <= 200 || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) && checkTags.size > 0)
+        publishBtn.isEnabled =
+            ((publishContent.text.isNotEmpty() || publishContent.text.length <= 200 || pickedPhotos.size > 0 || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) && checkTags.size > 0)
     }
 
     override fun onResume() {
@@ -810,8 +811,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     override fun onClick(view: View) {
         when (view.id) {
             R.id.publishBtn -> {
-
-
 
 
                 if (emojRv.visibility == View.VISIBLE) {

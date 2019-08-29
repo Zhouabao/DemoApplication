@@ -36,6 +36,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [qqappid: "1109743471"]
 
         // 这里添加
         multiDexEnabled true

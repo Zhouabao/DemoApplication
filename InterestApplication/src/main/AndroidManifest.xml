@@ -63,6 +63,12 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.AboutActivity">
+        </activity>
+
+        <uses-library
+                android:name="org.apache.http.legacy"
+                android:required="false"/>
 
         <activity android:name=".ui.activity.BlackListActivity">
         </activity>
@@ -229,10 +235,29 @@
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions">
         </activity>
+        <activity
+                android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+                android:configChanges="keyboardHidden|orientation"
+                android:exported="false"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
+        <activity
+                android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
+                android:configChanges="keyboardHidden|orientation"
+                android:exported="false"
+                android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+                android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
+                android:launchMode="singleTask"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
 
-
-
-        <!-- 微信分享回调 -->
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity> <!-- 微信分享回调 -->
         <activity
                 android:name=".wxapi.WXEntryActivity"
                 android:configChanges="keyboardHidden|orientation|screenSize"
@@ -240,7 +265,6 @@
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
         <activity
                 android:name=".wxapi.WXPayEntryActivity"
                 android:configChanges="keyboardHidden|orientation|screenSize"
@@ -249,11 +273,12 @@
                 android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
+
                 <data android:scheme="wx4a3210c3cc8e44fb"/>
             </intent-filter>
-        </activity>
-        <!-- *****************自动适配********************** -->
+        </activity> <!-- *****************自动适配********************** -->
         <meta-data
                 android:name="design_width_in_dp"
                 android:value="375"/>
@@ -266,7 +291,7 @@
 
         <service android:name="com.amap.api.location.APSService"/> <!-- *****************云信IM********************** -->
         <!--
- APP key, 可以在这里设置，也可以在 SDKOptions 中提供。
+APP key, 可以在这里设置，也可以在 SDKOptions 中提供。
            如果 SDKOptions 中提供了，取 SDKOptions 中的值。
         -->
         <meta-data

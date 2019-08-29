@@ -22,10 +22,17 @@ interface Api {
      */
     @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")
     fun loginOrAlloc(
-        @Query("uni_account") phone: String, @Query("type") scene: String = "1", @Query("password") password: String = "", @Query(
-            "code"
-        ) code: String
+        @Query("uni_account") phone: String = "", @Query("type") scene: String = "1",
+        @Query("password") password: String = "", @Query("code") code: String = "",
+        @Query("wxcode") wxcode: String = ""
     ): Observable<BaseResp<LoginBean>>
+
+
+    /**
+     * 检查验证码是否一致,即登录
+     */
+    @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")
+    fun loginOWithWechat(@Query("type") scene: String = "1", @Query("wxcode") wxcode: String = ""): Observable<BaseResp<LoginBean?>>
 
 
     /**
@@ -440,9 +447,6 @@ interface Api {
     fun myShieldingList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<BlackBean>?>>
 
 
-
-
-
     /*---------------------聊天界面请求--------------------------------*/
     /**
      * 聊天界面添加好友
@@ -475,15 +479,12 @@ interface Api {
     fun removeGreet(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
 
 
-
-
     /**
      * 聊天界面获取信息
      */
     @FormUrlEncoded
     @POST("MemberInfo/getTargetInfo${Constants.END_BASE_URL}")
     fun getTargetInfo(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<NimBean?>>
-
 
 
     /**
@@ -504,14 +505,12 @@ interface Api {
     fun productLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
 
 
-
     /**
      * 获取订单信息
      */
     @FormUrlEncoded
     @POST("pay_order/createOrder${Constants.END_BASE_URL}")
     fun createOrder(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PayBean>>
-
 
 
 }

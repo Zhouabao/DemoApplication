@@ -19,6 +19,8 @@ import org.jetbrains.anko.toast
  */
 class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClickListener {
 
+    private var wxcode: String = ""
+    private var login_type: String = "1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,11 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
     }
 
     private fun initView() {
+        if (intent != null) {
+            wxcode = intent.getStringExtra("wxcode") ?: ""
+            login_type = intent.getStringExtra("type") ?: "1"
+        }
+
 
         mPresenter = LoginPresenter()
         mPresenter.mView = this
@@ -71,7 +78,11 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
             }
             R.id.btnVerifyCode -> {
                 if (RegexUtils.isMobileSimple(etPhone.text.toString())) {
-                    startActivity<VerifyCodeActivity>("phone" to etPhone.text.toString(), "register" to "register")
+                    startActivity<VerifyCodeActivity>(
+                        "phone" to etPhone.text.toString(),
+                        "wxcode" to wxcode,
+                        "type" to login_type
+                    )
                 } else {
                     toast("请输入正确的手机号!")
                 }

@@ -55,6 +55,12 @@ object Constants {
     //微信支付appid
     const val WECHAT_APP_ID = "wx4a3210c3cc8e44fb"
     const val WECHAT_APP_KEY = "a6c9ff7bd2cc9029fd47c02ff2e021ab"
+    //新浪
+    const val SINA_APP_KEY = "1968551475"
+    const val SINA_APP_SECRET= "f3987e0c3f8d63914e998e8d8d1a7588"
+    //QQ
+    const val QQ_APP_KEY = "1109743471"
+    const val QQ_APP_SECRET= "KxByI7XUslBAh82c"
 
 
 

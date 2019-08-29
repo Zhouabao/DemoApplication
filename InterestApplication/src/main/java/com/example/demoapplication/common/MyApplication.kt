@@ -114,11 +114,11 @@ class MyApplication : BaseApplication() {
             })
 
             //微博平台
-            PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad", "http://sns.whalecloud.com")
+            PlatformConfig.setSinaWeibo(Constants.SINA_APP_KEY, Constants.SINA_APP_SECRET, "http://sns.whalecloud.com")
             //微信平台
             PlatformConfig.setWeixin(Constants.WECHAT_APP_ID, Constants.WECHAT_APP_KEY)
             //qq空间平台
-            PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba")
+            PlatformConfig.setQQZone(Constants.QQ_APP_KEY, Constants.QQ_APP_SECRET)
         }
     }
 
