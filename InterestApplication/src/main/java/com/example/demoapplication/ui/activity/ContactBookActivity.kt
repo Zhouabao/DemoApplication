@@ -29,6 +29,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_contact_book.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.headerview_label.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 import java.util.*
 
@@ -67,6 +68,8 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         }
         if (intent != null && intent.getSerializableExtra("square") != null) {
             hotT1.text = "选择好友"
+        } else {
+            hotT1.text = "通讯录"
         }
         mPresenter = ContactBookPresenter()
         mPresenter.mView = this
