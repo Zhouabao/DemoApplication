@@ -151,9 +151,9 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 photos.add(MyPhotoBean(MyPhotoBean.PHOTO, url))
             }
             adapter.setNewData(photos)
-            if ((data.photos ?: mutableListOf()).size < IMAGE_SIZE) {
-                adapter.addData(MyPhotoBean(MyPhotoBean.COVER, ""))
-            }
+//            if ((data.photos ?: mutableListOf()).size < IMAGE_SIZE) {
+            adapter.addData(MyPhotoBean(MyPhotoBean.COVER, ""))
+//            }
             refreshLayout()
         }
     }
@@ -187,12 +187,12 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
         dialog.makeAvator.onClick {
             isChange = true
-            val myPhotoBean0 =  adapter.data[0]
-            val myPhotoBeanP =  adapter.data[position]
+            val myPhotoBean0 = adapter.data[0]
+            val myPhotoBeanP = adapter.data[position]
             photos.set(0, myPhotoBeanP)
-            photos.set(position,myPhotoBean0)
+            photos.set(position, myPhotoBean0)
             adapter.data.set(0, myPhotoBeanP)
-            adapter.data.set(position,myPhotoBean0)
+            adapter.data.set(position, myPhotoBean0)
             adapter.notifyDataSetChanged()
 //            Collections.swap(photos, position, 0)
 //            Collections.swap(adapter.data, position, 0)
@@ -248,7 +248,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         //判断提醒谁布局看是否需要下移
         var row = adapter.itemCount / 3
         row = if (0 == adapter.itemCount % 3) row else row + 1
-        row = if (4 == row) 3 else row//row最多为三行
+//        row = if (4 == row) 4 else row//row最多为四行
         val marginTop =
             (SizeUtils.dp2px(15F) + (16 / 9F * (ScreenUtils.getScreenWidth() - 4 * SizeUtils.dp2px(15F)) / 3).toInt()) * row
         val params = mLinearLayout.layoutParams as RelativeLayout.LayoutParams
@@ -295,9 +295,9 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 loading.dismiss()
             isChange = true
             adapter.addData(choosePosition, MyPhotoBean(MyPhotoBean.PHOTO, key))
-            if (adapter.data.size == IMAGE_SIZE + 1) {
-                adapter.remove(IMAGE_SIZE)
-            }
+//            if (adapter.data.size == IMAGE_SIZE + 1) {
+//                adapter.remove(IMAGE_SIZE)
+//            }
             adapter.notifyDataSetChanged()
             refreshLayout()
             if (chooseCount < selectList.size)
@@ -363,7 +363,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 }
                 PictureConfig.CHOOSE_REQUEST -> {
                     if (data != null) {
-                        chooseCount=0
+                        chooseCount = 0
                         selectList = PictureSelector.obtainMultipleResult(data)
                         loading.show()
                         uploadPicture()
