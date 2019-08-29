@@ -26,11 +26,13 @@ import com.example.demoapplication.model.UserInfoSettingBean
 import com.example.demoapplication.presenter.UserInfoSettingsPresenter
 import com.example.demoapplication.presenter.view.UserInfoSettingsView
 import com.example.demoapplication.ui.adapter.UserPhotoAdapter
+import com.example.demoapplication.ui.dialog.LoadingDialog
 import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.DividerItemDecoration
 import com.example.demoapplication.widgets.OnRecyclerItemClickListener
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -181,11 +183,34 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         window?.attributes = params
 
         dialog.show()
+        dialog.makeAvator.setVisible(position != 0)
+
+        dialog.makeAvator.onClick {
+            isChange = true
+            val myPhotoBean0 =  adapter.data[0]
+            val myPhotoBeanP =  adapter.data[position]
+            photos.set(0, myPhotoBeanP)
+            photos.set(position,myPhotoBean0)
+            adapter.data.set(0, myPhotoBeanP)
+            adapter.data.set(position,myPhotoBean0)
+            adapter.notifyDataSetChanged()
+//            Collections.swap(photos, position, 0)
+//            Collections.swap(adapter.data, position, 0)
+
+            dialog.dismiss()
+        }
+
+
         dialog.lldelete.onClick {
             isChange = true
+
             adapter.remove(position)
             adapter.notifyDataSetChanged()
             refreshLayout()
+            dialog.dismiss()
+        }
+
+        dialog.cancel.onClick {
             dialog.dismiss()
         }
     }
@@ -251,13 +276,10 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             .maxSelectNum(count)
             .minSelectNum(0)
             .imageSpanCount(4)
-            .selectionMode(PictureConfig.SINGLE)
+            .selectionMode(PictureConfig.MULTIPLE)
             .previewImage(true)
             .isCamera(true)
-            .enableCrop(true)
-            .circleDimmedLayer(true)
-            .showCropFrame(false)
-            .showCropGrid(false)
+            .enableCrop(false)
             .rotateEnabled(false)
             .withAspectRatio(9, 16)
             .compress(true)
@@ -265,8 +287,12 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
+    private val loading by lazy { LoadingDialog(this) }
     override fun uploadImgResult(b: Boolean, key: String) {
+        chooseCount++
         if (b) {
+            if (loading.isShowing)
+                loading.dismiss()
             isChange = true
             adapter.addData(choosePosition, MyPhotoBean(MyPhotoBean.PHOTO, key))
             if (adapter.data.size == IMAGE_SIZE + 1) {
@@ -274,6 +300,8 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             }
             adapter.notifyDataSetChanged()
             refreshLayout()
+            if (chooseCount < selectList.size)
+                uploadPicture()
         }
     }
 
@@ -291,6 +319,8 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         }
     }
 
+    private var chooseCount = 0
+    private var selectList: MutableList<LocalMedia> = mutableListOf()
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -333,18 +363,24 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 }
                 PictureConfig.CHOOSE_REQUEST -> {
                     if (data != null) {
-                        val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
-                        val userProfile =
-                            "${Constants.FILE_NAME_INDEX}${Constants.USERCENTER}${SPUtils.getInstance(Constants.SPNAME).getString(
-                                "accid"
-                            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                                16
-                            )}.jpg"
-                        mPresenter.uploadProfile(selectList[0].compressPath, userProfile.toString())
+                        chooseCount=0
+                        selectList = PictureSelector.obtainMultipleResult(data)
+                        loading.show()
+                        uploadPicture()
                     }
                 }
             }
         }
+    }
+
+    private fun uploadPicture() {
+        val userProfile =
+            "${Constants.FILE_NAME_INDEX}${Constants.USERCENTER}${SPUtils.getInstance(Constants.SPNAME).getString(
+                "accid"
+            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                16
+            )}.jpg"
+        mPresenter.uploadProfile(selectList[chooseCount].compressPath, userProfile.toString())
     }
 
 
