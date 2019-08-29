@@ -9,24 +9,23 @@
               android:layout_height="match_parent">
 
     <RelativeLayout
-            android:background="@drawable/shape_rectangle_white"
+            android:background="@drawable/shape_rectangle_gray_white_15dp"
             android:layout_width="match_parent"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:layout_height="200dp"
+            android:layout_height="262dp"
             >
 
         <TextView
                 android:id="@+id/t1"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
                 android:textColor="@color/colorBlack22"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_above="@id/t2"
+                android:layout_marginTop="50dp"
                 android:text="您的账号已在其它设备登录"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -34,12 +33,12 @@
         <TextView
                 android:id="@+id/t2"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
                 android:textColor="@color/colorBlack22"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:layout_below="@id/t1"
                 android:text="请注意账号安全"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

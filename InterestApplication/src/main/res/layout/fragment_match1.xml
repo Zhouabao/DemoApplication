@@ -11,7 +11,7 @@
         app:msv_emptyView="@layout/loading_layout_match_lottie"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout_match_lottie"
-        app:msv_viewState="content">
+        app:msv_viewState="loading">
 
     <LinearLayout
             android:orientation="vertical"
@@ -68,7 +68,7 @@
                         android:layout_width="20dp"
                         android:gravity="center"
                         android:textSize="12sp"
-                        android:text="3"
+                        android:text="0"
                         android:layout_height="20dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"

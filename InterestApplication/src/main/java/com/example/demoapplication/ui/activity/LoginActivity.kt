@@ -42,6 +42,9 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
         if (intent != null) {
             wxcode = intent.getStringExtra("wxcode") ?: ""
             login_type = intent.getStringExtra("type") ?: "1"
+            titleTv.text = "请绑定手机号"
+        } else {
+            titleTv.text = "请输入手机号"
         }
 
 

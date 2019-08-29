@@ -25,6 +25,7 @@ import com.example.demoapplication.ui.activity.MatchDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.ui.dialog.ChargeVipDialog
+import com.example.demoapplication.ui.dialog.CountDownChatHiDialog
 import com.example.demoapplication.ui.dialog.TickDialog
 import com.example.demoapplication.utils.UriUtils
 import com.example.demoapplication.utils.UserManager
@@ -282,12 +283,12 @@ class MultiListSquareAdapter(
                                 ChatActivity.start(mContext as Activity, target_accid ?: "")
                             } else {
                                 UserManager.saveLightingCount(greetBean.lightningcnt)
+                                UserManager.saveCountDownTime(greetBean.countdown)
                                 if (greetBean.lightningcnt > 0) {
                                     greet(UserManager.getToken(), UserManager.getAccid(), (target_accid ?: ""))
                                 } else {
                                     if (UserManager.isUserVip()) {
-                                        //TODO 会员充值
-                                        ToastUtils.showShort("次数用尽，请充值。")
+                                        CountDownChatHiDialog(mContext).show()
                                     } else {
                                         ChargeVipDialog(mContext).show()
                                     }

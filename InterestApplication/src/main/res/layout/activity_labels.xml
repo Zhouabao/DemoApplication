@@ -9,6 +9,7 @@
         tools:context=".ui.activity.LabelsActivity">
 
     <ImageView
+            android:visibility="invisible"
             android:id="@+id/btnBack"
             style="@style/BckBtnStyle"
             app:layout_constraintLeft_toLeftOf="parent"

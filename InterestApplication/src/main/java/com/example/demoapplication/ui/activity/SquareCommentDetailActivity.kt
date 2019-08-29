@@ -41,10 +41,7 @@ import com.example.demoapplication.presenter.view.SquareDetailView
 import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.adapter.ListSquareImgsAdapter
 import com.example.demoapplication.ui.adapter.MultiListCommentAdapter
-import com.example.demoapplication.ui.dialog.ChargeVipDialog
-import com.example.demoapplication.ui.dialog.CommentActionDialog
-import com.example.demoapplication.ui.dialog.MoreActionDialog
-import com.example.demoapplication.ui.dialog.TranspondDialog
+import com.example.demoapplication.ui.dialog.*
 import com.example.demoapplication.utils.UriUtils
 import com.example.demoapplication.utils.UserManager
 import com.kennyc.view.MultiStateView
@@ -1035,6 +1032,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 ChatActivity.start(this, squareBean?.accid ?: "")
             } else {
                 UserManager.saveLightingCount(greetBean.lightningcnt)
+                UserManager.saveCountDownTime(greetBean.countdown)
                 if (greetBean.lightningcnt > 0) {
                     mPresenter.greet(
                         UserManager.getToken(),
@@ -1045,7 +1043,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 } else {
                     if (UserManager.isUserVip()) {
                         //TODO 会员充值
-                        ToastUtils.showShort("次数用尽，请充值。")
+                        CountDownChatHiDialog(this).show()
                     } else {
                         ChargeVipDialog(this).show()
                     }

@@ -37,6 +37,7 @@ import com.example.demoapplication.ui.adapter.MatchDetailLabelAdapter
 import com.example.demoapplication.ui.adapter.MatchImgsPagerAdapter
 import com.example.demoapplication.ui.chat.MatchSucceedActivity
 import com.example.demoapplication.ui.dialog.ChargeVipDialog
+import com.example.demoapplication.ui.dialog.CountDownChatHiDialog
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.fragment.BlockSquareFragment
 import com.example.demoapplication.ui.fragment.ListSquareFragment
@@ -207,7 +208,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             "${matchBean!!.age} / ${if (matchBean!!.gender == 1) "男" else "女"} / ${matchBean!!.constellation} / ${matchBean!!.distance}"
         detailUserJob.text = "${matchBean!!.jobname}"
         detailUserSign.text = "${matchBean!!.sign}"
-        updateLightCount(matchBean!!.lightningcnt ?: 0)
+        updateLightCount(matchBean!!.lightningcnt ?: 0, matchBean!!.countdown)
         detailUserJob.visibility = if (matchBean!!.jobname.isNullOrEmpty()) {
             View.GONE
         } else {
@@ -495,7 +496,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      */
     override fun onGreetStateResult(data: GreetBean?) {
         if (data != null) {
-            updateLightCount(data.lightningcnt)
+            updateLightCount(data.lightningcnt, data.countdown)
             if (data.isfriend || data.isgreet) {
                 ChatActivity.start(this, matchBean?.accid ?: "")
             } else {
@@ -508,8 +509,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     )
                 } else {
                     if (UserManager.isUserVip()) {
-                        //TODO 会员充值
-                        ToastUtils.showShort("次数用尽，请充值。")
+                        CountDownChatHiDialog(this).show()
                     } else {
                         ChargeVipDialog(this).show()
                     }
@@ -523,8 +523,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     /**
      * 更新本地的招呼次数
      */
-    private fun updateLightCount(lightningcnt: Int) {
+    private fun updateLightCount(lightningcnt: Int, countdown: Int) {
         UserManager.saveLightingCount(lightningcnt)
+        if (countdown != -1)
+            UserManager.saveCountDownTime(countdown)
+
         detailUserLeftChatCount.text = "${UserManager.getLightingCount()}"
     }
 
@@ -533,7 +536,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      */
     override fun onGreetSResult(success: Boolean) {
         if (success) {
-            updateLightCount(UserManager.getLightingCount() - 1)
+            updateLightCount(UserManager.getLightingCount() - 1, -1)
             sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
         }
     }

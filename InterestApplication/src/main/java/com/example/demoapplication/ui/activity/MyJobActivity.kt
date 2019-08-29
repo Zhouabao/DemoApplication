@@ -79,8 +79,10 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
             }
             if (adapter.data[position].checked) {
                 checkJob = adapter.data[position]
+                saveJobBtn.isEnabled = true
             } else {
                 checkJob = null
+                saveJobBtn.isEnabled = false
             }
             adapter.notifyDataSetChanged()
 

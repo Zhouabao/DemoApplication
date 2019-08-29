@@ -42,6 +42,7 @@
                 android:background="@drawable/selector_confirm_btn_15dp"
                 android:textColor="@color/complete_btn_color_selector"
                 android:text="完成"
+                android:enabled="false"
                 android:layout_marginRight="15dp"
                 />
     </LinearLayout>

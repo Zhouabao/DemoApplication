@@ -2,12 +2,13 @@
 <com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/stateview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+        app:msv_viewState="content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,7 +21,7 @@
 
         <RelativeLayout
                 android:id="@+id/rlTitle"
-                android:layout_width="match_parent"
+                android:layout_width="302dp"
                 android:layout_height="56dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -53,12 +54,12 @@
                 android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:srlEnableLoadMoreWhenContentNotFull="false"
-                app:srlEnableRefresh="true"
-                app:srlEnableLoadMore="true"
-                app:srlEnableAutoLoadMore="true"
                 app:layout_constraintBottom_toTopOf="@id/showCommentLl"
-                app:layout_constraintTop_toBottomOf="@id/rlTitle">
+                app:layout_constraintTop_toBottomOf="@id/rlTitle"
+                app:srlEnableAutoLoadMore="true"
+                app:srlEnableLoadMore="true"
+                app:srlEnableLoadMoreWhenContentNotFull="false"
+                app:srlEnableRefresh="true">
 
 
             <androidx.core.widget.NestedScrollView
@@ -176,7 +177,6 @@
                             app:layout_constraintBottom_toTopOf="@id/squareContent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/detailPlayUserLocationAndTime"/>
-
 
 
                     <com.ctetin.expandabletextviewlibrary.ExpandableTextView

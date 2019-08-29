@@ -21,6 +21,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
 import kotlinx.android.synthetic.main.activity_labels.*
@@ -61,10 +62,23 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
     }
 
     private fun initView() {
+        //首页禁止滑动
+        setSwipeBackEnable(false)
+
+
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             getLabel()
         }
+
+        if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity"
+                    || intent.getStringExtra("from") == "publish" || intent.getStringExtra("from") == "usercenter")
+        ) {
+            btnBack.setVisible(true)
+        } else {
+            btnBack.visibility=View.INVISIBLE
+        }
+
 
         btnBack.onClick {
             finish()
@@ -183,13 +197,13 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                 checkedLabels.remove(label)
             }
         }
-        if (checkedLabels.size < 3 || checkedLabels.size > Constants.LABEL_MAX_COUNT) {
+        if (checkedLabels.size < 4 || checkedLabels.size > Constants.LABEL_MAX_COUNT + 1) {
 //            shape_rectangle_unable_btn_15dp
             completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_unable_btn_15dp)
             completeLabelBtn.setTextColor(resources.getColor(R.color.colorBlackText))
             iconChecked.visibility = View.GONE
-            completeLabelBtn.text = if (checkedLabels.size < 3) {
-                "再选${3 - checkedLabels.size}个"
+            completeLabelBtn.text = if (checkedLabels.size < 4) {
+                "再选${4 - checkedLabels.size}个"
             } else {
                 ToastUtils.showShort("最多只能选${Constants.LABEL_MAX_COUNT}个标签")
                 "完成"
@@ -230,7 +244,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                 params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
                 params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
                 params["_timestamp"] = "${System.currentTimeMillis()}"
-                val checkIds = arrayOfNulls<Int>(10)
+                val checkIds = arrayOfNulls<Int>(Constants.LABEL_MAX_COUNT)
                 for (index in 0 until checkedLabels.size) {
                     checkIds[index] = checkedLabels[index].id
                 }
@@ -247,6 +261,15 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
             getString(R.string.retry_load_error)
         } else {
             getString(R.string.retry_net_error)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity"
+                    || intent.getStringExtra("from") == "publish" || intent.getStringExtra("from") == "usercenter")
+        ) {
+            super.onBackPressed()
+        } else {
         }
     }
 }

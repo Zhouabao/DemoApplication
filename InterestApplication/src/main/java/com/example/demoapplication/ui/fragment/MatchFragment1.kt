@@ -37,6 +37,7 @@ import com.example.demoapplication.ui.activity.MatchDetailActivity
 import com.example.demoapplication.ui.adapter.MatchUserAdapter
 import com.example.demoapplication.ui.chat.MatchSucceedActivity
 import com.example.demoapplication.ui.dialog.ChargeVipDialog
+import com.example.demoapplication.ui.dialog.CountDownChatHiDialog
 import com.example.demoapplication.utils.UserManager
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -175,7 +176,15 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnChat -> {
-                card_stack_view.swipe()
+                if (UserManager.getLightingCount() <= 0) {
+                    if (UserManager.isUserVip())
+                        CountDownChatHiDialog(activity!!).show()
+                    else
+                        ChargeVipDialog(activity!!).show()
+                } else {
+
+                    card_stack_view.swipe()
+                }
 //                mPresenter.greetState(
 //                    UserManager.getToken(),
 //                    UserManager.getAccid(),
@@ -213,8 +222,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                 card_stack_view.rewind()
                 if (UserManager.isUserVip()) {
                     //TODO 会员充值
-                    ToastUtils.showShort("次数用尽，请充值。")
-
+                    CountDownChatHiDialog(activity!!).show()
                 } else {
                     ChargeVipDialog(activity!!).show()
                 }
@@ -256,11 +264,14 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             matchUserAdapter.addData(matchBeans!!.list ?: mutableListOf<MatchBean>())
             //保存剩余招呼次数
             UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
+            //保存倒计时时间
+            UserManager.saveCountDownTime(matchBeans.countdown)
             //保存 VIP信息
             UserManager.saveUserVip(matchBeans.isvip)
             //保存认证信息
             UserManager.saveUserVerify(matchBeans.isfaced)
             tvLeftChatTime.text = "${UserManager.getLightingCount()}"
+
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
             stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
@@ -405,14 +416,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     }
 
     var switch = false
-    private val chargeVipDialog by lazy {
-        ChargeVipDialog(activity!!).apply {
-            setOnDismissListener {
-                switch = false
-            }
-        }
-    }
-
     override fun onCardDragging(direction: Direction, ratio: Float) {
         //向上超级喜欢(会员就超级喜欢 否则弹起收费窗)
         when (direction) {

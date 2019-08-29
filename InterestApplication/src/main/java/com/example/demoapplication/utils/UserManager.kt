@@ -266,6 +266,8 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
         SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
+        SPUtils.getInstance(Constants.SPNAME).remove("countdowntime")
+        SPUtils.getInstance(Constants.SPNAME).remove("lightingCount")
 
         //位置信息
         SPUtils.getInstance(Constants.SPNAME).remove("latitude")
@@ -282,6 +284,9 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("local_only")
         SPUtils.getInstance(Constants.SPNAME).remove("city_code")
         SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
+
+        //敏感词
+        SPUtils.getInstance(Constants.SPNAME).remove("sensitive")
     }
 
 
@@ -297,6 +302,21 @@ object UserManager {
      */
     fun getLightingCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("lightingCount", 0)
+    }
+
+
+    /**
+     * 保存补充招呼次数的时间
+     */
+    fun saveCountDownTime(time: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("countdowntime", time)
+    }
+
+    /**
+     * 获取补充招呼次数的时间
+     */
+    fun getCountDownTimet(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("countdowntime", 0)
     }
 
 }

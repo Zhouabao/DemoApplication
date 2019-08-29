@@ -12,7 +12,9 @@ data class MatchListBean(
     var list: MutableList<MatchBean>?,
     var lightningcnt: Int?,
     var isvip: Int = 0,    //是否会员 true是 false不是
-    var isfaced: Int = 0    //0未认证/认证不成功     1认证通过     2认证中
+    var isfaced: Int = 0,   //0未认证/认证不成功     1认证通过     2认证中
+    var countdown: Int = 0
+
 )
 
 /**
@@ -43,6 +45,7 @@ data class MatchBean(
     var tags: MutableList<Tag>?,
     var jobname: String?,
     var lightningcnt: Int?,
+    var countdown: Int = 0,
     var isfriend: Int?
 
 ) : Serializable
@@ -64,32 +67,6 @@ data class Square(
  * status :1.喜欢成功  2.匹配成功
  */
 data class StatusBean(val status: Int)
-
-/**
- * 用户详细信息
- */
-data class MatchUserDetailBean(
-    var accid: String?,
-    var avatar: String?,
-    var birth: Int?,
-    var constellation: String?,
-    var home_cover: String?,
-    var isvip: Int?,
-    var login_date_cnt: Int?,
-    var nickname: String?,
-    var photos: MutableList<String>?,
-    var sign: String?,
-    var square: MutableList<Square>?,
-    var tags: MutableList<Tag>?,
-    var isliked: Int?,
-    var lightning: Int?,
-    var age: Int?,
-    var distance: String?,
-    var gender: Int?,
-    var jobname: String?,
-    var lightningcnt: Int?,
-    var isfriend: Int?
-) : Serializable
 
 /**
  * 用戶標簽
@@ -121,5 +98,7 @@ data class Photos(
 data class GreetBean(
     val isfriend: Boolean = false,//是否好友
     val isgreet: Boolean = false,//是否打过招呼
-    val lightningcnt: Int = 0//剩余招呼次数
+    val lightningcnt: Int = 0,//剩余招呼次数
+    var countdown: Int = 0
+
 )

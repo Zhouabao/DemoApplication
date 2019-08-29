@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@drawable/shape_rectangle_gray_white_15dp"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_height="262dp">
+
+    <TextView
+            android:id="@+id/t1"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:textColor="@color/colorBlack22"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:text="打招呼次数已用尽"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <ImageView
+            android:id="@+id/myAvator"
+            android:src="@drawable/icon_default_avator"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/t1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
+    <TextView
+            android:id="@+id/fullTime"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/myAvator"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:text="22:25:33后补充"
+            android:textColor="#ff333333"
+            android:textSize="14sp"
+            />
+
+    <View
+            android:id="@+id/view"
+            android:layout_above="@id/confirm"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    <TextView
+            android:id="@+id/confirm"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:textSize="18sp"
+            android:textColor="@color/colorOrange"
+            android:text="好的"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"/>
+
+
+</RelativeLayout>
+

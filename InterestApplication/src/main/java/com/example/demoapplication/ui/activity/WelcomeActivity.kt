@@ -56,7 +56,8 @@ class WelcomeActivity : BaseActivity() {
         if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
             if (UserManager.isUserInfoMade()) {//是否填写过用户信息
                 if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isEmpty()) {//是否选择过标签
-                    startActivity<LabelsActivity>()
+                    UserManager.clearLoginData()
+//                    startActivity<LabelsActivity>()
                 } else {
                     startActivity<MainActivity>()
                 }
@@ -90,7 +91,7 @@ class WelcomeActivity : BaseActivity() {
             ToastUtils.showShort("你没有安装微信")
             return
         }
-        val  req =  SendAuth.Req()
+        val req = SendAuth.Req()
         req.scope = "snsapi_userinfo"
         req.state = "wechat_sdk_demo_test"
         wxapi.sendReq(req)
