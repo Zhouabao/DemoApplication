@@ -168,13 +168,13 @@
     <dimen name="bottom_component_margin_horizontal">6dip</dimen>
     <dimen name="bottom_component_margin_vertical">8dip</dimen>
     <dimen name="bubble_layout_margin_vertical">10dip</dimen>
-    <dimen name="bubble_time_layout_margin_top">18dip</dimen>
-    <dimen name="bubble_time_layout_margin_bottom">8dip</dimen>
+    <dimen name="bubble_time_layout_margin_top">10dip</dimen>
+    <dimen name="bubble_time_layout_margin_bottom">20dip</dimen>
     <dimen name="bubble_unread_tip_layout_margin_top">3dip</dimen>
     <dimen name="bubble_unread_tip_layout_margin_bottom">3dip</dimen>
     <dimen name="bubble_name_layout_margin_bottom">5dip</dimen>
     <dimen name="bubble_layout_margin_side">6dip</dimen>
-    <dimen name="bubble_head_margin_horizontal">8dip</dimen>
+    <dimen name="bubble_head_margin_horizontal">10dip</dimen>
     <dimen name="bubble_padding_top">10dip</dimen>
     <dimen name="bubble_padding_bottom">12dip</dimen>
     <dimen name="bubble_padding_left">16dip</dimen>

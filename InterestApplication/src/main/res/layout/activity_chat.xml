@@ -27,7 +27,6 @@
 
         <TextView
                 android:id="@+id/chatName"
-                tools:text="Javer"
                 android:textColor="#ff222222"
                 android:textSize="18sp"
                 android:gravity="center_vertical"
@@ -35,6 +34,7 @@
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 app:layout_constraintLeft_toRightOf="@id/btnBack"
+                tools:text="Javer"
                 />
 
         <TextView
@@ -64,7 +64,7 @@
                 android:background="@color/colorDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                app:layout_constraintTop_toBottomOf="@id/llTitle"/>
+                app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

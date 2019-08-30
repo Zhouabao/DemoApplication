@@ -237,10 +237,11 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         headAdapter.addData(like)
         if (data?.greet != null && data?.greet.isNotEmpty()) {
             adapter.headerLayout.hiCount.text = "${data.greet_cnt}"
+            adapter.headerLayout.visibility = View.VISIBLE
+            hiAdapter.setNewData(data?.greet ?: mutableListOf())
         } else {
-            adapter.headerLayout.hiCount.visibility = View.GONE
+            adapter.headerLayout.visibility = View.GONE
         }
-        hiAdapter.setNewData(data?.greet ?: mutableListOf())
 
         //获取最近联系人列表
         mPresenter.getRecentContacts()
@@ -260,22 +261,62 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         headAdapter.addData(like)
 
 
-            val greet1 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 1)
-            val greet2 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",countdown = 1000, countdown_total = 1200, type = 2)
-            val greet3 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",countdown = 1000, countdown_total = 1200, type = 3)
-            val greet4 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 4)
-            hiAdapter.addData(greet1)
-            hiAdapter.addData(greet2)
-            hiAdapter.addData(greet3)
-            hiAdapter.addData(greet4)
-            val greet11 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 1)
-            val greet21 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",countdown = 1000, countdown_total = 1200, type = 2)
-            val greet31 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",countdown = 1000, countdown_total = 1200, type = 3)
-            val greet41 = HiMessageBean(avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",countdown = 1000, countdown_total = 1200, type = 4)
-            hiAdapter.addData(greet11)
-            hiAdapter.addData(greet21)
-            hiAdapter.addData(greet31)
-            hiAdapter.addData(greet41)
+        val greet1 = HiMessageBean(
+            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",
+            countdown = 1000,
+            countdown_total = 1200,
+            type = 1
+        )
+        val greet2 = HiMessageBean(
+            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",
+            countdown = 1000,
+            countdown_total = 1200,
+            type = 2
+        )
+        val greet3 = HiMessageBean(
+            avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",
+            countdown = 1000,
+            countdown_total = 1200,
+            type = 3
+        )
+        val greet4 = HiMessageBean(
+            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",
+            countdown = 1000,
+            countdown_total = 1200,
+            type = 4
+        )
+        hiAdapter.addData(greet1)
+        hiAdapter.addData(greet2)
+        hiAdapter.addData(greet3)
+        hiAdapter.addData(greet4)
+        val greet11 = HiMessageBean(
+            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",
+            countdown = 1000,
+            countdown_total = 1200,
+            type = 1
+        )
+        val greet21 = HiMessageBean(
+            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",
+            countdown = 1000,
+            countdown_total = 1200,
+            type = 2
+        )
+        val greet31 = HiMessageBean(
+            avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",
+            countdown = 1000,
+            countdown_total = 1200,
+            type = 3
+        )
+        val greet41 = HiMessageBean(
+            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",
+            countdown = 1000,
+            countdown_total = 1200,
+            type = 4
+        )
+        hiAdapter.addData(greet11)
+        hiAdapter.addData(greet21)
+        hiAdapter.addData(greet31)
+        hiAdapter.addData(greet41)
         //获取最近联系人列表
         mPresenter.getRecentContacts()
     }

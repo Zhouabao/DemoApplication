@@ -27,10 +27,9 @@
                 android:id="@+id/hotT1"
                 android:text="个人信息"
                 android:textColor="@color/colorBlackTitle"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:gravity="center_vertical"
                 android:layout_width="0dp"
-                android:textStyle="bold"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 />

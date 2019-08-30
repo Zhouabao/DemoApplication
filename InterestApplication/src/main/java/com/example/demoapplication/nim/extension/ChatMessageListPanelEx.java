@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.example.baselibrary.glide.GlideUtil;
 import com.example.demoapplication.api.Api;
@@ -28,8 +29,9 @@ import com.example.demoapplication.model.Tag;
 import com.example.demoapplication.nim.adapter.ChatMsgAdapter;
 import com.example.demoapplication.nim.attachment.ChatHiAttachment;
 import com.example.demoapplication.ui.activity.MatchDetailActivity;
-import com.example.demoapplication.ui.adapter.MatchDetailLabelAdapter;
+import com.example.demoapplication.ui.adapter.ChatHiLabelAdapter;
 import com.example.demoapplication.utils.UserManager;
+import com.example.demoapplication.widgets.DividerItemDecoration;
 import com.example.demoapplication.widgets.TimeRunTextView;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
@@ -1508,7 +1510,11 @@ public class ChatMessageListPanelEx {
         FlexboxLayoutManager manager = new FlexboxLayoutManager(container.activity, FlexDirection.ROW, FlexWrap.WRAP);
         manager.setAlignItems(AlignItems.STRETCH);
         chatHiTags.setLayoutManager(manager);
-        MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(container.activity);
+        chatHiTags.addItemDecoration(
+                new DividerItemDecoration(container.activity, DividerItemDecoration.BOTH_SET, SizeUtils.dp2px(8F), container.activity.getResources().getColor(R.color.white))
+        );
+//        MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(container.activity);
+        ChatHiLabelAdapter adapter = new ChatHiLabelAdapter(container.activity);
         chatHiTags.setAdapter(adapter);
 
         ArrayList<LabelBean> mytags = (ArrayList<LabelBean>) UserManager.INSTANCE.getSpLabels();
