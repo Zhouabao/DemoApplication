@@ -3,14 +3,15 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        app:msv_loadingView="@layout/loading_layout"
-        app:msv_errorView="@layout/error_layout"
-        app:msv_viewState="content"
         android:id="@+id/stateview"
-        app:msv_animateViewChanges="true"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:msv_animateViewChanges="true"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="content">
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -18,10 +19,10 @@
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:srlDisableContentWhenRefresh="true"
-            app:srlDisableContentWhenLoading="true"
-            app:srlEnableLoadMoreWhenContentNotFull="false"
             android:background="@color/colorWhite"
+            app:srlDisableContentWhenLoading="true"
+            app:srlDisableContentWhenRefresh="true"
+            app:srlEnableLoadMoreWhenContentNotFull="false"
             tools:context=".ui.fragment.SquareFragment">
 
 
@@ -31,12 +32,39 @@
                 android:layout_height="match_parent">
 
 
+
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/squareDynamicRv"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
+            <FrameLayout
+                    android:id="@+id/uploadFl"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp">
+
+
+                <ProgressBar
+                        android:id="@+id/uploadProgressBar"
+                        style="@style/uploadProgress"
+                        android:max="100"
+                        android:progress="100"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/uploadProgressTv"
+                        android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="#ffffffff"
+                        android:textSize="12sp"
+                        android:text="正在发布"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </FrameLayout>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/squareEdit"

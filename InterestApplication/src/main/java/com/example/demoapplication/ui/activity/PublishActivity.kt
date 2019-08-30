@@ -56,7 +56,6 @@ import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.toast
 import java.io.File
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -843,7 +842,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                             16
                         )}.mp3"
-                    mPresenter.uploadFile(mMediaRecorderHelper.currentFilePath, audioQnPath, 3)
+                    mPresenter.uploadFile(1, 1, mMediaRecorderHelper.currentFilePath, audioQnPath, 3)
                 } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) { //图片
                     uploadPictures()
                 } else {//视频
@@ -854,7 +853,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                             16
                         )}.mp4"
-                    mPresenter.uploadFile(pickedPhotos[0].filePath, videoQnPath, 2)
+                    mPresenter.uploadFile(1, 1, pickedPhotos[0].filePath, videoQnPath, 2)
                 }
                 finish()
             }
@@ -1123,7 +1122,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             //  "md5_json" to ""
         )
 
-        mPresenter.publishContent(param, checkIds, keyList)
+        mPresenter.publishContent(type, param, checkIds, keyList)
     }
 
 
@@ -1135,7 +1134,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                 16
             )}.jpg"
-        mPresenter.uploadFile(pickedPhotos[uploadCount].filePath, imagePath, 1)
+        mPresenter.uploadFile(pickedPhotos.size, uploadCount + 1, pickedPhotos[uploadCount].filePath, imagePath, 1)
     }
 
     override fun onQnUploadResult(success: Boolean, type: Int, key: String) {
@@ -1168,10 +1167,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     /**
      * 广场发布结果回调
+     *   //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
      */
-    override fun onSquareAnnounceResult(success: Boolean) {
+    override fun onSquareAnnounceResult(type: Int, success: Boolean) {
         if (success) {
-            toast("动态发布成功！")
             EventBus.getDefault()
                 .post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
             if (!this.isFinishing)

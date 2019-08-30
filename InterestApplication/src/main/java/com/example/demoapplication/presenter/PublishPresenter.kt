@@ -5,6 +5,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.api.Api
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.UploadEvent
 import com.example.demoapplication.presenter.view.PublishView
 import com.example.demoapplication.ui.dialog.TickDialog
 import com.example.demoapplication.utils.QNUploadManager
@@ -16,6 +17,7 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.qiniu.android.storage.UpProgressHandler
 import com.qiniu.android.storage.UploadOptions
+import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 /**
@@ -30,28 +32,36 @@ class PublishPresenter : BasePresenter<PublishView>() {
     /**
      * 广场发布
      */
-    fun publishContent(params: HashMap<String, Any>, checkIds: Array<Int?>, keyList: Array<String?>?) {
+    fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: Array<Int?>, keyList: Array<String?>?) {
         RetrofitFactory.instance.create(Api::class.java)
             .squareAnnounce(params, checkIds, keyList)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     super.onStart()
+                    if (type == 0) {
+                        EventBus.getDefault().postSticky(UploadEvent(1, 1, 0.0))
+                    }
+
+
                 }
 
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
-                        mView.onSquareAnnounceResult(true)
-                    } else{
+                        if (type == 0) {
+                            EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0))
+                        }
+                        mView.onSquareAnnounceResult(type, true)
+                    } else {
                         mView.onError(t.msg)
-                        mView.onSquareAnnounceResult(false)
+                        mView.onSquareAnnounceResult(type, false)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
                         TickDialog(context).show()
-                    } else
-                        mView.onError(context.getString(R.string.retry_net_error))
+                    }
+                    mView.onError(context.getString(R.string.retry_net_error))
                 }
             })
     }
@@ -62,7 +72,7 @@ class PublishPresenter : BasePresenter<PublishView>() {
      * 文件名格式：ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
      * type 1图片 2视频 3音频
      */
-    fun uploadFile(filePath: String, imagePath: String, type: Int) {
+    fun uploadFile(totalCount: Int, currentCount: Int, filePath: String, imagePath: String, type: Int) {
         val file = File(filePath)
         if (!file.exists()) {
             Log.d("OkHttp", "文件不存在")
@@ -89,6 +99,7 @@ class PublishPresenter : BasePresenter<PublishView>() {
                 UpProgressHandler { key, percent ->
                     Log.d("OkHttp", "key=$key\npercent=$percent")
 
+                    EventBus.getDefault().postSticky(UploadEvent(totalCount, currentCount, percent))
                     if (percent == 1.0) {
                         mView.onQnUploadResult(true, type, key)
                     }

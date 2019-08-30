@@ -19,3 +19,7 @@ class RefreshEvent(val refresh: Boolean)
 
 //根据条件筛选请求的params
 class FilterEvent(val params: HashMap<String, Any>)
+
+
+//上传进度事件
+class UploadEvent(val totalFileCount: Int, val currentFileIndex: Int, val progress: Double, success: Boolean = true)

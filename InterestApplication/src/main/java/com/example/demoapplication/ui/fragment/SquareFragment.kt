@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.NotifyEvent
 import com.example.demoapplication.event.RefreshEvent
 import com.example.demoapplication.event.UpdateLabelEvent
+import com.example.demoapplication.event.UploadEvent
 import com.example.demoapplication.model.FriendBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.SquareListBean
@@ -40,6 +42,7 @@ import com.example.demoapplication.widgets.CommonItemDecoration
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -546,6 +549,20 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         }
     }
 
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.squareEdit -> {
+                startActivity<PublishActivity>()
+            }
+        }
+    }
+
+    override fun showLoading() {
+        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+    }
+
+    /***************************事件总线******************************/
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
         listParams["tagid"] = event.label.id
@@ -612,18 +629,31 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.squareEdit -> {
-                startActivity<PublishActivity>()
+
+    private var changeMarTop = false
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onProgressEvent(event: UploadEvent) {
+        uploadProgressBar.progress = (((event.currentFileIndex - 1) * 1.0F / event.totalFileCount + (1.0F / event.totalFileCount * event.progress)) * 100).toInt()
+        uploadProgressTv.text = "正在发布    ${uploadProgressBar.progress}%"
+
+        if (event.totalFileCount == event.currentFileIndex && (event.progress * 100).toInt() == 100) {
+            uploadProgressTv.text = "动态发布成功!"
+            uploadFl.postDelayed({
+                uploadFl.setVisible(false)
+                val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
+                params.topMargin = SizeUtils.dp2px(10F)
+                adapter.headerLayout.friendTv.layoutParams = params
+            }, 500)
+        } else {
+            uploadFl.setVisible(true)
+            if (!changeMarTop) {
+                val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
+                params.topMargin = SizeUtils.dp2px(45F)
+                adapter.headerLayout.friendTv.layoutParams = params
+                changeMarTop = true
             }
         }
+
     }
-
-    override fun showLoading() {
-        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
-    }
-
-
 }
 
