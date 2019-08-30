@@ -379,7 +379,6 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     }
 
     override fun onBackPressed() {
-        EventBus.getDefault().post(RefreshEvent(true))
         super.onBackPressed()
     }
 
@@ -390,6 +389,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         if (event.from == 2) {
 //            multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getMemberInfo(params)
+            EventBus.getDefault().post(RefreshEvent(true))
         }
     }
 

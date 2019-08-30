@@ -217,7 +217,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                     "${data.square_nickname}"
                 }
                 else -> {
-                    ""
+                    "暂时没有新动态哦"
                 }
             }, data?.square_cnt ?: 0, "${data?.square_time}", R.drawable.icon_square_msg
         )
@@ -225,7 +225,11 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 
         val like = MessageListBean(
             "对我感兴趣的",
-            "有${data?.liked_cnt ?: 0}个人对你感兴趣",
+            if ((data?.liked_cnt ?: 0) == 0) {
+                "暂时没有最新对你感兴趣的哦"
+            } else {
+                "有${data?.liked_cnt ?: 0}个人对你感兴趣"
+            },
             data?.liked_unread_cnt ?: 0,
             "${data?.liked_time}",
             R.drawable.icon_like_msg
@@ -237,97 +241,22 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         headAdapter.addData(like)
         if (data?.greet != null && data?.greet.isNotEmpty()) {
             adapter.headerLayout.hiCount.text = "${data.greet_cnt}"
-            adapter.headerLayout.visibility = View.VISIBLE
+            adapter.headerLayout.rlFriend.visibility = View.VISIBLE
             hiAdapter.setNewData(data?.greet ?: mutableListOf())
         } else {
-            adapter.headerLayout.visibility = View.GONE
+            adapter.headerLayout.rlFriend.visibility = View.GONE
         }
 
         //获取最近联系人列表
         mPresenter.getRecentContacts()
     }
 
-    private fun setHiData() {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-
-
-        ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
-        val squa = MessageListBean("发现", "赞了你的动态", 0, "", R.drawable.icon_square_msg)
-        val like = MessageListBean("对我感兴趣的", "有0个人对你感兴趣", 0, "", R.drawable.icon_like_msg)
-
-        headAdapter.data.clear()
-        headAdapter.addData(ass)
-        headAdapter.addData(squa)
-        headAdapter.addData(like)
-
-
-        val greet1 = HiMessageBean(
-            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",
-            countdown = 1000,
-            countdown_total = 1200,
-            type = 1
-        )
-        val greet2 = HiMessageBean(
-            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",
-            countdown = 1000,
-            countdown_total = 1200,
-            type = 2
-        )
-        val greet3 = HiMessageBean(
-            avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",
-            countdown = 1000,
-            countdown_total = 1200,
-            type = 3
-        )
-        val greet4 = HiMessageBean(
-            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",
-            countdown = 1000,
-            countdown_total = 1200,
-            type = 4
-        )
-        hiAdapter.addData(greet1)
-        hiAdapter.addData(greet2)
-        hiAdapter.addData(greet3)
-        hiAdapter.addData(greet4)
-        val greet11 = HiMessageBean(
-            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",
-            countdown = 1000,
-            countdown_total = 1200,
-            type = 1
-        )
-        val greet21 = HiMessageBean(
-            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/77532d27d819a58950e2b14db3e24d61/1563281846251/3uyv0r3plgb1f54w.jpg",
-            countdown = 1000,
-            countdown_total = 1200,
-            type = 2
-        )
-        val greet31 = HiMessageBean(
-            avatar = "http://rsrc1.futrueredland.com.cn/ppns/headImage/11ba48672c637c47f40dd4a74e5aeed2/1563349558/1oEDdWwa6ppIFRDM",
-            countdown = 1000,
-            countdown_total = 1200,
-            type = 3
-        )
-        val greet41 = HiMessageBean(
-            avatar = "http://rsrc1.futrueredland.com.cn/ppns/avator/e91604ad7765015666cd8b6148578bb7/1563440882928/utwab4mfzd551fkx.jpg",
-            countdown = 1000,
-            countdown_total = 1200,
-            type = 4
-        )
-        hiAdapter.addData(greet11)
-        hiAdapter.addData(greet21)
-        hiAdapter.addData(greet31)
-        hiAdapter.addData(greet41)
-        //获取最近联系人列表
-        mPresenter.getRecentContacts()
-    }
-
-
     //离线获取@了我的
     override fun updateOfflineContactAited(recentAited: MutableList<RecentContact>) {
     }
 
     //官方助手
-    var ass = MessageListBean("官方助手", "", 0, "", R.drawable.icon_assistant)
+    var ass = MessageListBean("官方助手", "暂时没有助手消息哦", 0, "", R.drawable.icon_assistant)
 
     //获取最近会话（但是要获取最近的联系人列表）
     override fun onGetRecentContactResults(result: MutableList<RecentContact>) {
