@@ -4,6 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        xmlns:tools="http://schemas.android.com/tools"
         android:background="@color/colorWhite"
         >
 
@@ -27,7 +28,7 @@
 
     <TextView
             android:id="@+id/visitName"
-            android:text="用户名最大长"
+            tools:text="用户名最大长"
             android:textColor="#ff333333"
             android:textSize="16sp"
             android:layout_width="wrap_content"
@@ -53,7 +54,7 @@
             android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="22 / 女 / 巨蟹座 / 18.85km"
+            tools:text="22 / 女 / 巨蟹座 / 18.85km"
             android:textColor="#ff9b9b9b"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="@id/visitName"
@@ -93,7 +94,7 @@
 
     <TextView
             android:id="@+id/visitCount"
-            android:text="20次"
+            tools:text="20次"
             android:textColor="#ffff6318"
             android:textSize="16sp"
             android:layout_marginRight="15dp"

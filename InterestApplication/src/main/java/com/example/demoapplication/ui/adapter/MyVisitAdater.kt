@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.VisitorBean
+import com.example.demoapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.item_visit.view.*
 
@@ -17,10 +18,10 @@ import kotlinx.android.synthetic.main.item_visit.view.*
  *    desc   : 我的访客
  *    version: 1.0
  */
-class MyVisitAdater(val isVip: Boolean) : BaseQuickAdapter<VisitorBean, BaseViewHolder>(R.layout.item_visit) {
+class MyVisitAdater : BaseQuickAdapter<VisitorBean, BaseViewHolder>(R.layout.item_visit) {
 
     override fun convert(holder: BaseViewHolder, item: VisitorBean) {
-        if (isVip) {
+        if (UserManager.isUserVip()) {
             holder.itemView.visitImgHide.visibility = View.GONE
             holder.itemView.visitHideName.visibility = View.GONE
             holder.itemView.visitHideInfo.visibility = View.GONE

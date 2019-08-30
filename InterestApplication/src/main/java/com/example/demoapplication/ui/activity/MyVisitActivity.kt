@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.item_visit_headview.view.*
 class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefreshListener, OnLoadMoreListener {
 
     private var page = 1
-    private val visitAdapter by lazy { MyVisitAdater(intent.getBooleanExtra("isVip", false)) }
+    private val visitAdapter by lazy { MyVisitAdater() }
     private val params by lazy {
         hashMapOf(
             "token" to UserManager.getToken(),
@@ -65,6 +65,10 @@ class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefr
         view.visitTodayCount.text = "今日来访：${intent.getIntExtra("today", 0)}"
         view.visitAllCount.text = "总来访：${intent.getIntExtra("all", 0)}"
         visitAdapter.addHeaderView(view)
+
+        visitAdapter.setOnItemClickListener { _, view, position ->
+            MatchDetailActivity.start(this, visitAdapter.data[position].accid ?: "")
+        }
 
     }
 
