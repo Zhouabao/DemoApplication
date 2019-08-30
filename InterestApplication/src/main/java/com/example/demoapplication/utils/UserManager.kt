@@ -169,7 +169,7 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("verify", 0)
     }
 
-
+    //0未认证/认证不成功     1认证通过     2认证中
     fun saveUserVerify(verify: Int) {
         SPUtils.getInstance(Constants.SPNAME).put("verify", verify)
     }

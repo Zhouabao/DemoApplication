@@ -206,7 +206,8 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     when {
                         t.code == 200 -> {
                             toast("审核提交成功")
-                            setResult(Activity.RESULT_OK, intent.putExtra("verify", true))
+                            UserManager.saveUserVerify(2)
+                            setResult(Activity.RESULT_OK)
                             finish()
                         }
                         t.code == 403 -> UserManager.startToLogin(context as Activity)

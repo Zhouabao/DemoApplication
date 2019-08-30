@@ -28,7 +28,7 @@ data class Userinfo(
     val isvip: Int? = 0,
     val todayvisit: Int? = 0,
     val vip_express: String? = "",
-    val isfaced: Int? = 0
+    var isfaced: Int = 0//0未认证/认证不成功     1认证通过     2认证中
 )
 
 data class TagBean(

@@ -30,6 +30,7 @@ import com.example.baselibrary.utils.RandomUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.UpdateLabelEvent
+import com.example.demoapplication.event.UploadEvent
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.MediaBean
 import com.example.demoapplication.player.MediaPlayerHelper
@@ -138,6 +139,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         mPresenter = PublishPresenter()
         mPresenter.mView = this
         mPresenter.context = applicationContext
+        if (intent.getIntExtra("from", 1) == 2) {
+            mPresenter.from = 2
+        }
 
         tabPublishWay.setOnCheckedChangeListener(this)
         tabPublishWay.check(currentWayId)//默认选中图片
@@ -1171,8 +1175,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      */
     override fun onSquareAnnounceResult(type: Int, success: Boolean) {
         if (success) {
-            EventBus.getDefault()
-                .post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
+            if (mPresenter.from == 2) {
+                EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
+            } else {
+                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
+            }
             if (!this.isFinishing)
                 finish()
         }

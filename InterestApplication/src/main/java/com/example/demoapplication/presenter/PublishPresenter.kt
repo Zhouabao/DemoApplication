@@ -28,6 +28,9 @@ import java.io.File
  */
 class PublishPresenter : BasePresenter<PublishView>() {
 
+    //from 1 来自广场  2来自用户中心
+    public var from = 1
+
 
     /**
      * 广场发布
@@ -38,16 +41,14 @@ class PublishPresenter : BasePresenter<PublishView>() {
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     super.onStart()
-                    if (type == 0) {
+                    if (type == 0 && from == 1) {
                         EventBus.getDefault().postSticky(UploadEvent(1, 1, 0.0))
                     }
-
-
                 }
 
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
-                        if (type == 0) {
+                        if (type == 0 && from == 1) {
                             EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0))
                         }
                         mView.onSquareAnnounceResult(type, true)
@@ -86,8 +87,6 @@ class PublishPresenter : BasePresenter<PublishView>() {
             imagePath,
             SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
             { key, info, response ->
-                Log.d("OkHttp", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
-                Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null) {
                     if (!info.isOK) {
                         mView.onQnUploadResult(false, type, key)
@@ -97,9 +96,8 @@ class PublishPresenter : BasePresenter<PublishView>() {
             UploadOptions(
                 null, null, false,
                 UpProgressHandler { key, percent ->
-                    Log.d("OkHttp", "key=$key\npercent=$percent")
-
-                    EventBus.getDefault().postSticky(UploadEvent(totalCount, currentCount, percent))
+                    if (from == 1)
+                        EventBus.getDefault().postSticky(UploadEvent(totalCount, currentCount, percent))
                     if (percent == 1.0) {
                         mView.onQnUploadResult(true, type, key)
                     }

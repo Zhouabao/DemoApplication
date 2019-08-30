@@ -21,5 +21,12 @@ class RefreshEvent(val refresh: Boolean)
 class FilterEvent(val params: HashMap<String, Any>)
 
 
-//上传进度事件
-class UploadEvent(val totalFileCount: Int, val currentFileIndex: Int, val progress: Double, success: Boolean = true)
+//上传进度事件 from 1广场 2用户中心
+class UploadEvent(
+    val totalFileCount: Int,
+    val currentFileIndex: Int,
+    val progress: Double,
+    var success: Boolean = true,
+    var from: Int = 1
+)
+

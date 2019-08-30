@@ -20,6 +20,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.RefreshEvent
 import com.example.demoapplication.event.UpdateAvatorEvent
+import com.example.demoapplication.event.UploadEvent
 import com.example.demoapplication.model.MatchBean
 import com.example.demoapplication.model.UserInfoBean
 import com.example.demoapplication.presenter.UserCenterPresenter
@@ -41,6 +42,8 @@ import kotlinx.android.synthetic.main.dialog_charge_vip.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.item_not_vip_viewpager.view.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 
@@ -53,6 +56,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         const val REQUEST_INFO_SETTING = 11
         const val REQUEST_MY_SQUARE = 12
         const val REQUEST_ID_VERIFY = 13
+        const val REQUEST_PUBLISH = 14
     }
 
     //用户标签adapter
@@ -69,20 +73,19 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_center)
+        EventBus.getDefault().register(this)
         initView()
-        mPresenter.getMemberInfo(
-            hashMapOf(
-                "accid" to UserManager.getAccid(),
-                "token" to UserManager.getToken(),
-                "_sign" to "",
-                "_timestamp" to System.currentTimeMillis()
-            )
-        )
+        mPresenter.getMemberInfo(params)
     }
 
     override fun onResume() {
         super.onResume()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 
     private fun initData() {
@@ -255,7 +258,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         val headView = LayoutInflater.from(this).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
         coverAdapter.headerLayout.onClick {
-            startActivity<PublishActivity>()
+            startActivityForResult<PublishActivity>(REQUEST_PUBLISH, "from" to 2)
         }
 
         //我的访客封面
@@ -286,6 +289,15 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         }
     }
 
+    private val params by lazy {
+        hashMapOf(
+            "accid" to UserManager.getAccid(),
+            "token" to UserManager.getToken(),
+            "_sign" to "",
+            "_timestamp" to System.currentTimeMillis()
+        )
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -293,16 +305,10 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
                 getTagData()
             } else if (requestCode == REQUEST_INFO_SETTING || requestCode == REQUEST_MY_SQUARE) {
                 multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-                mPresenter.getMemberInfo(
-                    hashMapOf(
-                        "accid" to UserManager.getAccid(),
-                        "token" to UserManager.getToken(),
-                        "_sign" to "",
-                        "_timestamp" to System.currentTimeMillis()
-                    )
-                )
+                mPresenter.getMemberInfo(params)
             } else if (requestCode == REQUEST_ID_VERIFY) {
-
+                userInfoBean.userinfo?.isfaced = UserManager.isUserVerify()
+                checkVerify()
             }
         }
     }
@@ -375,6 +381,16 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     override fun onBackPressed() {
         EventBus.getDefault().post(RefreshEvent(true))
         super.onBackPressed()
+    }
+
+
+    //发布成功后回来刷新界面数据
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onProgressEvent(event: UploadEvent) {
+        if (event.from == 2) {
+//            multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.getMemberInfo(params)
+        }
     }
 
 }
