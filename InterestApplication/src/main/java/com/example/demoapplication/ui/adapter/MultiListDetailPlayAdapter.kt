@@ -21,7 +21,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
-import com.example.demoapplication.model.VideoJson
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
@@ -97,9 +96,6 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
             SquareBean.PIC -> {
 //                holder.itemView.picFl.setBackgroundResource(R.color.colorBlack)
                 if (holder.itemView.detailPlayVp2Indicator1.childCount == 0) {
-                    if (item.photo_json.isNullOrEmpty()) {
-                        item.photo_json = mutableListOf(VideoJson(url = item.avatar ?: ""))
-                    }
                     holder.itemView.detailPlayVp2.adapter =
                         SquareDetailImgsAdaper(context, item.photo_json ?: mutableListOf())
 

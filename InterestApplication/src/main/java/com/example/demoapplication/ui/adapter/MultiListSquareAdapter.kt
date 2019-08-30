@@ -22,6 +22,7 @@ import com.example.demoapplication.nim.attachment.ChatHiAttachment
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.activity.MatchDetailActivity
+import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.ui.dialog.ChargeVipDialog
@@ -155,7 +156,7 @@ class MultiListSquareAdapter(
                 } else {
                     holder.itemView.squareUserPics1.visibility = View.GONE
                     holder.itemView.onClick {
-                        mContext.startActivity<SquarePlayListDetailActivity>("item" to item)
+                        SquareCommentDetailActivity.start(mContext as Activity, item)
                     }
                 }
 

@@ -551,6 +551,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         //开启录音计时线程
         countTimeThread = object : CountDownTimer(3 * 60 * 1000, 1000) {
             override fun onFinish() {
+
+                switchActionState()
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -565,6 +567,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 recordTime.text = UriUtils.getShowTime(totalSecond)
                 recordTime.setTextColor(resources.getColor(R.color.colorOrange))
                 recordProgress.update(totalSecond, 100)
+
 
 //                }
 
@@ -769,6 +772,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         if (videoPreview.isPlaying) videoPreview.stopPlayback()
         countTimeThread?.cancel()
         mPreviewTimeThread?.stop()
+        if (currentActionState == ACTION_RECORDING) {
+            mMediaRecorderHelper.cancel()
+            changeToNormalState()
+        }
         if (KeyboardUtils.isSoftInputVisible(this)) {
             KeyboardUtils.showSoftInput(publishContent)
         }
@@ -812,10 +819,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     return
                 }
 
-                if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-                    ToastUtils.showShort("语音、图片、视频至少要选择一种发布哦~")
-                    return
-                }
+//                if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+//                    ToastUtils.showShort("语音、图片、视频至少要选择一种发布哦~")
+//                    return
+//                }
 
                 if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != ACTION_COMMPLETE) {
                     ToastUtils.showShort("请录制完语音再发布")
