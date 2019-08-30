@@ -37,8 +37,12 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
     }
 
     private lateinit var adapter: LabelAdapter
+    private var checkedJob: String = ""
     private val params by lazy { hashMapOf("token" to UserManager.getToken(), "accid" to UserManager.getAccid()) }
     private fun initView() {
+        //已经选中的职业
+        checkedJob = intent.getStringExtra("job") ?: ""
+
         mPresenter = MyJobPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -48,6 +52,7 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getJobList(params)
         }
+
 
         initRv()
 
@@ -91,6 +96,13 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
 
     override fun onGetJobListResult(mutableList: MutableList<LabelBean>?) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+
+        for (job in mutableList?: mutableListOf()) {
+            if (job.title == checkedJob) {
+                job.checked = true
+                break
+            }
+        }
         adapter.setNewData(mutableList)
     }
 

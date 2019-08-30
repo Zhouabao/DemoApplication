@@ -399,7 +399,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 startActivityForResult<UserBirthActivity>(100)
             }
             R.id.userJob -> {
-                startActivityForResult<MyJobActivity>(103)
+                startActivityForResult<MyJobActivity>(103,"job" to userJob.text.toString())
             }
         }
 
