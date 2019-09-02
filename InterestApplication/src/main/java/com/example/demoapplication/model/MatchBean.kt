@@ -46,7 +46,8 @@ data class MatchBean(
     var jobname: String?,
     var lightningcnt: Int?,
     var countdown: Int = 0,
-    var isfriend: Int?
+    var isfriend: Int?,
+    var residue: Int = 0
 
 ) : Serializable
 
@@ -65,8 +66,9 @@ data class Square(
 /**
  * 匹配状态
  * status :1.喜欢成功  2.匹配成功
+ * residue:剩余滑动次数
  */
-data class StatusBean(val status: Int)
+data class StatusBean(val status: Int, val residue: Int)
 
 /**
  * 用戶標簽

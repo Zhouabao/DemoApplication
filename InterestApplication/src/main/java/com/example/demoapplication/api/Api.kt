@@ -215,7 +215,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("relationship/dontLike${Constants.END_BASE_URL}")
-    fun dontLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    fun dontLike(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
 
 
     /**

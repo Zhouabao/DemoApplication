@@ -64,13 +64,13 @@ class MatchPresenter : BasePresenter<MatchView>() {
 
         RetrofitFactory.instance.create(Api::class.java)
             .dontLike(params)
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
-                        mView.onGetDislikeResult(true)
+                        mView.onGetDislikeResult(true,t.data)
                     } else {
-                        mView.onError(t.msg)
-                        mView.onGetDislikeResult(false)
+//                        mView.onError(t.msg)
+                        mView.onGetDislikeResult(false,t.data)
                     }
                 }
 

@@ -268,6 +268,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
         SPUtils.getInstance(Constants.SPNAME).remove("countdowntime")
         SPUtils.getInstance(Constants.SPNAME).remove("lightingCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("slideCount")
 
         //位置信息
         SPUtils.getInstance(Constants.SPNAME).remove("latitude")
@@ -320,5 +321,6 @@ object UserManager {
     fun getCountDownTimet(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("countdowntime", 0)
     }
+
 
 }

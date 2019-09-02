@@ -185,12 +185,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
                     card_stack_view.swipe()
                 }
-//                mPresenter.greetState(
-//                    UserManager.getToken(),
-//                    UserManager.getAccid(),
-//                    (matchUserAdapter.data[manager.topPosition].accid ?: ""),
-//                    matchUserAdapter.data[manager.topPosition]
-//                )
             }
         }
     }
@@ -285,14 +279,25 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     /**
      * 左滑不喜欢结果
      */
-    override fun onGetDislikeResult(success: Boolean) {
+    override fun onGetDislikeResult(success: Boolean, data: StatusBean?) {
+        if (data != null) {
+            if (data.residue == 0) {
+                card_stack_view.rewind()
+                ChargeVipDialog(activity!!).show()
+            }
+        }
+
+
     }
 
     //status :1.喜欢成功  2.匹配成功
     override fun onGetLikeResult(success: Boolean, data: StatusBean?) {
-        if (success) {
-            switch = false
-            if (data != null && data.status == 2) {
+        if (data != null) {
+            if (data.residue == 0) {
+                card_stack_view.rewind()
+                ChargeVipDialog(activity!!).show()
+            }
+            if (data.status == 2) {
                 sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                 startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[matchUserAdapter.data.size - 1])
             }
@@ -373,7 +378,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         //最大的缩放间隔
         manager.setScaleInterval(0.95f)
         //卡片滑出飞阈值
-        manager.setSwipeThreshold(0.6f)
+        manager.setSwipeThreshold(0.4f)
         //横向纵向的旋转角度
         manager.setMaxDegree(5F)
         //滑动的方向
@@ -415,7 +420,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     }
 
-    var switch = false
     override fun onCardDragging(direction: Direction, ratio: Float) {
         //向上超级喜欢(会员就超级喜欢 否则弹起收费窗)
         when (direction) {
@@ -518,10 +522,12 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         resetAnimation()
         if (direction == Direction.Left) {//左滑不喜欢
             toast("不喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
+
 //            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
 //            mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             toast("喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
+
 //            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
 //            mPresenter.likeUser(params)
         } else if (direction == Direction.Top) {//上滑打招呼

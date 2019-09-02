@@ -191,7 +191,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
         }
     }
 
-    override fun onGetDislikeResult(success: Boolean) {
+    override fun onGetDislikeResult(success: Boolean, data: StatusBean?) {
         if (success) {
             matchUserAdapter.data.removeAt(matchUserAdapter.data.size - 1)
         } else {

@@ -16,7 +16,7 @@ interface MatchView : BaseView {
 
     fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?)
 
-    fun onGetDislikeResult(success: Boolean)
+    fun onGetDislikeResult(success: Boolean,data: StatusBean?)
 
     fun onGetLikeResult(success: Boolean, data: StatusBean?)
 

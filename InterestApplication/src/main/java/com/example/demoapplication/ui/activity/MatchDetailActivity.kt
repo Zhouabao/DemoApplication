@@ -222,7 +222,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
 
-        //已感兴趣H或者是好友不做操作
+        //已感兴趣或者是好友不做操作
         if (matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
             detailUserLikeBtn.visibility = View.GONE
             detailUserLikeBtn.isEnabled = false
@@ -415,14 +415,18 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     override fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?) {
-        if (success && statusBean != null) {
-            ToastUtils.showShort(statusBean.msg)
-            if (statusBean!!.data?.status == 1) {  //喜欢成功
-                detailUserLikeBtn.isEnabled = false
-                detailUserLikeBtn.visibility = View.GONE
-                detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
-            } else if (statusBean!!.data?.status == 2) {//匹配成功
-                startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
+        if (statusBean != null) {
+            if (statusBean.data?.residue == 0) {
+                ChargeVipDialog(this).show()
+            } else {
+                ToastUtils.showShort(statusBean.msg)
+                if (statusBean.data?.status == 1) {  //喜欢成功
+                    detailUserLikeBtn.isEnabled = false
+                    detailUserLikeBtn.visibility = View.GONE
+                    detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
+                } else if (statusBean.data?.status == 2) {//匹配成功
+                    startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
+                }
             }
         }
     }

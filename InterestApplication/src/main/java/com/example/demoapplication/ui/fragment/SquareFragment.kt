@@ -644,7 +644,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     private var changeMarTop = false
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onProgressEvent(event: UploadEvent) {
-        uploadProgressBar.progress = (((event.currentFileIndex - 1) * 1.0F / event.totalFileCount + (1.0F / event.totalFileCount * event.progress)) * 100).toInt()
+        uploadProgressBar.progress =
+            (((event.currentFileIndex - 1) * 1.0F / event.totalFileCount + (1.0F / event.totalFileCount * event.progress)) * 100).toInt()
         uploadProgressTv.text = "正在发布    ${uploadProgressBar.progress}%"
 
         if (event.totalFileCount == event.currentFileIndex && (event.progress * 100).toInt() == 100) {
