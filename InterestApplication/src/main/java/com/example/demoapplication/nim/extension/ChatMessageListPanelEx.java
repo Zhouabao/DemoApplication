@@ -22,6 +22,7 @@ import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.example.baselibrary.glide.GlideUtil;
 import com.example.demoapplication.api.Api;
+import com.example.demoapplication.common.Constants;
 import com.example.demoapplication.event.EnablePicEvent;
 import com.example.demoapplication.event.NimHeadEvent;
 import com.example.demoapplication.model.LabelBean;
@@ -1523,7 +1524,7 @@ public class ChatMessageListPanelEx {
             if (mytags.size() > 0)
                 for (int i = 0; i < mytags.size(); i++) {
                     for (int j = 0; j < tags.size(); j++) {
-                        if (mytags.get(i).getId() == tags.get(j).getId()) {
+                        if (mytags.get(i).getId() == tags.get(j).getId() && tags.get(j).getId() != Constants.RECOMMEND_TAG_ID) {
                             tags.get(j).setSameLabel(true);
                         } else {
                             tags.get(j).setSameLabel(false);

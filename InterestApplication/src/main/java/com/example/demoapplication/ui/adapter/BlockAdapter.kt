@@ -1,5 +1,7 @@
 package com.example.demoapplication.ui.adapter
 
+import android.widget.RelativeLayout
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -17,8 +19,11 @@ import kotlinx.android.synthetic.main.item_block_square.view.*
 class BlockAdapter : BaseQuickAdapter<Photos, BaseViewHolder>(R.layout.item_block_square) {
 
     override fun convert(holder: BaseViewHolder, item: Photos) {
-
-        GlideUtil.loadRoundImgCenterCrop(mContext, item.url ?: "", holder.itemView.ivSquare,  SizeUtils.dp2px(5F))
+        val params = holder.itemView.ivSquare.layoutParams as RelativeLayout.LayoutParams
+        params.width = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.height = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        holder.itemView.ivSquare.layoutParams = params
+        GlideUtil.loadRoundImgCenterCrop(mContext, item.url ?: "", holder.itemView.ivSquare, SizeUtils.dp2px(5F))
     }
 
 }

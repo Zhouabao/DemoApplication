@@ -164,7 +164,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     private val emojAdapter by lazy { EmojAdapter() }
 
     private fun initEmojRv() {
-        emojRv.layoutManager = GridLayoutManager(this, 10, RecyclerView.VERTICAL, false)
+        emojRv.layoutManager = GridLayoutManager(this, 8, RecyclerView.VERTICAL, false)
         emojRv.adapter = emojAdapter
 
         emojAdapter.addData(EmojiSource.people.toMutableList())

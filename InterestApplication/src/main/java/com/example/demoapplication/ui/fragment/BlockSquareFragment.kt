@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.event.BlockDataEvent
 import com.example.demoapplication.model.Photos
@@ -13,6 +14,7 @@ import com.example.demoapplication.presenter.BlockSquarePresenter
 import com.example.demoapplication.presenter.view.BlockSquareView
 import com.example.demoapplication.ui.adapter.BlockAdapter
 import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.widgets.DividerItemDecoration
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -48,6 +50,14 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
         EventBus.getDefault().register(this)
 
         blockRv.layoutManager = GridLayoutManager(activity, 3, RecyclerView.VERTICAL, false)
+        blockRv.addItemDecoration(
+            DividerItemDecoration(
+                activity!!,
+                DividerItemDecoration.BOTH_SET,
+                SizeUtils.dp2px(10F),
+                resources.getColor(R.color.colorWhite)
+            )
+        )
         blockRv.adapter = blockAdapter
         blockAdapter.setEmptyView(R.layout.empty_layout_block, blockRv)
 
@@ -79,6 +89,15 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
             if (data.isNullOrEmpty()) {
                 refreshBlock.finishLoadMoreWithNoMoreData()
             }
+            blockAdapter.addData(data ?: mutableListOf())
+            blockAdapter.addData(data ?: mutableListOf())
+            blockAdapter.addData(data ?: mutableListOf())
+            blockAdapter.addData(data ?: mutableListOf())
+            blockAdapter.addData(data ?: mutableListOf())
+            blockAdapter.addData(data ?: mutableListOf())
+            blockAdapter.addData(data ?: mutableListOf())
+            blockAdapter.addData(data ?: mutableListOf())
+            blockAdapter.addData(data ?: mutableListOf())
             blockAdapter.addData(data ?: mutableListOf())
         } else {
 //            stateview.viewState = MultiStateView.VIEW_STATE_ERROR

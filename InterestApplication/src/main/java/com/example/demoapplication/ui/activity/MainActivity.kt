@@ -372,15 +372,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     )
                 } else {
                     for (index in 0 until labelAdapter.dataList.size) {
-                        labelAdapter.dataList[index].checked = if (index == position - 1) {
-                            SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelAdapter.dataList[index].id)
-                            true
-                        } else {
-                            false
-                        }
+                        labelAdapter.dataList[index].checked = index == position - 1
                     }
                     labelAdapter.notifyDataSetChanged()
-                    EventBus.getDefault().post(UpdateLabelEvent(labelList[position - 1]))
+
+                    if (labelAdapter.dataList[position - 1].id == UserManager.getGlobalLabelId()) {
+                        return
+                    } else {
+                        SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelAdapter.dataList[position - 1].id)
+                        EventBus.getDefault().post(UpdateLabelEvent(labelList[position - 1]))
+                    }
                 }
             }
 
@@ -409,7 +410,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode,resultCode,data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LABEL_CODE) {

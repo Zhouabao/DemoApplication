@@ -30,6 +30,7 @@ import com.example.demoapplication.ui.adapter.UserLabelAdapter
 import com.example.demoapplication.ui.adapter.VisitUserAvatorAdater
 import com.example.demoapplication.ui.dialog.ChargeVipDialog
 import com.example.demoapplication.utils.UserManager
+import com.example.demoapplication.widgets.DividerItemDecoration
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -254,6 +255,14 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         //用户动态照片
         val squareManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         userSquaresRv.layoutManager = squareManager
+        userSquaresRv.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL_LIST,
+                SizeUtils.dp2px(10F),
+                resources.getColor(R.color.colorWhite)
+            )
+        )
         userSquaresRv.adapter = coverAdapter
         val headView = LayoutInflater.from(this).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)

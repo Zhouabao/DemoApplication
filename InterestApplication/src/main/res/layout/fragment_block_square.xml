@@ -21,14 +21,16 @@
             app:srlEnableAutoLoadMore="true"
             app:srlEnableNestedScrolling="true"
             app:srlEnableLoadMoreWhenContentNotFull="false"
+            android:background="@color/colorWhite"
             app:srlEnableRefresh="false">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/blockRv"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/colorWhite"
-                android:paddingLeft="10dp"
                 tools:context=".ui.fragment.BlockSquareFragment">
 
         </androidx.recyclerview.widget.RecyclerView>

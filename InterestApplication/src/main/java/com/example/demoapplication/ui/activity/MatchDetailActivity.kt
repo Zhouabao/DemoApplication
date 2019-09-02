@@ -22,6 +22,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.CommonFunction
+import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.BlockDataEvent
 import com.example.demoapplication.event.ListDataEvent
 import com.example.demoapplication.event.NotifyEvent
@@ -386,7 +387,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             val labels = UserManager.getSpLabels()
             for (label in labels) {
                 for (tag in matchBean!!.tags ?: mutableListOf()) {
-                    if (label.id == tag.id) {
+                    if (label.id == tag.id && tag.id != Constants.RECOMMEND_TAG_ID) {
                         tag.sameLabel = true
                     }
                 }
