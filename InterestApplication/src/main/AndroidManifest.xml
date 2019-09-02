@@ -63,14 +63,22 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.AboutActivity">
+        <activity
+                android:name=".ui.activity.ProtocolActivity"
+                android:screenOrientation="portrait">
+        </activity>
+        <activity
+                android:name=".ui.activity.AboutActivity"
+                android:screenOrientation="portrait">
         </activity>
 
         <uses-library
                 android:name="org.apache.http.legacy"
                 android:required="false"/>
 
-        <activity android:name=".ui.activity.BlackListActivity">
+        <activity
+                android:name=".ui.activity.BlackListActivity"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".ui.activity.IDVerifyActivity"

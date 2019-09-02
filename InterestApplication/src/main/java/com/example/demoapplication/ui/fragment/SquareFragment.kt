@@ -452,8 +452,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
         resetAudio()
 
-        adapter.data.clear()
         friendsAdapter.data.clear()
+        friendsAdapter.notifyDataSetChanged()
+
         refreshLayout.setNoMoreData(false)
         mPresenter.getSquareList(listParams, true)
         mPresenter.getFrinedsList(friendsParams)
@@ -474,15 +475,25 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
         if (friends.size == 0) {
+//            adapter.headerLayout.setVisible(false)
             adapter.headerLayout.friendTv.visibility = View.GONE
+            adapter.headerLayout.headRv.visibility = View.GONE
         } else {
-            friendsAdapter.setNewData(friends)
+//            adapter.headerLayout.setVisible(true)
             adapter.headerLayout.friendTv.visibility = View.VISIBLE
+            adapter.headerLayout.headRv.visibility = View.VISIBLE
+            friendsAdapter.setNewData(friends)
+
         }
     }
 
-    override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, refresh: Boolean?) {
+    override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {
         if (result) {
+            if (isRefresh) {
+                adapter.data.clear()
+                adapter.notifyDataSetChanged()
+            }
+
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data!!.list != null && data!!.list!!.size > 0) {
                 for (tempData in 0 until data!!.list!!.size) {

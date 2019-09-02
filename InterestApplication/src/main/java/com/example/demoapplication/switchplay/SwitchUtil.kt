@@ -16,9 +16,10 @@ object SwitchUtil {
 
         gsyVideoPlayer.isShowPauseCover = true
 
+
         gsyVideoPlayer.dismissControlTime = 500
         //是否循环播放
-//        gsyVideoPlayer.isLooping = true
+        gsyVideoPlayer.isLooping = true
 
         gsyVideoPlayer.setSwitchUrl(url)
 

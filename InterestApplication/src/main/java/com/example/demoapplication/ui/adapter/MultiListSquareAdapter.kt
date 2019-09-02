@@ -164,8 +164,7 @@ class MultiListSquareAdapter(
             SquareBean.VIDEO -> {
                 //增加封面
                 val imageview = ImageView(mContext)
-                imageview.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                GlideUtil.loadImg(mContext, item.cover_url ?: "", imageview)
+                GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", imageview, 0)
                 if (imageview.parent != null) {
                     val vg = imageview.parent as ViewGroup
                     vg.removeView(imageview)
@@ -173,14 +172,16 @@ class MultiListSquareAdapter(
                 holder.itemView.squareUserVideo.thumbImageView = imageview
 
                 holder.itemView.squareUserVideo.detail_btn.setOnClickListener {
-                    SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
-                    holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(holder.itemView.squareUserVideo)
-                    SquarePlayDetailActivity.startActivity(
-                        mContext as Activity,
-                        holder.itemView.squareUserVideo,
-                        item,
-                        holder.layoutPosition
-                    )
+                    if (holder.itemView.squareUserVideo.isInPlayingState) {
+                        SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
+                        holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(holder.itemView.squareUserVideo)
+                        SquarePlayDetailActivity.startActivity(
+                            mContext as Activity,
+                            holder.itemView.squareUserVideo,
+                            item,
+                            holder.layoutPosition
+                        )
+                    }
                 }
                 holder.itemView.squareUserVideo.playTag = TAG
                 holder.itemView.squareUserVideo.playPosition = holder.layoutPosition

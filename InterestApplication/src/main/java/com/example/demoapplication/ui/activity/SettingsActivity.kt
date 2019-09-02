@@ -92,6 +92,7 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
             }
             //关于
             R.id.aboutUs -> {
+                startActivity<AboutActivity>()
             }
             //清理缓存
             R.id.clearData -> {

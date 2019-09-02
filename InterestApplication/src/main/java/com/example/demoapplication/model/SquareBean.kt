@@ -72,7 +72,9 @@ data class SquareBean(
 data class VideoJson(
     val duration: Int = 0,
     val url: String = "",
-    var leftTime:Int = 0//倒计时剩下的时间
+    var width: Float = 0f,
+    var height: Float = 0f,
+    var leftTime: Int = 0//倒计时剩下的时间
 ) : Serializable
 
 

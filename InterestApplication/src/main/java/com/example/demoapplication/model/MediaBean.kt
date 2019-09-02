@@ -14,8 +14,20 @@ data class MediaBean(
     var thumbnail: String = "",
     var duration: Int = 0,
     var size: Long = 0L,
-    var ischecked: Boolean = false
+    var ischecked: Boolean = false,
+    var width: Int = 0,
+    var height: Int = 0
 ) {
     enum class TYPE { IMAGE, VIDEO }
 
 }
+
+/**
+ * 媒体文件的参数
+ */
+data class MediaParamBean(
+    var url: String = "",
+    var duration: Int = 0,
+    var width: Int = 0,
+    var height: Int = 0
+)

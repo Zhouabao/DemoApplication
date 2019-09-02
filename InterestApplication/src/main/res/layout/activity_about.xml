@@ -100,10 +100,10 @@
                 android:layout_height="wrap_content"/>
 
         <ImageView
+                android:id="@+id/userAgreement"
                 android:layout_gravity="center_vertical"
                 android:scaleType="centerInside"
                 android:padding="15dp"
-                android:id="@+id/userAgreement"
                 android:src="@drawable/icon_more_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

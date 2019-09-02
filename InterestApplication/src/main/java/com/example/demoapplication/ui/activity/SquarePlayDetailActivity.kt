@@ -244,7 +244,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
      * 展示转发动态对话框
      */
     private fun showTranspondDialog() {
-        val transpondDialog = TranspondDialog(this,squareBean)
+        val transpondDialog = TranspondDialog(this, squareBean)
         transpondDialog.show()
     }
 
@@ -307,7 +307,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             }
             //点击内容跳转到评论详情页面
             R.id.detailPlayContent -> {
-                SquareCommentDetailActivity.start(this,squareBean)
+                SquareCommentDetailActivity.start(this, squareBean)
             }
             R.id.detailPlayCommentSend -> {
                 if (!detailPlayComment.text.toString().isEmpty())
@@ -356,6 +356,15 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 //        SwitchUtil.release()
     }
 
+    override fun finish() {
+        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.listener())
+
+        SwitchUtil.savePlayState(detailPlayVideo)
+        detailPlayVideo.gsyVideoManager.setLastListener(detailPlayVideo)
+//        supportFinishAfterTransition()
+        setResult(Activity.RESULT_OK, intent)
+        super.finish()
+    }
 
     override fun onGetRecentlySquaresResults(mutableList: MutableList<SquareBean?>) {
     }

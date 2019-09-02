@@ -1,6 +1,7 @@
 package com.example.demoapplication.utils
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import android.util.Log
 import com.example.demoapplication.model.MediaBean
@@ -104,7 +105,9 @@ object UriUtils {
                 MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.SIZE,
-                MediaStore.Images.Media.DISPLAY_NAME
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.WIDTH,
+                MediaStore.Images.Media.HEIGHT
             )
             val mCursor = context.contentResolver.query(
                 mImageUri,
@@ -121,8 +124,15 @@ object UriUtils {
                     val path = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA))
                     val size = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.SIZE)) / 1024L
                     val displayName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
+                    val width = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.WIDTH))
+                    val height = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.HEIGHT))
                     //用于展示相册初始化界面
-                    mediaBeen.add(MediaBean(id, MediaBean.TYPE.IMAGE, path, displayName, "", 0, size))
+                    mediaBeen.add(
+                        MediaBean(
+                            id, MediaBean.TYPE.IMAGE, path, displayName, "",
+                            0, size, width = width, height = height
+                        )
+                    )
                 }
                 mCursor.close()
             }
@@ -181,7 +191,12 @@ object UriUtils {
                         MediaStore.Video.Thumbnails.MICRO_KIND,
                         null
                     )
-                    val projection = arrayOf(MediaStore.Video.Thumbnails._ID, MediaStore.Video.Thumbnails.DATA)
+                    val projection = arrayOf(
+                        MediaStore.Video.Thumbnails._ID,
+                        MediaStore.Video.Thumbnails.DATA,
+                        MediaStore.Video.Thumbnails.WIDTH,
+                        MediaStore.Video.Thumbnails.HEIGHT
+                    )
                     val cursor = context.contentResolver.query(
                         MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
                         projection,
@@ -190,20 +205,19 @@ object UriUtils {
                         null
                     )
                     var thumbPath = ""
+                    var height = 0
+                    var width = 0
                     while (cursor!!.moveToNext()) {
                         thumbPath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Thumbnails.DATA))
+                        width = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Thumbnails.WIDTH))
+                        height = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Thumbnails.HEIGHT))
                     }
                     cursor.close()
                     if (duration > 0)
                         mediaBeen.add(
                             MediaBean(
-                                videoId,
-                                MediaBean.TYPE.VIDEO,
-                                path,
-                                displayName,
-                                thumbPath,
-                                duration,
-                                size
+                                videoId, MediaBean.TYPE.VIDEO, path, displayName,
+                                thumbPath, duration, size, width = width, height = height
                             )
                         )
 
@@ -217,4 +231,21 @@ object UriUtils {
     }
 
 
+    /**
+     * 获取图片文件的宽高
+     */
+    fun getImageWidthHeight(path: String): IntArray {
+        val options = BitmapFactory.Options()
+
+        /**
+         * 最关键在此，把options.inJustDecodeBounds = true;
+         * 这里再decodeFile()，返回的bitmap为空，但此时调用options.outHeight时，已经包含了图片的高了
+         */
+        options.inJustDecodeBounds = true
+        val bitmap = BitmapFactory.decodeFile(path, options) // 此时返回的bitmap为null
+        /**
+         * options.outHeight为原始图片的高
+         */
+        return intArrayOf(options.outWidth, options.outHeight)
+    }
 }

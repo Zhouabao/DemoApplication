@@ -33,6 +33,7 @@ import com.example.demoapplication.event.UpdateLabelEvent
 import com.example.demoapplication.event.UploadEvent
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.MediaBean
+import com.example.demoapplication.model.MediaParamBean
 import com.example.demoapplication.player.MediaPlayerHelper
 import com.example.demoapplication.player.MediaRecorderHelper
 import com.example.demoapplication.player.MediaRecorderHelper.*
@@ -49,6 +50,7 @@ import com.example.demoapplication.utils.UriUtils.getAllPhotoInfo
 import com.example.demoapplication.utils.UriUtils.getAllVideoInfos
 import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.DividerItemDecoration
+import com.google.gson.Gson
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -827,7 +829,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 //                    return
 //                }
 
-                if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != ACTION_COMMPLETE) {
+                if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != ACTION_DONE) {
                     ToastUtils.showShort("请录制完语音再发布")
                     return
                 }
@@ -954,6 +956,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             //拍照返回
             if (requestCode == REQUEST_CODE_CAPTURE_RAW) {
                 //用于展示相册初始化界面
+
                 val imageBean = MediaBean(
                     imageFile?.length()?.toInt() ?: 0,
                     MediaBean.TYPE.IMAGE,
@@ -962,7 +965,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     "",
                     0,
                     imageFile?.length() ?: 0L,
-                    true
+                    true,
+                    width = ImageUtils.getSize(imageFile?.absolutePath ?: "")[0],
+                    height = ImageUtils.getSize(imageFile?.absolutePath ?: "")[0]
                 )
                 //插入选中照片的第一个
                 pickedPhotos.add(0, imageBean)
@@ -986,6 +991,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     val id = cursor.getInt(cursor.getColumnIndex(Video.VideoColumns._ID))
                     val filePath = cursor.getString(cursor.getColumnIndex(Video.VideoColumns.DATA))
                     val duration = cursor.getInt(cursor.getColumnIndex(Video.Media.DURATION))
+
                     var size = cursor.getLong(cursor.getColumnIndex(Video.Media.SIZE)) / 1024 //单位kb
                     if (size < 0) {
                         //某些设备获取size<0，直接计算
@@ -995,7 +1001,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     val displayName = cursor.getString(cursor.getColumnIndex(Video.Media.DISPLAY_NAME))
                     //提前生成缩略图，再获取：http://stackoverflow.com/questions/27903264/how-to-get-the-video-thumbnail-path-and-not-the-bitmap
                     Video.Thumbnails.getThumbnail(contentResolver, id.toLong(), Video.Thumbnails.MICRO_KIND, null)
-                    val projection = arrayOf(Video.Thumbnails._ID, Video.Thumbnails.DATA)
+                    val projection = arrayOf(
+                        Video.Thumbnails._ID,
+                        Video.Thumbnails.DATA,
+                        Video.Thumbnails.WIDTH,
+                        Video.Thumbnails.HEIGHT
+                    )
                     val thumCursor = contentResolver.query(
                         Video.Thumbnails.EXTERNAL_CONTENT_URI,
                         projection,
@@ -1004,16 +1015,22 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         null
                     )
                     var thumbPath = ""
+                    var width = 0
+                    var height = 0
                     while (thumCursor!!.moveToNext()) {
                         thumbPath = thumCursor.getString(thumCursor.getColumnIndex(Video.Thumbnails.DATA))
+                        width = cursor.getInt(cursor.getColumnIndex(Video.Thumbnails.WIDTH))
+                        height = cursor.getInt(cursor.getColumnIndex(Video.Thumbnails.HEIGHT))
                     }
                     thumCursor.close()
                     cursor.close()
 
                     if (duration >= 3000) {
                         pickedPhotos.add(
-                            0,
-                            MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true)
+                            0, MediaBean(
+                                id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath,
+                                duration, size, true, width, height
+                            )
                         )
                         //pickedPhotoAdapter.data.add(0,MediaBean(id, MediaBean.TYPE.VIDEO, filePath, displayName, thumbPath, duration, size, true))
                         allVideoThumbAdapter.data.add(
@@ -1058,7 +1075,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     /**
      * 设置发布的参数
      */
+//    private val keyList: Array<String?>? = arrayOfNulls<String>(10)
+//    private val keyList: Array<Array<String>?>? = arrayOfNulls<String>(10)
     private val keyList: Array<String?>? = arrayOfNulls<String>(10)
+//    private val keyList = Array(10) { Array<String>(4, { i: Int -> "" }) }
 
     private fun publish() {
         val checkIds = arrayOfNulls<Int>(10)
@@ -1111,7 +1131,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 locationCity.text.toString()
             },
             //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
-            "type" to type,
+            "type" to type
+            /*,
             //上传音频、视频的时间，精确到秒
             "duration" to if (pickedPhotos.isNotEmpty() && type == 2) {
                 pickedPhotos[0].duration / 1000
@@ -1119,7 +1140,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 totalSecond
             } else {
                 0
-            }
+            }*/
             //	发布的图片/视频/声音 的json串（ios和android定义相同数据结构）
             //  "comment" to "",
             //发布图片/视频/声音 后加密的json串（ios和android定义相同数据结构）
@@ -1141,6 +1162,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         mPresenter.uploadFile(pickedPhotos.size, uploadCount + 1, pickedPhotos[uploadCount].filePath, imagePath, 1)
     }
 
+
+    //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
     override fun onQnUploadResult(success: Boolean, type: Int, key: String) {
         if (success) {
             when (type) {
@@ -1148,7 +1171,18 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     publish()
                 }
                 1 -> {
-                    keyList?.set(uploadCount, key)
+//                    keyList?.set(uploadCount, key)
+                    keyList?.set(
+                        uploadCount,
+                        Gson().toJson(
+                            MediaParamBean(
+                                key,
+                                pickedPhotos[uploadCount].duration,
+                                pickedPhotos[uploadCount].width,
+                                pickedPhotos[uploadCount].height
+                            )
+                        )
+                    )
                     uploadCount++
                     if (uploadCount == pickedPhotos.size) {
                         publish()
@@ -1157,11 +1191,30 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     }
                 }
                 2 -> {
-                    keyList?.set(uploadCount, key)
+//                    keyList?.set(uploadCount, key)
+                    keyList?.set(
+                        uploadCount,
+                        Gson().toJson(
+                            MediaParamBean(
+                                key,
+                                pickedPhotos[uploadCount].duration,
+                                pickedPhotos[uploadCount].width,
+                                pickedPhotos[uploadCount].height
+                            )
+                        )
+                    )
+
                     publish()
                 }
                 3 -> {
-                    keyList?.set(uploadCount, key)
+//                    keyList?.set(uploadCount, key)
+                    keyList?.set(
+                        uploadCount,
+                        Gson().toJson(
+                            MediaParamBean(key, totalSecond, 0, 0)
+                        )
+                    )
+
                     publish()
                 }
             }
@@ -1178,7 +1231,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             if (mPresenter.from == 2) {
                 EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
             } else {
-                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
+                EventBus.getDefault()
+                    .post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
             }
             if (!this.isFinishing)
                 finish()

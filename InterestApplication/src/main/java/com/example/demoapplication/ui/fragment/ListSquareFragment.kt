@@ -211,7 +211,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
     }
 
-    override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean?) {
+    override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {
         if (result) {
 //            if ((data == null || data.list.isNullOrEmpty()) && adapter.data.isNullOrEmpty()) {
 //                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY

@@ -15,7 +15,7 @@ interface SquareView : BaseView {
 
     fun onGetFriendsListResult(friends: MutableList<FriendBean?>)
 
-    fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean?=null)
+    fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean = false)
 
     fun onGetSquareLikeResult(position: Int, result: Boolean)
 

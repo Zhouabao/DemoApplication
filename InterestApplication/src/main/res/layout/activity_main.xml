@@ -122,7 +122,7 @@
                 android:layout_height="5dp"
                 android:layout_marginLeft="34dp"
                 android:background="@drawable/shape_oval_orange"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintLeft_toRightOf="@id/filterBtn"
                 app:layout_constraintTop_toTopOf="@id/notificationBtn"/>
 
