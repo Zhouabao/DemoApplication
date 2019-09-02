@@ -420,9 +420,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 SquarePlayDetailActivity.startActivity(this, squareUserVideo, squareBean!!, 0)
             }
         }
-        squareUserVideo.setSwitchUrl(squareBean!!.video_json?.get(0)?.url ?: "")
-        squareUserVideo.setSwitchCache(false)
-        squareUserVideo.setUp(squareBean!!.video_json?.get(0)?.url ?: "", false, "")
+
+        SwitchUtil.optionPlayer(squareUserVideo, squareBean!!.video_json?.get(0)?.url ?: "", true)
+        squareUserVideo.setUp(squareBean!!.video_json?.get(0)?.url ?: "", false, null, null, "")
+//        squareUserVideo.setSwitchUrl(squareBean!!.video_json?.get(0)?.url ?: "")
+//        squareUserVideo.setSwitchCache(false)
+//        squareUserVideo.setUp(squareBean!!.video_json?.get(0)?.url ?: "", false, "")
         squareUserVideo.startPlayLogic()
     }
 

@@ -120,8 +120,8 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                 }
             }
         })
-
-        detailPlayVideo.setSurfaceToPlay()
+//        setSurfaceToPlay()
+        detailPlayVideo.startPlayLogic()
         // 这里指定了被共享的视图元素
         ViewCompat.setTransitionName(videoFl, OPTION_VIEW)
     }
@@ -133,7 +133,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         detailPlayContent.text = squareBean.descr ?: ""
 
         val drawable1 =
-            resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+            resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         detailPlaydianzan.text = "${squareBean.like_cnt}"
@@ -260,7 +260,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             }
 
             val drawable1 =
-                resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+                resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
             drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
             detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
             detailPlaydianzan.text = "${squareBean.like_cnt}"

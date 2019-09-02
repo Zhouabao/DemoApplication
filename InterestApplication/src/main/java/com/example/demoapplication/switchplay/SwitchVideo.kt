@@ -67,8 +67,17 @@ class SwitchVideo : StandardGSYVideoPlayer {
 
 
     override fun updateStartImage() {
-        if (mCurrentState == GSYVideoView.CURRENT_STATE_PLAYING) {
+//        if (mCurrentState == GSYVideoView.CURRENT_STATE_PLAYING) {
 //            start.setImageResource(com.example.demoapplication.R.drawable.icon_pause_white)
+//        } else if (mCurrentState == GSYVideoView.CURRENT_STATE_ERROR) {
+//            start.setImageResource(com.example.demoapplication.R.drawable.icon_play_white)
+//        } else {
+//            start.setImageResource(com.example.demoapplication.R.drawable.icon_play_white)
+//        }
+
+
+        if (mCurrentState == GSYVideoView.CURRENT_STATE_PLAYING) {
+            start.setImageResource(com.example.demoapplication.R.drawable.icon_pause_white)
             start.setVisible(false)
         } else if (mCurrentState == GSYVideoView.CURRENT_STATE_ERROR || mCurrentState == GSYVideoView.CURRENT_STATE_NORMAL) {
             start.setImageResource(com.example.demoapplication.R.drawable.icon_play_white)

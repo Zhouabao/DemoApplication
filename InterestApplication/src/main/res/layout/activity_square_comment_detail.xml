@@ -21,7 +21,7 @@
 
         <RelativeLayout
                 android:id="@+id/rlTitle"
-                android:layout_width="302dp"
+                android:layout_width="match_parent"
                 android:layout_height="56dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
