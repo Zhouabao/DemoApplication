@@ -1,7 +1,7 @@
 package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
-import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.example.demoapplication.R
@@ -44,24 +44,35 @@ class ProtocolActivity : BaseActivity() {
     }
 
     private fun initWebview() {
-        if (type == 1) {
-            webView.loadUrl("https://devppsns.duluduludala.com/ppsns/protocol/privacyProtocol/v1.json")
-        }else if (type == 2) {
-            webView.loadUrl("https://devppsns.duluduludala.com/ppsns/protocol/userProtocol/v1.json")
-        }
-
-        val webSettings = webView.settings
-        webSettings.loadWithOverviewMode = true
-        webSettings.setSupportZoom(false)
-
-        webView.webViewClient =object :WebViewClient(){
-            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                view.loadUrl(request.url.toString())
+        //支持javascript
+        // 设置可以支持缩放
+        webView.settings.setSupportZoom(true)
+        // 设置出现缩放工具
+        webView.settings.builtInZoomControls = true
+        //扩大比例的缩放
+        webView.settings.useWideViewPort = true
+        //自适应屏幕
+        webView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
+        webView.settings.loadWithOverviewMode = true
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                view.loadUrl(url)
 
                 return true
+
             }
+//            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+//                view.loadUrl(request.url.toString())
+//
+//                return true
+//            }
         }
 
+        if (type == 1) {
+            webView.loadUrl("https://devppsns.duluduludala.com/ppsns/protocol/privacyProtocol/v1.json")
+        } else if (type == 2) {
+            webView.loadUrl("https://devppsns.duluduludala.com/ppsns/protocol/userProtocol/v1.json")
+        }
 
 
     }
