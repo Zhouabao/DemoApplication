@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.ui.activity.BaseActivity
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseReq
@@ -31,7 +30,6 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
         if (resp.type == ConstantsAPI.COMMAND_PAY_BY_WX) {
             when (resp.errCode) {
                 0 -> {
-                    UserManager.saveUserVip(1)
                     Toast.makeText(this, "支付成功！", Toast.LENGTH_LONG).show()
                     finish()
                 }

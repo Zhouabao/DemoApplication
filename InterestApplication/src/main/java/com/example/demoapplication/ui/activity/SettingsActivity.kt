@@ -82,6 +82,7 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
             }
             //消息提醒
             R.id.msgNotificate -> {
+                startActivity<NotificationActivity>()
             }
             //意见反馈
             R.id.feedBack -> {

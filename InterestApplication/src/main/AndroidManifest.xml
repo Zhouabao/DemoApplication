@@ -63,6 +63,8 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.NotificationActivity">
+        </activity>
         <activity
                 android:name=".ui.activity.ProtocolActivity"
                 android:screenOrientation="portrait">

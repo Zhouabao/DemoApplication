@@ -1,6 +1,7 @@
 package com.example.demoapplication.ui.adapter
 
 import android.view.View
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -34,6 +35,8 @@ class MyVisitAdater : BaseQuickAdapter<VisitorBean, BaseViewHolder>(R.layout.ite
                 "女"
             }}\t/\t${item.constellation}\t/\t${item.distance}"
             holder.itemView.visitCount.text = "${item.visitcount}"
+            holder.itemView.visitVip.isVisible = (item.isvip ?: 0) == 1
+
 
         } else {
             holder.itemView.visitImgHide.visibility = View.VISIBLE
