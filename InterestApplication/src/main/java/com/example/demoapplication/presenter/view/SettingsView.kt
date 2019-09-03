@@ -9,4 +9,8 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface SettingsView : BaseView {
+
+    fun onBlockedAddressBookResult(success: Boolean)
+
+    fun onHideDistanceResult(success: Boolean)
 }

@@ -447,6 +447,25 @@ interface Api {
     fun myShieldingList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<BlackBean>?>>
 
 
+
+    /**
+     * 屏蔽通讯录
+     */
+    @FormUrlEncoded
+    @POST("StrageBlock/blockedAddressBook${Constants.END_BASE_URL}")
+    fun blockedAddressBook(@Field("token") token: String, @Field("accid") accid: String, @Field("content[]") content: Array<String?>? = null): Observable<BaseResp<Any?>>
+
+
+
+
+    /**
+     * 屏蔽距离
+     */
+    @FormUrlEncoded
+    @POST("StrageBlock/isHideDistance${Constants.END_BASE_URL}")
+    fun isHideDistance(@Field("token") token: String, @Field("accid") accid: String, @Field("state") content: Int): Observable<BaseResp<Any?>>
+
+
     /*---------------------聊天界面请求--------------------------------*/
     /**
      * 聊天界面添加好友

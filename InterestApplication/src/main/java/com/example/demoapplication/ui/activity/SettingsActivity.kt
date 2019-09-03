@@ -1,13 +1,19 @@
 package com.example.demoapplication.ui.activity
 
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.nim.activity.ChatActivity
-import com.example.demoapplication.presenter.SetInfoPresenter
+import com.example.demoapplication.presenter.SettingsPresenter
+import com.example.demoapplication.presenter.view.SettingsView
 import com.example.demoapplication.utils.DataCleanManager
+import com.example.demoapplication.utils.UriUtils
 import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -20,8 +26,8 @@ import org.jetbrains.anko.startActivity
 /**
  * 系统设置
  */
-class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnCheckedChangeListener,
-    View.OnClickListener {
+class SettingsActivity : BaseMvpActivity<SettingsPresenter>(), CompoundButton.OnCheckedChangeListener,
+    View.OnClickListener, SettingsView {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +42,10 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
     }
 
     private fun initView() {
+        mPresenter = SettingsPresenter()
+        mPresenter.mView = this
+        mPresenter.context = this
+
         switchContacts.setOnCheckedChangeListener(this)
         switchDistance.setOnCheckedChangeListener(this)
 
@@ -47,6 +57,8 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
         clearData.setOnClickListener(this)
         loginOutBtn.setOnClickListener(this)
         btnBack.setOnClickListener(this)
+        filterContacts.setOnClickListener(this)
+        filterDistance.setOnClickListener(this)
         hotT1.text = "设置"
 
 
@@ -58,7 +70,7 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
             //屏蔽通讯录
             R.id.switchContacts -> {
                 if (check) {
-                    ToastUtils.showShort("已屏蔽")
+
                 } else {
                     ToastUtils.showShort("已取消屏蔽")
                 }
@@ -113,7 +125,76 @@ class SettingsActivity : BaseMvpActivity<SetInfoPresenter>(), CompoundButton.OnC
             R.id.btnBack -> {
                 finish()
             }
+            //屏蔽距离
+            R.id.filterDistance -> {
+                mPresenter.isHideDistance(
+                    UserManager.getAccid(),
+                    UserManager.getToken(),
+                    if (switchDistance.isChecked) {
+                        0
+                    } else {
+                        1
+                    }
+                )
+            }
+            //屏蔽通讯录
+            R.id.filterContacts -> {
+                if (switchContacts.isChecked) {
+                    mPresenter.blockedAddressBook(UserManager.getAccid(), UserManager.getToken())
+                } else {
+                    //TODO 请求接口看是否已经屏蔽过通讯录
+                    if (ContextCompat.checkSelfPermission(
+                            this,
+                            android.Manifest.permission.READ_CONTACTS
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        //申请权限
+                        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_CONTACTS), 1)
+                    } else {
+                        obtainContacts()
+                    }
+                }
+            }
         }
     }
 
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                obtainContacts()
+            } else {
+                ToastUtils.showShort("您已拒绝获取联系人列表权限的开启！")
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun obtainContacts() {
+        //权限申请成功
+        val contacts = UriUtils.getPhoneContacts(this)
+        val content = arrayOfNulls<String>(contacts.size)
+        for (contact in contacts.withIndex()) {
+            content[contact.index] = contact.value.phone
+            Log.d("contacts", "${contact.value.name}：${contact.value.phone}")
+        }
+        mPresenter.blockedAddressBook(UserManager.getAccid(), UserManager.getToken(), content)
+    }
+
+
+    //是否已经屏蔽过
+    private var filter = false
+
+    override fun onBlockedAddressBookResult(success: Boolean) {
+        if (success) {
+            switchContacts.isChecked = !switchContacts.isChecked
+        }
+    }
+
+    override fun onHideDistanceResult(success: Boolean) {
+        if (success) {
+            switchDistance.isChecked = !switchDistance.isChecked
+        }
+
+    }
 }
