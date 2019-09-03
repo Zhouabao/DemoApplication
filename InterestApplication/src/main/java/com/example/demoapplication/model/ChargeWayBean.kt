@@ -14,7 +14,6 @@ data class ChargeWayBeans(
 )
 
 
-
 data class PaywayBean(
     val comments: String = "",
     val id: Int = 0,
@@ -37,8 +36,12 @@ data class ChargeWayBean(
 data class PayBean(
     val order_id: String? = "",
     val otn: String? = "",
-    val wechat: Wechat? = Wechat()
+    val wechat: Wechat? = Wechat(),
+    val reqstr: String
+
+
 )
+
 
 data class Wechat(
     val `package`: String? = "",

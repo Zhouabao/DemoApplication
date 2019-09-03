@@ -55,13 +55,15 @@ object Constants {
     //微信支付appid
     const val WECHAT_APP_ID = "wx4a3210c3cc8e44fb"
     const val WECHAT_APP_KEY = "a6c9ff7bd2cc9029fd47c02ff2e021ab"
+    //支付宝支付appid
+    const val ALIPAY_APP_ID = "2088631087441932"
+    const val ALIPAY_APP_KEY = "a6c9ff7bd2cc9029fd47c02ff2e021ab"
     //新浪
     const val SINA_APP_KEY = "3069931526"
-    const val SINA_APP_SECRET= "57acb0e0282c250ebd92de38a7912536"
+    const val SINA_APP_SECRET = "57acb0e0282c250ebd92de38a7912536"
     //QQ
     const val QQ_APP_KEY = "1109743471"
-    const val QQ_APP_SECRET= "KxByI7XUslBAh82c"
-
+    const val QQ_APP_SECRET = "KxByI7XUslBAh82c"
 
 
 }

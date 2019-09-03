@@ -154,6 +154,10 @@ dependencies {
 
     //lottie
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    // 添加下面的内容
+    implementation (name: 'alipaySdk-15.6.5-20190718211159-noUtdid', ext: 'aar')
+
     //查看长图
 
 
