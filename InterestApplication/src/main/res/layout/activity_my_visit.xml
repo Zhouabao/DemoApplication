@@ -58,11 +58,55 @@
                 app:srlDisableContentWhenLoading="false"
                 app:srlDisableContentWhenRefresh="false">
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/visitRv"
-                    android:orientation="vertical"
+
+            <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent">
+
+                <androidx.core.widget.NestedScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/visitRv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                </androidx.core.widget.NestedScrollView>
+
+                <RelativeLayout
+                        android:id="@+id/lockToSee"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="40dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_width="168dp"
+                        android:paddingLeft="37dp"
+                        android:paddingRight="37dp"
+                        android:background="@drawable/gradient_message_hi_time_bg_15dp"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:id="@+id/i1"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/icon_unlock"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"/>
+
+                    <TextView
+                            android:text="解锁查看"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:textColor="#ffffffff"
+                            android:textSize="16sp"
+                            android:layout_toRightOf="@id/i1"
+                            android:layout_marginLeft="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"/>
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     </com.kennyc.view.MultiStateView>
 

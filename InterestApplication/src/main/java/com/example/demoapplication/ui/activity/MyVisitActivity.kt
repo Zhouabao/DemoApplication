@@ -1,6 +1,7 @@
 package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demoapplication.R
@@ -8,6 +9,7 @@ import com.example.demoapplication.model.VisitorBean
 import com.example.demoapplication.presenter.MyVisitPresenter
 import com.example.demoapplication.presenter.view.MyVisitView
 import com.example.demoapplication.ui.adapter.MyVisitAdater
+import com.example.demoapplication.ui.dialog.ChargeVipDialog
 import com.example.demoapplication.utils.UserManager
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -65,6 +67,11 @@ class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefr
         view.visitTodayCount.text = "今日来访：${intent.getIntExtra("today", 0)}"
         view.visitAllCount.text = "总来访：${intent.getIntExtra("all", 0)}"
         visitAdapter.addHeaderView(view)
+
+        lockToSee.isVisible = !UserManager.isUserVip()
+        lockToSee.onClick {
+            ChargeVipDialog(this).show()
+        }
 
         visitAdapter.setOnItemClickListener { _, view, position ->
             MatchDetailActivity.start(this, visitAdapter.data[position].accid ?: "")
