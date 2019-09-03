@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.KeyboardUtils
 import com.example.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.example.baselibrary.widgets.swipeback.Utils
 import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
@@ -245,6 +246,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     override fun initToolBar() {
         btnBack.onClick {
+            KeyboardUtils.hideSoftInput(this)
             finish()
         }
         //打开聊天信息
@@ -258,6 +260,10 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     }
 
 
+    override fun onBackPressed() {
+        KeyboardUtils.hideSoftInput(this)
+        super.onBackPressed()
+    }
 
     /*------------------------侧滑退出-----------------*/
     private lateinit var mHelper: SwipeBackActivityHelper
@@ -272,6 +278,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     override fun scrollToFinishActivity() {
         Utils.convertActivityToTranslucent(this)
+        KeyboardUtils.hideSoftInput(this)
         swipeBackLayout.scrollToFinishActivity()
     }
 
