@@ -28,7 +28,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-        <RadioGroup
+        <LinearLayout
                 android:id="@+id/bannerIndicator"
                 android:orientation="horizontal"
                 android:layout_marginBottom="20dp"
@@ -37,7 +37,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/bannerVip"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent">
-        </RadioGroup>
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
