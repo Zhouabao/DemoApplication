@@ -51,6 +51,9 @@ class ProtocolActivity : BaseActivity() {
         webView.settings.builtInZoomControls = true
         //扩大比例的缩放
         webView.settings.useWideViewPort = true
+
+        webView.settings.blockNetworkImage = false//解决图片不显示
+        webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW//混合模式，允许https中加载http图片
         //自适应屏幕
         webView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         webView.settings.loadWithOverviewMode = true
