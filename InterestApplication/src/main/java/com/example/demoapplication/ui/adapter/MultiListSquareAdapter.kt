@@ -128,7 +128,7 @@ class MultiListSquareAdapter(
             View.GONE
         }
         GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.squareUserIv1)
-        holder.itemView.squareLocationAndTime1.text = (item.city_name ?: "").plus(
+        holder.itemView.squareLocationAndTime1.text = item.province_name.plus(item.city_name).plus(
             if (item.city_name.isNullOrEmpty()) {
                 ""
             } else {
