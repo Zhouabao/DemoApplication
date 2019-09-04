@@ -340,6 +340,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNewLabelEvent(event: UpdateAvatorEvent) {
+        initData()
+    }
+
     /**
      * 好友列表和标签列表
      * 设置头部数据一直居于最顶端
@@ -379,7 +384,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     if (labelAdapter.dataList[position - 1].id == UserManager.getGlobalLabelId()) {
                         return
                     } else {
-                        SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelAdapter.dataList[position - 1].id)
+                        SPUtils.getInstance(Constants.SPNAME)
+                            .put("globalLabelId", labelAdapter.dataList[position - 1].id)
                         EventBus.getDefault().post(UpdateLabelEvent(labelList[position - 1]))
                     }
                 }
