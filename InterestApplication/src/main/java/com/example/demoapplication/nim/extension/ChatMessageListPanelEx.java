@@ -1390,7 +1390,7 @@ public class ChatMessageListPanelEx {
     private boolean pause = false;
     private CountDownTimer countDownTimer;
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onEventMainThread(final NimHeadEvent event) {
         if (headView == null) {
             headView = initHeadView(event);
@@ -1424,7 +1424,7 @@ public class ChatMessageListPanelEx {
                     outdateTimeText.setVisibility(View.VISIBLE);
                     //文本倒计时
                     if (!pause) {
-                        outdateTimeText.startTime(event.getNimBean().getCountdown(), "2", "后消息过期");
+                        outdateTimeText.startTime(event.getNimBean().getCountdown(), "2", "后过期");
                     }
                     countDownProgress.setMax(event.getNimBean().getCountdown_total());
                     countDownProgress.setProgress(event.getNimBean().getCountdown());

@@ -89,7 +89,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
                         if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
                             EventBus.getDefault().postSticky(new NimHeadEvent(nimBeanBaseResp.getData()));
-                            EventBus.getDefault().postSticky(new StarEvent(nimBeanBaseResp.getData().getStared(),nimBeanBaseResp.getData().getIsfriend()));
+                            EventBus.getDefault().postSticky(new StarEvent(nimBeanBaseResp.getData().getStared(), nimBeanBaseResp.getData().getIsfriend()));
                             EventBus.getDefault().postSticky(new EnablePicEvent(nimBeanBaseResp.getData().getIsfriend()));
                         }
                     }
@@ -272,7 +272,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             //收到已读回执
             messageListPanel.receiveReceipt();
             //收到已读回执,调用接口,改变此时招呼或者消息的状态
-            getTargetInfo(sessionId);
+            if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
+                getTargetInfo(sessionId);
+            }
         }
     };
 
@@ -411,9 +413,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         inputPanel.collapse(false);
     }
 
+    //禁止消息长按操作
     @Override
     public boolean isLongClickEnabled() {
-        return !inputPanel.isRecording();
+        return false;
+//        return !inputPanel.isRecording();
     }
 
     @Override
