@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
@@ -13,6 +15,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.model.LikeMeOneDayBean
 import com.example.demoapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_like_me_one_day_all.view.*
 
 /**
@@ -29,15 +32,23 @@ class LikeMeOneDayGirdAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolde
         params.width = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - (SPAN_COUNT - 1) * SizeUtils.dp2px(10F)) * 1.0F / SPAN_COUNT).toInt()
         params.height = (16 / 9F * params.width).toInt()
         itemView.layoutParams = params
-        GlideUtil.loadRoundImgCenterCrop(mContext, item.avatar, itemView.likeMeOneDayAvator,SizeUtils.dp2px(5F))
         if (UserManager.isUserVip()) {
             itemView.likeMeOneDayType.visibility = View.VISIBLE
+            GlideUtil.loadRoundImgCenterCrop(mContext, item.avatar, itemView.likeMeOneDayAvator, SizeUtils.dp2px(5F))
         } else {
             itemView.likeMeOneDayType.visibility = View.INVISIBLE
+            val transformation = MultiTransformation(
+                CenterCrop(),
+                BlurTransformation(SizeUtils.dp2px(25F)),
+                RoundedCornersTransformation(SizeUtils.dp2px(5F), 0)
+            )
             Glide.with(mContext)
                 .load(item.avatar ?: "")
-                .apply(RequestOptions.bitmapTransform(BlurTransformation(25)))
-                .into(holder.itemView.likeMeOneDayAvator)
+                .priority(Priority.NORMAL)
+                .thumbnail(0.5F)
+                .transform(transformation)
+                .into(itemView.likeMeOneDayAvator)
+
         }
 
 

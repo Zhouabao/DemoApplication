@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="content">
+            app:msv_viewState="loading">
 
         <ScrollView
                 android:layout_width="match_parent"
