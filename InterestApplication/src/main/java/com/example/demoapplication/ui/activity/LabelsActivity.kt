@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.UpdateAvatorEvent
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.model.LoginBean
 import com.example.demoapplication.presenter.LabelsPresenter
@@ -26,6 +27,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
 import kotlinx.android.synthetic.main.activity_labels.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnClickListener {
@@ -76,7 +78,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
         ) {
             btnBack.setVisible(true)
         } else {
-            btnBack.visibility=View.INVISIBLE
+            btnBack.visibility = View.INVISIBLE
         }
 
 
@@ -224,9 +226,11 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
             if (data != null) {
                 UserManager.saveUserInfo(data)
             }
-            if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity"
-                        || intent.getStringExtra("from") == "publish" || intent.getStringExtra("from") == "usercenter")
+            if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity" || intent.getStringExtra(
+                    "from"
+                ) == "publish" || intent.getStringExtra("from") == "usercenter")
             ) {
+                EventBus.getDefault().post(UpdateAvatorEvent(true))
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else {
@@ -245,6 +249,12 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                 params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
                 params["_timestamp"] = "${System.currentTimeMillis()}"
                 val checkIds = arrayOfNulls<Int>(Constants.LABEL_MAX_COUNT)
+                for (checkLabel in checkedLabels) {
+                    if (checkLabel.id == Constants.RECOMMEND_TAG_ID) {
+                        checkedLabels.remove(checkLabel)
+                        break
+                    }
+                }
                 for (index in 0 until checkedLabels.size) {
                     checkIds[index] = checkedLabels[index].id
                 }
