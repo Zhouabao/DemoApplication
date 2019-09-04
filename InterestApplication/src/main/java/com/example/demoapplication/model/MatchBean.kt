@@ -78,7 +78,7 @@ data class Tag(
     var id: Int = 0,
     var title: String = "",
     var sameLabel: Boolean = false
-)
+) : Serializable
 
 //九宫格相册
 data class BlockListBean(

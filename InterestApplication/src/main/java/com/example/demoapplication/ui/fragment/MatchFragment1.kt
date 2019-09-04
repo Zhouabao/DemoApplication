@@ -297,9 +297,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                 card_stack_view.rewind()
                 ChargeVipDialog(activity!!).show()
             }
-            if (data.status == 2) {
+            if (data.status == 2) {//status :1.喜欢成功  2.匹配成功
                 sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
-                startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[matchUserAdapter.data.size - 1])
             }
 
         }
@@ -526,10 +525,10 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 //            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
 //            mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
-            toast("喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
-
-//            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-//            mPresenter.likeUser(params)
+//            toast("喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
+//
+            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+            mPresenter.likeUser(params)
         } else if (direction == Direction.Top) {//上滑打招呼
             mPresenter.greetState(
                 UserManager.getToken(),
@@ -616,13 +615,18 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition - 1]?.accid ?: "")
-                /*manager.topPosition*/
-                //打招呼成功，就减少招呼次数
-                if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
-                    UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
-                    tvLeftChatTime.text = "${UserManager.getLightingCount()}"
+                if (msg.attachment is ChatHiAttachment &&(msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) { //匹配成功跳转到飞卡片
+                    startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[matchUserAdapter.data.size - 1])
+                } else {//招呼成功跳转到招呼
+                    ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition - 1]?.accid ?: "")
+                    /*manager.topPosition*/
+                    //打招呼成功，就减少招呼次数
+                    if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
+                        UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
+                        tvLeftChatTime.text = "${UserManager.getLightingCount()}"
+                    }
                 }
+
 
             }
 

@@ -425,7 +425,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     detailUserLikeBtn.visibility = View.GONE
                     detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
                 } else if (statusBean.data?.status == 2) {//匹配成功
-                    startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
+                    sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                 }
             }
         }
@@ -438,7 +438,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 showMoreActionDialog()
             }
             R.id.detailUserLikeBtn -> {//感兴趣
-                mPresenter.likeUser(params)
+                startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
+
+//                mPresenter.likeUser(params)
             }
             //todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
             //1.首先判断是否有次数，
@@ -589,8 +591,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                ChatActivity.start(this@MatchDetailActivity, matchBean?.accid ?: "")
-
+                if (msg.attachment is ChatHiAttachment) {
+                    if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI)
+                        ChatActivity.start(this@MatchDetailActivity, matchBean?.accid ?: "")
+                    else
+                        startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
+                }
             }
 
             override fun onFailed(code: Int) {

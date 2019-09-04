@@ -67,10 +67,10 @@ class MatchPresenter : BasePresenter<MatchView>() {
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
-                        mView.onGetDislikeResult(true,t.data)
+                        mView.onGetDislikeResult(true, t.data)
                     } else {
 //                        mView.onError(t.msg)
-                        mView.onGetDislikeResult(false,t.data)
+                        mView.onGetDislikeResult(false, t.data)
                     }
                 }
 
@@ -99,7 +99,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
                         mView.onGetLikeResult(true, t.data ?: null)
                     } else {
                         mView.onError(t.msg)
-                        mView.onGetLikeResult(false, null)
+                        mView.onGetLikeResult(false, t.data ?: null)
                     }
                 }
 

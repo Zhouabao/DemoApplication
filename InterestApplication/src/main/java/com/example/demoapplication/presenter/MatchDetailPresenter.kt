@@ -171,7 +171,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                         mView.onGetLikeResult(true, t)
                     }else {
                         mView.onError(t.msg)
-                        mView.onGetLikeResult(false, null)
+                        mView.onGetLikeResult(false, t)
                     }
                 }
 
