@@ -380,6 +380,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 //                    showVideoPreview(allVideoThumbAdapter.data[position])
                 }
                 R.id.chooseCamera -> {
+                    if (pickedPhotos.size == 1) {
+                        ToastUtils.showShort("最多只能选择1个视频")
+                        return@setOnItemChildClickListener
+                    }
                     go2TakeVideo()
                 }
                 R.id.choosePhotoDel -> {
@@ -829,7 +833,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 //                    return
 //                }
 
-                if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != ACTION_DONE) {
+                if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != ACTION_DONE && !isTopPreview) {
                     ToastUtils.showShort("请录制完语音再发布")
                     return
                 }
