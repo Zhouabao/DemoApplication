@@ -150,10 +150,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
         adapter.setOnItemClickListener { _, view, position ->
             SquareCommentDetailActivity.start(this, adapter.data[position])
-            if (mediaPlayer != null) {
-                mediaPlayer!!.resetMedia()
-                mediaPlayer = null
-            }
+            resetAudio()
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -164,10 +161,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                 }
                 R.id.squareCommentBtn1 -> {
                     SquareCommentDetailActivity.start(this, adapter.data[position], enterPosition = "comment")
-                    if (mediaPlayer != null) {
-                        mediaPlayer!!.resetMedia()
-                        mediaPlayer = null
-                    }
+                    resetAudio()
                 }
                 R.id.squareDianzanBtn1 -> {
                     val params = hashMapOf(
@@ -218,10 +212,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
     var mediaPlayer: IjkMediaPlayerUtil? = null
 
     private fun initAudio(position: Int) {
-        if (mediaPlayer != null) {
-            mediaPlayer!!.resetMedia()
-            mediaPlayer = null
-        }
+        resetAudio()
         mediaPlayer = IjkMediaPlayerUtil(this, position, object : OnPlayingListener {
 
             override fun onPlay(position: Int) {
@@ -239,21 +230,17 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
             override fun onStop(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                currPlayIndex = -1
 //                adapter.notifyItemChanged(position)
+                resetAudio()
                 adapter.notifyDataSetChanged()
-                mediaPlayer!!.resetMedia()
-                mediaPlayer = null
             }
 
             override fun onError(position: Int) {
                 toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
 //                adapter.notifyItemChanged(position)
-                currPlayIndex = -1
+                resetAudio()
                 adapter.notifyDataSetChanged()
-                mediaPlayer!!.resetMedia()
-                mediaPlayer = null
             }
 
             override fun onPrepared(position: Int) {
@@ -276,6 +263,16 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
             }
 
         }).getInstance()
+    }
+
+
+    private fun resetAudio() {
+        currPlayIndex = -1
+        //                adapter.notifyItemChanged(position)
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
     }
 
 
@@ -386,10 +383,8 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
     override fun onDestroy() {
         super.onDestroy()
         GSYVideoManager.releaseAllVideos()
-        if (mediaPlayer != null) {
-            mediaPlayer!!.resetMedia()
-            mediaPlayer = null
-        }
+
+        resetAudio()
     }
 
     override fun finish() {
@@ -399,6 +394,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         refreshLayout.setNoMoreData(false)
+        resetAudio()
         page = 1
         params["page"] = page
         adapter.data.clear()
