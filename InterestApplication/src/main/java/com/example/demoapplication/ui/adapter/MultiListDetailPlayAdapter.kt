@@ -61,14 +61,14 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 //        holder.addOnClickListener(R.id.detailPlayComment)
         holder.addOnClickListener(R.id.detailPlayContent)
         holder.addOnClickListener(R.id.detailPlayCommentSend)
+        holder.addOnClickListener(R.id.detailPlayCommentBtn)
 
-        GlideUtil.loadAvatorImg(context, item.avatar ?: "", holder.itemView.detailPlayUserAvatar)
-        holder.itemView.detailPlayUserLocationAndTime.text = (item.city_name ?: "").plus("\t\t").plus(item.out_time)
+        GlideUtil.loadAvatorImg(context, item.avatar, holder.itemView.detailPlayUserAvatar)
+        holder.itemView.detailPlayUserLocationAndTime.text = item.city_name.plus("\t\t").plus(item.out_time)
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
-        holder.itemView.detailPlayContent.text = item.descr ?: ""
+        holder.itemView.detailPlayContent.text = item.descr
 
-        val drawable1 =
-            context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
+        val drawable1 = context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         holder.itemView.detailPlaydianzan.text = "${item.like_cnt}"

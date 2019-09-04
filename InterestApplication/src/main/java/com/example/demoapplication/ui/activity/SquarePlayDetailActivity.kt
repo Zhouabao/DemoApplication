@@ -88,6 +88,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         detailPlaydianzan.setOnClickListener(this)
         //点击内容跳转到评论详情页面
         detailPlayContent.setOnClickListener(this)
+        detailPlayCommentBtn.setOnClickListener(this)
         //發送評論
         detailPlayCommentSend.setOnClickListener(this)
         //增加封面
@@ -238,8 +239,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         }
     }
 
-    private val transpondDialog by lazy { TranspondDialog(this) }
-
     /**
      * 展示转发动态对话框
      */
@@ -306,7 +305,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                 mPresenter.getSquareLike(params, 0)
             }
             //点击内容跳转到评论详情页面
-            R.id.detailPlayContent -> {
+            R.id.detailPlayContent, R.id.detailPlayCommentBtn -> {
                 SquareCommentDetailActivity.start(this, squareBean)
             }
             R.id.detailPlayCommentSend -> {

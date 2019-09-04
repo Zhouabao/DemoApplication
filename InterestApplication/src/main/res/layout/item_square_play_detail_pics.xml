@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              android:id="@+id/picFl"
-             android:background="@color/colorTransparent"
+             android:background="@color/colorBlack"
              android:orientation="vertical"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
@@ -11,7 +11,7 @@
             android:id="@+id/detailPlayVp2"
             android:layout_width="match_parent"
             android:layout_gravity="center"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 
     <include
             layout="@layout/item_square_detail_play_cover"/>

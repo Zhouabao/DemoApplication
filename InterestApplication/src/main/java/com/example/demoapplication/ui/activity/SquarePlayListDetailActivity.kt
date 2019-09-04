@@ -252,7 +252,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                     mPresenter.getSquareLike(params, position)
                 }
                 //点击内容跳转到评论详情页面
-                R.id.detailPlayContent -> {
+                R.id.detailPlayContent, R.id.detailPlayCommentBtn -> {
                     SquareCommentDetailActivity.start(this, adapter.data[position])
                 }
 
