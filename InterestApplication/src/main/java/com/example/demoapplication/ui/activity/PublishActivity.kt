@@ -678,6 +678,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         audioRecordLl.visibility = View.GONE
         recordTime.visibility = View.VISIBLE
         recordProgress.visibility = View.VISIBLE
+        voicePlayView.cancelAnimation()
         mIsPreview = false
         isTopPreview = false
         mIsRecorder = false
@@ -928,9 +929,20 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 //changeToNormalState()
             }
             R.id.recordDelete -> {
-                isTopPreview = false
-                mMediaRecorderHelper.cancel()
-                changeToNormalState()
+                val dialog = DeleteDialog(this)
+                dialog.show()
+                dialog.tip.text = "确定重新录制？"
+                dialog.confirm.onClick {
+                    isTopPreview = false
+                    mMediaRecorderHelper.cancel()
+                    changeToNormalState()
+                    dialog.dismiss()
+                }
+
+                dialog.cancel.onClick {
+                    dialog.dismiss()
+                }
+
             }
             R.id.audioPlayBtn -> {
                 if (!click) {
