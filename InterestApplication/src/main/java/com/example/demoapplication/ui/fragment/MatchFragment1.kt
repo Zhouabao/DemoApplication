@@ -594,7 +594,13 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         val matchBean = matchUserAdapter.data[manager.topPosition - 1]
         Log.d("OkHttp", matchBean.accid ?: "")
         val container = Container(activity!!, matchBean?.accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), type)
+        val chatHiAttachment = ChatHiAttachment(
+            if (type == ChatHiAttachment.CHATHI_MATCH) {
+                UserManager.getGlobalLabelName()
+            } else {
+                null
+            }, type
+        )
         val message = MessageBuilder.createCustomMessage(
             matchBean?.accid,
             SessionTypeEnum.P2P,

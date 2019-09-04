@@ -39,7 +39,11 @@ public class ChatHiAttachment extends CustomAttachment {
     @Override
     protected JSONObject packData() {
         JSONObject data = new JSONObject();
-        data.put(KEY_TAG, matchTag);
+        if (matchTag != null)
+            data.put(KEY_TAG, matchTag);
+        else
+            data.put(KEY_TAG, "");
+
         data.put(KEY_SHOWTYPE, showType);
         return data;
     }
