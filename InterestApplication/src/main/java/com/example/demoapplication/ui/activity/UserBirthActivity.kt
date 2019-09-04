@@ -106,10 +106,10 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
 
 
     /**
-     * 判断输入的年是否正确
+     * 判断输入的年是否正确（18到35）
      */
     private fun judgeYear(year: Int): Boolean {
-        if (year < 1900 || Calendar.getInstance().get(Calendar.YEAR) - year < 18) {
+        if (Calendar.getInstance().get(Calendar.YEAR) - year < 18 || Calendar.getInstance().get(Calendar.YEAR) - year > 35) {
             return false
         }
         return true
