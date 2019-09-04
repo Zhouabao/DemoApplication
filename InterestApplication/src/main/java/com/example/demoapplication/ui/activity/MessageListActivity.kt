@@ -242,7 +242,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         if (data?.greet != null && data?.greet.isNotEmpty()) {
             adapter.headerLayout.hiCount.text = "${data.greet_cnt}"
             adapter.headerLayout.rlFriend.visibility = View.VISIBLE
-            hiAdapter.setNewData(data?.greet ?: mutableListOf())
+            hiAdapter.setNewData(data.greet)
         } else {
             adapter.headerLayout.rlFriend.visibility = View.GONE
         }
@@ -276,6 +276,19 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                 break
             }
         }
+
+        //遍历删除招呼消息
+        val iterator = result.iterator()
+        while (iterator.hasNext()) {
+            val contact = iterator.next()
+            for (hiBean in hiAdapter.data) {
+                if (contact.contactId == hiBean.accid) {
+                    iterator.remove()
+                    break
+                }
+            }
+        }
+
         adapter.data.clear()
         adapter.setNewData(result)
         refreshMessages()
@@ -301,7 +314,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
      * **************************** 排序 ***********************************
      */
     private fun sortRecentContacts(list: List<RecentContact>) {
-        if (list.size == 0) {
+        if (list.isEmpty()) {
             return
         }
         Collections.sort(list, comp)
@@ -434,6 +447,19 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                 TeamMemberAitHelper.setRecentContactAited(r, cacheMessages[r.contactId])
             }
         }
+
+        //遍历删除招呼消息
+        val iterator = recentContacts.iterator()
+        while (iterator.hasNext()) {
+            val contact = iterator.next()
+            for (hiBean in hiAdapter.data) {
+                if (contact.contactId == hiBean.accid) {
+                    iterator.remove()
+                    break
+                }
+            }
+        }
+
         cacheMessages.clear()
         refreshMessages()
     }
@@ -495,11 +521,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         Observer { recentContact ->
             if (recentContact != null) {
                 for (item in adapter.data) {
-                    if (TextUtils.equals(
-                            item.getContactId(),
-                            recentContact.contactId
-                        ) && item.getSessionType() == recentContact.sessionType
-                    ) {
+                    if (TextUtils.equals(item.getContactId(), recentContact.contactId) && item.getSessionType() == recentContact.sessionType) {
                         adapter.data.remove(item)
                         refreshMessages()
                         break
