@@ -3,12 +3,18 @@
        android:shape="rectangle">
 
 
+    <!--<gradient-->
+    <!--android:type="linear"-->
+    <!--android:useLevel="true"-->
+    <!--android:startColor="#ffff6318"-->
+    <!--android:centerColor="#FFFFA654"-->
+    <!--android:endColor="#FFFFBE69"-->
+    <!--android:angle="180"/>-->
     <gradient
             android:type="linear"
             android:useLevel="true"
-            android:startColor="#ffff6318"
-            android:centerColor="#FFFFA654"
-            android:endColor="#FFFFBE69"
-            android:angle="180"/>
+            android:startColor="#FF7326"
+            android:endColor="#FFCB75"
+            android:angle="135"/>
 
 </shape>

@@ -31,5 +31,6 @@
     <color name="colorGradientRedB">#80FF003E</color>
     <color name="colorGradientRed">#FF003E</color>
     <color name="colorLightOrange">#FFFFBC91</color>
+    <color name="colorGreen">#00C800</color>
 
 </resources>

@@ -7,10 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.app.ActivityCompat
-import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.utils.AMapManager
@@ -43,6 +40,10 @@ class WelcomeActivity : BaseActivity() {
         setContentView(R.layout.activity_welcome)
         ScreenUtils.setFullScreen(this)
 
+        userAgreement.text = SpanUtils.with(userAgreement).append("积糖用户协议").setUnderline().create()
+        privacyPolicy.text = SpanUtils.with(privacyPolicy).append("隐私协议").setUnderline().create()
+
+
         //动态申请权限
         if (!SPUtils.getInstance(Constants.SPNAME).getBoolean("autoPermissions", false)) {
             showAlertDialog()
@@ -73,13 +74,19 @@ class WelcomeActivity : BaseActivity() {
         phoneLoginBtn.onClick {
             startActivity<LoginActivity>()
         }
-        // QQ登录
-        qqLoginBtn.onClick {
 
-        }
         //微信登录
         wechatLoginBtn.onClick {
             wechatLogin()
+        }
+
+        //隐私协议
+        privacyPolicy.onClick {
+            startActivity<ProtocolActivity>("type" to 1)
+        }
+        //用户协议
+        userAgreement.onClick {
+            startActivity<ProtocolActivity>("type" to 2)
         }
 
     }
