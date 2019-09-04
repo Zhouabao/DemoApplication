@@ -1,7 +1,6 @@
 package com.example.demoapplication.ui.activity
 
 import android.app.Activity
-import android.app.ActivityOptions
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -9,14 +8,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.transition.Explode
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
-import androidx.core.app.ActivityCompat
-import androidx.core.app.SharedElementCallback
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -73,7 +67,6 @@ import kotlinx.android.synthetic.main.switch_video.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
-import java.util.*
 
 
 /**
@@ -132,9 +125,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 设置一个exit transition
-        window?.enterTransition = Explode()
-        window?.exitTransition = Explode()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_square_comment_detail)
         initView()
@@ -414,9 +404,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             if (squareUserVideo.isInPlayingState) {
                 SwitchUtil.savePlayState(squareUserVideo)
                 squareUserVideo.gsyVideoManager.setLastListener(squareUserVideo)
-                //fixme 页面跳转是，元素共享，效果会有一个中间中间控件的存在
-                //fixme 这时候中间控件 CURRENT_STATE_PLAYING，会触发 startProgressTimer
-                //FIXME 但是没有cancel
                 SquarePlayDetailActivity.startActivity(this, squareUserVideo, squareBean!!, 0)
             }
         }
@@ -440,15 +427,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             squareUserPics.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
             squareUserPics.adapter = imgsAdapter
             imgsAdapter.setOnItemClickListener { _, view, position ->
-                val intent = Intent(this@SquareCommentDetailActivity, BigImageActivity::class.java)
-                intent.putExtra(BigImageActivity.IMG_KEY, squareBean!!)
-                intent.putExtra(BigImageActivity.IMG_POSITION, position)
-                val bundle = ActivityOptions.makeSceneTransitionAnimation(
-                    this@SquareCommentDetailActivity,
-                    view.findViewById(R.id.ivUser) as ImageView,
-                    "share"
-                ).toBundle()
-                startActivity(intent, bundle)
+                startActivity<BigImageActivity>(
+                    BigImageActivity.IMG_KEY to squareBean!!,
+                    BigImageActivity.IMG_POSITION to position
+                )
             }
         }
     }
@@ -900,34 +882,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         showCommentEt.text.clear()
         showCommentEt.hint = "有什么感受说来听听"
         KeyboardUtils.hideSoftInput(showCommentEt)
-    }
-
-    override fun onActivityReenter(resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && data != null) {
-            val exitPos = data.getIntExtra(BigImageActivity.IMG_CURRENT_POSITION, -1)
-            if (exitPos != -1) {
-                var exitView = imgsAdapter.getViewByPosition(squareUserPics, exitPos, R.id.ivUser)
-                if (exitView != null) {
-                    ActivityCompat.setExitSharedElementCallback(this,
-                        object : SharedElementCallback() {
-                            override fun onMapSharedElements(
-                                names: MutableList<String>?,
-                                sharedElements: MutableMap<String, View>?
-                            ) {
-                                names?.clear()
-                                sharedElements?.clear()
-                                names?.add(ViewCompat.getTransitionName(exitView)!!)
-                                sharedElements?.put(
-                                    Objects.requireNonNull(ViewCompat.getTransitionName(exitView)!!),
-                                    exitView
-                                )
-                                //清空回调，避免下次进入时共享元素混乱
-                                setExitSharedElementCallback(object : SharedElementCallback() {})
-                            }
-                        })
-                }
-            }
-        }
     }
 
 
