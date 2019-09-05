@@ -66,7 +66,6 @@ import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 import java.util.*
 
 /**
@@ -419,7 +418,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             if (statusBean.data?.residue == 0) {
                 ChargeVipDialog(this).show()
             } else {
-                ToastUtils.showShort(statusBean.msg)
                 if (statusBean.data?.status == 1) {  //喜欢成功
                     detailUserLikeBtn.isEnabled = false
                     detailUserLikeBtn.visibility = View.GONE
@@ -438,9 +436,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 showMoreActionDialog()
             }
             R.id.detailUserLikeBtn -> {//感兴趣
-                startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
-
-//                mPresenter.likeUser(params)
+                mPresenter.likeUser(params)
             }
             //todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
             //1.首先判断是否有次数，
@@ -600,11 +596,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
 
             override fun onFailed(code: Int) {
-                toast("$code")
             }
 
             override fun onException(exception: Throwable) {
-                toast(exception.message ?: "")
             }
         })
         return true

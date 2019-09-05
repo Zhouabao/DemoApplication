@@ -58,7 +58,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.toast
 
 /**
  * 匹配页面(新版)
@@ -519,11 +518,11 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     //todo 放开注释
     override fun onCardSwiped(direction: Direction?) {
         resetAnimation()
-        if (direction == Direction.Left) {//左滑不喜欢
-            toast("不喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
+        if (direction == Direction.Left)  {//左滑不喜欢
+//            toast("不喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
 
-//            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-//            mPresenter.dislikeUser(params)
+            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+            mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
 //            toast("喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
 //
