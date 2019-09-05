@@ -971,12 +971,12 @@ public class ChatMessageListPanelEx {
             // 5 trans 语音转文字
 //            longClickItemVoidToText(selectedItem, alertDialog, msgType);
 
-            if (!NimUIKitImpl.getMsgForwardFilter().shouldIgnore(selectedItem) && !recordOnly) {
-                // 6 forward to person
-                longClickItemForwardToPerson(selectedItem, alertDialog);
-                // 7 forward to team
+//            if (!NimUIKitImpl.getMsgForwardFilter().shouldIgnore(selectedItem) && !recordOnly) {
+            // 6 forward to person
+//                longClickItemForwardToPerson(selectedItem, alertDialog);
+            // 7 forward to team
 //                longClickItemForwardToTeam(selectedItem, alertDialog);
-            }
+//            }
             // 7 cancel upload attachment
             longClickItemCancelUpload(selectedItem, alertDialog);
         }
@@ -1390,11 +1390,12 @@ public class ChatMessageListPanelEx {
     private boolean pause = false;
     private CountDownTimer countDownTimer;
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(final NimHeadEvent event) {
         if (headView == null) {
             headView = initHeadView(event);
             adapter.addHeaderView(headView);
+            setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
         } else {
             setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
         }
@@ -1486,20 +1487,17 @@ public class ChatMessageListPanelEx {
 
 
     private View initHeadView(NimHeadEvent event) {
-        if (headView == null) {
-            headView = LayoutInflater.from(container.activity).inflate(com.example.demoapplication.R.layout.item_chat_head, messageListView, false);
-            //初始化数据
-            chatHiAvator = headView.findViewById(com.example.demoapplication.R.id.targetAvator);
-            chatHiTags = headView.findViewById(com.example.demoapplication.R.id.targetLabels);
-            targetCl = headView.findViewById(com.example.demoapplication.R.id.targetCl);
-            chatHiAvator.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    MatchDetailActivity.start(container.activity, container.account);
-                }
-            });
-        }
-        setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
+        headView = LayoutInflater.from(container.activity).inflate(com.example.demoapplication.R.layout.item_chat_head, messageListView, false);
+        //初始化数据
+        chatHiAvator = headView.findViewById(com.example.demoapplication.R.id.targetAvator);
+        chatHiTags = headView.findViewById(com.example.demoapplication.R.id.targetLabels);
+        targetCl = headView.findViewById(com.example.demoapplication.R.id.targetCl);
+        chatHiAvator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MatchDetailActivity.start(container.activity, container.account);
+            }
+        });
         return headView;
     }
 
@@ -1522,12 +1520,13 @@ public class ChatMessageListPanelEx {
 
         if (tags != null && tags.size() > 0) {
             if (mytags.size() > 0)
-                for (int i = 0; i < mytags.size(); i++) {
-                    for (int j = 0; j < tags.size(); j++) {
-                        if (mytags.get(i).getId() == tags.get(j).getId() && tags.get(j).getId() != Constants.RECOMMEND_TAG_ID) {
-                            tags.get(j).setSameLabel(true);
+                for (int i= 0;i < tags.size(); i++) {
+                    for (int j = 0; j < mytags.size(); j++) {
+                        if (mytags.get(j).getId() == tags.get(i).getId() && tags.get(i).getId() != Constants.RECOMMEND_TAG_ID) {
+                            tags.get(i).setSameLabel(true);
+                            break;
                         } else {
-                            tags.get(j).setSameLabel(false);
+                            tags.get(i).setSameLabel(false);
                         }
                     }
                 }
