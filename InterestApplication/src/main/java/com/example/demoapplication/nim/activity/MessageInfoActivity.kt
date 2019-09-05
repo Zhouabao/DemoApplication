@@ -216,7 +216,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
                 }
             }
             3 -> {//todo 此处差一个删除好友的接口
-                if (NIMClient.getService(FriendService::class.java).isMyFriend(account)) {
+                if (isfriend) {
                     dialog.tip.text = "确定删除该好友?"
                     dialog.cancel.onClick { dialog.dismiss() }
                     dialog.confirm.onClick {
@@ -294,7 +294,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
     }
 
     private fun updateUserOperatorView() {
-        if (NIMClient.getService(FriendService::class.java).isMyFriend(account)) {
+        if (isfriend) {
             friendDelete.visibility = View.VISIBLE
             deleteTv.text = "删除好友"
         } else {

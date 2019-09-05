@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import com.example.baselibrary.widgets.swipeback.SwipeBackLayout;
 import com.example.baselibrary.widgets.swipeback.Utils;
 import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityBase;
@@ -48,6 +50,9 @@ public class DisplayMessageActivity extends UI implements ModuleProxy, SwipeBack
 
     private MessageListPanelEx messageListPanel;
 
+    private ImageView btnBack;
+    private TextView llTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +65,22 @@ public class DisplayMessageActivity extends UI implements ModuleProxy, SwipeBack
         View rootView = LayoutInflater.from(this).inflate(R.layout.message_history_activity, null);
         setContentView(rootView);
 
+        btnBack = rootView.findViewById(R.id.btnBack);
+        llTitle = rootView.findViewById(R.id.llTitle);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        llTitle.setText(UserInfoHelper.getUserName(account));
+
+
         onParseIntent();
 
         Container container = new Container(this, account, sessionType, this);
         messageListPanel = new MessageListPanelEx(container, rootView, anchor, true, false);
+
     }
 
     @Override
