@@ -20,6 +20,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.RefreshSquareEvent
 import com.example.demoapplication.event.UpdateHiCountEvent
 import com.example.demoapplication.model.AllCommentBean
 import com.example.demoapplication.model.CommentBean
@@ -523,6 +524,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 } else {
                     1
                 }
+                EventBus.getDefault().post(RefreshSquareEvent(true))
             }
         }
     }
@@ -540,7 +542,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
             squareDianzanBtn.text = "${squareBean!!.like_cnt}"
             squareDianzanBtnImg.setImageResource(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-
+            EventBus.getDefault().post(RefreshSquareEvent(true))
         } else {
             toast("点赞失败，请重试")
         }
@@ -558,6 +560,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (result) {
             resetCommentEt()
             refreshLayout.autoRefresh()
+            EventBus.getDefault().post(RefreshSquareEvent(true))
         }
     }
 
@@ -575,7 +578,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onDeleteCommentResult(data: BaseResp<Any?>, position: Int) {
         toast(data.msg)
-        adapter.notifyItemChanged(position)
+        if (data.msg == "删除成功!")
+            adapter.notifyItemRemoved(position)
     }
 
     override fun onReportCommentResult(data: BaseResp<Any?>, position: Int) {
@@ -711,6 +715,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     override fun onRemoveMySquareResult(result: Boolean) {
         if (result) {
             toast("动态删除成功!")
+            EventBus.getDefault().post(RefreshSquareEvent(true))
             finish()
         } else {
             toast("动态删除失败！")
