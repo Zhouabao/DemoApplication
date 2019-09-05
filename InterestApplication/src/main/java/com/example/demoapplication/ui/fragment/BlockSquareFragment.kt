@@ -90,15 +90,6 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
                 refreshBlock.finishLoadMoreWithNoMoreData()
             }
             blockAdapter.addData(data ?: mutableListOf())
-            blockAdapter.addData(data ?: mutableListOf())
-            blockAdapter.addData(data ?: mutableListOf())
-            blockAdapter.addData(data ?: mutableListOf())
-            blockAdapter.addData(data ?: mutableListOf())
-            blockAdapter.addData(data ?: mutableListOf())
-            blockAdapter.addData(data ?: mutableListOf())
-            blockAdapter.addData(data ?: mutableListOf())
-            blockAdapter.addData(data ?: mutableListOf())
-            blockAdapter.addData(data ?: mutableListOf())
         } else {
 //            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
 //            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
