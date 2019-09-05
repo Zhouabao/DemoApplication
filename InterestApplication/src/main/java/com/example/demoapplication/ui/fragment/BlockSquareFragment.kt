@@ -75,6 +75,7 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
+        params["page"] = page
         mPresenter.squarePhotosList(params)
     }
 
@@ -88,9 +89,13 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
 //            }
             if (data.isNullOrEmpty()) {
                 refreshBlock.finishLoadMoreWithNoMoreData()
+            } else {
+                refreshBlock.finishLoadMore(true)
             }
             blockAdapter.addData(data ?: mutableListOf())
         } else {
+            refreshBlock.finishLoadMore(false)
+
 //            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
 //            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
 //            blockAdapter.data.clear()
