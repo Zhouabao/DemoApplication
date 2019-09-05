@@ -177,13 +177,13 @@ public class NimSDKOptionConfig {
         // 第三方推送配置
         MixPushConfig config = new MixPushConfig();
         // 小米推送
-        config.xmAppId = "2882303761517502883";
-        config.xmAppKey = "5671750254883";
-        config.xmCertificateName = "DEMO_MI_PUSH";
+        config.xmAppId = "2882303761518151078";
+        config.xmAppKey = "5591815169078";
+        config.xmCertificateName = "JITANG";
 
 
         // 华为推送
-        config.hwCertificateName = "DEMO_HW_PUSH";
+        config.hwCertificateName = "JITANG";
 
 
         // 魅族推送
@@ -191,8 +191,6 @@ public class NimSDKOptionConfig {
         config.mzAppKey = "282bdd3a37ec4f898f47c5bbbf9d2369";
         config.mzCertificateName = "DEMO_MZ_PUSH";
 
-        // fcm 推送，适用于海外用户，不使用fcm请不要配置
-        config.fcmCertificateName = "DEMO_FCM_PUSH";
 
 
         // vivo推送

@@ -5,9 +5,12 @@ import android.util.Log
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.ThreadUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.example.demoapplication.nim.DemoCache
 import com.example.demoapplication.nim.NIMInitManager
 import com.example.demoapplication.nim.NimSDKOptionConfig
+import com.example.demoapplication.nim.mixpush.DemoMixPushMessageHandler
+import com.example.demoapplication.nim.mixpush.DemoPushContentProvider
 import com.example.demoapplication.nim.session.NimDemoLocationProvider
 import com.example.demoapplication.nim.session.SessionHelper
 import com.example.demoapplication.nim.sp.UserPreferences
@@ -18,6 +21,10 @@ import com.netease.nim.uikit.R
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.UIKitOptions
 import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.Observer
+import com.netease.nimlib.sdk.mixpush.NIMPushClient
+import com.netease.nimlib.sdk.msg.MsgServiceObserve
+import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
@@ -50,6 +57,14 @@ class MyApplication : BaseApplication() {
     }
 
 
+    private var customNotificationObserver: Observer<CustomNotification> =
+        Observer { customNotification ->
+            if (customNotification.content != null) {
+                Log.d("systemMsg", customNotification.content)
+                ToastUtils.showShort(customNotification.content)
+            }
+        }
+
     @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
@@ -68,6 +83,8 @@ class MyApplication : BaseApplication() {
         NIMClient.init(this, UserManager.loginInfo(), NimSDKOptionConfig.getSDKOptions(this))
         initUIKit()
 
+
+        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, true)
     }
 
     private fun initUmeng() {
@@ -141,7 +158,7 @@ class MyApplication : BaseApplication() {
     private fun initUIKit() {
         if (NIMUtil.isMainProcess(this)) {
             // 注册自定义推送消息处理，这个是可选项
-//            Nimpu.registerMixPushMessageHandler(DemoMixPushMessageHandler())
+            NIMPushClient.registerMixPushMessageHandler(DemoMixPushMessageHandler())
 
             NimUIKit.init(this, buildUIKitOptions())
             // 设置地理位置提供者。如果需要发送地理位置消息，该参数必须提供。如果不需要，可以忽略。
@@ -152,6 +169,9 @@ class MyApplication : BaseApplication() {
             NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
             //云信相关业务初始化
             NIMInitManager.getInstance().init(true)
+
+            // 添加自定义推送文案以及选项，请开发者在各端（Android、IOS、PC、Web）消息发送时保持一致，以免出现通知不一致的情况
+            NimUIKit.setCustomPushContentProvider(DemoPushContentProvider())
 
             //在线状态内容提供者
 //            NimUIKit.setOnlineStateContentProvider(DemoOnlineStateContentProvider())
@@ -166,4 +186,7 @@ class MyApplication : BaseApplication() {
         options.messageRightBackground = R.drawable.shape_rectangle_share_square_bg
         return options
     }
+
+
+
 }
