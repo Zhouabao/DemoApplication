@@ -66,14 +66,13 @@ public class DisplayMessageActivity extends UI implements ModuleProxy, SwipeBack
         setContentView(rootView);
 
         btnBack = rootView.findViewById(R.id.btnBack);
-        llTitle = rootView.findViewById(R.id.llTitle);
+        llTitle = rootView.findViewById(R.id.hotT1);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        llTitle.setText(UserInfoHelper.getUserName(account));
 
 
         onParseIntent();
@@ -95,8 +94,7 @@ public class DisplayMessageActivity extends UI implements ModuleProxy, SwipeBack
         anchor = (IMMessage) getIntent().getSerializableExtra(EXTRA_ANCHOR);
         account = anchor.getSessionId();
         sessionType = anchor.getSessionType();
-
-        setTitle(UserInfoHelper.getUserTitleName(account, sessionType));
+        llTitle.setText(UserInfoHelper.getUserName(account));
     }
 
     @Override

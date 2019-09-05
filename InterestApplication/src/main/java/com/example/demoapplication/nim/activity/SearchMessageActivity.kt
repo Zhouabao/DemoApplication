@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.AbsListView
 import android.widget.AdapterView
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.size
 import com.example.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.example.baselibrary.widgets.swipeback.Utils
 import com.example.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
@@ -202,7 +201,7 @@ class SearchMessageActivity : UI(),SwipeBackActivityBase {
             return
         }
         searching = true
-        val anchor = if (append) searchResultListData[searchResultList.size - 1] else emptyMsg
+        val anchor = if (append) searchResultListData[searchResultListData.size - 1] else emptyMsg
 
         NIMClient.getService(MsgService::class.java)
             .searchMessageHistory(keyword, arrayListOf(), anchor, SEARCH_COUNT)
