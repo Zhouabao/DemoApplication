@@ -141,8 +141,6 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         //每次改变输入就清空数据重新查询
         searchAdapter.data.clear()
         searchAdapter.notifyDataSetChanged()
-        var datas = adapter.data
-        datas.addAll(headAdapter.data)
         for (data in adapter.data) {
             val pinyin = Cn2Spell.getPinYin(data.nickname ?: "")
             if (!query.isNullOrEmpty() && (pinyin.contains(query) || (data.nickname ?: "").contains(query))) {
