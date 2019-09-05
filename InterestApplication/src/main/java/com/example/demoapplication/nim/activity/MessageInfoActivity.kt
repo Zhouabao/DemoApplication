@@ -371,8 +371,8 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
-                        star = !friendStar.isChecked
-                        friendStar.isChecked = !friendStar.isChecked
+                        star = false
+                        friendStar.isChecked = false
                     } else {
                         ToastUtils.showShort(t.msg)
                     }
