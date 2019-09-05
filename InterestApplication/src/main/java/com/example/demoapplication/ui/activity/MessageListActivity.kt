@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.example.demoapplication.R
+import com.example.demoapplication.common.CommonFunction
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.UpdateHiEvent
 import com.example.demoapplication.model.HiMessageBean
@@ -43,6 +44,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import kotlinx.android.synthetic.main.activity_message_list.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.headerview_hi.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -82,6 +84,12 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         }
         contactBoockBtn.onClick {
             startActivity<ContactBookActivity>()
+        }
+
+
+        stateview.retryBtn.onClick {
+            //获取最近消息
+            mPresenter.messageCensus(params)
         }
 
         messageListRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -200,7 +208,6 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
      * 获取消息中心的顶部数据
      */
     override fun onMessageCensusResult(data: MessageListBean1?) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
         val squa = MessageListBean(
             "发现", when (data?.square_type) {
@@ -260,6 +267,8 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 
     //获取最近会话（但是要获取最近的联系人列表）
     override fun onGetRecentContactResults(result: MutableList<RecentContact>) {
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+
         for (loadedRecent in result) {
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
                 ass = MessageListBean(
@@ -521,7 +530,11 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         Observer { recentContact ->
             if (recentContact != null) {
                 for (item in adapter.data) {
-                    if (TextUtils.equals(item.getContactId(), recentContact.contactId) && item.getSessionType() == recentContact.sessionType) {
+                    if (TextUtils.equals(
+                            item.getContactId(),
+                            recentContact.contactId
+                        ) && item.getSessionType() == recentContact.sessionType
+                    ) {
                         adapter.data.remove(item)
                         refreshMessages()
                         break
@@ -554,6 +567,14 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     override fun onStart() {
         super.onStart()
     }
+
+    override fun onError(text: String) {
+        super.onError(text)
+        stateview.viewState = MultiStateView.VIEW_STATE_ERROR
+        stateview.errorMsg.text = CommonFunction.getErrorMsg(this)
+
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateHiEvent(event: UpdateHiEvent) {
