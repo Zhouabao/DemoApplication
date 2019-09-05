@@ -83,7 +83,11 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
             val item = adapter.data[position]
             when (item.type) {
                 1 -> {//点击点赞跳转动态详情
-                    SquarePlayListDetailActivity.start(this, item.id ?: 0)
+                    //0文本 1图片 2视频 3 语音
+                    if (item.category == 0)
+                        SquareCommentDetailActivity.start(this, squareId = item.id ?: 0, enterPosition = "comment")
+                    else
+                        SquarePlayListDetailActivity.start(this, item.id ?: 0)
                 }
                 2, 3 -> {//点击评论进入评论详情
                     SquareCommentDetailActivity.start(this, squareId = item.id ?: 0, enterPosition = "comment")
