@@ -569,7 +569,6 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     }
 
     override fun onError(text: String) {
-        super.onError(text)
         stateview.viewState = MultiStateView.VIEW_STATE_ERROR
         stateview.errorMsg.text = CommonFunction.getErrorMsg(this)
 

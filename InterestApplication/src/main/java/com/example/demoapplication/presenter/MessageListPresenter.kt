@@ -35,7 +35,7 @@ class MessageListPresenter : BasePresenter<MessageListView>() {
                     if (t.code == 200) {
                         mView.onMessageCensusResult(t.data)
                     } else {
-                        mView.onError("")
+                        mView.onMessageCensusResult(null)
                     }
                 }
 
