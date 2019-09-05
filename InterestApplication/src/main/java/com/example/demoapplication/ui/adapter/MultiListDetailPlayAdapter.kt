@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
@@ -21,11 +22,14 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.model.SquareBean
+import com.example.demoapplication.model.VideoJson
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.switchplay.SwitchUtil
+import com.example.demoapplication.ui.activity.MatchDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import com.example.demoapplication.ui.adapter.SquareDetailImgsAdaper
+import com.example.demoapplication.utils.UserManager
 import com.kotlin.base.ext.onClick
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -64,7 +68,8 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         holder.addOnClickListener(R.id.detailPlayCommentBtn)
 
         GlideUtil.loadAvatorImg(context, item.avatar, holder.itemView.detailPlayUserAvatar)
-        holder.itemView.detailPlayUserLocationAndTime.text = item.province_name.plus(item.city_name).plus("\t\t").plus(item.out_time)
+        holder.itemView.detailPlayUserLocationAndTime.text =
+            item.province_name.plus(item.city_name).plus("\t\t").plus(item.out_time)
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
         holder.itemView.detailPlayContent.text = item.descr
 
@@ -91,14 +96,20 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 
         })
 
+        holder.itemView.detailPlayUserAvatar.onClick {
+            if (UserManager.getAccid() != item.accid) {
+                MatchDetailActivity.start(mContext, item.accid)
+            }
+        }
 
         var play = false
         when (holder.itemViewType) {
             SquareBean.PIC -> {
-//                holder.itemView.picFl.setBackgroundResource(R.color.colorBlack)
                 if (holder.itemView.detailPlayVp2Indicator1.childCount == 0) {
-                    holder.itemView.detailPlayVp2.adapter =
-                        SquareDetailImgsAdaper(context, item.photo_json ?: mutableListOf())
+                    if (item.photo_json.isNullOrEmpty()) {
+                        item.photo_json = mutableListOf(VideoJson(url = item.avatar))
+                    }
+                    holder.itemView.detailPlayVp2.adapter = SquareDetailImgsAdaper(mContext, item.photo_json!!)
 
                     //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
                     holder.itemView.detailPlayVp2.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -140,6 +151,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 
             }
             SquareBean.VIDEO -> {
+                holder.itemView.btnBack.isVisible = false
                 holder.itemView.btnBack.onClick {
                     (mContext as SquarePlayListDetailActivity).onBackPressed()
                 }

@@ -16,6 +16,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.RefreshSquareEvent
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.presenter.SquarePlayDetaiPresenter
 import com.example.demoapplication.presenter.view.SquarePlayDetailView
@@ -32,6 +33,7 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import kotlinx.android.synthetic.main.activity_square_play_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.toast
 
 /**
@@ -80,6 +82,8 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 //        btnBack.visibility = View.GONE
         detailPlayComment.setTextColor(resources.getColor(R.color.colorWhite))
 
+        //头像点击
+        detailPlayUserAvatar.setOnClickListener(this)
         //评论
         detailPlayComment.setOnClickListener(this)
         //更多操作
@@ -238,6 +242,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         if (b) {
             ToastUtils.showShort("删除动态成功！")
             finish()
+            EventBus.getDefault().post(RefreshSquareEvent(true))
         } else {
             ToastUtils.showShort("删除动态失败！")
         }
@@ -247,6 +252,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     override fun onGetSquareReport(t: Boolean) {
         if (t) {
             ToastUtils.showShort("举报成功！")
+            EventBus.getDefault().post(RefreshSquareEvent(true))
         } else {
             ToastUtils.showShort("举报失败！")
         }
@@ -276,6 +282,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
             detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
             detailPlaydianzan.text = "${squareBean.like_cnt}"
+            EventBus.getDefault().post(RefreshSquareEvent(true))
         }
     }
 
@@ -286,6 +293,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         } else {
             squareBean.iscollected = 1
         }
+        EventBus.getDefault().post(RefreshSquareEvent(true))
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
@@ -293,11 +301,17 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
         toast(data.msg)
+        EventBus.getDefault().post(RefreshSquareEvent(true))
     }
 
 
     override fun onClick(view: View) {
         when (view.id) {
+            R.id.detailPlayUserAvatar->{
+                if (UserManager.getAccid() != squareBean.accid) {
+                    MatchDetailActivity.start(this, squareBean.accid)
+                }
+            }
             //更多操作
             R.id.detailPlayMoreActions -> {
                 showMoreDialog(0)
