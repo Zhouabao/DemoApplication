@@ -1,7 +1,6 @@
 package com.example.demoapplication.ui.adapter
 
 import android.view.View
-import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.example.baselibrary.glide.GlideUtil
@@ -9,6 +8,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.nim.attachment.ChatHiAttachment
 import com.example.demoapplication.nim.attachment.ShareSquareAttachment
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
+import com.netease.nim.uikit.common.util.sys.TimeUtil
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import kotlinx.android.synthetic.main.item_message_list.view.*
 
@@ -53,7 +53,7 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
         } else {
             holder.itemView.text.text = item.content
         }
-        holder.itemView.latelyTime.text = TimeUtils.getFriendlyTimeSpanByNow(item.time)
+        holder.itemView.latelyTime.text = TimeUtil.getTimeShowString(item.time, true)
         if (item.unreadCount == 0) {
             holder.itemView.newCount.visibility = View.GONE
         } else {
