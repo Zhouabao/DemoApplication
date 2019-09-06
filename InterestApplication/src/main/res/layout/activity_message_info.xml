@@ -76,11 +76,13 @@
                 android:showText="false"
                 android:thumb="@drawable/switch_ios_thumb"
                 android:track="@drawable/selector_switch_ios_track"
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
+            android:id="@+id/llNoBother"
             android:gravity="center"
             android:layout_gravity="center"
             android:paddingRight="15dp"
@@ -99,6 +101,7 @@
         <Switch
                 android:id="@+id/friendNoBother"
                 android:showText="false"
+                android:enabled="false"
                 android:thumb="@drawable/switch_ios_thumb"
                 android:track="@drawable/selector_switch_ios_track"
                 android:layout_width="wrap_content"
