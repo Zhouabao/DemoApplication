@@ -40,7 +40,6 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import kotlinx.android.synthetic.main.activity_message_list.*
@@ -425,52 +424,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         }
 
     private fun onRecentContactChanged(recentContacts: MutableList<RecentContact>) {
-        var index: Int
-        for (r in recentContacts) {
-            if (r.contactId == Constants.ASSISTANT_ACCID) {
-                ass = MessageListBean(
-                    "官方助手",
-                    r.content,
-                    r.unreadCount,
-                    TimeUtils.getFriendlyTimeSpanByNow(r.time),
-                    R.drawable.icon_assistant,
-                    r.contactId
-                )
-                headAdapter.setData(0, ass)
-                headAdapter.notifyItemChanged(0)
-                recentContacts.remove(r)
-                break
-            }
-            index = -1
-            for (i in adapter.data.indices) {
-                if (r.contactId == adapter.data.get(i).getContactId() && r.sessionType == adapter.data.get(i).getSessionType()) {
-                    index = i
-                    break
-                }
-            }
-            if (index >= 0) {
-                adapter.data.removeAt(index)
-            }
-            adapter.data.add(r)
-            if (r.sessionType == SessionTypeEnum.Team && cacheMessages[r.contactId] != null) {
-                TeamMemberAitHelper.setRecentContactAited(r, cacheMessages[r.contactId])
-            }
-        }
-
-        //遍历删除招呼消息
-        val iterator = recentContacts.iterator()
-        while (iterator.hasNext()) {
-            val contact = iterator.next()
-            for (hiBean in hiAdapter.data) {
-                if (contact.contactId == hiBean.accid) {
-                    iterator.remove()
-                    break
-                }
-            }
-        }
-
-        cacheMessages.clear()
-        refreshMessages()
+        mPresenter.messageCensus(params)
     }
 
     private fun registerOnlineStateChangeListener(register: Boolean) {
