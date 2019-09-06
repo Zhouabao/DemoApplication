@@ -60,7 +60,7 @@ data class Square(
     var cover_url: String?
 //    var photo_json: String?,
 //    var video_json: String?
-)
+):Serializable
 
 
 /**
@@ -68,7 +68,7 @@ data class Square(
  * status :1.喜欢成功  2.匹配成功
  * residue:剩余滑动次数
  */
-data class StatusBean(val status: Int, val residue: Int)
+data class StatusBean(val status: Int, val residue: Int =0)
 
 /**
  * 用戶標簽
