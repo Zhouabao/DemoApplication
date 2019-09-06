@@ -219,6 +219,7 @@ class LocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener, Vie
                         ""
                     )
                 )
+                locationBtn.isEnabled = true
             }
         }
     }
