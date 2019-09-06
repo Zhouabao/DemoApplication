@@ -32,7 +32,7 @@
                 android:layout_width="26dp"
                 android:layout_height="26dp"/>
 
-        <com.example.demoapplication.widgets.TimeRunTextView
+        <com.sdy.jitangapplication.widgets.TimeRunTextView
                 android:id="@+id/audioTime"
                 android:layout_marginLeft="10dp"
                 tools:text="00:30"
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <!--<com.example.demoapplication.player.VoisePlayingIcon-->
+        <!--<com.sdy.jitangapplication.player.VoisePlayingIcon-->
                 <!--android:id="@+id/voicePlayView"-->
                 <!--android:layout_width="160dp"-->
                 <!--android:layout_height="22dp"-->

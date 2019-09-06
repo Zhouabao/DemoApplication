@@ -30,7 +30,7 @@ android {
     compileSdkVersion compile_sdk_version
     buildToolsVersion build_tools_version
     defaultConfig {
-        applicationId "com.example.demoapplication"
+        applicationId "com.sdy.jitangapplication"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
         versionCode 1
@@ -40,7 +40,7 @@ android {
 
         // 这里添加
         multiDexEnabled true
-        manifestPlaceholders = [qqappid: 'com.example.demoapplication']
+        manifestPlaceholders = [qqappid: 'com.sdy.jitangapplication']
         packagingOptions {
             //解决编译时com.android.builder.merge.DuplicateRelativeFileException: More than one file was found with OS independent path 'META-INF/rxjava.properties'这个错误
             exclude 'META-INF/rxjava.properties'

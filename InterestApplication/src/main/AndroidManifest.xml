@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.example.demoapplication">
+          package="com.sdy.jitangapplication">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
@@ -61,11 +61,11 @@
     <!-- SDK 权限申明, 第三方 APP 接入时，请将 com.netease.nim.demo 替换为自己的包名 -->
     <!-- 和下面的 uses-permission 一起加入到你的 AndroidManifest 文件中。 -->
     <permission
-            android:name="com.example.demoapplication.permission.RECEIVE_MSG"
+            android:name="com.sdy.jitangapplication.permission.RECEIVE_MSG"
             android:protectionLevel="signature"/>
 
     <!-- 接收 SDK 消息广播权限， 第三方 APP 接入时，请将 com.netease.nim.demo 替换为自己的包名 -->
-    <uses-permission android:name="com.example.demoapplication.permission.RECEIVE_MSG"/> <!-- 全面屏配置 -->
+    <uses-permission android:name="com.sdy.jitangapplication.permission.RECEIVE_MSG"/> <!-- 全面屏配置 -->
     <meta-data
             android:name="android.max_aspect"
             android:value="2.1"/>
@@ -73,9 +73,9 @@
 
     <!-- 小米推送 -->
     <permission
-            android:name="com.example.demoapplication.permission.MIPUSH_RECEIVE"
+            android:name="com.sdy.jitangapplication.permission.MIPUSH_RECEIVE"
             android:protectionLevel="signature"/>
-    <uses-permission android:name="com.example.demoapplication.permission.MIPUSH_RECEIVE"/>
+    <uses-permission android:name="com.sdy.jitangapplication.permission.MIPUSH_RECEIVE"/>
 
     <uses-sdk tools:overrideLibrary="com.huawei.android.hms.base,com.huawei.android.hms.push"/>
     <!--魅族推送-->
@@ -83,15 +83,15 @@
     <!-- 兼容flyme5.0以下版本，魅族内部集成pushSDK必填，不然无法收到消息-->
     <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE"/>
     <permission
-            android:name="com.example.demoapplication.push.permission.MESSAGE"
+            android:name="com.sdy.jitangapplication.push.permission.MESSAGE"
             android:protectionLevel="signature"/>
-    <uses-permission android:name="com.example.demoapplication.push.permission.MESSAGE"/>
+    <uses-permission android:name="com.sdy.jitangapplication.push.permission.MESSAGE"/>
     <!--  兼容flyme3.0配置权限-->
     <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE"/>
     <permission
-            android:name="com.example.demoapplication.permission.C2D_MESSAGE"
+            android:name="com.sdy.jitangapplication.permission.C2D_MESSAGE"
             android:protectionLevel="signature"/>
-    <uses-permission android:name="com.example.demoapplication.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="com.sdy.jitangapplication.permission.C2D_MESSAGE"/>
 
     <!--  oppo推送配置权限-->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE"/>
@@ -100,7 +100,7 @@
 
 
     <application
-            android:name=".common.MyApplication"
+            android:name="com.sdy.jitangapplication.common.MyApplication"
             android:allowBackup="true"
             android:icon="@drawable/icon_logo_login"
             android:label="@string/app_name"
@@ -110,15 +110,15 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.NotificationActivity"
+        <activity android:name="com.sdy.jitangapplication.ui.activity.NotificationActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.ProtocolActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.ProtocolActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.AboutActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.AboutActivity"
                 android:screenOrientation="portrait">
         </activity>
 
@@ -127,157 +127,157 @@
                 android:required="false"/>
 
         <activity
-                android:name=".ui.activity.BlackListActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.BlackListActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.IDVerifyActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.IDVerifyActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".nim.activity.DisplayMessageActivity"
+                android:name="com.sdy.jitangapplication.nim.activity.DisplayMessageActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".nim.location.activity.LocationAmapActivity"
+                android:name="com.sdy.jitangapplication.nim.location.activity.LocationAmapActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".nim.location.activity.NavigationAmapActivity"
+                android:name="com.sdy.jitangapplication.nim.location.activity.NavigationAmapActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".nim.activity.MessageInfoActivity"
+                android:name="com.sdy.jitangapplication.nim.activity.MessageInfoActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".nim.activity.SearchMessageActivity"
+                android:name="com.sdy.jitangapplication.nim.activity.SearchMessageActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".nim.activity.MessageHistoryActivity"
+                android:name="com.sdy.jitangapplication.nim.activity.MessageHistoryActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".nim.activity.ChatActivity"
+                android:name="com.sdy.jitangapplication.nim.activity.ChatActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.ContactBookActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.ContactBookActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MessageLikeMeOneDayActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MessageLikeMeOneDayActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MessageLikeMeActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MessageLikeMeActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MessageHiActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MessageHiActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MessageSquareActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MessageSquareActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MessageListActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MessageListActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MyJobActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MyJobActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.NickNameActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.NickNameActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.UserInfoSettingsActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.UserInfoSettingsActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MyCommentActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MyCommentActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MyVisitActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MyVisitActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MyCollectionEtcActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MyCollectionEtcActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MyQuestionActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MyQuestionActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.SettingsActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.SettingsActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.UserCenterActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.UserCenterActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.LocationActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.LocationActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.BigImageActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.BigImageActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.PublishActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.PublishActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity
-                android:name=".ui.activity.PublishChooseLabelsActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.PublishChooseLabelsActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.activity.SquarePlayListDetailActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/BlackTheme"
                 android:windowSoftInputMode="adjustPan"/>
         <activity
-                android:name=".ui.activity.SquarePlayDetailActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustPan"/>
         <activity
-                android:name=".ui.activity.SquareCommentDetailActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustResize"/>
         <activity
-                android:name=".ui.chat.MatchSucceedActivity"
+                android:name="com.sdy.jitangapplication.ui.chat.MatchSucceedActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-                android:name=".ui.activity.MatchDetailActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MatchDetailActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.activity.UserBirthActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.UserBirthActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.LabelsActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.LabelsActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.SetInfoActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.SetInfoActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.VerifyCodeActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.VerifyCodeActivity"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".ui.activity.LoginActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.LoginActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.WelcomeActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.WelcomeActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
@@ -287,7 +287,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".ui.activity.MainActivity"
+                android:name="com.sdy.jitangapplication.ui.activity.MainActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
@@ -317,14 +317,14 @@
             </intent-filter>
         </activity> <!-- 微信分享回调 -->
         <activity
-                android:name=".wxapi.WXEntryActivity"
+                android:name="com.sdy.jitangapplication.wxapi.WXEntryActivity"
                 android:configChanges="keyboardHidden|orientation|screenSize"
                 android:exported="true"
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
-                android:name=".wxapi.WXPayEntryActivity"
+                android:name="com.sdy.jitangapplication.wxapi.WXPayEntryActivity"
                 android:configChanges="keyboardHidden|orientation|screenSize"
                 android:exported="true"
                 android:launchMode="singleTop"
@@ -391,7 +391,7 @@ APP key, 可以在这里设置，也可以在 SDKOptions 中提供。
         <!-- android:authorities="{包名}.ipc.provider", 请将com.netease.nim.demo替换为自己的包名 -->
         <provider
                 android:name="com.netease.nimlib.ipc.NIMContentProvider"
-                android:authorities="com.example.demoapplication.ipc.provider"
+                android:authorities="com.sdy.jitangapplication.ipc.provider"
                 android:exported="false"
                 android:process=":core"/>
 

@@ -4,7 +4,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content">
 
-    <com.example.baselibrary.emoj.EmojiAsyncLoadTextView
+    <com.sdy.baselibrary.emoj.EmojiAsyncLoadTextView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/emojTv"
             android:orientation="vertical"
@@ -14,6 +14,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-    </com.example.baselibrary.emoj.EmojiAsyncLoadTextView>
+    </com.sdy.baselibrary.emoj.EmojiAsyncLoadTextView>
 
 </LinearLayout>

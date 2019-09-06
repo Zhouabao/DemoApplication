@@ -44,7 +44,7 @@
 
     <!--此处安装一个验证控件-->
 
-    <com.example.demoapplication.widgets.VerificationView
+    <com.sdy.jitangapplication.widgets.VerificationView
             android:id="@+id/clVerifyCode"
             android:layout_width="300dp"
             app:vTextCount="6"

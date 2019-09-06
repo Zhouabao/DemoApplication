@@ -10,7 +10,7 @@
         >
 
 
-    <com.example.demoapplication.widgets.WaterRippleView
+    <com.sdy.jitangapplication.widgets.WaterRippleView
             android:id="@+id/nofitySensor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

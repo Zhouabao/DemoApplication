@@ -32,7 +32,7 @@
             android:textStyle="bold"
             tools:text="00:30"/>
 
-    <!--<com.example.demoapplication.player.VoisePlayingIcon
+    <!--<com.sdy.jitangapplication.player.VoisePlayingIcon
             android:id="@+id/audioPreAnim"
             android:layout_width="160dp"
             android:layout_height="22dp"

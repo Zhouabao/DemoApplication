@@ -25,7 +25,7 @@
             android:background="@color/colorWhite"
             tools:context=".ui.activity.MatchDetailActivity">
 
-        <com.example.demoapplication.widgets.BounceScrollView
+        <com.sdy.jitangapplication.widgets.BounceScrollView
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     >
 
-                <com.example.demoapplication.widgets.NoScrollViewPager
+                <com.sdy.jitangapplication.widgets.NoScrollViewPager
                         android:id="@+id/detailPhotosVp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -297,7 +297,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </com.example.demoapplication.widgets.BounceScrollView>
+        </com.sdy.jitangapplication.widgets.BounceScrollView>
 
         <LinearLayout
                 android:layout_centerHorizontal="true"

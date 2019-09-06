@@ -19,7 +19,7 @@
         app:cardUseCompatPadding="true"
         app:contentPadding="0dp">
 
-    <com.example.demoapplication.widgets.NoScrollViewPager
+    <com.sdy.jitangapplication.widgets.NoScrollViewPager
             android:id="@+id/vpPhotos"
             android:orientation="horizontal"
             android:layout_width="match_parent"

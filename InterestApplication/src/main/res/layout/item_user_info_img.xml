@@ -5,7 +5,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-    <com.example.baselibrary.widgets.RoundImageView
+    <com.sdy.baselibrary.widgets.RoundImageView
             android:id="@+id/userImg"
             android:scaleType="centerCrop"
             android:layout_width="match_parent"

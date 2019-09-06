@@ -148,7 +148,7 @@
                                 app:layout_constraintLeft_toLeftOf="@id/btnChat"
                                 app:layout_constraintTop_toTopOf="@id/btnChat"/>
 
-                        <com.example.demoapplication.switchplay.SwitchVideo
+                        <com.sdy.jitangapplication.switchplay.SwitchVideo
                                 android:id="@+id/squareUserVideo"
                                 android:layout_marginTop="10dp"
                                 android:layout_width="0dp"

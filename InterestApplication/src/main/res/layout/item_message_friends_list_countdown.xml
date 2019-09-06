@@ -18,7 +18,7 @@
             app:layout_constraintRight_toRightOf="@id/countTimer"
             app:layout_constraintTop_toTopOf="@id/countTimer"/>
 
-    <com.example.demoapplication.widgets.MsgTimerProgress
+    <com.sdy.jitangapplication.widgets.MsgTimerProgress
             android:id="@+id/countTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

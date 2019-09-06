@@ -36,7 +36,7 @@
                     android:layout_height="match_parent"/>
         </LinearLayout>
 
-        <com.example.demoapplication.widgets.TimeRunTextView
+        <com.sdy.jitangapplication.widgets.TimeRunTextView
                 android:id="@+id/outdateTimeText"
                 android:gravity="center"
                 android:textSize="14sp"
