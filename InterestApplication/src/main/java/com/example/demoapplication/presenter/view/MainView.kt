@@ -1,5 +1,6 @@
 package com.example.demoapplication.presenter.view
 
+import com.example.demoapplication.model.AllMsgCount
 import com.kotlin.base.presenter.view.BaseView
 
 /**
@@ -10,5 +11,5 @@ import com.kotlin.base.presenter.view.BaseView
  */
 interface MainView : BaseView {
 
-    fun onUpdateFilterResult()
+    fun onMsgListResult(allMsgCount: AllMsgCount?)
 }

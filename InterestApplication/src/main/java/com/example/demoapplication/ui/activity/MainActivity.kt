@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
@@ -18,6 +19,8 @@ import com.example.baselibrary.glide.GlideUtil
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.*
+import com.example.demoapplication.model.AllMsgCount
+import com.example.demoapplication.model.CustomerMsgBean
 import com.example.demoapplication.model.LabelBean
 import com.example.demoapplication.nim.activity.ChatActivity
 import com.example.demoapplication.presenter.MainPresenter
@@ -31,12 +34,18 @@ import com.example.demoapplication.ui.fragment.SquareFragment
 import com.example.demoapplication.utils.AMapManager
 import com.example.demoapplication.utils.UserManager
 import com.example.demoapplication.widgets.ScaleTransitionPagerTitleView
+import com.google.gson.Gson
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.NimIntent
+import com.netease.nimlib.sdk.Observer
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.umeng.socialize.UMShareAPI
@@ -76,6 +85,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         EventBus.getDefault().register(this)
+        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, true)
+
         initView()
 
         //如果定位信息没有就重新定位
@@ -257,7 +268,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             R.id.filterBtn -> {
                 showFilterDialog()
             }
-            R.id.notificationBtn -> {//点击通知，进入消息列表
+            R.id.llMsgCount, R.id.notificationBtn -> {//点击通知，进入消息列表
                 startActivity<MessageListActivity>()
             }
             R.id.ivUserFace -> {//点击头像，进入个人中心
@@ -269,25 +280,17 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onPause() {
         super.onPause()
-        //        GSYVideoManager.onPause()
-
     }
 
     override fun onResume() {
         super.onResume()
         parseIntents()
-        EventBus.getDefault().post(NewMsgEvent(21, 6, 3, 2))
-        //        GSYVideoManager.onResume(false)
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
-        //SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId",true)
-        //SPUtils.getInstance(Constants.SPNAME).remove("globalLabelPath",true)
-        //        GSYVideoManager.releaseAllVideos()
-
+        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, false)
     }
 
     override fun onBackPressed() {
@@ -297,40 +300,65 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         super.onBackPressed()
     }
 
-    override fun onUpdateFilterResult() {
-        if (filterUserDialog.isShowing)
-            filterUserDialog.dismiss()
+
+    /**
+     * 获取未读消息个数
+     */
+    override fun onMsgListResult(allMsgCount: AllMsgCount?) {
+        if (allMsgCount != null) {
+            //喜欢我的个数
+            msgLike.text = allMsgCount.likecount.toString()
+            //打招呼个数
+            msgHi.text = allMsgCount.greetcount.toString()
+            //广场消息个数
+            msgSquare.text = allMsgCount.square_count.toString()
+            //未读消息个数
+            val totalMsgUnread = NIMClient.getService(MsgService::class.java).totalUnreadCount - allMsgCount.greetcount
+            msgChat.text = "$totalMsgUnread"
+            ivNewMsg.isVisible =
+                (allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || totalMsgUnread > 0)
+            llMsgCount.visibility = View.VISIBLE
+            YoYo.with(Techniques.Bounce)
+                .duration(3000)
+                .withListener(object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(p0: Animator?) {
+                    }
+
+                    override fun onAnimationCancel(p0: Animator?) {
+                    }
+
+                    override fun onAnimationStart(p0: Animator?) {
+                    }
+
+                    override fun onAnimationEnd(p0: Animator?) {
+                        llMsgCount.visibility = View.GONE
+                    }
+
+                })
+                .playOn(llMsgCount)
+        }
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNewMsgEvent(event: NewMsgEvent) {
-        msgLike.text = event.likeCount.toString()
-        msgHi.text = event.HiCount.toString()
-        msgChat.text = event.chatCount.toString()
-        msgSquare.text = event.squareCount.toString()
-        llMsgCount.visibility = View.VISIBLE
-        YoYo.with(Techniques.Bounce)
-            .duration(2000)
-            .withListener(object : Animator.AnimatorListener {
-                override fun onAnimationRepeat(p0: Animator?) {
+    private var customNotificationObserver: Observer<CustomNotification> =
+        Observer { customNotification ->
+            if (customNotification.content != null) {
+                val customerMsgBean =
+                    Gson().fromJson<CustomerMsgBean>(customNotification.content, CustomerMsgBean::class.java)
+                when (customerMsgBean.type) {
+                    1 -> {//系统通知新的消息数量
+                        mPresenter.msgList(UserManager.getToken(), UserManager.getAccid())
+                    }
+                    2 -> {//对方删除自己,本地删除会话列表
+                        NIMClient.getService(MsgService::class.java)
+                            .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                    }
+                    3 -> { //新的招呼刷新界面
+                        EventBus.getDefault().post(UpdateHiEvent())
+                    }
                 }
-
-                override fun onAnimationCancel(p0: Animator?) {
-                }
-
-                override fun onAnimationStart(p0: Animator?) {
-                }
-
-                override fun onAnimationEnd(p0: Animator?) {
-                    llMsgCount.visibility = View.GONE
-                }
-
-            })
-            .delay(1000)
-            .playOn(llMsgCount)
-    }
-
+            }
+        }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateAvatorEvent(event: UpdateAvatorEvent) {
