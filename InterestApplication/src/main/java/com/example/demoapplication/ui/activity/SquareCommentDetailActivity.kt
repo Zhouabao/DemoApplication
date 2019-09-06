@@ -578,8 +578,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onDeleteCommentResult(data: BaseResp<Any?>, position: Int) {
         toast(data.msg)
-        if (data.msg == "删除成功!")
+        if (data.msg == "删除成功!") {
+            adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
+        }
     }
 
     override fun onReportCommentResult(data: BaseResp<Any?>, position: Int) {
