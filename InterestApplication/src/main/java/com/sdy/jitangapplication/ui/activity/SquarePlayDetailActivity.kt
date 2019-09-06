@@ -10,9 +10,13 @@ import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
@@ -24,9 +28,6 @@ import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -81,7 +82,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         }
 //        btnBack.visibility = View.GONE
         detailPlayComment.setTextColor(resources.getColor(R.color.colorWhite))
-
         //头像点击
         detailPlayUserAvatar.setOnClickListener(this)
         //评论
@@ -155,6 +155,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
         detailPlaydianzan.text = "${squareBean.like_cnt}"
+        detailPlayUserVipIv.isVisible = squareBean.isvip == 1
 
     }
 
@@ -307,7 +308,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.detailPlayUserAvatar->{
+            R.id.detailPlayUserAvatar -> {
                 if (UserManager.getAccid() != squareBean.accid) {
                     MatchDetailActivity.start(this, squareBean.accid)
                 }

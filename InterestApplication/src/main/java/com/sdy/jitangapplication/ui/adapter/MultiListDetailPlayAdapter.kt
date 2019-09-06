@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.SquareBean
@@ -30,7 +31,6 @@ import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.adapter.SquareDetailImgsAdaper
 import com.sdy.jitangapplication.utils.UserManager
-import com.kotlin.base.ext.onClick
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import jp.wasabeef.glide.transformations.BlurTransformation
@@ -72,6 +72,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
             item.province_name.plus(item.city_name).plus("\t\t").plus(item.out_time)
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
         holder.itemView.detailPlayContent.text = item.descr
+        holder.itemView.detailPlayUserVipIv.isVisible = item.isvip == 1
 
         val drawable1 =
             context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
