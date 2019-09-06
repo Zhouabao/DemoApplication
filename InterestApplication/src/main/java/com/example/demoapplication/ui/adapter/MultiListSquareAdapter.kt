@@ -22,7 +22,6 @@ import com.example.demoapplication.nim.attachment.ChatHiAttachment
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.switchplay.SwitchUtil
 import com.example.demoapplication.ui.activity.MatchDetailActivity
-import com.example.demoapplication.ui.activity.SquareCommentDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayDetailActivity
 import com.example.demoapplication.ui.activity.SquarePlayListDetailActivity
 import com.example.demoapplication.ui.dialog.ChargeVipDialog
@@ -68,7 +67,8 @@ import org.jetbrains.anko.startActivity
 class MultiListSquareAdapter(
     data: MutableList<SquareBean>,
     var playState: Int = -1,
-    var playPosition: Int = 0
+    var playPosition: Int = 0,
+    var resetAudioListener: ResetAudioListener? = null
 ) :
     BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data), ModuleProxy {
     companion object {
@@ -155,9 +155,6 @@ class MultiListSquareAdapter(
                     }
                 } else {
                     holder.itemView.squareUserPics1.visibility = View.GONE
-                    holder.itemView.onClick {
-                        SquareCommentDetailActivity.start(mContext as Activity, item)
-                    }
                 }
 
             }
@@ -190,6 +187,9 @@ class MultiListSquareAdapter(
                         if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen) {
                             //静音
                             GSYVideoManager.instance().isNeedMute = true
+                            if (resetAudioListener != null) {
+                                resetAudioListener!!.resetAudioState()
+                            }
                         }
                     }
 
@@ -419,4 +419,8 @@ class MultiListSquareAdapter(
 
     }
 
+
+    interface ResetAudioListener {
+        fun resetAudioState()
+    }
 }

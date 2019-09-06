@@ -381,6 +381,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         if (result) {
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
+            EventBus.getDefault().post(RefreshSquareEvent(true))
         }
     }
 
@@ -460,6 +461,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
             }
 //            adapter.notifyItemChanged(position)
             adapter.notifyDataSetChanged()
+            EventBus.getDefault().post(RefreshSquareEvent(true))
         }
     }
 
@@ -475,6 +477,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
+        EventBus.getDefault().post(RefreshSquareEvent(true))
     }
 
     override fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int) {

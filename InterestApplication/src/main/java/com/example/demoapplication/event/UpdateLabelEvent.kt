@@ -17,6 +17,10 @@ class NotifyEvent(var position: Int)
 //刷新事件
 class RefreshEvent(val refresh: Boolean)
 
+
+//刷新事件
+class RefreshSquareEvent(val refresh: Boolean)
+
 //根据条件筛选请求的params
 class FilterEvent(val params: HashMap<String, Any>)
 

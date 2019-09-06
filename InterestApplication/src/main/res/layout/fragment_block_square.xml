@@ -20,7 +20,7 @@
             app:srlEnableLoadMore="true"
             app:srlEnableAutoLoadMore="true"
             app:srlEnableNestedScrolling="true"
-            app:srlEnableLoadMoreWhenContentNotFull="false"
+            app:srlEnableLoadMoreWhenContentNotFull="true"
             android:background="@color/colorWhite"
             app:srlEnableRefresh="false">
 

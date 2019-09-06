@@ -15,10 +15,7 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
-import com.example.demoapplication.event.NotifyEvent
-import com.example.demoapplication.event.RefreshEvent
-import com.example.demoapplication.event.UpdateLabelEvent
-import com.example.demoapplication.event.UploadEvent
+import com.example.demoapplication.event.*
 import com.example.demoapplication.model.FriendBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.SquareListBean
@@ -67,10 +64,20 @@ import org.jetbrains.anko.support.v4.toast
  * 广场列表
  */
 class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
-    View.OnClickListener {
+    View.OnClickListener, MultiListSquareAdapter.ResetAudioListener {
+    override fun resetAudioState() {
+        /*if (mediaPlayer != null ) {
+            if (currPlayIndex != -1) {
+                adapter.data[currPlayIndex].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                adapter.notifyItemChanged(currPlayIndex)
+                currPlayIndex = -1
+//                adapter.notifyDataSetChanged()
+            }
+        }*/
+    }
 
     //广场列表内容适配器
-    private val adapter by lazy { MultiListSquareAdapter(mutableListOf()) }
+    private val adapter by lazy { MultiListSquareAdapter(mutableListOf(), resetAudioListener = this) }
 
     //广场好友适配器
     private val friendsAdapter: SquareFriendsAdapter by lazy { SquareFriendsAdapter(userList) }
@@ -592,6 +599,10 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         refreshLayout.autoRefresh()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshSquareEvent(event: RefreshSquareEvent){
+        refreshLayout.autoRefresh()
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNotifyEvent(event: NotifyEvent) {

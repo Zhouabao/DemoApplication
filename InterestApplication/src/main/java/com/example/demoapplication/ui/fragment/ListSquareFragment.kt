@@ -13,6 +13,7 @@ import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
 import com.example.demoapplication.event.ListDataEvent
 import com.example.demoapplication.event.NotifyEvent
+import com.example.demoapplication.event.RefreshSquareEvent
 import com.example.demoapplication.model.FriendBean
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.SquareListBean
@@ -50,17 +51,25 @@ import org.jetbrains.anko.support.v4.toast
 /**
  * 列表形式的广场列表
  */
-class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoadMoreListener {
+class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoadMoreListener,
+    MultiListSquareAdapter.ResetAudioListener {
+
     private lateinit var scrollCalculatorHelper: ScrollCalculatorHelper
     //音频当前播放位置
     private var currPlayIndex = -1
 
     private val adapter by lazy {
-        MultiListSquareAdapter(mutableListOf()).apply {
+        MultiListSquareAdapter(mutableListOf(),resetAudioListener = this).apply {
             chat = false
         }
     }
-
+    override fun resetAudioState() {
+       /* currPlayIndex = -1
+//                adapter.notifyItemChanged(position)
+        adapter.notifyDataSetChanged()
+        mediaPlayer!!.resetMedia()
+        mediaPlayer = null*/
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list_square, container, false)
@@ -206,6 +215,14 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             mPresenter.getSomeoneSquare(params)
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshSquareEvent(event: RefreshSquareEvent){
+        adapter.data.clear()
+        listRefresh.setNoMoreData(false)
+        page = 1
+        params["page"] = page
+        mPresenter.getSomeoneSquare(params)
+    }
 
     override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
 
@@ -252,6 +269,8 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             }
 //            adapter.notifyItemChanged(position)
             adapter.notifyDataSetChanged()
+            EventBus.getDefault().post(RefreshSquareEvent(true))
+
         }
     }
 
@@ -267,6 +286,8 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
+        EventBus.getDefault().post(RefreshSquareEvent(true))
+
     }
 
     override fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int) {

@@ -14,6 +14,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.example.demoap.MultiListDetailPlayAdapter
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.RefreshSquareEvent
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.OnPlayingListener
@@ -33,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_square_play_detail.btnBack
 import kotlinx.android.synthetic.main.activity_square_play_list_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
@@ -378,7 +380,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             } else {
                 adapter.remove(position)
             }
-
+            EventBus.getDefault().post(RefreshSquareEvent(true))
 
         } else {
             toast("删除动态失败！")
@@ -447,6 +449,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
             }
             adapter.notifyItemChanged(position, "hahah")
+            EventBus.getDefault().post(RefreshSquareEvent(true))
         } else {
             ToastUtils.showShort("点赞失败！")
         }
@@ -462,6 +465,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
+        EventBus.getDefault().post(RefreshSquareEvent(true))
     }
 
     override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
@@ -469,6 +473,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         if (data.code == 200) {
             adapter.data[position].comment = ""
             adapter.notifyItemChanged(position)
+            EventBus.getDefault().post(RefreshSquareEvent(true))
         }
     }
 

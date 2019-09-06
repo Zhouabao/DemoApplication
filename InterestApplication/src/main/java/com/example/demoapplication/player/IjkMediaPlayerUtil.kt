@@ -25,6 +25,7 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
 
     private var pause = false
     private var mediaPlayer: IjkMediaPlayer? = null
+    public var currentState = MEDIA_PREPARE
     fun getInstance(): IjkMediaPlayerUtil {
         if (mediaPlayer != null) {
             mediaPlayer!!.release()
@@ -47,6 +48,7 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
     public fun prepareMedia(): IjkMediaPlayerUtil {
         mediaPlayer!!.prepareAsync()
         onPlayingListener.onPreparing(position)
+        currentState = MEDIA_PREPARE
         return this!!
     }
 
@@ -55,6 +57,7 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
         pause = false
         mediaPlayer!!.start()
         onPlayingListener.onPlay(position)
+        currentState = MEDIA_PLAY
     }
 
 
@@ -64,6 +67,7 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
             mediaPlayer!!.pause()
         }
         onPlayingListener.onPause(position)
+        currentState = MEDIA_PAUSE
     }
 
 
@@ -71,6 +75,7 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
         pause = false
         mediaPlayer?.start()
         onPlayingListener.onPlay(position)
+        currentState = MEDIA_PLAY
     }
 
     public fun resetMedia() {
@@ -80,18 +85,22 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
             mediaPlayer = null
         }
         onPlayingListener.onRelease(position)
-
+        currentState = MEDIA_STOP
     }
 
     override fun onPrepared(mediaPlayer: IMediaPlayer?) {
         mediaPlayer!!.start()
         onPlayingListener.onPrepared(position)
+        currentState = MEDIA_PREPARE
+
     }
 
     override fun onCompletion(mediaPlayer: IMediaPlayer?) {
         if (mediaPlayer != null)
             mediaPlayer!!.release()
         onPlayingListener.onStop(position)
+        currentState = MEDIA_STOP
+
     }
 
     override fun onError(mediaPlayer: IMediaPlayer?, p1: Int, p2: Int): Boolean {
@@ -99,6 +108,7 @@ class IjkMediaPlayerUtil(val context: Context, val position: Int, val onPlayingL
             mediaPlayer.release()
         }
         onPlayingListener.onError(position)
+        currentState = MEDIA_ERROR
         return false
     }
 }

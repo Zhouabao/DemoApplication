@@ -11,6 +11,13 @@ interface Api {
     /****************登录板块**********************/
 
     /**
+     * 获取消息总的个数汇总数据
+     */
+    @POST("Index/msgList${Constants.END_BASE_URL}")
+    fun msgList(@Query("token") token: String, @Query("accid") accid: String): Observable<BaseResp<AllMsgCount?>>
+
+
+    /**
      * 发送验证码
      */
     @POST("Open_Api/SendSms${Constants.END_BASE_URL}")

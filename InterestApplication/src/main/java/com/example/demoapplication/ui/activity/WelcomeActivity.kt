@@ -43,12 +43,16 @@ class WelcomeActivity : BaseActivity() {
         userAgreement.text = SpanUtils.with(userAgreement).append("积糖用户协议").setUnderline().create()
         privacyPolicy.text = SpanUtils.with(privacyPolicy).append("隐私协议").setUnderline().create()
 
-
-        //动态申请权限
-        if (!SPUtils.getInstance(Constants.SPNAME).getBoolean("autoPermissions", false)) {
-            showAlertDialog()
+        if (Build.VERSION.SDK_INT >= 23) {
+            //动态申请权限
+            if (!SPUtils.getInstance(Constants.SPNAME).getBoolean("autoPermissions", false)) {
+                showAlertDialog()
+            }else {
+                //进行定位
+                AMapManager.initLocation(this)
+            }
         } else {
-            //进行定位
+//            进行定位
             AMapManager.initLocation(this)
         }
 

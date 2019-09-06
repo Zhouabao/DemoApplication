@@ -66,4 +66,9 @@ object Constants {
     const val QQ_APP_SECRET = "KxByI7XUslBAh82c"
 
 
+    //小米
+    // AppID 2882303761518151078
+    //AppKey  5591815169078
+    //AppSecret    fgsswM8jRV+rBPFZr/0ofA==
+
 }
