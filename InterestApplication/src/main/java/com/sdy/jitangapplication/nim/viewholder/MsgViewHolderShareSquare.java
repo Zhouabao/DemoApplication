@@ -1,16 +1,17 @@
 package com.sdy.jitangapplication.nim.viewholder;
 
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
+import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.baselibrary.widgets.RoundImageView;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.model.SquareBean;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity;
-import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 
 /**
  * author : ZFM
@@ -60,6 +61,11 @@ public class MsgViewHolderShareSquare extends MsgViewHolderBase {
         } else {
             shareType.setVisibility(View.GONE);
         }
+        if (isReceivedMessage()) {
+            shareDesc.setTextColor(Color.BLACK);
+        } else {
+            shareDesc.setTextColor(Color.WHITE);
+        }
     }
 
     @Override
@@ -71,6 +77,8 @@ public class MsgViewHolderShareSquare extends MsgViewHolderBase {
     protected int rightBackground() {
         return R.drawable.shape_rectangle_share_square_bg;
     }
+
+
 
     @Override
     protected boolean shouldDisplayReceipt() {
