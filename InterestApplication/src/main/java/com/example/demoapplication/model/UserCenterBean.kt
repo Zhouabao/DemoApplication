@@ -11,9 +11,10 @@ import com.chad.library.adapter.base.entity.MultiItemEntity
 data class UserInfoBean(
     val squarelist: Squarelist? = Squarelist(),//展示的广场
     val userinfo: Userinfo? = null,
+    val hide_distance: Boolean = false,//（true开启隐藏  false  关闭隐藏）
+    val hide_book: Boolean = false,//（ true 屏蔽通讯录     false  关闭隐藏通讯录）
     val vip_descr: MutableList<VipDescr>? = mutableListOf(),//会员权益描述
     val visitlist: MutableList<String>? = mutableListOf()//看过我的头像列表
-
 )
 
 //个人中心展示封面

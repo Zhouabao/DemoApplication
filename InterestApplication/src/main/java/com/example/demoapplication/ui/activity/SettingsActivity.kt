@@ -4,7 +4,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.CompoundButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.ToastUtils
@@ -26,7 +25,7 @@ import org.jetbrains.anko.startActivity
 /**
  * 系统设置
  */
-class SettingsActivity : BaseMvpActivity<SettingsPresenter>(), CompoundButton.OnCheckedChangeListener,
+class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
     View.OnClickListener, SettingsView {
 
 
@@ -46,8 +45,6 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(), CompoundButton.On
         mPresenter.mView = this
         mPresenter.context = this
 
-        switchContacts.setOnCheckedChangeListener(this)
-        switchDistance.setOnCheckedChangeListener(this)
 
         blackListBtn.setOnClickListener(this)
         msgNotificate.setOnClickListener(this)
@@ -61,29 +58,9 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(), CompoundButton.On
         filterDistance.setOnClickListener(this)
         hotT1.text = "设置"
 
+        switchDistance.isChecked = intent.getBooleanExtra("hide_distance",false)
+        switchContacts.isChecked = intent.getBooleanExtra("hide_book",false)
 
-    }
-
-
-    override fun onCheckedChanged(button: CompoundButton, check: Boolean) {
-        when (button.id) {
-            //屏蔽通讯录
-            R.id.switchContacts -> {
-                if (check) {
-
-                } else {
-                    ToastUtils.showShort("已取消屏蔽")
-                }
-            }
-            //隐藏距离
-            R.id.switchDistance -> {
-                if (check) {
-                    ToastUtils.showShort("已隐藏距离")
-                } else {
-                    ToastUtils.showShort("已取消隐藏距离")
-                }
-            }
-        }
     }
 
     override fun onClick(view: View) {

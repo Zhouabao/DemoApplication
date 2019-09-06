@@ -330,7 +330,10 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //设置
             R.id.settingBtn -> {
-                startActivity<SettingsActivity>()
+                startActivity<SettingsActivity>(
+                    "hide_distance" to userInfoBean.hide_distance,
+                    "hide_book" to userInfoBean.hide_book
+                )
             }
             //个人信息设置
             R.id.userInfoSettingBtn -> {

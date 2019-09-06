@@ -183,24 +183,24 @@ public class NimSDKOptionConfig {
 
 
         // 华为推送
-        config.hwCertificateName = "JITANG";
+//        config.hwCertificateName = "JITANG";
 
 
         // 魅族推送
-        config.mzAppId = "111710";
-        config.mzAppKey = "282bdd3a37ec4f898f47c5bbbf9d2369";
-        config.mzCertificateName = "DEMO_MZ_PUSH";
+//        config.mzAppId = "111710";
+//        config.mzAppKey = "282bdd3a37ec4f898f47c5bbbf9d2369";
+//        config.mzCertificateName = "DEMO_MZ_PUSH";
 
 
 
         // vivo推送
-        config.vivoCertificateName = "DEMO_VIVO_PUSH";
+//        config.vivoCertificateName = "DEMO_VIVO_PUSH";
 
         // oppo推送
-        config.oppoAppId = "3477155";
-        config.oppoAppKey = "6clw0ue1oZ8cCOogKg488o0os";
-        config.oppoAppSercet = "e163705Bd018bABb3e2362C440A94673";
-        config.oppoCertificateName = "DEMO_OPPO_PUSH";
+//        config.oppoAppId = "3477155";
+//        config.oppoAppKey = "6clw0ue1oZ8cCOogKg488o0os";
+//        config.oppoAppSercet = "e163705Bd018bABb3e2362C440A94673";
+//        config.oppoCertificateName = "DEMO_OPPO_PUSH";
         return config;
     }
 }
