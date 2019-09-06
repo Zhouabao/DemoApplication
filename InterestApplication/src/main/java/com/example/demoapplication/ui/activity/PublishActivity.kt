@@ -213,15 +213,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     "checkedLabels" to checkTags as Serializable
                 )
             } else {//其他时候点击就删除标签
-                if (publishLabelAdapter.data.size <= 2) {
-                    ToastUtils.showShort("至少要选择一个标签哦")
-                    return@setOnItemClickListener
-                } else {
                     val item = publishLabelAdapter.data[position]
                     checkTags.remove(item)
                     publishLabelAdapter.data.remove(item)
                     publishLabelAdapter.notifyItemRemoved(position)
-                }
             }
         }
     }
@@ -1069,9 +1064,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             }
             //标签返回
             else if (requestCode == REQUEST_CODE_LABEL) {
+                checkTags.clear()
                 checkTags = data!!.getSerializableExtra("checkedLabels") as MutableList<LabelBean>
-                publishLabelAdapter.setNewData(data!!.getSerializableExtra("checkedLabels") as MutableList<LabelBean>)
+                publishLabelAdapter.data.clear()
                 publishLabelAdapter.addData(0, LabelBean("添加标签"))
+                publishLabelAdapter.addData(data!!.getSerializableExtra("checkedLabels") as MutableList<LabelBean>)
                 checkCompleteBtnEnable()
             }
             //地图返回
