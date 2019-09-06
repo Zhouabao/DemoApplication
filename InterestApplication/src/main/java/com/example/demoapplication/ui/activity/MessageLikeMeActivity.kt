@@ -53,7 +53,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
 
     private fun initView() {
         btnBack.onClick {
-            finish()
+            onBackPressed()
         }
 
         lockToSee.setOnClickListener(this)

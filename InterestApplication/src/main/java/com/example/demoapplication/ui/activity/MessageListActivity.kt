@@ -1,6 +1,7 @@
 package com.example.demoapplication.ui.activity
 
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -197,8 +198,10 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 
     override fun onResume() {
         super.onResume()
-        //获取最近消息
-        mPresenter.messageCensus(params)
+        //获取最近消息 延迟一秒请求
+        Handler().postDelayed({
+            mPresenter.messageCensus(params)
+        }, 1000)
 //        setHiData()  模拟数据请求
     }
 
