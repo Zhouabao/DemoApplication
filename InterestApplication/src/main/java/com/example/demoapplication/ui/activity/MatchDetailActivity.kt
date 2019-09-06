@@ -423,6 +423,17 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     detailUserLikeBtn.visibility = View.GONE
                     detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
                 } else if (statusBean.data?.status == 2) {//匹配成功
+                    //喜欢过
+                    matchBean!!.isfriend = 1
+                    if (matchBean!!.isfriend == 1) {//是好友就显示聊天
+                        detailUserChatBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_orange)
+                        detailUserChatIv.setImageResource(R.drawable.icon_chat_white)
+                        detailUserLeftChatCount.isVisible = false
+                        detailUserChatTv.text = "聊天"
+                        detailUserLikeBtn.visibility = View.GONE
+                        detailUserLikeBtn.isEnabled = false
+                        detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
+                    }
                     sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                 }
             }
@@ -590,8 +601,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 if (msg.attachment is ChatHiAttachment) {
                     if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI)
                         ChatActivity.start(this@MatchDetailActivity, matchBean?.accid ?: "")
-                    else
+                    else {
                         startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
+
+                    }
                 }
             }
 
