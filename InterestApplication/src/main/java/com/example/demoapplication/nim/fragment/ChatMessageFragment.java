@@ -125,8 +125,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             public void onClick(View view) {
                 RetrofitFactory.Companion.getInstance().create(Api.class)
                         .addFriend(UserManager.INSTANCE.getToken(), UserManager.INSTANCE.getAccid(), sessionId)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(Schedulers.newThread())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new rx.Observer<BaseResp<Object>>() {
                             @Override
                             public void onCompleted() {
@@ -602,24 +602,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                 }
 
                             }
-
-
-
-
-
-
-
-
                             EventBus.getDefault().post(new NimHeadEvent(nimBeanBaseResp.getData()));
                             EventBus.getDefault().postSticky(new StarEvent(nimBeanBaseResp.getData().getStared(), nimBeanBaseResp.getData().getIsfriend()));
                             EventBus.getDefault().postSticky(new EnablePicEvent(nimBeanBaseResp.getData().getIsfriend()));
-
-
-
-
-
-
-
                         }
                     }
                 });
