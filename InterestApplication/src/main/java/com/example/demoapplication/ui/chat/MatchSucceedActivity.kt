@@ -26,7 +26,6 @@ import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_match_succeed.*
 
 /**
@@ -135,7 +134,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         val message = MessageBuilder.createTextMessage(
             matchBean.accid,
             SessionTypeEnum.P2P,
-            msgChat.text.toString()
+            etMsg.text.toString()
         )
         container.proxy.sendMessage(message)
     }

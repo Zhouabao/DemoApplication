@@ -58,6 +58,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.support.v4.toast
 
 /**
  * 匹配页面(新版)
@@ -518,7 +519,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     //todo 放开注释
     override fun onCardSwiped(direction: Direction?) {
         resetAnimation()
-        if (direction == Direction.Left)  {//左滑不喜欢
+        if (direction == Direction.Left) {//左滑不喜欢
 //            toast("不喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
 
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
@@ -614,8 +615,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                if (msg.attachment is ChatHiAttachment &&(msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) { //匹配成功跳转到飞卡片
-                    startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[matchUserAdapter.data.size - 1])
+                if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) { //匹配成功跳转到飞卡片
+                    startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[manager.topPosition - 1])
                 } else {//招呼成功跳转到招呼
                     ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition - 1]?.accid ?: "")
                     /*manager.topPosition*/
@@ -630,10 +631,12 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             }
 
             override fun onFailed(code: Int) {
+                toast("$code")
                 card_stack_view.rewind()
             }
 
             override fun onException(exception: Throwable) {
+                toast("${exception.message}")
                 card_stack_view.rewind()
             }
         })
