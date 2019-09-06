@@ -96,7 +96,7 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
 
             containerView.setBackgroundResource(NimUIKitImpl.getOptions().messageLeftBackground);
             containerView.setPadding(ScreenUtil.dip2px(15), ScreenUtil.dip2px(8), ScreenUtil.dip2px(10), ScreenUtil.dip2px(8));
-            animationView.setBackgroundResource(R.drawable.icon_voice);
+            animationView.setBackgroundResource(R.drawable.nim_audio_animation_list_left);
             durationLabel.setTextColor(Color.BLACK);
 
         } else {

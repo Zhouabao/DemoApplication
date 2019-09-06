@@ -3,10 +3,15 @@ package com.example.demoapplication.nim.fragment;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import com.blankj.utilcode.util.ToastUtils;
 import com.example.demoapplication.R;
 import com.example.demoapplication.api.Api;
 import com.example.demoapplication.common.Constants;
@@ -14,10 +19,12 @@ import com.example.demoapplication.event.EnablePicEvent;
 import com.example.demoapplication.event.NimHeadEvent;
 import com.example.demoapplication.event.StarEvent;
 import com.example.demoapplication.model.NimBean;
+import com.example.demoapplication.nim.attachment.ChatHiAttachment;
 import com.example.demoapplication.nim.extension.ChatMessageListPanelEx;
 import com.example.demoapplication.nim.panel.ChatInputPanel;
 import com.example.demoapplication.nim.session.*;
 import com.example.demoapplication.utils.UserManager;
+import com.example.demoapplication.widgets.TimeRunTextView;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.api.UIKitOptions;
@@ -48,6 +55,7 @@ import com.netease.nimlib.sdk.robot.model.NimRobotInfo;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.netease.nimlib.sdk.robot.model.RobotMsgType;
 import org.greenrobot.eventbus.EventBus;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
@@ -61,44 +69,18 @@ import java.util.Map;
  * Created by huangjun on 2015/2/1.
  */
 public class ChatMessageFragment extends TFragment implements ModuleProxy {
+    /**
+     * 时间倒计时
+     * 招呼头布局
+     *
+     * @param event
+     */
+    private int time = 0;
+    private boolean pause = false;
+    private CountDownTimer countDownTimer;
 
+    public NimBean nimBean = null;
 
-    //进入聊天界面 获取对方用户的个人信息
-    public void getTargetInfo(String target_accid) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("token", UserManager.INSTANCE.getToken());
-        params.put("accid", UserManager.INSTANCE.getAccid());
-        params.put("target_accid", target_accid);
-        RetrofitFactory.Companion.getInstance()
-                .create(Api.class)
-                .getTargetInfo(params)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(Schedulers.newThread())
-                .subscribe(new rx.Observer<BaseResp<NimBean>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
-                        if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
-                            EventBus.getDefault().postSticky(new NimHeadEvent(nimBeanBaseResp.getData()));
-                            EventBus.getDefault().postSticky(new StarEvent(nimBeanBaseResp.getData().getStared(), nimBeanBaseResp.getData().getIsfriend()));
-                            EventBus.getDefault().postSticky(new EnablePicEvent(nimBeanBaseResp.getData().getIsfriend()));
-                        }
-                    }
-                });
-
-    }
-
-
-    private View rootView;
 
     private SessionCustomization customization;
 
@@ -115,6 +97,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     protected AitManager aitManager;
 
+
+    private View rootView;
+    private TextView btnMakeFriends;
+    private TimeRunTextView outdateTimeText;
+    private ProgressBar outdateTime;
+    private LinearLayout messageActivityBottomLayout;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -124,6 +113,56 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.chat_nim_message_fragment, container, false);
+        btnMakeFriends = rootView.findViewById(R.id.btnMakeFriends);
+        outdateTimeText = rootView.findViewById(R.id.outdateTimeText);
+        outdateTime = rootView.findViewById(R.id.outdateTime);
+        messageActivityBottomLayout = rootView.findViewById(R.id.messageActivityBottomLayout);
+
+
+        //发送消息成为好友
+        btnMakeFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RetrofitFactory.Companion.getInstance().create(Api.class)
+                        .addFriend(UserManager.INSTANCE.getToken(), UserManager.INSTANCE.getAccid(), sessionId)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(Schedulers.newThread())
+                        .subscribe(new rx.Observer<BaseResp<Object>>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(BaseResp<Object> objectBaseResp) {
+                                if (objectBaseResp.getCode() == 200) {
+                                    btnMakeFriends.setVisibility(View.GONE);
+                                    outdateTimeText.stopTime();
+                                    outdateTimeText.setVisibility(View.GONE);
+                                    outdateTime.setVisibility(View.GONE);
+
+                                    //发送通知，可以发所有类型的消息
+                                    EventBus.getDefault().post(new EnablePicEvent(true));
+                                    ToastUtils.showShort(objectBaseResp.getMsg());
+
+                                    //发送成为好友消息，并且
+                                    IMMessage message = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, "", new ChatHiAttachment(null, ChatHiAttachment.CHATHI_RFIEND), new CustomMessageConfig());
+                                    sendMessage(message);
+
+                                } else {
+                                    ToastUtils.showShort("添加好友失败哦~");
+                                }
+                            }
+                        });
+
+
+            }
+        });
         return rootView;
     }
 
@@ -134,6 +173,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void onPause() {
         super.onPause();
+        pause = true;
         NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, SessionTypeEnum.None);
         inputPanel.onPause();
         messageListPanel.onPause();
@@ -142,12 +182,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void onResume() {
         super.onResume();
+        pause = false;
         inputPanel.onResume();
         messageListPanel.onResume();
         if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
             getTargetInfo(sessionId);
         } else {
-            rootView.findViewById(R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
+            messageActivityBottomLayout.setVisibility(View.VISIBLE);
         }
         NIMClient.getService(MsgService.class).setChattingAccount(sessionId, sessionType);
         getActivity().setVolumeControlStream(AudioManager.STREAM_VOICE_CALL); // 默认使用听筒播放
@@ -181,6 +222,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         Container container = new Container(getActivity(), sessionId, sessionType, this, true);
 
         if (messageListPanel == null) {
+//             btnMakeFriends = rootView.findViewById(R.id.btnMakeFriends);
+//        outdateTimeText = rootView.findViewById(R.id.outdateTimeText);
+//        outdateTime = rootView.findViewById(R.id.outdateTime);
+//        messageActivityBottomLayout = rootView.findViewById(R.id.messageActivityBottomLayout);
             messageListPanel = new ChatMessageListPanelEx(container, rootView, anchor, false, false);
         } else {
             messageListPanel.reload(container, anchor);
@@ -253,10 +298,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         messageListPanel.onIncomingMessage(messages);
 
         //新消息来了请求接口，更新键盘啊头布局等数据。
-        if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
-            getTargetInfo(sessionId);
-        } else {
+        if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
             rootView.findViewById(R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
+        } else if (nimBean == null || !nimBean.getIsfriend()) {
+            getTargetInfo(sessionId);
         }
 
         // 发送已读回执
@@ -293,6 +338,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             NIMClient.getService(MsgService.class).sendMessage(message, false).setCallback(new RequestCallback<Void>() {
                 @Override
                 public void onSuccess(Void param) {
+                    //var type: Int = 0,//类型1，新消息 2，倒计时 3，普通样式 4 过期
+                    if (!nimBean.getIsfriend()) {
+                        if (nimBean.getType() == 4) {
+                            nimBean.setType(3);
+                        }
+                        EventBus.getDefault().post(new NimHeadEvent(nimBean));
+                    }
 
                 }
 
@@ -416,8 +468,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     //禁止消息长按操作
     @Override
     public boolean isLongClickEnabled() {
-        return false;
-//        return !inputPanel.isRecording();
+        return !inputPanel.isRecording();
     }
 
     @Override
@@ -453,5 +504,127 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
         return actions;
     }
+
+
+
+    //进入聊天界面 获取对方用户的个人信息
+    public void getTargetInfo(String target_accid) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("token", UserManager.INSTANCE.getToken());
+        params.put("accid", UserManager.INSTANCE.getAccid());
+        params.put("target_accid", target_accid);
+        RetrofitFactory.Companion.getInstance()
+                .create(Api.class)
+                .getTargetInfo(params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new rx.Observer<BaseResp<NimBean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
+                        if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
+                            nimBean = nimBeanBaseResp.getData();
+                            if (nimBean.getIsfriend()) { //是好友了，按钮消失
+                                btnMakeFriends.setVisibility(View.GONE);
+                                messageActivityBottomLayout.setVisibility(View.VISIBLE);
+                            } else {
+
+                                //1，新消息 2，倒计时 3，普通样式 4 过期
+                                if (nimBean.getType() == 2) { //倒计时消息
+                                    messageActivityBottomLayout.setVisibility(View.VISIBLE);
+                                    if (nimBean.getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
+                                        btnMakeFriends.setVisibility(View.GONE);
+                                    } else {//非好友并且是别人发起的招呼,按钮显示
+                                        btnMakeFriends.setVisibility(View.VISIBLE);
+                                    }
+
+                                    if (nimBean.getCountdown() > 0) {
+                                        //倒计时进度条
+                                        outdateTime.setVisibility(View.VISIBLE);
+                                        outdateTimeText.setVisibility(View.VISIBLE);
+                                        //文本倒计时
+                                        if (!pause) {
+                                            outdateTimeText.startTime(nimBean.getCountdown(), "2", "后过期");
+                                        }
+                                        outdateTime.setMax(nimBean.getCountdown_total());
+                                        outdateTime.setProgress(nimBean.getCountdown());
+                                        if (countDownTimer != null) {
+                                            countDownTimer.cancel();
+                                            //防止new出多个导致时间跳动加速
+                                            countDownTimer = null;
+                                        }
+                                        countDownTimer = new CountDownTimer((nimBean.getCountdown()) * 1000, 1000) {
+
+                                            @Override
+                                            public void onTick(long l) {
+                                                if (!pause) {
+                                                    time++;
+                                                    outdateTime.setProgress((nimBean.getCountdown() - time));
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                outdateTimeText.setText("消息已过期");
+                                                //过期消息不展示消息面板
+                                                messageActivityBottomLayout.setVisibility(View.GONE);
+                                                outdateTime.setProgress(0);
+                                            }
+                                        }.start();
+                                    }
+                                } else if (nimBean.getType() == 4) {//过期消息
+                                    //过期消息不展示消息面板
+                                    inputPanel.collapse(true);
+                                    messageActivityBottomLayout.setVisibility(View.GONE);
+                                    btnMakeFriends.setVisibility(View.GONE);
+                                    outdateTime.setVisibility(View.VISIBLE);
+                                    outdateTime.setProgress(0);
+                                    outdateTimeText.setVisibility(View.VISIBLE);
+                                    outdateTimeText.setText("招呼已于 " + nimBean.getTimeout_time() + " 过期");
+                                } else {
+                                    if (nimBean.getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
+                                        btnMakeFriends.setVisibility(View.GONE);
+                                    } else {//非好友并且是别人发起的招呼,按钮显示
+                                        btnMakeFriends.setVisibility(View.VISIBLE);
+                                    }
+                                    outdateTime.setVisibility(View.GONE);
+                                    outdateTimeText.setVisibility(View.GONE);
+                                    messageActivityBottomLayout.setVisibility(View.VISIBLE);
+                                }
+
+                            }
+
+
+
+
+
+
+
+
+                            EventBus.getDefault().post(new NimHeadEvent(nimBeanBaseResp.getData()));
+                            EventBus.getDefault().postSticky(new StarEvent(nimBeanBaseResp.getData().getStared(), nimBeanBaseResp.getData().getIsfriend()));
+                            EventBus.getDefault().postSticky(new EnablePicEvent(nimBeanBaseResp.getData().getIsfriend()));
+
+
+
+
+
+
+
+                        }
+                    }
+                });
+
+    }
+
 
 }

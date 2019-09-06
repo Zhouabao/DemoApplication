@@ -13,33 +13,24 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.SizeUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.example.baselibrary.glide.GlideUtil;
-import com.example.demoapplication.api.Api;
 import com.example.demoapplication.common.Constants;
-import com.example.demoapplication.event.EnablePicEvent;
 import com.example.demoapplication.event.NimHeadEvent;
 import com.example.demoapplication.model.LabelBean;
 import com.example.demoapplication.model.Tag;
 import com.example.demoapplication.nim.adapter.ChatMsgAdapter;
-import com.example.demoapplication.nim.attachment.ChatHiAttachment;
 import com.example.demoapplication.ui.activity.MatchDetailActivity;
 import com.example.demoapplication.ui.adapter.ChatHiLabelAdapter;
 import com.example.demoapplication.utils.UserManager;
 import com.example.demoapplication.widgets.DividerItemDecoration;
-import com.example.demoapplication.widgets.TimeRunTextView;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
-import com.kotlin.base.data.net.RetrofitFactory;
-import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
@@ -84,7 +75,6 @@ import com.netease.nimlib.sdk.team.model.TeamMember;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -111,11 +101,6 @@ public class ChatMessageListPanelEx {
     private ChatMsgAdapter adapter;
     private ImageView ivBackground;
 
-
-    //倒计时和成为好友
-    private ProgressBar countDownProgress;
-    private TextView btnMakeFriends;
-    private TimeRunTextView outdateTimeText;
 
     // 新消息到达提醒
     private IncomingMsgPrompt incomingMsgPrompt;
@@ -162,12 +147,10 @@ public class ChatMessageListPanelEx {
 
     public void onResume() {
         setEarPhoneMode(UserPreferences.isEarPhoneModeEnable(), false);
-        pause = false;
     }
 
     public void onPause() {
         MessageAudioControl.getInstance(container.activity).stopAudio();
-        pause = true;
     }
 
     public void onDestroy() {
@@ -213,50 +196,7 @@ public class ChatMessageListPanelEx {
 //        outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
 //        countDownProgress.setVisibility(View.GONE);
 //        outdateTimeText.setVisibility(View.GONE);
-        //成为好友
-        btnMakeFriends = rootView.findViewById(com.example.demoapplication.R.id.btnMakeFriends);
-        //发送消息成为好友
-        btnMakeFriends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RetrofitFactory.Companion.getInstance().create(Api.class)
-                        .addFriend(UserManager.INSTANCE.getToken(), UserManager.INSTANCE.getAccid(), container.account)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(Schedulers.newThread())
-                        .subscribe(new rx.Observer<BaseResp<Object>>() {
-                            @Override
-                            public void onCompleted() {
 
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(BaseResp<Object> objectBaseResp) {
-                                if (objectBaseResp.getCode() == 200) {
-                                    //发送成为好友消息，并且
-                                    IMMessage message = MessageBuilder.createCustomMessage(container.account, SessionTypeEnum.P2P, "", new ChatHiAttachment(null, ChatHiAttachment.CHATHI_RFIEND), new CustomMessageConfig());
-                                    if (container.proxySend) {
-                                        container.proxy.sendMessage(message);
-                                    } else {
-                                        NIMClient.getService(MsgService.class).sendMessage(message, false);
-                                        btnMakeFriends.setVisibility(View.GONE);
-
-                                    }
-                                    //发送通知，可以发所有类型的消息
-                                    EventBus.getDefault().post(new EnablePicEvent(true));
-                                } else {
-                                    ToastUtils.showShort("添加好友失败哦~");
-                                }
-                            }
-                        });
-
-
-            }
-        });
 
         // RecyclerView
         messageListView = rootView.findViewById(R.id.messageListView);
@@ -963,9 +903,9 @@ public class ChatMessageListPanelEx {
             // 2 copy 复制文本
             longClickItemCopy(selectedItem, alertDialog, msgType);
             // 3 revoke 撤回
-            if (enableRevokeButton(selectedItem)) {
-                longClickRevokeMsg(selectedItem, alertDialog);
-            }
+//            if (enableRevokeButton(selectedItem)) {
+//                longClickRevokeMsg(selectedItem, alertDialog);
+//            }
             // 4 delete 删除
             longClickItemDelete(selectedItem, alertDialog);
             // 5 trans 语音转文字
@@ -1386,10 +1326,6 @@ public class ChatMessageListPanelEx {
      *
      * @param event
      */
-    private int time = 0;
-    private boolean pause = false;
-    private CountDownTimer countDownTimer;
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(final NimHeadEvent event) {
         if (headView == null) {
@@ -1399,90 +1335,6 @@ public class ChatMessageListPanelEx {
         } else {
             setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
         }
-
-
-        if (event.getNimBean().getIsfriend()) { //是好友了，按钮消失
-            btnMakeFriends.setVisibility(View.GONE);
-            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
-        } else {
-            if (event.getNimBean().getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
-                btnMakeFriends.setVisibility(View.GONE);
-            } else {//非好友并且是别人发起的招呼,按钮显示
-                btnMakeFriends.setVisibility(View.VISIBLE);
-            }
-
-            //1，新消息 2，倒计时 3，普通样式 4 过期
-            if (event.getNimBean().getType() == 2) { //倒计时消息
-                rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
-                if (event.getNimBean().getCountdown() > 0) {
-                    //倒计时进度条
-                    if (countDownProgress == null)
-                        countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
-                    if (outdateTimeText == null)
-                        outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
-
-                    countDownProgress.setVisibility(View.VISIBLE);
-                    outdateTimeText.setVisibility(View.VISIBLE);
-                    //文本倒计时
-                    if (!pause) {
-                        outdateTimeText.startTime(event.getNimBean().getCountdown(), "2", "后过期");
-                    }
-                    countDownProgress.setMax(event.getNimBean().getCountdown_total());
-                    countDownProgress.setProgress(event.getNimBean().getCountdown());
-                    if (countDownTimer != null) {
-                        countDownTimer.cancel();
-                        //防止new出多个导致时间跳动加速
-                        countDownTimer = null;
-                    }
-                    countDownTimer = new CountDownTimer((event.getNimBean().getCountdown()) * 1000, 1000) {
-
-                        @Override
-                        public void onTick(long l) {
-                            if (!pause) {
-                                time++;
-                                countDownProgress.setProgress((event.getNimBean().getCountdown() - time));
-                            }
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            outdateTimeText.setText("消息已过期");
-                            //过期消息不展示消息面板
-                            rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.GONE);
-                            countDownProgress.setProgress(0);
-                        }
-                    }.start();
-                }
-            } else if (event.getNimBean().getType() == 4) {//过期消息
-                //过期消息不展示消息面板
-                rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.GONE);
-                if (countDownProgress == null)
-                    countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
-                if (outdateTimeText == null)
-                    outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
-
-                btnMakeFriends.setVisibility(View.GONE);
-                countDownProgress.setVisibility(View.VISIBLE);
-                countDownProgress.setProgress(0);
-                outdateTimeText.setVisibility(View.VISIBLE);
-                outdateTimeText.setText("招呼已于 " + event.getNimBean().getTimeout_time() + " 过期");
-            } else {
-                if (countDownProgress == null) {
-                    countDownProgress = rootView.findViewById(com.example.demoapplication.R.id.outdateTime);
-                }
-                countDownProgress.setVisibility(View.GONE);
-                if (outdateTimeText == null) {
-                    outdateTimeText = rootView.findViewById(com.example.demoapplication.R.id.outdateTimeText);
-                }
-                outdateTimeText.setVisibility(View.GONE);
-                btnMakeFriends.setVisibility(View.GONE);
-                rootView.findViewById(com.example.demoapplication.R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
-            }
-
-        }
-
-
-//
     }
 
 
@@ -1520,7 +1372,7 @@ public class ChatMessageListPanelEx {
 
         if (tags != null && tags.size() > 0) {
             if (mytags.size() > 0)
-                for (int i= 0;i < tags.size(); i++) {
+                for (int i = 0; i < tags.size(); i++) {
                     for (int j = 0; j < mytags.size(); j++) {
                         if (mytags.get(j).getId() == tags.get(i).getId() && tags.get(i).getId() != Constants.RECOMMEND_TAG_ID) {
                             tags.get(i).setSameLabel(true);
