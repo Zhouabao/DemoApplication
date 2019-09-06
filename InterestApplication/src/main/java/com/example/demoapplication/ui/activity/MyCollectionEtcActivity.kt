@@ -12,12 +12,15 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.demoapplication.R
 import com.example.demoapplication.common.Constants
+import com.example.demoapplication.event.RefreshSquareEvent
 import com.example.demoapplication.model.SquareBean
 import com.example.demoapplication.model.SquareListBean
 import com.example.demoapplication.player.IjkMediaPlayerUtil
 import com.example.demoapplication.player.OnPlayingListener
 import com.example.demoapplication.presenter.MyCollectionPresenter
 import com.example.demoapplication.presenter.view.MyCollectionView
+import com.example.demoapplication.switchplay.SwitchUtil
+import com.example.demoapplication.switchplay.SwitchVideo
 import com.example.demoapplication.ui.adapter.MultiListSquareAdapter
 import com.example.demoapplication.ui.dialog.MoreActionDialog
 import com.example.demoapplication.ui.dialog.TranspondDialog
@@ -32,10 +35,15 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import kotlinx.android.synthetic.main.activity_my_collection_etc.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.toast
 
 /**
@@ -43,7 +51,8 @@ import org.jetbrains.anko.toast
  *  1,我的所有动态 2我点过赞的 3 我收藏的
  */
 class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyCollectionView, OnRefreshListener,
-    OnLoadMoreListener {
+    OnLoadMoreListener, MultiListSquareAdapter.ResetAudioListener {
+
 
     private val type by lazy { intent.getIntExtra("type", 0) }
 
@@ -64,11 +73,18 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_collection_etc)
         initView()
+        refreshLayout.autoRefresh()
+
     }
 
 
     //广场列表内容适配器
-    private val adapter by lazy { MultiListSquareAdapter(mutableListOf()) }
+    private val adapter by lazy { MultiListSquareAdapter(mutableListOf(), resetAudioListener = this) }
+
+    override fun resetAudioState() {
+        /*resetAudio()
+        adapter.notifyDataSetChanged()*/
+    }
 
     private lateinit var scrollCalculatorHelper: ScrollCalculatorHelper
 
@@ -79,6 +95,8 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
     private var currPlayIndex = -1
 
     private fun initView() {
+        EventBus.getDefault().register(this)
+
         mPresenter = MyCollectionPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -118,6 +136,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         collectionRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, collectionRv)
         adapter.setHeaderAndEmpty(false)
+        adapter.bindToRecyclerView(collectionRv)
         //取消动画，主要是闪烁
 //        (collectionRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         collectionRv.itemAnimator?.changeDuration = 0
@@ -157,7 +176,6 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
             val squareBean = adapter.data[position]
             when (view.id) {
                 R.id.squareChatBtn1 -> {
-                    toast("聊天呗$position")
                 }
                 R.id.squareCommentBtn1 -> {
                     SquareCommentDetailActivity.start(this, adapter.data[position], enterPosition = "comment")
@@ -376,19 +394,19 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         super.onResume()
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
 //        GSYVideoManager.onResume(false)
-        refreshLayout.autoRefresh()
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
         GSYVideoManager.releaseAllVideos()
+        EventBus.getDefault().unregister(this)
 
         resetAudio()
     }
 
     override fun finish() {
-        setResult(Activity.RESULT_OK,intent)
+        setResult(Activity.RESULT_OK, intent)
         super.finish()
     }
 
@@ -487,6 +505,56 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
+                val pos = data!!.getIntExtra("position", -1)
+                GSYVideoManager.releaseAllVideos()
+
+//        adapter.notifyDataSetChanged()
+                //静音
+                val switchVideo = adapter.getViewByPosition(pos, R.id.squareUserVideo) as SwitchVideo
+                SwitchUtil.clonePlayState(switchVideo)
+                val state = switchVideo.currentState
+//        switchVideo.isStartAfterPrepared = false
+                //延迟加2S
+                switchVideo.seekOnStart = switchVideo.gsyVideoManager.currentPosition
+                switchVideo.startPlayLogic()
+                switchVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+                    override fun onStartPrepared(url: String?, vararg objects: Any?) {
+                        super.onStartPrepared(url, *objects)
+                        GSYVideoManager.instance().isNeedMute = true
+                    }
+
+                    override fun onPrepared(url: String?, vararg objects: Any?) {
+                        super.onPrepared(url, *objects)
+                        GSYVideoManager.instance().isNeedMute = true
+                        if (state == GSYVideoView.CURRENT_STATE_PAUSE) {
+                            switchVideo.onVideoPause()
+                        } else if (state == GSYVideoView.CURRENT_STATE_AUTO_COMPLETE || state == GSYVideoView.CURRENT_STATE_ERROR) {
+                            SwitchUtil.release()
+                            GSYVideoManager.releaseAllVideos()
+                        }
+                    }
+
+                    override fun onClickResume(url: String?, vararg objects: Any?) {
+                        super.onClickResume(url, *objects)
+                        switchVideo.onVideoResume()
+                    }
+
+                    override fun onAutoComplete(url: String?, vararg objects: Any?) {
+                        super.onAutoComplete(url, *objects)
+                        SwitchUtil.release()
+                        GSYVideoManager.releaseAllVideos()
+                        adapter.notifyItemChanged(pos)
+
+                    }
+                })
+            }
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshSquareEvent(event: RefreshSquareEvent) {
+        refreshLayout.autoRefresh()
+    }
+
 }
