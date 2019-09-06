@@ -106,19 +106,11 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
     private fun initView() {
         btnBack.onClick { finish() }
 
-        //是好友才显示星标
-        llstar.setVisible(isfriend)
-        if (isfriend) {
-            friendStar.isChecked = star
-            deleteTv.text = "删除好友"
-        } else {
-            deleteTv.text = "删除招呼"
-        }
-
 
         //TA的主页
         chatDetailBtn.onClick { MatchDetailActivity.start(this, account ?: "") }
         //删除好友
+
         friendDelete.onClick {
             showDeleteDialog(3)
         }
@@ -162,9 +154,9 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
         }
 
         //消息免打扰
-        friendNoBother.setOnClickListener(this)
+        llNoBother.setOnClickListener(this)
         //星标好友
-        friendStar.setOnClickListener(this)
+        llstar.setOnClickListener(this)
     }
 
     //显示删除对话
@@ -241,16 +233,15 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
 
     override fun onClick(p0: View) {
         when (p0.id) {
-            R.id.friendNoBother -> {
-                val checkState = friendNoBother.isChecked
-                NIMClient.getService(FriendService::class.java).setMessageNotify(account, !checkState)
+            R.id.llNoBother -> {
+                NIMClient.getService(FriendService::class.java).setMessageNotify(account, !NIMClient.getService(FriendService::class.java).isNeedMessageNotify(account))
                     .setCallback(object : RequestCallback<Void?> {
                         override fun onSuccess(param: Void?) {
+                            friendNoBother.isChecked = !friendNoBother.isChecked
 
                         }
 
                         override fun onFailed(code: Int) {
-                            friendNoBother.isChecked = !friendNoBother.isChecked
                         }
 
                         override fun onException(exception: Throwable) {
@@ -258,12 +249,11 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
                         }
                     })
             }
-            R.id.friendStar -> {//星标好友
-                val checkState = friendStar.isChecked
-                if (checkState) {
-                    addStar()
-                } else {
+            R.id.llstar -> {//星标好友
+                if (star) {
                     removeStar()
+                } else {
+                    addStar()
                 }
             }
         }
@@ -356,6 +346,15 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
     fun onStarEvent(event: StarEvent) {
         star = event.stared
         isfriend = event.isfriend
+        //是好友才显示星标
+        llstar.setVisible(isfriend)
+        if (isfriend) {
+            friendStar.isChecked = star
+            deleteTv.text = "删除好友"
+        } else {
+            deleteTv.text = "删除招呼"
+        }
+
     }
 
 
