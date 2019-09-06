@@ -102,7 +102,8 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.msgIcon -> {
-                    MatchDetailActivity.start(this, adapter.data[position].accid ?: "")
+                    if ((adapter.data[position].accid ?: "") != UserManager.getAccid())
+                        MatchDetailActivity.start(this, adapter.data[position].accid ?: "")
                 }
             }
         }

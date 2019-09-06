@@ -346,6 +346,7 @@
                         android:hint="有什么感受说来听听"
                         android:background="@null"
                         android:textSize="14sp"
+                        android:maxLength="150"
                         android:textColorHint="@color/colorBlackC9"
                         android:textColor="@color/colorBlackTitle"
                         android:gravity="center_vertical"
