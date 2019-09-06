@@ -78,7 +78,6 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
         }
 
         if (!judgeYear(year!!.toInt())) { //年份不正确
-            toast("请输入正确的年份！")
             userBirthYear.clear()
             userAge.text = ""
             userAge.visibility = View.GONE
@@ -109,7 +108,11 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
      * 判断输入的年是否正确（18到35）
      */
     private fun judgeYear(year: Int): Boolean {
-        if (Calendar.getInstance().get(Calendar.YEAR) - year < 18 || Calendar.getInstance().get(Calendar.YEAR) - year > 35) {
+        if (Calendar.getInstance().get(Calendar.YEAR) - year < 18){
+            toast("年龄必须大于等于18岁哦")
+            return false
+        }else if (Calendar.getInstance().get(Calendar.YEAR) - year > 35) {
+            toast("年龄必须在35岁以内哦")
             return false
         }
         return true
