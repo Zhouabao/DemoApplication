@@ -4,6 +4,12 @@ import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.VisitorBean
 import com.sdy.jitangapplication.presenter.MyVisitPresenter
@@ -11,12 +17,6 @@ import com.sdy.jitangapplication.presenter.view.MyVisitView
 import com.sdy.jitangapplication.ui.adapter.MyVisitAdater
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_my_visit.*
 import kotlinx.android.synthetic.main.activity_user_center.btnBack
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -74,7 +74,8 @@ class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefr
         }
 
         visitAdapter.setOnItemClickListener { _, view, position ->
-            MatchDetailActivity.start(this, visitAdapter.data[position].accid ?: "")
+            if (UserManager.isUserVip())
+                MatchDetailActivity.start(this, visitAdapter.data[position].accid ?: "")
         }
 
     }
