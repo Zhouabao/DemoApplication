@@ -12,7 +12,9 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.google.gson.Gson
@@ -296,11 +298,24 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     }
 
+
+    /**
+     * 双击退出APP
+     */
+    private var firstClickTime = 0L
     override fun onBackPressed() {
         if (GSYVideoManager.backFromWindowFull(this)) {
             return
         }
-        super.onBackPressed()
+
+        val secondTime = System.currentTimeMillis()
+        if (secondTime - firstClickTime > 2000) {
+            ToastUtils.showShort("再按一次退出程序")
+            firstClickTime = secondTime
+        } else {
+            AppUtils.exitApp()
+        }
+
     }
 
 
@@ -524,7 +539,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (unreadNum == 0) {
             UserManager.saveHiCount(0)
         }
-        ivNewMsg.isVisible = (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
+        ivNewMsg.isVisible =
+            (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
     }
 
 }
