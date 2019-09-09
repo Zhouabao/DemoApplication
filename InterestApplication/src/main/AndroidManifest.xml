@@ -161,6 +161,7 @@
         </activity>
         <activity
                 android:name="com.sdy.jitangapplication.ui.activity.ContactBookActivity"
+                android:windowSoftInputMode="adjustResize|stateHidden"
                 android:screenOrientation="portrait">
         </activity>
         <activity

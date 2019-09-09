@@ -303,6 +303,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
      * 双击退出APP
      */
     private var firstClickTime = 0L
+
     override fun onBackPressed() {
         if (GSYVideoManager.backFromWindowFull(this)) {
             return
@@ -334,7 +335,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             //广场消息个数
             msgSquare.text = allMsgCount.square_count.toString()
             //未读消息个数
-            val totalMsgUnread = NIMClient.getService(MsgService::class.java).totalUnreadCount - allMsgCount.greetcount
+            val msgCount = NIMClient.getService(MsgService::class.java).totalUnreadCount
+            var totalMsgUnread = 0
+            if (msgCount > 0)
+                totalMsgUnread = msgCount - allMsgCount.greetcount
+            else UserManager.saveHiCount(0)
+
             msgChat.text = "$totalMsgUnread"
             ivNewMsg.isVisible =
                 (allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || totalMsgUnread > 0)

@@ -879,6 +879,13 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
     private void updateActionsState(boolean enable) {
         if (enable) {
             disable = false;
+            actions.get(2).setEnable(true);
+            actions.get(3).setEnable(true);
+            actions.get(4).setEnable(true);
+
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
         } else {
             disable = true;
             actions.get(2).setEnable(false);

@@ -12,19 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.blankj.utilcode.util.ToastUtils;
-import com.sdy.jitangapplication.R;
-import com.sdy.jitangapplication.api.Api;
-import com.sdy.jitangapplication.common.Constants;
-import com.sdy.jitangapplication.event.EnablePicEvent;
-import com.sdy.jitangapplication.event.NimHeadEvent;
-import com.sdy.jitangapplication.event.StarEvent;
-import com.sdy.jitangapplication.model.NimBean;
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
-import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
-import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
-import com.sdy.jitangapplication.nim.session.*;
-import com.sdy.jitangapplication.utils.UserManager;
-import com.sdy.jitangapplication.widgets.TimeRunTextView;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.api.UIKitOptions;
@@ -54,6 +41,20 @@ import com.netease.nimlib.sdk.msg.model.MessageReceipt;
 import com.netease.nimlib.sdk.robot.model.NimRobotInfo;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.netease.nimlib.sdk.robot.model.RobotMsgType;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.api.Api;
+import com.sdy.jitangapplication.common.Constants;
+import com.sdy.jitangapplication.event.EnablePicEvent;
+import com.sdy.jitangapplication.event.NimHeadEvent;
+import com.sdy.jitangapplication.event.StarEvent;
+import com.sdy.jitangapplication.event.UpdateHiEvent;
+import com.sdy.jitangapplication.model.NimBean;
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
+import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
+import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
+import com.sdy.jitangapplication.nim.session.*;
+import com.sdy.jitangapplication.utils.UserManager;
+import com.sdy.jitangapplication.widgets.TimeRunTextView;
 import org.greenrobot.eventbus.EventBus;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -319,6 +320,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             //收到已读回执,调用接口,改变此时招呼或者消息的状态
             if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
                 getTargetInfo(sessionId);
+                EventBus.getDefault().post(new UpdateHiEvent());
             }
         }
     };
@@ -602,6 +604,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                 }
 
                             }
+                            EventBus.getDefault().post(new UpdateHiEvent());
                             EventBus.getDefault().post(new NimHeadEvent(nimBeanBaseResp.getData()));
                             EventBus.getDefault().postSticky(new StarEvent(nimBeanBaseResp.getData().getStared(), nimBeanBaseResp.getData().getIsfriend()));
                             EventBus.getDefault().postSticky(new EnablePicEvent(nimBeanBaseResp.getData().getIsfriend()));

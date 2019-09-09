@@ -16,16 +16,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.SizeUtils;
-import com.sdy.baselibrary.glide.GlideUtil;
-import com.sdy.jitangapplication.common.Constants;
-import com.sdy.jitangapplication.event.NimHeadEvent;
-import com.sdy.jitangapplication.model.LabelBean;
-import com.sdy.jitangapplication.model.Tag;
-import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
-import com.sdy.jitangapplication.ui.adapter.ChatHiLabelAdapter;
-import com.sdy.jitangapplication.utils.UserManager;
-import com.sdy.jitangapplication.widgets.DividerItemDecoration;
 import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
@@ -71,6 +61,16 @@ import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.netease.nimlib.sdk.robot.model.RobotMsgType;
 import com.netease.nimlib.sdk.team.constant.TeamMemberType;
 import com.netease.nimlib.sdk.team.model.TeamMember;
+import com.sdy.baselibrary.glide.GlideUtil;
+import com.sdy.jitangapplication.common.Constants;
+import com.sdy.jitangapplication.event.NimHeadEvent;
+import com.sdy.jitangapplication.model.LabelBean;
+import com.sdy.jitangapplication.model.Tag;
+import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
+import com.sdy.jitangapplication.ui.adapter.ChatHiLabelAdapter;
+import com.sdy.jitangapplication.utils.UserManager;
+import com.sdy.jitangapplication.widgets.DividerItemDecoration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -129,6 +129,7 @@ public class ChatMessageListPanelEx {
     private RecyclerView chatHiTags;
     private ConstraintLayout targetCl;
     private View headView;
+    private ChatHiLabelAdapter hiLabelAdapter;
 
     public ChatMessageListPanelEx(Container container, View rootView, boolean recordOnly, boolean remote) {
         this(container, rootView, null, recordOnly, remote);
@@ -188,6 +189,8 @@ public class ChatMessageListPanelEx {
     }
 
     private void initListView(IMMessage anchor) {
+
+
         ivBackground = rootView.findViewById(R.id.message_activity_background);
 
         //倒计时进度条
@@ -1328,7 +1331,7 @@ public class ChatMessageListPanelEx {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(final NimHeadEvent event) {
         if (headView == null) {
-            headView = initHeadView(event);
+            headView = initHeadView();
             adapter.addHeaderView(headView);
             setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
         } else {
@@ -1337,7 +1340,7 @@ public class ChatMessageListPanelEx {
     }
 
 
-    private View initHeadView(NimHeadEvent event) {
+    private View initHeadView() {
         headView = LayoutInflater.from(container.activity).inflate(com.sdy.jitangapplication.R.layout.item_chat_head, messageListView, false);
         //初始化数据
         chatHiAvator = headView.findViewById(com.sdy.jitangapplication.R.id.targetAvator);
@@ -1349,6 +1352,13 @@ public class ChatMessageListPanelEx {
                 MatchDetailActivity.start(container.activity, container.account);
             }
         });
+
+        FlexboxLayoutManager manager = new FlexboxLayoutManager(container.activity, FlexDirection.ROW, FlexWrap.WRAP);
+        manager.setAlignItems(AlignItems.STRETCH);
+        chatHiTags.setLayoutManager(manager);
+        chatHiTags.addItemDecoration(new DividerItemDecoration(container.activity, DividerItemDecoration.BOTH_SET, SizeUtils.dp2px(8F), container.activity.getResources().getColor(R.color.white)));
+        hiLabelAdapter = new ChatHiLabelAdapter(container.activity);
+        chatHiTags.setAdapter(hiLabelAdapter);
         return headView;
     }
 
@@ -1357,16 +1367,7 @@ public class ChatMessageListPanelEx {
         //头像
         GlideUtil.loadAvatorImg(container.activity, avator, chatHiAvator);
         //用户标签
-        FlexboxLayoutManager manager = new FlexboxLayoutManager(container.activity, FlexDirection.ROW, FlexWrap.WRAP);
-        manager.setAlignItems(AlignItems.STRETCH);
-        chatHiTags.setLayoutManager(manager);
-        chatHiTags.addItemDecoration(
-                new DividerItemDecoration(container.activity, DividerItemDecoration.BOTH_SET, SizeUtils.dp2px(8F), container.activity.getResources().getColor(R.color.white))
-        );
 //        MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(container.activity);
-        ChatHiLabelAdapter adapter = new ChatHiLabelAdapter(container.activity);
-        chatHiTags.setAdapter(adapter);
-
         ArrayList<LabelBean> mytags = (ArrayList<LabelBean>) UserManager.INSTANCE.getSpLabels();
 
         if (tags != null && tags.size() > 0) {
@@ -1381,7 +1382,7 @@ public class ChatMessageListPanelEx {
                         }
                     }
                 }
-            adapter.setData(tags);
+            hiLabelAdapter.setData(tags);
         }
     }
 

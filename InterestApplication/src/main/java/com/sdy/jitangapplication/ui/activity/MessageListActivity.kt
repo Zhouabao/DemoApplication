@@ -128,7 +128,8 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                     ChatActivity.start(this, adapter.data[position].contactId)
                     // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
                     // 通知中的 RecentContact 对象的未读数为0
-                    NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
+                    NIMClient.getService(MsgService::class.java)
+                        .clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
                     EventBus.getDefault().post(NewMsgEvent())
 
                 }
@@ -218,6 +219,11 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
      */
     override fun onMessageCensusResult(data: MessageListBean1?) {
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
+        UserManager.saveSquareCount(data?.square_cnt ?: 0)
+        UserManager.saveLikeCount(data?.liked_unread_cnt ?: 0)
+        if (UserManager.getLikeCount() > 0 || UserManager.getSquareCount() > 0)
+            EventBus.getDefault().post(NewMsgEvent())
+
         val squa = MessageListBean(
             "发现", when (data?.square_type) {
                 1 -> {

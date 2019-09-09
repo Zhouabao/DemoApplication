@@ -20,30 +20,6 @@ import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.BlockDataEvent
-import com.sdy.jitangapplication.event.ListDataEvent
-import com.sdy.jitangapplication.event.NotifyEvent
-import com.sdy.jitangapplication.model.GreetBean
-import com.sdy.jitangapplication.model.MatchBean
-import com.sdy.jitangapplication.model.StatusBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
-import com.sdy.jitangapplication.presenter.MatchDetailPresenter
-import com.sdy.jitangapplication.presenter.view.MatchDetailView
-import com.sdy.jitangapplication.ui.adapter.DetailThumbAdapter
-import com.sdy.jitangapplication.ui.adapter.MatchDetailLabelAdapter
-import com.sdy.jitangapplication.ui.adapter.MatchImgsPagerAdapter
-import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
-import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
-import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
-import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
-import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.BounceScrollView
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -61,6 +37,32 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.BlockDataEvent
+import com.sdy.jitangapplication.event.ListDataEvent
+import com.sdy.jitangapplication.event.NotifyEvent
+import com.sdy.jitangapplication.event.UpdateLabelEvent
+import com.sdy.jitangapplication.model.GreetBean
+import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.presenter.MatchDetailPresenter
+import com.sdy.jitangapplication.presenter.view.MatchDetailView
+import com.sdy.jitangapplication.ui.adapter.DetailThumbAdapter
+import com.sdy.jitangapplication.ui.adapter.MatchDetailLabelAdapter
+import com.sdy.jitangapplication.ui.adapter.MatchImgsPagerAdapter
+import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
+import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
+import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
+import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
+import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.BounceScrollView
 import kotlinx.android.synthetic.main.activity_match_detail1.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -407,6 +409,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 matchBean!!.isfriend = 0
                 //更新数据
                 initData()
+            } else if (result == "拉黑成功!") {
+                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = UserManager.getGlobalLabelId())))
+                finish()
             }
             ToastUtils.showShort(result)
         }
