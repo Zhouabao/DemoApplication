@@ -73,7 +73,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     private fun initView() {
         ScreenUtils.setFullScreen(this)
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_FULL)
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
         mPresenter.context = this

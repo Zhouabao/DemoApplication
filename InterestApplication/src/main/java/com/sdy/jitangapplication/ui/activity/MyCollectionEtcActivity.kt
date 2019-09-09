@@ -10,6 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshSquareEvent
@@ -27,13 +34,6 @@ import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonItemDecoration
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -82,8 +82,12 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
     private val adapter by lazy { MultiListSquareAdapter(mutableListOf(), resetAudioListener = this) }
 
     override fun resetAudioState() {
-        /*resetAudio()
-        adapter.notifyDataSetChanged()*/
+        //                adapter.notifyItemChanged(position)
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+        currPlayIndex = -1
     }
 
     private lateinit var scrollCalculatorHelper: ScrollCalculatorHelper
@@ -276,8 +280,8 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
             override fun onRelease(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-//                adapter.notifyItemChanged(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position)
+//                adapter.notifyDataSetChanged()
             }
 
         }).getInstance()

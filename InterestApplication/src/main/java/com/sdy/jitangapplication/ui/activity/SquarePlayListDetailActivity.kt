@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.demoap.MultiListDetailPlayAdapter
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
@@ -23,13 +27,8 @@ import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
-import com.shuyu.gsyvideoplayer.utils.GSYVideoType.SCREEN_TYPE_FULL
 import kotlinx.android.synthetic.main.activity_square_play_detail.btnBack
 import kotlinx.android.synthetic.main.activity_square_play_list_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
@@ -168,7 +167,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     private fun initView() {
         ScreenUtils.setFullScreen(this)
         btnBack.onClick { finish() }
-        GSYVideoType.setShowType(SCREEN_TYPE_FULL)
+        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
         mPresenter.context = this

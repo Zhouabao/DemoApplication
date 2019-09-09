@@ -10,6 +10,21 @@ import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseException
+import com.kotlin.base.rx.BaseSubscriber
+import com.netease.nim.uikit.business.session.module.Container
+import com.netease.nim.uikit.business.session.module.ModuleProxy
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
@@ -29,21 +44,6 @@ import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.kotlin.base.data.net.RetrofitFactory
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.excute
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.rx.BaseException
-import com.kotlin.base.rx.BaseSubscriber
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.msg.MessageBuilder
-import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
-import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import kotlinx.android.synthetic.main.item_list_square_audio.view.*
@@ -167,7 +167,6 @@ class MultiListSquareAdapter(
                     vg.removeView(imageview)
                 }
                 holder.itemView.squareUserVideo.thumbImageView = imageview
-
                 holder.itemView.squareUserVideo.detail_btn.setOnClickListener {
                     if (holder.itemView.squareUserVideo.isInPlayingState) {
                         SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
@@ -183,14 +182,18 @@ class MultiListSquareAdapter(
                 holder.itemView.squareUserVideo.playTag = TAG
                 holder.itemView.squareUserVideo.playPosition = holder.layoutPosition
                 holder.itemView.squareUserVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+                    override fun onStartPrepared(url: String?, vararg objects: Any?) {
+                        super.onStartPrepared(url, *objects)
+                        if (resetAudioListener != null) {
+                            resetAudioListener!!.resetAudioState()
+                        }
+                    }
                     override fun onPrepared(url: String?, vararg objects: Any?) {
                         if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen) {
                             //静音
                             GSYVideoManager.instance().isNeedMute = true
-                            if (resetAudioListener != null) {
-                                resetAudioListener!!.resetAudioState()
-                            }
                         }
+
                     }
 
                     override fun onQuitFullscreen(url: String?, vararg objects: Any?) {

@@ -13,6 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ext.setVisible
+import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
@@ -36,14 +44,6 @@ import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonItemDecoration
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ext.setVisible
-import com.kotlin.base.ui.fragment.BaseMvpFragment
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -66,14 +66,11 @@ import org.jetbrains.anko.support.v4.toast
 class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
     View.OnClickListener, MultiListSquareAdapter.ResetAudioListener {
     override fun resetAudioState() {
-        /*if (mediaPlayer != null ) {
-            if (currPlayIndex != -1) {
-                adapter.data[currPlayIndex].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                adapter.notifyItemChanged(currPlayIndex)
-                currPlayIndex = -1
-//                adapter.notifyDataSetChanged()
-            }
-        }*/
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+            currPlayIndex = -1
+        }
     }
 
     //广场列表内容适配器
@@ -297,28 +294,23 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             override fun onError(position: Int) {
                 toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
-//                adapter.notifyItemChanged(position)
                 resetAudio()
                 adapter.notifyDataSetChanged()
             }
 
             override fun onPrepared(position: Int) {
-//                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
-//                adapter.notifyItemChanged(position)
-//                adapter.notifyDataSetChanged()
                 mediaPlayer!!.startPlay()
             }
 
             override fun onPreparing(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PREPARE
                 adapter.notifyDataSetChanged()
-
             }
 
             override fun onRelease(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-//                adapter.notifyItemChanged(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(currPlayIndex + adapter.headerLayoutCount)
+
             }
 
         }).getInstance()
@@ -600,7 +592,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onRefreshSquareEvent(event: RefreshSquareEvent){
+    fun onRefreshSquareEvent(event: RefreshSquareEvent) {
         refreshLayout.autoRefresh()
     }
 

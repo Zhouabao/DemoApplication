@@ -9,6 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.ListDataEvent
@@ -31,11 +36,6 @@ import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpFragment
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -64,11 +64,12 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         }
     }
     override fun resetAudioState() {
-       /* currPlayIndex = -1
-//                adapter.notifyItemChanged(position)
-        adapter.notifyDataSetChanged()
-        mediaPlayer!!.resetMedia()
-        mediaPlayer = null*/
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+        currPlayIndex = -1
+
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -359,8 +360,8 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
             override fun onRelease(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-//                adapter.notifyItemChanged(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position)
+//                adapter.notifyDataSetChanged()
             }
 
         }).getInstance()
