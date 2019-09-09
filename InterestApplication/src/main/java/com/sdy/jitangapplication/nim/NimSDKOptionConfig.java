@@ -183,13 +183,13 @@ public class NimSDKOptionConfig {
 
 
         // 华为推送
-//        config.hwCertificateName = "JITANG";
+        config.hwCertificateName = "JITANGHUAWEI";
 
 
         // 魅族推送
-//        config.mzAppId = "111710";
-//        config.mzAppKey = "282bdd3a37ec4f898f47c5bbbf9d2369";
-//        config.mzCertificateName = "DEMO_MZ_PUSH";
+        config.mzAppId = "123952";
+        config.mzAppKey = "97aaf629b9a84da999fa60272e591486";
+        config.mzCertificateName = "JITANGFLYME";
 
 
 
@@ -197,10 +197,10 @@ public class NimSDKOptionConfig {
 //        config.vivoCertificateName = "DEMO_VIVO_PUSH";
 
         // oppo推送
-//        config.oppoAppId = "3477155";
-//        config.oppoAppKey = "6clw0ue1oZ8cCOogKg488o0os";
-//        config.oppoAppSercet = "e163705Bd018bABb3e2362C440A94673";
-//        config.oppoCertificateName = "DEMO_OPPO_PUSH";
+        config.oppoAppId = "30189111";
+        config.oppoAppKey = "e0b41df3486b416ca44457141a803959";
+        config.oppoAppSercet = "6372b4b60b5d44a69ee534782ee0a273";
+        config.oppoCertificateName = "JITANGOPPO";
         return config;
     }
 }

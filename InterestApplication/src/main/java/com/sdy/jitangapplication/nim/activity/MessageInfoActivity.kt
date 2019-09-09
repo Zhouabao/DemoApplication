@@ -90,7 +90,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
 
 
         AppManager.instance.addActivity(this)
-        PushAgent.getInstance(this).onAppStart()
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)

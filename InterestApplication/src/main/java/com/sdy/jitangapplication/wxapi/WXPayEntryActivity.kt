@@ -3,8 +3,9 @@ package com.sdy.jitangapplication.wxapi
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import com.sdy.jitangapplication.common.Constants
 import com.kotlin.base.ui.activity.BaseActivity
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
@@ -32,18 +33,23 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
                 0 -> {
                     Toast.makeText(this, "支付成功！", Toast.LENGTH_LONG).show()
                     finish()
+                    MainActivity.start(this,intent)
                 }
                 -2 -> {
                     Toast.makeText(this, "支付取消！", Toast.LENGTH_LONG).show()
                     finish()
+                    MainActivity.start(this,intent)
                 }
                 -1 -> {
                     Toast.makeText(this, "支付失败！", Toast.LENGTH_LONG).show()
                     finish()
+                    MainActivity.start(this,intent)
                 }
                 else -> {
                     Toast.makeText(this, "支付出错！", Toast.LENGTH_LONG).show()
                     finish()
+                    MainActivity.start(this,intent)
+
                 }
             }
         }

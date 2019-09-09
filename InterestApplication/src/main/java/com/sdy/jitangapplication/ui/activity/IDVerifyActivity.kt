@@ -76,7 +76,6 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppManager.instance.addActivity(this)
-        PushAgent.getInstance(this).onAppStart()
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)

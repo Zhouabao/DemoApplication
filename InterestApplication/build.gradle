@@ -150,7 +150,15 @@ dependencies {
     //云信UI库
     implementation project(path: ':NIM_Android_UIKit-master')
     // 云信推送
-    implementation 'com.netease.nimlib:push:6.8.0'
+//    implementation 'com.netease.nimlib:push:6.8.0'
+//    implementation 'com.huawei.android.hms:push:2.6.3.301'
+    implementation 'com.huawei.android.hms:push:2.6.0.301'
+    implementation files('libs\\MiPush_SDK_Client_3_6_19.jar')
+    implementation files('libs\\nim-push-6.7.0.jar')
+    implementation files('libs\\com.coloros.mcssdk.jar')
+    implementation 'com.meizu.flyme.internet:push-internal:3.6.3@aar'
+
+
 
     //人脸认证
     implementation project(path: ':faceplatform-ui')
@@ -160,7 +168,6 @@ dependencies {
 
     // 添加下面的内容
     implementation (name: 'alipaySdk-15.6.5-20190718211159-noUtdid', ext: 'aar')
-    implementation files('libs\\MiPush_SDK_Client_3_6_19.jar')
 
     //查看长图
 

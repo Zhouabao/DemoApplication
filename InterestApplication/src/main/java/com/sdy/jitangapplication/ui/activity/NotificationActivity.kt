@@ -2,11 +2,11 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
 import android.widget.CompoundButton
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.nim.DemoCache
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.netease.nimlib.sdk.NIMClient
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.nim.DemoCache
 import com.umeng.message.MsgConstant
 import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.activity_notification.*
@@ -41,6 +41,8 @@ class NotificationActivity : BaseActivity(), CompoundButton.OnCheckedChangeListe
         when (button.id) {
             //点赞提醒
             R.id.switchDianzan -> {
+//                NIMClient.getService(MixPushService::class.java).enable(true)
+
             }
             //评论提醒
             R.id.switchComment -> {
@@ -51,11 +53,6 @@ class NotificationActivity : BaseActivity(), CompoundButton.OnCheckedChangeListe
             }
             //通知音效
             R.id.switchMusic -> {
-                if (check) {
-                    PushAgent.getInstance(this).notificationPlaySound = MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE
-                } else {
-                    PushAgent.getInstance(this).notificationPlaySound = MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE
-                }
                 val config = DemoCache.getNotificationConfig()
                 config.ring = check
                 NIMClient.updateStatusBarNotificationConfig(config)

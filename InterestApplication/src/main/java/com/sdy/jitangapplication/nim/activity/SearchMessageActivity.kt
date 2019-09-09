@@ -64,7 +64,6 @@ class SearchMessageActivity : UI(),SwipeBackActivityBase {
 
 
         AppManager.instance.addActivity(this)
-        PushAgent.getInstance(this).onAppStart()
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)

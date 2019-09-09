@@ -48,7 +48,6 @@ class MessageHistoryActivity : UI(), ModuleProxy, SwipeBackActivityBase {
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
-        PushAgent.getInstance(this).onAppStart()
         AppManager.instance.addActivity(this)
 
 

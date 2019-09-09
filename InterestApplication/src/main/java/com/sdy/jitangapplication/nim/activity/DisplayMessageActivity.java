@@ -59,7 +59,6 @@ public class DisplayMessageActivity extends UI implements ModuleProxy, SwipeBack
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
         getSwipeBackLayout().setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        PushAgent.getInstance(this).onAppStart();
         AppManager.Companion.getInstance().addActivity(this);
 
         View rootView = LayoutInflater.from(this).inflate(R.layout.message_history_activity, null);

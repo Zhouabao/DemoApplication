@@ -23,7 +23,6 @@ open class BaseActivity : SwipeBackActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppManager.instance.addActivity(this)
-        PushAgent.getInstance(this).onAppStart()
         initSwipeBackFinish()
     }
 

@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.common
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.ThreadUtils
@@ -26,8 +25,6 @@ import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.utils.UserManager
 import com.umeng.commonsdk.UMConfigure
-import com.umeng.message.IUmengRegisterCallback
-import com.umeng.message.PushAgent
 import com.umeng.socialize.PlatformConfig
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
@@ -68,6 +65,7 @@ class MyApplication : BaseApplication() {
         configPlayer()
 
         DemoCache.setContext(this)
+
         NIMClient.init(this, UserManager.loginInfo(), NimSDKOptionConfig.getSDKOptions(this))
         initUIKit()
 
@@ -101,20 +99,7 @@ class MyApplication : BaseApplication() {
              * 参数：boolean 默认为false（不加密）
              */
             UMConfigure.setEncryptEnabled(true)
-            //获取消息推送代理示例
-            val mPushAgent = PushAgent.getInstance(this)
-            //注册推送服务，每次调用register方法都会回调该接口
-            mPushAgent.register(object : IUmengRegisterCallback {
-                override fun onSuccess(deviceToken: String?) {
-                    Log.d("deviceToken", deviceToken)
-                }
 
-                override fun onFailure(p0: String?, p1: String?) {
-                    Log.d("deviceToken", "=========$p0,=======$p1")
-
-                }
-
-            })
 
 
 

@@ -43,7 +43,7 @@ class WelcomeActivity : BaseActivity() {
         userAgreement.text = SpanUtils.with(userAgreement).append("积糖用户协议").setUnderline().create()
         privacyPolicy.text = SpanUtils.with(privacyPolicy).append("隐私协议").setUnderline().create()
 
-        if (Build.VERSION.SDK_INT >= 23) {
+//        if (Build.VERSION.SDK_INT >= 23) {
             //动态申请权限
             if (!SPUtils.getInstance(Constants.SPNAME).getBoolean("autoPermissions", false)) {
                 showAlertDialog()
@@ -51,10 +51,10 @@ class WelcomeActivity : BaseActivity() {
                 //进行定位
                 AMapManager.initLocation(this)
             }
-        } else {
+//        } else {
 //            进行定位
-            AMapManager.initLocation(this)
-        }
+//            AMapManager.initLocation(this)
+//        }
 
 
         //判断是否有登录
