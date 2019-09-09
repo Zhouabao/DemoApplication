@@ -24,6 +24,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.services.core.PoiItem
 import com.blankj.utilcode.util.*
+import com.google.gson.Gson
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ext.setVisible
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.emoj.EmojiSource
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.RandomUtils
@@ -50,10 +54,6 @@ import com.sdy.jitangapplication.utils.UriUtils.getAllPhotoInfo
 import com.sdy.jitangapplication.utils.UriUtils.getAllVideoInfos
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import com.google.gson.Gson
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ext.setVisible
-import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_publish.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
@@ -345,6 +345,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     checkCompleteBtnEnable()
                 }
                 R.id.chooseCamera -> {
+                    //相册的选择与取消选择
+                    if (pickedPhotos.size == 9) {
+                        ToastUtils.showShort("最多只能选9张图片")
+                        return@setOnItemChildClickListener
+                    }
                     gotoCaptureRaw(true)
                 }
             }
