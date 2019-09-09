@@ -213,10 +213,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     "checkedLabels" to checkTags as Serializable
                 )
             } else {//其他时候点击就删除标签
-                    val item = publishLabelAdapter.data[position]
-                    checkTags.remove(item)
-                    publishLabelAdapter.data.remove(item)
-                    publishLabelAdapter.notifyItemRemoved(position)
+                val item = publishLabelAdapter.data[position]
+                checkTags.remove(item)
+                publishLabelAdapter.data.remove(item)
+                publishLabelAdapter.notifyItemRemoved(position)
             }
         }
     }
@@ -393,10 +393,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                             ToastUtils.showShort("最多只能选择1个视频")
                             return@setOnItemChildClickListener
                         }
-                        if (allVideoThumbAdapter.data[position].duration < 3000) {
+                        if (allVideoThumbAdapter.data[position].duration / 1000 < 3) {
                             ToastUtils.showShort("视频时长过短")
                             return@setOnItemChildClickListener
-                        } else if (allVideoThumbAdapter.data[position].duration > 120000) {
+                        } else if (allVideoThumbAdapter.data[position].duration / 1000 > 120) {
                             ToastUtils.showShort("视频时长过长")
                             return@setOnItemChildClickListener
                         }
