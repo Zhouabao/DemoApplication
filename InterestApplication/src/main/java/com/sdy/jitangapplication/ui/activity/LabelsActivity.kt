@@ -6,15 +6,6 @@ import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.UpdateAvatorEvent
-import com.sdy.jitangapplication.model.LabelBean
-import com.sdy.jitangapplication.model.LoginBean
-import com.sdy.jitangapplication.presenter.LabelsPresenter
-import com.sdy.jitangapplication.presenter.view.LabelsView
-import com.sdy.jitangapplication.ui.adapter.LabelAdapter
-import com.sdy.jitangapplication.utils.UserManager
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -24,6 +15,15 @@ import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.UpdateAvatorEvent
+import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.presenter.LabelsPresenter
+import com.sdy.jitangapplication.presenter.view.LabelsView
+import com.sdy.jitangapplication.ui.adapter.LabelAdapter
+import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
 import kotlinx.android.synthetic.main.activity_labels.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -130,7 +130,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                     break
                 }
                 for (j in 0 until saveLabels.size) {
-                    if (labels[index].id == saveLabels[j].id) {
+                    if (labels[index].id == saveLabels[j].id || labels[index].id == Constants.RECOMMEND_TAG_ID) {
                         labels[index].checked = true
                         updateCheckedLabels(labels[index])
                         labels.addAll(index + 1, labels[index].son ?: mutableListOf())
