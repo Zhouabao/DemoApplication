@@ -52,6 +52,7 @@ class MultiListCommentAdapter(var context: Context, data: MutableList<CommentBea
                             .create()
                 }
                 holder.addOnClickListener(R.id.commentDianzanBtn)
+                holder.addOnClickListener(R.id.commentUser)
                 GlideUtil.loadAvatorImg(context, item.avatar ?: "", holder.itemView.commentUser)
                 holder.itemView.commentUserName.text = item.nickname ?: ""
                 holder.itemView.commentTime.text = item.create_time ?: ""
