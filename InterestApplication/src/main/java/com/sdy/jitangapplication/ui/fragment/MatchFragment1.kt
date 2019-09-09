@@ -19,6 +19,18 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.netease.nim.uikit.business.session.module.Container
+import com.netease.nim.uikit.business.session.module.ModuleProxy
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshEvent
@@ -39,18 +51,6 @@ import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpFragment
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.msg.MessageBuilder
-import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
-import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_match1.*
@@ -616,7 +616,11 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
                 if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) { //匹配成功跳转到飞卡片
-                    startActivity<MatchSucceedActivity>("matchBean" to matchUserAdapter.data[manager.topPosition - 1])
+                    startActivity<MatchSucceedActivity>(
+                        "avator" to matchUserAdapter.data[manager.topPosition - 1].avatar,
+                        "nickname" to matchUserAdapter.data[manager.topPosition - 1].nickname,
+                        "accid" to matchUserAdapter.data[manager.topPosition - 1].accid
+                    )
                 } else {//招呼成功跳转到招呼
                     ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition - 1]?.accid ?: "")
                     /*manager.topPosition*/

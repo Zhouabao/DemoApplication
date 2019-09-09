@@ -29,12 +29,20 @@ class LikeMeOneDayGirdAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolde
     override fun convert(holder: BaseViewHolder, item: LikeMeOneDayBean) {
         val itemView = holder.itemView
         val params = itemView.layoutParams as RecyclerView.LayoutParams
-        params.width = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - (SPAN_COUNT - 1) * SizeUtils.dp2px(10F)) * 1.0F / SPAN_COUNT).toInt()
+        params.width =
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - (SPAN_COUNT - 1) * SizeUtils.dp2px(10F)) * 1.0F / SPAN_COUNT).toInt()
         params.height = (16 / 9F * params.width).toInt()
         itemView.layoutParams = params
         if (UserManager.isUserVip()) {
             itemView.likeMeOneDayType.visibility = View.VISIBLE
             GlideUtil.loadRoundImgCenterCrop(mContext, item.avatar, itemView.likeMeOneDayAvator, SizeUtils.dp2px(5F))
+
+            holder.addOnClickListener(R.id.likeMeOneDayType)
+            if (item.isfriend == 1) {
+                itemView.likeMeOneDayType.setImageResource(R.drawable.icon_chat_with_circle)
+            } else {
+                itemView.likeMeOneDayType.setImageResource(R.drawable.icon_like_with_circle)
+            }
         } else {
             itemView.likeMeOneDayType.visibility = View.INVISIBLE
             val transformation = MultiTransformation(

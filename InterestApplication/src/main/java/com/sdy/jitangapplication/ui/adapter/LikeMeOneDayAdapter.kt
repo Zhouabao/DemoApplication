@@ -48,6 +48,11 @@ class LikeMeOneDayAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolder>(R
             itemView.likeMeType.visibility = View.VISIBLE
             GlideUtil.loadRoundImgCenterCrop(mContext, item.avatar, itemView.likeMeAvator, SizeUtils.dp2px(5F))
 
+            holder.addOnClickListener(R.id.likeMeType)
+            if (item.isfriend == 1)
+                itemView.likeMeType.setImageResource(R.drawable.icon_chat_with_circle)
+            else
+                itemView.likeMeType.setImageResource(R.drawable.icon_like_with_circle)
         } else {
             itemView.likeMeType.visibility = View.INVISIBLE
             itemView.likeMeTagCover.visibility = View.VISIBLE

@@ -92,11 +92,12 @@ data class LikeMeBean(
 data class LikeMeOneDayBean(
     val age: Int? = 0,
     val avatar: String? = "",
+    val accid: String? = "",
     val birth: Int? = 0,
     val constellation: String? = "",
     val distance: String? = "",
     val gender: Int? = 0,
-    val isfriend: Int? = 0,
+    var isfriend: Int = 0,
     val isvip: Int? = 0,
     val job: String? = "",
     val nickname: String? = "",

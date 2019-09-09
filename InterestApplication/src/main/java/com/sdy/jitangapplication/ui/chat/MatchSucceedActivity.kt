@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.chat
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,10 +13,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.sdy.baselibrary.glide.GlideUtil
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.MatchBean
-import com.sdy.jitangapplication.utils.UserManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.netease.nim.uikit.business.session.module.Container
@@ -26,6 +23,9 @@ import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_match_succeed.*
 
 /**
@@ -33,7 +33,6 @@ import kotlinx.android.synthetic.main.activity_match_succeed.*
  */
 class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
-    private val matchBean by lazy { intent.getSerializableExtra("matchBean") as MatchBean }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match_succeed)
@@ -42,13 +41,20 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
     }
 
     private fun initData() {
-        GlideUtil.loadRoundImgCenterCrop(this, matchBean.avatar ?: "", iconOther, SizeUtils.dp2px(10F))
+        GlideUtil.loadRoundImgCenterCrop(this, avator, iconOther, SizeUtils.dp2px(10F))
         GlideUtil.loadRoundImgCenterCrop(this, UserManager.getAvator(), iconMine, SizeUtils.dp2px(10F))
 
-        matchTip.text = "你和 ${matchBean.nickname} 都彼此欣赏 \n不如就说先点什么吧"
+        matchTip.text = "你和 $nickname 都彼此欣赏 \n不如就说先点什么吧"
     }
 
+    private lateinit var accid: String
+    private lateinit var avator: String
+    private lateinit var nickname: String
     private fun initView() {
+        accid = intent.getStringExtra("accid") ?: ""
+        avator = intent.getStringExtra("avator") ?: ""
+        nickname = intent.getStringExtra("nickname") ?: ""
+
         btnBack.onClick { onBackPressed() }
 
         //主动弹起键盘
@@ -105,17 +111,20 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
     }
 
 
-
-
     override fun onBackPressed() {
-        KeyboardUtils.hideSoftInput(etMsg)
-        super.onBackPressed()
+        if (KeyboardUtils.isSoftInputVisible(this)) {
+            KeyboardUtils.hideSoftInput(etMsg)
+        } else {
+            setResult(Activity.RESULT_OK)
+            super.onBackPressed()
+        }
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        KeyboardUtils.hideSoftInput(etMsg)
+        if (KeyboardUtils.isSoftInputVisible(this))
+            KeyboardUtils.hideSoftInput(etMsg)
     }
 
     override fun onClick(view: View) {
@@ -130,9 +139,9 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
     /*--------------------------消息代理------------------------*/
     //发送匹配成功第一次对话
     private fun sendMatchHiMessage() {
-        val container = Container(this, matchBean.accid, SessionTypeEnum.P2P, this, true)
+        val container = Container(this, accid, SessionTypeEnum.P2P, this, true)
         val message = MessageBuilder.createTextMessage(
-            matchBean.accid,
+            accid,
             SessionTypeEnum.P2P,
             etMsg.text.toString()
         )

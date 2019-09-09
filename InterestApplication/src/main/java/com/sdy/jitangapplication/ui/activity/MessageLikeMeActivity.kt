@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -13,6 +15,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.UpdateLikemeEvent
 import com.sdy.jitangapplication.model.LikeMeBean
 import com.sdy.jitangapplication.presenter.MessageLikeMePresenter
 import com.sdy.jitangapplication.presenter.view.MessageLikeMeView
@@ -23,6 +26,9 @@ import kotlinx.android.synthetic.main.activity_message_like_me.*
 import kotlinx.android.synthetic.main.empty_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.emptyImg
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -52,6 +58,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
     private val adapter by lazy { LikeMeAdapter() }
 
     private fun initView() {
+        EventBus.getDefault().register(this)
         btnBack.onClick {
             onBackPressed()
         }
@@ -75,7 +82,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         likeMeRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, likeMeRv)
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_like_me)
-        adapter.emptyView.emptyTip.text="更新下个人信息，会有人出现的"
+        adapter.emptyView.emptyTip.text = "更新下个人信息，会有人出现的"
 
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -140,5 +147,32 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
     override fun onBackPressed() {
         mPresenter.markLikeRead(params)
         super.onBackPressed()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            adapter.data.clear()
+            refreshLayout.setNoMoreData(false)
+
+            page = 1
+            params["page"] = page
+            mPresenter.likeLists(params)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateLikemeEvent(event: UpdateLikemeEvent) {
+        adapter.data.clear()
+        refreshLayout.setNoMoreData(false)
+        page = 1
+        params["page"] = page
+        mPresenter.likeLists(params)
     }
 }
