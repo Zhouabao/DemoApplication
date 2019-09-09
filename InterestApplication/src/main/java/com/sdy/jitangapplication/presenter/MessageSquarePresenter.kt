@@ -1,15 +1,18 @@
 package com.sdy.jitangapplication.presenter
 
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.SquareMsgBean
-import com.sdy.jitangapplication.presenter.view.MessageSquareView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.event.NewMsgEvent
+import com.sdy.jitangapplication.model.SquareMsgBean
+import com.sdy.jitangapplication.presenter.view.MessageSquareView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -50,6 +53,10 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
             .markSquareRead(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        UserManager.saveSquareCount(0)
+                        EventBus.getDefault().post(NewMsgEvent())
+                    }
                 }
 
                 override fun onError(e: Throwable?) {

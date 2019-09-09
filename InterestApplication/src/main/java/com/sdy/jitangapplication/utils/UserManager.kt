@@ -2,13 +2,13 @@ package com.sdy.jitangapplication.utils
 
 import android.app.Activity
 import com.blankj.utilcode.util.SPUtils
+import com.kotlin.base.common.AppManager
+import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.ui.activity.LoginActivity
-import com.kotlin.base.common.AppManager
-import com.netease.nimlib.sdk.auth.LoginInfo
 import org.jetbrains.anko.startActivity
 import java.util.*
 
@@ -269,6 +269,10 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("countdowntime")
         SPUtils.getInstance(Constants.SPNAME).remove("lightingCount")
         SPUtils.getInstance(Constants.SPNAME).remove("slideCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("hiCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("likeCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("squareCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
 
         //位置信息
         SPUtils.getInstance(Constants.SPNAME).remove("latitude")
@@ -322,5 +326,28 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("countdowntime", 0)
     }
 
+    fun saveLikeCount(likeCount: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("likeCount", likeCount)
+    }
+
+    fun saveSquareCount(squareCount: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("squareCount", squareCount)
+    }
+
+    fun saveHiCount(greetCount: Int = 0) {
+        SPUtils.getInstance(Constants.SPNAME).put("hiCount", greetCount)
+    }
+
+    fun getLikeCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("likeCount", 0)
+    }
+
+    fun getHiCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("hiCount", 0)
+    }
+
+    fun getSquareCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("squareCount", 0)
+    }
 
 }

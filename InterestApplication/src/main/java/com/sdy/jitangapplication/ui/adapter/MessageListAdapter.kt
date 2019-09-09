@@ -3,13 +3,13 @@ package com.sdy.jitangapplication.ui.adapter
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.netease.nim.uikit.business.uinfo.UserInfoHelper
+import com.netease.nim.uikit.common.util.sys.TimeUtil
+import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
-import com.netease.nim.uikit.business.uinfo.UserInfoHelper
-import com.netease.nim.uikit.common.util.sys.TimeUtil
-import com.netease.nimlib.sdk.msg.model.RecentContact
 import kotlinx.android.synthetic.main.item_message_list.view.*
 
 /**

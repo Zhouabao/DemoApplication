@@ -1,17 +1,20 @@
 package com.sdy.jitangapplication.presenter
 
 import com.blankj.utilcode.util.SPUtils
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.LikeMeListBean
-import com.sdy.jitangapplication.presenter.view.MessageLikeMeView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.NewMsgEvent
+import com.sdy.jitangapplication.model.LikeMeListBean
+import com.sdy.jitangapplication.presenter.view.MessageLikeMeView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -54,7 +57,10 @@ class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
             .markLikeRead(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
-
+                    if (t.code == 200) {
+                        UserManager.saveLikeCount(0)
+                        EventBus.getDefault().post(NewMsgEvent())
+                    }
                 }
 
                 override fun onError(e: Throwable?) {

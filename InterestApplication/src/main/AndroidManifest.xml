@@ -276,10 +276,11 @@
                 android:name="com.sdy.jitangapplication.ui.activity.LoginActivity"
                 android:screenOrientation="portrait">
         </activity>
+        <!--android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"-->
         <activity
                 android:name="com.sdy.jitangapplication.ui.activity.WelcomeActivity"
                 android:screenOrientation="portrait"
-                android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

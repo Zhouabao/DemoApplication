@@ -9,21 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.UpdateHiEvent
-import com.sdy.jitangapplication.model.HiMessageBean
-import com.sdy.jitangapplication.model.MessageListBean
-import com.sdy.jitangapplication.model.MessageListBean1
-import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.presenter.MessageListPresenter
-import com.sdy.jitangapplication.presenter.view.MessageListView
-import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
-import com.sdy.jitangapplication.ui.adapter.MessageListFriensAdapter
-import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
-import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -41,8 +26,25 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.RecentContact
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.NewMsgEvent
+import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.model.HiMessageBean
+import com.sdy.jitangapplication.model.MessageListBean
+import com.sdy.jitangapplication.model.MessageListBean1
+import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.presenter.MessageListPresenter
+import com.sdy.jitangapplication.presenter.view.MessageListView
+import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
+import com.sdy.jitangapplication.ui.adapter.MessageListFriensAdapter
+import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
+import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_message_list.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.headerview_hi.view.*
@@ -124,6 +126,11 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                 }
                 R.id.content -> {
                     ChatActivity.start(this, adapter.data[position].contactId)
+                    // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
+                    // 通知中的 RecentContact 对象的未读数为0
+                    NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
+                    EventBus.getDefault().post(NewMsgEvent())
+
                 }
             }
         }
@@ -459,6 +466,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                 if (explosive) {
                     if (id is RecentContact) {
                         cached.remove(id.contactId)
+
                     } else if (id is String && id.contentEquals("0")) {
                         cached.clear()
                     }
@@ -479,6 +487,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             if (index >= 0 && index < adapter.data.size) {
                 val item = adapter.data.get(index)
                 item.setMsgStatus(message.status)
+
                 adapter.notifyItemChanged(index + adapter.headerLayoutCount)
             }
         }

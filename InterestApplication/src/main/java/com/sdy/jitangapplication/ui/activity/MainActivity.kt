@@ -15,6 +15,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.SPUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.google.gson.Gson
+import com.jaygoo.widget.OnRangeChangedListener
+import com.jaygoo.widget.RangeSeekBar
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.NimIntent
+import com.netease.nimlib.sdk.Observer
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.MsgServiceObserve
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomNotification
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
@@ -34,19 +47,6 @@ import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
-import com.google.gson.Gson
-import com.jaygoo.widget.OnRangeChangedListener
-import com.jaygoo.widget.RangeSeekBar
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.NimIntent
-import com.netease.nimlib.sdk.Observer
-import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.MsgServiceObserve
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomNotification
-import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_main.*
@@ -86,6 +86,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         setContentView(R.layout.activity_main)
         EventBus.getDefault().register(this)
         NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, true)
+        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
 
         initView()
 
@@ -291,6 +292,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         super.onDestroy()
         EventBus.getDefault().unregister(this)
         NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, false)
+        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
+
     }
 
     override fun onBackPressed() {
@@ -306,6 +309,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
      */
     override fun onMsgListResult(allMsgCount: AllMsgCount?) {
         if (allMsgCount != null) {
+            UserManager.saveHiCount(allMsgCount.greetcount)
+            UserManager.saveLikeCount(allMsgCount.likecount)
+            UserManager.saveSquareCount(allMsgCount.square_count)
             //喜欢我的个数
             msgLike.text = allMsgCount.likecount.toString()
             //打招呼个数
@@ -339,7 +345,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
     }
 
-
+    /**
+     * 系统通知监听
+     */
     private var customNotificationObserver: Observer<CustomNotification> =
         Observer { customNotification ->
             if (customNotification.content != null) {
@@ -360,17 +368,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
         }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateAvatorEvent(event: UpdateAvatorEvent) {
-        if (event.update) {
-            GlideUtil.loadAvatorImg(this, SPUtils.getInstance(Constants.SPNAME).getString("avatar"), ivUserFace)
-        }
-    }
 
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNewLabelEvent(event: UpdateAvatorEvent) {
-        initData()
+    /**
+     * 消息接收观察者
+     */
+    private var incomingMessageObserver: Observer<List<IMMessage>> = Observer {
+        mPresenter.msgList(UserManager.getToken(), UserManager.getAccid())
     }
 
     /**
@@ -499,6 +502,29 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
         tabMain.navigator = commonNavigator
         ViewPagerHelper.bind(tabMain, vpMain)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateAvatorEvent(event: UpdateAvatorEvent) {
+        if (event.update) {
+            GlideUtil.loadAvatorImg(this, SPUtils.getInstance(Constants.SPNAME).getString("avatar"), ivUserFace)
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNewLabelEvent(event: UpdateAvatorEvent) {
+        initData()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNewMsgEvent(event: NewMsgEvent) {
+        val unreadNum = NIMClient.getService(MsgService::class.java).totalUnreadCount
+        if (unreadNum == 0) {
+            UserManager.saveHiCount(0)
+        }
+        ivNewMsg.isVisible = (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
     }
 
 }
