@@ -64,7 +64,7 @@ class MessageSquareAdapter : BaseQuickAdapter<SquareMsgBean, BaseViewHolder>(R.l
                 GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.msgIcon)
                 holder.itemView.squareContent.text = item.cover_url ?: ""
                 holder.itemView.squareContent.visibility = View.VISIBLE
-                holder.itemView.squareImg.visibility = View.GONE
+                holder.itemView.squareImg.visibility = View.INVISIBLE
                 holder.itemView.squareType.visibility = View.GONE
             }
             1 -> {

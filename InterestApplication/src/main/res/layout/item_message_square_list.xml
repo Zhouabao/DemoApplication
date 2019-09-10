@@ -79,10 +79,10 @@
             android:textSize="8sp"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginRight="15dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="@id/squareImg"
+            app:layout_constraintBottom_toBottomOf="@id/squareImg"
+            app:layout_constraintRight_toRightOf="@id/squareImg"
+            app:layout_constraintTop_toTopOf="@id/squareImg"/>
 
     <ImageView
             android:id="@+id/squareImg"
@@ -92,7 +92,7 @@
             android:layout_height="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headTitle"
 />
 
     <ImageView
