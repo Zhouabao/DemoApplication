@@ -35,7 +35,6 @@ import com.sdy.jitangapplication.model.MatchFaceBean
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
-import com.umeng.message.PushAgent
 import com.zhy.http.okhttp.OkHttpUtils
 import com.zhy.http.okhttp.callback.Callback
 import okhttp3.Call

@@ -5,7 +5,6 @@ import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.kotlin.base.common.BaseApplication
-import com.mob.MobSDK
 import com.netease.nim.uikit.R
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.UIKitOptions
@@ -53,9 +52,6 @@ class MyApplication : BaseApplication() {
     @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
-        //mob分享初始化
-        MobSDK.init(this)
-
 
         //初始化Umeng
         initUmeng()

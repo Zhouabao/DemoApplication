@@ -25,7 +25,6 @@ import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
-import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.activity_search_message.*
 import org.jetbrains.anko.startActivity
 

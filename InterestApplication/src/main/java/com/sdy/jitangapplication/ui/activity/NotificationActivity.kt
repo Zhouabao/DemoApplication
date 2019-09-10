@@ -7,8 +7,6 @@ import com.kotlin.base.ui.activity.BaseActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.nim.DemoCache
-import com.umeng.message.MsgConstant
-import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
@@ -63,11 +61,6 @@ class NotificationActivity : BaseActivity(), CompoundButton.OnCheckedChangeListe
                 config.vibrate = check
                 NIMClient.updateStatusBarNotificationConfig(config)
 
-                if (check) {
-                    PushAgent.getInstance(this).notificationPlayVibrate = MsgConstant.NOTIFICATION_PLAY_SDK_ENABLE
-                } else {
-                    PushAgent.getInstance(this).notificationPlayVibrate = MsgConstant.NOTIFICATION_PLAY_SDK_DISABLE
-                }
             }
         }
     }

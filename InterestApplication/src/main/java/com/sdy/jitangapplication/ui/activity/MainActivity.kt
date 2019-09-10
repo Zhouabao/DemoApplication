@@ -339,7 +339,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             var totalMsgUnread = 0
             if (msgCount > 0)
                 totalMsgUnread = msgCount - allMsgCount.greetcount
-            else UserManager.saveHiCount(0)
+            else
+                UserManager.saveHiCount(0)
 
             msgChat.text = "$totalMsgUnread"
             ivNewMsg.isVisible =
@@ -377,6 +378,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 when (customerMsgBean.type) {
                     1 -> {//系统通知新的消息数量
                         mPresenter.msgList(UserManager.getToken(), UserManager.getAccid())
+                        EventBus.getDefault().post(UpdateHiEvent())
                     }
                     2 -> {//对方删除自己,本地删除会话列表
                         NIMClient.getService(MsgService::class.java)
@@ -545,8 +547,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (unreadNum == 0) {
             UserManager.saveHiCount(0)
         }
-        ivNewMsg.isVisible =
-            (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
+        ivNewMsg.isVisible = (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
     }
 
 }

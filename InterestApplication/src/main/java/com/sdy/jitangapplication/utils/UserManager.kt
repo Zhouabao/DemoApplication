@@ -26,8 +26,6 @@ object UserManager {
     fun startToLogin(activity: Activity) {
         AppManager.instance.finishAllActivity()
         activity.startActivity<LoginActivity>()
-        SPUtils.getInstance(Constants.SPNAME).remove("token", true)
-        SPUtils.getInstance(Constants.SPNAME).remove("accid", true)
         clearLoginData()
     }
 

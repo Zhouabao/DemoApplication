@@ -6,10 +6,9 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
+import com.kotlin.base.common.AppManager
 import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivity
-import com.kotlin.base.common.AppManager
-import com.umeng.message.PushAgent
 import org.jetbrains.anko.find
 
 

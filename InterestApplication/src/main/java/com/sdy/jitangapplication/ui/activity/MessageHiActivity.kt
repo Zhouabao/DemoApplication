@@ -102,7 +102,8 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         adapter.setOnItemClickListener { _, view, position ->
             // 通知中的 RecentContact 对象的未读数为0
             //做招呼的已读状态更新
-            NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
+            NIMClient.getService(MsgService::class.java)
+                .clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
             EventBus.getDefault().post(NewMsgEvent())
 
             //发送通知告诉剩余时间，并且开始倒计时
@@ -115,11 +116,17 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         mPresenter.getRecentContacts(t)
     }
 
-    override fun onDelTimeoutGreetResult(t: Boolean) {
-        if (t)
-            refreshLayout.autoRefresh()
-        else
+    override fun onDelTimeoutGreetResult(t: Boolean, accids: MutableList<String>?) {
+        if (t) {
+            if (!accids.isNullOrEmpty()) {
+                for (accid in accids) {
+                    NIMClient.getService(MsgService::class.java).deleteRecentContact2(accid, SessionTypeEnum.P2P)
+                }
+            }
+            EventBus.getDefault().post(UpdateHiEvent())
+        } else {
             ToastUtils.showShort("删除超时消息失败！")
+        }
     }
 
     override fun onGetRecentContactResults(
@@ -250,7 +257,8 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
                             } else if (imMessage.attachment is ShareSquareAttachment) {
                                 contact.content = "[动态分享内容]"
                             } else {
-                                contact.content = imMessage.content                            }
+                                contact.content = imMessage.content
+                            }
                         }
                     }
                 }

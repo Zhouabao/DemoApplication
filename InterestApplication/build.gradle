@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.mob.sdk'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
@@ -79,22 +78,6 @@ android {
     }
 }
 
-
-//ShareSdk 社会化分享
-MobSDK {
-    appKey "198a047f87d0c"
-    appSecret "fdac15d4e51de4590d25293a78da7dc7"
-
-    ShareSDK {}
-
-}
-
-greendao {
-    schemaVersion 1
-    daoPackage 'com.demoapplication.greendao.gen'
-    targetGenDir 'src.main.java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -120,7 +103,6 @@ dependencies {
     //recyclerview的animation
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
     //GreenDao
-    implementation 'org.greenrobot:greendao:3.2.2' // add library
 //    implementation 'ckrjfrog.Page:PageView:1.2.7'
     //年龄选择进度条
     implementation 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'

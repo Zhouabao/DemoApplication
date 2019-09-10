@@ -1,7 +1,5 @@
 package com.sdy.jitangapplication.model
 
-import org.greenrobot.greendao.annotation.Entity
-import org.greenrobot.greendao.annotation.Id
 import java.io.Serializable
 
 /**
@@ -21,9 +19,8 @@ data class Label(
     var subSubId: Int = -1
 )
 
-@Entity
 data class LabelBean(
-    @Id var title: String = "",
+    var title: String = "",
     var descr: String = "",
     var icon: String = "",
     var id: Int = -1,

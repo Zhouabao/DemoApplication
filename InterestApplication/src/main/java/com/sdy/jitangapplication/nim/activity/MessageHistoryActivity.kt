@@ -17,7 +17,6 @@ import com.netease.nim.uikit.business.session.module.list.MessageListPanelEx
 import com.netease.nim.uikit.common.activity.UI
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
-import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.activity_message_history.*
 import org.jetbrains.anko.startActivity
 

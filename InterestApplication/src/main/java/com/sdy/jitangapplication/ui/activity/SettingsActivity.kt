@@ -101,7 +101,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                         UserManager.clearLoginData()
                         NIMClient.getService(AuthService::class.java).logout()
                         AppManager.instance.finishAllActivity()
-                        startActivity<WelcomeActivity>()
+                        startActivity<LoginActivity>()
                     }
                     .setNegativeButton("取消") { p0, _ ->
                         p0.cancel()

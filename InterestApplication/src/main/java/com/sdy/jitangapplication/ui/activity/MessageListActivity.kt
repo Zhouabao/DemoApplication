@@ -163,7 +163,8 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         hiAdapter.setOnItemClickListener { _, view, position ->
             // 通知中的 RecentContact 对象的未读数为0
             //做招呼的已读状态更新
-            NIMClient.getService(MsgService::class.java).clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
+            NIMClient.getService(MsgService::class.java)
+                .clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
             EventBus.getDefault().post(NewMsgEvent())
 
             //发送通知告诉剩余时间，并且开始倒计时
@@ -268,12 +269,14 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         headAdapter.addData(ass)
         headAdapter.addData(squa)
         headAdapter.addData(like)
+        hiAdapter.data.clear()
         if (data?.greet != null && data?.greet.isNotEmpty()) {
             adapter.headerLayout.hiCount.text = "${data.greet_cnt}"
             adapter.headerLayout.rlFriend.visibility = View.VISIBLE
             hiAdapter.setNewData(data.greet)
         } else {
             adapter.headerLayout.rlFriend.visibility = View.GONE
+            hiAdapter.notifyDataSetChanged()
         }
 
         //获取最近联系人列表

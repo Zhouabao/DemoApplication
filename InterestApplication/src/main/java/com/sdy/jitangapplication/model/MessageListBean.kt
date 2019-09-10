@@ -45,6 +45,13 @@ data class HiMessageBean(
 
 }
 
+
+/**
+ * 被删除的超时的accid
+ */
+data class OuttimeBean(
+    val list: MutableList<String> = mutableListOf()
+)
 /*************消息列表**************/
 
 

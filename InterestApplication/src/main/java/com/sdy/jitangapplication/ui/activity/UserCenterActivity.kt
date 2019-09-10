@@ -15,6 +15,13 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
@@ -31,13 +38,6 @@ import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import com.google.android.flexbox.AlignItems
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_user_center.*
 import kotlinx.android.synthetic.main.dialog_charge_vip.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -330,9 +330,16 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //设置
             R.id.settingBtn -> {
+
                 startActivity<SettingsActivity>(
-                    "hide_distance" to userInfoBean.hide_distance,
-                    "hide_book" to userInfoBean.hide_book
+                    "hide_distance" to if (userInfoBean == null) {
+                        false
+                    } else {
+                        userInfoBean.hide_distance
+                    },
+                    "hide_book" to if (userInfoBean == null) {
+                        false
+                    } else userInfoBean.hide_book
                 )
             }
             //个人信息设置
