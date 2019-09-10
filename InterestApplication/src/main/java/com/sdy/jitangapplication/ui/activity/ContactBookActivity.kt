@@ -14,6 +14,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.model.ContactBean
 import com.sdy.jitangapplication.model.ContactDataBean
 import com.sdy.jitangapplication.model.LetterComparator
@@ -33,6 +34,9 @@ import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.headerview_label.view.*
 import kotlinx.android.synthetic.main.item_contact_book.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import java.util.*
 
@@ -59,6 +63,7 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contact_book)
+        EventBus.getDefault().register(this)
         initView()
         mPresenter.getContactLists(params)
     }
@@ -222,7 +227,7 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
                     )
                 }
 
-                adapter.addData(data.list!!)
+                adapter.setNewData(data.list!!)
                 Collections.sort(adapter.data, LetterComparator())
                 adapter.notifyDataSetChanged()
             }
@@ -237,7 +242,7 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
                     )
                 }
                 Collections.sort(data.asterisk, LetterComparator())
-                headAdapter.addData(data.asterisk!!)
+                headAdapter.setNewData(data.asterisk!!)
             }
         }
     }
@@ -249,5 +254,15 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         } else {
             getString(R.string.retry_net_error)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updateContactEvent(event: UpdateContactBookEvent) {
+        mPresenter.getContactLists(params)
     }
 }

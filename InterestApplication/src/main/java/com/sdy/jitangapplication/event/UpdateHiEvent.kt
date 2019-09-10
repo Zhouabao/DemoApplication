@@ -6,5 +6,12 @@ package com.sdy.jitangapplication.event
  *    desc   :
  *    version: 1.0
  */
-class UpdateHiEvent() {
-}
+/**
+ * 更新招呼列表
+ */
+class UpdateHiEvent
+
+/**
+ * 更新通讯录（加好友、星标、删除好友、移除星标等均要更新）
+ */
+class UpdateContactBookEvent

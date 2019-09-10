@@ -5,21 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.blankj.utilcode.util.ToastUtils
-import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
-import com.sdy.baselibrary.widgets.swipeback.Utils
-import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
-import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.StarEvent
-import com.sdy.jitangapplication.nim.DemoCache
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
-import com.sdy.jitangapplication.ui.activity.MainActivity
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.dialog.TickDialog
-import com.sdy.jitangapplication.utils.UserManager
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -31,8 +16,6 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
 import com.netease.nim.uikit.business.session.helper.MessageListPanelHelper
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
 import com.netease.nim.uikit.common.activity.UI
 import com.netease.nimlib.sdk.NIMClient
@@ -40,12 +23,23 @@ import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.friend.FriendService
 import com.netease.nimlib.sdk.friend.model.MuteListChangedNotify
-import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
-import com.netease.nimlib.sdk.msg.model.IMMessage
-import com.umeng.message.PushAgent
+import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
+import com.sdy.baselibrary.widgets.swipeback.Utils
+import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
+import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.StarEvent
+import com.sdy.jitangapplication.event.UpdateContactBookEvent
+import com.sdy.jitangapplication.nim.DemoCache
+import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
+import com.sdy.jitangapplication.ui.dialog.DeleteDialog
+import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_info.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import org.greenrobot.eventbus.EventBus
@@ -57,8 +51,7 @@ import org.jetbrains.anko.toast
 /**
  * 好友信息界面
  */
-class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
-    View.OnClickListener {
+class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
 
     private var account: String? = null
     private var star: Boolean = false//是否是星标好友
@@ -371,6 +364,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
                     if (t.code == 200) {
                         star = false
                         friendStar.isChecked = false
+                        EventBus.getDefault().post(UpdateContactBookEvent())
                     } else {
                         ToastUtils.showShort(t.msg)
                     }
@@ -393,6 +387,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
                     if (t.code == 200) {
                         star = true
                         friendStar.isChecked = true
+                        EventBus.getDefault().post(UpdateContactBookEvent())
                     } else {
                         ToastUtils.showShort(t.msg)
                     }
@@ -451,6 +446,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         NIMClient.getService(MsgService::class.java).deleteRecentContact2(account, SessionTypeEnum.P2P)
+                        EventBus.getDefault().post(UpdateContactBookEvent())
                         val intent = Intent()
                         intent.setClass(this@MessageInfoActivity, MainActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -469,52 +465,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, ModuleProxy,
 
     }
 
-
-    /*--------------------------消息代理------------------------*/
-    private fun sendChatHiMessage(type: Int) {
-        val container = Container(this, account, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), type)
-        val message = MessageBuilder.createCustomMessage(
-            account,
-            SessionTypeEnum.P2P,
-            "",
-            chatHiAttachment,
-            CustomMessageConfig()
-        )
-        container.proxy.sendMessage(message)
-    }
-
-    override fun sendMessage(msg: IMMessage): Boolean {
-        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
-            RequestCallback<Void?> {
-            override fun onSuccess(param: Void?) {
-                ToastUtils.showShort("添加好友成功！")
-            }
-
-            override fun onFailed(code: Int) {
-            }
-
-            override fun onException(exception: Throwable) {
-            }
-        })
-        return true
-    }
-
-    override fun onInputPanelExpand() {
-
-    }
-
-    override fun shouldCollapseInputPanel() {
-
-    }
-
-    override fun isLongClickEnabled(): Boolean {
-        return false
-    }
-
-    override fun onItemFooterClick(message: IMMessage?) {
-
-    }
 
 
     /*------------------------侧滑退出-----------------*/

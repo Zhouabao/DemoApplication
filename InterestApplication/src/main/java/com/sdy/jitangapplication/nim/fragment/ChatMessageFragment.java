@@ -44,10 +44,7 @@ import com.netease.nimlib.sdk.robot.model.RobotMsgType;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.Constants;
-import com.sdy.jitangapplication.event.EnablePicEvent;
-import com.sdy.jitangapplication.event.NimHeadEvent;
-import com.sdy.jitangapplication.event.StarEvent;
-import com.sdy.jitangapplication.event.UpdateHiEvent;
+import com.sdy.jitangapplication.event.*;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
@@ -142,16 +139,17 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             @Override
                             public void onNext(BaseResp<Object> objectBaseResp) {
                                 if (objectBaseResp.getCode() == 200) {
+                                    //隐藏倒计时控件
                                     btnMakeFriends.setVisibility(View.GONE);
                                     outdateTimeText.stopTime();
                                     outdateTimeText.setVisibility(View.GONE);
                                     outdateTime.setVisibility(View.GONE);
-
                                     //发送通知，可以发所有类型的消息
                                     EventBus.getDefault().post(new EnablePicEvent(true));
+                                    EventBus.getDefault().post(new UpdateContactBookEvent());
                                     ToastUtils.showShort(objectBaseResp.getMsg());
 
-                                    //发送成为好友消息，并且
+                                    //并且发送成为好友消息，
                                     IMMessage message = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, "", new ChatHiAttachment(null, ChatHiAttachment.CHATHI_RFIEND), new CustomMessageConfig());
                                     sendMessage(message);
 
@@ -536,8 +534,14 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                         if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
                             nimBean = nimBeanBaseResp.getData();
                             if (nimBean.getIsfriend()) { //是好友了，按钮消失
+                                //隐藏倒计时控件
                                 btnMakeFriends.setVisibility(View.GONE);
+                                outdateTimeText.stopTime();
+                                outdateTimeText.setVisibility(View.GONE);
+                                outdateTime.setVisibility(View.GONE);
                                 messageActivityBottomLayout.setVisibility(View.VISIBLE);
+                                //发送通知，可以发所有类型的消息
+                                EventBus.getDefault().post(new EnablePicEvent(true));
                             } else {
 
                                 //1，新消息 2，倒计时 3，普通样式 4 过期
