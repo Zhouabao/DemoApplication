@@ -311,11 +311,9 @@ class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog
         for (payway in payways) {
             if (payway.payment_type == 1) {
                 zhiPayBtn.visibility = View.VISIBLE
-            }
-            if (payway.payment_type == 2) {
+            } else if (payway.payment_type == 2) {
                 wechatPayBtn.visibility = View.VISIBLE
-            }
-            if (payway.payment_type == 3) {
+            } else if (payway.payment_type == 3) {
                 balancePayBtn.visibility = View.VISIBLE
             }
         }
