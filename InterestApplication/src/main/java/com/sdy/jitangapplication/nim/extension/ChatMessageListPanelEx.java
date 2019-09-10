@@ -339,9 +339,10 @@ public class ChatMessageListPanelEx {
         if (isMyMessage(lastMsg)) {
             if (needScrollToBottom) {
                 doScrollToBottom();
-            } else if (incomingMsgPrompt != null && lastMsg.getSessionType() != SessionTypeEnum.ChatRoom) {
-                incomingMsgPrompt.show(lastMsg);
             }
+//            else if (incomingMsgPrompt != null && lastMsg.getSessionType() != SessionTypeEnum.ChatRoom) {
+//             incomingMsgPrompt.show(lastMsg);
+//            }
         }
     }
 
