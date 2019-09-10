@@ -230,6 +230,8 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
                 adapter.setNewData(data.list!!)
                 Collections.sort(adapter.data, LetterComparator())
                 adapter.notifyDataSetChanged()
+            } else {
+                adapter.notifyDataSetChanged()
             }
             if (!data.asterisk.isNullOrEmpty()) {
                 for (data in data.asterisk!!) {
@@ -243,7 +245,12 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
                 }
                 Collections.sort(data.asterisk, LetterComparator())
                 headAdapter.setNewData(data.asterisk!!)
+            } else {
+                headAdapter.notifyDataSetChanged()
             }
+        } else {
+            adapter.notifyDataSetChanged()
+            headAdapter.notifyDataSetChanged()
         }
     }
 
@@ -263,6 +270,8 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateContactEvent(event: UpdateContactBookEvent) {
+        headAdapter.data.clear()
+        adapter.data.clear()
         mPresenter.getContactLists(params)
     }
 }

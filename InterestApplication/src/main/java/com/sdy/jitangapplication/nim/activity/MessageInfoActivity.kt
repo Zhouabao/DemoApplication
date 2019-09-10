@@ -225,8 +225,11 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
 
     override fun onClick(p0: View) {
         when (p0.id) {
-            R.id.llNoBother -> {
-                NIMClient.getService(FriendService::class.java).setMessageNotify(account, !NIMClient.getService(FriendService::class.java).isNeedMessageNotify(account))
+            R.id.llNoBother, R.id.friendNoBother -> {
+                NIMClient.getService(FriendService::class.java).setMessageNotify(
+                    account,
+                    !NIMClient.getService(FriendService::class.java).isNeedMessageNotify(account)
+                )
                     .setCallback(object : RequestCallback<Void?> {
                         override fun onSuccess(param: Void?) {
                             friendNoBother.isChecked = !friendNoBother.isChecked
@@ -241,7 +244,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         }
                     })
             }
-            R.id.llstar -> {//星标好友
+            R.id.llstar, R.id.friendStar -> {//星标好友
                 if (star) {
                     removeStar()
                 } else {
@@ -464,7 +467,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
             })
 
     }
-
 
 
     /*------------------------侧滑退出-----------------*/
