@@ -54,47 +54,54 @@
             android:layout_height="1dp"
             />
 
-    <LinearLayout
-            android:id="@+id/llstar"
+    <FrameLayout
             android:gravity="center"
             android:layout_gravity="center"
-            android:paddingRight="15dp"
-            android:paddingLeft="15dp"
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
-        <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="22dp"
-                android:text="星标好友"
-                android:textColor="#ff222222"
-                android:textSize="16sp"/>
 
         <Switch
                 android:id="@+id/friendStar"
+                android:layout_gravity="right|center_vertical"
                 android:showText="false"
+                android:enabled="false"
+                android:layout_marginRight="15dp"
                 android:thumb="@drawable/switch_ios_thumb"
                 android:track="@drawable/selector_switch_ios_track"
-                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-    </LinearLayout>
 
-    <LinearLayout
-            android:id="@+id/llNoBother"
+        <TextView
+                android:id="@+id/llstar"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="星标好友"
+                android:textColor="#ff222222"
+                android:textSize="16sp"/>
+    </FrameLayout>
+
+    <FrameLayout
             android:gravity="center"
             android:layout_gravity="center"
-            android:paddingRight="15dp"
-            android:paddingLeft="15dp"
             android:layout_width="match_parent"
             android:layout_height="50dp">
 
         <TextView
+                android:id="@+id/llNoBother"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
                 android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="22dp"
+                android:layout_gravity="center_vertical|left"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:text="消息免打扰"
+                android:gravity="center_vertical"
                 android:textColor="#ff222222"
                 android:textSize="16sp"/>
 
@@ -102,11 +109,13 @@
                 android:id="@+id/friendNoBother"
                 android:showText="false"
                 android:enabled="false"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="right|center_vertical"
                 android:thumb="@drawable/switch_ios_thumb"
                 android:track="@drawable/selector_switch_ios_track"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
             android:gravity="center"
