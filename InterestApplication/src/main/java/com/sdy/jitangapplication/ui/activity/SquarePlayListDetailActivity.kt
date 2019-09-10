@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -185,6 +186,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
         friendSquareList.layoutManager = layoutmanager
         friendSquareList.adapter = adapter
+        adapter.bindToRecyclerView(friendSquareList)
         //取消动画，主要是闪烁
         (friendSquareList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
@@ -257,6 +259,9 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 R.id.detailPlayContent, R.id.detailPlayCommentBtn -> {
                     SquareCommentDetailActivity.start(this, adapter.data[position])
                 }
+                R.id.audioFl -> {
+                    hideCover(position, SquareBean.AUDIO)
+                }
 
             }
         }
@@ -267,6 +272,35 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         //下一个
         rvNext.setOnClickListener(this)
 
+    }
+
+    //type :
+    public fun hideCover(position: Int, type: Int) {
+        when (type) {
+            SquareBean.AUDIO, SquareBean.PIC -> {
+                val coverLayout = adapter.getViewByPosition(position, R.id.coverLayout)
+                if (coverLayout != null)
+                    if (coverLayout.isVisible) {
+                        coverLayout.isVisible = false
+                        btnBack.isVisible = false
+                    } else {
+                        coverLayout.isVisible = true
+                        btnBack.isVisible = true
+                    }
+            }
+
+            SquareBean.VIDEO -> {
+                val coverLayout = adapter.getViewByPosition(position, R.id.videoCover)
+                if (coverLayout != null)
+                    if (coverLayout.isVisible) {
+                        coverLayout.isVisible = false
+                        btnBack.isVisible = false
+                    } else {
+                        coverLayout.isVisible = true
+                        btnBack.isVisible = true
+                    }
+            }
+        }
     }
 
 
@@ -380,7 +414,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             } else {
                 adapter.remove(position)
             }
-            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
 
         } else {
             toast("删除动态失败！")
@@ -449,7 +483,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
             }
             adapter.notifyItemChanged(position, "hahah")
-            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         } else {
             ToastUtils.showShort("点赞失败！")
         }
@@ -465,7 +499,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
-        EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+        EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
     }
 
     override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
@@ -473,7 +507,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         if (data.code == 200) {
             adapter.data[position].comment = ""
             adapter.notifyItemChanged(position)
-            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
 

@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
@@ -31,7 +30,6 @@ import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.adapter.SquareDetailImgsAdaper
 import com.sdy.jitangapplication.utils.UserManager
-import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.view.*
@@ -56,7 +54,6 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
         addItemType(SquareBean.AUDIO, R.layout.item_square_play_detail_audio)
     }
 
-    private val gsyVideoOptionBuilder by lazy { GSYVideoOptionBuilder() }
 
     override fun convert(holder: BaseViewHolder, item: SquareBean) {
         // 这里指定了被共享的视图元素
@@ -110,7 +107,7 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                     if (item.photo_json.isNullOrEmpty()) {
                         item.photo_json = mutableListOf(VideoJson(url = item.avatar))
                     }
-                    holder.itemView.detailPlayVp2.adapter = SquareDetailImgsAdaper(mContext, item.photo_json!!)
+                    holder.itemView.detailPlayVp2.adapter = SquareDetailImgsAdaper(mContext, item.photo_json!!,holder.layoutPosition)
 
                     //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
                     holder.itemView.detailPlayVp2.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -149,7 +146,6 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                     }
                 }
 
-
             }
             SquareBean.VIDEO -> {
                 holder.itemView.btnBack.isVisible = false
@@ -184,18 +180,14 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                 holder.itemView.detailPlayVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
                     override fun onClickBlank(url: String?, vararg objects: Any?) {
                         super.onClickBlank(url, *objects)
-                        if (holder.itemView.videoCover.visibility == View.VISIBLE) {
-                            holder.itemView.videoCover.visibility = View.GONE
-                            holder.itemView.btnBack.visibility = View.GONE
-                        } else {
-                            holder.itemView.videoCover.visibility = View.VISIBLE
-                            holder.itemView.btnBack.visibility = View.VISIBLE
-                        }
+                        (mContext as SquarePlayListDetailActivity).hideCover(holder.layoutPosition, SquareBean.VIDEO)
                     }
                 })
             }
             SquareBean.AUDIO -> {
                 holder.addOnClickListener(R.id.detailPlayBtn)
+                holder.addOnClickListener(R.id.audioFl)
+
                 Glide.with(mContext)
                     .load(item.avatar)
                     .thumbnail(0.5F)

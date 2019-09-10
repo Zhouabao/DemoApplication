@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.viewpager.widget.PagerAdapter
+import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.VideoJson
+import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
 import kotlinx.android.synthetic.main.item_detail_img_viewpager.view.*
 
 /**
@@ -17,7 +20,8 @@ import kotlinx.android.synthetic.main.item_detail_img_viewpager.view.*
  *    desc   :
  *    version: 1.0
  */
-class SquareDetailImgsAdaper(val context: Context, val datas: MutableList<VideoJson>) : PagerAdapter() {
+class SquareDetailImgsAdaper(val context: Context, val datas: MutableList<VideoJson>, val position: Int = 0) :
+    PagerAdapter() {
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
     }
@@ -30,7 +34,11 @@ class SquareDetailImgsAdaper(val context: Context, val datas: MutableList<VideoJ
         val view = LayoutInflater.from(context).inflate(R.layout.item_detail_img_viewpager, null)
         view.detailImg.transitionName = "imageview"
         GlideUtil.loadRoundImgCenterinside(context, datas[position].url, view.detailImg, 1F, 0)
-
+        view.onClick {
+            if (context is SquarePlayListDetailActivity) {
+                context.hideCover(position, SquareBean.PIC)
+            }
+        }
 
 
 //        val imageview = RoundImageView(context)
