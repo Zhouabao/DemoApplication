@@ -23,6 +23,12 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alipay.sdk.app.PayTask
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseException
+import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -32,12 +38,6 @@ import com.sdy.jitangapplication.ui.adapter.VipBannerAdapter
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.wxapi.PayResult
-import com.kotlin.base.data.net.RetrofitFactory
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.excute
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.rx.BaseException
-import com.kotlin.base.rx.BaseSubscriber
 import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.dialog_charge_vip.*
@@ -141,7 +141,6 @@ class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog
                 data.value.check = data.index == position
             }
             vipChargeAdapter.notifyDataSetChanged()
-            ToastUtils.showShort("${position}")
         }
 
         //支付宝支付
