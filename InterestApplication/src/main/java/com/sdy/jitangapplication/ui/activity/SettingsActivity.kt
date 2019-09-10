@@ -4,9 +4,14 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.ToastUtils
+import com.kotlin.base.common.AppManager
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.auth.AuthService
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.SettingsPresenter
@@ -14,10 +19,6 @@ import com.sdy.jitangapplication.presenter.view.SettingsView
 import com.sdy.jitangapplication.utils.DataCleanManager
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.kotlin.base.common.AppManager
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.auth.AuthService
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
@@ -58,8 +59,8 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         filterDistance.setOnClickListener(this)
         hotT1.text = "设置"
 
-        switchDistance.isChecked = intent.getBooleanExtra("hide_distance",false)
-        switchContacts.isChecked = intent.getBooleanExtra("hide_book",false)
+        switchDistance.isChecked = intent.getBooleanExtra("hide_distance", false)
+        switchContacts.isChecked = intent.getBooleanExtra("hide_book", false)
 
     }
 
@@ -93,10 +94,19 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             }
             //退出登录，同时退出IM和服务器
             R.id.loginOutBtn -> {
-                UserManager.clearLoginData()
-                NIMClient.getService(AuthService::class.java).logout()
-                AppManager.instance.finishAllActivity()
-                startActivity<WelcomeActivity>()
+                AlertDialog.Builder(this)
+                    .setTitle("退出登录")
+                    .setMessage("是否确认退出登录?")
+                    .setPositiveButton("确定") { _, _ ->
+                        UserManager.clearLoginData()
+                        NIMClient.getService(AuthService::class.java).logout()
+                        AppManager.instance.finishAllActivity()
+                        startActivity<WelcomeActivity>()
+                    }
+                    .setNegativeButton("取消") { p0, _ ->
+                        p0.cancel()
+                    }
+                    .show()
             }
             //返回
             R.id.btnBack -> {
