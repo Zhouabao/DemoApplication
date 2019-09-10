@@ -205,20 +205,24 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      */
     override fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean) {
         if (greetBean != null) {
-            if (greetBean.lightningcnt > 0) {
-                mPresenter.greet(
-                    UserManager.getToken(),
-                    UserManager.getAccid(),
-                    (matchBean.accid ?: ""),
-                    UserManager.getGlobalLabelId()
-                )
+            if (greetBean.isfriend || greetBean.isgreet) {
+                ChatActivity.start(activity!!, matchBean?.accid ?: "")
             } else {
-                card_stack_view.rewind()
-                if (UserManager.isUserVip()) {
-                    //TODO 会员充值
-                    CountDownChatHiDialog(activity!!).show()
+                if (greetBean.lightningcnt > 0) {
+                    mPresenter.greet(
+                        UserManager.getToken(),
+                        UserManager.getAccid(),
+                        (matchBean.accid ?: ""),
+                        UserManager.getGlobalLabelId()
+                    )
                 } else {
-                    ChargeVipDialog(activity!!).show()
+                    card_stack_view.rewind()
+                    if (UserManager.isUserVip()) {
+                        //TODO 会员充值
+                        CountDownChatHiDialog(activity!!).show()
+                    } else {
+                        ChargeVipDialog(activity!!).show()
+                    }
                 }
             }
         } else {
@@ -230,7 +234,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     /**
      * 打招呼结果（先请求服务器）
      */
-    override fun onGreetSResult(greetBean: Boolean) {
+    override fun onGreetSResult(greetBean: Boolean, code: Int) {
         if (greetBean) {
             sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
         } else {
