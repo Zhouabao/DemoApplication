@@ -16,10 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.SizeUtils;
-import com.google.android.flexbox.AlignItems;
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexWrap;
-import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.*;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
@@ -1355,6 +1352,8 @@ public class ChatMessageListPanelEx {
 
         FlexboxLayoutManager manager = new FlexboxLayoutManager(container.activity, FlexDirection.ROW, FlexWrap.WRAP);
         manager.setAlignItems(AlignItems.STRETCH);
+        manager.setJustifyContent(JustifyContent.CENTER);
+
         chatHiTags.setLayoutManager(manager);
         chatHiTags.addItemDecoration(new DividerItemDecoration(container.activity, DividerItemDecoration.BOTH_SET, SizeUtils.dp2px(8F), container.activity.getResources().getColor(R.color.white)));
         hiLabelAdapter = new ChatHiLabelAdapter(container.activity);

@@ -4,17 +4,14 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.flexbox.*;
+import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
+import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
+import com.netease.nim.uikit.common.util.sys.ScreenUtil;
 import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.attachment.ChatMatchAttachment;
 import com.sdy.jitangapplication.ui.adapter.MatchDetailLabelAdapter;
-import com.google.android.flexbox.AlignItems;
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexWrap;
-import com.google.android.flexbox.FlexboxLayoutManager;
-import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
-import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
-import com.netease.nim.uikit.common.util.sys.ScreenUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -56,6 +53,7 @@ public class MsgViewHolderMatch extends MsgViewHolderBase {
         //用户标签
         FlexboxLayoutManager manager = new FlexboxLayoutManager(context, FlexDirection.ROW, FlexWrap.WRAP);
         manager.setAlignItems(AlignItems.STRETCH);
+        manager.setJustifyContent(JustifyContent.CENTER);
         chatHiTags.setLayoutManager(manager);
         MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(context);
         chatHiTags.setAdapter(adapter);

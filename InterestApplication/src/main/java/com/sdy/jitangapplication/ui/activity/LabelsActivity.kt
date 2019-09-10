@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.google.android.flexbox.AlignItems
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
@@ -87,12 +84,9 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
         }
         completeLabelLL.setOnClickListener(this)
 
-        val manager = FlexboxLayoutManager(this)
-        //item的排列方向
-        manager.flexDirection = FlexDirection.ROW
-        //是否换行
-        manager.flexWrap = FlexWrap.WRAP
+        val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.CENTER
         labelRecyclerview.layoutManager = manager
         adapter = LabelAdapter()
         labelRecyclerview.adapter = adapter

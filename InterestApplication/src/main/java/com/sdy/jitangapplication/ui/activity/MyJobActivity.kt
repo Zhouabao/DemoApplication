@@ -4,19 +4,16 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import com.blankj.utilcode.util.ToastUtils
+import com.google.android.flexbox.*
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.presenter.MyJobPresenter
 import com.sdy.jitangapplication.presenter.view.MyJobView
 import com.sdy.jitangapplication.ui.adapter.LabelAdapter
 import com.sdy.jitangapplication.utils.UserManager
-import com.google.android.flexbox.AlignItems
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
 import kotlinx.android.synthetic.main.activity_labels.btnBack
 import kotlinx.android.synthetic.main.activity_my_job.*
@@ -68,6 +65,7 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
         //是否换行
         manager.flexWrap = FlexWrap.WRAP
         manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.CENTER
         userJobRv.layoutManager = manager
         adapter = LabelAdapter()
         userJobRv.adapter = adapter

@@ -4,18 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.google.android.flexbox.*
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.presenter.LabelsPresenter
 import com.sdy.jitangapplication.ui.adapter.LabelAdapter
 import com.sdy.jitangapplication.utils.UserManager
-import com.google.android.flexbox.AlignItems
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
 import kotlinx.android.synthetic.main.activity_publish_choose_labels.*
 import org.jetbrains.anko.startActivityForResult
@@ -57,6 +54,7 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
         //是否换行
         manager.flexWrap = FlexWrap.WRAP
         manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.CENTER
         labelRecyclerview.layoutManager = manager
         adapter = LabelAdapter()
         labelRecyclerview.adapter = adapter
