@@ -1,8 +1,8 @@
 package com.sdy.jitangapplication.api
 
+import com.kotlin.base.data.protocol.BaseResp
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.*
-import com.kotlin.base.data.protocol.BaseResp
 import retrofit2.http.*
 import rx.Observable
 
@@ -385,7 +385,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tidings/delTimeoutGreet${Constants.END_BASE_URL}")
-    fun delTimeoutGreet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    fun delTimeoutGreet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<OuttimeBean?>>
 
 
     /**

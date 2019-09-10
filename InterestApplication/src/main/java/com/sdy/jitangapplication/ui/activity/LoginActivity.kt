@@ -1,96 +1,92 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.RegexUtils
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SpanUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.presenter.LoginPresenter
-import com.sdy.jitangapplication.presenter.view.LoginView
-import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.utils.UserManager
+import com.tencent.mm.opensdk.modelmsg.SendAuth
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
 /**
- * 手机登录界面
+ * 欢迎页
  */
-class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClickListener {
 
-    private var wxcode: String = ""
-    private var login_type: String = "1"
-
+//todo(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
+class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        ScreenUtils.setFullScreen(this)
 
-        initView()
-    }
-
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        etPhone.postDelayed({
-            KeyboardUtils.showSoftInput(etPhone, 0)
-        }, 200)
-
-    }
-
-    private fun initView() {
-        wxcode = intent.getStringExtra("wxcode") ?: ""
-        login_type = intent.getStringExtra("type") ?: "1"
-        if (login_type == "3") {
-            titleTv.text = "请绑定手机号"
-        } else {
-            titleTv.text = "请输入手机号"
-        }
+        userAgreement.text = SpanUtils.with(userAgreement).append("积糖用户协议").setUnderline().create()
+        privacyPolicy.text = SpanUtils.with(privacyPolicy).append("隐私协议").setUnderline().create()
 
 
-        mPresenter = LoginPresenter()
-        mPresenter.mView = this
-        mPresenter.context = this
-
-
-        btnBack.setOnClickListener(this)
-        btnLoginQuestion.setOnClickListener(this)
-        btnVerifyCode.setOnClickListener(this)
-
-        etPhone.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(edit: Editable?) {
-                btnVerifyCode.isEnabled = etPhone.text.toString().isNotEmpty() && etPhone.text.toString().length == 11
-
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-        })
-    }
-
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.btnBack -> {
-                finish()
-            }
-            R.id.btnLoginQuestion -> {
-            }
-            R.id.btnVerifyCode -> {
-                if (RegexUtils.isMobileSimple(etPhone.text.toString())) {
-                    startActivity<VerifyCodeActivity>(
-                        "phone" to etPhone.text.toString(),
-                        "wxcode" to wxcode,
-                        "type" to login_type
-                    )
+        //判断是否有登录
+        if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
+            if (UserManager.isUserInfoMade()) {//是否填写过用户信息
+                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isEmpty()) {//是否选择过标签
+                    UserManager.clearLoginData()
+//                    startActivity<LabelsActivity>()
                 } else {
-                    toast("请输入正确的手机号!")
+                    startActivity<MainActivity>()
                 }
+                finish()
+            } else {
+                UserManager.clearLoginData()
+//                startActivity<SetInfoActivity>()
             }
         }
+
+
+        //手机登录
+        phoneLoginBtn.onClick {
+            startActivity<PhoneActivity>()
+        }
+
+        //微信登录
+        wechatLoginBtn.onClick {
+            wechatLogin()
+        }
+
+        //隐私协议
+        privacyPolicy.onClick {
+            startActivity<ProtocolActivity>("type" to 1)
+        }
+        //用户协议
+        userAgreement.onClick {
+            startActivity<ProtocolActivity>("type" to 2)
+        }
+
     }
 
+    private fun wechatLogin() {
+        val wxapi = WXAPIFactory.createWXAPI(this, null)
+        wxapi.registerApp(Constants.WECHAT_APP_ID)
+        if (!wxapi.isWXAppInstalled) {
+            ToastUtils.showShort("你没有安装微信")
+            return
+        }
+        val req = SendAuth.Req()
+        req.scope = "snsapi_userinfo"
+        req.state = "wechat_sdk_demo_test"
+        wxapi.sendReq(req)
+//        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, umAuthListener)
+    }
+
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        UMShareAPI.get(this).release()
+    }
 }

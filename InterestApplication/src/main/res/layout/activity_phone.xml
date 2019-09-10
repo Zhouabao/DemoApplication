@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.PhoneActivity">
+
+    <ImageView
+            android:id="@+id/btnBack"
+            style="@style/BckBtnStyle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/btnLoginQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:text="登录问题"
+            android:visibility="gone"
+            android:textColor="#ff9b9b9b"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/btnBack"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnBack"/>
+
+    <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="请输入手机号"
+            android:textColor="#ff262626"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnBack"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clPhone"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="156dp"
+            android:alpha="0.8"
+            android:background="@drawable/login_rectangle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnBack">
+
+        <TextView
+                android:layout_width="26dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="16dp"
+                android:text="+86"
+                android:textColor="#ff262626"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+                android:layout_width="1dp"
+                android:layout_height="28dp"
+                android:layout_marginLeft="57dp"
+                android:alpha="0.5"
+                android:background="#000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <EditText
+                android:id="@+id/etPhone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="73dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="输入手机号"
+                android:textColorHint="#BDBDBD"
+                android:textSize="14sp"
+                android:inputType="phone"
+                android:maxLength="11"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <Button
+            android:id="@+id/btnVerifyCode"
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/selector_confirm_btn"
+            android:gravity="center"
+            android:text="获取验证码"
+            android:textColor="#ffffffff"
+            android:enabled="false"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="@id/clPhone"
+            app:layout_constraintRight_toRightOf="@id/clPhone"
+            app:layout_constraintTop_toBottomOf="@id/clPhone"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
