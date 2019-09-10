@@ -43,7 +43,7 @@
             app:msv_emptyView="@layout/empty_layout"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            app:msv_viewState="content">
 
         <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -198,6 +198,7 @@
                             android:text="职业"
                             android:textColor="#ff222222"
                             android:textSize="16sp"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:layout_constraintBottom_toBottomOf="@id/userJob"
@@ -206,6 +207,7 @@
 
 
                     <TextView
+                            android:visibility="gone"
                             android:id="@+id/userJob"
                             android:drawablePadding="10dp"
                             android:gravity="center"
