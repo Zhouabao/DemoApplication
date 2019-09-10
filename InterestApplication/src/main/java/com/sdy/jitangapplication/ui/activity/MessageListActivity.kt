@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +29,7 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.netease.nimlib.sdk.msg.model.MessageReceipt
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -159,6 +161,11 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             startActivity<MessageHiActivity>()
         }
         hiAdapter.setOnItemClickListener { _, view, position ->
+            // 通知中的 RecentContact 对象的未读数为0
+            //做招呼的已读状态更新
+            NIMClient.getService(MsgService::class.java).clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
+            EventBus.getDefault().post(NewMsgEvent())
+
             //发送通知告诉剩余时间，并且开始倒计时
             ChatActivity.start(this, hiAdapter.data[position].accid ?: "")
         }
@@ -364,6 +371,11 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         service.observeRecentContact(messageObserver, register)
         service.observeMsgStatus(statusObserver, register)
         service.observeRecentContactDeleted(deleteObserver, register)
+//        // 已读回执监听
+        if (NimUIKitImpl.getOptions().shouldHandleReceipt) {
+            service.observeMessageReceipt(messageReceiptObserver, register)
+        }
+
         NimUIKit.getContactChangedObservable().registerObserver(friendDataChangedObserver, register)
         if (register) {
             registerUserInfoObserver()
@@ -519,6 +531,16 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         }
 
 
+    private val TAG = MessageListActivity::class.java.simpleName
+    /**
+     * 已读回执观察者
+     */
+    private val messageReceiptObserver = Observer<List<MessageReceipt>> {
+        //收到已读回执,调用接口,改变此时招呼或者消息的状态
+        Log.d(TAG, "======已读回执=====")
+        mPresenter.messageCensus(params)
+    }
+
     private fun getItemIndex(uuid: String): Int {
         for (i in adapter.data.indices) {
             val item = adapter.data.get(i)
@@ -551,4 +573,14 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     fun onUpdateHiEvent(event: UpdateHiEvent) {
         mPresenter.messageCensus(params)
     }
+
+
+//    private fun registerObservers(register: Boolean) {
+//        val service = NIMClient.getService(MsgServiceObserve::class.java)
+//        service.observeReceiveMessage(incomingMessageObserver, register)
+//        // 已读回执监听
+//        if (NimUIKitImpl.getOptions().shouldHandleReceipt) {
+//            service.observeMessageReceipt(messageReceiptObserver, register)
+//        }
+//    }
 }

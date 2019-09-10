@@ -4,8 +4,23 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.Observer
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.MsgServiceObserve
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.netease.nimlib.sdk.msg.model.RecentContact
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.NewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.HiMessageBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -15,14 +30,6 @@ import com.sdy.jitangapplication.presenter.MessageHiPresenter
 import com.sdy.jitangapplication.presenter.view.MessageHiView
 import com.sdy.jitangapplication.ui.adapter.MessageHiListAdapter
 import com.sdy.jitangapplication.utils.UserManager
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nimlib.sdk.msg.model.RecentContact
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_message_hi.*
 import kotlinx.android.synthetic.main.activity_message_hi.stateview
 import kotlinx.android.synthetic.main.activity_message_list.btnBack
@@ -51,6 +58,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_hi)
         EventBus.getDefault().register(this)
+        registerObservers(true)
         initView()
 
     }
@@ -92,6 +100,11 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         adapter.emptyView.emptyTip.text = "还没有消息哦，不如主动出击？"
 
         adapter.setOnItemClickListener { _, view, position ->
+            // 通知中的 RecentContact 对象的未读数为0
+            //做招呼的已读状态更新
+            NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
+            EventBus.getDefault().post(NewMsgEvent())
+
             //发送通知告诉剩余时间，并且开始倒计时
             ChatActivity.start(this, adapter.data[position].accid ?: "")
         }
@@ -195,6 +208,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
+        registerObservers(false)
         adapter.cancelAllTimers()//取消所有的定时器
     }
 
@@ -203,5 +217,45 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         refreshLayout.autoRefresh()
     }
 
+
+    /**
+     * ********************** 收消息，处理状态变化 ************************
+     */
+    private fun registerObservers(register: Boolean) {
+        val service = NIMClient.getService(MsgServiceObserve::class.java)
+        service.observeReceiveMessage(messageReceiverObserver, register)
+    }
+
+
+    //监听在线消息中是否有@我
+    private val messageReceiverObserver =
+        Observer<List<IMMessage>> { imMessages ->
+            if (imMessages != null) {
+                for (contact in adapter.data) {
+                    for (imMessage in imMessages) {
+                        if (contact.accid == imMessage.fromAccount) {
+                            if (imMessage.attachment is ChatHiAttachment) {
+                                contact.content =
+                                    if ((imMessage.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
+                                        "[招呼消息]"
+                                    } else if ((imMessage.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) {
+                                        "[匹配消息]"
+                                    } else if ((imMessage.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND) {
+                                        "[好友消息]"
+                                    } else if ((imMessage.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME) {
+                                        "[消息过期]"
+                                    } else {
+                                        ""
+                                    }
+                            } else if (imMessage.attachment is ShareSquareAttachment) {
+                                contact.content = "[动态分享内容]"
+                            } else {
+                                contact.content = imMessage.content                            }
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+        }
 
 }

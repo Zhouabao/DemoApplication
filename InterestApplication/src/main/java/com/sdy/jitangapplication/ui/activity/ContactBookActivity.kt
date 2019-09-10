@@ -5,10 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.ContactBean
 import com.sdy.jitangapplication.model.ContactDataBean
 import com.sdy.jitangapplication.model.LetterComparator
@@ -23,12 +28,10 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.sortcontacts.Cn2Spell
 import com.sdy.jitangapplication.widgets.sortcontacts.PinnedHeaderDecoration
 import com.sdy.jitangapplication.widgets.sortcontacts.WaveSideBarView
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_contact_book.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.headerview_label.view.*
+import kotlinx.android.synthetic.main.item_contact_book.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 import java.util.*
@@ -89,6 +92,7 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         }
         contactsRv.addItemDecoration(decoration)
         contactsRv.adapter = adapter
+        adapter.addHeaderView(initAssistantView())
         adapter.addHeaderView(initHeadsView())
         indexBar.setOnSelectIndexItemListener(object : WaveSideBarView.OnSelectIndexItemListener {
             override fun onSelectIndexItem(letter: String) {
@@ -169,6 +173,18 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
             chatOrShare(headAdapter.data[position])
         }
 
+        return headView
+    }
+
+    private fun initAssistantView(): View {
+        val headView = LayoutInflater.from(this).inflate(R.layout.item_contact_book, contactsRv, false)
+        headView.tv_index.isVisible = false
+        headView.friendDivider.isVisible = false
+        headView.friendIcon.setImageResource(R.drawable.icon_assistant)
+        headView.friendName.text = "官方小助手"
+        headView.setOnClickListener {
+            ChatActivity.start(this, Constants.ASSISTANT_ACCID)
+        }
         return headView
     }
 
