@@ -54,15 +54,17 @@ import org.jetbrains.anko.support.v4.toast
 class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoadMoreListener,
     MultiListSquareAdapter.ResetAudioListener {
 
+    private val TAG = ListSquareFragment::class.java.simpleName
     private lateinit var scrollCalculatorHelper: ScrollCalculatorHelper
     //音频当前播放位置
     private var currPlayIndex = -1
 
     private val adapter by lazy {
-        MultiListSquareAdapter(mutableListOf(),resetAudioListener = this).apply {
+        MultiListSquareAdapter(mutableListOf(), resetAudioListener = this).apply {
             chat = false
         }
     }
+
     override fun resetAudioState() {
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
@@ -71,6 +73,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         currPlayIndex = -1
 
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list_square, container, false)
@@ -91,7 +94,14 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         EventBus.getDefault().register(this)
 
         val linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        listSquareRv.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.HORIZONTAL_LIST, SizeUtils.dp2px(20F), resources.getColor(R.color.colorWhite)))
+        listSquareRv.addItemDecoration(
+            DividerItemDecoration(
+                activity!!,
+                DividerItemDecoration.HORIZONTAL_LIST,
+                SizeUtils.dp2px(20F),
+                resources.getColor(R.color.colorWhite)
+            )
+        )
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
         adapter.bindToRecyclerView(listSquareRv)
@@ -216,13 +226,16 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             mPresenter.getSomeoneSquare(params)
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onRefreshSquareEvent(event: RefreshSquareEvent){
-        adapter.data.clear()
-        listRefresh.setNoMoreData(false)
-        page = 1
-        params["page"] = page
-        mPresenter.getSomeoneSquare(params)
+    fun onRefreshSquareEvent(event: RefreshSquareEvent) {
+        if (event.from != TAG) {
+            adapter.data.clear()
+            listRefresh.setNoMoreData(false)
+            page = 1
+            params["page"] = page
+            mPresenter.getSomeoneSquare(params)
+        }
     }
 
     override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
@@ -237,7 +250,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 //                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
 //            }
 
-            if (data == null || data.list == null || data!!.list!!.size == 0 ) {
+            if (data == null || data.list == null || data!!.list!!.size == 0) {
                 listRefresh.finishLoadMoreWithNoMoreData()
             } else {
                 for (tempData in 0 until data!!.list!!.size) {
@@ -268,9 +281,9 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                 adapter.data[position].isliked = 1
                 adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
             }
-//            adapter.notifyItemChanged(position)
-            adapter.notifyDataSetChanged()
-            EventBus.getDefault().post(RefreshSquareEvent(true))
+            adapter.notifyItemChanged(position)
+//            adapter.notifyDataSetChanged()
+            EventBus.getDefault().post(RefreshSquareEvent(refresh = true, from = TAG))
 
         }
     }
@@ -283,11 +296,11 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         } else {
             adapter.data[position].iscollected = 1
         }
-        adapter.notifyDataSetChanged()
+        adapter.notifyItemChanged(position)
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
-        EventBus.getDefault().post(RefreshSquareEvent(true))
+        EventBus.getDefault().post(RefreshSquareEvent(refresh = true, from = TAG))
 
     }
 

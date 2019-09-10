@@ -52,7 +52,7 @@ import org.jetbrains.anko.toast
  */
 class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyCollectionView, OnRefreshListener,
     OnLoadMoreListener, MultiListSquareAdapter.ResetAudioListener {
-
+    private val TAG = MyCollectionEtcActivity::class.java.simpleName
 
     private val type by lazy { intent.getIntExtra("type", 0) }
 
@@ -385,7 +385,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         if (result) {
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
-            EventBus.getDefault().post(RefreshSquareEvent(true))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
 
@@ -463,9 +463,9 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                 adapter.data[position].isliked = 1
                 adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
             }
-//            adapter.notifyItemChanged(position)
-            adapter.notifyDataSetChanged()
-            EventBus.getDefault().post(RefreshSquareEvent(true))
+            adapter.notifyItemChanged(position)
+//            adapter.notifyDataSetChanged()
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
 
@@ -561,7 +561,8 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshSquareEvent(event: RefreshSquareEvent) {
-        refreshLayout.autoRefresh()
+        if (event.from != TAG)
+            refreshLayout.autoRefresh()
     }
 
 }

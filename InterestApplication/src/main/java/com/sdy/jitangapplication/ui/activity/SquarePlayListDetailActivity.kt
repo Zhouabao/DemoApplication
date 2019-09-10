@@ -46,6 +46,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
     //确定内容的来源地  1好友列表 2广场列表 3聊天跳转
     private var from = -1
+    private val TAG = SquarePlayListDetailActivity::class.java.simpleName
 
     //广场列表内容适配器
     private val adapter by lazy { MultiListDetailPlayAdapter(this, mutableListOf()) }
@@ -379,7 +380,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             } else {
                 adapter.remove(position)
             }
-            EventBus.getDefault().post(RefreshSquareEvent(true))
+            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
 
         } else {
             toast("删除动态失败！")
@@ -448,7 +449,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
             }
             adapter.notifyItemChanged(position, "hahah")
-            EventBus.getDefault().post(RefreshSquareEvent(true))
+            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
         } else {
             ToastUtils.showShort("点赞失败！")
         }
@@ -464,7 +465,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
-        EventBus.getDefault().post(RefreshSquareEvent(true))
+        EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
     }
 
     override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
@@ -472,7 +473,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         if (data.code == 200) {
             adapter.data[position].comment = ""
             adapter.notifyItemChanged(position)
-            EventBus.getDefault().post(RefreshSquareEvent(true))
+            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
         }
     }
 

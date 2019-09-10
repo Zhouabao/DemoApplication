@@ -18,8 +18,8 @@ class NotifyEvent(var position: Int)
 class RefreshEvent(val refresh: Boolean)
 
 
-//刷新事件
-class RefreshSquareEvent(val refresh: Boolean)
+//刷新事件  local 是否是本地
+class RefreshSquareEvent(val refresh: Boolean, var from: String = "")
 
 //根据条件筛选请求的params
 class FilterEvent(val params: HashMap<String, Any>)
