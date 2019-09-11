@@ -5,19 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.KeyboardUtils
-import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
-import com.sdy.baselibrary.widgets.swipeback.Utils
-import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
-import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.EnablePicEvent
-import com.sdy.jitangapplication.event.NimHeadEvent
-import com.sdy.jitangapplication.event.UpdateHiEvent
-import com.sdy.jitangapplication.model.NimBean
-import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
-import com.sdy.jitangapplication.utils.UserManager
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -40,6 +27,19 @@ import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
+import com.sdy.baselibrary.widgets.swipeback.Utils
+import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
+import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.EnablePicEvent
+import com.sdy.jitangapplication.event.NimHeadEvent
+import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.model.NimBean
+import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.greenrobot.eventbus.EventBus
 
@@ -167,8 +167,9 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         super.onDestroy()
         EventBus.getDefault().post(UpdateHiEvent())
         registerObservers(false)
+        if (KeyboardUtils.isSoftInputVisible(this))
+            KeyboardUtils.hideSoftInput(this)
         AppManager.instance.finishActivity(this)
-
     }
 
     override fun onResume() {
@@ -259,7 +260,8 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
 
     override fun onBackPressed() {
-        KeyboardUtils.hideSoftInput(this)
+        if (KeyboardUtils.isSoftInputVisible(this))
+            KeyboardUtils.hideSoftInput(this)
         super.onBackPressed()
     }
 
@@ -276,7 +278,8 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     override fun scrollToFinishActivity() {
         Utils.convertActivityToTranslucent(this)
-        KeyboardUtils.hideSoftInput(this)
+        if (KeyboardUtils.isSoftInputVisible(this))
+            KeyboardUtils.hideSoftInput(this)
         swipeBackLayout.scrollToFinishActivity()
     }
 
