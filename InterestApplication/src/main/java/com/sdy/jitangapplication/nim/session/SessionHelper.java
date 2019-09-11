@@ -244,17 +244,17 @@ public class SessionHelper {
                 public String getDefaultDigest(RecentContact recent) {
                     if (recent.getAttachment() instanceof ChatHiAttachment) {
                         if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_HI) {
-                            return "[打招呼]";
+                            return "『招呼消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_MATCH) {
-                            return "[匹配消息]";
+                            return "通过『" + ((ChatHiAttachment) recent.getAttachment()).getTag() + "』匹配";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
-                            return "[好友消息]";
+                            return "『好友消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_OUTTIME) {
-                            return "[消息过期]";
+                            return "『消息过期』";
                         }
 
                     } else if (recent.getAttachment() instanceof ShareSquareAttachment) {
-                        return "[转发动态]";
+                        return "『转发动态』";
 
                     }
                     return super.getDefaultDigest(recent);
