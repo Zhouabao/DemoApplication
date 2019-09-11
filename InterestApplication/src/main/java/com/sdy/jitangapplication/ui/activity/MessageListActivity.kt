@@ -9,7 +9,6 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.TimeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -22,6 +21,7 @@ import com.netease.nim.uikit.business.recent.TeamMemberAitHelper
 import com.netease.nim.uikit.common.CommonUtil
 import com.netease.nim.uikit.common.ui.drop.DropCover
 import com.netease.nim.uikit.common.ui.drop.DropManager
+import com.netease.nim.uikit.common.util.sys.TimeUtil
 import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
@@ -40,6 +40,8 @@ import com.sdy.jitangapplication.model.HiMessageBean
 import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
 import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
@@ -130,7 +132,8 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                     ChatActivity.start(this, adapter.data[position].contactId)
                     // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
                     // 通知中的 RecentContact 对象的未读数为0
-                    NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
+                    NIMClient.getService(MsgService::class.java)
+                        .clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
                     if (UserManager.getHiCount() > 0) {
                         UserManager.saveHiCount(UserManager.getHiCount() - 1)
                     }
@@ -168,7 +171,8 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             if (UserManager.getHiCount() > 0) {
                 UserManager.saveHiCount(UserManager.getHiCount() - 1)
             }
-            NIMClient.getService(MsgService::class.java).clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
+            NIMClient.getService(MsgService::class.java)
+                .clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
             EventBus.getDefault().post(NewMsgEvent())
 
             //发送通知告诉剩余时间，并且开始倒计时
@@ -302,9 +306,19 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
                 ass = MessageListBean(
                     "官方助手",
-                    loadedRecent.content,
+                    when {
+                        loadedRecent.attachment is ChatHiAttachment -> when {
+                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
+                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH -> "通过『" + (loadedRecent.getAttachment() as ChatHiAttachment).tag + "』匹配"
+                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
+                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
+                            else -> ""
+                        }
+                        loadedRecent.attachment is ShareSquareAttachment -> "『动态分享内容』"
+                        else -> loadedRecent.content
+                    },
                     loadedRecent.unreadCount,
-                    TimeUtils.getFriendlyTimeSpanByNow(loadedRecent.time),
+                    TimeUtil.getTimeShowString(loadedRecent.time, true),
                     R.drawable.icon_assistant,
                     loadedRecent.contactId
                 )
