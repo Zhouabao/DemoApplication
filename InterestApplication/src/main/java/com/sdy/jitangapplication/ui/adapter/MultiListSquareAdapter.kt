@@ -403,10 +403,10 @@ class MultiListSquareAdapter(
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                clickPos = -1
                 ChatActivity.start(mContext as Activity, mData[clickPos].accid ?: "")
                 //发送通知修改招呼次数
                 EventBus.getDefault().postSticky(UpdateHiCountEvent())
+                clickPos = -1
             }
 
             override fun onFailed(code: Int) {
