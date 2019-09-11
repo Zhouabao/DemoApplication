@@ -11,7 +11,7 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+        app:msv_viewState="content">
 
     <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -131,6 +131,16 @@
                         app:layout_constraintBottom_toBottomOf="@id/detailUserName"
                         app:layout_constraintLeft_toRightOf="@id/detailUserName"
                         app:layout_constraintTop_toTopOf="@id/detailUserName"/>
+                <ImageView
+                        android:id="@+id/detailUserVerify"
+                        android:src="@drawable/icon_verify"
+                        android:layout_width="25dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_height="25dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@id/detailUserVip"
+                        app:layout_constraintLeft_toRightOf="@id/detailUserVip"
+                        app:layout_constraintTop_toTopOf="@id/detailUserVip"/>
 
                 <ImageView
                         android:id="@+id/moreBtn"

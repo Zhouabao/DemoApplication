@@ -219,6 +219,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         } else {
             View.GONE
         }
+        detailUserVerify.isVisible = matchBean!!.isfaced == 1
 
 
         //已感兴趣或者是好友不做操作
