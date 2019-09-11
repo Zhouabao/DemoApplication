@@ -35,6 +35,7 @@ data class SquareBean(
     var comment: String = "",
     var create_time: String = "",
     var descr: String = "",
+    val distance: String = "",
     var id: Int?,
     var isliked: Int?,
     var iscollected: Int?,//0没收藏 1收藏

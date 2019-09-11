@@ -154,12 +154,12 @@ data class ContactDataBean(
 )
 
 data class ContactBean(
-    var nickname: String? = "",
+    var nickname: String = "",
     var stared: Boolean = false,
-    var accid: String? = "",
-    var avatar: String? = "",
-    var member_level: Int? = 0,
-    var index: String? = ""
+    var accid: String = "",
+    var avatar: String = "",
+    var member_level: Int = 0,
+    var index: String = ""
 //    var index: String? = Cn2Spell.getPinYinFirstLetter(nickname).toUpperCase()
 )
 
