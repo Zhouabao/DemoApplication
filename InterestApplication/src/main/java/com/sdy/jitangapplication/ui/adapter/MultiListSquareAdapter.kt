@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.app.Activity
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -110,7 +111,7 @@ class MultiListSquareAdapter(
             if (resetAudioListener != null) {
                 resetAudioListener!!.resetAudioState()
             }
-            clickPos = holder.layoutPosition
+            clickPos = holder.layoutPosition - headerLayoutCount
             greetState(UserManager.getToken(), UserManager.getAccid(), item.accid)
         }
 
@@ -296,6 +297,7 @@ class MultiListSquareAdapter(
                         if (greetBean != null) {
                             if (greetBean.isfriend || greetBean.isgreet) {
                                 ChatActivity.start(mContext as Activity, target_accid ?: "")
+                                clickPos = -1
                             } else {
                                 UserManager.saveLightingCount(greetBean.lightningcnt)
                                 UserManager.saveCountDownTime(greetBean.countdown)
@@ -381,6 +383,7 @@ class MultiListSquareAdapter(
     /*--------------------------消息代理------------------------*/
 
     private fun sendChatHiMessage(squareBean: SquareBean) {
+        Log.d("OkHttp", "${squareBean.accid}====================")
         val container = Container(mContext as Activity, squareBean?.accid, SessionTypeEnum.P2P, this, true)
         val chatHiAttachment = ChatHiAttachment(
             UserManager.getGlobalLabelName(),
@@ -400,6 +403,7 @@ class MultiListSquareAdapter(
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
+                clickPos = -1
                 ChatActivity.start(mContext as Activity, mData[clickPos].accid ?: "")
                 //发送通知修改招呼次数
                 EventBus.getDefault().postSticky(UpdateHiCountEvent())
