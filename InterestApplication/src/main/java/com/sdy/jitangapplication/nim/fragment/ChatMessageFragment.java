@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
@@ -317,8 +318,14 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             messageListPanel.receiveReceipt();
             //收到已读回执,调用接口,改变此时招呼或者消息的状态
             if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
-                getTargetInfo(sessionId);
-                EventBus.getDefault().post(new UpdateHiEvent());
+                try {
+                    Thread.sleep(2000L);
+                    getTargetInfo(sessionId);
+                    EventBus.getDefault().post(new UpdateHiEvent());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
         }
     };
@@ -506,7 +513,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
 
-
     //进入聊天界面 获取对方用户的个人信息
     public void getTargetInfo(String target_accid) {
         HashMap<String, String> params = new HashMap<>();
@@ -580,10 +586,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
                                             @Override
                                             public void onFinish() {
-                                                outdateTimeText.setText("消息已过期");
+                                                outdateTimeText.setText("消息已于 " + TimeUtils.getNowString() + " 过期");
                                                 //过期消息不展示消息面板
+                                                inputPanel.collapse(true);
                                                 messageActivityBottomLayout.setVisibility(View.GONE);
                                                 outdateTime.setProgress(0);
+                                                btnMakeFriends.setVisibility(View.GONE);
+
                                             }
                                         }.start();
                                     }
@@ -595,7 +604,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                     outdateTime.setVisibility(View.VISIBLE);
                                     outdateTime.setProgress(0);
                                     outdateTimeText.setVisibility(View.VISIBLE);
-                                    outdateTimeText.setText("招呼已于 " + nimBean.getTimeout_time() + " 过期");
+                                    if (nimBean.getTimeout_time().isEmpty()) {
+                                        outdateTimeText.setText("招呼已过期");
+                                    } else {
+                                        outdateTimeText.setText("招呼已于 " + nimBean.getTimeout_time() + " 过期");
+                                    }
                                 } else {
                                     if (nimBean.getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
                                         btnMakeFriends.setVisibility(View.GONE);
