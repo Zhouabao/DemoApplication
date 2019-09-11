@@ -32,7 +32,7 @@
             android:id="@+id/t1"
             android:textColor="@color/colorWhite"
             android:layout_marginTop="15dp"
-            android:text="在这里遇到和你一样的人"
+            android:text="遇见与你一样特别的人"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
