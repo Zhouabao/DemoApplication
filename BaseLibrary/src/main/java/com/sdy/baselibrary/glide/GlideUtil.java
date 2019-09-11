@@ -39,6 +39,8 @@ public class GlideUtil {
         return new RequestOptions()
                 .fitCenter()
                 .priority(Priority.HIGH)
+                .placeholder(R.drawable.default_image)
+                .error(R.drawable.default_image)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
     }
@@ -66,7 +68,7 @@ public class GlideUtil {
     public static void loadAvatorImg(Context context, Object url, ImageView targetImg) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
+                .apply(getOptions().placeholder(R.drawable.default_avator_image).error(R.drawable.default_avator_image))
                 .into(targetImg);
     }
 
