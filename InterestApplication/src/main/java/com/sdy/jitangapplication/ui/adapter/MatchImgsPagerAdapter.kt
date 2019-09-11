@@ -27,8 +27,9 @@ class MatchImgsPagerAdapter(var context: Context, private var datas: MutableList
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val imageview: ImageView = LayoutInflater.from(context).inflate(R.layout.item_match_roundimg,null) as ImageView
+        val imageview: ImageView = LayoutInflater.from(context).inflate(R.layout.item_match_roundimg, null) as ImageView
         GlideUtil.loadImg(context, datas[position], imageview)
+//        GlideUtil.loadRoundImgCenterCrop(context, datas[position], imageview, SizeUtils.dp2px(10F))
         container.addView(imageview)
         return imageview
     }

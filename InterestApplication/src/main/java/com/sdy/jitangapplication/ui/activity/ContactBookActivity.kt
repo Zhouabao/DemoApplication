@@ -188,7 +188,7 @@ class ContactBookActivity : BaseMvpActivity<ContactBookPresenter>(), ContactBook
         headView.friendIcon.setImageResource(R.drawable.icon_assistant)
         headView.friendName.text = "官方小助手"
         headView.setOnClickListener {
-            ChatActivity.start(this, Constants.ASSISTANT_ACCID)
+            chatOrShare(ContactBean(nickname = "官方小助手",accid = Constants.ASSISTANT_ACCID))
         }
         return headView
     }

@@ -38,7 +38,14 @@ class UserPhotoAdapter(var domain: String? = null, datas: MutableList<MyPhotoBea
                     holder.itemView.isAvator.visibility = View.INVISIBLE
                 }
                 holder.itemView.userImg.visibility = View.VISIBLE
-                GlideUtil.loadImg(mContext, domain.plus(item.url), holder.itemView.userImg)
+                GlideUtil.loadRoundImgCenterCrop(
+                    mContext,
+                    domain.plus(item.url),
+                    holder.itemView.userImg,
+                    SizeUtils.dp2px(5F)
+                )
+
+//                GlideUtil.loadImg(mContext, domain.plus(item.url), holder.itemView.userImg)
             }
         }
 

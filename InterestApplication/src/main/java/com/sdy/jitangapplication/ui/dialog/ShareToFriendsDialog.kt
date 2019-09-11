@@ -12,12 +12,6 @@ import android.widget.LinearLayout
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.sdy.baselibrary.glide.GlideUtil
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.SquareBean
-import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
-import com.sdy.jitangapplication.utils.UserManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -32,6 +26,12 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.model.SquareBean
+import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_share_to_friends.*
 import java.net.HttpURLConnection
 import java.net.URL
@@ -61,7 +61,11 @@ class ShareToFriendsDialog constructor(
     //        const val VIDEO = 2
     //        const val AUDIO = 3
     private fun initView() {
-        GlideUtil.loadImg(myContext, avator ?: "", friendImg)
+        if (accid == com.sdy.jitangapplication.common.Constants.ASSISTANT_ACCID) {
+            GlideUtil.loadImg(myContext, R.drawable.icon_assistant, friendImg)
+        } else {
+            GlideUtil.loadImg(myContext, avator ?: "", friendImg)
+        }
         friendNick.text = nickname ?: ""
         if (squareBean.type == SquareBean.PIC) { //图片
             if (squareBean.photo_json.isNullOrEmpty()) {

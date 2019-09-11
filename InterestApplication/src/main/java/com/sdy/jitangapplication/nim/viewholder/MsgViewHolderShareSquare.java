@@ -4,10 +4,10 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.blankj.utilcode.util.SizeUtils;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 import com.sdy.baselibrary.glide.GlideUtil;
-import com.sdy.baselibrary.widgets.RoundImageView;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.model.SquareBean;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
@@ -23,7 +23,7 @@ public class MsgViewHolderShareSquare extends MsgViewHolderBase {
 
     private TextView shareDesc; //分享描述文本
     private TextView shareContent; //分享文字内容
-    private RoundImageView shareImg;//分享的图片
+    private ImageView shareImg;//分享的图片
     private ImageView shareType;//分享的类型
     private ShareSquareAttachment attachment;
 
@@ -55,7 +55,7 @@ public class MsgViewHolderShareSquare extends MsgViewHolderBase {
             shareDesc.setVisibility(View.GONE);
         }
         shareContent.setText(attachment.getDesc());
-        GlideUtil.loadImg(context, attachment.getImg(), shareImg);
+        GlideUtil.loadRoundImgCenterCrop(context, attachment.getImg(), shareImg, SizeUtils.dp2px(5F));
         if (attachment.getShareType() == SquareBean.VIDEO) {
             shareType.setVisibility(View.VISIBLE);
         } else {
@@ -77,7 +77,6 @@ public class MsgViewHolderShareSquare extends MsgViewHolderBase {
     protected int rightBackground() {
         return R.drawable.shape_rectangle_share_square_bg;
     }
-
 
 
     @Override
