@@ -956,7 +956,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                     }
                                 } else if (checkGreetSendBean.getResidue_msg_cnt() == 0) {//次数用尽不能再发消息
                                     resetActions();
-                                    ToastUtils.showShort("本次招呼发送消息次数已用完！");
+                                    ToastUtils.showShort("消息次数已用完！");
                                 }
                             }
 
