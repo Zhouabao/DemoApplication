@@ -130,8 +130,10 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                     ChatActivity.start(this, adapter.data[position].contactId)
                     // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
                     // 通知中的 RecentContact 对象的未读数为0
-                    NIMClient.getService(MsgService::class.java)
-                        .clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
+                    NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
+                    if (UserManager.getHiCount() > 0) {
+                        UserManager.saveHiCount(UserManager.getHiCount() - 1)
+                    }
                     EventBus.getDefault().post(NewMsgEvent())
 
                 }
@@ -163,8 +165,10 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         hiAdapter.setOnItemClickListener { _, view, position ->
             // 通知中的 RecentContact 对象的未读数为0
             //做招呼的已读状态更新
-            NIMClient.getService(MsgService::class.java)
-                .clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
+            if (UserManager.getHiCount() > 0) {
+                UserManager.saveHiCount(UserManager.getHiCount() - 1)
+            }
+            NIMClient.getService(MsgService::class.java).clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
             EventBus.getDefault().post(NewMsgEvent())
 
             //发送通知告诉剩余时间，并且开始倒计时
