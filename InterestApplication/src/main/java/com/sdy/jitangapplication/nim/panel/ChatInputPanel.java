@@ -941,7 +941,8 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                             } else {
 
                                 if (checkGreetSendBean.getResidue_msg_cnt() > 0 || checkGreetSendBean.getIslimit() == false) {//次数大于0就发送消息
-                                    ToastUtils.showShort("剩余" + checkGreetSendBean.getResidue_msg_cnt() + "次消息机会");
+                                    if (checkGreetSendBean.getIslimit())
+                                        ToastUtils.showShort("剩余" + checkGreetSendBean.getResidue_msg_cnt() + "次消息机会");
                                     if (type == 1) {
                                         onTextMessageSendButtonPressed();
                                     } else if (type == 2) {
