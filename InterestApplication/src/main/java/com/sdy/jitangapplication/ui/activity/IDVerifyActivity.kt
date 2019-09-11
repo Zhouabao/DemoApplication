@@ -83,11 +83,11 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         // 根据需求添加活体动作
         MyApplication.livenessList.clear()
         MyApplication.livenessList.add(LivenessTypeEnum.Eye)
-        MyApplication.livenessList.add(LivenessTypeEnum.Mouth)
-        MyApplication.livenessList.add(LivenessTypeEnum.HeadDown)
+//        MyApplication.livenessList.add(LivenessTypeEnum.HeadDown)
+        MyApplication.livenessList.add(LivenessTypeEnum.HeadLeft)
+        MyApplication.livenessList.add(LivenessTypeEnum.HeadRight)
+//        MyApplication.livenessList.add(LivenessTypeEnum.Mouth)
 //        MyApplication.livenessList.add(LivenessTypeEnum.HeadUp)
-//        MyApplication.livenessList.add(LivenessTypeEnum.HeadLeft)
-//        MyApplication.livenessList.add(LivenessTypeEnum.HeadRight)
 //        MyApplication.livenessList.add(LivenessTypeEnum.HeadLeftOrRight)
 
         // 为了android和ios 区分授权，appId=appname_face_android ,其中appname为申请sdk时的应用名
