@@ -180,11 +180,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         btnChat.isVisible = !(UserManager.getAccid() == squareBean!!.accid)
         btnChat.onClick {
-            if (UserManager.getLightingCount() > 0) {
-                mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid ?: "")
-            } else {
-                ChargeVipDialog(this).show()
-            }
+            mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid ?: "")
+        }
+        squareUserIv.onClick {
+            MatchDetailActivity.start(this, squareBean?.accid ?: "")
         }
 
         detailPlayUserLocationAndTime.text =
@@ -264,7 +263,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.commentUser -> {
-                    MatchDetailActivity.start(this,adapter.data[position].member_accid?:"")
+                    MatchDetailActivity.start(this, adapter.data[position].member_accid ?: "")
 //                    reply = true
 //                    reply_id = adapter.data[position].reply_id!!
 //                    showCommentEt.isFocusable = true
@@ -525,7 +524,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 } else {
                     1
                 }
-                EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+                EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
             }
         }
     }
@@ -543,7 +542,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
             squareDianzanBtn.text = "${squareBean!!.like_cnt}"
             squareDianzanBtnImg.setImageResource(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         } else {
             toast("点赞失败，请重试")
         }
@@ -561,7 +560,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (result) {
             resetCommentEt()
             refreshLayout.autoRefresh()
-            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
 
@@ -718,7 +717,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     override fun onRemoveMySquareResult(result: Boolean) {
         if (result) {
             toast("动态删除成功!")
-            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
             finish()
         } else {
             toast("动态删除失败！")
@@ -958,7 +957,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         return super.dispatchTouchEvent(ev)
     }
-    /*--------------------------消息代理------------------------*/
+/*--------------------------消息代理------------------------*/
 
     /** todo
      *  点击聊天
@@ -984,10 +983,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
 
-    //todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
-    //1.首先判断是否有次数，
-    // 若有 就打招呼
-    // 若无 就弹充值
+//todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
+//1.首先判断是否有次数，
+// 若有 就打招呼
+// 若无 就弹充值
     /**
      * 判断当前能否打招呼
      */
