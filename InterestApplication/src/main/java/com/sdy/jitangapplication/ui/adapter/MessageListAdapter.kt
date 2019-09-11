@@ -34,22 +34,24 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
         }
         GlideUtil.loadAvatorImg(mContext, UserInfoHelper.getAvatar(item.contactId), holder.itemView.msgIcon)
 
+
+
         if (item.attachment is ChatHiAttachment) {
             holder.itemView.text.text =
                 if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
-                    "[招呼消息]"
+                    "『招呼消息』"
                 } else if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) {
-                    "[匹配消息]"
+                    "通过『" + (item.getAttachment() as ChatHiAttachment).tag + "』匹配"
                 } else if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND) {
-                    "[好友消息]"
+                    "『好友消息』"
                 } else if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME) {
-                    "[消息过期]"
+                    "『消息过期』"
                 } else {
                     ""
                 }
 
         } else if (item.attachment is ShareSquareAttachment) {
-            holder.itemView.text.text = "[动态分享内容]"
+            holder.itemView.text.text = "『动态分享内容』"
         } else {
             holder.itemView.text.text = item.content
         }
