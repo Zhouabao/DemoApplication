@@ -100,7 +100,7 @@ public class MsgTimerProgress extends View {
         canvas.translate(point.x, point.y);
         canvas.rotate(mSweepAnglePer);
 
-        Bitmap bitmap = imageScale(mBitmap, bitmapWidth, bitmapWidth);
+        Bitmap bitmap = imageScale(mBitmap, bitmapWidth, bitmapWidth, 270 + mSweepAnglePer);
         canvas.drawBitmap(bitmap, mRadius - bitmap.getWidth() / 2, -bitmap.getHeight() / 2, mDefaultWheelPaint);
         canvas.translate(mRadius - bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
         canvas.restore();
@@ -193,15 +193,16 @@ public class MsgTimerProgress extends View {
      * @param dst_h  输出高度
      * @return
      */
-    public static Bitmap imageScale(Bitmap bitmap, float dst_w, float dst_h) {
+    public static Bitmap imageScale(Bitmap bitmap, float dst_w, float dst_h, float degree) {
         int src_w = bitmap.getWidth();
         int src_h = bitmap.getHeight();
         float scale_w = ((float) SizeUtils.dp2px(dst_w)) / src_w;
         float scale_h = ((float) SizeUtils.dp2px(dst_h)) / src_h;
         Matrix matrix = new Matrix();
         matrix.postScale(scale_w, scale_h);
-        Bitmap dstbmp = Bitmap.createBitmap(bitmap, 0, 0, src_w, src_h, matrix,
-                true);
+        //把旋转的画布又旋转回去 （图片就不会倒放了）
+        matrix.postRotate(-degree);
+        Bitmap dstbmp = Bitmap.createBitmap(bitmap, 0, 0, src_w, src_h, matrix, true);
         return dstbmp;
     }
 }
