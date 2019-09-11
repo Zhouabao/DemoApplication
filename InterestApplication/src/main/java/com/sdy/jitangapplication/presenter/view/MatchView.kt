@@ -1,10 +1,10 @@
 package com.sdy.jitangapplication.presenter.view
 
+import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.StatusBean
-import com.kotlin.base.presenter.view.BaseView
 
 /**
  *    author : ZFM
@@ -23,5 +23,5 @@ interface MatchView : BaseView {
     fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean)
 
 
-    fun onGreetSResult(greetBean: Boolean)
+    fun onGreetSResult(greetBean: Boolean,code:Int)
 }

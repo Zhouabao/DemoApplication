@@ -1,5 +1,11 @@
 package com.sdy.jitangapplication.presenter
 
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
+import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.GreetBean
@@ -8,12 +14,6 @@ import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
-import com.kotlin.base.data.net.RetrofitFactory
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.excute
-import com.kotlin.base.presenter.BasePresenter
-import com.kotlin.base.rx.BaseException
-import com.kotlin.base.rx.BaseSubscriber
 
 /**
  *    author : ZFM
@@ -125,9 +125,9 @@ class MatchPresenter : BasePresenter<MatchView>() {
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
-                        mView.onGreetSResult(true)
+                        mView.onGreetSResult(true, t.code)
                     } else {
-                        mView.onGreetSResult(false)
+                        mView.onGreetSResult(false, t.code)
                     }
                 }
 

@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
 import com.chad.library.adapter.base.BaseViewHolder
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateLabelEvent
@@ -24,9 +27,6 @@ import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.swipecard.OverLayCardLayoutManager
 import com.sdy.jitangapplication.widgets.swipecard.RenRenCallback
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpFragment
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_match.*
 import kotlinx.android.synthetic.main.item_match_user.view.*
@@ -42,7 +42,7 @@ import org.jetbrains.anko.support.v4.toast
  */
 class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener,
     RenRenCallback.OnSwipeListener {
-    override fun onGreetSResult(greetBean: Boolean) {
+    override fun onGreetSResult(greetBean: Boolean, code: Int) {
 
 
     }
