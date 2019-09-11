@@ -25,7 +25,7 @@
 
         <TextView
                 android:id="@+id/chatName"
-                android:text="Javer"
+                tools:text="Javer"
                 android:textColor="#ff222222"
                 android:textSize="20sp"
                 android:gravity="center_vertical"
