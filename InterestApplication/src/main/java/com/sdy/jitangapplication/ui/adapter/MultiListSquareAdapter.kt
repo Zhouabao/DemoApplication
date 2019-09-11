@@ -107,6 +107,9 @@ class MultiListSquareAdapter(
 
         //todo 进入聊天界面
         holder.itemView.squareChatBtn1.onClick {
+            if (resetAudioListener != null) {
+                resetAudioListener!!.resetAudioState()
+            }
             clickPos = holder.layoutPosition
             greetState(UserManager.getToken(), UserManager.getAccid(), item.accid)
         }
@@ -151,6 +154,9 @@ class MultiListSquareAdapter(
                     val adapter = ListSquareImgsAdapter(mContext, item.photo_json ?: mutableListOf())
                     holder.itemView.squareUserPics1.adapter = adapter
                     adapter.setOnItemClickListener { adapter, view, position ->
+                        if (resetAudioListener != null) {
+                            resetAudioListener!!.resetAudioState()
+                        }
                         mContext.startActivity<SquarePlayListDetailActivity>("item" to item)
                     }
                 } else {
@@ -188,6 +194,7 @@ class MultiListSquareAdapter(
                             resetAudioListener!!.resetAudioState()
                         }
                     }
+
                     override fun onPrepared(url: String?, vararg objects: Any?) {
                         if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen) {
                             //静音
@@ -256,6 +263,9 @@ class MultiListSquareAdapter(
                     holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                 }
                 holder.itemView.audioRecordLl.onClick {
+                    if (resetAudioListener != null) {
+                        resetAudioListener!!.resetAudioState()
+                    }
                     mContext.startActivity<SquarePlayListDetailActivity>("item" to item, "from" to "squareFragment")
                 }
             }

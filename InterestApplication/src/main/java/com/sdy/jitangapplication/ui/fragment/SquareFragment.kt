@@ -128,6 +128,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         friendsView.headRv.adapter = friendsAdapter
         friendsAdapter.addData(userList)
         friendsAdapter.setOnItemClickListener { adapter, view, position ->
+            resetAudio()
             startActivity<SquarePlayListDetailActivity>("target_accid" to (friendsAdapter.data[position].accid ?: 0))
         }
 
@@ -201,19 +202,20 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         })
 
         adapter.setOnItemClickListener { _, view, position ->
-            SquareCommentDetailActivity.start(activity!!, adapter.data[position])
             resetAudio()
+            SquareCommentDetailActivity.start(activity!!, adapter.data[position])
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
             val squareBean = adapter.data[position]
             when (view.id) {
                 R.id.squareChatBtn1 -> {
+                    resetAudio()
                     ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
                 }
                 R.id.squareCommentBtn1 -> {
-                    SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
                     resetAudio()
+                    SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
                 }
                 R.id.squareDianzanBtn1 -> {
                     val params = hashMapOf(

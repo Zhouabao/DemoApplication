@@ -57,10 +57,11 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
             targetMatchIv.setImageResource(R.drawable.icon_flash_small);
             if (message.getFromAccount().equals(UserManager.INSTANCE.getAccid())) {
                 chatHiMatch.setText("你向对方打了个招呼");
+                targetMatchContent.setText("好好表现争取赢个好友位吧");
             } else {
                 chatHiMatch.setText("对方向你打了个招呼");
+                targetMatchContent.setText("和他接触下吧说不定不错呢");
             }
-            targetMatchContent.setText("好好表现争取赢个好友位吧");
         } else if (attachment.getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
             targetMatchIv.setImageResource(R.drawable.icon_like);
             if (message.getFromAccount().equals(UserManager.INSTANCE.getAccid())) {

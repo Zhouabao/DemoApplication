@@ -172,8 +172,8 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         })
 
         adapter.setOnItemClickListener { _, view, position ->
-            SquareCommentDetailActivity.start(this, adapter.data[position])
             resetAudio()
+            SquareCommentDetailActivity.start(this, adapter.data[position])
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -182,8 +182,8 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                 R.id.squareChatBtn1 -> {
                 }
                 R.id.squareCommentBtn1 -> {
-                    SquareCommentDetailActivity.start(this, adapter.data[position], enterPosition = "comment")
                     resetAudio()
+                    SquareCommentDetailActivity.start(this, adapter.data[position], enterPosition = "comment")
                 }
                 R.id.squareDianzanBtn1 -> {
                     val params = hashMapOf(

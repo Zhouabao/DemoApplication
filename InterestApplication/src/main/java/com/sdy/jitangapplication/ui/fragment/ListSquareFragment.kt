@@ -137,26 +137,29 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 //        })
 
         adapter.setOnItemClickListener { _, view, position ->
-            SquareCommentDetailActivity.start(activity!!, adapter.data[position])
             if (mediaPlayer != null) {
                 mediaPlayer!!.resetMedia()
                 mediaPlayer = null
             }
+            SquareCommentDetailActivity.start(activity!!, adapter.data[position])
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
             val squareBean = adapter.data[position]
             when (view.id) {
                 R.id.squareChatBtn1 -> {
-                    ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
-                }
-                R.id.squareCommentBtn1 -> {
-                    SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
-
                     if (mediaPlayer != null) {
                         mediaPlayer!!.resetMedia()
                         mediaPlayer = null
                     }
+                    ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
+                }
+                R.id.squareCommentBtn1 -> {
+                    if (mediaPlayer != null) {
+                        mediaPlayer!!.resetMedia()
+                        mediaPlayer = null
+                    }
+                    SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
                 }
                 R.id.squareDianzanBtn1 -> {
                     val params = hashMapOf(
