@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -136,6 +137,48 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         GlideUtil.loadAvatorImg(this, SPUtils.getInstance(Constants.SPNAME).getString("avatar"), ivUserFace)
         initHeadView()
 
+
+        //进入页面弹消息提醒
+        if (UserManager.getSquareCount() > 0 || UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0
+            || NIMClient.getService(MsgService::class.java).totalUnreadCount > 0
+        ) {
+            //喜欢我的个数
+            msgLike.text = UserManager.getLikeCount().toString()
+            //打招呼个数
+            msgHi.text = UserManager.getHiCount().toString()
+            //广场消息个数
+            msgSquare.text = UserManager.getSquareCount().toString()
+            //未读消息个数
+            val msgCount = NIMClient.getService(MsgService::class.java).totalUnreadCount
+            msgChat.text = "$msgCount"
+            ivNewMsg.isVisible = true
+            llMsgCount.visibility = View.VISIBLE
+            try {
+                llMsgCount.visibility = View.VISIBLE
+                Thread.sleep(3000L)
+                llMsgCount.visibility = View.GONE
+            } catch (e: Exception) {
+            }
+//            YoYo.with(Techniques.Bounce)
+//                .duration(3000)
+//                .withListener(object : Animator.AnimatorListener {
+//                    override fun onAnimationRepeat(p0: Animator?) {
+//                    }
+//
+//                    override fun onAnimationCancel(p0: Animator?) {
+//                    }
+//
+//                    override fun onAnimationStart(p0: Animator?) {
+//                    }
+//
+//                    override fun onAnimationEnd(p0: Animator?) {
+//                        llMsgCount.visibility = View.GONE
+//                    }
+//
+//                })
+//                .playOn(llMsgCount)
+        }
+
     }
 
 
@@ -172,7 +215,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         filterUserDialog.seekBarAge.setProgress(
             sp.getInt("limit_age_low", 18).toFloat(),
-            sp.getInt("limit_age_high", 30).toFloat()
+            sp.getInt("limit_age_high", 35).toFloat()
         )
         filterUserDialog.filterAge.text =
             "${filterUserDialog.seekBarAge.leftSeekBar.progress.toInt()}-${filterUserDialog.seekBarAge.rightSeekBar.progress.toInt()}岁"
@@ -337,10 +380,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             //未读消息个数
             val msgCount = NIMClient.getService(MsgService::class.java).totalUnreadCount
             var totalMsgUnread = 0
-            if (msgCount > 0)
-                totalMsgUnread = msgCount - allMsgCount.greetcount
-            else
+            if (msgCount == 0)
                 UserManager.saveHiCount(0)
+            else if (msgCount > allMsgCount.greetcount)
+                totalMsgUnread = msgCount - allMsgCount.greetcount
 
             msgChat.text = "$totalMsgUnread"
             ivNewMsg.isVisible =
@@ -387,7 +430,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     3 -> { //新的招呼刷新界面
                         EventBus.getDefault().post(UpdateHiEvent())
                     }
+
                 }
+                Log.d("OkHttp", "${customerMsgBean.type}=================${customerMsgBean.accid}=================")
             }
         }
 
@@ -547,7 +592,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (unreadNum == 0) {
             UserManager.saveHiCount(0)
         }
-        ivNewMsg.isVisible = (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
+        ivNewMsg.isVisible =
+            (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
     }
 
 }

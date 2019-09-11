@@ -193,7 +193,7 @@ object UserManager {
         parmas["limit_age_low"] = sp.getInt("limit_age_low", 18)
         parmas["limit_age_high"] = sp.getInt("limit_age_high", 30)
         parmas["local_only"] = sp.getInt("local_only", 1)
-        parmas["city_code"] = sp.getInt("city_code", 0)
+        parmas["city_code"] = sp.getString("city_code", "0")
         parmas["audit_only"] = sp.getInt("audit_only", 1)
         parmas["gender"] = sp.getInt("filter_gender", 3)
 
