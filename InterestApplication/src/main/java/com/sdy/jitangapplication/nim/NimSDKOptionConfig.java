@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Environment;
 import android.text.TextUtils;
-import com.sdy.jitangapplication.nim.sp.UserPreferences;
-import com.sdy.jitangapplication.ui.activity.MainActivity;
 import com.netease.nim.uikit.api.wrapper.MessageRevokeTip;
 import com.netease.nim.uikit.api.wrapper.NimUserInfoProvider;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderThumbBase;
@@ -16,6 +14,10 @@ import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.mixpush.MixPushConfig;
 import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
+import com.sdy.jitangapplication.nim.sp.UserPreferences;
+import com.sdy.jitangapplication.ui.activity.MainActivity;
 
 import java.io.IOException;
 
@@ -137,7 +139,7 @@ public class NimSDKOptionConfig {
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
         // 点击通知需要跳转到的界面
         config.notificationEntrance = MainActivity.class;
-//        config.notificationSmallIconId = R.drawable.ic_stat_notify_msg;
+        config.notificationSmallIconId = R.drawable.icon_logo;
 //        config.notificationColor = DemoCache.getContext().getResources().getColor(R.color.color_blue_3a9efb);
         // 通知铃声的uri字符串
         config.notificationSound = "android.resource://com.netease.nim.demo/raw/msg";
@@ -159,6 +161,26 @@ public class NimSDKOptionConfig {
 
         @Override
         public String makeNotifyContent(String nick, IMMessage message) {
+            if (message.getAttachment() instanceof ChatHiAttachment) {
+                /* public static int CHATHI_MATCH = 1;
+    public static int CHATHI_HI = 2;
+    public static int CHATHI_RFIEND = 3;
+    public static int CHATHI_OUTTIME = 4;*/
+                switch (((ChatHiAttachment) message.getAttachment()).getShowType()) {
+                    case 1:
+                        return "匹配消息";
+                    case 2:
+                        return "招呼消息";
+                    case 3:
+                        return "好友消息";
+                    case 4:
+                        return "过期消息";
+                    default:
+                        return null;
+                }
+
+            }
+
             return null; // 采用SDK默认文案
         }
 
@@ -190,7 +212,6 @@ public class NimSDKOptionConfig {
         config.mzAppId = "123952";
         config.mzAppKey = "97aaf629b9a84da999fa60272e591486";
         config.mzCertificateName = "JITANGFLYME";
-
 
 
         // vivo推送
