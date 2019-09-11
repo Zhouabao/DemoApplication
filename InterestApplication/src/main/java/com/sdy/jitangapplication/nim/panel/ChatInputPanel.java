@@ -15,12 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.ToastUtils;
-import com.sdy.jitangapplication.R;
-import com.sdy.jitangapplication.api.Api;
-import com.sdy.jitangapplication.event.EnablePicEvent;
-import com.sdy.jitangapplication.model.CheckGreetSendBean;
-import com.sdy.jitangapplication.nim.session.ChatBaseAction;
-import com.sdy.jitangapplication.utils.UserManager;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.kotlin.base.utils.NetWorkUtils;
@@ -44,10 +38,17 @@ import com.netease.nimlib.sdk.media.record.RecordType;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
+import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.netease.nimlib.sdk.msg.model.CustomNotificationConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.api.Api;
+import com.sdy.jitangapplication.event.EnablePicEvent;
+import com.sdy.jitangapplication.model.CheckGreetSendBean;
+import com.sdy.jitangapplication.nim.session.ChatBaseAction;
+import com.sdy.jitangapplication.utils.UserManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import rx.android.schedulers.AndroidSchedulers;
@@ -908,6 +909,8 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
      * @param type 1-文本  2-录音
      */
 
+    private boolean sendTip = false;
+
     private void checkGreetSendMsg(final int type) {
         if (!NetWorkUtils.INSTANCE.isNetWorkAvailable(container.activity)) {
             ToastUtils.showShort("请打开网络");
@@ -939,10 +942,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                 updateActionsState(true);
                                 view.findViewById(com.sdy.jitangapplication.R.id.btnMakeFriends).setVisibility(View.GONE);
                             } else {
-
                                 if (checkGreetSendBean.getResidue_msg_cnt() > 0 || checkGreetSendBean.getIslimit() == false) {//次数大于0就发送消息
-                                    if (checkGreetSendBean.getIslimit())
-                                        ToastUtils.showShort("剩余" + checkGreetSendBean.getResidue_msg_cnt() + "次消息机会");
                                     if (type == 1) {
                                         onTextMessageSendButtonPressed();
                                     } else if (type == 2) {
@@ -954,9 +954,26 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                             resetActions();
                                         }
                                     }
+                                    if (checkGreetSendBean.getIslimit() && checkGreetSendBean.getResidue_msg_cnt() == 3) {
+                                        IMMessage tipMessage = MessageBuilder.createTipMessage(container.account, container.sessionType);
+                                        tipMessage.setContent("在收到消息回复前，只能发送三条消息哦");
+                                        tipMessage.setStatus(MsgStatusEnum.success);
+                                        NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
+                                    }
                                 } else if (checkGreetSendBean.getResidue_msg_cnt() == 0) {//次数用尽不能再发消息
-                                    resetActions();
-                                    ToastUtils.showShort("消息次数已用完！");
+                                    if (!sendTip) {
+                                        resetActions();
+                                        IMMessage msg = MessageBuilder.createTipMessage(container.account, container.sessionType);
+                                        msg.setContent("您已发送三条消息，请耐心等待对方回复");
+                                        msg.setStatus(MsgStatusEnum.success);
+                                        NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
+                                        sendTip = true;
+                                    }
+//                                    CustomMessageConfig config = new CustomMessageConfig();
+//                                    config.enablePush = false; // 不推送
+//                                    msg.setConfig(config);
+//                                    container.proxy.sendMessage(msg);
+//                                    ToastUtils.showShort("消息次数已用完！");
                                 }
                             }
 
