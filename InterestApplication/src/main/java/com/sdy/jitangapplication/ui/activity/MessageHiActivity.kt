@@ -102,8 +102,10 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         adapter.setOnItemClickListener { _, view, position ->
             // 通知中的 RecentContact 对象的未读数为0
             //做招呼的已读状态更新
-            NIMClient.getService(MsgService::class.java)
-                .clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
+            if (UserManager.getHiCount() > 0) {
+                UserManager.saveHiCount(UserManager.getHiCount() - 1)
+            }
+            NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
             EventBus.getDefault().post(NewMsgEvent())
 
             //发送通知告诉剩余时间，并且开始倒计时
@@ -147,18 +149,18 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
                     if (recentContactt.attachment is ChatHiAttachment) {
                         data.content =
                             if ((recentContactt.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
-                                "[招呼消息]"
+                                "『招呼消息』"
                             } else if ((recentContactt.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) {
-                                "[匹配消息]"
+                                "通过『" + (recentContactt.getAttachment() as ChatHiAttachment).tag + "』匹配"
                             } else if ((recentContactt.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND) {
-                                "[好友消息]"
+                                "『好友消息』"
                             } else if ((recentContactt.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME) {
-                                "[消息过期]"
+                                "『消息过期』"
                             } else {
                                 ""
                             }
                     } else if (recentContactt.attachment is ShareSquareAttachment) {
-                        data.content = "[动态分享内容]"
+                        data.content = "『动态分享内容』"
                     } else {
                         data.content = recentContactt.content
                     }
