@@ -19,8 +19,8 @@
             android:id="@+id/squareUserVipIv1"
             android:layout_marginLeft="40dp"
             android:src="@drawable/icon_vip"
-            android:layout_width="17dp"
-            android:layout_height="17dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 

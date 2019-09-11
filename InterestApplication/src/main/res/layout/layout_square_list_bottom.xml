@@ -26,6 +26,7 @@
             app:ep_need_always_showright="true"
             app:ep_need_contract="true"
             app:ep_need_expand="true"
+            android:lineSpacingMultiplier="1.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
