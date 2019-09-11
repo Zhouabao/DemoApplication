@@ -3,8 +3,10 @@ package com.sdy.jitangapplication.nim.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.KeyboardUtils
+import com.google.gson.Gson
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -23,6 +25,7 @@ import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.netease.nim.uikit.impl.customization.DefaultP2PSessionCustomization
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
+import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomNotification
@@ -36,9 +39,12 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.EnablePicEvent
 import com.sdy.jitangapplication.event.NimHeadEvent
+import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.model.NimBean
 import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.greenrobot.eventbus.EventBus
@@ -96,6 +102,33 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
 
     /**
+     * 系统通知监听
+     */
+    private var customNotificationObserver: Observer<CustomNotification> =
+        Observer { customNotification ->
+            if (customNotification.content != null) {
+                val customerMsgBean =
+                    Gson().fromJson<CustomerMsgBean>(customNotification.content, CustomerMsgBean::class.java)
+                when (customerMsgBean.type) {
+                    2 -> {//对方删除自己,本地删除会话列表
+                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        EventBus.getDefault().post(UpdateContactBookEvent())
+                        val intent = Intent()
+                        intent.setClass(this@ChatActivity, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+                    }
+                }
+                Log.d("OkHttp", "${customerMsgBean.type}=================${customerMsgBean.accid}=================")
+            }
+        }
+
+
+
+
+
+    /**
      * 命令消息接收观察者
      */
     private val commandObserver = Observer<CustomNotification> { message ->
@@ -114,6 +147,10 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         }
         requestBuddyInfo()
     }
+
+
+
+
 
     /**
      * 好友资料变更（eg:关系）
@@ -202,6 +239,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     private fun registerObservers(register: Boolean) {
         NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(commandObserver, register)
         NimUIKit.getUserInfoObservable().registerObserver(userInfoObserver, register)
+        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, register)
         NimUIKit.getContactChangedObservable().registerObserver(friendDataChangedObserver, register)
         if (NimUIKit.enableOnlineState()) {
             NimUIKit.getOnlineStateChangeObservable()
