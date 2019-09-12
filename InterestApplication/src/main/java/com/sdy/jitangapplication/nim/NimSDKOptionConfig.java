@@ -15,6 +15,7 @@ import com.netease.nimlib.sdk.mixpush.MixPushConfig;
 import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.sp.UserPreferences;
 import com.sdy.jitangapplication.ui.activity.MainActivity;
@@ -62,6 +63,7 @@ public class NimSDKOptionConfig {
         options.mixPushConfig = buildMixPushConfig();
         //        options.mNosTokenSceneConfig = createNosTokenScene();
         options.loginCustomTag = "登录自定义字段";
+        options.appKey = Constants.NIM_APP_KEY;
         return options;
     }
 

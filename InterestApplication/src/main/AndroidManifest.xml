@@ -11,25 +11,39 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.INTERNET"/> <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> <!-- 允许程序设置内置sd卡的写权限 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- 允许程序获取网络状态 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- 允许程序访问WiFi网络信息 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> <!-- 允许程序读写手机状态和身份 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- 用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/> <!-- 用于申请调用A-GPS模块 -->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/> <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- 允许程序设置内置sd卡的写权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 允许程序获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 允许程序读写手机状态和身份 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <!-- 用于申请获取蓝牙信息进行室内定位 -->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/> <!-- 控制呼吸灯，振动器等，用于新消息提醒 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <!-- 控制呼吸灯，振动器等，用于新消息提醒 -->
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
-    <uses-permission android:name="android.permission.VIBRATE"/> <!-- 外置存储存取权限 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- 外置存储存取权限 -->
     <!-- 8.0 系统需要 -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> <!-- 如果需要实时音视频通话模块，下面的权限也是必须的。否则，可以不加 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <!-- 如果需要实时音视频通话模块，下面的权限也是必须的。否则，可以不加 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/> <!-- 需要使用Feature -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- 需要使用Feature -->
     <uses-feature
             android:name="android.hardware.camera"
             android:required="false"/>
@@ -44,20 +58,25 @@
             android:required="false"/>
     <uses-feature
             android:glEsVersion="0x00020000"
-            android:required="true"/> <!-- SDK 权限申明, 第三方 APP 接入时，请将 com.netease.nim.demo 替换为自己的包名 -->
+            android:required="true"/>
+    <!-- SDK 权限申明, 第三方 APP 接入时，请将 com.netease.nim.demo 替换为自己的包名 -->
     <!-- 和下面的 uses-permission 一起加入到你的 AndroidManifest 文件中。 -->
     <permission
             android:name="com.sdy.jitangapplication.permission.RECEIVE_MSG"
-            android:protectionLevel="signature"/> <!-- 接收 SDK 消息广播权限， 第三方 APP 接入时，请将 com.netease.nim.demo 替换为自己的包名 -->
-    <uses-permission android:name="com.sdy.jitangapplication.permission.RECEIVE_MSG"/> <!-- 全面屏配置 -->
+            android:protectionLevel="signature"/>
+    <!-- 接收 SDK 消息广播权限， 第三方 APP 接入时，请将 com.netease.nim.demo 替换为自己的包名 -->
+    <uses-permission android:name="com.sdy.jitangapplication.permission.RECEIVE_MSG"/>
+    <!-- 全面屏配置 -->
     <meta-data
             android:name="android.max_aspect"
-            android:value="2.1"/> <!-- 小米推送 -->
+            android:value="2.1"/>
+    <!-- 小米推送 -->
     <permission
             android:name="com.sdy.jitangapplication.permission.MIPUSH_RECEIVE"
             android:protectionLevel="signature"/>
 
-    <uses-permission android:name="com.sdy.jitangapplication.permission.MIPUSH_RECEIVE"/> <!-- 魅族推送 -->
+    <uses-permission android:name="com.sdy.jitangapplication.permission.MIPUSH_RECEIVE"/>
+    <!-- 魅族推送 -->
     <!-- 兼容flyme5.0以下版本，魅族内部集成pushSDK必填，不然无法收到消息 -->
     <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE"/>
 
@@ -65,14 +84,16 @@
             android:name="com.sdy.jitangapplication.push.permission.MESSAGE"
             android:protectionLevel="signature"/>
 
-    <uses-permission android:name="com.sdy.jitangapplication.push.permission.MESSAGE"/> <!-- 兼容flyme3.0配置权限 -->
+    <uses-permission android:name="com.sdy.jitangapplication.push.permission.MESSAGE"/>
+    <!-- 兼容flyme3.0配置权限 -->
     <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE"/>
 
     <permission
             android:name="com.sdy.jitangapplication.permission.C2D_MESSAGE"
             android:protectionLevel="signature"/>
 
-    <uses-permission android:name="com.sdy.jitangapplication.permission.C2D_MESSAGE"/> <!-- oppo推送配置权限 -->
+    <uses-permission android:name="com.sdy.jitangapplication.permission.C2D_MESSAGE"/>
+    <!-- oppo推送配置权限 -->
     <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE"/>
 
     <application
@@ -86,7 +107,8 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.SplashActivity"
+        <activity
+                android:name=".ui.activity.SplashActivity"
                 android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -325,19 +347,20 @@
                 android:value="375"/>
         <meta-data
                 android:name="design_height_in_dp"
-                android:value="667"/> <!-- *****************高德地图********************** -->
+                android:value="667"/>
+
+
+        <!-- *****************高德地图********************** -->
         <meta-data
                 android:name="com.amap.api.v2.apikey"
                 android:value="ed0911965c16cc04ec36bb2360dccaa2"/>
 
-        <service android:name="com.amap.api.location.APSService"/> <!-- *****************云信IM********************** -->
-        <!--
-APP key, 可以在这里设置，也可以在 SDKOptions 中提供。
-           如果 SDKOptions 中提供了，取 SDKOptions 中的值。
-        -->
-        <meta-data
-                android:name="com.netease.nim.appKey"
-                android:value="197b98d4853be1582aec4f2a9c6a6645"/> <!-- 云信后台服务，请使用独立进程。 -->
+        <service android:name="com.amap.api.location.APSService"/>
+
+        <!-- *****************云信IM********************** -->
+
+
+        <!-- 云信后台服务，请使用独立进程。 -->
         <service
                 android:name="com.netease.nimlib.service.NimService"
                 android:process=":core"/> <!-- 云信后台辅助服务 -->
