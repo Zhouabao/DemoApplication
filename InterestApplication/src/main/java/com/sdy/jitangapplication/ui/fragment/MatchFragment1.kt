@@ -83,7 +83,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             "page" to page,
             "pagesize" to Constants.PAGESIZE,
             "_timestamp" to System.currentTimeMillis(),
-            "tagid" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
+            "tagid" to UserManager.getGlobalLabelId()
         )
     }
 
@@ -168,7 +168,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "target_accid" to "",
-            "tag_id" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
+            "tag_id" to UserManager.getGlobalLabelId()
         )
     }
 
@@ -381,7 +381,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         //最大的缩放间隔
         manager.setScaleInterval(0.95f)
         //卡片滑出飞阈值
-        manager.setSwipeThreshold(0.4f)
+        manager.setSwipeThreshold(0.3f)
         //横向纵向的旋转角度
         manager.setMaxDegree(5F)
         //滑动的方向
