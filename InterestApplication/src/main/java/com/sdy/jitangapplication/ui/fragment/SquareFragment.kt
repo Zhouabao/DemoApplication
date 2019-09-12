@@ -277,27 +277,27 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             override fun onPlay(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
 //                adapter.notifyItemChanged(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
 
             }
 
             override fun onPause(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
 //                adapter.notifyItemChanged(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
             }
 
             override fun onStop(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
                 resetAudio()
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
             }
 
             override fun onError(position: Int) {
                 toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 resetAudio()
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
             }
 
             override fun onPrepared(position: Int) {
@@ -306,12 +306,12 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
             override fun onPreparing(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PREPARE
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
             }
 
             override fun onRelease(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                adapter.notifyItemChanged(currPlayIndex + adapter.headerLayoutCount)
+                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
 
             }
 
@@ -460,7 +460,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         mPresenter.getSquareList(listParams, true)
         mPresenter.getFrinedsList(friendsParams)
 
-
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
@@ -493,6 +492,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             if (isRefresh) {
                 adapter.data.clear()
                 adapter.notifyDataSetChanged()
+                squareDynamicRv.scrollToPosition(0)
             }
 
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -577,6 +577,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
+//        squareDynamicRv.scrollToPosition(0)
+
         listParams["tagid"] = event.label.id
         //这个地方还要默认设置选中第一个标签来更新数据
         refreshLayout.autoRefresh()
@@ -585,6 +587,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: RefreshEvent) {
+//        squareDynamicRv.scrollToPosition(0)
         //这个地方还要默认设置选中第一个标签来更新数据
         val params = UserManager.getFilterConditions()
         params.forEach {
@@ -595,6 +598,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshSquareEvent(event: RefreshSquareEvent) {
+//        squareDynamicRv.scrollToPosition(0)
+
         refreshLayout.autoRefresh()
     }
 
