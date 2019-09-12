@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.fragment
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -218,18 +219,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                     SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
                 }
                 R.id.squareDianzanBtn1 -> {
-                    val params = hashMapOf(
-                        "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                        "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                        "type" to if (squareBean.isliked == 1) {
-                            2
-                        } else {
-                            1
-                        },
-                        "square_id" to squareBean.id!!,
-                        "_timestamp" to System.currentTimeMillis()
-                    )
-                    mPresenter.getSquareLike(params, position)
+                    clickZan(position)
                 }
                 R.id.squareZhuanfaBtn1 -> {
                     showTranspondDialog(adapter.data[position])
@@ -265,6 +255,41 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         //这个地方还要默认设置选中第一个标签来更新数据
         mPresenter.getSquareList(listParams, true, true)
         mPresenter.getFrinedsList(friendsParams)
+
+    }
+
+
+    /**
+     * 点赞按钮
+     */
+    private fun clickZan(position: Int) {
+        val squareBean = adapter.data[position]
+        if (adapter.data[position].isliked == 1) {
+            adapter.data[position].isliked = 0
+            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.minus(1)
+        } else {
+            adapter.data[position].isliked = 1
+            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
+        }
+//        adapter.notifyItemChanged(position + adapter.headerLayoutCount)
+        adapter.notifyDataSetChanged()
+        Handler().postDelayed({
+            if (squareBean.originalLike == squareBean.isliked) {
+                return@postDelayed
+            }
+            val params = hashMapOf(
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "type" to if (squareBean.isliked == 0) {
+                    2
+                } else {
+                    1
+                },
+                "square_id" to squareBean.id!!,
+                "_timestamp" to System.currentTimeMillis()
+            )
+            mPresenter.getSquareLike(params, position)
+        }, 2000L)
 
     }
 
@@ -513,6 +538,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                         !data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
                         else -> SquareBean.PIC
                     }
+                    data!!.list!![tempData].originalLike = data!!.list!![tempData].isliked
                 }
                 adapter.addData(data!!.list!!)
             }
@@ -532,15 +558,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onGetSquareLikeResult(position: Int, result: Boolean) {
         if (result) {
-            if (adapter.data[position].isliked == 1) {
-                adapter.data[position].isliked = 0
-                adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.minus(1)
-            } else {
-                adapter.data[position].isliked = 1
-                adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
-            }
-//            adapter.notifyItemChanged(position)
-            adapter.notifyDataSetChanged()
+            adapter.data[position].originalLike = adapter.data[position].isliked
         }
     }
 

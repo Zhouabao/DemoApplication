@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -186,18 +187,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                     SquareCommentDetailActivity.start(this, adapter.data[position], enterPosition = "comment")
                 }
                 R.id.squareDianzanBtn1 -> {
-                    val params = hashMapOf(
-                        "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                        "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                        "type" to if (squareBean.isliked == 1) {
-                            2
-                        } else {
-                            1
-                        },
-                        "square_id" to squareBean.id!!,
-                        "_timestamp" to System.currentTimeMillis()
-                    )
-                    mPresenter.getSquareLike(params, position)
+                    clickZan(position)
                 }
                 R.id.squareZhuanfaBtn1 -> {
                     showTranspondDialog(squareBean)
@@ -231,6 +221,44 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
     }
 
+
+
+
+    /**
+     * 点赞按钮
+     */
+    private fun clickZan(position: Int) {
+        val squareBean = adapter.data[position]
+        if (adapter.data[position].isliked == 1) {
+            adapter.data[position].isliked = 0
+            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.minus(1)
+        } else {
+            adapter.data[position].isliked = 1
+            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
+        }
+//        adapter.notifyItemChanged(position + adapter.headerLayoutCount)
+        adapter.notifyDataSetChanged()
+        Handler().postDelayed({
+            if (squareBean.originalLike == squareBean.isliked) {
+                return@postDelayed
+            }
+            val params = hashMapOf(
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "type" to if (squareBean.isliked == 0) {
+                    2
+                } else {
+                    1
+                },
+                "square_id" to squareBean.id!!,
+                "_timestamp" to System.currentTimeMillis()
+            )
+            mPresenter.getSquareLike(params, position)
+        }, 2000L)
+
+    }
+
+
     var mediaPlayer: IjkMediaPlayerUtil? = null
 
     private fun initAudio(position: Int) {
@@ -239,30 +267,30 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
             override fun onPlay(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
-//                adapter.notifyItemChanged(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position)
+//                adapter.notifyDataSetChanged()
 
             }
 
             override fun onPause(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
-//                adapter.notifyItemChanged(position)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position)
+//                adapter.notifyDataSetChanged()
             }
 
             override fun onStop(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-//                adapter.notifyItemChanged(position)
                 resetAudio()
-                adapter.notifyDataSetChanged()
+//                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position)
             }
 
             override fun onError(position: Int) {
                 toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
-//                adapter.notifyItemChanged(position)
                 resetAudio()
-                adapter.notifyDataSetChanged()
+//                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position)
             }
 
             override fun onPrepared(position: Int) {
@@ -274,7 +302,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
             override fun onPreparing(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PREPARE
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(position)
 
             }
 
@@ -383,8 +411,14 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
     override fun onRemoveMySquareResult(result: Boolean, position: Int) {
         if (result) {
+            if (adapter.data[position].type == SquareBean.AUDIO) {
+                resetAudio()
+            }else if (adapter.data[position].type == SquareBean.VIDEO) {
+                GSYVideoManager.releaseAllVideos()
+            }
             adapter.data.removeAt(position)
-            adapter.notifyItemRemoved(position)
+            adapter.notifyItemRemoved(position+adapter.headerLayoutCount)
+
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
@@ -445,6 +479,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                     !data.list!![tempData].photo_json.isNullOrEmpty() || (data.list!![tempData].photo_json.isNullOrEmpty() && data.list!![tempData].audio_json.isNullOrEmpty() && data.list!![tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
                     else -> SquareBean.PIC
                 }
+                data.list!![tempData].originalLike = data.list!![tempData].isliked
             }
             adapter.addData(data.list!!)
         }
@@ -456,15 +491,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
     override fun onGetSquareLikeResult(position: Int, result: Boolean) {
         if (result) {
-            if (adapter.data[position].isliked == 1) {
-                adapter.data[position].isliked = 0
-                adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.minus(1)
-            } else {
-                adapter.data[position].isliked = 1
-                adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
-            }
-            adapter.notifyItemChanged(position)
-//            adapter.notifyDataSetChanged()
+            adapter.data[position].originalLike = adapter.data[position].isliked
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
