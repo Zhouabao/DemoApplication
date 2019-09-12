@@ -32,8 +32,8 @@ class LikeMeOneDayAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolder>(R
         params.width = SizeUtils.dp2px(180F)
         params.height = (16 / 9F * params.width).toInt()
         itemView.likeMeAvator.layoutParams = params
-        itemView.likeMeTag.text = item.tag_title
-        itemView.likeMeNickname.text = item.nickname
+        itemView.likeMeTag.text = "${item.tag_title}"
+        itemView.likeMeNickname.text = "${item.nickname}"
         itemView.likeMeInfo.text = "${item.age} / ${if (item.gender == 1) {
             "男"
         } else {
