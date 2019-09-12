@@ -537,6 +537,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
                     @Override
                     public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
+                        time = 0;
                         if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
                             nimBean = nimBeanBaseResp.getData();
                             if (nimBean.getIsfriend()) { //是好友了，按钮消失
@@ -604,6 +605,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                     outdateTime.setVisibility(View.VISIBLE);
                                     outdateTime.setProgress(0);
                                     outdateTimeText.setVisibility(View.VISIBLE);
+                                    outdateTimeText.stopTime();
                                     if (nimBean.getTimeout_time().isEmpty()) {
                                         outdateTimeText.setText("招呼已过期");
                                     } else {
@@ -616,6 +618,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                         btnMakeFriends.setVisibility(View.VISIBLE);
                                     }
                                     outdateTime.setVisibility(View.GONE);
+                                    outdateTimeText.stopTime();
                                     outdateTimeText.setVisibility(View.GONE);
                                     messageActivityBottomLayout.setVisibility(View.VISIBLE);
                                 }
