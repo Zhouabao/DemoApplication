@@ -9,8 +9,10 @@ android {
 
         def password = "123456"
         def alias = "key"
+//        def alias = "key0"
 //        def filePath = "D:/AndroidProjects/FaceSDK-Collect-WithLiveness-Android/facesdk.jks"  //如  ../facesharp.jks//签名文件路径
         def filePath = "C:/Users/Admin/AndroidStudioProjects/DemoApplication/demoapp.jks"  //如  ../facesharp.jks//签名文件路径
+//        def filePath = "D:/AndroidProjects/keystorefile/demo.jks"  //如  ../facesharp.jks//签名文件路径
 
 
         debug {
@@ -59,11 +61,11 @@ android {
     buildTypes {
         release {
             //打开混淆
-            minifyEnabled true
+//            minifyEnabled false
             //zipalign优化
-            zipAlignEnabled true
+//            zipAlignEnabled true
             //移除无用的resource文件
-            shrinkResources true
+//            shrinkResources true
             signingConfig signingConfigs.release //设置签名信息
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
