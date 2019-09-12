@@ -60,9 +60,7 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    }
+
                 }
             })
     }
