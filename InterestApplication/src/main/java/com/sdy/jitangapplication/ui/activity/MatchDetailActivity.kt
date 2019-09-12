@@ -406,6 +406,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (success) {
             if (result == "解除成功!") {
                 matchBean!!.isfriend = 0
+                NIMClient.getService(MsgService::class.java).deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
                 //更新数据
                 initData()
             } else if (result == "拉黑成功!") {
@@ -458,10 +459,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             // 若有 就打招呼
             // 若无 就弹充值
             R.id.detailUserChatBtn -> {//打个招呼
-                if (matchBean!!.isfriend == 1) {
-                    ChatActivity.start(this, matchBean?.accid ?: "")
-                } else
-                    mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), matchBean?.accid ?: "")
+                if (matchBean != null)
+                    if (matchBean!!.isfriend == 1) {
+                        ChatActivity.start(this, matchBean?.accid ?: "")
+                    } else
+                        mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), matchBean?.accid ?: "")
             }
 
             R.id.backBtn -> {
