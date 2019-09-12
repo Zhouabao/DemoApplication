@@ -13,6 +13,7 @@ import com.baidu.idl.face.platform.ui.FaceLivenessActivity
 import com.baidu.idl.face.platform.utils.Base64Utils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.google.gson.Gson
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.common.BaseApplication.Companion.context
@@ -97,6 +98,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         FaceSDKManager.getInstance().initialize(this, Constants.licenseID, Constants.licenseFileName)
         setFaceConfig()
 
+        ToastUtils.showLong("审核将与用户头像做比对，请确认头像为本人")
         //获取accesstoken
 //        getAccessToken()
         //获取图片的base64
