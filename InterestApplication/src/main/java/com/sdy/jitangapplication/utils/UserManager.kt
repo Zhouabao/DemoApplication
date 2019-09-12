@@ -215,7 +215,7 @@ object UserManager {
     }
 
     fun getGlobalLabelId(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId", 0)
+        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId", 1)
     }
 
     fun getGlobalLabelName(): String {
