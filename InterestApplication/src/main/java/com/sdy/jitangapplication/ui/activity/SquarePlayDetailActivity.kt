@@ -156,7 +156,12 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             resources.getDrawable(if (squareBean.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
-        detailPlaydianzan.text = "${squareBean.like_cnt}"
+        detailPlaydianzan.text =
+            "${if (squareBean!!.like_cnt < 0) {
+                0
+            } else {
+                squareBean!!.like_cnt
+            }}"
         detailPlayUserVipIv.isVisible = squareBean.isvip == 1
 
     }
@@ -245,7 +250,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         if (b) {
             ToastUtils.showShort("删除动态成功！")
             finish()
-            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         } else {
             ToastUtils.showShort("删除动态失败！")
         }
@@ -255,7 +260,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     override fun onGetSquareReport(t: Boolean) {
         if (t) {
             ToastUtils.showShort("举报成功！")
-            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         } else {
             ToastUtils.showShort("举报失败！")
         }
@@ -285,7 +290,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
             detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
             detailPlaydianzan.text = "${squareBean.like_cnt}"
-            EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
 
@@ -296,7 +301,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         } else {
             squareBean.iscollected = 1
         }
-        EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+        EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
@@ -304,7 +309,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
         toast(data.msg)
-        EventBus.getDefault().post(RefreshSquareEvent(true,TAG))
+        EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
     }
 
 

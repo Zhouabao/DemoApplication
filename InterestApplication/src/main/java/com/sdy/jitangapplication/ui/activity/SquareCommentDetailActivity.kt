@@ -171,7 +171,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         squareDianzanBtnImg.setImageResource(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
 
-        squareDianzanBtn.text = "${squareBean!!.like_cnt}"
+        squareDianzanBtn.text = "${if (squareBean!!.like_cnt < 0) {
+            0
+        } else {
+            squareBean!!.like_cnt
+        }}"
         squareCommentBtn.text = "${squareBean!!.comment_cnt}"
         squareContent.setContent("${squareBean!!.descr}")
         squareZhuanfaBtn.text = "${squareBean!!.share_cnt}"

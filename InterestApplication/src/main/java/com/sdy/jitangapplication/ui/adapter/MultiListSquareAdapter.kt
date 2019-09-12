@@ -124,7 +124,11 @@ class MultiListSquareAdapter(
 
         holder.itemView.squareUserName1.text = item.nickname ?: ""
 
-        holder.itemView.squareDianzanBtn1.text = "${item.like_cnt}"
+        holder.itemView.squareDianzanBtn1.text = "${if (item.like_cnt < 0) {
+            0
+        } else {
+            item.like_cnt
+        }}"
         holder.itemView.squareCommentBtn1.text = item.comment_cnt
         holder.itemView.squareUserVipIv1.visibility = if (item.isvip == 1) {
             View.VISIBLE
@@ -405,7 +409,7 @@ class MultiListSquareAdapter(
             override fun onSuccess(param: Void?) {
                 ChatActivity.start(mContext as Activity, mData[clickPos].accid ?: "")
                 //发送通知修改招呼次数
-                UserManager.saveLightingCount(UserManager.getLightingCount()-1)
+                UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
                 EventBus.getDefault().postSticky(UpdateHiCountEvent())
                 clickPos = -1
             }

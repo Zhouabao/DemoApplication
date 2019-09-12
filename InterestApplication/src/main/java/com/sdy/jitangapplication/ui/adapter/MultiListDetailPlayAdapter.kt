@@ -75,8 +75,11 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
             context.resources.getDrawable(if (item.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan_white)
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.detailPlaydianzan.setCompoundDrawables(drawable1, null, null, null)
-        holder.itemView.detailPlaydianzan.text = "${item.like_cnt}"
-
+        holder.itemView.detailPlaydianzan.text = "${if (item.like_cnt < 0) {
+            0
+        } else {
+            item.like_cnt
+        }}"
         if (holder.itemView.detailPlayComment.text.toString().isNotEmpty())
             holder.itemView.detailPlayComment.setText("")//尤其是在评论之后清除数据
         holder.itemView.detailPlayComment.addTextChangedListener(object : TextWatcher {
@@ -107,7 +110,8 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                     if (item.photo_json.isNullOrEmpty()) {
                         item.photo_json = mutableListOf(VideoJson(url = item.avatar))
                     }
-                    holder.itemView.detailPlayVp2.adapter = SquareDetailImgsAdaper(mContext, item.photo_json!!,holder.layoutPosition)
+                    holder.itemView.detailPlayVp2.adapter =
+                        SquareDetailImgsAdaper(mContext, item.photo_json!!, holder.layoutPosition)
 
                     //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
                     holder.itemView.detailPlayVp2.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
