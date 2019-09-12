@@ -1,8 +1,9 @@
 package com.sdy.jitangapplication.wxapi
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.ui.activity.MainActivity
@@ -31,25 +32,16 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
         if (resp.type == ConstantsAPI.COMMAND_PAY_BY_WX) {
             when (resp.errCode) {
                 0 -> {
-                    Toast.makeText(this, "支付成功！", Toast.LENGTH_LONG).show()
-                    finish()
-                    MainActivity.start(this,intent)
+                    showAlert(this, "支付成功！")
                 }
                 -2 -> {
-                    Toast.makeText(this, "支付取消！", Toast.LENGTH_LONG).show()
-                    finish()
-                    MainActivity.start(this,intent)
+                    showAlert(this, "支付取消！")
                 }
                 -1 -> {
-                    Toast.makeText(this, "支付失败！", Toast.LENGTH_LONG).show()
-                    finish()
-                    MainActivity.start(this,intent)
+                    showAlert(this, "支付失败！")
                 }
                 else -> {
-                    Toast.makeText(this, "支付出错！", Toast.LENGTH_LONG).show()
-                    finish()
-                    MainActivity.start(this,intent)
-
+                    showAlert(this, "支付出错，请重新请求！")
                 }
             }
         }
@@ -59,5 +51,17 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
 
     }
 
+
+    private fun showAlert(ctx: Context, info: String) {
+        AlertDialog.Builder(ctx)
+            .setTitle("支付结果")
+            .setMessage(info)
+            .setPositiveButton("确定") { p0, _ ->
+                p0.cancel()
+                finish()
+                MainActivity.start(this, Intent())
+            }
+            .show()
+    }
 
 }

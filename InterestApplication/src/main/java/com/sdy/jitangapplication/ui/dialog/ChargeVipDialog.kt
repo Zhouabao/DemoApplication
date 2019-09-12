@@ -2,10 +2,9 @@ package com.sdy.jitangapplication.ui.dialog
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -17,6 +16,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -34,6 +34,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.adapter.VipBannerAdapter
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
@@ -215,10 +216,10 @@ class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog
                         // 判断resultStatus 为9000则代表支付成功
                         if (TextUtils.equals(resultStatus, "9000")) {
                             // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付成功:$resultInfo")
+                            showAlert(context1, "支付成功！")
                         } else {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付失败:$resultInfo")
+                            showAlert(context1, "支付失败！")
 
                         }
                     }
@@ -330,14 +331,13 @@ class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog
 
 
     private fun showAlert(ctx: Context, info: String) {
-        showAlert(ctx, info, null)
-    }
-
-    private fun showAlert(ctx: Context, info: String, onDismiss: DialogInterface.OnDismissListener?) {
         AlertDialog.Builder(ctx)
+            .setTitle("支付结果")
             .setMessage(info)
-            .setPositiveButton("确定", null)
-            .setOnDismissListener(onDismiss)
+            .setPositiveButton("确定") { p0, _ ->
+                p0.cancel()
+                MainActivity.start(context1, Intent())
+            }
             .show()
     }
 
