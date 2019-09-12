@@ -32,16 +32,22 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
         if (resp.type == ConstantsAPI.COMMAND_PAY_BY_WX) {
             when (resp.errCode) {
                 0 -> {
-                    showAlert(this, "支付成功！")
+                    showAlert(0, this, "支付成功！")
+//                    Toast.makeText(this, "支付成功！", Toast.LENGTH_LONG).show()
+//                    finish()
+//                    MainActivity.start(this,intent)
                 }
                 -2 -> {
-                    showAlert(this, "支付取消！")
+                    showAlert(-2, this, "支付取消！")
+//                    Toast.makeText(this, "支付取消！", Toast.LENGTH_LONG).show()
                 }
                 -1 -> {
-                    showAlert(this, "支付失败！")
+                    showAlert(-1, this, "支付失败！")
+//                    Toast.makeText(this, "支付失败！", Toast.LENGTH_LONG).show()
                 }
                 else -> {
-                    showAlert(this, "支付出错，请重新请求！")
+                    showAlert(-3, this, "支付出错，请重新请求！")
+//                    Toast.makeText(this, "支付出错，请重新请求！！", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -52,14 +58,16 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
     }
 
 
-    private fun showAlert(ctx: Context, info: String) {
+    private fun showAlert(code: Int, ctx: Context, info: String) {
         AlertDialog.Builder(ctx)
             .setTitle("支付结果")
             .setMessage(info)
             .setPositiveButton("确定") { p0, _ ->
                 p0.cancel()
                 finish()
-                MainActivity.start(this, Intent())
+                overridePendingTransition(0, 0)
+                if (code == 0)
+                    MainActivity.start(this, Intent())
             }
             .show()
     }

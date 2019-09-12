@@ -330,9 +330,10 @@
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
                 android:name=".wxapi.WXPayEntryActivity"
+                android:theme="@style/wx_theme"
                 android:configChanges="keyboardHidden|orientation|screenSize"
                 android:exported="true"
-                android:launchMode="singleTop"
+                android:launchMode="singleInstance"
                 android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
