@@ -263,7 +263,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
      * 点赞按钮
      */
     private fun clickZan(position: Int) {
-        val squareBean = adapter.data[position]
         if (adapter.data[position].isliked == 1) {
             adapter.data[position].isliked = 0
             adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.minus(1)
@@ -274,18 +273,18 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 //        adapter.notifyItemChanged(position + adapter.headerLayoutCount)
         adapter.notifyDataSetChanged()
         Handler().postDelayed({
-            if (squareBean.originalLike == squareBean.isliked) {
+            if (adapter.data[position].originalLike == adapter.data[position].isliked) {
                 return@postDelayed
             }
             val params = hashMapOf(
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "type" to if (squareBean.isliked == 0) {
+                "type" to if (adapter.data[position].isliked == 0) {
                     2
                 } else {
                     1
                 },
-                "square_id" to squareBean.id!!,
+                "square_id" to adapter.data[position].id!!,
                 "_timestamp" to System.currentTimeMillis()
             )
             mPresenter.getSquareLike(params, position)
