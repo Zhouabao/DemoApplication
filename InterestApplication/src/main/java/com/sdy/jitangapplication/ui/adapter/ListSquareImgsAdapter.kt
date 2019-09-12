@@ -42,6 +42,12 @@ class ListSquareImgsAdapter(
 //                holder.itemView.ivUser.setType(RoundImageView.TYPE_ROUND)
                 val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
                 layoutParams.height = SizeUtils.dp2px(252F)
+                if (item.width == 0F) {
+                    item.width = SizeUtils.dp2px(180F).toFloat()
+                }
+                if (item.height == 0F) {
+                    item.height = SizeUtils.dp2px(252F).toFloat()
+                }
                 layoutParams.width = (item.width / item.height * layoutParams.height).toInt()
                 layoutParams.leftMargin = SizeUtils.dp2px(10F)
                 if (position == datas.size - 1) {

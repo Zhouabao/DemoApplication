@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -122,11 +123,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
 
     override fun onConfirmVerifyCode(data: LoginBean, isRight: Boolean) {
         onChangeVerifyButtonStatus(true)
-
-        if (!isRight) {
-            toast("验证码输入不正确！")
-//            onChangeVerifyButtonStatus(false)
-        } else if (isRight) {
+         if (isRight) {
             this.data = data
             mPresenter.loginIM(LoginInfo(data.accid, data.extra_data?.im_token))
 
@@ -190,5 +187,9 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
         //更新配置
         NIMClient.updateStatusBarNotificationConfig(statusBarNotificationConfig)
 
+    }
+
+    override fun onError(text: String) {
+        ToastUtils.showShort(text)
     }
 }

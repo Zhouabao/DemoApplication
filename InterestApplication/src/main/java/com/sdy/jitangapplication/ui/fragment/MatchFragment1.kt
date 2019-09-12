@@ -110,8 +110,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         mPresenter.mView = this
         mPresenter.context = activity!!
 
-        stateview.retryBtn.onClick {
-            stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+        matchStateview.retryBtn.onClick {
+            matchStateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getMatchList(matchParams)
         }
         btnChat.setOnClickListener(this)
@@ -251,11 +251,11 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             hasMore = true
             hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == Constants.PAGESIZE
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
-                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
+                matchStateview.viewState = MultiStateView.VIEW_STATE_EMPTY
                 btnChat.isVisible = false
                 tvLeftChatTime.isVisible = false
             } else {
-                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+                matchStateview.viewState = MultiStateView.VIEW_STATE_CONTENT
                 btnChat.isVisible = true
                 tvLeftChatTime.isVisible = true
             }
@@ -271,8 +271,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             tvLeftChatTime.text = "${UserManager.getLightingCount()}"
 
         } else {
-            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-            stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
+            matchStateview.viewState = MultiStateView.VIEW_STATE_ERROR
+            matchStateview.errorMsg.text = if (mPresenter.checkNetWork()) {
                 activity!!.getString(R.string.retry_load_error)
             } else {
                 activity!!.getString(R.string.retry_net_error)
@@ -321,7 +321,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
-        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+        matchStateview.viewState = MultiStateView.VIEW_STATE_LOADING
 
         params["tag_id"] = event.label.id
         matchUserAdapter.data.clear()
@@ -339,7 +339,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: RefreshEvent) {
-        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+        matchStateview.viewState = MultiStateView.VIEW_STATE_LOADING
 
         matchUserAdapter.data.clear()
         page = 1
@@ -551,7 +551,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             matchParams["page"] = page
             mPresenter.getMatchList(matchParams)
         } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
-            stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
+            matchStateview.viewState = MultiStateView.VIEW_STATE_EMPTY
             btnChat.isVisible = false
             tvLeftChatTime.isVisible = false
         }

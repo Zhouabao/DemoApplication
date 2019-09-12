@@ -151,8 +151,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         squareEdit.setOnClickListener(this)
 
 
-        stateview.retryBtn.onClick {
-            stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+        squareStateview.retryBtn.onClick {
+            squareStateview.viewState = MultiStateView.VIEW_STATE_LOADING
             //这个地方还要默认设置选中第一个标签来更新数据
             mPresenter.getSquareList(listParams, true, true)
             mPresenter.getFrinedsList(friendsParams)
@@ -524,7 +524,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 squareDynamicRv.scrollToPosition(0)
             }
 
-            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+            squareStateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data!!.list != null && data!!.list!!.size > 0) {
                 for (tempData in 0 until data!!.list!!.size) {
                     data!!.list!![tempData].type = when {
@@ -542,8 +542,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 adapter.addData(data!!.list!!)
             }
         } else {
-            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-            stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
+            squareStateview.viewState = MultiStateView.VIEW_STATE_ERROR
+            squareStateview.errorMsg.text = if (mPresenter.checkNetWork()) {
                 activity!!.getString(R.string.retry_load_error)
             } else {
                 activity!!.getString(R.string.retry_net_error)
@@ -592,7 +592,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     }
 
     override fun showLoading() {
-        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+        squareStateview.viewState = MultiStateView.VIEW_STATE_LOADING
     }
 
     /***************************事件总线******************************/
