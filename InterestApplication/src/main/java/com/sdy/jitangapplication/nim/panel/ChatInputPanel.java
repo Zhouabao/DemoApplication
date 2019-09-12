@@ -754,6 +754,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
     public void onRecordFail() {
         if (started) {
             ToastHelper.showToast(container.activity, R.string.recording_error);
+            resetActions();
         }
     }
 
