@@ -210,7 +210,10 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
     override fun onResume() {
         super.onResume()
         //主动刷新列表
-        refreshLayout.autoRefresh()
+        page = 1
+        params["page"] = page
+        adapter.data.clear()
+        mPresenter.greatLists(params)
 //        setData() 模拟数据请求
     }
 
@@ -223,7 +226,11 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateHiEvent(event: UpdateHiEvent) {
-        refreshLayout.autoRefresh()
+        refreshLayout.resetNoMoreData()
+        page = 1
+        params["page"] = page
+        adapter.data.clear()
+        mPresenter.greatLists(params)
     }
 
 
