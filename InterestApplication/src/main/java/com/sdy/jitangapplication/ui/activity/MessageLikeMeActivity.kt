@@ -52,7 +52,10 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_like_me)
         initView()
+        //获取喜欢我的列表
         mPresenter.likeLists(params)
+        //标记已读
+        mPresenter.markLikeRead(params)
     }
 
     private val adapter by lazy { LikeMeAdapter() }
@@ -145,7 +148,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
     }
 
     override fun onBackPressed() {
-        mPresenter.markLikeRead(params)
+
         super.onBackPressed()
     }
 

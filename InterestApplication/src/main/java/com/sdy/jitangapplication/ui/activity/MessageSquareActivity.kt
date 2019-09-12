@@ -4,6 +4,12 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.SquareMsgBean
@@ -13,12 +19,6 @@ import com.sdy.jitangapplication.ui.adapter.MessageSquareAdapter
 import com.sdy.jitangapplication.ui.dialog.SquareDelDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_message_square.*
 import kotlinx.android.synthetic.main.dialog_square_del.*
 import kotlinx.android.synthetic.main.empty_layout.view.*
@@ -46,6 +46,9 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_square)
         initView()
+        //进入页面就标记已读
+        mPresenter.markSquareRead(params)
+        //获取广场列表
         mPresenter.squareLists(params)
     }
 
@@ -197,7 +200,6 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
     }
 
     override fun onBackPressed() {
-        mPresenter.markSquareRead(params)
         super.onBackPressed()
     }
 }
