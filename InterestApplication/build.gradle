@@ -123,8 +123,8 @@ android {
         variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
             //这个修改输出APK的文件名
             apkData.outputFileName = "JITANG-" +
-                    variant.versionName + "_" +
-                    variant.flavorName + "_" +
+                    variant.versionName + "-" +
+                    variant.flavorName + "-" +
                     variant.buildType.name  +
                     ".apk"
 

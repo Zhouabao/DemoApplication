@@ -5,6 +5,12 @@ import android.os.CountDownTimer
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.kotlin.base.common.AppManager
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LoginBean
@@ -13,12 +19,6 @@ import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.presenter.VerifyCodePresenter
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
 import com.sdy.jitangapplication.utils.UserManager
-import com.kotlin.base.common.AppManager
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.auth.LoginInfo
 import kotlinx.android.synthetic.main.activity_verify_code.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -156,7 +156,10 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
             //初始化消息提醒配置
             initNotificationConfig()
 
-            if (data != null && data!!.userinfo != null && data!!.userinfo!!.nickname.isNullOrEmpty()) {//个人信息没有填写
+            if (data != null && data!!.userinfo != null
+                && (data!!.userinfo!!.nickname.isNullOrEmpty() || data!!.userinfo!!.avatar.isNullOrEmpty()
+                        || data!!.userinfo!!.gender == 0 || data!!.userinfo!!.birth.isNullOrEmpty())
+            ) {//个人信息没有填写
                 startActivity<SetInfoActivity>()
             } else {
                 UserManager.saveUserInfo(data!!)

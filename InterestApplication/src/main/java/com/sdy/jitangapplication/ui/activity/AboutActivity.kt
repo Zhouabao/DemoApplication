@@ -3,9 +3,10 @@ package com.sdy.jitangapplication.ui.activity
 import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
-import com.sdy.jitangapplication.R
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
@@ -29,6 +30,9 @@ class AboutActivity : BaseActivity() {
         }
         userAgreement.onClick {
             startActivity<ProtocolActivity>("type" to 2)
+        }
+        contactUs.onClick {
+            ChatActivity.start(this, com.sdy.jitangapplication.common.Constants.ASSISTANT_ACCID)
         }
 
         versionTip.text = "for Android V${getAppVersionName(this)}"

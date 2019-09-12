@@ -37,9 +37,9 @@ data class SquareBean(
     var descr: String = "",
     val distance: String = "",
     var id: Int?,
-    var isliked: Int?,
+    var isliked: Int = 0,
     var iscollected: Int?,//0没收藏 1收藏
-    var like_cnt: Int?,
+    var like_cnt: Int = 0,
     var member_level: Int?,
     var nickname: String?,
     var out_time: String?,
@@ -53,7 +53,9 @@ data class SquareBean(
     var tags: MutableList<String>?,
     var video_json: MutableList<VideoJson>?,
     var type: Int = 1,
-    var duration: Long = 0L
+    var duration: Long = 0L,
+    var clickTime: Int = 0,
+    var originalLike: Int = 0
 
 ) :
     Serializable, MultiItemEntity {
