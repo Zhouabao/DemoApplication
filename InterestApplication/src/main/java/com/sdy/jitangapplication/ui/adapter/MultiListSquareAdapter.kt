@@ -405,6 +405,7 @@ class MultiListSquareAdapter(
             override fun onSuccess(param: Void?) {
                 ChatActivity.start(mContext as Activity, mData[clickPos].accid ?: "")
                 //发送通知修改招呼次数
+                UserManager.saveLightingCount(UserManager.getLightingCount()-1)
                 EventBus.getDefault().postSticky(UpdateHiCountEvent())
                 clickPos = -1
             }
