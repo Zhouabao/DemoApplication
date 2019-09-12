@@ -342,7 +342,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         star = event.stared
         isfriend = event.isfriend
         //是好友才显示星标
-        llstar.setVisible(isfriend)
+        flStar.setVisible(isfriend)
         if (isfriend) {
             friendStar.isChecked = star
             deleteTv.text = "删除好友"
