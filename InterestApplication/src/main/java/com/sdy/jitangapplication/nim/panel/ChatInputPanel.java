@@ -759,7 +759,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     @Override
     public void onRecordCancel() {
-
+        resetActions();
     }
 
     @Override
