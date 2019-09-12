@@ -37,10 +37,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.BlockDataEvent
-import com.sdy.jitangapplication.event.ListDataEvent
-import com.sdy.jitangapplication.event.NotifyEvent
-import com.sdy.jitangapplication.event.UpdateLabelEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.MatchBean
@@ -548,6 +545,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (countdown != -1)
             UserManager.saveCountDownTime(countdown)
 
+        EventBus.getDefault().postSticky(UpdateHiCountEvent())
         detailUserLeftChatCount.text = "${UserManager.getLightingCount()}"
     }
 

@@ -366,6 +366,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateHiCountEvent(event: UpdateHiCountEvent) {
+        if (UserManager.getLightingCount() < 0) {
+            UserManager.saveLightingCount(0)
+        }
         tvLeftChatTime.text = "${UserManager.getLightingCount()}"
     }
 

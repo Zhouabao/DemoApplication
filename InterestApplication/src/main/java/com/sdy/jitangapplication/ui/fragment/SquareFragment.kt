@@ -415,8 +415,13 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onRemoveMySquareResult(result: Boolean, position: Int) {
         if (result) {
+            if (adapter.data[position].type == SquareBean.AUDIO) {
+                resetAudio()
+            } else if (adapter.data[position].type == SquareBean.VIDEO) {
+                GSYVideoManager.releaseAllVideos()
+            }
             adapter.data.removeAt(position)
-            adapter.notifyItemRemoved(position)
+            adapter.notifyItemRemoved(position + adapter.headerLayoutCount)
         }
     }
 
