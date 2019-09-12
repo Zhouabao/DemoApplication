@@ -331,10 +331,13 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         public void onClick(View v) {
             if (v == sendMessageButtonInInputBar) {
                 //检测是否可以发消息
-                if (disable) {
-                    checkGreetSendMsg(1);
-                } else {
-                    onTextMessageSendButtonPressed();
+                if (checkSendButtonEnable(messageEditText)) {
+                    if (disable) {
+                        checkGreetSendMsg(1);
+                    } else {
+                        onTextMessageSendButtonPressed();
+                    }
+                    sendMessageButtonInInputBar.setEnabled(false);
                 }
 
             }
@@ -501,15 +504,17 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
      *
      * @param editText
      */
-    private void checkSendButtonEnable(EditText editText) {
+    private Boolean checkSendButtonEnable(EditText editText) {
         if (isRobotSession) {
-            return;
+            return false;
         }
         String textMessage = editText.getText().toString();
-        if (!TextUtils.isEmpty(StringUtil.removeBlanks(textMessage)) && editText.hasFocus()) {
+        if (!TextUtils.isEmpty(StringUtil.removeBlanks(textMessage))) {
             sendMessageButtonInInputBar.setEnabled(true);
+            return true;
         } else {
             sendMessageButtonInInputBar.setEnabled(false);
+            return false;
         }
     }
 
