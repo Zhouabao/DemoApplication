@@ -324,25 +324,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
     }
 
-
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onResume() {
         super.onResume()
         if (KeyboardUtils.isSoftInputVisible(this))
             KeyboardUtils.hideSoftInput(this)
         parseIntents()
-    }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-
     }
 
     override fun onDestroy() {

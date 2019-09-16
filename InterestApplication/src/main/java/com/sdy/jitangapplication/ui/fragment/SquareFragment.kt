@@ -8,13 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
@@ -51,7 +51,7 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_ERROR
 import kotlinx.android.synthetic.main.dialog_more_action.*
-import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_square.*
 import kotlinx.android.synthetic.main.headerview_label.view.*
 import org.greenrobot.eventbus.EventBus
@@ -151,9 +151,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         squareEdit.setOnClickListener(this)
 
 
-        squareStateview.retryBtn.onClick {
-            squareStateview.viewState = MultiStateView.VIEW_STATE_LOADING
-            //这个地方还要默认设置选中第一个标签来更新数据
+        retryBtn.onClick {
+            setViewState(LOADING)
+//            这个地方还要默认设置选中第一个标签来更新数据
             mPresenter.getSquareList(listParams, true, true)
             mPresenter.getFrinedsList(friendsParams)
         }
@@ -524,7 +524,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 squareDynamicRv.scrollToPosition(0)
             }
 
-            squareStateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+            setViewState(CONTENT)
             if (data!!.list != null && data!!.list!!.size > 0) {
                 for (tempData in 0 until data!!.list!!.size) {
                     data!!.list!![tempData].type = when {
@@ -542,8 +542,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 adapter.addData(data!!.list!!)
             }
         } else {
-            squareStateview.viewState = MultiStateView.VIEW_STATE_ERROR
-            squareStateview.errorMsg.text = if (mPresenter.checkNetWork()) {
+            setViewState(ERROR)
+            errorMsg.text = if (mPresenter.checkNetWork()) {
                 activity!!.getString(R.string.retry_load_error)
             } else {
                 activity!!.getString(R.string.retry_net_error)
@@ -592,8 +592,47 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     }
 
     override fun showLoading() {
-        squareStateview.viewState = MultiStateView.VIEW_STATE_LOADING
+        setViewState(LOADING)
     }
+
+
+    companion object {
+        private const val LOADING = 0
+        private const val CONTENT = 1
+        private const val ERROR = 2
+        private const val EMPTY = 3
+    }
+
+    private fun setViewState(state: Int) {
+        when (state) {
+            LOADING -> {
+                loadingLayout.isVisible = true
+                contentLayout.isVisible = false
+                errorLayout.isVisible = false
+                emptyLayout.isVisible = false
+            }
+            CONTENT -> {
+                contentLayout.isVisible = true
+                loadingLayout.isVisible = false
+                errorLayout.isVisible = false
+                emptyLayout.isVisible = false
+            }
+            ERROR -> {
+                errorLayout.isVisible = true
+                contentLayout.isVisible = false
+                loadingLayout.isVisible = false
+                emptyLayout.isVisible = false
+            }
+            EMPTY -> {
+                emptyLayout.isVisible = true
+                contentLayout.isVisible = false
+                errorLayout.isVisible = false
+                loadingLayout.isVisible = false
+            }
+        }
+
+    }
+
 
     /***************************事件总线******************************/
 

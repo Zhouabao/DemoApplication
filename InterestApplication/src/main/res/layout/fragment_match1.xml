@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.kennyc.view.MultiStateView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/matchStateview"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:msv_animateViewChanges="false"
-        app:msv_emptyView="@layout/loading_layout_match_lottie"
-        app:msv_errorView="@layout/error_layout"
-        app:msv_loadingView="@layout/loading_layout_match_lottie"
-        app:msv_viewState="loading">
+<!--<com.kennyc.view.MultiStateView-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:id="@+id/matchStateview"-->
+<!--android:orientation="vertical"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--app:msv_animateViewChanges="false"-->
+<!--app:msv_emptyView="@layout/loading_layout_match_lottie"-->
+<!--app:msv_errorView="@layout/error_layout"-->
+<!--app:msv_loadingView="@layout/loading_layout_match_lottie"-->
+<!--app:msv_viewState="loading">-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/contentLayout"
             android:orientation="vertical"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.fragment.MatchFragment1">
@@ -106,4 +114,20 @@
 
 
     </LinearLayout>
-</com.kennyc.view.MultiStateView>
+
+    <include
+            android:id="@+id/loadingLayout"
+            layout="@layout/loading_layout_match_lottie"/>
+
+    <include
+            android:id="@+id/errorLayout"
+            layout="@layout/error_layout"
+            android:visibility="gone"/>
+
+    <include
+            android:id="@+id/emptyLayout"
+            layout="@layout/loading_layout_match_lottie"
+            android:visibility="gone"/>
+</FrameLayout>
+
+        <!--</com.kennyc.view.MultiStateView>-->

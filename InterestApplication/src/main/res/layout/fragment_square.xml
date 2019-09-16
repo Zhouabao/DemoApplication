@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.kennyc.view.MultiStateView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/squareStateview"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:msv_animateViewChanges="true"
-        app:msv_errorView="@layout/error_layout"
-        app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+<!--<com.kennyc.view.MultiStateView-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:id="@+id/squareStateview"-->
+<!--android:orientation="vertical"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--app:msv_animateViewChanges="false"-->
+<!--app:msv_errorView="@layout/error_layout"-->
+<!--app:msv_loadingView="@layout/loading_layout"-->
+<!--app:msv_viewState="loading">-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-        <FrameLayout
+    <FrameLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_height="match_parent">
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="match_parent">
-
-            <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:id="@+id/refreshLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorWhite"
-                    app:srlDisableContentWhenLoading="true"
-                    app:srlDisableContentWhenRefresh="true"
-                    app:srlEnableLoadMoreWhenContentNotFull="false"
-                    tools:context=".ui.fragment.SquareFragment">
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite"
+                app:srlDisableContentWhenLoading="true"
+                app:srlDisableContentWhenRefresh="true"
+                app:srlEnableLoadMoreWhenContentNotFull="false"
+                tools:context=".ui.fragment.SquareFragment">
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/squareDynamicRv"
@@ -36,47 +43,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-            <FrameLayout
-                    android:id="@+id/uploadFl"
-                    android:visibility="gone"
+        <FrameLayout
+                android:id="@+id/uploadFl"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="25dp">
+
+
+            <ProgressBar
+                    android:id="@+id/uploadProgressBar"
+                    style="@style/uploadProgress"
+                    android:max="100"
+                    android:progress="100"
                     android:layout_width="match_parent"
-                    android:layout_height="25dp">
+                    android:layout_height="wrap_content"/>
 
-
-                <ProgressBar
-                        android:id="@+id/uploadProgressBar"
-                        style="@style/uploadProgress"
-                        android:max="100"
-                        android:progress="100"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                <TextView
-                        android:id="@+id/uploadProgressTv"
-                        android:layout_marginLeft="15dp"
-                        android:gravity="center_vertical"
-                        android:layout_gravity="center_vertical"
-                        android:textColor="#ffffffff"
-                        android:textSize="12sp"
-                        android:text="正在发布"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-            </FrameLayout>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/squareEdit"
-                    android:layout_marginRight="15dp"
-                    android:layout_gravity="end|bottom"
-                    android:backgroundTint="@color/colorOrange"
-                    android:src="@drawable/icon_edit"
-                    android:layout_marginBottom="40dp"
+            <TextView
+                    android:id="@+id/uploadProgressTv"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    android:text="正在发布"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_anchorGravity="bottom|right|end"/>
-
+                    android:layout_height="wrap_content"/>
         </FrameLayout>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/squareEdit"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="end|bottom"
+                android:backgroundTint="@color/colorOrange"
+                android:src="@drawable/icon_edit"
+                android:layout_marginBottom="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_anchorGravity="bottom|right|end"/>
 
-</com.kennyc.view.MultiStateView>
+    </FrameLayout>
+
+    <include
+            android:visibility="visible"
+            android:id="@+id/loadingLayout"
+            layout="@layout/loading_layout"/>
+
+    <include
+            android:id="@+id/errorLayout"
+            layout="@layout/error_layout"
+            android:visibility="gone"/>
+
+    <include
+            android:id="@+id/emptyLayout"
+            layout="@layout/empty_layout"
+            android:visibility="gone"/>
+</FrameLayout>
+
+
+        <!--</com.kennyc.view.MultiStateView>-->
