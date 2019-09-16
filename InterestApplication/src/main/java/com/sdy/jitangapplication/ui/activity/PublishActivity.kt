@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -16,7 +17,6 @@ import android.util.Log
 import android.view.View
 import android.widget.MediaController
 import android.widget.RadioGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
@@ -53,6 +53,7 @@ import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UriUtils.getAllPhotoInfo
 import com.sdy.jitangapplication.utils.UriUtils.getAllVideoInfos
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_publish.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
@@ -108,21 +109,28 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
         //进入页面判断是否启用草稿箱，不管启用不启用，最后都删除内容，只保留一次。
         if (SPUtils.getInstance(Constants.SPNAME).getString("draft", "").isNotEmpty()) {
-            AlertDialog.Builder(this)
+            CommonAlertDialog.Builder(this)
                 .setTitle("草稿箱")
-                .setMessage("是否启用草稿箱？")
-                .setPositiveButton("是") { _, _ ->
-                    publishContent.setText(SPUtils.getInstance(Constants.SPNAME).getString("draft", ""))
-                    publishContent.setSelection(publishContent.length())
-                    SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
-                }
-                .setNegativeButton("否") { _, _ ->
-                    SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
-                }
-                .setOnDismissListener {
-                    SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
-                }
+                .setContent("是否启用草稿箱")
+                .setConfirmText("是")
+                .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+                    override fun onClick(dialog: Dialog) {
+                        publishContent.setText(SPUtils.getInstance(Constants.SPNAME).getString("draft", ""))
+                        publishContent.setSelection(publishContent.length())
+                        SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
+                        dialog.cancel()
+                    }
+                })
+                .setCancelText("否")
+                .setOnCancelListener(object :CommonAlertDialog.OnCancelListener{
+                    override fun onClick(dialog: Dialog) {
+                        SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
+                        dialog.cancel()
+                    }
+                })
+                .create()
                 .show()
+
         }
     }
 

@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -28,6 +28,7 @@ import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -225,20 +226,29 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             mPresenter.getSquareCollect(params, position)
         }
         moreActionDialog.llJubao.onClick {
-            AlertDialog.Builder(this)
-                .setNegativeButton("取消举报") { p0, p1 -> p0.cancel() }
-                .setPositiveButton("确认举报") { p0, p1 ->
-                    mPresenter.getSquareReport(
-                        hashMapOf(
-                            "accid" to UserManager.getAccid(),
-                            "token" to UserManager.getToken(),
-                            "square_id" to squareBean.id!!,
-                            "_timestamp" to System.currentTimeMillis()
-                        )
-                    )
-                }
+            CommonAlertDialog.Builder(this)
                 .setTitle("举报")
-                .setMessage("是否确认举报该动态？")
+                .setContent("是否确认举报该动态？")
+                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                    override fun onClick(dialog: Dialog) {
+                        mPresenter.getSquareReport(
+                            hashMapOf(
+                                "accid" to UserManager.getAccid(),
+                                "token" to UserManager.getToken(),
+                                "square_id" to squareBean.id!!,
+                                "_timestamp" to System.currentTimeMillis()
+                            )
+                        )
+                    }
+
+                })
+                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
+                    override fun onClick(dialog: Dialog) {
+                        dialog.cancel()
+                    }
+
+                })
+                .create()
                 .show()
         }
         moreActionDialog.cancel.onClick {

@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.RadioButton
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -38,6 +37,7 @@ import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.adapter.VipBannerAdapter
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.wxapi.PayResult
 import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -331,13 +331,18 @@ class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog
 
 
     private fun showAlert(ctx: Context, info: String) {
-        AlertDialog.Builder(ctx)
+        CommonAlertDialog.Builder(ctx)
             .setTitle("支付结果")
-            .setMessage(info)
-            .setPositiveButton("确定") { p0, _ ->
-                p0.cancel()
-                MainActivity.start(context1, Intent())
-            }
+            .setContent(info)
+            .setCancelIconIsVisibility(false)
+            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                override fun onClick(dialog: Dialog) {
+                    dialog.cancel()
+                    MainActivity.start(context1, Intent())
+                }
+
+            })
+            .create()
             .show()
     }
 

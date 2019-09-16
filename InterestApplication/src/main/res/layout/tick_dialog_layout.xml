@@ -15,37 +15,26 @@
             android:layout_marginRight="15dp"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:layout_height="262dp"
+            android:layout_height="wrap_content"
             >
 
         <TextView
                 android:id="@+id/t1"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:textColor="@color/colorBlack22"
+                android:textColor="@color/color_333333"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="50dp"
-                android:text="您的账号已在其它设备登录"
+                android:layout_marginTop="30dp"
+                android:lineSpacingMultiplier="1.5"
+                android:gravity="center"
+                android:text="您的账号已在其它设备登录\n请注意账号安全"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-        <TextView
-                android:id="@+id/t2"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center"
-                android:textColor="@color/colorBlack22"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_below="@id/t1"
-                android:text="请注意账号安全"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
 
         <View
                 android:id="@+id/view"
-                android:layout_above="@id/confirm"
+                android:layout_below="@id/t1"
                 android:layout_marginTop="20dp"
                 android:background="@color/colorDivider"
                 android:layout_width="match_parent"
@@ -54,7 +43,7 @@
         <TextView
                 android:id="@+id/confirm"
                 android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@id/view"
                 android:textSize="18sp"
                 android:textColor="@color/colorOrange"
                 android:text="确定"

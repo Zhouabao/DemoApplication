@@ -56,7 +56,7 @@ class VipChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layou
         } else {
             holder.itemView.vipOriginalPrice.visibility = View.VISIBLE
             holder.itemView.vipOriginalPrice.text =
-                SpanUtils.with(holder.itemView.vipOriginalPrice).append("¥${item.discount_price ?: "0"}")
+                SpanUtils.with(holder.itemView.vipOriginalPrice).append("¥${item.original_price ?: "0"}")
                     .setStrikethrough().create()
         }
         holder.itemView.vipLong.text = item.ename ?: ""

@@ -1,6 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -29,6 +29,7 @@ import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.umeng.socialize.UMShareAPI
@@ -376,20 +377,28 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             mPresenter.getSquareCollect(params, position)
         }
         moreActionDialog.llJubao.onClick {
-            AlertDialog.Builder(this)
-                .setNegativeButton("取消举报") { p0, p1 -> p0.cancel() }
-                .setPositiveButton("确认举报") { p0, p1 ->
-                    mPresenter.getSquareReport(
-                        hashMapOf(
-                            "accid" to UserManager.getAccid(),
-                            "token" to UserManager.getToken(),
-                            "square_id" to adapter.data[position].id!!,
-                            "_timestamp" to System.currentTimeMillis()
-                        )
-                    )
-                }
+            CommonAlertDialog.Builder(this)
                 .setTitle("举报")
-                .setMessage("是否确认举报该动态？")
+                .setContent("是否确认举报该动态？")
+                .setOnCancelListener(object :CommonAlertDialog.OnCancelListener{
+                    override fun onClick(dialog: Dialog) {
+                        dialog.cancel()
+                    }
+                })
+                .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+                    override fun onClick(dialog: Dialog) {
+                        mPresenter.getSquareReport(
+                            hashMapOf(
+                                "accid" to UserManager.getAccid(),
+                                "token" to UserManager.getToken(),
+                                "square_id" to adapter.data[position].id!!,
+                                "_timestamp" to System.currentTimeMillis()
+                            )
+                        )
+                    }
+
+                })
+                .create()
                 .show()
         }
         moreActionDialog.cancel.onClick {

@@ -1,10 +1,10 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.ToastUtils
@@ -19,6 +19,7 @@ import com.sdy.jitangapplication.presenter.view.SettingsView
 import com.sdy.jitangapplication.utils.DataCleanManager
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
@@ -94,19 +95,27 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             }
             //退出登录，同时退出IM和服务器
             R.id.loginOutBtn -> {
-                AlertDialog.Builder(this)
+                CommonAlertDialog.Builder(this)
                     .setTitle("退出登录")
-                    .setMessage("是否确认退出登录?")
-                    .setPositiveButton("确定") { _, _ ->
-                        UserManager.clearLoginData()
-                        NIMClient.getService(AuthService::class.java).logout()
-                        AppManager.instance.finishAllActivity()
-                        startActivity<LoginActivity>()
-                    }
-                    .setNegativeButton("取消") { p0, _ ->
-                        p0.cancel()
-                    }
+                    .setContent("是否退出登录？\n退出后用户信息将在上次登录位置对其他用户持续可见")
+                    .setOnCancelListener(object :CommonAlertDialog.OnCancelListener{
+                        override fun onClick(dialog: Dialog) {
+                            dialog.cancel()
+                        }
+
+                    })
+                    .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+                        override fun onClick(dialog: Dialog) {
+                            UserManager.clearLoginData()
+                            NIMClient.getService(AuthService::class.java).logout()
+                            AppManager.instance.finishAllActivity()
+                            startActivity<LoginActivity>()
+                        }
+
+                    })
+                    .create()
                     .show()
+
             }
             //返回
             R.id.btnBack -> {
