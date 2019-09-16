@@ -12,6 +12,12 @@ import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.config.PictureMimeType
+import com.luck.picture.lib.entity.LocalMedia
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
@@ -19,12 +25,6 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.presenter.SetInfoPresenter
 import com.sdy.jitangapplication.presenter.view.SetInfoView
 import com.sdy.jitangapplication.utils.UserManager
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureConfig
-import com.luck.picture.lib.config.PictureMimeType
-import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.activity_set_info.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
@@ -159,13 +159,14 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             .selectionMode(PictureConfig.SINGLE)
             .previewImage(true)
             .isCamera(true)
-            .enableCrop(true)
-            .circleDimmedLayer(true)
-            .showCropFrame(false)
-            .showCropGrid(false)
+            .enableCrop(true)//是否裁剪
+            .circleDimmedLayer(true)//圆形裁剪
+            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
+            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or fa
+            .scaleEnabled(true)
             .rotateEnabled(false)
             .withAspectRatio(9, 16)
-            .compress(true)
+            .compress(false)//是否压缩
             .openClickSound(false)
             .forResult(PictureConfig.CHOOSE_REQUEST)
     }
@@ -219,14 +220,19 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                 PictureConfig.CHOOSE_REQUEST -> {
                     if (data != null) {
                         val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
-                        GlideUtil.loadCircleImg(applicationContext, selectList[0].compressPath, userProfileBtn)
+                        val path = if (selectList[0].isCut) {
+                            selectList[0].cutPath
+                        } else {
+                            selectList[0].path
+                        }
+                        GlideUtil.loadCircleImg(applicationContext, path, userProfileBtn)
                         userProfile =
                             "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
                                 "accid"
                             )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                 16
                             )}.jpg"
-                        mPresenter.uploadProfile(selectList[0].compressPath, userProfile.toString())
+                        mPresenter.uploadProfile(path, userProfile.toString())
                         checkConfirmBtnEnable()
                     }
                 }
@@ -247,6 +253,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
 
     private fun checkConfirmBtnEnable() {
-        confirmBtn.isEnabled = !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty() && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
+        confirmBtn.isEnabled =
+            !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty() && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
     }
 }
