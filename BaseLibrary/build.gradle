@@ -14,8 +14,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        manifestPlaceholders = [qqappid: "1109743471"]
-
         ndk {
             //设置支持的SO库架构
             abiFilters 'armeabi', 'armeabi-v7a', 'x86'

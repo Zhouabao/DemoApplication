@@ -10,15 +10,15 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import com.blankj.utilcode.util.ToastUtils
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.ui.activity.ContactBookActivity
 import com.sdy.jitangapplication.utils.UserManager
-import com.kotlin.base.data.net.RetrofitFactory
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.excute
-import com.kotlin.base.rx.BaseSubscriber
 import com.umeng.socialize.ShareAction
 import com.umeng.socialize.UMShareAPI
 import com.umeng.socialize.UMShareListener
@@ -110,19 +110,6 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
         if (squareBean?.type == SquareBean.PIC) {
             //多图上传,需要带文字描述
             if (!squareBean?.photo_json.isNullOrEmpty()) {
-//                val images = arrayOfNulls<UMImage>((squareBean?.photo_json ?: mutableListOf()).size)
-//                for (img in (squareBean?.photo_json ?: mutableListOf()).withIndex()) {
-//                    val image = UMImage(myContext, img.value.url)//
-//                    //大小压缩，默认为大小压缩，适合普通很大的图
-//                    image.compressStyle = UMImage.CompressStyle.SCALE
-//                    image.compressFormat = Bitmap.CompressFormat.JPEG
-//                    image.title = "${squareBean?.nickname} 在积糖发了一张照片"
-//                    image.description = if (!squareBean?.descr.isNullOrEmpty()) {
-//                        squareBean?.descr
-//                    } else "「你先抓紧看看这个」"
-//                    images[img.index] = image
-//                }
-
                 val image = UMImage(myContext, squareBean?.photo_json?.get(0)?.url)//
                 //大小压缩，默认为大小压缩，适合普通很大的图
                 image.compressStyle = UMImage.CompressStyle.SCALE
@@ -131,8 +118,6 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
                 image.description = if (!squareBean?.descr.isNullOrEmpty()) {
                     squareBean?.descr
                 } else "「你先抓紧看看这个」"
-
-
                 ShareAction(myContext as Activity)
                     .setPlatform(platformConfig)
                     .withText(
@@ -209,6 +194,8 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
          * @param platform 平台类型
          */
         override fun onResult(p0: SHARE_MEDIA?) {
+            Log.d("share===", "结果。。。。")
+
             addShare()
         }
 
@@ -217,6 +204,8 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
          * @param platform 平台类型
          */
         override fun onCancel(p0: SHARE_MEDIA?) {
+            Log.d("share===", "取消。。。。")
+
             dismiss()
         }
 
@@ -235,6 +224,7 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
          * @param platform 平台类型
          */
         override fun onStart(p0: SHARE_MEDIA?) {
+            Log.d("share===", "开始。。。。")
 
         }
 

@@ -39,12 +39,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
-        manifestPlaceholders = [qqappid: "1109743471"]
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "umeng"]
+        manifestPlaceholders = [qqappid: "1109743471"]
+//        manifestPlaceholders = [qqappid: 'com.sdy.jitangapplication']
 
         // 这里添加
         multiDexEnabled true
-        manifestPlaceholders = [qqappid: 'com.sdy.jitangapplication']
         packagingOptions {
             //解决编译时com.android.builder.merge.DuplicateRelativeFileException: More than one file was found with OS independent path 'META-INF/rxjava.properties'这个错误
             exclude 'META-INF/rxjava.properties'
