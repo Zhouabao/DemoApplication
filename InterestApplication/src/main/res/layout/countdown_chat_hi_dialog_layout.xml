@@ -34,10 +34,10 @@
             android:id="@+id/fullTime"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/myAvator"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginTop="10dp"
-            android:text="22:25:33后补充"
+            android:text="请等待充能"
             android:textColor="#ff333333"
             android:textSize="14sp"
             />
