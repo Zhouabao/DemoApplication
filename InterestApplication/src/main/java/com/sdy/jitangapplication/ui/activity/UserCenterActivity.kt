@@ -68,7 +68,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     private val visitsAdapter by lazy { VisitUserAvatorAdater() }
 
 
-    private lateinit var userInfoBean: UserInfoBean
+    private var userInfoBean: UserInfoBean? = null
     private lateinit var vipDialog: ChargeVipDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,20 +91,20 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
 
     private fun initData() {
         //更新了信息之后更新本地缓存
-        SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean.userinfo?.avatar)
-        EventBus.getDefault().post(UpdateAvatorEvent(true))
-        getTagData()
-        coverAdapter.setNewData(userInfoBean.squarelist?.list ?: mutableListOf())
-        visitsAdapter.setNewData(userInfoBean.visitlist ?: mutableListOf())
-        GlideUtil.loadAvatorImg(this, userInfoBean.userinfo?.avatar ?: "", userAvator)
-        userName.text = userInfoBean.userinfo?.nickname ?: ""
-        userSquareCount.text = "我的动态 ${userInfoBean.squarelist?.count}"
-        UserManager.saveUserVip(userInfoBean.userinfo?.isvip ?: 0)
-        UserManager.saveUserVerify(userInfoBean.userinfo?.isfaced ?: 0)
+            SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
+            EventBus.getDefault().post(UpdateAvatorEvent(true))
+            getTagData()
+            coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
+            visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
+            GlideUtil.loadAvatorImg(this, userInfoBean?.userinfo?.avatar ?: "", userAvator)
+            userName.text = userInfoBean?.userinfo?.nickname ?: ""
+            userSquareCount.text = "我的动态 ${userInfoBean?.squarelist?.count}"
+            UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
+            UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
 
-        // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
-        checkVerify()
-        checkVip()
+            // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
+            checkVerify()
+            checkVip()
     }
 
     //从缓存中获取标签信息
@@ -115,13 +115,13 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
 
     //是否认证 1认证 2未认证
     private fun checkVerify() {
-        if (userInfoBean.userinfo?.isfaced == 1) {
+        if (userInfoBean?.userinfo?.isfaced == 1) {
             userVerify.setImageResource(R.drawable.icon_verify)
             userVerifyTip.visibility = View.GONE
             userVerifyBtn.isVisible = true
             userVerifyBtn.text = "已认证"
             userVerifyBtn.isEnabled = false
-        } else if (userInfoBean.userinfo?.isfaced == 2) {
+        } else if (userInfoBean?.userinfo?.isfaced == 2) {
             userVerify.setImageResource(R.drawable.icon_verify_gray)
             userVerifyTip.visibility = View.VISIBLE
             userVerifyBtn.isVisible = false
@@ -138,10 +138,10 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     //是否认证
     private fun checkVip() {
         //是否会员
-        if (userInfoBean.userinfo?.isvip == 1) {
+        if (userInfoBean?.userinfo?.isvip == 1) {
             userVip.visibility = View.VISIBLE
             isVipCl.visibility = View.VISIBLE
-            isVipTimeout.text = "到期时间\t\t${userInfoBean.userinfo?.vip_express ?: ""}"
+            isVipTimeout.text = "到期时间\t\t${userInfoBean?.userinfo?.vip_express ?: ""}"
             notVipPowerLl.visibility = View.GONE
         } else {
             userVip.visibility = View.GONE
@@ -154,8 +154,8 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     private fun initViewPager() {
         /*生成indicator*/
         if (notVipPowerIndicator.childCount == 0)
-            if ((userInfoBean.vip_descr ?: mutableListOf<MatchBean>()).size > 1) {
-                val size = (userInfoBean.vip_descr ?: mutableListOf<MatchBean>()).size
+            if ((userInfoBean?.vip_descr ?: mutableListOf<MatchBean>()).size > 1) {
+                val size = (userInfoBean?.vip_descr ?: mutableListOf<MatchBean>()).size
                 for (i in 0 until size) {
                     val indicator = RadioButton(this)
                     indicator.width = SizeUtils.dp2px(5F)
@@ -183,13 +183,13 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
 
             override fun getCount(): Int {
-                return (userInfoBean.vip_descr ?: mutableListOf<MatchBean>()).size
+                return (userInfoBean?.vip_descr ?: mutableListOf<MatchBean>()).size
             }
 
             override fun instantiateItem(container: ViewGroup, position: Int): Any {
                 val view = layoutInflater.inflate(R.layout.item_not_vip_viewpager, null)
-                view.vpTitle.text = userInfoBean.vip_descr?.get(position)?.title ?: ""
-                view.vpMsg.text = userInfoBean.vip_descr?.get(position)?.rule ?: ""
+                view.vpTitle.text = userInfoBean?.vip_descr?.get(position)?.title ?: ""
+                view.vpMsg.text = userInfoBean?.vip_descr?.get(position)?.rule ?: ""
                 view.setOnClickListener {
                     vipDialog.show()
                     if (vipDialog.bannerVip.childCount == 0) {
@@ -316,7 +316,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
                 multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
                 mPresenter.getMemberInfo(params)
             } else if (requestCode == REQUEST_ID_VERIFY) {
-                userInfoBean.userinfo?.isfaced = UserManager.isUserVerify()
+                userInfoBean?.userinfo?.isfaced = UserManager.isUserVerify()
                 checkVerify()
             }
         }
@@ -335,11 +335,11 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
                     "hide_distance" to if (userInfoBean == null) {
                         false
                     } else {
-                        userInfoBean.hide_distance
+                        userInfoBean?.hide_distance
                     },
                     "hide_book" to if (userInfoBean == null) {
                         false
-                    } else userInfoBean.hide_book
+                    } else userInfoBean?.hide_book
                 )
             }
             //个人信息设置
@@ -378,9 +378,9 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             //我的来访
             R.id.userVisit -> {
                 startActivity<MyVisitActivity>(
-                    "isVip" to (userInfoBean.userinfo?.isvip == 1),
-                    "today" to userInfoBean.userinfo?.todayvisit,
-                    "all" to userInfoBean.userinfo?.allvisit
+                    "isVip" to (userInfoBean?.userinfo?.isvip == 1),
+                    "today" to userInfoBean?.userinfo?.todayvisit,
+                    "all" to userInfoBean?.userinfo?.allvisit
                 )
             }
             //我的问题

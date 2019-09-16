@@ -22,12 +22,12 @@ data class Userinfo(
     val avatar: String? = "",
     val gender: Int = 0,
     val birth: String = "",
-    val accid: String? = "",
-    val allvisit: Int? = 0,
+    val accid: String = "",
+    val allvisit: Int = 0,
     val face_audit_state: Int? = 0,
     val isvip: Int? = 0,
-    val todayvisit: Int? = 0,
-    val vip_express: String? = "",
+    val todayvisit: Int = 0,
+    val vip_express: String = "",
     var isfaced: Int = 0//0未认证/认证不成功     1认证通过     2认证中
 )
 
