@@ -227,7 +227,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                             )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                 16
                             )}.jpg"
-//                        mPresenter.uploadProfile(path, userProfile.toString())
+                        mPresenter.uploadProfile(path, userProfile.toString())
                         checkConfirmBtnEnable()
                     }
                 }
