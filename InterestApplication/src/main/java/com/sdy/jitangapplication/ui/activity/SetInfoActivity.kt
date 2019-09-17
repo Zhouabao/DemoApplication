@@ -63,8 +63,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
         initView()
 
-        if (SPUtils.getInstance(Constants.SPNAME).getString("sensitive").isNullOrEmpty())
-            mPresenter.checkNickName()
 
     }
 
@@ -159,13 +157,13 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             .selectionMode(PictureConfig.SINGLE)
             .previewImage(true)
             .isCamera(true)
-            .enableCrop(true)//是否裁剪
-            .circleDimmedLayer(true)//圆形裁剪
-            .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
+            .enableCrop(false)//是否裁剪
+            .isDragFrame(true)
+            .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
             .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or fa
             .scaleEnabled(true)
             .rotateEnabled(false)
-            .withAspectRatio(9, 16)
+            .withAspectRatio(1, 1)
             .compress(false)//是否压缩
             .openClickSound(false)
             .forResult(PictureConfig.CHOOSE_REQUEST)
@@ -220,11 +218,8 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                 PictureConfig.CHOOSE_REQUEST -> {
                     if (data != null) {
                         val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
-                        val path = if (selectList[0].isCut) {
-                            selectList[0].cutPath
-                        } else {
-                            selectList[0].path
-                        }
+                        val path = selectList[0].path
+
                         GlideUtil.loadCircleImg(applicationContext, path, userProfileBtn)
                         userProfile =
                             "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
@@ -232,7 +227,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                             )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                 16
                             )}.jpg"
-                        mPresenter.uploadProfile(path, userProfile.toString())
+//                        mPresenter.uploadProfile(path, userProfile.toString())
                         checkConfirmBtnEnable()
                     }
                 }
@@ -253,7 +248,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
 
     private fun checkConfirmBtnEnable() {
-        confirmBtn.isEnabled =
-            !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty() && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
+        confirmBtn.isEnabled = !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty()
+                && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
     }
 }

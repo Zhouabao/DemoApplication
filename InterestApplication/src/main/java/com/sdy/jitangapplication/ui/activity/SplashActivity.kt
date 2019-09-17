@@ -12,9 +12,11 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseActivity
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.presenter.LoginPresenter
+import com.sdy.jitangapplication.presenter.view.LoginView
 import com.sdy.jitangapplication.utils.AMapManager
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import org.jetbrains.anko.startActivity
@@ -22,7 +24,7 @@ import org.jetbrains.anko.startActivity
 /**
  * 启动页面
  */
-class SplashActivity : BaseActivity() {
+class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
     private val handler = Handler()
 
@@ -38,11 +40,17 @@ class SplashActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         ScreenUtils.setFullScreen(this)
+
+        mPresenter = LoginPresenter()
+        mPresenter.mView = this
+        mPresenter.context = this
+        mPresenter.checkNickName()
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //动态申请权限
             if (!SPUtils.getInstance(Constants.SPNAME).getBoolean("autoPermissions", false)) {
                 showAlertDialog()
-            }else {
+            } else {
                 //进行定位
                 AMapManager.initLocation(this)
                 start2login()
@@ -52,7 +60,6 @@ class SplashActivity : BaseActivity() {
             AMapManager.initLocation(this)
             start2login()
         }
-
 
 
     }
