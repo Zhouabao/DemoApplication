@@ -39,8 +39,8 @@ public class GlideUtil {
         return new RequestOptions()
                 .fitCenter()
                 .priority(Priority.HIGH)
-                .placeholder(R.drawable.default_image)
-                .error(R.drawable.default_image)
+                .placeholder(R.drawable.icon_default_img)
+                .error(R.drawable.icon_default_img)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
     }
@@ -68,7 +68,7 @@ public class GlideUtil {
     public static void loadAvatorImg(Context context, Object url, ImageView targetImg) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().placeholder(R.drawable.default_avator_image).error(R.drawable.default_avator_image))
+                .apply(getOptions().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
                 .into(targetImg);
     }
 
@@ -82,7 +82,7 @@ public class GlideUtil {
     public static void loadImgWithError(Context context, Object url, ImageView targetImg) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().error(R.drawable.icon_default_avator))
+                .apply(getOptions().error(R.drawable.icon_default_img))
                 .into(targetImg);
     }
 
@@ -97,7 +97,7 @@ public class GlideUtil {
     public static void loadCircleImg(Context context, Object url, ImageView targetImg) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().circleCrop())
+                .apply(getOptions().circleCrop().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
                 .into(targetImg);
     }
 
@@ -116,6 +116,7 @@ public class GlideUtil {
                 .load(url)
                 .priority(Priority.NORMAL)
                 .thumbnail(scale)
+                .apply(getOptions())
                 .transform(multiTransformation)
                 .into(tartgetImg);
 
@@ -134,6 +135,7 @@ public class GlideUtil {
                 .load(url)
                 .priority(Priority.NORMAL)
                 .thumbnail(0.5F)
+                .apply(getOptions())
                 .transform(multiTransformation)
                 .into(tartgetImg);
 
