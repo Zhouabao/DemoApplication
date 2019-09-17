@@ -17,6 +17,14 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback
 import com.chad.library.adapter.base.listener.OnItemDragListener
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ext.setVisible
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
+import com.luck.picture.lib.config.PictureMimeType
+import com.luck.picture.lib.entity.LocalMedia
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
@@ -30,14 +38,6 @@ import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.sdy.jitangapplication.widgets.OnRecyclerItemClickListener
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ext.setVisible
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureConfig
-import com.luck.picture.lib.config.PictureMimeType
-import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.android.synthetic.main.activity_user_center.btnBack
 import kotlinx.android.synthetic.main.activity_user_info_settings.*
 import kotlinx.android.synthetic.main.dialog_delete_photo.*
@@ -61,6 +61,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     private var isChange = false
     private var photos: MutableList<MyPhotoBean> = mutableListOf()
     private val adapter by lazy { UserPhotoAdapter(datas = mutableListOf()) }
+    private var data: UserInfoSettingBean? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_info_settings)
@@ -131,6 +132,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
      */
     private fun setData(data: UserInfoSettingBean?) {
         if (data != null) {
+            this.data = data
             //更新本地缓存
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.nickname!!)
             SPUtils.getInstance(Constants.SPNAME).put("gender", data.gender!!)
@@ -395,7 +397,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 startActivityForResult<NickNameActivity>(102, "type" to 1, "content" to userNickName.text.toString())
             }
             R.id.userNickSign -> {
-                startActivityForResult<NickNameActivity>(102, "type" to 2, "content" to userNickSign.text.toString())
+                startActivityForResult<NickNameActivity>(102, "type" to 2, "content" to data?.sign)
             }
             R.id.userBirth -> {
                 startActivityForResult<UserBirthActivity>(100)
