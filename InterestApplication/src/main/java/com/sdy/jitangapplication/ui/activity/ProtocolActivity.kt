@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.kotlin.base.common.BaseConstant
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
@@ -72,9 +73,9 @@ class ProtocolActivity : BaseActivity() {
         }
 
         if (type == 1) {
-            webView.loadUrl("https://devppsns.duluduludala.com/ppsns/protocol/privacyProtocol/v1.json")
+            webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/privacyProtocol/v1.json")
         } else if (type == 2) {
-            webView.loadUrl("https://devppsns.duluduludala.com/ppsns/protocol/userProtocol/v1.json")
+            webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/userProtocol/v1.json")
         }
 
 
