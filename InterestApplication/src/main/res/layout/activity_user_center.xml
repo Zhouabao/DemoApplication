@@ -200,6 +200,7 @@
                                 android:layout_height="0dp"
                                 android:textSize="10sp"
                                 android:gravity="center"
+                                android:visibility="gone"
                                 android:textColor="@color/colorOrange"
                                 app:layout_constraintBottom_toBottomOf="@id/isVipTimeout"
                                 app:layout_constraintLeft_toRightOf="@id/isVipTimeout"
