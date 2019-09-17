@@ -203,7 +203,7 @@ public class NimSDKOptionConfig {
         // 小米推送
         config.xmAppId = "2882303761518151078";
         config.xmAppKey = "5591815169078";
-        config.xmCertificateName = "JITANG";
+        config.xmCertificateName = "JITANGXIAOMI";
 
 
         // 华为推送

@@ -342,34 +342,35 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             final IMMessage msg = message;
             appendPushConfig(message);
             // send message to server and save to db
-            NIMClient.getService(MsgService.class).sendMessage(message, false).setCallback(new RequestCallback<Void>() {
-                @Override
-                public void onSuccess(Void param) {
-                    //var type: Int = 0,//类型1，新消息 2，倒计时 3，普通样式 4 过期
-                    if (!nimBean.getIsfriend()) {
-                        if (nimBean.getType() == 2) {
-                            nimBean.setType(3);
-                            outdateTime.setVisibility(View.GONE);
-                            outdateTimeText.stopTime();
-                            outdateTimeText.setVisibility(View.GONE);
-                            messageActivityBottomLayout.setVisibility(View.VISIBLE);
+            if (!sessionId.equals(Constants.ASSISTANT_ACCID))
+                NIMClient.getService(MsgService.class).sendMessage(message, false).setCallback(new RequestCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void param) {
+                        //var type: Int = 0,//类型1，新消息 2，倒计时 3，普通样式 4 过期
+                        if (!nimBean.getIsfriend()) {
+                            if (nimBean.getType() == 2) {
+                                nimBean.setType(3);
+                                outdateTime.setVisibility(View.GONE);
+                                outdateTimeText.stopTime();
+                                outdateTimeText.setVisibility(View.GONE);
+                                messageActivityBottomLayout.setVisibility(View.VISIBLE);
+                            }
+
+                            EventBus.getDefault().post(new NimHeadEvent(nimBean));
                         }
 
-                        EventBus.getDefault().post(new NimHeadEvent(nimBean));
                     }
 
-                }
+                    @Override
+                    public void onFailed(int code) {
+                        sendFailWithBlackList(code, msg);
+                    }
 
-                @Override
-                public void onFailed(int code) {
-                    sendFailWithBlackList(code, msg);
-                }
+                    @Override
+                    public void onException(Throwable exception) {
 
-                @Override
-                public void onException(Throwable exception) {
-
-                }
-            });
+                    }
+                });
 
         } else {
             // 替换成tip

@@ -181,7 +181,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                     card_stack_view.swipe()
                 }
             }
-            R.id.retryBtn->{
+            R.id.retryBtn -> {
                 setViewState(LOADING)
                 mPresenter.getMatchList(matchParams)
             }
@@ -320,7 +320,11 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         private const val EMPTY = 3
     }
 
-    fun setViewState(state: Int) {
+
+    /**
+     * 改变当前页面的状态
+     */
+    private fun setViewState(state: Int) {
         when (state) {
             LOADING -> {
                 loadingLayout.isVisible = true

@@ -22,6 +22,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -37,9 +38,11 @@ import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.event.BlockDataEvent
+import com.sdy.jitangapplication.event.ListDataEvent
+import com.sdy.jitangapplication.event.NotifyEvent
+import com.sdy.jitangapplication.event.UpdateHiCountEvent
 import com.sdy.jitangapplication.model.GreetBean
-import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -403,13 +406,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     override fun onGetUserActionResult(success: Boolean, result: String?) {
         if (success) {
             if (result == "解除成功!") {
-                matchBean!!.isfriend = 0
-                NIMClient.getService(MsgService::class.java).deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
+//                matchBean!!.isfriend = 0
                 //更新数据
-                initData()
+//                initData()
             } else if (result == "拉黑成功!") {
-                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = UserManager.getGlobalLabelId())))
-                finish()
+                NIMClient.getService(MsgService::class.java).deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
+                AppManager.instance.finishAllActivity()
+                startActivity<MainActivity>()
+//                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = UserManager.getGlobalLabelId())))
+
             }
             ToastUtils.showShort(result)
         }
