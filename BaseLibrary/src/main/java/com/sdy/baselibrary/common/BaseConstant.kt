@@ -10,10 +10,11 @@ class BaseConstant {
         const val SERVER_ADDRESS = "https://ppsns.duluduludala.com/ppsns/"
         //生产
 //        const val SERVER_ADDRESS = "https://devppsns.duluduludala.com/ppsns/"
-        //        const val SERVER_ADDRESS = "http://192.168.0.109/ppsns/"
+//        const val SERVER_ADDRESS = "http://192.168.0.109/ppsns/"
         //SP表名
         const val TABLE_PREFS = "Kotlin_mall"
         //Token Key
         const val KEY_SP_TOKEN = "token"
+
     }
 }

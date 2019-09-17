@@ -65,7 +65,10 @@ object Constants {
     const val QQ_APP_KEY = "1109743471"
     const val QQ_APP_SECRET = "KxByI7XUslBAh82c"
     //云信
-    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951" //正式
+//    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951" //正式
+//    const val NIM_APP_KEY = "197b98d4853be1582aec4f2a9c6a6645"//测试
+    //云信新账号
+    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
 //    const val NIM_APP_KEY = "197b98d4853be1582aec4f2a9c6a6645"//测试
 
 
