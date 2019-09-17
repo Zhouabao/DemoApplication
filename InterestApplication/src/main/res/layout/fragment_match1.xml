@@ -126,7 +126,7 @@
 
     <include
             android:id="@+id/emptyLayout"
-            layout="@layout/loading_layout_match_lottie"
+            layout="@layout/empty_match_layout"
             android:visibility="gone"/>
 </FrameLayout>
 
