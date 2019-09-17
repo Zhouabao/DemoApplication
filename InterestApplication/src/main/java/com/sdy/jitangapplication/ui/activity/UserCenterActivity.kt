@@ -143,10 +143,13 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             isVipCl.visibility = View.VISIBLE
             isVipTimeout.text = "到期时间\t\t${userInfoBean?.userinfo?.vip_express ?: ""}"
             notVipPowerLl.visibility = View.GONE
+            isVipPowerBtn.isVisible = false
         } else {
             userVip.visibility = View.GONE
             isVipCl.visibility = View.GONE
             notVipPowerLl.visibility = View.VISIBLE
+            isVipPowerBtn.isVisible = true
+            isVipPowerBtn.text = "开通会员"
             initViewPager()
         }
     }
@@ -354,6 +357,9 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //会员权益
             R.id.isVipPowerBtn -> {
+                if (userInfoBean?.userinfo?.isvip != 1) {
+                    vipDialog.show()
+                }
             }
             //我的标签
             R.id.userTagsBtn -> {
