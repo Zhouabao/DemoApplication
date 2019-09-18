@@ -40,17 +40,18 @@
 
     <TextView
             android:id="@+id/squareLocationAndTime1"
-            tools:text="北京市北京市北京市北京市北京市北京市北京市"
-            android:layout_width="wrap_content"
+            tools:text="北京市"
+            android:layout_width="0dp"
             android:layout_height="17dp"
             android:textColor="@color/colorBlack99"
             android:layout_marginTop="1dp"
             android:textSize="12sp"
-            android:maxLength="20"
             android:singleLine="true"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            app:layout_constraintStart_toStartOf="@id/squareUserName1"
+            android:layout_marginRight="2dp"
+            app:layout_constraintRight_toLeftOf="@id/squareChatBtn1"
+            app:layout_constraintLeft_toLeftOf="@id/squareUserName1"
             app:layout_constraintTop_toBottomOf="@id/squareUserName1"
             />
 

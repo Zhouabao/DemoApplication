@@ -105,6 +105,7 @@
                                 android:layout_height="22dp"
                                 android:textColor="@color/colorBlack22"
                                 android:textSize="16sp"
+                                android:textStyle="bold"
                                 app:layout_constraintLeft_toRightOf="@id/squareUserIv"
                                 app:layout_constraintTop_toTopOf="@id/squareUserIv"
                                 tools:text="Kimberly Davis"
@@ -112,14 +113,17 @@
 
                         <TextView
                                 android:id="@+id/detailPlayUserLocationAndTime"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="17dp"
                                 android:textColor="@color/colorBlack99"
                                 android:layout_marginTop="4dp"
                                 android:textSize="12sp"
+                                android:singleLine="true"
+                                android:ellipsize="end"
+                                app:layout_constraintEnd_toStartOf="@id/btnChat"
                                 app:layout_constraintStart_toStartOf="@id/detailPlayUserName"
                                 app:layout_constraintTop_toBottomOf="@id/detailPlayUserName"
-                                tools:text="北京市 10小时前"
+                                tools:text="北京市 10小时前北京市 10小时前北京市 10小时前北京市 10小时前北京市 10小时前"
                                 />
 
                         <TextView
