@@ -410,7 +410,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 //更新数据
 //                initData()
             } else if (result == "拉黑成功!") {
-                NIMClient.getService(MsgService::class.java).deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
+                NIMClient.getService(MsgService::class.java)
+                    .deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
                 AppManager.instance.finishAllActivity()
                 startActivity<MainActivity>()
 //                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = UserManager.getGlobalLabelId())))
@@ -613,8 +614,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI)
                         ChatActivity.start(this@MatchDetailActivity, matchBean?.accid ?: "")
                     else {
-                        startActivity<MatchSucceedActivity>("matchBean" to matchBean!!)
-
+                        startActivity<MatchSucceedActivity>(
+                            "avator" to matchBean!!.avatar,
+                            "nickname" to matchBean!!.nickname,
+                            "accid" to matchBean!!.accid
+                        )
                     }
                 }
             }
