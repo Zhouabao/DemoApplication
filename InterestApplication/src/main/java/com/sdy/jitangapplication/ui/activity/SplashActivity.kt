@@ -77,11 +77,11 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
      */
     private fun requestPermissions() {
         val permissions = arrayOf(
-            Manifest.permission.CALL_PHONE,
             Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_CONTACTS,
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,

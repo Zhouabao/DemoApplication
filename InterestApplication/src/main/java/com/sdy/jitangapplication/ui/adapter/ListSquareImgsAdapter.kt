@@ -48,7 +48,12 @@ class ListSquareImgsAdapter(
                 if (item.height == 0F) {
                     item.height = SizeUtils.dp2px(252F).toFloat()
                 }
-                layoutParams.width = (item.width / item.height * layoutParams.height).toInt()
+                layoutParams.width =
+                    if ((item.width / item.height * layoutParams.height).toInt() < SizeUtils.dp2px(150F).toFloat()) {
+                        SizeUtils.dp2px(150F)
+                    } else {
+                        (item.width / item.height * layoutParams.height).toInt()
+                    }
                 layoutParams.leftMargin = SizeUtils.dp2px(10F)
                 if (position == datas.size - 1) {
                     layoutParams.rightMargin = SizeUtils.dp2px(10F)
