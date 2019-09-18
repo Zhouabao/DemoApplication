@@ -118,7 +118,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             val item = matchUserAdapter.data[manager.topPosition]
             when (view.id) {
                 R.id.v1 -> {
-                    MatchDetailActivity.start(activity!!, (matchUserAdapter.data[manager.topPosition].accid ?: ""))
+                    if ((matchUserAdapter.data[manager.topPosition].accid ?: "") != UserManager.getAccid())
+                        MatchDetailActivity.start(activity!!, (matchUserAdapter.data[manager.topPosition].accid ?: ""))
                 }
                 R.id.nextImgBtn -> {
                     val itemView = manager.topView

@@ -74,7 +74,7 @@ class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefr
         }
 
         visitAdapter.setOnItemClickListener { _, view, position ->
-            if (UserManager.isUserVip())
+            if (UserManager.isUserVip() && UserManager.getAccid() != visitAdapter.data[position].accid)
                 MatchDetailActivity.start(this, visitAdapter.data[position].accid ?: "")
         }
 

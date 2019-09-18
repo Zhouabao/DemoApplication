@@ -49,7 +49,7 @@
             android:layout_height="match_parent"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            app:msv_viewState="c">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"

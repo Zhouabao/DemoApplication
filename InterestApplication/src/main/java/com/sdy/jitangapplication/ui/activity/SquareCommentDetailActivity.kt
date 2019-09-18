@@ -188,7 +188,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid ?: "")
         }
         squareUserIv.onClick {
-            MatchDetailActivity.start(this, squareBean?.accid ?: "")
+            if ((squareBean?.accid ?: "") != UserManager.getAccid())
+                MatchDetailActivity.start(this, squareBean?.accid ?: "")
         }
 
         detailPlayUserLocationAndTime.text =
@@ -268,7 +269,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.commentUser -> {
-                    MatchDetailActivity.start(this, adapter.data[position].member_accid ?: "")
+                    if ((adapter.data[position].member_accid ?: "") != UserManager.getAccid())
+                        MatchDetailActivity.start(this, adapter.data[position].member_accid ?: "")
 //                    reply = true
 //                    reply_id = adapter.data[position].reply_id!!
 //                    showCommentEt.isFocusable = true
