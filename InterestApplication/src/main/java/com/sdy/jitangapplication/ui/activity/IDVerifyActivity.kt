@@ -118,11 +118,14 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         //裁剪人脸大小
         config.setCropFaceValue(FaceEnvironment.VALUE_CROP_FACE_SIZE)
         //人脸yaw,pitch,row角度，范围(-45,45)，推荐-15-15
-        config.setHeadPitchValue(FaceEnvironment.VALUE_HEAD_PITCH)
-        config.setHeadRollValue(FaceEnvironment.VALUE_HEAD_ROLL)
-        config.setHeadYawValue(FaceEnvironment.VALUE_HEAD_YAW)
+        //低头抬头角度
+        config.setHeadPitchValue(45)
+        //偏头角度
+        config.setHeadRollValue(45)
+        //左右角度
+        config.setHeadYawValue(45)
         //最小检测人脸80-200 越小越耗性能,推荐120-200
-        config.setMinFaceSize(FaceEnvironment.VALUE_MIN_FACE_SIZE)
+        config.setMinFaceSize(120)
 
         config.setNotFaceValue(FaceEnvironment.VALUE_NOT_FACE_THRESHOLD)
         //人脸遮挡范围(0-1) 推荐小于0.5
