@@ -49,7 +49,7 @@
             android:layout_height="match_parent"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            app:msv_viewState="content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -294,6 +294,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="8dp"
                                     android:textStyle="bold"
+                                    android:visibility="gone"
                                     android:gravity="center_vertical"
                                     android:textColor="@color/colorBlack22"
                                     android:textSize="14sp"
