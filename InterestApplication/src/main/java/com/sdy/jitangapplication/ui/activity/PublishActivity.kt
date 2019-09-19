@@ -852,6 +852,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 if (emojRv.visibility == View.VISIBLE) {
                     emojRv.visibility = View.GONE
                 }
+                if (!mPresenter.checkNetWork()) {
+                    ToastUtils.showShort("网络不可用,请检查网络设置")
+                    return
+                }
 
                 //todo 此处要存下所有的数据信息
                 UserManager.publishState = 1
@@ -1331,7 +1335,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             if (intent.getIntExtra("from", 1) == 2) {
                 EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
             } else {
-                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
+                EventBus.getDefault()
+                    .post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
             }
             if (!this.isFinishing)
                 finish()
