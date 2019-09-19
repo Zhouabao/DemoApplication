@@ -25,6 +25,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RePublishEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UploadEvent
@@ -91,20 +92,20 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
 
     private fun initData() {
         //更新了信息之后更新本地缓存
-            SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
-            EventBus.getDefault().post(UpdateAvatorEvent(true))
-            getTagData()
-            coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
-            visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
-            GlideUtil.loadAvatorImg(this, userInfoBean?.userinfo?.avatar ?: "", userAvator)
-            userName.text = userInfoBean?.userinfo?.nickname ?: ""
-            userSquareCount.text = "我的动态 ${userInfoBean?.squarelist?.count}"
-            UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
-            UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
+        SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
+        EventBus.getDefault().post(UpdateAvatorEvent(true))
+        getTagData()
+        coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
+        visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
+        GlideUtil.loadAvatorImg(this, userInfoBean?.userinfo?.avatar ?: "", userAvator)
+        userName.text = userInfoBean?.userinfo?.nickname ?: ""
+        userSquareCount.text = "我的动态 ${userInfoBean?.squarelist?.count}"
+        UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
+        UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
 
-            // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
-            checkVerify()
-            checkVip()
+        // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
+        checkVerify()
+        checkVip()
     }
 
     //从缓存中获取标签信息
@@ -249,6 +250,11 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         userComment.setOnClickListener(this)
         userVerifyBtn.setOnClickListener(this)
 
+        multiStateView.retryBtn.onClick {
+            multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.getMemberInfo(params)
+        }
+
         //用户标签
         val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH
@@ -270,7 +276,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         val headView = LayoutInflater.from(this).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
         coverAdapter.headerLayout.onClick {
-            startActivityForResult<PublishActivity>(REQUEST_PUBLISH, "from" to 2)
+            EventBus.getDefault().postSticky(RePublishEvent(true, this))
         }
 
         //我的访客封面

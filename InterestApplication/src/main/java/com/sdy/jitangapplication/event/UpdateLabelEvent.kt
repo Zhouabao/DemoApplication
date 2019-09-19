@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.event
 
+import android.content.Context
 import com.sdy.jitangapplication.model.LabelBean
 
 /**
@@ -27,10 +28,22 @@ class FilterEvent(val params: HashMap<String, Any>)
 
 //上传进度事件 from 1广场 2用户中心
 class UploadEvent(
-    val totalFileCount: Int,
-    val currentFileIndex: Int,
-    val progress: Double,
-    var success: Boolean = true,
+    var totalFileCount: Int = 0,
+    var currentFileIndex: Int = 0,
+    var progress: Double = 0.0,
+    var qnSuccess: Boolean = true,
     var from: Int = 1
 )
+
+
+//上传成功或者失败事件
+/**
+ * @param serverSuccess 成功或者失败
+ * @param  code失败的code码 判断是否是审核不通过
+ */
+class AnnounceEvent(var serverSuccess: Boolean = false, var code: Int = 0)
+
+
+//重新上传内容的通知成功或者失败事件
+class RePublishEvent(var republish: Boolean, val context: Context)
 

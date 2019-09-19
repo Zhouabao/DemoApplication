@@ -2,13 +2,7 @@ package com.sdy.jitangapplication.presenter
 
 import android.util.Log
 import com.blankj.utilcode.util.SPUtils
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.UploadEvent
-import com.sdy.jitangapplication.presenter.view.PublishView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
-import com.sdy.jitangapplication.utils.QNUploadManager
+import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -17,6 +11,13 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.qiniu.android.storage.UpProgressHandler
 import com.qiniu.android.storage.UploadOptions
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.UploadEvent
+import com.sdy.jitangapplication.presenter.view.PublishView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.QNUploadManager
+import com.sdy.jitangapplication.utils.UserManager
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -27,42 +28,42 @@ import java.io.File
  *    version: 1.0
  */
 class PublishPresenter : BasePresenter<PublishView>() {
-
-    //from 1 来自广场  2来自用户中心
-    public var from = 1
-
-
     /**
      * 广场发布
      */
     fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: Array<Int?>, keyList: Array<String?>?) {
+        if (!checkNetWork()) {
+            ToastUtils.showShort("网络不可用")
+            return
+        }
         RetrofitFactory.instance.create(Api::class.java)
             .squareAnnounce(params, checkIds, keyList)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     super.onStart()
-                    if (type == 0 && from == 1) {
+                    if (type == 0) {
                         EventBus.getDefault().postSticky(UploadEvent(1, 1, 0.0))
                     }
                 }
 
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
-                        if (type == 0 && from == 1) {
+                        if (type == 0) {
                             EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0))
                         }
-                        mView.onSquareAnnounceResult(type, true)
+                        mView.onSquareAnnounceResult(type, true, 200)
                     } else {
                         mView.onError(t.msg)
-                        mView.onSquareAnnounceResult(type, false)
+                        mView.onSquareAnnounceResult(type, false, t.code)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
                         TickDialog(context).show()
+                    } else {
+                        mView.onSquareAnnounceResult(type, false)
                     }
-                    mView.onError(context.getString(R.string.retry_net_error))
                 }
             })
     }
@@ -80,6 +81,7 @@ class PublishPresenter : BasePresenter<PublishView>() {
             return
         }
         if (!checkNetWork()) {
+            ToastUtils.showShort("网络不可用")
             return
         }
         QNUploadManager.getInstance().put(
@@ -89,19 +91,20 @@ class PublishPresenter : BasePresenter<PublishView>() {
             { key, info, response ->
                 if (info != null) {
                     if (!info.isOK) {
-                        mView.onQnUploadResult(false, type, key)
+//                        mView.onQnUploadResult(false, type, key)
+                        mView.onSquareAnnounceResult(1, false)
                     }
                 }
             },
             UploadOptions(
                 null, null, false,
                 UpProgressHandler { key, percent ->
-                    if (from == 1)
-                        EventBus.getDefault().postSticky(UploadEvent(totalCount, currentCount, percent))
+                    Log.d("OkHttp", "=============percent = $percent============")
+                    EventBus.getDefault().postSticky(UploadEvent(totalCount, currentCount, percent))
                     if (percent == 1.0) {
                         mView.onQnUploadResult(true, type, key)
                     }
-                }, null
+                }, UserManager.cancellationHandler
             )
         )
     }

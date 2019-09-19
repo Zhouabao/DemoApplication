@@ -33,6 +33,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.AnnounceEvent
 import com.sdy.jitangapplication.event.UpdateLabelEvent
 import com.sdy.jitangapplication.event.UploadEvent
 import com.sdy.jitangapplication.model.LabelBean
@@ -113,7 +114,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 .setTitle("草稿箱")
                 .setContent("是否启用草稿箱")
                 .setConfirmText("是")
-                .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                     override fun onClick(dialog: Dialog) {
                         publishContent.setText(SPUtils.getInstance(Constants.SPNAME).getString("draft", ""))
                         publishContent.setSelection(publishContent.length())
@@ -122,7 +123,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     }
                 })
                 .setCancelText("否")
-                .setOnCancelListener(object :CommonAlertDialog.OnCancelListener{
+                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
                     override fun onClick(dialog: Dialog) {
                         SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
                         dialog.cancel()
@@ -136,6 +137,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
 
     private fun initView() {
+        UserManager.cancelUpload = false
+
         btnBack.onClick {
             onBackPressed()
         }
@@ -149,9 +152,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         mPresenter = PublishPresenter()
         mPresenter.mView = this
         mPresenter.context = applicationContext
-        if (intent.getIntExtra("from", 1) == 2) {
-            mPresenter.from = 2
-        }
+
 
         tabPublishWay.setOnCheckedChangeListener(this)
         tabPublishWay.check(currentWayId)//默认选中图片
@@ -851,9 +852,71 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 if (emojRv.visibility == View.VISIBLE) {
                     emojRv.visibility = View.GONE
                 }
+
+                //todo 此处要存下所有的数据信息
+                UserManager.publishState = 1
+                for (i in 0 until checkTags.size) {
+                    UserManager.checkIds[i] = checkTags[i].id
+                }
+                val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+                    0
+                } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+                    3
+                } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) {
+                    1
+                } else {
+                    2
+                }
+                UserManager.publishParams = hashMapOf(
+                    "token" to UserManager.getToken(),
+                    "accid" to UserManager.getAccid(),
+                    "tag_id" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"),
+                    "descr" to "${publishContent.text}",
+                    "lat" to if (positionItem == null) {
+                        UserManager.getlatitude()
+                    } else {
+                        positionItem!!.latLonPoint?.latitude ?: 0.0
+                    },
+                    "lng" to if (positionItem == null) {
+                        UserManager.getlongtitude()
+                    } else {
+                        positionItem!!.latLonPoint?.longitude ?: 0.0
+                    },
+                    "province_name" to if (positionItem == null) {
+                        UserManager.getProvince()
+                    } else {
+                        positionItem!!.provinceName ?: ""
+                    },
+                    "city_name" to if (positionItem == null) {
+                        UserManager.getCity()
+                    } else {
+                        positionItem!!.cityName ?: ""
+                    },
+                    "city_code" to (if (positionItem == null) {
+                        UserManager.getCityCode()
+                    } else {
+                        positionItem!!.cityCode ?: ""
+                    }),
+                    "puber_address" to if (locationCity.text.toString() == "不显示位置") {
+                        ""
+                    } else {
+                        locationCity.text.toString()
+                    },
+                    //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
+                    "type" to type
+                )
+
+
                 if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//文本
                     publish()
                 } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//音频
+                    //保存音频数据
+                    UserManager.mediaBeans.add(
+                        MediaParamBean(
+                            url = mMediaRecorderHelper.currentFilePath,
+                            duration = totalSecond
+                        )
+                    )
                     //TODO上传音频
                     val audioQnPath =
                         "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
@@ -863,8 +926,28 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         )}.mp3"
                     mPresenter.uploadFile(1, 1, mMediaRecorderHelper.currentFilePath, audioQnPath, 3)
                 } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) { //图片
+                    //保存图片数据
+                    for (photo in pickedPhotos) {
+                        UserManager.mediaBeans.add(
+                            MediaParamBean(
+                                url = photo.filePath,
+                                width = photo.width,
+                                height = photo.height
+                            )
+                        )
+                    }
+
                     uploadPictures()
                 } else {//视频
+                    //保存视频数据
+                    UserManager.mediaBeans.add(
+                        MediaParamBean(
+                            url = pickedPhotos[0].filePath,
+                            duration = pickedPhotos[0].duration,
+                            width = pickedPhotos[0].width,
+                            height = pickedPhotos[0].height
+                        )
+                    )
                     //TODO上传视频
                     val videoQnPath =
                         "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
@@ -1101,10 +1184,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     /**
      * 设置发布的参数
      */
-//    private val keyList: Array<String?>? = arrayOfNulls<String>(10)
-//    private val keyList: Array<Array<String>?>? = arrayOfNulls<String>(10)
     private val keyList: Array<String?>? = arrayOfNulls<String>(10)
-//    private val keyList = Array(10) { Array<String>(4, { i: Int -> "" }) }
 
     private fun publish() {
         val checkIds = arrayOfNulls<Int>(10)
@@ -1197,7 +1277,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     publish()
                 }
                 1 -> {
-//                    keyList?.set(uploadCount, key)
                     keyList?.set(
                         uploadCount,
                         Gson().toJson(
@@ -1217,7 +1296,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     }
                 }
                 2 -> {
-//                    keyList?.set(uploadCount, key)
                     keyList?.set(
                         uploadCount,
                         Gson().toJson(
@@ -1229,22 +1307,17 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                             )
                         )
                     )
-
                     publish()
                 }
                 3 -> {
-//                    keyList?.set(uploadCount, key)
-                    keyList?.set(
-                        uploadCount,
-                        Gson().toJson(
-                            MediaParamBean(key, totalSecond, 0, 0)
-                        )
-                    )
-
+                    keyList?.set(uploadCount, Gson().toJson(MediaParamBean(key, totalSecond, 0, 0)))
                     publish()
                 }
             }
+        } else {
+            EventBus.getDefault().postSticky(UploadEvent(qnSuccess = false))
         }
+
     }
 
 
@@ -1252,16 +1325,17 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      * 广场发布结果回调
      *   //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
      */
-    override fun onSquareAnnounceResult(type: Int, success: Boolean) {
+    override fun onSquareAnnounceResult(type: Int, success: Boolean, code: Int) {
+        EventBus.getDefault().postSticky(AnnounceEvent(success, code))
         if (success) {
-            if (mPresenter.from == 2) {
+            if (intent.getIntExtra("from", 1) == 2) {
                 EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
             } else {
-                EventBus.getDefault()
-                    .post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
+                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
             }
             if (!this.isFinishing)
                 finish()
+
         }
     }
 

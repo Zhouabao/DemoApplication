@@ -269,6 +269,12 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
     override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
 
     }
+    override fun onSquareAnnounceResult(type: Int, b: Boolean, code: Int) {
+    }
+
+    override fun onQnUploadResult(b: Boolean, type: Int, key: String?) {
+    }
+
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {
         if (result) {

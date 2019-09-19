@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
+import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -15,13 +16,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.google.gson.Gson
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
@@ -38,12 +41,14 @@ import com.sdy.jitangapplication.switchplay.SwitchVideo
 import com.sdy.jitangapplication.ui.activity.PublishActivity
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
+import com.sdy.jitangapplication.ui.activity.UserCenterActivity
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.adapter.SquareFriendsAdapter
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.widgets.CommonItemDecoration
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -57,6 +62,7 @@ import kotlinx.android.synthetic.main.headerview_label.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
 
@@ -66,6 +72,8 @@ import org.jetbrains.anko.support.v4.toast
  */
 class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
     View.OnClickListener, MultiListSquareAdapter.ResetAudioListener {
+
+
     override fun resetAudioState() {
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
@@ -586,7 +594,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     override fun onClick(view: View) {
         when (view.id) {
             R.id.squareEdit -> {
-                startActivity<PublishActivity>()
+                onRePublishEvent(RePublishEvent(true, activity!!))
             }
         }
     }
@@ -715,28 +723,265 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
     private var changeMarTop = false
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onProgressEvent(event: UploadEvent) {
-        uploadProgressBar.progress =
-            (((event.currentFileIndex - 1) * 1.0F / event.totalFileCount + (1.0F / event.totalFileCount * event.progress)) * 100).toInt()
-        uploadProgressTv.text = "正在发布    ${uploadProgressBar.progress}%"
+        if (event.from == 1)
+            if (event.qnSuccess) {
+                llRetry.isVisible = false
+                btnClose.isVisible = false
+                uploadProgressBar.progress =
+                    (((event.currentFileIndex - 1) * 1.0F / event.totalFileCount + (1.0F / event.totalFileCount * event.progress)) * 100).toInt()
+                uploadProgressTv.text = "正在发布    ${uploadProgressBar.progress}%"
+                uploadFl.isVisible = true
+                if (!changeMarTop) {
+                    val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
+                    params.topMargin = SizeUtils.dp2px(45F)
+                    adapter.headerLayout.friendTv.layoutParams = params
+                    changeMarTop = true
+                }
+            } else {
+                UserManager.cancelUpload = true
+                UserManager.publishState = -2
+            }
 
-        if (event.totalFileCount == event.currentFileIndex && (event.progress * 100).toInt() == 100) {
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onAnnounceEvent(event: AnnounceEvent) {
+        if (event.serverSuccess) {
+            UserManager.clearPublishParams()
             uploadProgressTv.text = "动态发布成功!"
             uploadFl.postDelayed({
-                uploadFl.setVisible(false)
+                uploadFl.isVisible = false
                 val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
                 params.topMargin = SizeUtils.dp2px(10F)
                 adapter.headerLayout.friendTv.layoutParams = params
             }, 500)
         } else {
-            uploadFl.setVisible(true)
-            if (!changeMarTop) {
+            UserManager.cancelUpload = true
+            uploadFl.isVisible = true
+            val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
+            params.topMargin = SizeUtils.dp2px(45F)
+            adapter.headerLayout.friendTv.layoutParams = params
+            uploadProgressBar.progress = 0
+            llRetry.isVisible = true
+            btnClose.isVisible = true
+
+            if (event.code == 400) { //内容违规重新去编辑
+                UserManager.publishState = -1
+                uploadProgressTv.text = "内容违规请重新编辑"
+                iconRetry.setImageResource(R.drawable.icon_edit_retry)
+                editRetry.text = "编辑"
+                llRetry.onClick {
+                    SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
+                    UserManager.clearPublishParams()
+                    startActivity<PublishActivity>()
+                    UserManager.publishState = 0
+                    uploadFl.isVisible = false
+                    val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
+                    params.topMargin = SizeUtils.dp2px(10F)
+                    adapter.headerLayout.friendTv.layoutParams = params
+
+                }
+            } else { //发布失败重新发布
+                UserManager.publishState = -2
+                uploadProgressTv.text = "发布失败"
+                iconRetry.setImageResource(R.drawable.icon_retry)
+                editRetry.text = "重试"
+                llRetry.onClick {
+                    retryPublish()
+                }
+            }
+            //TODO 取消重新发布，清除本地所存下的发布的数据
+            btnClose.onClick {
+                uploadFl.isVisible = false
                 val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
-                params.topMargin = SizeUtils.dp2px(45F)
+                params.topMargin = SizeUtils.dp2px(10F)
                 adapter.headerLayout.friendTv.layoutParams = params
-                changeMarTop = true
+                UserManager.clearPublishParams()
             }
         }
-
     }
+
+
+    private var from = 1
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onRePublishEvent(event: RePublishEvent) {
+        if (event.context is UserCenterActivity) {
+            from = 2
+        } else {
+            from = 1
+        }
+        if (UserManager.publishState == 1) {//正在发布中
+            ToastUtils.showShort("还有动态正在发布哦~请稍候")
+            return
+        } else if (UserManager.publishState == -2) {//发布失败
+            CommonAlertDialog.Builder(event.context)
+                .setTitle("发布提示")
+                .setContent("您有一条内容未成功发布，是否重新发布？")
+                .setConfirmText("重新上传")
+                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                    override fun onClick(dialog: Dialog) {
+                        dialog.cancel()
+                        retryPublish()
+                    }
+                })
+                .setCancelText("发布新内容")
+                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
+                    override fun onClick(dialog: Dialog) {
+                        dialog.cancel()
+                        uploadFl.isVisible = false
+                        val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
+                        params.topMargin = SizeUtils.dp2px(10F)
+                        adapter.headerLayout.friendTv.layoutParams = params
+                        UserManager.clearPublishParams()
+                        if (event.context is UserCenterActivity) {
+                            event.context.startActivity<PublishActivity>("from" to 2)
+                        } else {
+                            event.context.startActivity<PublishActivity>()
+                        }
+                    }
+                })
+                .create()
+                .show()
+        } else if (UserManager.publishState == -1) { //400
+            SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
+            UserManager.clearPublishParams()
+            if (event.context is UserCenterActivity) {
+                event.context.startActivity<PublishActivity>("from" to 2)
+            } else {
+                event.context.startActivity<PublishActivity>()
+            }
+            uploadFl.isVisible = false
+            val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
+            params.topMargin = SizeUtils.dp2px(10F)
+            adapter.headerLayout.friendTv.layoutParams = params
+        } else if (UserManager.publishState == 0) {
+            if (event.context is UserCenterActivity) {
+                event.context.startActivity<PublishActivity>("from" to 2)
+            } else {
+                event.context.startActivity<PublishActivity>()
+            }
+        }
+    }
+
+    /**
+     * 重新上传
+     */
+    private var uploadCount = 0
+
+    private fun retryPublish() {
+        if (!mPresenter.checkNetWork()) {
+            uploadProgressTv.text = "网络不可用,请检查网络设置"
+            return
+        } else {
+            uploadProgressTv.text = ""
+        }
+        uploadCount = 0
+        llRetry.isVisible = false
+        btnClose.isVisible = false
+        //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
+        UserManager.publishState = 1
+        when {
+            UserManager.publishParams["type"] == 0 -> publish()
+            UserManager.publishParams["type"] == 1 -> {
+                UserManager.cancelUpload = false
+                uploadPictures()
+            }
+            UserManager.publishParams["type"] == 2 -> {
+                UserManager.cancelUpload = false
+                //TODO上传视频
+                val videoQnPath =
+                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
+                        "accid"
+                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                        16
+                    )}.mp4"
+                mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, videoQnPath, 2)
+            }
+            UserManager.publishParams["type"] == 3 -> {
+                UserManager.cancelUpload = false
+                //TODO上传音频
+                val audioQnPath =
+                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
+                        "accid"
+                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                        16
+                    )}.mp3"
+                mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, audioQnPath, 3)
+            }
+        }
+    }
+
+
+    //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
+    override fun onQnUploadResult(success: Boolean, type: Int, key: String?) {
+        if (success) {
+            when (type) {
+                0 -> {
+                    publish()
+                }
+                1 -> {
+                    UserManager.mediaBeans[uploadCount].url = key ?: ""
+                    UserManager.keyList?.set(uploadCount, Gson().toJson(UserManager.mediaBeans[uploadCount]))
+                    uploadCount++
+                    if (uploadCount == UserManager.mediaBeans.size) {
+                        publish()
+                    } else {
+                        uploadPictures()
+                    }
+                }
+                2 -> {
+                    UserManager.mediaBeans[uploadCount].url = key ?: ""
+                    UserManager.keyList?.set(uploadCount, Gson().toJson(UserManager.mediaBeans[0]))
+                    publish()
+                }
+                3 -> {
+                    UserManager.mediaBeans[uploadCount].url = key ?: ""
+                    UserManager.keyList?.set(uploadCount, Gson().toJson(UserManager.mediaBeans[0]))
+                    publish()
+                }
+            }
+        } else {
+            onProgressEvent(UploadEvent(qnSuccess = false))
+        }
+    }
+
+    override fun onSquareAnnounceResult(type: Int, success: Boolean, code: Int) {
+        onAnnounceEvent(AnnounceEvent(success, code))
+        if (from == 2) {
+            EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
+        } else {
+            refreshLayout.autoRefresh()
+        }
+
+        from = 1
+    }
+
+    private fun uploadPictures() {
+        //上传图片
+        val imagePath =
+            "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
+                "accid"
+            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                16
+            )}.jpg"
+        mPresenter.uploadFile(
+            UserManager.mediaBeans.size,
+            uploadCount + 1,
+            UserManager.mediaBeans[uploadCount].url,
+            imagePath,
+            1
+        )
+    }
+
+    private fun publish() {
+        mPresenter.publishContent(
+            UserManager.publishParams["type"] as Int,
+            UserManager.publishParams,
+            UserManager.checkIds,
+            UserManager.keyList
+        )
+    }
+
 }
 

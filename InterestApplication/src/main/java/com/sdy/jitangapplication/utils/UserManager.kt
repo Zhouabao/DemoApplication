@@ -4,9 +4,11 @@ import android.app.Activity
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.common.AppManager
 import com.netease.nimlib.sdk.auth.LoginInfo
+import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.MediaParamBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.ui.activity.LoginActivity
 import org.jetbrains.anko.startActivity
@@ -19,6 +21,30 @@ import java.util.*
  *    version: 1.0
  */
 object UserManager {
+    //手动取消上传
+    var cancelUpload = false
+    //帮助取消上传的handler
+    val cancellationHandler = UpCancellationSignal { cancelUpload }
+
+    //发布动态的状态
+    var publishState: Int = 0  //0未发布  1进行中   -1失败--违规400  -2失败--发布失败
+    //发布
+    var publishParams: HashMap<String, Any> = hashMapOf()
+    //发布的标签ids
+    var checkIds: Array<Int?> = arrayOfNulls(10)
+    //发布的对象
+    var mediaBeans: MutableList<MediaParamBean> = mutableListOf()
+    //发布的对象keylist
+    var keyList: Array<String?>? = arrayOfNulls<String>(10)
+
+    fun clearPublishParams() {
+        publishState = 0
+        publishParams.clear()
+        mediaBeans.clear()
+        keyList = arrayOfNulls<String>(10)
+        checkIds = arrayOfNulls(10)
+        cancelUpload = false
+    }
 
     /**
      * 跳至登录界面
@@ -59,7 +85,7 @@ object UserManager {
     /**
      * 登录成功保存用户信息
      */
-    public fun isUserInfoMade(): Boolean {
+    fun isUserInfoMade(): Boolean {
         return !(SPUtils.getInstance(Constants.SPNAME).getString("nickname").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
@@ -71,7 +97,7 @@ object UserManager {
     /**
      * 保存位置信息
      */
-    public fun saveLocation(
+    fun saveLocation(
         latitude: String?,
         longtitude: String?,
         province: String?,
@@ -232,7 +258,7 @@ object UserManager {
 
 
     // 如果已经存在IM用户登录信息，返回LoginInfo，否则返回null即可
-    public fun loginInfo(): LoginInfo? {
+    fun loginInfo(): LoginInfo? {
         if (SPUtils.getInstance(Constants.SPNAME).getString("imToken") != null
             && SPUtils.getInstance(Constants.SPNAME).getString("imAccid") != null
         ) {
