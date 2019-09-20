@@ -44,13 +44,9 @@ class NickNameActivity : BaseActivity() {
             params.width = LinearLayout.LayoutParams.MATCH_PARENT
             params.height = SizeUtils.dp2px(200F)
             changeEt.layoutParams = params
-            changeEt.setText(
-                if (intent.getStringExtra("content").isNullOrEmpty()) {
-                    ""
-                } else {
-                    intent.getStringExtra("content")
-                }
-            )
+            if (!(intent.getStringExtra("content").isNullOrBlank())) {
+                changeEt.setText(intent.getStringExtra("content"))
+            }
         }
         changeEtInputLength.text = SpanUtils.with(changeEtInputLength)
             .append(changeEt.length().toString())
