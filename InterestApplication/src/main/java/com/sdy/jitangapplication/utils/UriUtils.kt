@@ -126,7 +126,12 @@ object UriUtils {
                     val id = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media._ID))
                     val path = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA))
                     val size = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.SIZE)) / 1024L
-                    val displayName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
+                    val displayName =
+                        if (mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)).isNullOrEmpty()) {
+                            ""
+                        } else {
+                            mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
+                        }
                     val width = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.WIDTH))
                     val height = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.HEIGHT))
                     //用于展示相册初始化界面

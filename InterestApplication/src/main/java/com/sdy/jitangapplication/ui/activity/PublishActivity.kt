@@ -76,7 +76,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
 
     companion object {
-        const val AUTHORITY = "com.sdy.jitangapplication.fileprovider" //FileProvider的签名 7.0以上要用
+        const val AUTHORITY = "com.sdy.jitangapplication.provider" //FileProvider的签名 7.0以上要用
         const val REQUEST_CODE_CAPTURE_RAW = 6 //startActivityForResult时的请求码
         const val REQUEST_CODE_VIDEO = 10 //startActivityForResult时的请求码
         const val REQUEST_CODE_LABEL = 20 //startActivityForResult时的请求码
