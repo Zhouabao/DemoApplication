@@ -62,7 +62,7 @@
                 android:text="女"
                 android:paddingLeft="40dp"
                 android:button="@null"
-                android:checked="true"
+                android:checked="false"
                 android:gravity="center"
                 android:drawableLeft="@drawable/selector_pic_woman_btn"
                 android:background="@drawable/selector_woman_btn"
