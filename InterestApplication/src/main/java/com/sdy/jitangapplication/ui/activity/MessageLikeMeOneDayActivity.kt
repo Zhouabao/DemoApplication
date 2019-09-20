@@ -97,6 +97,10 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         likeRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, likeRv)
 
+        adapter.setOnItemClickListener { _, view, position ->
+            if (UserManager.isUserVip())
+                MatchDetailActivity.start(this, adapter.data[position].accid ?: "")
+        }
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.likeMeOneDayType -> {

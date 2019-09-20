@@ -25,6 +25,7 @@ import com.sdy.jitangapplication.model.LikeMeBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -115,8 +116,12 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                             })
                     }
                 }
-
             }
+        }
+
+        adapter.setOnItemClickListener { _, view, position ->
+            if (UserManager.isUserVip())
+                MatchDetailActivity.start(mContext, adapter.data[position].accid ?: "")
         }
     }
 
