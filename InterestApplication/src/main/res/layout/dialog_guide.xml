@@ -88,6 +88,7 @@
 
                 <View
                         android:id="@+id/last"
+                        android:alpha="0.4"
                         android:layout_width="16dp"
                         android:layout_gravity="center"
                         android:background="@drawable/shape_oval_orange"
@@ -144,6 +145,7 @@
                         android:layout_gravity="center"
                         android:background="@drawable/shape_oval_orange"
                         android:layout_height="16dp"
+                        android:alpha="0.4"
                         android:layout_marginRight="30dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -195,6 +197,7 @@
 
                 <View
                         android:id="@+id/detail"
+                        android:alpha="0.4"
                         android:layout_width="16dp"
                         android:layout_gravity="center"
                         android:background="@drawable/shape_oval_orange"
@@ -346,7 +349,6 @@
                         />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

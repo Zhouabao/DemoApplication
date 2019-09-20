@@ -207,7 +207,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         filterUserDialog.seekBarAge.setProgress(
             sp.getInt("limit_age_low", 18).toFloat(),
-            sp.getInt("limit_age_high", 50).toFloat()
+            sp.getInt("limit_age_high", 35).toFloat()
         )
         filterUserDialog.filterAge.text =
             "${filterUserDialog.seekBarAge.leftSeekBar.progress.toInt()}-${filterUserDialog.seekBarAge.rightSeekBar.progress.toInt()}岁"

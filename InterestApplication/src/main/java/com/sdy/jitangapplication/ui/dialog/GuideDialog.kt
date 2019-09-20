@@ -44,9 +44,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
 
 
     private fun initView() {
-
-
-
         last.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
         next.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
         detail.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
