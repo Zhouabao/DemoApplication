@@ -25,10 +25,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.RePublishEvent
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.UpdateAvatorEvent
-import com.sdy.jitangapplication.event.UploadEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.presenter.UserCenterPresenter
@@ -321,9 +318,8 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LABEL_CODE) {
                 getTagData()
-            } else if (requestCode == REQUEST_INFO_SETTING || requestCode == REQUEST_MY_SQUARE) {
-                multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-                mPresenter.getMemberInfo(params)
+            } else if (requestCode == REQUEST_MY_SQUARE) {
+                onRefreshEvent(UserCenterEvent(true))
             } else if (requestCode == REQUEST_ID_VERIFY) {
                 userInfoBean?.userinfo?.isfaced = UserManager.isUserVerify()
                 checkVerify()
@@ -422,6 +418,14 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             mPresenter.getMemberInfo(params)
             EventBus.getDefault().post(RefreshEvent(true))
         }
+    }
+
+
+    //发布成功后回来刷新界面数据
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onRefreshEvent(event: UserCenterEvent) {
+        multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
+        mPresenter.getMemberInfo(params)
     }
 
 }

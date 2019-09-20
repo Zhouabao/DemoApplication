@@ -28,6 +28,7 @@ import com.luck.picture.lib.entity.LocalMedia
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.model.UserInfoSettingBean
@@ -42,6 +43,7 @@ import kotlinx.android.synthetic.main.activity_user_center.btnBack
 import kotlinx.android.synthetic.main.activity_user_info_settings.*
 import kotlinx.android.synthetic.main.dialog_delete_photo.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
 import java.text.SimpleDateFormat
 import java.util.*
@@ -209,6 +211,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             adapter.remove(position)
             adapter.notifyDataSetChanged()
             refreshLayout()
+            updatePhotos()
             dialog.dismiss()
         }
 
@@ -237,6 +240,19 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             toPos = -1
         }
         refreshLayout()
+        updatePhotos()
+    }
+
+    private fun updatePhotos() {
+        if (isChange) {
+            val photos = arrayOfNulls<String>(10)
+            for (data in adapter.data.withIndex()) {
+                if (data.value.type == MyPhotoBean.PHOTO) {
+                    photos[data.index] = data.value.url
+                }
+            }
+            mPresenter.addPhotos(UserManager.getToken(), UserManager.getAccid(), photos)
+        }
     }
 
 
@@ -306,6 +322,9 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             refreshLayout()
             if (chooseCount < selectList.size)
                 uploadPicture()
+            else {
+                updatePhotos()
+            }
         }
     }
 
@@ -317,8 +336,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     override fun onSavePersonalResult(result: Boolean, type: Int) {
         if (type == 2) {
             if (result) {
-                setResult(Activity.RESULT_OK)
-                finish()
+                EventBus.getDefault().postSticky(UserCenterEvent(true))
             }
         }
     }
@@ -403,24 +421,25 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 startActivityForResult<UserBirthActivity>(100)
             }
             R.id.userJob -> {
-                startActivityForResult<MyJobActivity>(103,"job" to userJob.text.toString())
+                startActivityForResult<MyJobActivity>(103, "job" to userJob.text.toString())
             }
         }
 
     }
 
     override fun onBackPressed() {
-        if (isChange) {
-            val photos = arrayOfNulls<String>(10)
-            for (data in adapter.data.withIndex()) {
-                if (data.value.type == MyPhotoBean.PHOTO) {
-                    photos[data.index] = data.value.url
-                }
-            }
-            mPresenter.addPhotos(UserManager.getToken(), UserManager.getAccid(), photos)
-        } else {
-            finish()
-        }
+        super.onBackPressed()
+//        if (isChange) {
+//            val photos = arrayOfNulls<String>(10)
+//            for (data in adapter.data.withIndex()) {
+//                if (data.value.type == MyPhotoBean.PHOTO) {
+//                    photos[data.index] = data.value.url
+//                }
+//            }
+//            mPresenter.addPhotos(UserManager.getToken(), UserManager.getAccid(), photos)
+//        } else {
+//            finish()
+//        }
 
     }
 }
