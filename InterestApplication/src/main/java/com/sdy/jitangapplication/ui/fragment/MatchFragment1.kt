@@ -81,7 +81,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             "page" to page,
             "pagesize" to Constants.PAGESIZE,
             "_timestamp" to System.currentTimeMillis(),
-            "tagid" to UserManager.getGlobalLabelId()
+            "tagid" to UserManager.getGlobalLabelId(),
+            "lng" to UserManager.getlongtitude().toFloat(),
+            "lat" to UserManager.getlatitude().toFloat()
         )
     }
 
