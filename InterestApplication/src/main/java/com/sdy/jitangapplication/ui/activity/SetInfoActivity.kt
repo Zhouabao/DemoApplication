@@ -81,6 +81,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                 ToastUtils.showShort("性别是不可更改项仅可选择一次")
                 sexTip = true
             }
+            checkConfirmBtnEnable()
         }
         //判断et输入完成并检验输入昵称的合法性
         userNickNameEt.addTextChangedListener(object : TextWatcher {
@@ -250,5 +251,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     private fun checkConfirmBtnEnable() {
         confirmBtn.isEnabled = !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty()
                 && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
+                && (sexGroup.checkedRadioButtonId == R.id.userSexWoman || sexGroup.checkedRadioButtonId == R.id.userSexMan)
     }
 }
