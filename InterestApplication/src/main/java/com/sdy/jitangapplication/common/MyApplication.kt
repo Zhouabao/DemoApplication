@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.common
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.ThreadUtils
@@ -23,7 +24,9 @@ import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.utils.UserManager
+import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
+import com.umeng.commonsdk.statistics.common.DeviceConfig
 import com.umeng.socialize.PlatformConfig
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
@@ -95,8 +98,11 @@ class MyApplication : BaseApplication() {
              * 参数：boolean 默认为false（不加密）
              */
             UMConfigure.setEncryptEnabled(true)
+            // 选用AUTO页面采集模式
+            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
 
-
+            Log.d("UMENG",DeviceConfig.getDeviceIdForGeneral(this))
+            Log.d("UMENG",DeviceConfig.getMac(this))
 
 
 
@@ -106,9 +112,11 @@ class MyApplication : BaseApplication() {
             PlatformConfig.setWeixin(Constants.WECHAT_APP_ID, Constants.WECHAT_APP_KEY)
             //qq空间平台
             PlatformConfig.setQQZone(Constants.QQ_APP_KEY, Constants.QQ_APP_SECRET)
+
+
+
         }
     }
-
 
     private fun configPlayer() {
 //        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_4_3)
