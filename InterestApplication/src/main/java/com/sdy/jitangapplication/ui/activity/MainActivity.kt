@@ -96,6 +96,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
 
         initView()
+        //启动时间统计
+        mPresenter.startupRecord(UserManager.getToken(),UserManager.getAccid())
 
         //如果定位信息没有就重新定位
         if (UserManager.getlatitude().toDouble() == 0.0 || UserManager.getlongtitude().toDouble() == 0.0)

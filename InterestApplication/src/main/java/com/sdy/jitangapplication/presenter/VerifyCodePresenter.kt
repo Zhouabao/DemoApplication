@@ -1,10 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
 import android.util.Log
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.LoginBean
-import com.sdy.jitangapplication.presenter.view.VerifyCodeView
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -13,6 +9,10 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.auth.LoginInfo
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.presenter.view.VerifyCodeView
 
 class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
 
@@ -38,7 +38,7 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(context.getString(R.string.service_error))
+                    mView.onError(CommonFunction.getErrorMsg(context))
                 }
             })
     }
@@ -62,6 +62,10 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                         mView.onGetVerifyCode(t)
                     else
                         mView.onError(t.msg)
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onError(CommonFunction.getErrorMsg(context))
                 }
             })
 

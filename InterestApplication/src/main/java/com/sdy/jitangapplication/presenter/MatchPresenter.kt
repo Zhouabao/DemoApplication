@@ -8,6 +8,7 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
@@ -107,7 +108,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else
-                        mView.onError(context.getString(R.string.service_error))
+                        mView.onError(CommonFunction.getErrorMsg(context))
                 }
             })
     }
@@ -135,7 +136,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else
-                        mView.onError(context.getString(R.string.service_error))
+                        mView.onError(CommonFunction.getErrorMsg(context))
                 }
             })
     }

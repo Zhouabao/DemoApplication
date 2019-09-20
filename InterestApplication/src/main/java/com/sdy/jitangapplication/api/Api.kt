@@ -18,6 +18,13 @@ interface Api {
 
 
     /**
+     * 启动统计
+     */
+    @POST("MemberInfo/startupRecord${Constants.END_BASE_URL}")
+    fun startupRecord(@Query("token") token: String, @Query("accid") accid: String): Observable<BaseResp<Any?>>
+
+
+    /**
      * 发送验证码
      */
     @POST("Open_Api/SendSms${Constants.END_BASE_URL}")

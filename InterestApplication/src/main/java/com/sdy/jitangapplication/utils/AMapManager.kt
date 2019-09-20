@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.utils
 import android.content.Context
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
-import com.blankj.utilcode.util.ToastUtils
 
 /**
  *    author : ZFM
@@ -50,9 +49,6 @@ object AMapManager {
                         it.district,
                         it.cityCode
                     )
-                } else {
-                    //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-                    ToastUtils.showShort("${it.errorCode},${it.errorInfo}")
                 }
             }
         }
