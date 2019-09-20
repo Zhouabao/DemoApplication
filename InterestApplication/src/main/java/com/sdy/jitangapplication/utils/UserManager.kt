@@ -375,4 +375,13 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("squareCount", 0)
     }
 
+
+    fun isShowGuide(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuide", false)
+    }
+
+    fun saveShowGuide(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuide", isShow)
+    }
+
 }

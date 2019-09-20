@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import androidx.core.app.ActivityCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
@@ -39,8 +38,6 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        ScreenUtils.setFullScreen(this)
-
         mPresenter = LoginPresenter()
         mPresenter.mView = this
         mPresenter.context = this

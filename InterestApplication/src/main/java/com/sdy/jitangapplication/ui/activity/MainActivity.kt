@@ -46,6 +46,7 @@ import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
+import com.sdy.jitangapplication.ui.dialog.GuideDialog
 import com.sdy.jitangapplication.ui.fragment.MatchFragment1
 import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.utils.AMapManager
@@ -84,6 +85,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val squareFragment by lazy { SquareFragment() }
     private val titles = arrayOf("匹配", "发现")
 
+    private val guideDialog by lazy { GuideDialog(this) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +102,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             AMapManager.initLocation(this)
         initFragment()
         filterBtn.setOnClickListener(this)
+
+        if (!UserManager.isShowGuide()) {
+            guideDialog.show()
+            UserManager.saveShowGuide(true)
+        }
     }
 
 
@@ -160,24 +168,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 llMsgCount.visibility = View.GONE
             } catch (e: Exception) {
             }
-//            YoYo.with(Techniques.Bounce)
-//                .duration(3000)
-//                .withListener(object : Animator.AnimatorListener {
-//                    override fun onAnimationRepeat(p0: Animator?) {
-//                    }
-//
-//                    override fun onAnimationCancel(p0: Animator?) {
-//                    }
-//
-//                    override fun onAnimationStart(p0: Animator?) {
-//                    }
-//
-//                    override fun onAnimationEnd(p0: Animator?) {
-//                        llMsgCount.visibility = View.GONE
-//                    }
-//
-//                })
-//                .playOn(llMsgCount)
         }
 
     }
@@ -346,6 +336,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private var firstClickTime = 0L
 
     override fun onBackPressed() {
+        if (guideDialog.isShowing) {
+            return
+        }
+
         if (GSYVideoManager.backFromWindowFull(this)) {
             return
         }
