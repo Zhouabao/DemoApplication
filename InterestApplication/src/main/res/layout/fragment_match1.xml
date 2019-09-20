@@ -116,6 +116,7 @@
     </LinearLayout>
 
     <include
+            android:visibility="visible"
             android:id="@+id/loadingLayout"
             layout="@layout/loading_layout_match_lottie"/>
 
