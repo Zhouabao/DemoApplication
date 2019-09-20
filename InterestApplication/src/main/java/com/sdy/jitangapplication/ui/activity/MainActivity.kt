@@ -105,7 +105,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         if (!UserManager.isShowGuide()) {
             guideDialog.show()
-            UserManager.saveShowGuide(true)
         }
     }
 

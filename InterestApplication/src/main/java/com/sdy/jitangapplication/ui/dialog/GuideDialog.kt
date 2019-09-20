@@ -9,6 +9,7 @@ import android.view.WindowManager
 import androidx.core.view.isVisible
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_guide.*
 
 /**
@@ -87,6 +88,7 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyFullTransparentD
         }
         startUse.onClick {
             dismiss()
+            UserManager.saveShowGuide(true)
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.common
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.ThreadUtils
@@ -24,9 +23,9 @@ import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.utils.UserManager
+import com.tencent.bugly.Bugly
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
-import com.umeng.commonsdk.statistics.common.DeviceConfig
 import com.umeng.socialize.PlatformConfig
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
@@ -60,13 +59,14 @@ class MyApplication : BaseApplication() {
         initUmeng()
         //崩溃日志
         CrashUtils.init(NimSDKOptionConfig.getAppCacheDir(this) + "/demoApplication")
+        //自适应size
         configUnits()
+        //gsyvideoplayer
         configPlayer()
-
-        DemoCache.setContext(this)
-
-        NIMClient.init(this, UserManager.loginInfo(), NimSDKOptionConfig.getSDKOptions(this))
+        //nim
         initUIKit()
+        //bugly初始化
+        Bugly.init(this, Constants.BUGLY_APP_ID, false)
 
     }
 
@@ -80,19 +80,13 @@ class MyApplication : BaseApplication() {
              * 参数4:设备类型，UMConfigure.DEVICE_TYPE_PHONE为手机、UMConfigure.DEVICE_TYPE_BOX为盒子，默认为手机
              * 参数5:Push推送业务的secret
              */
-            UMConfigure.init(
-                this,
-                Constants.UMENG_APPKEY,
-                "Umeng",
-                UMConfigure.DEVICE_TYPE_PHONE,
-                Constants.UMENG_SECRET
-            )
+            UMConfigure.init(this, Constants.UMENG_APPKEY, "Umeng", UMConfigure.DEVICE_TYPE_PHONE, Constants.UMENG_SECRET)
 
             /**
              * 设置组件化的Log开关
              * 参数: boolean 默认为false，如需查看LOG设置为true
              */
-            UMConfigure.setLogEnabled(true)
+            UMConfigure.setLogEnabled(Constants.TEST)
             /**
              * 设置日志加密
              * 参数：boolean 默认为false（不加密）
@@ -100,11 +94,6 @@ class MyApplication : BaseApplication() {
             UMConfigure.setEncryptEnabled(true)
             // 选用AUTO页面采集模式
             MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
-
-            Log.d("UMENG",DeviceConfig.getDeviceIdForGeneral(this))
-            Log.d("UMENG",DeviceConfig.getMac(this))
-
-
 
             //微博平台
             PlatformConfig.setSinaWeibo(Constants.SINA_APP_KEY, Constants.SINA_APP_SECRET, "http://sns.whalecloud.com")
@@ -134,6 +123,9 @@ class MyApplication : BaseApplication() {
 
 
     private fun initUIKit() {
+        DemoCache.setContext(this)
+        NIMClient.init(this, UserManager.loginInfo(), NimSDKOptionConfig.getSDKOptions(this))
+
         if (NIMUtil.isMainProcess(this)) {
 
             // 注册自定义推送消息处理，这个是可选项

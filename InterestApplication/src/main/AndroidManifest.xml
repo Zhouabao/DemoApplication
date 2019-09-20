@@ -5,6 +5,10 @@
 
     <uses-sdk tools:overrideLibrary="com.huawei.android.hms.base,com.huawei.android.hms.push"/>
 
+    <uses-permission android:name="android.permission.READ_LOGS"
+                     tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -345,6 +349,23 @@
                 <data android:scheme="wx4a3210c3cc8e44fb"/>
             </intent-filter>
         </activity>
+
+        <activity
+                android:name="com.tencent.bugly.beta.ui.BetaActivity"
+                android:configChanges="keyboardHidden|orientation|screenSize|locale"
+                android:theme="@android:style/Theme.Translucent" />
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="com.sdy.jitangapplication.fileProvider"
+                android:exported="false"
+                tools:replace="name,authorities,exported,grantUriPermissions"
+                android:grantUriPermissions="true">
+            <meta-data
+                    tools:replace="name,resource"
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/provider_paths"/>
+        </provider>
+
 
         <!-- *****************自动适配********************** -->
         <meta-data
