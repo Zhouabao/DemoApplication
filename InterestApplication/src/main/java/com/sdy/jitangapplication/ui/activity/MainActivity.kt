@@ -13,7 +13,6 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -22,6 +21,7 @@ import com.daimajia.androidanimations.library.YoYo
 import com.google.gson.Gson
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -207,7 +207,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         filterUserDialog.seekBarAge.setProgress(
             sp.getInt("limit_age_low", 18).toFloat(),
-            sp.getInt("limit_age_high", 35).toFloat()
+            sp.getInt("limit_age_high", 50).toFloat()
         )
         filterUserDialog.filterAge.text =
             "${filterUserDialog.seekBarAge.leftSeekBar.progress.toInt()}-${filterUserDialog.seekBarAge.rightSeekBar.progress.toInt()}岁"
@@ -350,7 +350,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             ToastUtils.showShort("再按一次退出程序")
             firstClickTime = secondTime
         } else {
-            AppUtils.exitApp()
+            AppManager.instance.finishAllActivity()
+//            AppManager.instance.exitApp(this)
         }
 
     }

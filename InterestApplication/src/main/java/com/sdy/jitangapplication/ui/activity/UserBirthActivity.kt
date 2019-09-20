@@ -3,11 +3,11 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.presenter.UserBirthPresenter
 import com.sdy.jitangapplication.presenter.view.UserBirthView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
 import kotlinx.android.synthetic.main.activity_user_birth.*
 import org.jetbrains.anko.toast
 import java.util.*
@@ -111,8 +111,8 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
         if (Calendar.getInstance().get(Calendar.YEAR) - year < 18){
             toast("年龄必须大于等于18岁哦")
             return false
-        }else if (Calendar.getInstance().get(Calendar.YEAR) - year > 35) {
-            toast("年龄必须在35岁以内哦")
+        }else if (Calendar.getInstance().get(Calendar.YEAR) - year > 50) {
+            toast("年龄必须在50岁以内哦")
             return false
         }
         return true
