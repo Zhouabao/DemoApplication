@@ -77,6 +77,7 @@ dependencies {
     api "de.hdodenhof:circleimageview:$circle_imageView_version"
     //Take Photo
     api "com.jph.takephoto:takephoto_library:$take_photo_version"
+
     //Alert View
     api "com.bigkoo:alertview:$alert_view_version"
     //七牛
@@ -108,15 +109,25 @@ dependencies {
     api 'me.jessyan:autosize:1.1.2'
 
     //GSYVideoPlayer
-//    api 'com.shuyu:GSYVideoPlayer:7.0.2'
-    api 'com.shuyu:gsyVideoPlayer-java:7.0.2'
+    api "com.shuyu:GSYVideoPlayer:$gsy_video_version"
 
+//    api "com.shuyu:gsyVideoPlayer-java:$gsy_video_version"
     //根据你的需求ijk模式的so
-    api 'com.shuyu:gsyVideoPlayer-armv5:7.0.2'
-    api 'com.shuyu:gsyVideoPlayer-armv7a:7.0.2'
-    api 'com.shuyu:gsyVideoPlayer-arm64:7.0.2'
-    api 'com.shuyu:gsyVideoPlayer-x64:7.0.2'
-    api 'com.shuyu:gsyVideoPlayer-x86:7.0.2'
+//    api "com.shuyu:gsyVideoPlayer-armv5:$gsy_video_version"
+//    api "com.shuyu:gsyVideoPlayer-armv7a:$gsy_video_version"
+//    api "com.shuyu:gsyVideoPlayer-arm64:$gsy_video_version"
+//    api "com.shuyu:gsyVideoPlayer-x64:$gsy_video_version"
+//    api "com.shuyu:gsyVideoPlayer-x86:$gsy_video_version"
+
+
+
+
+
+//    api "com.shuyu:gsyVideoPlayer-java:$gsy_video_version"
+    //是否需要ExoPlayer模式
+//    api "com.shuyu:GSYVideoPlayer-exo2:$gsy_video_version"
+    //更多ijk的编码支持
+//    api "com.shuyu:gsyVideoPlayer-ex_so:$gsy_video_version"
 
     //TabLayout
     api  'com.github.hackware1993:MagicIndicator:1.5.0'
