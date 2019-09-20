@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.WindowManager
+import android.view.animation.AnimationUtils
+import android.view.animation.ScaleAnimation
+import android.view.animation.TranslateAnimation
 import androidx.core.view.isVisible
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
@@ -18,7 +21,7 @@ import kotlinx.android.synthetic.main.dialog_guide.*
  *    desc   :
  *    version: 1.0
  */
-class GuideDialog(context: Context) : Dialog(context, R.style.MyFullTransparentDialog) {
+class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_guide)
@@ -41,6 +44,19 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyFullTransparentD
 
 
     private fun initView() {
+
+
+
+        last.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
+        next.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
+        detail.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
+
+        guide_dislike_hand_left.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_left_to_right) as TranslateAnimation))
+        guide_like_hand_right.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_right_to_left) as TranslateAnimation))
+        guide_hi_hand_top.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_bottom_to_top) as TranslateAnimation))
+
+
+
         guideLast.onClick {
             guideCl.isVisible = true
             guideLast.isVisible = false
@@ -48,6 +64,9 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyFullTransparentD
             guideDetail.isVisible = false
             guideHi.isVisible = false
             useCl.isVisible = false
+            guideLike.isVisible = false
+            guideDislike.isVisible = false
+            guideChathi.isVisible = false
         }
 
         guideNext.onClick {
@@ -57,6 +76,9 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyFullTransparentD
             guideDetail.isVisible = true
             guideHi.isVisible = false
             useCl.isVisible = false
+            guideLike.isVisible = false
+            guideDislike.isVisible = false
+            guideChathi.isVisible = false
         }
 
         guideDetail.onClick {
@@ -66,6 +88,9 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyFullTransparentD
             guideDetail.isVisible = false
             guideHi.isVisible = true
             useCl.isVisible = false
+            guideLike.isVisible = false
+            guideDislike.isVisible = false
+            guideChathi.isVisible = false
         }
 
         guideHi.onClick {
@@ -75,6 +100,32 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyFullTransparentD
             guideDetail.isVisible = false
             guideHi.isVisible = false
             guideCl.isVisible = false
+            guideLike.isVisible = true
+            guideDislike.isVisible = false
+            guideChathi.isVisible = false
+            useCl.isVisible = false
+        }
+
+        guideLike.onClick {
+            guideCl.isVisible = false
+            guideLike.isVisible = false
+            guideDislike.isVisible = true
+            guideChathi.isVisible = false
+            useCl.isVisible = false
+        }
+        guideDislike.onClick {
+            guideCl.isVisible = false
+            guideLike.isVisible = false
+            guideDislike.isVisible = false
+            guideChathi.isVisible = true
+            useCl.isVisible = false
+        }
+
+        guideChathi.onClick {
+            guideCl.isVisible = false
+            guideLike.isVisible = false
+            guideDislike.isVisible = false
+            guideChathi.isVisible = false
             useCl.isVisible = true
         }
 
@@ -84,11 +135,20 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyFullTransparentD
             guideNext.isVisible = false
             guideDetail.isVisible = false
             guideHi.isVisible = false
+            guideLike.isVisible = false
+            guideDislike.isVisible = false
+            guideChathi.isVisible = false
             useCl.isVisible = false
         }
         startUse.onClick {
-            dismiss()
+            last.clearAnimation()
+            next.clearAnimation()
+            detail.clearAnimation()
+            guide_dislike_hand_left.clearAnimation()
+            guide_like_hand_right.clearAnimation()
+            guide_hi_hand_top.clearAnimation()
             UserManager.saveShowGuide(true)
+            dismiss()
         }
     }
 }
