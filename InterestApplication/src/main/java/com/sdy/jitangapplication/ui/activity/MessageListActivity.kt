@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
@@ -279,7 +280,12 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         headAdapter.addData(like)
         hiAdapter.data.clear()
         if (data?.greet != null && data?.greet.isNotEmpty()) {
-            adapter.headerLayout.hiCount.text = "${data.greet_cnt}"
+            if (data.greet_cnt > 0) {
+                adapter.headerLayout.hiCount.text = "${data.greet_cnt}"
+                adapter.headerLayout.hiCount.isVisible = true
+            } else {
+                adapter.headerLayout.hiCount.isVisible = false
+            }
             adapter.headerLayout.rlFriend.visibility = View.VISIBLE
             hiAdapter.setNewData(data.greet)
         } else {

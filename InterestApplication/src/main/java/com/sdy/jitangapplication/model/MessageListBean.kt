@@ -57,7 +57,7 @@ data class OuttimeBean(
 
 data class MessageListBean1(
     val greet: MutableList<HiMessageBean>? = mutableListOf(),
-    val greet_cnt: Int? = 0,//招呼总数
+    val greet_cnt: Int = 0,//招呼总数
     val liked_cnt: Int? = 0,//感兴趣的数量
     val liked_unread_cnt: Int? = 0,//	未读感兴趣总数
     val liked_time: String? = "",//	感兴趣最后一条时间
