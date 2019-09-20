@@ -47,3 +47,7 @@ class AnnounceEvent(var serverSuccess: Boolean = false, var code: Int = 0)
 //重新上传内容的通知成功或者失败事件
 class RePublishEvent(var republish: Boolean, val context: Context)
 
+
+//更新用户中心信息
+class UserCenterEvent(var refresh: Boolean)
+

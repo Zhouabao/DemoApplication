@@ -208,7 +208,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailUserInfo.text =
             "${matchBean!!.age} / ${if (matchBean!!.gender == 1) "男" else "女"} / ${matchBean!!.constellation} / ${matchBean!!.distance}"
         detailUserJob.text = "${matchBean!!.jobname}"
-        detailUserSign.text = "${matchBean!!.sign}"
+        detailUserSign.apply {
+            text = "${matchBean!!.sign}"
+            isVisible = !(matchBean!!.sign.isNullOrBlank())
+        }
         updateLightCount(matchBean!!.lightningcnt ?: 0, matchBean!!.countdown)
         detailUserJob.visibility = if (matchBean!!.jobname.isNullOrEmpty()) {
             View.GONE

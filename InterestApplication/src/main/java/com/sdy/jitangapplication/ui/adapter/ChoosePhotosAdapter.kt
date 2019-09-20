@@ -63,7 +63,7 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
                         helper.itemView.choosePhotoIndex.text = "${index + 1}"
                     }
                 }
-                GlideUtil.loadRoundImgCenterCrop(
+                GlideUtil.loadRoundImgCenterCropNoHolder(
                     mContext,
                     item.filePath,
                     helper.itemView.choosePhoto,
@@ -74,7 +74,7 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
         } else if (type == 1) {//1:选中的相册
             helper.itemView.chooseVideoDuration.visibility = View.GONE
             helper.itemView.choosePhotoIndex.visibility = View.GONE
-            GlideUtil.loadRoundImgCenterCrop(mContext, item.filePath, helper.itemView.choosePhoto, SizeUtils.dp2px(5F))
+            GlideUtil.loadRoundImgCenterCropNoHolder(mContext, item.filePath, helper.itemView.choosePhoto, SizeUtils.dp2px(5F))
             helper.itemView.choosePhotoDel.visibility = if (item.ischecked) {
                 helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_delete)
                 View.VISIBLE
@@ -101,7 +101,7 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
                         helper.itemView.choosePhotoIndex.text = "${index + 1}"
                     }
                 }
-                GlideUtil.loadRoundImgCenterCrop(
+                GlideUtil.loadRoundImgCenterCropNoHolder(
                     mContext,
                     item.filePath,
                     helper.itemView.choosePhoto,

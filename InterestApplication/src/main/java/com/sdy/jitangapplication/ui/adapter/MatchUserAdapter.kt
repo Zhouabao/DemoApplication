@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -61,7 +62,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                     }
                     1 -> {
                         if (item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                            holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
                             holder.itemView.matchUserInfoCl.visibility = View.GONE
                             holder.itemView.matchUserDynamicLl.visibility = View.GONE
                         } else {
@@ -72,7 +73,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                     }
                     2 -> {
                         if (item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                            holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
                             holder.itemView.matchUserInfoCl.visibility = View.GONE
                             holder.itemView.matchUserDynamicLl.visibility = View.GONE
                         } else {
@@ -81,14 +82,14 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                                 holder.itemView.matchUserIntroduce.visibility = View.GONE
                                 holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
                             } else {
-                                holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                                holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
                                 holder.itemView.matchUserInfoCl.visibility = View.GONE
                             }
                         }
                     }
                     else -> {
                         if (item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                            holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
                             holder.itemView.matchUserInfoCl.visibility = View.GONE
                             holder.itemView.matchUserDynamicLl.visibility = View.GONE
                         } else {
@@ -97,7 +98,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                                 holder.itemView.matchUserIntroduce.visibility = View.GONE
                                 holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
                             } else {
-                                holder.itemView.matchUserIntroduce.visibility = View.VISIBLE
+                                holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
                                 holder.itemView.matchUserInfoCl.visibility = View.GONE
                             }
                         }
@@ -191,7 +192,10 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         } else {
             View.GONE
         }
+
+
         holder.itemView.matchUserIntroduce.text = item.sign ?: ""
+
 
 
         holder.itemView.matchUserLabelsLikeCount.visibility = if (item.tagcount == null || item.tagcount == 0) {
