@@ -496,11 +496,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 for (label in labelList) {
                     if (label.id == id) {
                         label.checked = true
+                        break
                     }
                 }
             } else {
-                labelList[0].checked = true
-                SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelList[0].id)
+                labelList[1].checked = true
+                SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelList[1].id)
             }
         }
         labelAdapter.setData(labelList)
