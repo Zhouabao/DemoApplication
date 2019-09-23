@@ -130,7 +130,7 @@ public class GlideUtil {
      * @param url
      * @param tartgetImg
      */
-    public static void loadRoundImgCenterCrop(Context context, String url, ImageView tartgetImg, int radius) {
+    public static void loadRoundImgCenterCrop(Context context, Object url, ImageView tartgetImg, int radius) {
         MultiTransformation multiTransformation = new MultiTransformation(new CenterCrop(), new RoundedCornersTransformation(radius, 0));
         Glide.with(context)
                 .load(url)
