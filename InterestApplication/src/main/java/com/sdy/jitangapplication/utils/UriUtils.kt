@@ -1,8 +1,12 @@
 package com.sdy.jitangapplication.utils
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
+import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.util.Log
@@ -264,52 +268,10 @@ object UriUtils {
      * @param context
      * @return
      */
-    fun getAllContacts(context: Context): List<ContactInfo> {
-        val list = ArrayList<ContactInfo>()
-        // 获取解析者
-        val resolver = context.contentResolver
-        // 访问地址
-        val raw_contacts = Uri.parse("content://com.android.contacts/raw_contacts")
-        val data = Uri.parse("content://com.android.contacts/data")
-        // 查询语句
-        // select contact_id from raw_contacts;//1 2 3 4
-        // select mimetype,data1 from view_data where raw_contact_id=3;
-        // Cursor cursor=resolver.query(访问地址, 返回字段 null代表全部, where 语句, 参数, 排序)
-        val cursor = resolver.query(raw_contacts, arrayOf("contact_id"), null, null, null)
-
-        while (cursor != null && cursor.moveToNext()) {
-            // getColumnIndex根据名称查列号
-            val id = cursor.getString(cursor.getColumnIndex("contact_id"))
-            // 创建实例
-            var name = ""
-            var phone = ""
-            val item = resolver.query(data, arrayOf("mimetype", "data1"), "raw_contact_id=?", arrayOf(id), null)
-
-            while (item != null && item.moveToNext()) {
-                val mimetype = item.getString(item.getColumnIndex("mimetype"))
-                val data1 = item.getString(item.getColumnIndex("data1"))
-                if ("vnd.android.cursor.item/name".equals(mimetype)) {
-                    name = data1
-                } else if ("vnd.android.cursor.item/phone_v2".equals(mimetype)) {
-                    // 有的手机号中间会带有空格
-                    phone = data1.replace(" ", "")
-                }
-            }
-            val info = ContactInfo(id, name, phone)
-            item?.close()
-            // 添加集合
-            list.add(info)
-        }
-
-        cursor?.close()
-        return list
-    }
-
-
     fun getPhoneContacts(context: Context): List<ContactInfo> {
         val list = ArrayList<ContactInfo>()
 
-        val PHONES_PROJECTION = arrayOf(
+        val photosProjection = arrayOf(
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Phone.NUMBER,
             ContactsContract.CommonDataKinds.Phone.PHOTO_ID,
@@ -319,7 +281,7 @@ object UriUtils {
         val resolver = context.contentResolver
         //获取手机联系人
         val phoneCorsur =
-            resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, PHONES_PROJECTION, null, null, null)
+            resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, photosProjection, null, null, null)
 
         if (phoneCorsur != null) {
             while (phoneCorsur.moveToNext()) {
@@ -338,4 +300,20 @@ object UriUtils {
         }
         return list
     }
+
+    /**
+     * android刷新媒体库
+     */
+    fun updateMedia(context: Context, path: String) = if (SDK_INT >= Build.VERSION_CODES.KITKAT) {//当大于等于Android 4.4时
+        MediaScannerConnection.scanFile(context, arrayOf(path), null) { p0, uri ->
+            val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+            mediaScanIntent.data = uri
+            context.sendBroadcast(mediaScanIntent)
+        }
+
+    } else {//Andrtoid4.4以下版本
+        context.sendBroadcast(Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.fromFile((File(path).parentFile))))
+    }
+
+
 }

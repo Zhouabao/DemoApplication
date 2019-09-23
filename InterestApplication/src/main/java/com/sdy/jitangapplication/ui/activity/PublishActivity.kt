@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
@@ -19,6 +20,9 @@ import android.widget.MediaController
 import android.widget.RadioGroup
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -51,7 +55,6 @@ import com.sdy.jitangapplication.ui.adapter.PublishLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UriUtils
-import com.sdy.jitangapplication.utils.UriUtils.getAllPhotoInfo
 import com.sdy.jitangapplication.utils.UriUtils.getAllVideoInfos
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -72,8 +75,7 @@ import java.util.*
  *
  */
 class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioGroup.OnCheckedChangeListener,
-    View.OnClickListener, TextWatcher {
-
+    View.OnClickListener, TextWatcher, LoaderManager.LoaderCallbacks<Cursor> {
 
     companion object {
         const val AUTHORITY = "com.sdy.jitangapplication.provider" //FileProvider的签名 7.0以上要用
@@ -81,6 +83,79 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         const val REQUEST_CODE_VIDEO = 10 //startActivityForResult时的请求码
         const val REQUEST_CODE_LABEL = 20 //startActivityForResult时的请求码
         const val REQUEST_CODE_MAP = 30 //startActivityForResult时的请求码
+
+        val IMAGE_PROJECTION = arrayOf(
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.SIZE,
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.WIDTH,
+            MediaStore.Images.Media.HEIGHT,
+            MediaStore.Images.Media.DATE_MODIFIED
+        )
+
+        val VIDEO_PROJECTION = arrayOf(
+            Video.Thumbnails._ID,
+            Video.Thumbnails.DATA,
+            Video.Media.DURATION,
+            Video.Media.SIZE,
+            Video.Media.DISPLAY_NAME,
+            Video.Media.DATE_ADDED
+        )
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        if (id == 0) {
+            return CursorLoader(
+                this,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                IMAGE_PROJECTION,
+                null,
+                null,
+                IMAGE_PROJECTION[2] + " DESC"
+            )
+        } else {
+            return CursorLoader(
+                this,
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                IMAGE_PROJECTION,
+                null,
+                null,
+                IMAGE_PROJECTION[2] + " DESC"
+            )
+        }
+    }
+
+    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
+        if (data != null) {
+            val count = data.count
+            data.moveToFirst()
+            if (count > 0) {
+                do {
+                    val imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]))
+                    val size = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1])) / 1024L
+                    val id = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]))
+                    val displayName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]))
+                    val width = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]))
+                    val height = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]))
+                    allPhotoAdapter.addData(
+                        MediaBean(
+                            id,
+                            MediaBean.TYPE.IMAGE,
+                            imagePath,
+                            displayName,
+                            size = size,
+                            width = width,
+                            height = height
+                        )
+                    )
+                } while (data.moveToNext())
+            }
+        }
+    }
+
+    override fun onLoaderReset(loader: Loader<Cursor>) {
+        supportLoaderManager.destroyLoader(0)
     }
 
 
@@ -89,8 +164,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         setContentView(R.layout.activity_publish)
         initView()
 
-        //获取所有的照片信息
-        allPhotoAdapter.setNewData(getAllPhotoInfo(this))
+//        allPhotoAdapter.setNewData(getAllPhotoInfo(this))
         //获取所有的视频封面
         allVideoThumbAdapter.setNewData(getAllVideoInfos(this))
         initData()
@@ -238,7 +312,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     private var videoPath: String = ""
     private var audioPath: String = ""
 
-    private val allPhotoAdapter by lazy { ChoosePhotosAdapter(0, pickedPhotos) } //全部照片
+    private val allPhotoAdapter by lazy { ChoosePhotosAdapter(0, mutableListOf<MediaBean>()) } //全部照片
     private val pickedPhotoAdapter by lazy { ChoosePhotosAdapter(1) }//选中的封面
     private val allVideoThumbAdapter by lazy { ChoosePhotosAdapter(2) }//全部视频封面
     private var videoCheckIndex = -1
@@ -465,7 +539,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      * @param isCapture 是否是拍照 true为拍照 false为视频
      */
     private fun gotoCaptureRaw(isCapture: Boolean) {
-        imageFile = createImageFile(isCapture = isCapture)
+        imageFile = createImageFile(isCamera = isCapture)
         imageFile?.let {
             var intent: Intent
             if (isCapture) {
@@ -510,11 +584,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     /**
      * 创建文件夹来保存照片
      */
-    private fun createImageFile(isCrop: Boolean = false, isCapture: Boolean = true): File? {
+    private fun createImageFile(isCrop: Boolean = false, isCamera: Boolean = true): File? {
         return try {
             var rootFile: File? = null
 
-            if (isCapture) {
+            if (!isCamera) {
                 rootFile = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
                     "demoapplicaiton/video"
@@ -528,7 +602,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             if (!rootFile.exists())
                 rootFile.mkdirs()
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-            val fileName = if (isCapture) {
+            val fileName = if (isCamera) {
                 if (isCrop) "IMG_${timeStamp}_CROP.jpg" else "IMG_$timeStamp.jpg"
             } else {
                 "VID_$timeStamp.mp4"
@@ -783,11 +857,16 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     override fun onResume() {
         super.onResume()
+
+        UriUtils.updateMedia(this, Environment.getExternalStorageDirectory().absolutePath)
+        //获取所有的照片信息
+        supportLoaderManager.initLoader(0, null, this)
         AMapManager.initLocation(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        supportLoaderManager.destroyLoader(0)
         if (videoPreview.isPlaying) videoPreview.stopPlayback()
         countTimeThread?.cancel()
         mPreviewTimeThread?.stop()
@@ -1081,11 +1160,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     height = ImageUtils.getSize(imageFile?.absolutePath ?: "")[0]
                 )
                 //插入选中照片的第一个
-                pickedPhotos.add(0, imageBean)
-                pickedPhotoAdapter.notifyDataSetChanged()
+                pickedPhotoAdapter.addData(0,imageBean)
                 //插入全部照片的第二个 第一个为拍照
-                allPhotoAdapter.data.add(1, imageBean)
-                allPhotoAdapter.notifyDataSetChanged()
+                UriUtils.updateMedia(this,imageBean.filePath)
+                allPhotoAdapter.addData(1, imageBean)
                 pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
                     View.VISIBLE
                 } else {
