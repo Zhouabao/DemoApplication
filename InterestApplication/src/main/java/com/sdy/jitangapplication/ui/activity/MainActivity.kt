@@ -2,14 +2,18 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.animation.Animator
 import android.app.Activity
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.core.app.NotificationCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -92,7 +96,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         EventBus.getDefault().register(this)
-        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, true)
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
 
         initView()
@@ -325,7 +328,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
-        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, false)
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
 
     }
@@ -403,32 +405,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 .playOn(llMsgCount)
         }
     }
-
-    /**
-     * 系统通知监听
-     */
-    private var customNotificationObserver: Observer<CustomNotification> =
-        Observer { customNotification ->
-            if (customNotification.content != null) {
-                val customerMsgBean =
-                    Gson().fromJson<CustomerMsgBean>(customNotification.content, CustomerMsgBean::class.java)
-                when (customerMsgBean.type) {
-                    1 -> {//系统通知新的消息数量
-                        mPresenter.msgList(UserManager.getToken(), UserManager.getAccid())
-                        EventBus.getDefault().post(UpdateHiEvent())
-                    }
-                    2 -> {//对方删除自己,本地删除会话列表
-                        NIMClient.getService(MsgService::class.java)
-                            .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
-                    }
-                    3 -> { //新的招呼刷新界面
-                        EventBus.getDefault().post(UpdateHiEvent())
-                    }
-
-                }
-                Log.d("OkHttp", "${customerMsgBean.type}=================${customerMsgBean.accid}=================")
-            }
-        }
 
 
     /**
@@ -579,6 +555,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNewLabelEvent(event: UpdateAvatorEvent) {
         initData()
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onGetMSGEvent(event: GetNewMsgEvent) {
+        mPresenter.msgList(UserManager.getToken(),UserManager.getAccid())
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

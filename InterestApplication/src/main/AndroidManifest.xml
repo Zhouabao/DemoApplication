@@ -5,9 +5,10 @@
 
     <uses-sdk tools:overrideLibrary="com.huawei.android.hms.base,com.huawei.android.hms.push"/>
 
-    <uses-permission android:name="android.permission.READ_LOGS"
-                     tools:ignore="ProtectedPermissions"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission
+            android:name="android.permission.READ_LOGS"
+            tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
@@ -353,17 +354,18 @@
         <activity
                 android:name="com.tencent.bugly.beta.ui.BetaActivity"
                 android:configChanges="keyboardHidden|orientation|screenSize|locale"
-                android:theme="@android:style/Theme.Translucent" />
+                android:theme="@android:style/Theme.Translucent"/>
+
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="com.sdy.jitangapplication.fileProvider"
                 android:exported="false"
-                tools:replace="name,authorities,exported,grantUriPermissions"
-                android:grantUriPermissions="true">
+                android:grantUriPermissions="true"
+                tools:replace="name,authorities,exported,grantUriPermissions">
             <meta-data
-                    tools:replace="name,resource"
                     android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/provider_paths"/>
+                    android:resource="@xml/provider_paths"
+                    tools:replace="name,resource"/>
         </provider>
 
 
@@ -423,9 +425,10 @@
                 android:authorities="com.sdy.jitangapplication.ipc.provider"
                 android:exported="false"
                 android:process=":core"/>
-        <!-- 配置的service, activity, receiver -->
-        <!--
-<service
+
+
+        <!-- VIVO配置的service, activity, receiver -->
+        <service
                 android:name="com.vivo.push.sdk.service.CommandClientService"
                 android:exported="true"/>
         <activity
@@ -435,11 +438,19 @@
                 android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <receiver android:name="com.netease.nimlib.mixpush.vivo.VivoPushReceiver">
             <intent-filter>
-                &lt;!&ndash; 接收 push 消息 &ndash;&gt;
+                <!-- 接收 push 消息 -->
                 <action android:name="com.vivo.pushclient.action.RECEIVE"/>
             </intent-filter>
         </receiver>
-        -->
+
+        <meta-data
+                android:name="com.vivo.push.api_key"
+                android:value="{你的vivo推送app key}"/>
+        <meta-data
+                android:name="com.vivo.push.app_id"
+                android:value="{你的vivo推送的app id}"/>
+
+
         <!-- 小米配置的service和receiver -->
         <service
                 android:name="com.xiaomi.push.service.XMPushService"
@@ -483,17 +494,18 @@
                 <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED"/>
                 <action android:name="com.xiaomi.mipush.ERROR"/>
             </intent-filter>
-        </receiver> <!-- 华为推送配置 -->
+        </receiver>
+
+
+        <!-- 华为推送配置 -->
         <meta-data
                 android:name="com.huawei.hms.client.appid"
-                android:value="101103961"/>
-        <!--
+                android:value="appid=101103961"/>
         <provider
                 android:name="com.huawei.hms.update.provider.UpdateProvider"
                 android:authorities="com.sdy.jitangapplication.hms.update.provider"
                 android:exported="false"
                 android:grantUriPermissions="true"/>
-        -->
         <!-- 云信华为推送消息广播 -->
         <receiver android:name="com.netease.nimlib.mixpush.hw.HWPushReceiver">
             <intent-filter android:priority="0x7fffffff">
@@ -506,14 +518,19 @@
             <meta-data
                     android:name="CS_cloud_ablitity"
                     android:value="successRateAnalytics"/>
-        </receiver> <!-- 兼容性广播 -->
+        </receiver>
+
+        <!-- 兼容性广播 -->
         <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
             <intent-filter>
 
                 <!-- 接收通道发来的通知栏消息，兼容老版本Push -->
                 <action android:name="com.huawei.intent.action.PUSH"/>
             </intent-filter>
-        </receiver> <!-- Oppo推送配置项 -->
+        </receiver>
+
+
+        <!-- Oppo推送配置项 -->
         <service
                 android:name="com.netease.nimlib.mixpush.oppo.OppoPushService"
                 android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE">

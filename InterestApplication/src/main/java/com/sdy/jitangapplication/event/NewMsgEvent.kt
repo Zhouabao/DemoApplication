@@ -6,7 +6,8 @@ package com.sdy.jitangapplication.event
  *    desc   :显示新消息的event
  *    version: 1.0
  */
-class NewMsgEvent()
+class NewMsgEvent
+class GetNewMsgEvent
 
 
 class UpdateAvatorEvent(val update: Boolean)

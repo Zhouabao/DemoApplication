@@ -26,7 +26,6 @@ import com.netease.nim.uikit.impl.customization.DefaultP2PSessionCustomization
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.msg.model.IMMessage
@@ -120,7 +119,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                         startActivity(intent)
                     }
                 }
-                Log.d("OkHttp", "${customerMsgBean.type}=================${customerMsgBean.accid}=================")
+                Log.d("OkHttp", "${customerMsgBean.type}=================${customerMsgBean.msg}=================")
             }
         }
 
@@ -237,9 +236,9 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     }
 
     private fun registerObservers(register: Boolean) {
-        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(commandObserver, register)
+//        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(commandObserver, register)
         NimUIKit.getUserInfoObservable().registerObserver(userInfoObserver, register)
-        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, register)
+//        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, register)
         NimUIKit.getContactChangedObservable().registerObserver(friendDataChangedObserver, register)
         if (NimUIKit.enableOnlineState()) {
             NimUIKit.getOnlineStateChangeObservable()

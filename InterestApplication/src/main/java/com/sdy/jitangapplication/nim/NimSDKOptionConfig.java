@@ -201,8 +201,8 @@ public class NimSDKOptionConfig {
         // 第三方推送配置
         MixPushConfig config = new MixPushConfig();
         // 小米推送
-        config.xmAppId = "2882303761518151078";
-        config.xmAppKey = "5591815169078";
+        config.xmAppId = "2882303761518169448";
+        config.xmAppKey = "5181816924448";
         config.xmCertificateName = "JITANGXIAOMI";
 
 

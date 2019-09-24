@@ -1,19 +1,37 @@
 package com.sdy.jitangapplication.common
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.os.Build
+import android.util.Log
+import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.ThreadUtils
+import com.google.gson.Gson
 import com.kotlin.base.common.BaseApplication
 import com.netease.nim.uikit.R
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.UIKitOptions
 import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.mixpush.NIMPushClient
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.MsgServiceObserve
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
+import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivity
+import com.sdy.jitangapplication.event.GetNewMsgEvent
+import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
 import com.sdy.jitangapplication.nim.NimSDKOptionConfig
@@ -22,6 +40,7 @@ import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
 import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.bugly.Bugly
 import com.umeng.analytics.MobclickAgent
@@ -29,6 +48,7 @@ import com.umeng.commonsdk.UMConfigure
 import com.umeng.socialize.PlatformConfig
 import me.jessyan.autosize.AutoSizeConfig
 import me.jessyan.autosize.unit.Subunits
+import org.greenrobot.eventbus.EventBus
 
 
 class MyApplication : BaseApplication() {
@@ -51,9 +71,90 @@ class MyApplication : BaseApplication() {
     }
 
 
+    /**
+     * 系统通知监听
+     */
+    private var customNotificationObserver: Observer<CustomNotification> =
+        Observer { customNotification ->
+            if (customNotification.content != null) {
+                val customerMsgBean =
+                    Gson().fromJson<CustomerMsgBean>(customNotification.content, CustomerMsgBean::class.java)
+                when (customerMsgBean.type) {
+                    1 -> {//系统通知新的消息数量
+                        EventBus.getDefault().postSticky(GetNewMsgEvent())
+                        EventBus.getDefault().post(UpdateHiEvent())
+                        initNotificationManager(customerMsgBean.msg)
+                    }
+                    2 -> {//对方删除自己,本地删除会话列表
+                        NIMClient.getService(MsgService::class.java)
+                            .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        val intent = Intent()
+                        intent.setClass(this, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+                    }
+                    3 -> { //新的招呼刷新界面
+                        EventBus.getDefault().post(UpdateHiEvent())
+                    }
+                }
+                Log.d("OkHttp", "${customerMsgBean.type}====,${customerMsgBean.msg}==================================")
+
+            }
+        }
+
+
+    fun initNotificationManager(msg: String) {
+        val manager = getSystemService(SwipeBackActivity.NOTIFICATION_SERVICE) as NotificationManager
+        //8.0 以后需要加上channelId 才能正常显示
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "default"
+            val channelName = "默认通知"
+            manager.createNotificationChannel(
+                NotificationChannel(
+                    channelId,
+                    channelName,
+                    NotificationManager.IMPORTANCE_HIGH
+                )
+            )
+        }
+
+
+        //为了版本兼容  选择V7包下的NotificationCompat进行构造
+        val builder = NotificationCompat.Builder(this, "default")
+        //Ticker是状态栏显示的提示
+//        builder.setTicker("通知")
+        //第一行内容  通常作为通知栏标题
+//        builder.setContentTitle("积糖")
+        //第二行内容 通常是通知正文
+        builder.setContentText(msg)
+        //第三行内容 通常是内容摘要什么的 在低版本机器上不一定显示
+//        builder.setSubText("这里显示的是通知第三行内容！")
+        //ContentInfo 在通知的右侧 时间的下面 用来展示一些其他信息
+        //builder.setContentInfo("2");
+        //number设计用来显示同种通知的数量和ContentInfo的位置一样，如果设置了ContentInfo则number会被隐藏
+//        builder.setNumber(2)
+        //可以点击通知栏的删除按钮删除
+        builder.setAutoCancel(true)
+        //系统状态栏显示的小图标
+        builder.setSmallIcon(com.sdy.jitangapplication.R.drawable.icon_logo)
+        //下拉显示的大图标
+        builder.setLargeIcon(BitmapFactory.decodeResource(resources, com.sdy.jitangapplication.R.drawable.icon_logo))
+        val intent = Intent(this, MainActivity::class.java)
+        val pIntent = PendingIntent.getActivity(this, 1, intent, 0)
+        //点击跳转的intent
+        builder.setContentIntent(pIntent)
+        //通知默认的声音 震动 呼吸灯
+        builder.setDefaults(NotificationCompat.DEFAULT_ALL)
+        val notification = builder.build()
+        manager.notify(1, notification)
+
+    }
+
     @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
+
 
         //初始化Umeng
         initUmeng()
@@ -80,7 +181,13 @@ class MyApplication : BaseApplication() {
              * 参数4:设备类型，UMConfigure.DEVICE_TYPE_PHONE为手机、UMConfigure.DEVICE_TYPE_BOX为盒子，默认为手机
              * 参数5:Push推送业务的secret
              */
-            UMConfigure.init(this, Constants.UMENG_APPKEY, "Umeng", UMConfigure.DEVICE_TYPE_PHONE, Constants.UMENG_SECRET)
+            UMConfigure.init(
+                this,
+                Constants.UMENG_APPKEY,
+                "Umeng",
+                UMConfigure.DEVICE_TYPE_PHONE,
+                Constants.UMENG_SECRET
+            )
 
             /**
              * 设置组件化的Log开关
@@ -101,7 +208,6 @@ class MyApplication : BaseApplication() {
             PlatformConfig.setWeixin(Constants.WECHAT_APP_ID, Constants.WECHAT_APP_KEY)
             //qq空间平台
             PlatformConfig.setQQZone(Constants.QQ_APP_KEY, Constants.QQ_APP_SECRET)
-
 
 
         }
@@ -145,9 +251,10 @@ class MyApplication : BaseApplication() {
             NimUIKit.setCustomPushContentProvider(DemoPushContentProvider())
 
 
-
             //在线状态内容提供者
 //            NimUIKit.setOnlineStateContentProvider(DemoOnlineStateContentProvider())
+            NIMClient.getService(MsgServiceObserve::class.java)
+                .observeCustomNotification(customNotificationObserver, true)
 
         }
     }
@@ -159,7 +266,6 @@ class MyApplication : BaseApplication() {
         options.messageRightBackground = R.drawable.shape_rectangle_share_square_bg
         return options
     }
-
 
 
 }
