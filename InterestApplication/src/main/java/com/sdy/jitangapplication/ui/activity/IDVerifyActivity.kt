@@ -154,7 +154,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                         "accid"
                     )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                         16
-                    )}.jpg"
+                    )}"
 
                 uploadProfile(bitmap2Bytes(mILivenessStrategy.bestFaceImage), fileKey)
             }

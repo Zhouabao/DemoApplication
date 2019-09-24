@@ -895,7 +895,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                         "accid"
                     )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                         16
-                    )}.mp4"
+                    )}"
                 mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, videoQnPath, 2)
             }
             UserManager.publishParams["type"] == 3 -> {
@@ -906,7 +906,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                         "accid"
                     )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                         16
-                    )}.mp3"
+                    )}"
                 mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, audioQnPath, 3)
             }
         }
@@ -964,7 +964,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 "accid"
             )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                 16
-            )}.jpg"
+            )}"
         mPresenter.uploadFile(
             UserManager.mediaBeans.size,
             uploadCount + 1,

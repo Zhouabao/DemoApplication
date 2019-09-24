@@ -165,6 +165,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         setContentView(R.layout.activity_publish)
         initView()
 
+
+        //UriUtils.updateMedia(this, Environment.getExternalStorageDirectory().absolutePath)
+        //获取所有的照片信息
+        supportLoaderManager.initLoader(0, null, this)
 //        allPhotoAdapter.setNewData(getAllPhotoInfo(this))
         //获取所有的视频封面
         allVideoThumbAdapter.setNewData(getAllVideoInfos(this))
@@ -859,9 +863,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     override fun onResume() {
         super.onResume()
 
-        UriUtils.updateMedia(this, Environment.getExternalStorageDirectory().absolutePath)
-        //获取所有的照片信息
-        supportLoaderManager.initLoader(0, null, this)
         AMapManager.initLocation(this)
     }
 
@@ -1007,7 +1008,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                             "accid"
                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                             16
-                        )}.mp3"
+                        )}"
                     mPresenter.uploadFile(1, 1, mMediaRecorderHelper.currentFilePath, audioQnPath, 3)
                 } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) { //图片
                     //保存图片数据
@@ -1038,7 +1039,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                             "accid"
                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                             16
-                        )}.mp4"
+                        )}"
                     mPresenter.uploadFile(1, 1, pickedPhotos[0].filePath, videoQnPath, 2)
                 }
                 finish()
@@ -1147,7 +1148,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             //拍照返回
             if (requestCode == REQUEST_CODE_CAPTURE_RAW) {
                 //用于展示相册初始化界面
-
+                //插入全部照片的第二个 第一个为拍照
+                //UriUtils.updateMedia(this, imageFile?.absolutePath ?: "")
                 val imageBean = MediaBean(
                     imageFile?.length()?.toInt() ?: 0,
                     MediaBean.TYPE.IMAGE,
@@ -1161,9 +1163,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     height = ImageUtils.getSize(imageFile?.absolutePath ?: "")[0]
                 )
                 //插入选中照片的第一个
-                pickedPhotoAdapter.addData(0,imageBean)
-                //插入全部照片的第二个 第一个为拍照
-                UriUtils.updateMedia(this,imageBean.filePath)
+                pickedPhotoAdapter.addData(0, imageBean)
+
                 allPhotoAdapter.addData(1, imageBean)
                 pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
                     View.VISIBLE
@@ -1347,8 +1348,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 "accid"
             )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                 16
-            )}.jpg"
-        mPresenter.uploadFile(pickedPhotos.size, uploadCount + 1, pickedPhotos[uploadCount].filePath, imagePath, 1)
+            )}"
+        Log.d("uploadPictures", "${imagePath}")
+          mPresenter.uploadFile(pickedPhotos.size, uploadCount + 1, pickedPhotos[uploadCount].filePath, imagePath, 1)
     }
 
 

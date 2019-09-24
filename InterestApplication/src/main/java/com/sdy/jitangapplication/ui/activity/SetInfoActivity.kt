@@ -2,12 +2,20 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
+import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.TimeUtils
@@ -24,11 +32,15 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.presenter.SetInfoPresenter
 import com.sdy.jitangapplication.presenter.view.SetInfoView
+import com.sdy.jitangapplication.ui.adapter.UploadAvatorAdapter
+import com.sdy.jitangapplication.ui.dialog.UploadAvatorDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_set_info.*
+import kotlinx.android.synthetic.main.dialog_upload_avator.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -41,6 +53,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     companion object {
         const val USER_BIRTH_REQUEST_CODE = 1000
         const val USER_PROFILE_REQUEST_CODE = 1001
+        const val REQUEST_CODE_TAKE_PHOTO = 1
     }
 
     //请求参数
@@ -170,12 +183,41 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
+    private val uploadAvatorDialog by lazy { UploadAvatorDialog(this) }
+    private fun showAvatorDialog() {
+        uploadAvatorDialog!!.show()
+        val imgs = mutableListOf<Int>(
+            R.drawable.icon_pass_person,
+            R.drawable.icon_huangse_person,
+            R.drawable.icon_network_person,
+            R.drawable.icon_famous_person
+        )
+        val adapter = UploadAvatorAdapter()
+        adapter.setNewData(imgs)
+        uploadAvatorDialog.rvPersons.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        uploadAvatorDialog.rvPersons.adapter = adapter
+
+        uploadAvatorDialog.choosePhoto.onClick {
+            onTakePhoto()
+            uploadAvatorDialog.cancel()
+
+        }
+        uploadAvatorDialog.takePhoto.onClick {
+            takePhoto()
+            uploadAvatorDialog.cancel()
+        }
+        uploadAvatorDialog.cancel.onClick {
+            uploadAvatorDialog.cancel()
+        }
+
+    }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.userProfileBtn -> {
-                onTakePhoto()
                 userProfile = null
+//                showAvatorDialog()
+                onTakePhoto()
 //                startActivityForResult<TCCameraActivity>(USER_PROFILE_REQUEST_CODE)
             }
             //点击跳转到标签选择页
@@ -227,7 +269,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                                 "accid"
                             )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                 16
-                            )}.jpg"
+                            )}"
                         mPresenter.uploadProfile(path, userProfile.toString())
                         checkConfirmBtnEnable()
                     }
@@ -243,6 +285,18 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                     }
 
                 }
+                REQUEST_CODE_TAKE_PHOTO -> {
+                    if (imageFile != null) {
+                        GlideUtil.loadCircleImg(this, imageFile!!.absolutePath, userProfileBtn)
+                        userProfile =
+                            "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
+                                "accid"
+                            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                                16
+                            )}"
+                        mPresenter.uploadProfile(imageFile!!.absolutePath, userProfile.toString())
+                    }
+                }
             }
         }
     }
@@ -253,4 +307,48 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                 && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
                 && (sexGroup.checkedRadioButtonId == R.id.userSexWoman || sexGroup.checkedRadioButtonId == R.id.userSexMan)
     }
+
+
+    private var imageFile: File? = null     //拍照后保存的照片
+    private var imgUri: Uri? = null         //拍照后保存的照片的uri
+    private fun takePhoto() {
+        imageFile = createImageFile()
+        imageFile?.let {
+            var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {  //如果是7.0以上，使用FileProvider，否则会报错
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                imgUri = FileProvider.getUriForFile(this, PublishActivity.AUTHORITY, it)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri) //设置拍照后图片保存的位置
+            } else {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(it)) //设置拍照后图片保存的位置
+            }
+            intent.resolveActivity(packageManager)?.let {
+                startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO) //调起系统相机
+            }
+        }
+    }
+
+    /**
+     * 创建文件夹来保存照片
+     */
+    private fun createImageFile(): File? {
+        return try {
+            var rootFile = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+                "demoapplicaiton/camera"
+            )
+            if (!rootFile.exists())
+                rootFile.mkdirs()
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+            val fileName = "IMG_$timeStamp.jpg"
+            File(rootFile.absolutePath + File.separator + fileName)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+
 }

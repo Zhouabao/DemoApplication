@@ -401,7 +401,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 "accid"
             )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                 16
-            )}.jpg"
+            )}"
         mPresenter.uploadProfile(selectList[chooseCount].compressPath, userProfile.toString())
     }
 
