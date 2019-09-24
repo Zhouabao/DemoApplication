@@ -9,6 +9,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/ivSquare"
             android:layout_width="108dp"
+            android:background="@drawable/default_image"
             android:layout_height="108dp"
             >
 

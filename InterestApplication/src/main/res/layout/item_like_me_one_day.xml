@@ -13,6 +13,7 @@
             android:id="@+id/likeMeAvator"
             android:layout_width="180dp"
             android:layout_height="320dp"
+            android:background="@drawable/default_image"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
           />

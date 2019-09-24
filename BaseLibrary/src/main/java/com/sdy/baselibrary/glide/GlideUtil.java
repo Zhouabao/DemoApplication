@@ -39,8 +39,6 @@ public class GlideUtil {
         return new RequestOptions()
                 .fitCenter()
                 .priority(Priority.HIGH)
-                .placeholder(R.drawable.default_image)
-                .error(R.drawable.default_image)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
     }
@@ -115,8 +113,6 @@ public class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .priority(Priority.NORMAL)
-                .placeholder(R.drawable.default_image)
-                .error(R.drawable.default_image)
                 .thumbnail(scale)
                 .transform(multiTransformation)
                 .into(tartgetImg);
@@ -135,8 +131,8 @@ public class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .priority(Priority.NORMAL)
-                .placeholder(R.drawable.default_image)
-                .error(R.drawable.default_image)
+//                .placeholder(R.drawable.default_image)
+//                .error(R.drawable.default_image)
                 .thumbnail(0.5F)
                 .transform(multiTransformation)
                 .into(tartgetImg);
