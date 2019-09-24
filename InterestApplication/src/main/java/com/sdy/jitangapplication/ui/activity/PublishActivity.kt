@@ -128,6 +128,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
         if (data != null) {
+            allPhotoAdapter.data.clear()
             val count = data.count
             data.moveToFirst()
             if (count > 0) {
