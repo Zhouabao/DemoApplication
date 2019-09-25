@@ -138,6 +138,10 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                     if (UserManager.getHiCount() > 0) {
                         UserManager.saveHiCount(UserManager.getHiCount() - 1)
                     }
+                    try {
+                        Thread.sleep(1000)
+                    } catch (e: Exception) {
+                    }
                     EventBus.getDefault().post(NewMsgEvent())
 
                 }
@@ -174,6 +178,10 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             }
             NIMClient.getService(MsgService::class.java)
                 .clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
             EventBus.getDefault().post(NewMsgEvent())
 
             //发送通知告诉剩余时间，并且开始倒计时

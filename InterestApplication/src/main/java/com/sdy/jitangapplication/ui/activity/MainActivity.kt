@@ -2,18 +2,14 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.animation.Animator
 import android.app.Activity
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import androidx.core.app.NotificationCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +18,6 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.google.gson.Gson
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.kotlin.base.common.AppManager
@@ -34,14 +29,12 @@ import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
-import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.MainPresenter
@@ -100,7 +93,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         initView()
         //启动时间统计
-        mPresenter.startupRecord(UserManager.getToken(),UserManager.getAccid())
+        mPresenter.startupRecord(UserManager.getToken(), UserManager.getAccid())
 
         //如果定位信息没有就重新定位
         if (UserManager.getlatitude().toDouble() == 0.0 || UserManager.getlongtitude().toDouble() == 0.0)
@@ -560,7 +553,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onGetMSGEvent(event: GetNewMsgEvent) {
-        mPresenter.msgList(UserManager.getToken(),UserManager.getAccid())
+        mPresenter.msgList(UserManager.getToken(), UserManager.getAccid())
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -569,6 +562,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (unreadNum == 0) {
             UserManager.saveHiCount(0)
         }
+        Log.d(
+            "Mainactivity",
+            "getLikeCount = ${UserManager.getLikeCount()}, getHicount = ${UserManager.getHiCount()},  getSquareCount = ${UserManager.getSquareCount()},   unreadNum = ${unreadNum}"
+        )
         ivNewMsg.isVisible =
             (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
     }

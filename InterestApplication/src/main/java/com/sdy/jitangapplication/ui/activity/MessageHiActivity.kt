@@ -106,6 +106,10 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
                 UserManager.saveHiCount(UserManager.getHiCount() - 1)
             }
             NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
+            try {
+                Thread.sleep(1000)
+            } catch (e: Exception) {
+            }
             EventBus.getDefault().post(NewMsgEvent())
 
             //发送通知告诉剩余时间，并且开始倒计时
@@ -226,10 +230,12 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateHiEvent(event: UpdateHiEvent) {
+        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
         refreshLayout.resetNoMoreData()
         page = 1
         params["page"] = page
         adapter.data.clear()
+        adapter.notifyDataSetChanged()
         mPresenter.greatLists(params)
     }
 
