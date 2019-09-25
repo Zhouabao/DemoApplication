@@ -46,6 +46,8 @@ class WXEntryActivity : WXCallbackActivity() {
                 val code = (resp as SendAuth.Resp).code
                 Log.d("OkHttp", code)
                 loginWithWechat(code)
+            } else {
+                finish()
             }
         } else {
             super.onResp(resp)//一定要加super，实现我们的方法，否则不能回调
@@ -126,7 +128,15 @@ class WXEntryActivity : WXCallbackActivity() {
             //初始化消息提醒配置
             initNotificationConfig()
 
-            if (data != null && data!!.userinfo != null && data!!.userinfo!!.nickname.isNullOrEmpty()) {//个人信息没有填写
+
+            if (data == null
+                || (data != null && data!!.userinfo == null)
+                || (data != null && data!!.userinfo != null
+                        && (data!!.userinfo!!.nickname.isNullOrEmpty()
+                        || data!!.userinfo!!.avatar.isNullOrEmpty()
+                        || data!!.userinfo!!.gender == 0
+                        || data!!.userinfo!!.birth.isNullOrEmpty()))
+            ) {//个人信息没有填写
                 startActivity<SetInfoActivity>()
             } else {
                 UserManager.saveUserInfo(data!!)
