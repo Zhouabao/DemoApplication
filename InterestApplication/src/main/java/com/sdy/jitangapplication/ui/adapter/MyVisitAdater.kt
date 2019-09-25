@@ -23,32 +23,26 @@ class MyVisitAdater : BaseQuickAdapter<VisitorBean, BaseViewHolder>(R.layout.ite
 
     override fun convert(holder: BaseViewHolder, item: VisitorBean) {
         if (UserManager.isUserVip()) {
-            holder.itemView.visitImgHide.visibility = View.GONE
             holder.itemView.visitHideName.visibility = View.GONE
             holder.itemView.visitHideInfo.visibility = View.GONE
-
             GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.visitImg)
-            holder.itemView.visitName.text = "${item.nickname}"
-            holder.itemView.visitInfo.text = "${item.age}\t/\t${if (item.gender == 1) {
-                "男"
-            } else {
-                "女"
-            }}\t/\t${item.constellation}\t/\t${item.distance}"
-            holder.itemView.visitCount.text = "${item.visitcount}"
-            holder.itemView.visitVip.isVisible = (item.isvip ?: 0) == 1
-
-
         } else {
-            holder.itemView.visitImgHide.visibility = View.VISIBLE
             holder.itemView.visitHideName.visibility = View.VISIBLE
             holder.itemView.visitHideInfo.visibility = View.VISIBLE
-            holder.itemView.visitCount.text = "${item.visitcount}"
             Glide.with(mContext)
                 .load(item.avatar ?: "")
                 .apply(RequestOptions.bitmapTransform(BlurTransformation(25)))
                 .into(holder.itemView.visitImg)
-
         }
+
+        holder.itemView.visitName.text = "${item.nickname}"
+        holder.itemView.visitInfo.text = "${item.age}\t/\t${if (item.gender == 1) {
+            "男"
+        } else {
+            "女"
+        }}\t/\t${item.constellation}\t/\t${item.distance}"
+        holder.itemView.visitCount.text = "${item.visitcount}"
+        holder.itemView.visitVip.isVisible = (item.isvip ?: 0) == 1
 
     }
 
