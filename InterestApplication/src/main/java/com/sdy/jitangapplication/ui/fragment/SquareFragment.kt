@@ -212,7 +212,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
         adapter.setOnItemClickListener { _, view, position ->
             resetAudio()
-            SquareCommentDetailActivity.start(activity!!, adapter.data[position])
+            SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -224,7 +224,12 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 }
                 R.id.squareCommentBtn1 -> {
                     resetAudio()
-                    SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
+                    SquareCommentDetailActivity.start(
+                        activity!!,
+                        adapter.data[position],
+                        enterPosition = "comment",
+                        position = position
+                    )
                 }
                 R.id.squareDianzanBtn1 -> {
                     clickZan(position)
@@ -278,7 +283,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             adapter.data[position].isliked = 1
             adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
         }
-//        adapter.notifyItemChanged(position + adapter.headerLayoutCount)
+//        adapter.refreshNotifyItemChanged(position)
         adapter.notifyDataSetChanged()
         Handler().postDelayed({
             if (adapter.data[position].originalLike == adapter.data[position].isliked) {
@@ -309,27 +314,26 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             override fun onPlay(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
 //                adapter.notifyItemChanged(position)
-                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
+                adapter.refreshNotifyItemChanged(position)
 
             }
 
             override fun onPause(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
-//                adapter.notifyItemChanged(position)
-                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
+                adapter.refreshNotifyItemChanged(position)
             }
 
             override fun onStop(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
                 resetAudio()
-                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
+                adapter.refreshNotifyItemChanged(position)
             }
 
             override fun onError(position: Int) {
                 toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 resetAudio()
-                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
+                adapter.refreshNotifyItemChanged(position)
             }
 
             override fun onPrepared(position: Int) {
@@ -338,12 +342,12 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
             override fun onPreparing(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PREPARE
-                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
+                adapter.refreshNotifyItemChanged(position)
             }
 
             override fun onRelease(position: Int) {
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                adapter.notifyItemChanged(position + adapter.headerLayoutCount)
+                adapter.refreshNotifyItemChanged(position)
 
             }
 
@@ -352,7 +356,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     private fun resetAudio() {
         currPlayIndex = -1
-        //                adapter.notifyItemChanged(position)
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
             mediaPlayer = null
@@ -712,7 +715,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 super.onAutoComplete(url, *objects)
                 SwitchUtil.release()
                 GSYVideoManager.releaseAllVideos()
-                adapter.notifyItemChanged(pos)
+                adapter.refreshNotifyItemChanged(pos)
 
             }
         })
@@ -864,9 +867,24 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         }
     }
 
-    /**
-     * 重新上传
-     */
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshLikeEvent(event: RefreshLikeEvent) {
+        if (event.position != -1) {
+            if (adapter.data[event.position].isliked != event.isLike) {
+                if (event.isLike == 1) {
+                    adapter.data[event.position].like_cnt++
+                } else {
+                    adapter.data[event.position].like_cnt--
+                }
+                adapter.data[event.position].isliked = event.isLike
+                adapter.refreshNotifyItemChanged(event.position)
+            }
+        }
+    }
+
+
+    /*-------------------------------------- 重新上传-----------------------------*/
     private var uploadCount = 0
 
     private fun retryPublish() {
@@ -982,6 +1000,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             UserManager.keyList
         )
     }
+
 
 }
 

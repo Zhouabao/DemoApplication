@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
@@ -36,6 +37,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.event.UpdateHiCountEvent
 import com.sdy.jitangapplication.model.AllCommentBean
@@ -84,6 +86,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     private var squareBean: SquareBean? = null
 
+    //是否改变了点赞的状态
+    private var isChangeLike = false
+
     //通过标志进入的入口来决定是否弹起键盘
     private val enterPosition: String? by lazy { intent.getStringExtra("enterPosition") }
 
@@ -102,7 +107,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             context: Context,
             squareBean: SquareBean? = null,
             squareId: Int? = null,
-            enterPosition: String? = null
+            enterPosition: String? = null,
+            position: Int? = 0
         ) {
             context.startActivity<SquareCommentDetailActivity>(
                 if (squareBean != null) {
@@ -119,7 +125,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                     "enterPosition" to enterPosition
                 } else {
                     "" to ""
-                }
+                },
+                "position" to position
             )
         }
 
@@ -277,7 +284,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 //                    showCommentEt.hint = "『回复\t${adapter.data[position].replyed_nickname}：』"
 //                    KeyboardUtils.showSoftInput(showCommentEt)
                 }
-                R.id.commentDianzanBtn -> {
+                R.id.llCommentDianzanBtn -> {
                     mPresenter.getCommentLike(
                         hashMapOf(
                             "token" to UserManager.getToken(),
@@ -539,19 +546,17 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     override fun onGetSquareLikeResult(result: Boolean) {
         if (result) {
             squareBean!!.isliked = if (squareBean!!.isliked == 0) {
-                toast("点赞成功")
                 squareBean!!.like_cnt = squareBean!!.like_cnt?.plus(1)
                 1
             } else {
-                toast("取消点赞成功")
                 squareBean!!.like_cnt = squareBean!!.like_cnt?.minus(1)
                 0
             }
             squareDianzanBtn.text = "${squareBean!!.like_cnt}"
             squareDianzanBtnImg.setImageResource(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
-        } else {
-            toast("点赞失败，请重试")
+
+            EventBus.getDefault().post(RefreshLikeEvent(squareBean?.isliked ?: 0, intent.getIntExtra("position", -1)))
+//            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
 
@@ -562,8 +567,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
     override fun onAddCommentResult(data: BaseResp<Any?>?, result: Boolean) {
-        if (data != null)
-            toast(data.msg)
         if (result) {
             resetCommentEt()
             refreshLayout.autoRefresh()
@@ -572,7 +575,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     override fun onLikeCommentResult(data: BaseResp<Any?>, position: Int) {
-        toast(data.msg)
         adapter.data[position].isliked = if (adapter.data[position].isliked == 0) {
             adapter.data[position].like_count = adapter.data[position].like_count!!.plus(1)
             1
@@ -584,7 +586,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     override fun onDeleteCommentResult(data: BaseResp<Any?>, position: Int) {
-        toast(data.msg)
         if (data.msg == "删除成功!") {
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
@@ -816,6 +817,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onPause() {
         super.onPause()
+        Log.d(TAG1, "super.onPause()")
 //        squareUserVideo.onVideoPause()
         if (mediaPlayer != null)
             mediaPlayer!!.pausePlay()
@@ -824,6 +826,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onStart() {
         super.onStart()
+        Log.d(TAG1, "super.onStart()")
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
         if (!enterPosition.isNullOrEmpty()) {
             showCommentEt.isFocusable = true
@@ -833,6 +836,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG1, "super.onResume()")
         squareUserVideo.onVideoResume(false)
         if (mediaPlayer != null)
             mediaPlayer!!.resumePlay()
@@ -841,6 +845,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d(TAG1, "super.onDestroy()")
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
             mediaPlayer = null
