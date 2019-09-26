@@ -130,7 +130,6 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                     refreshMessages()
                 }
                 R.id.content -> {
-                    ChatActivity.start(this, adapter.data[position].contactId)
                     // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
                     // 通知中的 RecentContact 对象的未读数为0
                     NIMClient.getService(MsgService::class.java)
@@ -139,9 +138,10 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
                         UserManager.saveHiCount(UserManager.getHiCount() - 1)
                     }
                     try {
-                        Thread.sleep(1000)
+                        Thread.sleep(500)
                     } catch (e: Exception) {
                     }
+                    ChatActivity.start(this, adapter.data[position].contactId)
                     EventBus.getDefault().post(NewMsgEvent())
 
                 }
@@ -171,21 +171,22 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
             startActivity<MessageHiActivity>()
         }
         hiAdapter.setOnItemClickListener { _, view, position ->
+            //发送通知告诉剩余时间，并且开始倒计时
+            NIMClient.getService(MsgService::class.java).clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
+
             // 通知中的 RecentContact 对象的未读数为0
             //做招呼的已读状态更新
             if (UserManager.getHiCount() > 0) {
                 UserManager.saveHiCount(UserManager.getHiCount() - 1)
             }
-            NIMClient.getService(MsgService::class.java)
-                .clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
             try {
-                Thread.sleep(1000)
+                Thread.sleep(500)
             } catch (e: Exception) {
             }
+
+            ChatActivity.start(this, hiAdapter.data[position].accid ?: "")
             EventBus.getDefault().post(NewMsgEvent())
 
-            //发送通知告诉剩余时间，并且开始倒计时
-            ChatActivity.start(this, hiAdapter.data[position].accid ?: "")
         }
 
 //        hiAdapter.addData(mutableListOf(""))

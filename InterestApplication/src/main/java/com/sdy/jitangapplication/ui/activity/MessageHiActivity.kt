@@ -100,20 +100,22 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         adapter.emptyView.emptyTip.text = "还没有消息哦，不如主动出击？"
 
         adapter.setOnItemClickListener { _, view, position ->
+            //发送通知告诉剩余时间，并且开始倒计时
+            NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
+
             // 通知中的 RecentContact 对象的未读数为0
             //做招呼的已读状态更新
             if (UserManager.getHiCount() > 0) {
                 UserManager.saveHiCount(UserManager.getHiCount() - 1)
             }
-            NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
             try {
-                Thread.sleep(1000)
+                Thread.sleep(500)
             } catch (e: Exception) {
             }
+            ChatActivity.start(this, adapter.data[position].accid ?: "")
             EventBus.getDefault().post(NewMsgEvent())
 
-            //发送通知告诉剩余时间，并且开始倒计时
-            ChatActivity.start(this, adapter.data[position].accid ?: "")
+
         }
     }
 
