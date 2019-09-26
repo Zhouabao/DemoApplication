@@ -88,6 +88,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         hashMapOf(
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
+            "tag_id" to UserManager.getGlobalLabelId(),
             "target_accid" to targetAccid,
             "_sign" to "",
             "_timestamp" to System.currentTimeMillis()
