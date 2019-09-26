@@ -7,17 +7,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
+import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.BlockDataEvent
 import com.sdy.jitangapplication.model.Photos
 import com.sdy.jitangapplication.presenter.BlockSquarePresenter
 import com.sdy.jitangapplication.presenter.view.BlockSquareView
+import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
 import com.sdy.jitangapplication.ui.adapter.BlockAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import com.kotlin.base.ui.fragment.BaseMvpFragment
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import kotlinx.android.synthetic.main.fragment_block_square.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -62,7 +63,7 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
         blockAdapter.setEmptyView(R.layout.empty_layout_block, blockRv)
 
         blockAdapter.setOnItemClickListener { _, view, position ->
-
+            SquarePlayListDetailActivity.start(activity!!, blockAdapter.data[position].square_id)
         }
 
 //        stateview.retryBtn.onClick {
