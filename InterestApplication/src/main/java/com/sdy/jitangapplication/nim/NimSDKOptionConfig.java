@@ -217,7 +217,7 @@ public class NimSDKOptionConfig {
 
 
         // vivo推送
-//        config.vivoCertificateName = "DEMO_VIVO_PUSH";
+        config.vivoCertificateName = "JITANGVIVO";
 
         // oppo推送
         config.oppoAppId = "30189111";

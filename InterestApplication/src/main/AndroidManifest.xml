@@ -445,10 +445,10 @@
 
         <meta-data
                 android:name="com.vivo.push.api_key"
-                android:value="{你的vivo推送app key}"/>
+                android:value="2b7d9339-137d-416a-8736-fda86822aa6b"/>
         <meta-data
                 android:name="com.vivo.push.app_id"
-                android:value="{你的vivo推送的app id}"/>
+                android:value="15649"/>
 
 
         <!-- 小米配置的service和receiver -->
