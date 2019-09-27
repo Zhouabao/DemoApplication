@@ -11,7 +11,6 @@ import android.widget.RadioButton
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.size
-import androidx.core.widget.NestedScrollView
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,7 +58,6 @@ import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
 import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.BounceScrollView
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail1.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
@@ -128,26 +126,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         mPresenter.mView = this
         mPresenter.context = this
 
-        detailScrollView.setOnBounceListener {
+        backBtn.onClick {
             finish()
         }
-        //向下拉
-        detailScrollView.bounceType = BounceScrollView.ENABLED_TOP
 
-        //刚度 默认1200 值越大回弹的速度越快
-        springAnim.spring.stiffness = 100.0f
-        //阻尼 默认0.5 值越小，回弹之后来回的次数越多
-        springAnim.spring.dampingRatio = 0.80f
-        detailScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-            if (scrollY < 0) {
-                springAnim.start()
-            } else if (scrollY < -100) {
-                springAnim.cancel()
-                finish()
-            } else {
-                springAnim.cancel()
-            }
-        }
 
 
         //设置图片的宽度占满屏幕，宽高比9:16
@@ -299,7 +281,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (photos.size > 1) {
             for (i in 0 until photos.size) {
                 val width = ((ScreenUtils.getScreenWidth()
-                        - SizeUtils.dp2px(15F) * 4
+                        - SizeUtils.dp2px(15F) * 2
                         - (SizeUtils.dp2px(6F) * (photos.size - 1))) * 1F / photos.size).toInt()
                 val height = SizeUtils.dp2px(5F)
 
@@ -582,7 +564,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     override fun onDestroy() {
         super.onDestroy()
-        detailScrollView.destroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
