@@ -20,6 +20,10 @@ import com.blankj.utilcode.util.ToastUtils
 import com.google.gson.Gson
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseActivity.Companion.CONTENT
+import com.kotlin.base.ui.activity.BaseActivity.Companion.EMPTY
+import com.kotlin.base.ui.activity.BaseActivity.Companion.ERROR
+import com.kotlin.base.ui.activity.BaseActivity.Companion.LOADING
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -606,13 +610,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         setViewState(LOADING)
     }
 
-
-    companion object {
-        private const val LOADING = 0
-        private const val CONTENT = 1
-        private const val ERROR = 2
-        private const val EMPTY = 3
-    }
 
     private fun setViewState(state: Int) {
         when (state) {

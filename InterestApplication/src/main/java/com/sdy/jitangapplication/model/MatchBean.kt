@@ -13,7 +13,10 @@ data class MatchListBean(
     var lightningcnt: Int?,
     var isvip: Int = 0,    //是否会员 true是 false不是
     var isfaced: Int = 0,   //0未认证/认证不成功     1认证通过     2认证中
-    var countdown: Int = 0
+    var countdown: Int = 0,
+    var motion: Int = -1, //		1，强制替换 2，引导替换 3，引导添加相册 其他不管
+    var perfect_times: Int = 0,    //滑动x次数跳【完善相册】
+    var replace_times: Int = 0 //滑动x次数跳【替换头像】
 
 )
 
@@ -60,7 +63,7 @@ data class Square(
     var cover_url: String?
 //    var photo_json: String?,
 //    var video_json: String?
-):Serializable
+) : Serializable
 
 
 /**
@@ -68,7 +71,7 @@ data class Square(
  * status :1.喜欢成功  2.匹配成功
  * residue:剩余滑动次数
  */
-data class StatusBean(val status: Int, val residue: Int =0)
+data class StatusBean(val status: Int, val residue: Int = 0)
 
 /**
  * 用戶標簽
@@ -89,7 +92,7 @@ data class BlockListBean(
  * 用户照片
  */
 data class Photos(
-    val square_id: Int? = 0,
+    val square_id: Int = 0,
     var url: String?
 )
 

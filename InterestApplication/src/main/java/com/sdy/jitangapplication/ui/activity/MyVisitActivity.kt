@@ -84,6 +84,9 @@ class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefr
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (visitor.isNullOrEmpty()) {
             refreshLayout.setNoMoreData(true)
+            if (page == 1) {
+                lockToSee.isVisible = false
+            }
         }
         refreshLayout.finishLoadMore(true)
         refreshLayout.finishRefresh(true)

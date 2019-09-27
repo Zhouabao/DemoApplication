@@ -64,6 +64,7 @@ import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
+import top.zibin.luban.OnCompressListener
 import java.io.File
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -152,11 +153,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     )
                 } while (data.moveToNext())
             }
+
         }
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
-        supportLoaderManager.destroyLoader(0)
+        LoaderManager.getInstance(this).destroyLoader(0)
     }
 
 
@@ -164,11 +166,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_publish)
         initView()
-
-
-        //UriUtils.updateMedia(this, Environment.getExternalStorageDirectory().absolutePath)
         //获取所有的照片信息
-        supportLoaderManager.initLoader(0, null, this)
+        LoaderManager.getInstance(this).initLoader(0, null, this)
 //        allPhotoAdapter.setNewData(getAllPhotoInfo(this))
         //获取所有的视频封面
         allVideoThumbAdapter.setNewData(getAllVideoInfos(this))
@@ -317,7 +316,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     private var videoPath: String = ""
     private var audioPath: String = ""
 
-    private val allPhotoAdapter by lazy { ChoosePhotosAdapter(0, mutableListOf<MediaBean>()) } //全部照片
+    private val allPhotoAdapter by lazy { ChoosePhotosAdapter(0, pickedPhotos) } //全部照片
     private val pickedPhotoAdapter by lazy { ChoosePhotosAdapter(1) }//选中的封面
     private val allVideoThumbAdapter by lazy { ChoosePhotosAdapter(2) }//全部视频封面
     private var videoCheckIndex = -1
@@ -1011,18 +1010,53 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         )}"
                     mPresenter.uploadFile(1, 1, mMediaRecorderHelper.currentFilePath, audioQnPath, 3)
                 } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) { //图片
-                    //保存图片数据
+                    //压缩图片并保存图片数据
+                    var pickedPaths = mutableListOf<String>()
+                    var index = 0
                     for (photo in pickedPhotos) {
-                        UserManager.mediaBeans.add(
-                            MediaParamBean(
-                                url = photo.filePath,
-                                width = photo.width,
-                                height = photo.height
-                            )
-                        )
+                        pickedPaths.add(photo.filePath)
                     }
+                    UriUtils.getLubanBuilder(this)
+                        .load(pickedPaths)
+                        .setCompressListener(object : OnCompressListener {
+                            override fun onSuccess(file: File?) {
+                                if (file != null) {
+                                    Log.d(TAG1, "original[$index] = ${pickedPhotos[index].filePath}")
+                                    Log.d(TAG1, "crop[$index] = ${file.absolutePath}")
+                                    UserManager.mediaBeans.add(
+                                        MediaParamBean(
+                                            url = file.absolutePath,
+                                            width = pickedPhotos[index].width,
+                                            height = pickedPhotos[index].height
+                                        )
+                                    )
+                                    index++
+                                }
+                                if (index == pickedPhotos.size)
+                                    uploadPictures()
+                            }
 
-                    uploadPictures()
+                            override fun onError(e: Throwable?) {
+                                for (photo in pickedPhotos) {
+                                    UserManager.mediaBeans.add(
+                                        MediaParamBean(
+                                            url = photo.filePath,
+                                            width = photo.width,
+                                            height = photo.height
+                                        )
+                                    )
+                                }
+
+                                uploadPictures()
+
+                            }
+
+                            override fun onStart() {
+                            }
+
+                        })
+                        .launch()
+
                 } else {//视频
                     //保存视频数据
                     UserManager.mediaBeans.add(
@@ -1350,7 +1384,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 16
             )}"
         Log.d("uploadPictures", "${imagePath}")
-          mPresenter.uploadFile(pickedPhotos.size, uploadCount + 1, pickedPhotos[uploadCount].filePath, imagePath, 1)
+        mPresenter.uploadFile(pickedPhotos.size, uploadCount + 1, pickedPhotos[uploadCount].filePath, imagePath, 1)
     }
 
 

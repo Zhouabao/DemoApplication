@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
-import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nim.uikit.api.NimUIKit
@@ -51,7 +50,7 @@ import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_message_list.*
-import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.headerview_hi.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -94,7 +93,8 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         }
 
 
-        stateview.retryBtn.onClick {
+        retryBtn.onClick {
+            setViewState(LOADING)
             //获取最近消息
             mPresenter.messageCensus(params)
         }
@@ -315,7 +315,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 
     //获取最近会话（但是要获取最近的联系人列表）
     override fun onGetRecentContactResults(result: MutableList<RecentContact>) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+        setViewState(CONTENT)
 
         for (loadedRecent in result) {
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
@@ -599,8 +599,8 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     }
 
     override fun onError(text: String) {
-        stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-        stateview.errorMsg.text = CommonFunction.getErrorMsg(this)
+        setViewState(ERROR)
+        errorMsg.text = CommonFunction.getErrorMsg(this)
 
     }
 
@@ -619,4 +619,30 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 //            service.observeMessageReceipt(messageReceiptObserver, register)
 //        }
 //    }
+
+
+
+
+    private fun setViewState(state: Int) {
+        when (state) {
+            LOADING -> {
+                loadingLayout.isVisible = true
+                messageListRv.isVisible = false
+                errorLayout.isVisible = false
+            }
+            CONTENT -> {
+                messageListRv.isVisible = true
+                loadingLayout.isVisible = false
+                errorLayout.isVisible = false
+            }
+            ERROR -> {
+                errorLayout.isVisible = true
+                messageListRv.isVisible = false
+                loadingLayout.isVisible = false
+            }
+        }
+
+    }
+
+
 }

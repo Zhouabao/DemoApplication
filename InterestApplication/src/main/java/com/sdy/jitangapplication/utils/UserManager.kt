@@ -21,6 +21,13 @@ import java.util.*
  *    version: 1.0
  */
 object UserManager {
+    var showVerifyDialogTime = 0
+    var motion = -1//1，强制替换 2，引导替换 3，引导添加相册 其他不管
+    var slide_times = 0
+    var perfect_times = 0 //滑动x次数跳【完善相册】
+    var replace_times = 0 //滑动x次数跳【替换头像】
+
+
     //手动取消上传
     var cancelUpload = false
     //帮助取消上传的handler
@@ -37,6 +44,25 @@ object UserManager {
     //发布的对象keylist
     var keyList: Array<String?>? = arrayOfNulls<String>(10)
 
+    //是否已经强制替换过头像
+    fun saveForceChangeAvator(isForceChangeAvator: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isForceChangeAvator", isForceChangeAvator)
+    }
+
+    fun isForceChangeAvator(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isForceChangeAvator", false)
+    }
+
+    //是否需要强制替换头像
+    fun saveNeedChangeAvator(isNeedChangeAvator: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isNeedChangeAvator", isNeedChangeAvator)
+    }
+
+    fun isNeedChangeAvator(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isNeedChangeAvator", false)
+    }
+
+
     fun clearPublishParams() {
         publishState = 0
         publishParams.clear()
@@ -45,6 +71,16 @@ object UserManager {
         checkIds = arrayOfNulls(10)
         cancelUpload = false
     }
+
+
+    fun cleanVerifyData() {
+        motion = -1
+        replace_times = 0
+        perfect_times = 0
+        slide_times = 0
+        showVerifyDialogTime = 0
+    }
+
 
     /**
      * 跳至登录界面
@@ -298,6 +334,8 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("likeCount")
         SPUtils.getInstance(Constants.SPNAME).remove("squareCount")
         SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
 
         //位置信息
         SPUtils.getInstance(Constants.SPNAME).remove("latitude")
@@ -319,6 +357,9 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("sensitive")
         //草稿箱清除
         SPUtils.getInstance(Constants.SPNAME).remove("draft")
+
+        clearPublishParams()
+        cleanVerifyData()
     }
 
 

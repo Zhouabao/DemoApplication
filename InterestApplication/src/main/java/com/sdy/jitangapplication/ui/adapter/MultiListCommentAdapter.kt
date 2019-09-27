@@ -51,7 +51,7 @@ class MultiListCommentAdapter(var context: Context, data: MutableList<CommentBea
                             .append("${item.reply_content}")
                             .create()
                 }
-                holder.addOnClickListener(R.id.commentDianzanBtn)
+                holder.addOnClickListener(R.id.llCommentDianzanBtn)
                 holder.addOnClickListener(R.id.commentUser)
                 GlideUtil.loadAvatorImg(context, item.avatar ?: "", holder.itemView.commentUser)
                 holder.itemView.commentUserName.text = item.nickname ?: ""

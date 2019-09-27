@@ -18,13 +18,12 @@ import kotlinx.android.synthetic.main.item_block_square.view.*
  */
 class BlockAdapter : BaseQuickAdapter<Photos, BaseViewHolder>(R.layout.item_block_square) {
 
-    //?imageView2/1/w/${SizeUtils.px2dp(layoutParams.width.toFloat()) * 2}/h/${SizeUtils.px2dp(layoutParams.height.toFloat()) * 2}
     override fun convert(holder: BaseViewHolder, item: Photos) {
         val params = holder.itemView.ivSquare.layoutParams as RelativeLayout.LayoutParams
         params.width = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
         params.height = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
         holder.itemView.ivSquare.layoutParams = params
-        GlideUtil.loadRoundImgCenterCrop(mContext, "${item.url}?imageView2/1/w/${SizeUtils.px2dp(params.width.toFloat()) * 2}/h/${SizeUtils.px2dp(params.height.toFloat()) * 2}" , holder.itemView.ivSquare, SizeUtils.dp2px(5F))
+        GlideUtil.loadRoundImgCenterCrop(mContext, item.url ?: "", holder.itemView.ivSquare, SizeUtils.dp2px(5F))
     }
 
 }

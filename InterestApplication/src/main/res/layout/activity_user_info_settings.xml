@@ -55,8 +55,41 @@
                     android:layout_width="match_parent"
                     >
 
+                <LinearLayout
+                        android:id="@+id/llGuide"
+                        android:visibility="gone"
+                        android:background="@drawable/shape_rectangle_enable_btn"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp">
+
+                    <TextView
+                            android:id="@+id/guideContent"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:layout_gravity="center"
+                            android:text="上传真实头像获取更多配对机会"
+                            android:textColor="#ffffffff"
+                            android:textSize="14sp"
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <ImageView
+                            android:id="@+id/guideDelete"
+                            android:layout_gravity="center_vertical|right"
+                            android:src="@drawable/icon_delete"
+                            android:layout_width="50dp"
+                            android:scaleType="centerInside"
+                            android:layout_height="match_parent"/>
+                </LinearLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/userPhotosRv"
+                        android:layout_below="@id/llGuide"
                         android:nestedScrollingEnabled="false"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="15dp"
@@ -131,7 +164,6 @@
                             android:drawablePadding="10dp"
                             android:gravity="center_vertical|right"
                             android:layout_marginTop="20dp"
-                            tools:text="随心所向"
                             android:layout_marginLeft="20dp"
                             android:textColor="#FF9B9B9B"
                             android:textSize="16sp"
@@ -140,7 +172,8 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintLeft_toRightOf="@id/tsign"
                             app:layout_constraintRight_toRightOf="@id/userNickName"
-                            app:layout_constraintTop_toBottomOf="@id/userNickName"/>
+                            app:layout_constraintTop_toBottomOf="@id/userNickName"
+                            tools:text="随心所向"/>
 
 
                     <TextView
@@ -207,8 +240,8 @@
 
 
                     <TextView
-                            android:visibility="gone"
                             android:id="@+id/userJob"
+                            android:visibility="gone"
                             android:drawablePadding="10dp"
                             android:gravity="center"
                             android:layout_marginTop="20dp"

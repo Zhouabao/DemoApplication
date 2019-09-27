@@ -31,10 +31,7 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.ShakeEvent
-import com.sdy.jitangapplication.event.UpdateHiCountEvent
-import com.sdy.jitangapplication.event.UpdateLabelEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
@@ -49,6 +46,7 @@ import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.GotoVerifyDialog
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_match1.*
@@ -270,6 +268,22 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             UserManager.saveUserVip(matchBeans.isvip)
             //保存认证信息
             UserManager.saveUserVerify(matchBeans.isfaced)
+            //保存引导次数
+            UserManager.motion = matchBeans.motion
+            when (matchBeans.motion) {
+                GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
+                    EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
+                }
+                GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> {
+                    UserManager.replace_times = matchBeans.replace_times
+                }
+                GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
+                    UserManager.perfect_times = matchBeans.perfect_times
+                }
+                else -> UserManager.slide_times = -1
+            }
+
+
             tvLeftChatTime.text = "${UserManager.getLightingCount()}"
 
         } else {
@@ -570,15 +584,32 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     //此时已经飞出去了
     //todo 放开注释
     override fun onCardSwiped(direction: Direction?) {
+        if (UserManager.slide_times != -1) {
+            UserManager.slide_times++
+            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times) { //完善相册
+                if (UserManager.showVerifyDialogTime < 5) {
+                    EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
+                    UserManager.showVerifyDialogTime++
+                    UserManager.slide_times = 0
+                } else {
+                    UserManager.cleanVerifyData()
+                }
+            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times) {//引导替换
+                if (UserManager.showVerifyDialogTime < 5) {
+                    EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
+                    UserManager.showVerifyDialogTime++
+                    UserManager.slide_times = 0
+                } else {
+                    UserManager.cleanVerifyData()
+                }
+            }
+        }
+
         resetAnimation()
         if (direction == Direction.Left) {//左滑不喜欢
-//            toast("不喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
-
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
-//            toast("喜欢${matchUserAdapter.data[manager.topPosition - 1].nickname}")
-//
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
             mPresenter.likeUser(params)
         } else if (direction == Direction.Top) {//上滑打招呼

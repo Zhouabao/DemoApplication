@@ -1,7 +1,9 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
@@ -19,6 +21,7 @@ import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.presenter.VerifyCodePresenter
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
+import com.sdy.jitangapplication.receiver.SMSBroadcastReceiver
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_verify_code.*
 import org.jetbrains.anko.startActivity
@@ -28,11 +31,14 @@ import org.jetbrains.anko.toast
 /**
  * 填写验证码界面
  */
-class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeView, View.OnClickListener {
-
+class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeView, View.OnClickListener,
+    SMSBroadcastReceiver.OnReceivedSMSListener {
 
     private lateinit var verifyCode: String
     private val phone by lazy { intent.getStringExtra("phone") }
+    //监听短信的广播
+//    private val mSMSBroadcastReceiver = SMSBroadcastReceiver(this)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +47,11 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
     }
 
     private fun initView() {
+        // 注册广播
+//        val intentFilter = IntentFilter(SMSBroadcastReceiver.SMS_RECEIVED_ACTION)
+//        intentFilter.priority = Integer.MAX_VALUE
+//        registerReceiver(mSMSBroadcastReceiver, intentFilter)
+
         mPresenter = VerifyCodePresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -61,6 +72,10 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
             }
         }
 
+    }
+
+    override fun onReceived(message: String) {
+        Log.d("SMSBroadcastReceiver", message)
     }
 
 
@@ -123,7 +138,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
 
     override fun onConfirmVerifyCode(data: LoginBean, isRight: Boolean) {
         onChangeVerifyButtonStatus(true)
-         if (isRight) {
+        if (isRight) {
             this.data = data
             mPresenter.loginIM(LoginInfo(data.accid, data.extra_data?.im_token))
 
@@ -191,5 +206,9 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
 
     override fun onError(text: String) {
         ToastUtils.showShort(text)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

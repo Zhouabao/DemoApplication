@@ -112,7 +112,7 @@ public class GlideUtil {
         MultiTransformation multiTransformation = new MultiTransformation(new CenterInside(), new RoundedCornersTransformation(radius, 0));
         Glide.with(context)
                 .load(url)
-                .priority(Priority.NORMAL)
+                .priority(Priority.HIGH)
                 .thumbnail(scale)
                 .transform(multiTransformation)
                 .into(tartgetImg);

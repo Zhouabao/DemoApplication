@@ -19,6 +19,10 @@ class NotifyEvent(var position: Int)
 class RefreshEvent(val refresh: Boolean)
 
 
+//刷新点赞等事件
+class RefreshLikeEvent(val isLike: Int,val position: Int)
+
+
 //刷新事件  local 是否是本地
 class RefreshSquareEvent(val refresh: Boolean, var from: String = "")
 

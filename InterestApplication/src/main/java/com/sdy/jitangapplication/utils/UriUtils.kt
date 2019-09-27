@@ -10,8 +10,11 @@ import android.os.Build.VERSION.SDK_INT
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.util.Log
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.ContactInfo
 import com.sdy.jitangapplication.model.MediaBean
+import com.sdy.jitangapplication.nim.NimSDKOptionConfig
+import top.zibin.luban.Luban
 import java.io.File
 
 /**
@@ -21,6 +24,20 @@ import java.io.File
  *    version: 1.0
  */
 object UriUtils {
+
+    /**
+     * 获取文件格式名
+     */
+    fun getFormatName(fileName: String): String {
+        var fileName = fileName
+        //去掉首尾的空格
+        fileName = fileName.trim { it <= ' ' }
+        val s = fileName.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        return if (s.size >= 2) {
+            s[s.size - 1]
+        } else ""
+    }
+
 
     fun getDuration(path: String, context: Context): Int {
         var duration = 0
@@ -313,6 +330,24 @@ object UriUtils {
 
     } else {//Andrtoid4.4以下版本
         context.sendBroadcast(Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.fromFile((File(path).parentFile))))
+    }
+
+
+    fun getLubanBuilder(context: Context): Luban.Builder {
+        return Luban.with(context)
+            .filter {
+                !(it.isEmpty() || it.toLowerCase().endsWith(".gif"))
+            }
+            .ignoreBy(100)
+            .setTargetDir(getCacheDir(context))
+    }
+
+    /**
+     * 设置缓存文件夹地址
+     */
+    fun getCacheDir(context: Context): String {
+        return NimSDKOptionConfig.getAppCacheDir(context).plus(Constants.CACHE_DIR)
+
     }
 
 

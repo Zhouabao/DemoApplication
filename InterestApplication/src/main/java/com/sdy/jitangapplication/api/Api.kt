@@ -25,6 +25,14 @@ interface Api {
 
 
     /**
+     * 人工审核
+     * 1 人工认证 2重传头像或则取消
+     */
+    @POST("member_info/humanAduit/v1.json${Constants.END_BASE_URL}")
+    fun humanAduit(@Query("token") token: String, @Query("accid") accid: String, @Query("type") type: Int): Observable<BaseResp<Any?>>
+
+
+    /**
      * 发送验证码
      */
     @POST("Open_Api/SendSms${Constants.END_BASE_URL}")
@@ -461,15 +469,12 @@ interface Api {
     fun myShieldingList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<BlackBean>?>>
 
 
-
     /**
      * 屏蔽通讯录
      */
     @FormUrlEncoded
     @POST("StrageBlock/blockedAddressBook${Constants.END_BASE_URL}")
     fun blockedAddressBook(@Field("token") token: String, @Field("accid") accid: String, @Field("content[]") content: Array<String?>? = null): Observable<BaseResp<Any?>>
-
-
 
 
     /**

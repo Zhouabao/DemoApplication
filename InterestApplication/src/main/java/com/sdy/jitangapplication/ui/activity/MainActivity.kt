@@ -48,6 +48,7 @@ import com.sdy.jitangapplication.ui.fragment.MatchFragment1
 import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.GotoVerifyDialog
 import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.umeng.socialize.UMShareAPI
@@ -83,6 +84,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val titles = arrayOf("匹配", "发现")
 
     private val guideDialog by lazy { GuideDialog(this) }
+
+    private var gotoVerifyDialog: GotoVerifyDialog? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -316,6 +319,17 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (KeyboardUtils.isSoftInputVisible(this))
             KeyboardUtils.hideSoftInput(this)
         parseIntents()
+
+        if (UserManager.isNeedChangeAvator())
+            if (!UserManager.isForceChangeAvator()) {
+                showGotoVerifyDialog(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
+            } else {
+                if (gotoVerifyDialog != null && gotoVerifyDialog!!.isShowing) {
+                    gotoVerifyDialog!!.cancel()
+                }
+                UserManager.saveNeedChangeAvator(false)
+                UserManager.saveForceChangeAvator(true)
+            }
     }
 
     override fun onDestroy() {
@@ -346,6 +360,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             firstClickTime = secondTime
         } else {
             AppManager.instance.finishAllActivity()
+            System.exit(0)//正常退出
 //            AppManager.instance.exitApp(this)
         }
 
@@ -569,5 +584,65 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         ivNewMsg.isVisible =
             (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
     }
+
+
+    /**
+     * 重新认证事件总线
+     */
+
+//    const val TYPE_VERIFY = 4//认证失败去认证
+//    const val TYPE_CHANGE_AVATOR_NOT_PASS = 5//头像违规替换
+//    const val TYPE_CHANGE_AVATOR_PASS = 6//头像通过,但是不是真人
+//    const val TYPE_CHANGE_ABLUM = 7//完善相册
+
+    private fun showGotoVerifyDialog(type: Int) {
+        var content = ""
+        var title = ""
+        var confirmText = ""
+        when (type) {
+            GotoVerifyDialog.TYPE_VERIFY -> { //认证不通过
+                content = "尊敬的用户，您当前头像无法通过人脸比对，请变更头像或进入人工审核流程。"
+                title = "认证审核不通过"
+            }
+            GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//头像违规
+                content = "尊敬的用户，您上传的头像未使用真实照片或涉及违规，替换真实照片前您将持续对其他不可见"
+                title = "请替换头像"
+                confirmText = "修改头像"
+
+            }
+            GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//完善相册
+                content = "完善相册会使你的信息更多在匹配页展示\n现在就去完善你的相册吧！"
+                title = "完善相册"
+                confirmText = "完善相册"
+
+            }
+            GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> { //真实头像替换
+                content = "当前的匹配率偏低，替换真实头像会使匹配率提高一倍，获得更多的用户好感。"
+                title = "获得更多匹配"
+                confirmText = "修改头像"
+            }
+        }
+        if (gotoVerifyDialog == null)
+            gotoVerifyDialog = GotoVerifyDialog.Builder(AppManager.instance.currentActivity())
+                .setTitle(title)
+                .setContent(content)
+                .setConfirmText(confirmText)
+                .setIcon(UserManager.getAvator())
+                .setIconVisible(true)
+                .setType(type)
+                .setCancelIconIsVisibility(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
+                .setOnCancelable(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
+                .create()
+        gotoVerifyDialog?.show()
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onReVerifyEvent(event: ReVerifyEvent) {
+        if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
+            UserManager.saveNeedChangeAvator(true)
+        showGotoVerifyDialog(event.type)
+    }
+
 
 }

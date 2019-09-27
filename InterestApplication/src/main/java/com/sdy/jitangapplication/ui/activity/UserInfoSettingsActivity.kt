@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.RelativeLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -36,8 +37,10 @@ import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.adapter.UserPhotoAdapter
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
+import com.sdy.jitangapplication.widgets.GotoVerifyDialog
 import com.sdy.jitangapplication.widgets.OnRecyclerItemClickListener
 import kotlinx.android.synthetic.main.activity_user_center.btnBack
 import kotlinx.android.synthetic.main.activity_user_info_settings.*
@@ -45,6 +48,8 @@ import kotlinx.android.synthetic.main.dialog_delete_photo.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
+import top.zibin.luban.OnCompressListener
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -72,6 +77,34 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     }
 
     private fun initView() {
+        when (intent.getIntExtra("type", -1)) {
+            GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> {
+                llGuide.isVisible = true
+                guideContent.text = "上传真实头像获取更多配对机会"
+                guideDelete.onClick {
+                    llGuide.isVisible = false
+                }
+            }
+            GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
+                llGuide.isVisible = true
+                guideContent.text = "请替换当前头像"
+                guideDelete.onClick {
+                    llGuide.isVisible = false
+                }
+            }
+            GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
+                llGuide.isVisible = true
+                guideContent.text = "完善相册，获取更多展示"
+                guideDelete.onClick {
+                    llGuide.isVisible = false
+                }
+            }
+            else -> {
+                llGuide.isVisible = false
+            }
+        }
+
+
         btnBack.setOnClickListener(this)
         userJob.setOnClickListener(this)
         userNickName.setOnClickListener(this)
@@ -193,14 +226,14 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             isChange = true
             val myPhotoBean0 = adapter.data[0]
             val myPhotoBeanP = adapter.data[position]
-            photos.set(0, myPhotoBeanP)
-            photos.set(position, myPhotoBean0)
-            adapter.data.set(0, myPhotoBeanP)
-            adapter.data.set(position, myPhotoBean0)
+            photos[0] = myPhotoBeanP
+            photos[position] = myPhotoBean0
+            adapter.data[0] = myPhotoBeanP
+            adapter.data[position] = myPhotoBean0
             adapter.notifyDataSetChanged()
 //            Collections.swap(photos, position, 0)
 //            Collections.swap(adapter.data, position, 0)
-
+            updatePhotos()
             dialog.dismiss()
         }
 
@@ -298,11 +331,13 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             .previewImage(true)
             .isCamera(true)
             .enableCrop(true)
+            .compressSavePath(UriUtils.getCacheDir(this))
+            .compress(false)
             .scaleEnabled(true)
             .showCropFrame(true)
             .rotateEnabled(false)
             .withAspectRatio(9, 16)
-            .compress(true)
+            .compressSavePath(UriUtils.getCacheDir(this))
             .openClickSound(false)
             .forResult(PictureConfig.CHOOSE_REQUEST)
     }
@@ -402,7 +437,29 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                 16
             )}"
-        mPresenter.uploadProfile(selectList[chooseCount].compressPath, userProfile.toString())
+        UriUtils.getLubanBuilder(this)
+            .load(selectList[chooseCount].cutPath)
+            .setCompressListener(object : OnCompressListener {
+                override fun onSuccess(file: File?) {
+                    mPresenter.uploadProfile(
+                        if (file != null) {
+                            file.absolutePath
+                        } else {
+                            selectList[chooseCount].compressPath
+                        }, userProfile
+                    )
+                }
+
+                override fun onError(e: Throwable?) {
+                    mPresenter.uploadProfile(selectList[chooseCount].compressPath, userProfile)
+                }
+
+                override fun onStart() {
+                }
+
+            })
+            .launch()
+
     }
 
 
@@ -428,6 +485,9 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     }
 
     override fun onBackPressed() {
+        if (UserManager.getAvator() != adapter.domain.plus(adapter.data[0].url)) {
+            UserManager.saveForceChangeAvator(true)
+        }
         super.onBackPressed()
 //        if (isChange) {
 //            val photos = arrayOfNulls<String>(10)
@@ -441,5 +501,12 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 //            finish()
 //        }
 
+    }
+
+    override fun scrollToFinishActivity() {
+        if (UserManager.getAvator() != adapter.domain.plus(adapter.data[0].url)) {
+            UserManager.saveForceChangeAvator(true)
+        }
+        super.scrollToFinishActivity()
     }
 }

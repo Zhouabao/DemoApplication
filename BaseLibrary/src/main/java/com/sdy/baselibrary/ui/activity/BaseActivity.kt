@@ -16,6 +16,14 @@ import org.jetbrains.anko.find
     Activity基类，业务无关
  */
 open class BaseActivity : SwipeBackActivity() {
+    public val TAG1 = this::class.java.simpleName
+
+    companion object {
+        public const val LOADING = 0
+        public const val CONTENT = 1
+        public const val ERROR = 2
+        public const val EMPTY = 3
+    }
 
     private lateinit var mSwipeBackLayout: SwipeBackLayout
 

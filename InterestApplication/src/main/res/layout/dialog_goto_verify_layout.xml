@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@drawable/shape_rectangle_gray_white_15dp"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/icon"
+            android:src="@drawable/icon_default_avator"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true"
+            android:visibility="visible"
+            android:layout_width="106dp"
+            android:layout_height="106dp"/>
+
+    <ImageView
+            android:id="@+id/iconWarn"
+            android:layout_marginTop="126dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/icon_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:id="@+id/title"
+            android:layout_below="@id/icon"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:layout_marginTop="30dp"
+            android:text="退出登录"
+            android:textColor="#ff3f3f3f"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:id="@+id/message"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.4"
+            android:text="尊敬的用户，您上传的头像未使用真实照片或涉及违规，替换真实照片前您将持续对其他不可见"
+            android:textColor="#ff333333"
+            android:textSize="14sp"
+            />
+
+    <View
+            android:id="@+id/view"
+            android:layout_below="@id/message"
+            android:layout_marginTop="23dp"
+            android:background="@color/colorDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    <LinearLayout
+            android:id="@+id/llVerify"
+            android:layout_below="@id/view"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/changeAvator"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:text="修改头像"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="#ff333333"
+                android:textSize="18sp"
+                />
+
+        <View
+                android:background="@color/colorDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+        <TextView
+                android:id="@+id/gotoHumanVerify"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:text="进入人工审核"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="#ff333333"
+                android:textSize="18sp"
+                />
+
+        <View
+                android:background="@color/colorDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+        <TextView
+                android:id="@+id/cancelVerify"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="取消审核"
+                android:textColor="#ff9c9c9c"
+                android:textSize="18sp"
+                />
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/llConfirmOrCancel"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_below="@id/view"
+            android:layout_height="53dp">
+
+        <TextView
+                android:id="@+id/cancel"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="取消"
+                android:textStyle="normal"
+                android:textColor="#ff9c9c9c"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+        <View
+                android:id="@+id/cancelView"
+                android:layout_width="1dp"
+                android:background="@color/colorDivider"
+                android:layout_height="match_parent"/>
+
+        <TextView
+                android:id="@+id/confirm"
+                android:textColor="#ff333333"
+                android:textSize="18sp"
+                android:text="确认"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                />
+
+    </LinearLayout>
+
+</RelativeLayout>
+

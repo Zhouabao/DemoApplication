@@ -113,6 +113,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
                                 "accid" to UserManager.getAccid(),
                                 "token" to UserManager.getToken(),
                                 "target_accid" to (adapter.data[position].accid ?: "")
+//                                "tag_id" to (adapter.data[position].tag_title ?: "")
                             )
                         )
                     }

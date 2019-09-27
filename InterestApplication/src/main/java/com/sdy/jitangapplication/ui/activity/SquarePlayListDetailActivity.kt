@@ -43,12 +43,12 @@ import org.jetbrains.anko.toast
 
 /**
  * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
- *    from 确定内容的来源地  1好友列表 2广场列表 3聊天跳转
+ *    from 确定内容的来源地  1好友列表 2广场列表 3广场消息
  */
 public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
     View.OnClickListener {
 
-    //确定内容的来源地  1好友列表 2广场列表 3聊天跳转
+    //确定内容的来源地  1好友列表 2广场列表 3广场消息
     private var from = -1
     private val TAG = SquarePlayListDetailActivity::class.java.simpleName
 
@@ -146,7 +146,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             rvNext.visibility = View.GONE
             adapter.addData(squareBean)
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-        } else if (intent.getIntExtra("id", -1) != -1) {//好友聊天
+        } else if (intent.getIntExtra("id", -1) != -1) {//广场消息
             from = 3
             rvLast.visibility = View.GONE
             rvNext.visibility = View.GONE

@@ -39,7 +39,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
-        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "umeng"]
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Umeng"]
         manifestPlaceholders = [qqappid: "1109743471"]
 //        manifestPlaceholders = [qqappid: 'com.sdy.jitangapplication']
 
@@ -182,7 +182,6 @@ dependencies {
     //带索引的通讯录
     implementation 'com.github.mcxtzhang:SuspensionIndexBar:V1.0.0'
 //    compile 'com.github.nanchen2251:WaveSideBar:1.0.6'
-
     // 添加依赖。注意，版本号必须一致。
     // 基础功能 (必需)
 //    implementation 'com.netease.nimlib:basesdk:6.1.1'
@@ -214,8 +213,9 @@ dependencies {
     implementation(name: 'alipaySdk-15.6.5-20190718211159-noUtdid', ext: 'aar')
 
     //查看长图
-
-
+    implementation "com.github.chrisbanes.photoview:library:1.2.4"
+    //鲁班压缩
+    implementation 'top.zibin:Luban:1.1.8'
     //微信支付
 //    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 //    implementation project(path: ':faceplatform')

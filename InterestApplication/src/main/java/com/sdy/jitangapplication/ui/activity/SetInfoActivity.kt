@@ -11,6 +11,7 @@ import android.os.Handler
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.core.content.FileProvider
@@ -25,7 +26,6 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
-import com.luck.picture.lib.entity.LocalMedia
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
@@ -34,12 +34,14 @@ import com.sdy.jitangapplication.presenter.SetInfoPresenter
 import com.sdy.jitangapplication.presenter.view.SetInfoView
 import com.sdy.jitangapplication.ui.adapter.UploadAvatorAdapter
 import com.sdy.jitangapplication.ui.dialog.UploadAvatorDialog
+import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_set_info.*
 import kotlinx.android.synthetic.main.dialog_upload_avator.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
+import top.zibin.luban.OnCompressListener
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -80,6 +82,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     }
 
     private fun initView() {
+        setSwipeBackEnable(false)
         mPresenter = SetInfoPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -162,7 +165,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     /**
      * 拍照或者选取照片
      */
-    private fun onTakePhoto() {
+    private fun choosePhoto() {
         PictureSelector.create(this)
             .openGallery(PictureMimeType.ofImage())
             .maxSelectNum(1)
@@ -198,7 +201,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         uploadAvatorDialog.rvPersons.adapter = adapter
 
         uploadAvatorDialog.choosePhoto.onClick {
-            onTakePhoto()
+            choosePhoto()
             uploadAvatorDialog.cancel()
 
         }
@@ -216,8 +219,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         when (view.id) {
             R.id.userProfileBtn -> {
                 userProfile = null
-//                showAvatorDialog()
-                onTakePhoto()
+                showAvatorDialog()
 //                startActivityForResult<TCCameraActivity>(USER_PROFILE_REQUEST_CODE)
             }
             //点击跳转到标签选择页
@@ -260,20 +262,93 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             when (requestCode) {
                 PictureConfig.CHOOSE_REQUEST -> {
                     if (data != null) {
-                        val selectList: List<LocalMedia> = PictureSelector.obtainMultipleResult(data)
-                        val path = selectList[0].path
+                        var path = PictureSelector.obtainMultipleResult(data)[0].path
+                        UriUtils.getLubanBuilder(this)
+                            .load(path)
+                            .setCompressListener(object : OnCompressListener {
+                                override fun onSuccess(file: File?) {
+                                    if (file != null) {
+                                        path = file.absolutePath
+                                    }
+                                    Log.d("SetInfoActivity", "$path===========================")
+                                    GlideUtil.loadCircleImg(this@SetInfoActivity, path, userProfileBtn)
+                                    userProfile =
+                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
+                                            "accid"
+                                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                                            16
+                                        )}"
+                                    mPresenter.uploadProfile(path, userProfile.toString())
+                                    checkConfirmBtnEnable()
 
-                        GlideUtil.loadCircleImg(applicationContext, path, userProfileBtn)
-                        userProfile =
-                            "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
-                                "accid"
-                            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                                16
-                            )}"
-                        mPresenter.uploadProfile(path, userProfile.toString())
-                        checkConfirmBtnEnable()
+                                }
+
+                                override fun onError(e: Throwable?) {
+                                    Log.d("SetInfoActivity", "$path===========================")
+                                    GlideUtil.loadCircleImg(this@SetInfoActivity, path, userProfileBtn)
+                                    userProfile =
+                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
+                                            "accid"
+                                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                                            16
+                                        )}"
+                                    mPresenter.uploadProfile(path, userProfile.toString())
+                                    checkConfirmBtnEnable()
+
+                                }
+
+                                override fun onStart() {
+
+                                }
+
+                            })
+                            .launch()
                     }
                 }
+
+                REQUEST_CODE_TAKE_PHOTO -> {
+                    if (imageFile != null) {
+                        var path = imageFile!!.absolutePath
+                        UriUtils.getLubanBuilder(this)
+                            .load(path)
+                            .setCompressListener(object : OnCompressListener {
+                                override fun onSuccess(file: File?) {
+                                    if (file != null) {
+                                        path = file.absolutePath
+                                    }
+                                    Log.d("SetInfoActivity", "$path===========================")
+                                    GlideUtil.loadCircleImg(this@SetInfoActivity, path, userProfileBtn)
+                                    userProfile =
+                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
+                                            "accid"
+                                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                                            16
+                                        )}"
+                                    mPresenter.uploadProfile(path, userProfile.toString())
+                                }
+
+                                override fun onError(e: Throwable?) {
+                                    Log.d("SetInfoActivity", "$path===========================")
+                                    GlideUtil.loadCircleImg(this@SetInfoActivity, path, userProfileBtn)
+                                    userProfile =
+                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
+                                            "accid"
+                                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                                            16
+                                        )}"
+                                    mPresenter.uploadProfile(path, userProfile.toString())
+                                }
+
+                                override fun onStart() {
+
+                                }
+
+                            })
+                            .launch()
+
+                    }
+                }
+
                 USER_BIRTH_REQUEST_CODE -> {
                     if (data != null) {
                         userBirth = "${data.getStringExtra("year")}${data.getStringExtra("month")}"
@@ -284,18 +359,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                         checkConfirmBtnEnable()
                     }
 
-                }
-                REQUEST_CODE_TAKE_PHOTO -> {
-                    if (imageFile != null) {
-                        GlideUtil.loadCircleImg(this, imageFile!!.absolutePath, userProfileBtn)
-                        userProfile =
-                            "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
-                                "accid"
-                            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                                16
-                            )}"
-                        mPresenter.uploadProfile(imageFile!!.absolutePath, userProfile.toString())
-                    }
                 }
             }
         }
@@ -350,5 +413,9 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         }
     }
 
+
+    override fun onBackPressed() {
+
+    }
 
 }

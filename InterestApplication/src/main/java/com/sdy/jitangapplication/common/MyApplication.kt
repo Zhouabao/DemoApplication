@@ -30,6 +30,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivity
 import com.sdy.jitangapplication.event.GetNewMsgEvent
+import com.sdy.jitangapplication.event.ReVerifyEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
@@ -41,6 +42,7 @@ import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.bugly.Bugly
 import com.umeng.analytics.MobclickAgent
@@ -79,6 +81,7 @@ class MyApplication : BaseApplication() {
             if (customNotification.content != null) {
                 val customerMsgBean =
                     Gson().fromJson<CustomerMsgBean>(customNotification.content, CustomerMsgBean::class.java)
+                Log.d("OkHttp", "${customerMsgBean.type}====,${customerMsgBean.msg}==================================")
                 when (customerMsgBean.type) {
                     1 -> {//系统通知新的消息数量
                         EventBus.getDefault().postSticky(GetNewMsgEvent())
@@ -97,14 +100,22 @@ class MyApplication : BaseApplication() {
                     3 -> { //新的招呼刷新界面
                         EventBus.getDefault().post(UpdateHiEvent())
                     }
+                    //4人脸认证不通过
+                    //5头像违规
+                    //6头像通过，但是不是真人
+                    //7相册引导完善
+                    4, 5, 6, 7 -> {
+                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type))
+                    }
+
                 }
-                Log.d("OkHttp", "${customerMsgBean.type}====,${customerMsgBean.msg}==================================")
+
 
             }
         }
 
 
-    fun initNotificationManager(msg: String) {
+    private fun initNotificationManager(msg: String) {
         val manager = getSystemService(SwipeBackActivity.NOTIFICATION_SERVICE) as NotificationManager
         //8.0 以后需要加上channelId 才能正常显示
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -159,7 +170,7 @@ class MyApplication : BaseApplication() {
         //初始化Umeng
         initUmeng()
         //崩溃日志
-        CrashUtils.init(NimSDKOptionConfig.getAppCacheDir(this) + "/demoApplication")
+        CrashUtils.init(UriUtils.getCacheDir(this))
         //自适应size
         configUnits()
         //gsyvideoplayer
@@ -183,8 +194,6 @@ class MyApplication : BaseApplication() {
              */
             UMConfigure.init(
                 this,
-                Constants.UMENG_APPKEY,
-                "Umeng",
                 UMConfigure.DEVICE_TYPE_PHONE,
                 Constants.UMENG_SECRET
             )
@@ -261,7 +270,7 @@ class MyApplication : BaseApplication() {
 
     private fun buildUIKitOptions(): UIKitOptions? {
         val options = UIKitOptions()
-        options.appCacheDir = NimSDKOptionConfig.getAppCacheDir(this) + "/demoApplication"
+        options.appCacheDir = UriUtils.getCacheDir(this)
         options.messageLeftBackground = R.drawable.shape_rectangle_share_square_bg_left
         options.messageRightBackground = R.drawable.shape_rectangle_share_square_bg
         return options

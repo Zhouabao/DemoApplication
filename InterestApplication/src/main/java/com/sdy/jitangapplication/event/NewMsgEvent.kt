@@ -7,7 +7,11 @@ package com.sdy.jitangapplication.event
  *    version: 1.0
  */
 class NewMsgEvent
+
 class GetNewMsgEvent
+
+//重新认证事件通知
+class ReVerifyEvent(val type: Int)
 
 
 class UpdateAvatorEvent(val update: Boolean)
