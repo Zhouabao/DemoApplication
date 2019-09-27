@@ -83,6 +83,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 guideContent.text = "上传真实头像获取更多配对机会"
                 guideDelete.onClick {
                     llGuide.isVisible = false
+                    refreshLayout()
                 }
             }
             GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
@@ -90,6 +91,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 guideContent.text = "请替换当前头像"
                 guideDelete.onClick {
                     llGuide.isVisible = false
+                    refreshLayout()
                 }
             }
             GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
@@ -97,6 +99,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 guideContent.text = "完善相册，获取更多展示"
                 guideDelete.onClick {
                     llGuide.isVisible = false
+                    refreshLayout()
                 }
             }
             else -> {
@@ -301,7 +304,12 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         row = if (0 == adapter.itemCount % 3) row else row + 1
 //        row = if (4 == row) 4 else row//row最多为四行
         val marginTop =
-            (SizeUtils.dp2px(15F) + (16 / 9F * (ScreenUtils.getScreenWidth() - 4 * SizeUtils.dp2px(15F)) / 3).toInt()) * row
+            if (llGuide.isVisible) {
+                SizeUtils.dp2px(50F)+(SizeUtils.dp2px(15F) + (16 / 9F * (ScreenUtils.getScreenWidth() - 4 * SizeUtils.dp2px(15F)) / 3).toInt()) * row
+            } else {
+                0+(SizeUtils.dp2px(15F) + (16 / 9F * (ScreenUtils.getScreenWidth() - 4 * SizeUtils.dp2px(15F)) / 3).toInt()) * row
+            }
+
         val params = mLinearLayout.layoutParams as RelativeLayout.LayoutParams
         params.setMargins(0, marginTop, 0, 0)
         mLinearLayout.layoutParams = params

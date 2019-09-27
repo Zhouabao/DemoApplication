@@ -280,7 +280,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                 GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
                     UserManager.perfect_times = matchBeans.perfect_times
                 }
-                else -> UserManager.slide_times = -1
+                else -> {
+                    UserManager.cleanVerifyData()
+                }
             }
 
 
@@ -587,21 +589,11 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         if (UserManager.slide_times != -1) {
             UserManager.slide_times++
             if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times) { //完善相册
-                if (UserManager.showVerifyDialogTime < 5) {
-                    EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
-                    UserManager.showVerifyDialogTime++
-                    UserManager.slide_times = 0
-                } else {
-                    UserManager.cleanVerifyData()
-                }
+                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
+                UserManager.slide_times = 0
             } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times) {//引导替换
-                if (UserManager.showVerifyDialogTime < 5) {
-                    EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
-                    UserManager.showVerifyDialogTime++
-                    UserManager.slide_times = 0
-                } else {
-                    UserManager.cleanVerifyData()
-                }
+                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
+                UserManager.slide_times = 0
             }
         }
 

@@ -223,6 +223,8 @@
                             android:drawableRight="@drawable/icon_more_right"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintRight_toRightOf="@id/userNickName"
                             app:layout_constraintTop_toBottomOf="@id/userGender"/>
 

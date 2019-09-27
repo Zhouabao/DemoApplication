@@ -21,7 +21,6 @@ import java.util.*
  *    version: 1.0
  */
 object UserManager {
-    var showVerifyDialogTime = 0
     var motion = -1//1，强制替换 2，引导替换 3，引导添加相册 其他不管
     var slide_times = 0
     var perfect_times = 0 //滑动x次数跳【完善相册】
@@ -63,6 +62,7 @@ object UserManager {
     }
 
 
+
     fun clearPublishParams() {
         publishState = 0
         publishParams.clear()
@@ -78,7 +78,6 @@ object UserManager {
         replace_times = 0
         perfect_times = 0
         slide_times = 0
-        showVerifyDialogTime = 0
     }
 
 

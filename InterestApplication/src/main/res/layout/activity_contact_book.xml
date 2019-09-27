@@ -45,6 +45,8 @@
                     android:gravity="center_vertical"
                     android:background="@drawable/shape_rectangle_gray_9dp"
                     app:iconifiedByDefault="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="true"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

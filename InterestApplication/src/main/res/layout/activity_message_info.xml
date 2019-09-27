@@ -25,13 +25,13 @@
 
         <TextView
                 android:id="@+id/chatName"
-                tools:text="Javer"
                 android:textColor="#ff222222"
                 android:textSize="20sp"
                 android:gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
+                tools:text="Javer"
                 />
 
         <TextView
@@ -119,6 +119,7 @@
     </FrameLayout>
 
     <LinearLayout
+            android:id="@+id/friendHistory"
             android:gravity="center"
             android:layout_gravity="center"
             android:paddingLeft="15dp"
@@ -134,7 +135,6 @@
                 android:textSize="16sp"/>
 
         <ImageView
-                android:id="@+id/friendHistory"
                 android:scaleType="center"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"
@@ -144,6 +144,7 @@
     </LinearLayout>
 
     <LinearLayout
+            android:id="@+id/friendHistoryClean"
             android:gravity="center"
             android:layout_gravity="center"
             android:paddingLeft="15dp"
@@ -159,7 +160,6 @@
                 android:textSize="16sp"/>
 
         <ImageView
-                android:id="@+id/friendHistoryClean"
                 android:scaleType="center"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"
@@ -170,6 +170,7 @@
 
 
     <LinearLayout
+            android:id="@+id/friendReport"
             android:gravity="center"
             android:layout_gravity="center"
             android:paddingLeft="15dp"
@@ -185,7 +186,6 @@
                 android:textSize="16sp"/>
 
         <ImageView
-                android:id="@+id/friendReport"
                 android:scaleType="center"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"
@@ -196,6 +196,7 @@
 
 
     <LinearLayout
+            android:id="@+id/friendDelete"
             android:gravity="center"
             android:layout_gravity="center"
             android:paddingLeft="15dp"
@@ -212,7 +213,6 @@
                 android:textSize="16sp"/>
 
         <ImageView
-                android:id="@+id/friendDelete"
                 android:scaleType="center"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"

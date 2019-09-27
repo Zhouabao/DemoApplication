@@ -211,13 +211,21 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.getSquareInfo(
-                hashMapOf(
-                    "token" to UserManager.getToken(),
-                    "accid" to UserManager.getAccid(),
-                    "square_id" to intent.getIntExtra("square_id", 0)
+            if (intent.getSerializableExtra("squareBean") != null) {
+                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+                squareBean = intent.getSerializableExtra("squareBean") as SquareBean
+                initData()
+                commentParams["square_id"] = "${squareBean!!.id}"
+                mPresenter.getCommentList(commentParams, true)
+            } else {
+                mPresenter.getSquareInfo(
+                    hashMapOf(
+                        "token" to UserManager.getToken(),
+                        "accid" to UserManager.getAccid(),
+                        "square_id" to intent.getIntExtra("square_id", 0)
+                    )
                 )
-            )
+            }
         }
 
 
