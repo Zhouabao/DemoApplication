@@ -57,6 +57,7 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/likeRv"
                     android:layout_width="match_parent"
+                    android:layout_marginLeft="15dp"
                     android:layout_height="wrap_content"
                     />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>

@@ -234,7 +234,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             filterUserDialog.switchShowVerify.isChecked = sp.getInt("audit_only", 1) == 2
 
         } else {
-            if (UserManager.isUserVerify() == 2) {
+            if (UserManager.isUserVerify() == 2 || UserManager.isUserVerify() == 3) {
                 filterUserDialog.btnVerify.text = "认证中"
             } else {
                 filterUserDialog.btnVerify.text = "未认证"
@@ -247,7 +247,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             ChargeVipDialog(this).show()
         }
         filterUserDialog.btnVerify.onClick {
-            if (UserManager.isUserVerify() == 2) {
+            if (UserManager.isUserVerify() == 2 || UserManager.isUserVerify() == 3) {
                 toast("认证正在审核中，请耐心等待哦~")
             } else {
                 startActivity<IDVerifyActivity>()

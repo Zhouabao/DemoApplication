@@ -52,6 +52,7 @@ data class HiMessageBean(
 data class OuttimeBean(
     val list: MutableList<String> = mutableListOf()
 )
+
 /*************消息列表**************/
 
 
@@ -92,7 +93,7 @@ data class LikeMeListBean(
 data class LikeMeBean(
     val count: Int? = 0,
     val date: String? = "",
-    val hasread: Boolean? = false,    //是否有未读 true 有 （标红）false 没有（）
+    var hasread: Boolean? = false,    //是否有未读 true 有 （标红）false 没有（）
     val list: MutableList<LikeMeOneDayBean>? = mutableListOf()
 )
 

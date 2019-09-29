@@ -7,12 +7,15 @@ import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.AuthService
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.VersionBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.SettingsPresenter
 import com.sdy.jitangapplication.presenter.view.SettingsView
@@ -35,6 +38,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         initView()
+        mPresenter.getVersion()
         initData()
     }
 
@@ -98,13 +102,13 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 CommonAlertDialog.Builder(this)
                     .setTitle("退出登录")
                     .setContent("是否退出登录？\n退出后用户信息将在上次登录位置对其他用户持续可见")
-                    .setOnCancelListener(object :CommonAlertDialog.OnCancelListener{
+                    .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
                         override fun onClick(dialog: Dialog) {
                             dialog.cancel()
                         }
 
                     })
-                    .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+                    .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                         override fun onClick(dialog: Dialog) {
                             UserManager.clearLoginData()
                             NIMClient.getService(AuthService::class.java).logout()
@@ -193,4 +197,10 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         }
 
     }
+
+
+    override fun onGetVersionResult(versionBean: VersionBean?) {
+        newVersionTip.isVisible = versionBean != null && versionBean.version != AppUtils.getAppVersionName()
+    }
+
 }

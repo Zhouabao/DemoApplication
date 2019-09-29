@@ -25,6 +25,13 @@ interface Api {
 
 
     /**
+     * 版本更新
+     */
+    @POST("member_info/getVersion${Constants.END_BASE_URL}")
+    fun getVersion(@Query("token") token: String, @Query("accid") accid: String): Observable<BaseResp<VersionBean?>>
+
+
+    /**
      * 人工审核
      * 1 人工认证 2重传头像或则取消
      */

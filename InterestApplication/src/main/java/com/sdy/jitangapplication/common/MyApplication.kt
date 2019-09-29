@@ -10,9 +10,11 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.google.gson.Gson
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.common.BaseApplication
 import com.netease.nim.uikit.R
 import com.netease.nim.uikit.api.NimUIKit
@@ -91,20 +93,20 @@ class MyApplication : BaseApplication() {
                     2 -> {//对方删除自己,本地删除会话列表
                         NIMClient.getService(MsgService::class.java)
                             .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
-                        val intent = Intent()
-                        intent.setClass(this, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intent)
+                        if (AppUtils.isAppForeground() && AppManager.instance.currentActivity()::class.java.simpleName !=MainActivity::class.java.simpleName) {
+                            val intent = Intent()
+                            intent.setClass(this, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
                     }
                     3 -> { //新的招呼刷新界面
                         EventBus.getDefault().post(UpdateHiEvent())
                     }
                     //4人脸认证不通过
-                    //5头像违规
-                    //6头像通过，但是不是真人
-                    //7相册引导完善
-                    4, 5, 6, 7 -> {
+                    4 -> {
                         EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type))
                     }
 

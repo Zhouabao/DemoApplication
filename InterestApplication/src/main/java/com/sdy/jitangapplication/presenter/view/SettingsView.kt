@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.VersionBean
 
 /**
  *    author : ZFM
@@ -13,4 +14,7 @@ interface SettingsView : BaseView {
     fun onBlockedAddressBookResult(success: Boolean)
 
     fun onHideDistanceResult(success: Boolean)
+
+
+    fun onGetVersionResult(versionBean:  VersionBean?)
 }

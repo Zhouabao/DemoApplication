@@ -1,15 +1,17 @@
 package com.sdy.jitangapplication.presenter
 
 import com.blankj.utilcode.util.ToastUtils
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.presenter.view.SettingsView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.model.VersionBean
+import com.sdy.jitangapplication.presenter.view.SettingsView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -66,6 +68,19 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
                         TickDialog(context).show()
+                    }
+                }
+            })
+    }
+
+    /**获取当前最新版本**/
+    fun getVersion() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getVersion(UserManager.getToken(), UserManager.getAccid())
+            .excute(object : BaseSubscriber<BaseResp<VersionBean?>>(mView) {
+                override fun onNext(t: BaseResp<VersionBean?>) {
+                    if (t.code == 200) {
+                        mView.onGetVersionResult(t.data)
                     }
                 }
             })

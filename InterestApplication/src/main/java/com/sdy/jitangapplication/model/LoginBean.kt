@@ -43,3 +43,5 @@ data class UserBean(
 )
 
 
+data class VersionBean(val version:String)
+

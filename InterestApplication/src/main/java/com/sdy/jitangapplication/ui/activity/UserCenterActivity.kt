@@ -128,7 +128,13 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             userVerify.setImageResource(R.drawable.icon_verify_gray)
             userVerifyTip.visibility = View.VISIBLE
             userVerifyBtn.isVisible = true
-            userVerifyBtn.text = "立即认证"
+            if (userInfoBean?.userinfo?.isfaced == 4) {
+                userVerifyTip.text = "审核不通过"
+                userVerifyBtn.text = "重新认证"
+            } else {
+                userVerifyTip.text = "未认证"
+                userVerifyBtn.text = "立即认证"
+            }
             userVerifyBtn.isEnabled = true
         }
     }
