@@ -1,9 +1,10 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
+import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -37,6 +38,7 @@ import kotlinx.android.synthetic.main.activity_message_like_me.btnBack
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.*
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.stateview
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.item_like_me_one_day_header.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
@@ -86,16 +88,10 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         }
 
         likeRv.layoutManager = GridLayoutManager(this, 3, RecyclerView.VERTICAL, false)
-        likeRv.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.BOTH_SET,
-                SizeUtils.dp2px(10F),
-                this.resources.getColor(R.color.colorWhite)
-            )
-        )
         likeRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, likeRv)
+        adapter.addHeaderView(initHeadView())
+        adapter.setHeaderAndEmpty(true)
 
         adapter.setOnItemClickListener { _, view, position ->
             if (UserManager.isUserVip())
@@ -120,8 +116,13 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
                 }
             }
         }
-        likeCount.text = "${intent.getIntExtra("count", 0)} 人对你感兴趣"
-        likeDate.text = "${intent.getStringExtra("date")}"
+        adapter.headerLayout.likeCount.text = "${intent.getIntExtra("count", 0)} 人对你感兴趣"
+        adapter.headerLayout.likeDate.text = "${intent.getStringExtra("date")}"
+        adapter.headerLayout.likeNew.isVisible = intent.getBooleanExtra("hasread", false)
+    }
+
+    private fun initHeadView(): View {
+        return layoutInflater.inflate(R.layout.item_like_me_one_day_header, likeRv, false)
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {

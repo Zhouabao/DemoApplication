@@ -93,7 +93,8 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
                 R.id.likeMeCount -> {
                     startActivity<MessageLikeMeOneDayActivity>(
                         "date" to "${adapter.data[position].date}",
-                        "count" to adapter.data[position].count
+                        "count" to adapter.data[position].count,
+                        "hasread" to adapter.data[position].hasread
                     )
                 }
             }

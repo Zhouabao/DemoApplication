@@ -1,8 +1,8 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -28,17 +28,22 @@ class LikeMeOneDayAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolder>(R
     override fun convert(holder: BaseViewHolder, item: LikeMeOneDayBean) {
         val itemView = holder.itemView
 
-        val params = itemView.likeMeAvator.layoutParams as ConstraintLayout.LayoutParams
+//        val params = itemView.layoutParams as ConstraintLayout.LayoutParams
+        val params = itemView.layoutParams as RecyclerView.LayoutParams
         params.width = SizeUtils.dp2px(180F)
         params.height = (16 / 9F * params.width).toInt()
-        itemView.likeMeAvator.layoutParams = params
+        itemView.layoutParams = params
         itemView.likeMeTag.text = "${item.tag_title}"
         itemView.likeMeNickname.text = "${item.nickname}"
         itemView.likeMeInfo.text = "${item.age} / ${if (item.gender == 1) {
             "男"
         } else {
             "女"
-        }} / ${item.constellation} / ${item.distance} / ${item.job}"
+        }} / ${item.constellation} / ${item.distance}  ${if (!item.job.isNullOrEmpty()) {
+            "/${item.job}"
+        } else {
+            ""
+        }}"
 
         itemView.view.isVisible = !(item.is_read ?: true)
         if (UserManager.isUserVip()) {

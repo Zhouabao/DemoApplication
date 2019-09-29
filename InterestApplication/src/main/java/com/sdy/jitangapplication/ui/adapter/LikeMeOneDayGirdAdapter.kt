@@ -32,6 +32,23 @@ class LikeMeOneDayGirdAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolde
         params.width =
             ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - (SPAN_COUNT - 1) * SizeUtils.dp2px(10F)) * 1.0F / SPAN_COUNT).toInt()
         params.height = (16 / 9F * params.width).toInt()
+        //左上右下
+        params.setMargins(
+            if ((holder.layoutPosition - headerLayoutCount) % 3 == 0) {
+                SizeUtils.dp2px(15F)
+            } else {
+                SizeUtils.dp2px(10F)
+            }
+            , if ((holder.layoutPosition - headerLayoutCount) / 3 == 0) {
+                SizeUtils.dp2px(15F)
+            } else {
+                SizeUtils.dp2px(10F)
+            }, if ((holder.layoutPosition - headerLayoutCount + 1) % 3 == 0) {
+                SizeUtils.dp2px(15F)
+            } else {
+                0
+            }, 0
+        )
         itemView.layoutParams = params
         if (UserManager.isUserVip()) {
             itemView.likeMeOneDayType.visibility = View.VISIBLE
