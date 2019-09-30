@@ -302,7 +302,7 @@
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"
-                android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+                android:windowSoftInputMode="adjustNothing|stateAlwaysHidden">
         </activity>
         <activity
                 android:name="com.umeng.socialize.media.WBShareCallBackActivity"

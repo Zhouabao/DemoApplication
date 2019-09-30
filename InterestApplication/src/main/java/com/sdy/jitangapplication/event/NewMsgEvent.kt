@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.event
 
+import com.sdy.jitangapplication.utils.UserManager
+
 /**
  *    author : ZFM
  *    date   : 2019/6/2516:30
@@ -11,7 +13,7 @@ class NewMsgEvent
 class GetNewMsgEvent
 
 //重新认证事件通知
-class ReVerifyEvent(val type: Int)
+class ReVerifyEvent(val type: Int, var avator: String = UserManager.getAvator())
 
 
 class UpdateAvatorEvent(val update: Boolean)

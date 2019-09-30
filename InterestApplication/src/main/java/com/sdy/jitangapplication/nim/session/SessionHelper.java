@@ -32,6 +32,7 @@ import com.netease.nimlib.sdk.msg.model.LocalAntiSpamResult;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.DemoCache;
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity;
 import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
@@ -283,17 +284,10 @@ public class SessionHelper {
             @Override
             public void onAvatarClicked(Context context, IMMessage message) {
                 // 一般用于打开用户资料页面
-//                if (message.getMsgType() == MsgTypeEnum.robot && message.getDirect() == MsgDirectionEnum.In) {
-//                    RobotAttachment attachment = (RobotAttachment) message.getAttachment();
-//                    if (attachment.isRobotSend()) {
-//                        return;
-//                    }
-//                }
                 if (message.getFromAccount().equals(UserManager.INSTANCE.loginInfo().getAccount())) {
                     context.startActivity(new Intent(context, UserCenterActivity.class));
-                } else {
+                } else if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID))
                     MatchDetailActivity.start(context, message.getFromAccount());
-                }
 
 
             }

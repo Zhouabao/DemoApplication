@@ -51,6 +51,8 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
     private lateinit var avator: String
     private lateinit var nickname: String
     private fun initView() {
+//        setSwipeBackEnable(false)
+
         accid = intent.getStringExtra("accid") ?: ""
         avator = intent.getStringExtra("avator") ?: ""
         nickname = intent.getStringExtra("nickname") ?: ""
@@ -59,7 +61,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
         //主动弹起键盘
         etMsg.postDelayed({
-            KeyboardUtils.showSoftInput(etMsg)
+            KeyboardUtils.showSoftInput(this)
         }, 200L)
 
         //编辑框
@@ -113,7 +115,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
     override fun onBackPressed() {
         if (KeyboardUtils.isSoftInputVisible(this)) {
-            KeyboardUtils.hideSoftInput(etMsg)
+            KeyboardUtils.hideSoftInput(this)
         } else {
             setResult(Activity.RESULT_OK)
             super.onBackPressed()
@@ -124,7 +126,13 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
     override fun onDestroy() {
         super.onDestroy()
         if (KeyboardUtils.isSoftInputVisible(this))
-            KeyboardUtils.hideSoftInput(etMsg)
+            KeyboardUtils.hideSoftInput(this)
+    }
+
+    override fun scrollToFinishActivity() {
+        if (KeyboardUtils.isSoftInputVisible(this))
+            KeyboardUtils.hideSoftInput(this)
+        super.scrollToFinishActivity()
     }
 
     override fun onClick(view: View) {

@@ -10,11 +10,11 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.google.gson.Gson
-import com.kotlin.base.common.AppManager
 import com.kotlin.base.common.BaseApplication
 import com.netease.nim.uikit.R
 import com.netease.nim.uikit.api.NimUIKit
@@ -91,9 +91,8 @@ class MyApplication : BaseApplication() {
                         initNotificationManager(customerMsgBean.msg)
                     }
                     2 -> {//对方删除自己,本地删除会话列表
-                        NIMClient.getService(MsgService::class.java)
-                            .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
-                        if (AppUtils.isAppForeground() && AppManager.instance.currentActivity()::class.java.simpleName !=MainActivity::class.java.simpleName) {
+                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        if (AppUtils.isAppForeground() && ActivityUtils.getTopActivity()::class.java.simpleName != MainActivity::class.java.simpleName) {
                             val intent = Intent()
                             intent.setClass(this, MainActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -107,7 +106,7 @@ class MyApplication : BaseApplication() {
                     }
                     //4人脸认证不通过
                     4 -> {
-                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type))
+                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
                     }
 
                 }

@@ -33,7 +33,6 @@ import com.sdy.jitangapplication.presenter.view.MessageLikeMeOneDayView
 import com.sdy.jitangapplication.ui.adapter.LikeMeOneDayGirdAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_message_like_me.btnBack
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.*
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.stateview
@@ -89,6 +88,8 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
 
         likeRv.layoutManager = GridLayoutManager(this, 3, RecyclerView.VERTICAL, false)
         likeRv.adapter = adapter
+        adapter.bindToRecyclerView(likeRv)
+
         adapter.setEmptyView(R.layout.empty_layout, likeRv)
         adapter.addHeaderView(initHeadView())
         adapter.setHeaderAndEmpty(true)

@@ -579,6 +579,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             resetCommentEt()
             refreshLayout.autoRefresh()
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            squareBean!!.comment_cnt = squareBean!!.comment_cnt.plus(1)
+            squareCommentBtn.text = "${squareBean!!.comment_cnt}"
         }
     }
 
@@ -597,6 +599,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (data.msg == "删除成功!") {
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
+            squareBean!!.comment_cnt = squareBean!!.comment_cnt.minus(1)
+            squareCommentBtn.text = "${squareBean!!.comment_cnt}"
         }
     }
 

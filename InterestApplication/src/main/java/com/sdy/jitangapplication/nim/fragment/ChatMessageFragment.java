@@ -299,7 +299,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
         //新消息来了请求接口，更新键盘啊头布局等数据。
         if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
-            rootView.findViewById(R.id.messageActivityBottomLayout).setVisibility(View.VISIBLE);
+            messageActivityBottomLayout.setVisibility(View.VISIBLE);
         } else if (nimBean == null || !nimBean.getIsfriend()) {
             getTargetInfo(sessionId);
         }

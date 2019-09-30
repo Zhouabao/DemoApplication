@@ -129,7 +129,7 @@ class MultiListSquareAdapter(
         } else {
             item.like_cnt
         }}"
-        holder.itemView.squareCommentBtn1.text = item.comment_cnt
+        holder.itemView.squareCommentBtn1.text = "${item.comment_cnt}"
         holder.itemView.squareUserVipIv1.visibility = if (item.isvip == 1) {
             View.VISIBLE
         } else {

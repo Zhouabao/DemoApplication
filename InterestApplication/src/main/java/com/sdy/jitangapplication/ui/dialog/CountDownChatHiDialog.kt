@@ -6,11 +6,10 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.Gravity
 import android.view.WindowManager
+import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.kotlin.base.ext.onClick
 import kotlinx.android.synthetic.main.countdown_chat_hi_dialog_layout.*
 
 /**
@@ -55,8 +54,8 @@ class CountDownChatHiDialog(var context1: Context) : Dialog(context1, R.style.My
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                fullTime.text = "${UriUtils.ms2HMS((millisUntilFinished).toInt())}后补充"
-//                fullTime.text = "请等待充能"
+//                fullTime.text = "${UriUtils.ms2HMS((millisUntilFinished).toInt())}后补充"
+                fullTime.text = "请等待充能"
             }
 
         }.start()

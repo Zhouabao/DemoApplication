@@ -31,7 +31,7 @@ data class SquareBean(
     var audio_json: MutableList<VideoJson>?,
     var avatar: String = "",
     var city_name: String = "",
-    var comment_cnt: String = "",
+    var comment_cnt: Int = 0,
     var comment: String = "",
     var create_time: String = "",
     var descr: String = "",

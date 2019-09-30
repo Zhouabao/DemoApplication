@@ -13,6 +13,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -84,8 +85,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val titles = arrayOf("匹配", "发现")
 
     private val guideDialog by lazy { GuideDialog(this) }
-
-    private var gotoVerifyDialog: GotoVerifyDialog? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -324,9 +323,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             if (!UserManager.isForceChangeAvator()) {
                 showGotoVerifyDialog(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
             } else {
-                if (gotoVerifyDialog != null && gotoVerifyDialog!!.isShowing) {
-                    gotoVerifyDialog!!.cancel()
-                }
                 UserManager.saveNeedChangeAvator(false)
                 UserManager.saveForceChangeAvator(true)
             }
@@ -334,9 +330,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onDestroy() {
         super.onDestroy()
+        EventBus.getDefault().removeAllStickyEvents()
         EventBus.getDefault().unregister(this)
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
-
     }
 
 
@@ -390,27 +386,30 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 totalMsgUnread = msgCount - allMsgCount.greetcount
 
             msgChat.text = "$totalMsgUnread"
-            ivNewMsg.isVisible =
-                (allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || totalMsgUnread > 0)
-            llMsgCount.visibility = View.VISIBLE
-            YoYo.with(Techniques.Bounce)
-                .duration(3000)
-                .withListener(object : Animator.AnimatorListener {
-                    override fun onAnimationRepeat(p0: Animator?) {
-                    }
+            if ((allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || totalMsgUnread > 0)) {
+                ivNewMsg.isVisible = true
+                llMsgCount.isVisible = true
+                YoYo.with(Techniques.Bounce)
+                    .duration(3000)
+                    .withListener(object : Animator.AnimatorListener {
+                        override fun onAnimationRepeat(p0: Animator?) {
+                        }
 
-                    override fun onAnimationCancel(p0: Animator?) {
-                    }
+                        override fun onAnimationCancel(p0: Animator?) {
+                        }
 
-                    override fun onAnimationStart(p0: Animator?) {
-                    }
+                        override fun onAnimationStart(p0: Animator?) {
+                        }
 
-                    override fun onAnimationEnd(p0: Animator?) {
-                        llMsgCount.visibility = View.GONE
-                    }
+                        override fun onAnimationEnd(p0: Animator?) {
+                            llMsgCount.visibility = View.GONE
+                        }
 
-                })
-                .playOn(llMsgCount)
+                    })
+                    .playOn(llMsgCount)
+            }
+
+
         }
     }
 
@@ -484,8 +483,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     }
                 }
             } else {
-                labelList[1].checked = true
-                SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelList[1].id)
+                labelList[0].checked = true
+                SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelList[0].id)
             }
         }
         labelAdapter.setData(labelList)
@@ -595,7 +594,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 //    const val TYPE_CHANGE_AVATOR_PASS = 6//头像通过,但是不是真人
 //    const val TYPE_CHANGE_ABLUM = 7//完善相册
 
-    private fun showGotoVerifyDialog(type: Int) {
+    private fun showGotoVerifyDialog(type: Int, avator: String = UserManager.getAvator()) {
         var content = ""
         var title = ""
         var confirmText = ""
@@ -622,18 +621,17 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 confirmText = "修改头像"
             }
         }
-        if (gotoVerifyDialog == null)
-            gotoVerifyDialog = GotoVerifyDialog.Builder(AppManager.instance.currentActivity())
-                .setTitle(title)
-                .setContent(content)
-                .setConfirmText(confirmText)
-                .setIcon(UserManager.getAvator())
-                .setIconVisible(true)
-                .setType(type)
-                .setCancelIconIsVisibility(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
-                .setOnCancelable(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
-                .create()
-        gotoVerifyDialog?.show()
+        GotoVerifyDialog.Builder(ActivityUtils.getTopActivity())
+            .setTitle(title)
+            .setContent(content)
+            .setConfirmText(confirmText)
+            .setIcon(avator)
+            .setIconVisible(true)
+            .setType(type)
+            .setCancelIconIsVisibility(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
+            .setOnCancelable(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
+            .create()
+            .show()
     }
 
 
@@ -641,7 +639,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     fun onReVerifyEvent(event: ReVerifyEvent) {
         if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
             UserManager.saveNeedChangeAvator(true)
-        showGotoVerifyDialog(event.type)
+        showGotoVerifyDialog(event.type, event.avator)
     }
 
 

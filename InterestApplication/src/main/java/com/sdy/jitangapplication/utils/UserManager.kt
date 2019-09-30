@@ -11,6 +11,7 @@ import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.MediaParamBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.ui.activity.LoginActivity
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import java.util.*
 
@@ -359,6 +360,8 @@ object UserManager {
 
         clearPublishParams()
         cleanVerifyData()
+
+        EventBus.getDefault().removeAllStickyEvents()//移除全部
     }
 
 

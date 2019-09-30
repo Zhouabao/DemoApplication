@@ -105,6 +105,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 //        adapter.setEmptyView(R.layout.empty_layout, messageListRv)
         adapter.addHeaderView(initFriendsView(), 0)
         adapter.addHeaderView(initHeadsView(), 1)
+        adapter.setHeaderAndEmpty(true)
 
         adapter.setOnItemChildClickListener { _, view, position ->
             val recentContact = adapter.data[position]
@@ -155,7 +156,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     private var hiDatas = mutableListOf<HiMessageBean>()
     private val hiAdapter by lazy { MessageListFriensAdapter(hiDatas) }
     private fun initFriendsView(): View {
-        val friendsView = LayoutInflater.from(this).inflate(R.layout.headerview_hi, messageListRv, false)
+        val friendsView = layoutInflater.inflate(R.layout.headerview_hi, messageListRv, false)
         val linearLayoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         friendsView.headRv.layoutManager = linearLayoutManager
         friendsView.headRv.adapter = hiAdapter

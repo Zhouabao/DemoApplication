@@ -174,7 +174,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             //更新本地缓存
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.nickname!!)
             SPUtils.getInstance(Constants.SPNAME).put("gender", data.gender!!)
-            SPUtils.getInstance(Constants.SPNAME).put("birth", data.birth!!)
+            SPUtils.getInstance(Constants.SPNAME).put("avatar", data.avatar!!)
 
             userNickName.text = "${data.nickname}"
             userNickSign.text = "${data.sign}"
@@ -187,8 +187,11 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             userJob.text = "${data.job}"
 
             adapter.domain = data.qiniu_domain
-            for (url in data.photos ?: mutableListOf()) {
-                photos.add(MyPhotoBean(MyPhotoBean.PHOTO, url))
+            for (url in (data.photos ?: mutableListOf()).withIndex()) {
+                photos.add(MyPhotoBean(MyPhotoBean.PHOTO, url.value))
+                if (url.index == 0) {
+                    originalAvator = data.qiniu_domain.plus(url.value)
+                }
             }
             adapter.setNewData(photos)
 //            if ((data.photos ?: mutableListOf()).size < IMAGE_SIZE) {
@@ -305,9 +308,11 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 //        row = if (4 == row) 4 else row//row最多为四行
         val marginTop =
             if (llGuide.isVisible) {
-                SizeUtils.dp2px(50F)+(SizeUtils.dp2px(15F) + (16 / 9F * (ScreenUtils.getScreenWidth() - 4 * SizeUtils.dp2px(15F)) / 3).toInt()) * row
+                SizeUtils.dp2px(50F) + (SizeUtils.dp2px(15F) + (16 / 9F * (ScreenUtils.getScreenWidth() - 4 * SizeUtils.dp2px(
+                    15F
+                )) / 3).toInt()) * row
             } else {
-                0+(SizeUtils.dp2px(15F) + (16 / 9F * (ScreenUtils.getScreenWidth() - 4 * SizeUtils.dp2px(15F)) / 3).toInt()) * row
+                0 + (SizeUtils.dp2px(15F) + (16 / 9F * (ScreenUtils.getScreenWidth() - 4 * SizeUtils.dp2px(15F)) / 3).toInt()) * row
             }
 
         val params = mLinearLayout.layoutParams as RelativeLayout.LayoutParams
@@ -453,13 +458,13 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                         if (file != null) {
                             file.absolutePath
                         } else {
-                            selectList[chooseCount].compressPath
+                            selectList[chooseCount].cutPath
                         }, userProfile
                     )
                 }
 
                 override fun onError(e: Throwable?) {
-                    mPresenter.uploadProfile(selectList[chooseCount].compressPath, userProfile)
+                    mPresenter.uploadProfile(selectList[chooseCount].cutPath, userProfile)
                 }
 
                 override fun onStart() {
@@ -493,9 +498,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     }
 
     override fun onBackPressed() {
-        if (UserManager.getAvator() != adapter.domain.plus(adapter.data[0].url)) {
-            UserManager.saveForceChangeAvator(true)
-        }
+        checkIsForceChangeAvator()
         super.onBackPressed()
 //        if (isChange) {
 //            val photos = arrayOfNulls<String>(10)
@@ -512,9 +515,15 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     }
 
     override fun scrollToFinishActivity() {
-        if (UserManager.getAvator() != adapter.domain.plus(adapter.data[0].url)) {
+        checkIsForceChangeAvator()
+        super.scrollToFinishActivity()
+    }
+
+
+    private var originalAvator = ""
+    private fun checkIsForceChangeAvator() {
+        if (adapter.data.isNotEmpty() && originalAvator != adapter.domain.plus(adapter.data[0].url)) {
             UserManager.saveForceChangeAvator(true)
         }
-        super.scrollToFinishActivity()
     }
 }

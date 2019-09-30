@@ -135,7 +135,7 @@ class WXEntryActivity : WXCallbackActivity() {
                         && (data!!.userinfo!!.nickname.isNullOrEmpty()
                         || data!!.userinfo!!.avatar.isNullOrEmpty()
                         || data!!.userinfo!!.gender == 0
-                        || data!!.userinfo!!.birth.isNullOrEmpty()))
+                        || data!!.userinfo!!.birth != 0))
             ) {//个人信息没有填写
                 startActivity<SetInfoActivity>()
             } else {

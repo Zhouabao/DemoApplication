@@ -212,8 +212,7 @@ class GotoVerifyDialog : Dialog {
                 }
                 dialog.btDialogConfirm?.onClick {
                     context.startActivity<UserInfoSettingsActivity>("type" to this.type)
-                    if (this.cancelable)
-                        dialog.cancel()
+                    dialog.cancel()
                 }
             }
 

@@ -317,32 +317,37 @@ public class ChatMessageListPanelEx {
     }
 
     public void onIncomingMessage(List<IMMessage> messages) {
-        boolean needScrollToBottom = isLastMessageVisible();
-        boolean needRefresh = false;
-        List<IMMessage> addedListItems = new ArrayList<>(messages.size());
-        for (IMMessage message : messages) {
-            if (isMyMessage(message)) {
-                items.add(message);
-                addedListItems.add(message);
-                needRefresh = true;
+        try {
+            boolean needScrollToBottom = isLastMessageVisible();
+            boolean needRefresh = false;
+            List<IMMessage> addedListItems = new ArrayList<>(messages.size());
+            for (IMMessage message : messages) {
+                if (isMyMessage(message)) {
+                    items.add(message);
+                    addedListItems.add(message);
+                    needRefresh = true;
+                }
             }
-        }
-        if (needRefresh) {
-            sortMessages(items);
-            adapter.notifyDataSetChanged();
-        }
-
-        adapter.updateShowTimeItem(addedListItems, false, true);
-
-        // incoming messages tip
-        IMMessage lastMsg = messages.get(messages.size() - 1);
-        if (isMyMessage(lastMsg)) {
-            if (needScrollToBottom) {
-                doScrollToBottom();
+            if (needRefresh) {
+                sortMessages(items);
+                adapter.notifyDataSetChanged();
             }
-//            else if (incomingMsgPrompt != null && lastMsg.getSessionType() != SessionTypeEnum.ChatRoom) {
-//             incomingMsgPrompt.show(lastMsg);
-//            }
+
+            adapter.updateShowTimeItem(addedListItems, false, true);
+
+            // incoming messages tip
+            IMMessage lastMsg = messages.get(messages.size() - 1);
+            if (isMyMessage(lastMsg)) {
+                if (needScrollToBottom) {
+                    doScrollToBottom();
+                }
+                //            else if (incomingMsgPrompt != null && lastMsg.getSessionType() != SessionTypeEnum.ChatRoom) {
+                //             incomingMsgPrompt.show(lastMsg);
+                //            }
+            }
+        } catch (Exception e) {
+            Log.d("error", e.getMessage());
+            e.printStackTrace();
         }
     }
 
