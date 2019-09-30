@@ -62,6 +62,14 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isNeedChangeAvator", false)
     }
 
+    //是否需要强制替换头像
+    fun saveChangeAvator(isNeedChangeAvator: String) {
+        SPUtils.getInstance(Constants.SPNAME).put("ChangeAvator", isNeedChangeAvator)
+    }
+
+    fun getChangeAvator(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("ChangeAvator")
+    }
 
 
     fun clearPublishParams() {
@@ -79,6 +87,9 @@ object UserManager {
         replace_times = 0
         perfect_times = 0
         slide_times = 0
+        SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
     }
 
 
@@ -125,8 +136,8 @@ object UserManager {
         return !(SPUtils.getInstance(Constants.SPNAME).getString("nickname").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
-//                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0)
-                SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty())
+                SPUtils.getInstance(Constants.SPNAME).getLong("birth", 0L) == 0L)
+//                SPUtils.getInstance(Constants.SPNAME).getInt("birth") != 0)
     }
 
 
@@ -334,8 +345,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("likeCount")
         SPUtils.getInstance(Constants.SPNAME).remove("squareCount")
         SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
-        SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
-        SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
+
 
         //位置信息
         SPUtils.getInstance(Constants.SPNAME).remove("latitude")

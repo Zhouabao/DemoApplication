@@ -16,6 +16,7 @@ import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.google.gson.Gson
 import com.kotlin.base.common.BaseApplication
+import com.leon.channel.helper.ChannelReaderUtil
 import com.netease.nim.uikit.R
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.UIKitOptions
@@ -91,7 +92,8 @@ class MyApplication : BaseApplication() {
                         initNotificationManager(customerMsgBean.msg)
                     }
                     2 -> {//对方删除自己,本地删除会话列表
-                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java)
+                            .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
                         if (AppUtils.isAppForeground() && ActivityUtils.getTopActivity()::class.java.simpleName != MainActivity::class.java.simpleName) {
                             val intent = Intent()
                             intent.setClass(this, MainActivity::class.java)
@@ -108,6 +110,12 @@ class MyApplication : BaseApplication() {
                     4 -> {
                         EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
                     }
+                    //7强制替换头像
+                    7 -> {
+                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                        UserManager.saveChangeAvator(customerMsgBean.msg)
+                    }
+
 
                 }
 
@@ -193,11 +201,16 @@ class MyApplication : BaseApplication() {
              * 参数4:设备类型，UMConfigure.DEVICE_TYPE_PHONE为手机、UMConfigure.DEVICE_TYPE_BOX为盒子，默认为手机
              * 参数5:Push推送业务的secret
              */
-            UMConfigure.init(
-                this,
-                UMConfigure.DEVICE_TYPE_PHONE,
-                Constants.UMENG_SECRET
-            )
+//            UMConfigure.init(
+//                this,
+//                UMConfigure.DEVICE_TYPE_PHONE,
+//                Constants.UMENG_SECRET
+//            )
+            var channel = "test"
+            if (ChannelReaderUtil.getChannel(this) != null) {
+                channel = ChannelReaderUtil.getChannel(this)
+            }
+            UMConfigure.init(this, null, channel, UMConfigure.DEVICE_TYPE_PHONE, null)
 
             /**
              * 设置组件化的Log开关

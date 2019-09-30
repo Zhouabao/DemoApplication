@@ -522,7 +522,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     private var originalAvator = ""
     private fun checkIsForceChangeAvator() {
-        if (adapter.data.isNotEmpty() && originalAvator != adapter.domain.plus(adapter.data[0].url)) {
+        if (adapter.data.isNotEmpty() && originalAvator != adapter.domain.plus(adapter.data[0].url) && UserManager.isNeedChangeAvator()) {
             UserManager.saveForceChangeAvator(true)
         }
     }

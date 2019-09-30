@@ -16,6 +16,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateLikemeEvent
+import com.sdy.jitangapplication.event.UpdateLikemeOnePosEvent
 import com.sdy.jitangapplication.model.LikeMeBean
 import com.sdy.jitangapplication.presenter.MessageLikeMePresenter
 import com.sdy.jitangapplication.presenter.view.MessageLikeMeView
@@ -179,4 +180,15 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         params["page"] = page
         mPresenter.likeLists(params)
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateLikemeOnePosEvent(event: UpdateLikemeOnePosEvent) {
+        if (event.parPos != -1 && event.childPos != -1) {
+            adapter.data[event.parPos].list?.get(event.childPos)?.isfriend  = 1
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+
 }

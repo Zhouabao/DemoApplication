@@ -318,10 +318,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (KeyboardUtils.isSoftInputVisible(this))
             KeyboardUtils.hideSoftInput(this)
         parseIntents()
-
+        Log.d("OKhttp", "${UserManager.isNeedChangeAvator()},${UserManager.isForceChangeAvator()}}")
         if (UserManager.isNeedChangeAvator())
             if (!UserManager.isForceChangeAvator()) {
-                showGotoVerifyDialog(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
+                showGotoVerifyDialog(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS, UserManager.getChangeAvator())
             } else {
                 UserManager.saveNeedChangeAvator(false)
                 UserManager.saveForceChangeAvator(true)
@@ -330,7 +330,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onDestroy() {
         super.onDestroy()
-        EventBus.getDefault().removeAllStickyEvents()
         EventBus.getDefault().unregister(this)
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
     }

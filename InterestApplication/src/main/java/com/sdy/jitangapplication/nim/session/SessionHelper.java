@@ -287,7 +287,7 @@ public class SessionHelper {
                 if (message.getFromAccount().equals(UserManager.INSTANCE.loginInfo().getAccount())) {
                     context.startActivity(new Intent(context, UserCenterActivity.class));
                 } else if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID))
-                    MatchDetailActivity.start(context, message.getFromAccount());
+                    MatchDetailActivity.start(context, message.getFromAccount(), -1, -1);
 
 
             }

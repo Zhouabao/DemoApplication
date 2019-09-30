@@ -122,7 +122,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
 
         adapter.setOnItemClickListener { _, view, position ->
             if (UserManager.isUserVip())
-                MatchDetailActivity.start(mContext, adapter.data[position].accid ?: "")
+                MatchDetailActivity.start(mContext, adapter.data[position].accid ?: "", holder.layoutPosition, position)
         }
     }
 

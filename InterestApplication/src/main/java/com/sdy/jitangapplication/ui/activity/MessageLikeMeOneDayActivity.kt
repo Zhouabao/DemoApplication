@@ -24,6 +24,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateLikemeEvent
+import com.sdy.jitangapplication.event.UpdateLikemeOnePosEvent
 import com.sdy.jitangapplication.model.LikeMeOneDayBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -39,6 +40,8 @@ import kotlinx.android.synthetic.main.activity_message_like_me_one_day.stateview
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.item_like_me_one_day_header.view.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -63,6 +66,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_like_me_one_day)
+        EventBus.getDefault().register(this)
         initView()
         mPresenter.likeListsCategory(params)
     }
@@ -96,7 +100,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
 
         adapter.setOnItemClickListener { _, view, position ->
             if (UserManager.isUserVip())
-                MatchDetailActivity.start(this, adapter.data[position].accid ?: "")
+                MatchDetailActivity.start(this, adapter.data[position].accid ?: "",position)
         }
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
@@ -176,6 +180,12 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
     }
 
 
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+
+    }
+
     /*--------------------------消息代理------------------------*/
     private fun sendChatHiMessage(position: Int) {
         val accid = adapter.data[position].accid ?: ""
@@ -227,5 +237,13 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
 
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateLikemeOnePosEvent(event: UpdateLikemeOnePosEvent) {
+        if (event.parPos != -1 && event.childPos == -1) {
+            adapter.data[event.parPos].isfriend  = 1
+            adapter.notifyDataSetChanged()
+        }
+    }
 
 }

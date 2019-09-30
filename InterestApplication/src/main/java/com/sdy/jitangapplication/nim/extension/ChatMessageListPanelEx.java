@@ -1352,7 +1352,7 @@ public class ChatMessageListPanelEx {
         chatHiAvator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MatchDetailActivity.start(container.activity, container.account);
+                MatchDetailActivity.start(container.activity, container.account,-1,-1);
             }
         });
 

@@ -37,10 +37,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.BlockDataEvent
-import com.sdy.jitangapplication.event.ListDataEvent
-import com.sdy.jitangapplication.event.NotifyEvent
-import com.sdy.jitangapplication.event.UpdateHiCountEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.StatusBean
@@ -104,8 +101,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     companion object {
         @JvmStatic
-        fun start(context: Context, fromAccount: String) {
-            context.startActivity<MatchDetailActivity>("target_accid" to fromAccount)
+        fun start(context: Context, fromAccount: String, parPos: Int = -1, childPos: Int = -1) {
+            context.startActivity<MatchDetailActivity>(
+                "target_accid" to fromAccount,
+                "parPos" to parPos,
+                "childPos" to childPos
+            )
         }
     }
 
@@ -129,7 +130,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         backBtn.onClick {
             finish()
         }
-
 
 
         //设置图片的宽度占满屏幕，宽高比9:16
@@ -418,6 +418,16 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     detailUserLikeBtn.visibility = View.GONE
                     detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
                 } else if (statusBean.data?.status == 2) {//匹配成功
+                    //如果是来自喜欢我的界面， 就刷新
+                    if (intent.getIntExtra("parPos", -1) != -1) {
+                        EventBus.getDefault().post(
+                            UpdateLikemeOnePosEvent(
+                                intent.getIntExtra("parPos", -1), intent.getIntExtra("childPos", -1)
+                            )
+                        )
+                    }
+
+
                     //喜欢过
                     matchBean!!.isfriend = 1
                     if (matchBean!!.isfriend == 1) {//是好友就显示聊天

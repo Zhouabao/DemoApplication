@@ -71,8 +71,8 @@ object Constants {
     const val BUGLY_APP_ID = "5218ec6f7d"
 
     //云信新账号
-//    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
-    const val NIM_APP_KEY = "197b98d4853be1582aec4f2a9c6a6645"//测试
+    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
+//    const val NIM_APP_KEY = "197b98d4853be1582aec4f2a9c6a6645"//测试
     //是否处于测试环境
     const val TEST = false
 

@@ -131,9 +131,6 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             if (userInfoBean?.userinfo?.isfaced == 4) {
                 userVerifyTip.text = "审核不通过"
                 userVerifyBtn.text = "重新认证"
-            } else if (userInfoBean?.userinfo?.isfaced == 5) {
-                userVerifyTip.text = "认证失效"
-                userVerifyBtn.text = "重新认证"
             } else {
                 userVerifyTip.text = "未认证"
                 userVerifyBtn.text = "立即认证"
