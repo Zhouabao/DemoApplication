@@ -661,7 +661,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     }
 
     override fun onCardRewound() {
-        Log.d("CardStackView", "onCardRewound: ${manager.topPosition}")
+        if (UserManager.slide_times > 0) {
+            UserManager.slide_times--
+        }
 
     }
 
