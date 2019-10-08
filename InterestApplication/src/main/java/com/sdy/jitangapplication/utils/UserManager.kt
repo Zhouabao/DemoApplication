@@ -123,7 +123,7 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo.nickname)
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
-            SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
+            SPUtils.getInstance(Constants.SPNAME).put("birth", "${data.userinfo.birth}")
             data.userinfo.isvip?.let { saveUserVip(it) }
             data.userinfo.isfaced?.let { saveUserVerify(it) }
         }
@@ -136,8 +136,8 @@ object UserManager {
         return !(SPUtils.getInstance(Constants.SPNAME).getString("nickname").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
-                SPUtils.getInstance(Constants.SPNAME).getLong("birth", 0L) == 0L)
-//                SPUtils.getInstance(Constants.SPNAME).getInt("birth") != 0)
+//                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0)
+                SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty())
     }
 
 
