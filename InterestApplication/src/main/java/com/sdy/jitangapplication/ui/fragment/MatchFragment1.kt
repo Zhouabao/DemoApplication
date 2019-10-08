@@ -20,8 +20,6 @@ import com.blankj.utilcode.util.ToastUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.ui.fragment.BaseMvpFragment
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.msg.MessageBuilder
@@ -59,8 +57,7 @@ import org.jetbrains.anko.support.v4.toast
 /**
  * 匹配页面(新版)
  */
-class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener,
-    ModuleProxy {
+class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
 
     private var hasMore = false
 
@@ -213,7 +210,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                         UserManager.getToken(),
                         UserManager.getAccid(),
                         (matchBean.accid ?: ""),
-                        UserManager.getGlobalLabelId()
+                        UserManager.getGlobalLabelId(),
+                        matchBean
                     )
                 } else {
                     card_stack_view.rewind()
@@ -234,9 +232,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     /**
      * 打招呼结果（先请求服务器）
      */
-    override fun onGreetSResult(greetBean: Boolean, code: Int) {
+    override fun onGreetSResult(greetBean: Boolean, code: Int, matchBean: MatchBean) {
         if (greetBean) {
-            sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
+            sendChatHiMessage(ChatHiAttachment.CHATHI_HI, matchBean)
         } else {
             card_stack_view.rewind()
             ToastUtils.showShort("打招呼失败，重新试一次吧")
@@ -313,14 +311,14 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     }
 
     //status :1.喜欢成功  2.匹配成功
-    override fun onGetLikeResult(success: Boolean, data: StatusBean?) {
+    override fun onGetLikeResult(success: Boolean, data: StatusBean?, matchBean: MatchBean) {
         if (data != null) {
             if (data.residue == 0) {
                 card_stack_view.rewind()
                 ChargeVipDialog(activity!!).show()
             }
             if (data.status == 2) {//status :1.喜欢成功  2.匹配成功
-                sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
+                sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH, matchBean)
             }
 
         }
@@ -605,7 +603,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-            mPresenter.likeUser(params)
+            mPresenter.likeUser(params,matchUserAdapter.data[manager.topPosition - 1])
         } else if (direction == Direction.Top) {//上滑打招呼
             mPresenter.greetState(
                 UserManager.getToken(),
@@ -616,7 +614,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         }
 
         //如果已经只剩5张了就请求数据(预加载).
-
         if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
             page++
             matchParams["page"] = page
@@ -670,10 +667,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     /*--------------------------消息代理------------------------*/
 
-    private fun sendChatHiMessage(type: Int) {
-        val matchBean = matchUserAdapter.data[manager.topPosition - 1]
+    private fun sendChatHiMessage(type: Int, matchBean: MatchBean) {
+//        val matchBean = matchUserAdapter.data[manager.topPosition - 1]
         Log.d("OkHttp", matchBean.accid ?: "")
-        val container = Container(activity!!, matchBean?.accid, SessionTypeEnum.P2P, this, true)
         val chatHiAttachment = ChatHiAttachment(
             if (type == ChatHiAttachment.CHATHI_MATCH) {
                 UserManager.getGlobalLabelName()
@@ -688,22 +684,26 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             chatHiAttachment,
             CustomMessageConfig()
         )
-        container.proxy.sendMessage(message)
+        sendMessage(message, matchBean)
     }
 
 
-    override fun sendMessage(msg: IMMessage): Boolean {
+    fun sendMessage(msg: IMMessage, matchBean: MatchBean): Boolean {
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
                 if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) { //匹配成功跳转到飞卡片
                     startActivity<MatchSucceedActivity>(
-                        "avator" to matchUserAdapter.data[manager.topPosition - 1].avatar,
-                        "nickname" to matchUserAdapter.data[manager.topPosition - 1].nickname,
-                        "accid" to matchUserAdapter.data[manager.topPosition - 1].accid
+                        "avator" to matchBean.avatar,
+                        "nickname" to matchBean.nickname,
+                        "accid" to matchBean.accid
+//                        "avator" to matchUserAdapter.data[manager.topPosition - 1].avatar,
+//                        "nickname" to matchUserAdapter.data[manager.topPosition - 1].nickname,
+//                        "accid" to matchUserAdapter.data[manager.topPosition - 1].accid
                     )
                 } else {//招呼成功跳转到招呼
-                    ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition - 1]?.accid ?: "")
+//                    ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition - 1]?.accid ?: "")
+                    ChatActivity.start(activity!!, matchBean.accid ?: "")
                     /*manager.topPosition*/
                     //打招呼成功，就减少招呼次数
                     if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
@@ -728,20 +728,5 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         return true
     }
 
-    override fun onInputPanelExpand() {
-
-    }
-
-    override fun shouldCollapseInputPanel() {
-
-    }
-
-    override fun isLongClickEnabled(): Boolean {
-        return false
-    }
-
-    override fun onItemFooterClick(message: IMMessage?) {
-
-    }
 
 }

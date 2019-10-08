@@ -88,7 +88,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
     /**
      * 喜欢
      */
-    fun likeUser(params: HashMap<String, Any>) {
+    fun likeUser(params: HashMap<String, Any>, matchBean: MatchBean) {
         if (!checkNetWork()) {
             return
         }
@@ -97,10 +97,10 @@ class MatchPresenter : BasePresenter<MatchView>() {
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
-                        mView.onGetLikeResult(true, t.data ?: null)
+                        mView.onGetLikeResult(true, t.data ?: null, matchBean)
                     } else {
                         mView.onError(t.msg)
-                        mView.onGetLikeResult(false, t.data ?: null)
+                        mView.onGetLikeResult(false, t.data ?: null, matchBean)
                     }
                 }
 
@@ -117,7 +117,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
     /**
      * 打招呼
      */
-    fun greet(token: String, accid: String, target_accid: String, tag_id: Int) {
+    fun greet(token: String, accid: String, target_accid: String, tag_id: Int, matchBean: MatchBean) {
         if (!checkNetWork()) {
             return
         }
@@ -126,9 +126,9 @@ class MatchPresenter : BasePresenter<MatchView>() {
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
-                        mView.onGreetSResult(true, t.code)
+                        mView.onGreetSResult(true, t.code, matchBean)
                     } else {
-                        mView.onGreetSResult(false, t.code)
+                        mView.onGreetSResult(false, t.code, matchBean)
                     }
                 }
 

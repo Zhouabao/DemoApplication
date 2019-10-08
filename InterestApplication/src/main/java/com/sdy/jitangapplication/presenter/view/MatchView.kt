@@ -16,12 +16,12 @@ interface MatchView : BaseView {
 
     fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?)
 
-    fun onGetDislikeResult(success: Boolean,data: StatusBean?)
+    fun onGetDislikeResult(success: Boolean, data: StatusBean?)
 
-    fun onGetLikeResult(success: Boolean, data: StatusBean?)
+    fun onGetLikeResult(success: Boolean, data: StatusBean?, matchBean: MatchBean)
 
     fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean)
 
 
-    fun onGreetSResult(greetBean: Boolean,code:Int)
+    fun onGreetSResult(greetBean: Boolean, code: Int, matchBean: MatchBean)
 }

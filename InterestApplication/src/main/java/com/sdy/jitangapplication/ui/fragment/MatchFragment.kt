@@ -42,14 +42,11 @@ import org.jetbrains.anko.support.v4.toast
  */
 class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener,
     RenRenCallback.OnSwipeListener {
-    override fun onGreetSResult(greetBean: Boolean, code: Int) {
 
-
+    override fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean) {
     }
 
-    override fun onGreetStateResult(greetBean: GreetBean?,matchBean: MatchBean) {
-
-
+    override fun onGreetSResult(greetBean: Boolean, code: Int, matchBean: MatchBean) {
     }
 
 
@@ -125,7 +122,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
 
         } else if (direction == ItemTouchHelper.RIGHT) {
             params["target_accid"] = matchUserAdapter.data[adapterPosition].accid ?: ""
-            mPresenter.likeUser(params)
+            mPresenter.likeUser(params,matchUserAdapter.data[matchUserAdapter.data.size - 1])
         }
     }
 
@@ -162,7 +159,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
             R.id.btnLike -> {
                 callback.toRight(matchUserRv)
                 params["target_accid"] = matchUserAdapter.data[matchUserAdapter.data.size - 1].accid ?: ""
-                mPresenter.likeUser(params)
+                mPresenter.likeUser(params,matchUserAdapter.data[matchUserAdapter.data.size - 1])
             }
             R.id.btnChat -> {
 
@@ -204,7 +201,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
     }
 
     //todo  这里应该还要传参数
-    override fun onGetLikeResult(success: Boolean, data: StatusBean?) {
+    override fun onGetLikeResult(success: Boolean, data: StatusBean?,matchBean: MatchBean) {
         if (success) {
             matchUserAdapter.data.removeAt(matchUserAdapter.data.size - 1)
             if (data != null && data.status == 2) {
