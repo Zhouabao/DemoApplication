@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
-import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.UserInfoSettingBean
 
 /**
  *    author : ZFM
@@ -19,5 +19,5 @@ interface UserInfoSettingsView : BaseView {
      */
     fun onSavePersonalResult(result: Boolean, type: Int)
 
-    fun uploadImgResult(b: Boolean, key: String)
+    fun uploadImgResult(b: Boolean, key: String, replaceAvator: Boolean = false)
 }

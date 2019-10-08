@@ -20,7 +20,6 @@ import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback
 import com.chad.library.adapter.base.listener.OnItemDragListener
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -62,6 +61,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     OnItemDragListener, View.OnClickListener {
     companion object {
         const val IMAGE_SIZE = 9
+        const val REPLACE_REQUEST = 187
     }
 
     val params by lazy { hashMapOf("token" to UserManager.getToken(), "accid" to UserManager.getAccid()) }
@@ -226,21 +226,33 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         window?.attributes = params
 
         dialog.show()
-        dialog.makeAvator.setVisible(position != 0)
+        dialog.makeAvatorTip.text = if (position == 0) {
+            "替换头像"
+        } else {
+            "设为头像"
+        }
+
 
         dialog.makeAvator.onClick {
-            isChange = true
-            val myPhotoBean0 = adapter.data[0]
-            val myPhotoBeanP = adapter.data[position]
-            photos[0] = myPhotoBeanP
-            photos[position] = myPhotoBean0
-            adapter.data[0] = myPhotoBeanP
-            adapter.data[position] = myPhotoBean0
-            adapter.notifyDataSetChanged()
+            if (position != 0) {
+                isChange = true
+                val myPhotoBean0 = adapter.data[0]
+                val myPhotoBeanP = adapter.data[position]
+                photos[0] = myPhotoBeanP
+                photos[position] = myPhotoBean0
+                adapter.data[0] = myPhotoBeanP
+                adapter.data[position] = myPhotoBean0
+                adapter.notifyDataSetChanged()
 //            Collections.swap(photos, position, 0)
 //            Collections.swap(adapter.data, position, 0)
-            updatePhotos()
-            dialog.dismiss()
+                updatePhotos()
+                dialog.dismiss()
+            } else {
+                choosePosition = 0
+                onTakePhoto(1, true)
+                dialog.dismiss()
+
+            }
         }
 
 
@@ -334,7 +346,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     /**
      * 拍照或者选取照片
      */
-    private fun onTakePhoto(count: Int) {
+    private fun onTakePhoto(count: Int, replaceAvator: Boolean = false) {
         PictureSelector.create(this)
             .openGallery(PictureMimeType.ofImage())
             .maxSelectNum(count)
@@ -343,7 +355,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             .selectionMode(PictureConfig.MULTIPLE)
             .previewImage(true)
             .isCamera(true)
-            .enableCrop(true)
+            .enableCrop(false)
             .compressSavePath(UriUtils.getCacheDir(this))
             .compress(false)
             .scaleEnabled(true)
@@ -352,28 +364,44 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             .withAspectRatio(9, 16)
             .compressSavePath(UriUtils.getCacheDir(this))
             .openClickSound(false)
-            .forResult(PictureConfig.CHOOSE_REQUEST)
+            .forResult(
+                if (replaceAvator) {
+                    REPLACE_REQUEST
+                } else {
+                    PictureConfig.CHOOSE_REQUEST
+                }
+            )
     }
 
     private val loading by lazy { LoadingDialog(this) }
-    override fun uploadImgResult(b: Boolean, key: String) {
-        chooseCount++
-        if (b) {
-            if (loading.isShowing)
-                loading.dismiss()
-            isChange = true
-            adapter.addData(choosePosition, MyPhotoBean(MyPhotoBean.PHOTO, key))
-//            if (adapter.data.size == IMAGE_SIZE + 1) {
-//                adapter.remove(IMAGE_SIZE)
-//            }
-            adapter.notifyDataSetChanged()
-            refreshLayout()
-            if (chooseCount < selectList.size)
-                uploadPicture()
-            else {
+    override fun uploadImgResult(b: Boolean, key: String, replaceAvator: Boolean) {
+        if (replaceAvator) {
+            if (b) {
+                if (loading.isShowing)
+                    loading.dismiss()
+                isChange = true
+                adapter.setData(choosePosition, MyPhotoBean(MyPhotoBean.PHOTO, key))
+                refreshLayout()
                 updatePhotos()
             }
+        } else {
+            chooseCount++
+            if (b) {
+                if (loading.isShowing)
+                    loading.dismiss()
+                isChange = true
+                adapter.addData(choosePosition, MyPhotoBean(MyPhotoBean.PHOTO, key))
+                adapter.notifyDataSetChanged()
+                refreshLayout()
+                if (chooseCount < selectList.size)
+                    uploadPicture()
+                else {
+                    updatePhotos()
+                }
+            }
         }
+
+
     }
 
     override fun onPersonalInfoResult(data: UserInfoSettingBean?) {
@@ -431,6 +459,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
                     }
                 }
+                //选中
                 PictureConfig.CHOOSE_REQUEST -> {
                     if (data != null) {
                         chooseCount = 0
@@ -439,11 +468,19 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                         uploadPicture()
                     }
                 }
+                //替换头像
+                REPLACE_REQUEST -> {
+                    if (data != null) {
+                        selectList = PictureSelector.obtainMultipleResult(data)
+                        loading.show()
+                        uploadPicture(true)
+                    }
+                }
             }
         }
     }
 
-    private fun uploadPicture() {
+    private fun uploadPicture(replaceAvator: Boolean = false) {
         val userProfile =
             "${Constants.FILE_NAME_INDEX}${Constants.USERCENTER}${SPUtils.getInstance(Constants.SPNAME).getString(
                 "accid"
@@ -451,20 +488,21 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 16
             )}"
         UriUtils.getLubanBuilder(this)
-            .load(selectList[chooseCount].cutPath)
+            .load(selectList[chooseCount].path)
             .setCompressListener(object : OnCompressListener {
                 override fun onSuccess(file: File?) {
                     mPresenter.uploadProfile(
                         if (file != null) {
                             file.absolutePath
                         } else {
-                            selectList[chooseCount].cutPath
+                            selectList[chooseCount].path
                         }, userProfile
+                        , replaceAvator
                     )
                 }
 
                 override fun onError(e: Throwable?) {
-                    mPresenter.uploadProfile(selectList[chooseCount].cutPath, userProfile)
+                    mPresenter.uploadProfile(selectList[chooseCount].path, userProfile)
                 }
 
                 override fun onStart() {
