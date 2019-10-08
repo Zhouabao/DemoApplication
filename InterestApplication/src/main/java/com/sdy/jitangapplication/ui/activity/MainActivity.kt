@@ -461,7 +461,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     } else {
                         SPUtils.getInstance(Constants.SPNAME)
                             .put("globalLabelId", labelAdapter.dataList[position - 1].id)
-                        EventBus.getDefault().post(UpdateLabelEvent(labelList[position - 1]))
+                        EventBus.getDefault().postSticky(UpdateLabelEvent(labelList[position - 1]))
                     }
                 }
             }

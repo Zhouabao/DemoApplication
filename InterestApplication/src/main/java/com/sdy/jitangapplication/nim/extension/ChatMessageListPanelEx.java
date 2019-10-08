@@ -30,6 +30,7 @@ import com.netease.nim.uikit.business.session.helper.MessageHelper;
 import com.netease.nim.uikit.business.session.helper.MessageListPanelHelper;
 import com.netease.nim.uikit.business.session.module.Container;
 import com.netease.nim.uikit.business.session.module.list.IncomingMsgPrompt;
+import com.netease.nim.uikit.business.session.module.list.MsgAdapter;
 import com.netease.nim.uikit.business.session.viewholder.robot.RobotLinkView;
 import com.netease.nim.uikit.common.CommonUtil;
 import com.netease.nim.uikit.common.ToastHelper;
@@ -94,7 +95,7 @@ public class ChatMessageListPanelEx {
     // message list view
     private RecyclerView messageListView;
     private List<IMMessage> items;
-    private ChatMsgAdapter adapter;
+    private MsgAdapter adapter;
     private ImageView ivBackground;
 
 
@@ -214,7 +215,7 @@ public class ChatMessageListPanelEx {
 
         // adapter
         items = new ArrayList<>();
-        adapter = new ChatMsgAdapter(messageListView, items, container);
+        adapter = new MsgAdapter(messageListView, items, container);
         adapter.setFetchMoreView(new MsgListFetchLoadMoreView());
 //        adapter.setLoadMoreView(new MsgListFetchLoadMoreView());
         adapter.setEventListener(new MsgItemEventListener());
@@ -337,7 +338,7 @@ public class ChatMessageListPanelEx {
 
             // incoming messages tip
             IMMessage lastMsg = messages.get(messages.size() - 1);
-            if (isMyMessage(lastMsg)) {
+            if (isMyMessage(lastMsg) && lastMsg.getMsgType() != MsgTypeEnum.tip) {
                 if (needScrollToBottom) {
                     doScrollToBottom();
                 }
@@ -1337,9 +1338,10 @@ public class ChatMessageListPanelEx {
             headView = initHeadView();
             adapter.addHeaderView(headView);
             setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
-        } else {
-            setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
         }
+        //else {
+        //   setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
+//        }
     }
 
 
@@ -1352,7 +1354,7 @@ public class ChatMessageListPanelEx {
         chatHiAvator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MatchDetailActivity.start(container.activity, container.account,-1,-1);
+                MatchDetailActivity.start(container.activity, container.account, -1, -1);
             }
         });
 

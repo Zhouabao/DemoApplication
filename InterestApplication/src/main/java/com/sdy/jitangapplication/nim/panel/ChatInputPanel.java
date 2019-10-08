@@ -40,6 +40,7 @@ import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.netease.nimlib.sdk.msg.model.CustomNotificationConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
@@ -143,7 +144,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
 
     public void onResume() {
-        switchToTextLayout(true);
+        switchToTextLayout(false);
     }
 
     public void onDestroy() {
@@ -964,6 +965,11 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                         IMMessage tipMessage = MessageBuilder.createTipMessage(container.account, container.sessionType);
                                         tipMessage.setContent("在收到消息回复前，只能发送三条消息哦");
                                         tipMessage.setStatus(MsgStatusEnum.success);
+                                        CustomMessageConfig config = new CustomMessageConfig();
+                                        config.enablePush = false;//不推送
+                                        config.enableUnreadCount = false;
+                                        tipMessage.setConfig(config);
+//                                        container.proxy.sendMessage(tipMessage);
                                         NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
                                     }
                                 } else if (checkGreetSendBean.getResidue_msg_cnt() == 0) {//次数用尽不能再发消息
@@ -972,6 +978,12 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                         IMMessage msg = MessageBuilder.createTipMessage(container.account, container.sessionType);
                                         msg.setContent("您已发送三条消息，请耐心等待对方回复");
                                         msg.setStatus(MsgStatusEnum.success);
+                                        CustomMessageConfig config = new CustomMessageConfig();
+                                        config.enablePush = false;//不推送
+                                        config.enableUnreadCount = false;
+                                        msg.setConfig(config);
+//                                        container.proxy.sendMessage(msg);
+
                                         NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
                                         sendTip = true;
                                     }

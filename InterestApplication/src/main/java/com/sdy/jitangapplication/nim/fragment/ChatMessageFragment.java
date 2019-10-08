@@ -291,21 +291,25 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     };
 
     private void onMessageIncoming(List<IMMessage> messages) {
-        if (CommonUtil.isEmpty(messages)) {
-            return;
-        }
-        //新消息来了更新消息状态
-        messageListPanel.onIncomingMessage(messages);
+        try {
+            if (CommonUtil.isEmpty(messages)) {
+                return;
+            }
+            //新消息来了更新消息状态
+            messageListPanel.onIncomingMessage(messages);
 
-        //新消息来了请求接口，更新键盘啊头布局等数据。
-        if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
-            messageActivityBottomLayout.setVisibility(View.VISIBLE);
-        } else if (nimBean == null || !nimBean.getIsfriend()) {
-            getTargetInfo(sessionId);
-        }
+            //新消息来了请求接口，更新键盘啊头布局等数据。
+            if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
+                messageActivityBottomLayout.setVisibility(View.VISIBLE);
+            } else if (nimBean == null || !nimBean.getIsfriend()) {
+                getTargetInfo(sessionId);
+            }
 
-        // 发送已读回执
-        messageListPanel.sendReceipt();
+            // 发送已读回执
+            messageListPanel.sendReceipt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -317,7 +321,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             //收到已读回执
             messageListPanel.receiveReceipt();
             //收到已读回执,调用接口,改变此时招呼或者消息的状态
-            if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
+            if (!sessionId.equals(Constants.ASSISTANT_ACCID) && (nimBean == null || !nimBean.getIsfriend())) {
                 try {
                     Thread.sleep(2000L);
                     getTargetInfo(sessionId);

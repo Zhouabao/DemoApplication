@@ -26,6 +26,7 @@ import com.kotlin.base.ui.activity.BaseActivity.Companion.ERROR
 import com.kotlin.base.ui.activity.BaseActivity.Companion.LOADING
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.baselibrary.utils.RandomUtils
@@ -270,6 +271,11 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
 
         //这个地方还要默认设置选中第一个标签来更新数据
+        val params = UserManager.getFilterConditions()
+        params.forEach {
+            listParams[it.key] = it.value
+        }
+
         mPresenter.getSquareList(listParams, true, true)
         mPresenter.getFrinedsList(friendsParams)
 
@@ -644,16 +650,38 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     /***************************事件总线******************************/
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /**
+     * 根据选择的标签切换广场内容
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
 //        squareDynamicRv.scrollToPosition(0)
-
+        Log.d("SquareFragment", event.label.title)
         listParams["tagid"] = event.label.id
         //这个地方还要默认设置选中第一个标签来更新数据
+        if (refreshLayout.state == RefreshState.Refreshing) {
+            refreshLayout.finishRefresh()
+        }
         refreshLayout.autoRefresh()
+
+//        refreshLayout.autoRefreshAnimationOnly()
+//        page = 1
+//        listParams["page"] = page
+//
+//        resetAudio()
+//
+//        friendsAdapter.data.clear()
+//        friendsAdapter.notifyDataSetChanged()
+//
+//        refreshLayout.setNoMoreData(false)
+//        mPresenter.getSquareList(listParams, true)
+//        mPresenter.getFrinedsList(friendsParams)
 
     }
 
+    /**
+     * 全局筛选框筛选广场内容
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: RefreshEvent) {
 //        squareDynamicRv.scrollToPosition(0)
@@ -665,6 +693,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         refreshLayout.autoRefresh()
     }
 
+    /**
+     * 更新广场
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshSquareEvent(event: RefreshSquareEvent) {
 //        squareDynamicRv.scrollToPosition(0)
@@ -672,6 +703,9 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         refreshLayout.autoRefresh()
     }
 
+    /**
+     * 无缝切换小屏和全屏
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNotifyEvent(event: NotifyEvent) {
         val pos = event.position

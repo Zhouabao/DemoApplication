@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
-import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -75,7 +74,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
         registerObservers(true)
         registerDropCompletedListener(true)
         registerOnlineStateChangeListener(true)
-
+        mPresenter.messageCensus(params)
 
     }
 
@@ -234,9 +233,9 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
     override fun onResume() {
         super.onResume()
         //获取最近消息 延迟一秒请求
-        Handler().postDelayed({
-            mPresenter.messageCensus(params)
-        }, 1000)
+//        Handler().postDelayed({
+//            mPresenter.messageCensus(params)
+//        }, 1000)
 //        setHiData()  模拟数据请求
     }
 
@@ -608,7 +607,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateHiEvent(event: UpdateHiEvent) {
-        mPresenter.messageCensus(params)
+//        mPresenter.messageCensus(params)
     }
 
 

@@ -39,7 +39,6 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.EnablePicEvent
 import com.sdy.jitangapplication.event.NimHeadEvent
 import com.sdy.jitangapplication.event.UpdateContactBookEvent
-import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.model.NimBean
 import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
@@ -201,7 +200,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     override fun onDestroy() {
         super.onDestroy()
-        EventBus.getDefault().post(UpdateHiEvent())
+//        EventBus.getDefault().post(UpdateHiEvent())
         registerObservers(false)
         if (KeyboardUtils.isSoftInputVisible(this))
             KeyboardUtils.hideSoftInput(this)

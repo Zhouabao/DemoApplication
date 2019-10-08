@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.Tag
-import com.kotlin.base.ui.adapter.BaseRecyclerViewAdapter
 import kotlinx.android.synthetic.main.item_match_detail_label.view.*
 
 

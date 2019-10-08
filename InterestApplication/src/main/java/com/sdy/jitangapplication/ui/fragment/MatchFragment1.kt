@@ -80,6 +80,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat()
         )
+
     }
 
 
@@ -109,6 +110,11 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         btnChat.setOnClickListener(this)
 
         initialize()
+        //加入本地的筛选对话框的筛选条件
+        val params = UserManager.getFilterConditions()
+        params.forEach {
+            matchParams[it.key] = it.value
+        }
         mPresenter.getMatchList(matchParams)
 
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
@@ -377,7 +383,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     /**
      * 通过全局的标签来更新数据
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
         setViewState(LOADING)
 

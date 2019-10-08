@@ -31,7 +31,6 @@ import com.sdy.jitangapplication.presenter.view.MessageHiView
 import com.sdy.jitangapplication.ui.adapter.MessageHiListAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_hi.*
-import kotlinx.android.synthetic.main.activity_message_hi.stateview
 import kotlinx.android.synthetic.main.activity_message_list.btnBack
 import kotlinx.android.synthetic.main.empty_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -60,7 +59,12 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         EventBus.getDefault().register(this)
         registerObservers(true)
         initView()
-
+        //主动刷新列表
+        page = 1
+        params["page"] = page
+        adapter.data.clear()
+        mPresenter.greatLists(params)
+//        setData() 模拟数据请求
     }
 
 
@@ -215,12 +219,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
 
     override fun onResume() {
         super.onResume()
-        //主动刷新列表
-        page = 1
-        params["page"] = page
-        adapter.data.clear()
-        mPresenter.greatLists(params)
-//        setData() 模拟数据请求
+
     }
 
     override fun onDestroy() {

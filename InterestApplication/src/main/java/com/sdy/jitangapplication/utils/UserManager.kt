@@ -265,7 +265,7 @@ object UserManager {
         var parmas = hashMapOf<String, Any>()
         val sp = SPUtils.getInstance(Constants.SPNAME)
         parmas["limit_age_low"] = sp.getInt("limit_age_low", 18)
-        parmas["limit_age_high"] = sp.getInt("limit_age_high", 30)
+        parmas["limit_age_high"] = sp.getInt("limit_age_high", 35)
         parmas["local_only"] = sp.getInt("local_only", 1)
         parmas["city_code"] = sp.getString("city_code", "0")
         parmas["audit_only"] = sp.getInt("audit_only", 1)
