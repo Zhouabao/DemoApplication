@@ -18,6 +18,7 @@
 
 
         <TextView
+                android:id="@+id/makeAvatorTip"
                 android:text="设为头像"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="16sp"
