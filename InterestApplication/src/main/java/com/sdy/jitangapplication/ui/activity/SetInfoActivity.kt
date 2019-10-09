@@ -52,6 +52,7 @@ import kotlin.collections.HashMap
  * 填写个人信息页面
  */
 class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.OnClickListener {
+
     companion object {
         const val USER_BIRTH_REQUEST_CODE = 1000
         const val USER_PROFILE_REQUEST_CODE = 1001
@@ -126,6 +127,15 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         userNickNameEt.postDelayed({
             KeyboardUtils.showSoftInput(userNickNameEt, 0)
         }, 200)
+    }
+
+
+    /**
+     * 上传头像结果
+     */
+    override fun onUploadUserAvatorResult(key: String) {
+        userProfile = key
+        checkConfirmBtnEnable()
     }
 
 
@@ -218,7 +228,6 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     override fun onClick(view: View) {
         when (view.id) {
             R.id.userProfileBtn -> {
-                userProfile = null
                 showAvatorDialog()
 //                startActivityForResult<TCCameraActivity>(USER_PROFILE_REQUEST_CODE)
             }
@@ -272,28 +281,27 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                                     }
                                     Log.d("SetInfoActivity", "$path===========================")
                                     GlideUtil.loadCircleImg(this@SetInfoActivity, path, userProfileBtn)
-                                    userProfile =
+                                    val key =
                                         "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
                                             "accid"
                                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                             16
                                         )}"
-                                    mPresenter.uploadProfile(path, userProfile.toString())
-                                    checkConfirmBtnEnable()
+                                    mPresenter.uploadProfile(path, key)
 
                                 }
 
                                 override fun onError(e: Throwable?) {
                                     Log.d("SetInfoActivity", "$path===========================")
                                     GlideUtil.loadCircleImg(this@SetInfoActivity, path, userProfileBtn)
-                                    userProfile =
+                                    val key =
                                         "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
                                             "accid"
                                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                             16
                                         )}"
-                                    mPresenter.uploadProfile(path, userProfile.toString())
-                                    checkConfirmBtnEnable()
+                                    mPresenter.uploadProfile(path, key.toString())
+
 
                                 }
 
@@ -318,25 +326,25 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                                     }
                                     Log.d("SetInfoActivity", "$path===========================")
                                     GlideUtil.loadCircleImg(this@SetInfoActivity, path, userProfileBtn)
-                                    userProfile =
+                                    val key =
                                         "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
                                             "accid"
                                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                             16
                                         )}"
-                                    mPresenter.uploadProfile(path, userProfile.toString())
+                                    mPresenter.uploadProfile(path, key.toString())
                                 }
 
                                 override fun onError(e: Throwable?) {
                                     Log.d("SetInfoActivity", "$path===========================")
                                     GlideUtil.loadCircleImg(this@SetInfoActivity, path, userProfileBtn)
-                                    userProfile =
+                                    val key =
                                         "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
                                             "accid"
                                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                             16
                                         )}"
-                                    mPresenter.uploadProfile(path, userProfile.toString())
+                                    mPresenter.uploadProfile(path, key.toString())
                                 }
 
                                 override fun onStart() {

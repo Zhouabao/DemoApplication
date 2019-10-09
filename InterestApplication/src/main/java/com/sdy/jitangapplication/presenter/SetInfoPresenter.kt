@@ -32,6 +32,8 @@ class SetInfoPresenter : BasePresenter<SetInfoView>() {
                 if (info != null) {
                     if (!info.isOK) {
                         mView.onError("头像上传失败！")
+                    } else {
+                        mView.onUploadUserAvatorResult(key)
                     }
                 }
             }, null
