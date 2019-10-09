@@ -1,0 +1,32 @@
+package com.sdy.jitangapplication.ui.adapter
+
+import androidx.core.view.isVisible
+import com.blankj.utilcode.util.SizeUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
+import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.NewLabel
+import kotlinx.android.synthetic.main.item_label_all.view.*
+import kotlinx.android.synthetic.main.item_label_tab.view.labelName
+
+/**
+ *    author : ZFM
+ *    date   : 2019/10/910:30
+ *    desc   :
+ *    version: 1.0
+ */
+class AllLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all) {
+    override fun convert(helper: BaseViewHolder, item: NewLabel) {
+
+        helper.itemView.labelName.text = item.title
+        helper.itemView.labelChoose.isVisible = item.checked
+        helper.itemView.labelCoverBg.isVisible = item.checked
+        GlideUtil.loadRoundImgCenterCrop(
+            mContext,
+            R.drawable.icon_logo,
+            helper.itemView.labelCover,
+            SizeUtils.dp2px(5F)
+        )
+    }
+}

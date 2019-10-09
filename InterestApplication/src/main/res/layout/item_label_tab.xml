@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="15dp"
+              android:animateLayoutChanges="true"
+              android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/labelName"
+            android:text="街头文化"
+            android:button="@null"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+    </TextView>
+
+    <ImageView
+            android:id="@+id/labelIndicator"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:src="@drawable/icon_indicator_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</LinearLayout>
+
+

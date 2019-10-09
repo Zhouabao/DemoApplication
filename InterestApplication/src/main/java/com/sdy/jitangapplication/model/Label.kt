@@ -39,3 +39,18 @@ data class Labels(
 )
 
 
+data class NewLabel(
+    val title: String,
+    val id: Int,
+    val parentId: Int,
+    var checked: Boolean = false
+)
+
+data class NewLabelBean(
+    val parent: String,
+    val parentId: Int,
+    var newLabels: MutableList<NewLabel> = mutableListOf(),
+    var checked: Boolean = false
+
+)
+
