@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.net.RetrofitFactory
@@ -37,6 +38,8 @@ import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
+import com.sdy.jitangapplication.ui.activity.MessageHiActivity
+import com.sdy.jitangapplication.ui.activity.MessageListActivity
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -415,11 +418,14 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         NIMClient.getService(MsgService::class.java).deleteRecentContact2(account, SessionTypeEnum.P2P)
-                        val intent = Intent()
-                        intent.setClass(this@MessageInfoActivity, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intent)
+                        if (ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(ChatActivity::class.java)
+                        if (ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(MessageInfoActivity::class.java)
+                        if (ActivityUtils.isActivityAlive(MessageHiActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(MessageHiActivity::class.java)
+
+                        ActivityUtils.startActivity(MessageListActivity::class.java)
                     } else {
                         ToastUtils.showShort(t.msg)
                     }
