@@ -42,14 +42,13 @@
 
 
         <TextView
-                android:id="@+id/confirm"
+                android:id="@+id/cancel"
                 android:gravity="center"
                 android:layout_height="50dp"
                 android:layout_width="0dp"
-                android:text="确定"
-                android:textColor="@color/colorOrange"
+                android:text="取消"
                 android:textSize="18sp"
-                android:textStyle="bold"
+                android:textColor="@color/colorGrayText"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/view1"
                 app:layout_constraintTop_toBottomOf="@id/view"/>
@@ -66,14 +65,15 @@
                 app:layout_constraintTop_toBottomOf="@id/view"/>
 
         <TextView
-                android:id="@+id/cancel"
+                android:id="@+id/confirm"
                 android:gravity="center"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:text="取消"
-                android:textColor="@color/colorGrayText"
+                android:text="确定"
                 android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorOrange"
                 app:layout_constraintLeft_toRightOf="@id/view1"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view"/>
