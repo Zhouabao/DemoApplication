@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.NetworkUtils
@@ -112,7 +113,7 @@ class MultiListSquareAdapter(
                 resetAudioListener!!.resetAudioState()
             }
             clickPos = holder.layoutPosition - headerLayoutCount
-            greetState(UserManager.getToken(), UserManager.getAccid(), item.accid)
+            greetState(UserManager.getToken(), UserManager.getAccid(), item.accid, holder.itemView.squareChatBtn1)
         }
 
         if (item.descr.isEmpty()) {
@@ -287,7 +288,7 @@ class MultiListSquareAdapter(
     /**
      * 判断当前能否打招呼
      */
-    fun greetState(token: String, accid: String, target_accid: String) {
+    fun greetState(token: String, accid: String, target_accid: String, btn: LinearLayout) {
         if (!NetworkUtils.isConnected()) {
             ToastUtils.showShort("请连接网络！")
             return
@@ -295,6 +296,11 @@ class MultiListSquareAdapter(
         RetrofitFactory.instance.create(Api::class.java)
             .greetState(token, accid, target_accid)
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(null) {
+                override fun onStart() {
+
+                    btn.isEnabled = false
+                }
+
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {
                         val greetBean = t.data
@@ -321,12 +327,14 @@ class MultiListSquareAdapter(
                     } else {
                         ToastUtils.showShort(t.msg)
                     }
+                    btn.isEnabled = true
                 }
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
                         TickDialog(mContext).show()
                     }
+                    btn.isEnabled = true
                 }
             })
     }

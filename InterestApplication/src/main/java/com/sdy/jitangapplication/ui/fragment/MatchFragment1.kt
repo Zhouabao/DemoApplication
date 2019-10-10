@@ -174,16 +174,16 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     }
 
 
+    private val countDownChatHiDialog by lazy { CountDownChatHiDialog(activity!!) }
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnChat -> {
                 if (UserManager.getLightingCount() <= 0) {
-                    if (UserManager.isUserVip())
-                        CountDownChatHiDialog(activity!!).show()
+                    if (UserManager.isUserVip() && !countDownChatHiDialog.isShowing)
+                        countDownChatHiDialog.show()
                     else
                         ChargeVipDialog(activity!!).show()
                 } else {
-
                     card_stack_view.swipe()
                 }
             }

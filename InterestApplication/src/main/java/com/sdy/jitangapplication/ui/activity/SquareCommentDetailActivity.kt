@@ -192,6 +192,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         btnChat.isVisible = !(UserManager.getAccid() == squareBean!!.accid)
         btnChat.onClick {
+            btnChat.isEnabled = false
             mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid ?: "")
         }
         squareUserIv.onClick {
@@ -1039,7 +1040,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 }
             }
         }
-
+        btnChat.isEnabled = true
 
     }
 

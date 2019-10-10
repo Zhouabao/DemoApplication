@@ -462,8 +462,22 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 if (matchBean != null)
                     if (matchBean!!.isfriend == 1) {
                         ChatActivity.start(this, matchBean?.accid ?: "")
-                    } else
-                        mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), matchBean?.accid ?: "")
+                    } else {
+                        if (UserManager.getLightingCount() == 0) {
+                            if (UserManager.isUserVip() && !countDownDialog.isShowing) {
+                                countDownDialog.show()
+//                                CountDownChatHiDialog(this).show()
+                            } else {
+                                ChargeVipDialog(this).show()
+                            }
+                        } else {
+                            mPresenter.greetState(
+                                UserManager.getToken(),
+                                UserManager.getAccid(),
+                                matchBean?.accid ?: ""
+                            )
+                        }
+                    }
             }
 
             R.id.backBtn -> {
@@ -506,6 +520,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
     }
 
+    //次数用尽弹窗
+    private val countDownDialog by lazy { CountDownChatHiDialog(this) }
+
     /**
      *  点击聊天
      *
@@ -528,8 +545,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                         UserManager.getGlobalLabelId()
                     )
                 } else {
-                    if (UserManager.isUserVip()) {
-                        CountDownChatHiDialog(this).show()
+                    if (UserManager.isUserVip() && !countDownDialog.isShowing) {
+                        countDownDialog.show()
                     } else {
                         ChargeVipDialog(this).show()
                     }
