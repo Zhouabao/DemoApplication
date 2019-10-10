@@ -1,8 +1,9 @@
 package com.kotlin.base.data.net
 
 import com.blankj.utilcode.util.AppUtils
-import com.sdy.baselibrary.retrofit.MyGsonConverterFactory
+import com.blankj.utilcode.util.DeviceUtils
 import com.kotlin.base.common.BaseConstant
+import com.sdy.baselibrary.retrofit.MyGsonConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,7 +35,7 @@ class RetrofitFactory private constructor() {
                 .addHeader("Content_Type", "application/json")
                 .addHeader("charset", "UTF-8")
                 .addHeader("os", "android")
-                .addHeader("chnl",android.os.Build.BRAND)
+                .addHeader("chnl",DeviceUtils.getModel())
                 .addHeader("app-vrn",AppUtils.getAppVersionName())
                 .build()
 
