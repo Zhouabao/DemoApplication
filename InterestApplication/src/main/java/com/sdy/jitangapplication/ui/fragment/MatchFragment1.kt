@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -307,6 +308,10 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      */
     override fun onGetDislikeResult(success: Boolean, data: StatusBean?) {
         if (data != null) {
+            if (data.residue == 10) {
+                ToastUtils.setGravity(Gravity.CENTER, 0, 0)
+                ToastUtils.showShort("剩余10次滑动机会")
+            }
             if (data.residue == 0) {
                 card_stack_view.rewind()
                 ChargeVipDialog(activity!!).show()
@@ -319,6 +324,10 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     //status :1.喜欢成功  2.匹配成功
     override fun onGetLikeResult(success: Boolean, data: StatusBean?, matchBean: MatchBean) {
         if (data != null) {
+            if (data.residue == 10) {
+                ToastUtils.setGravity(Gravity.CENTER, 0, 0)
+                ToastUtils.showShort("剩余10次滑动机会")
+            }
             if (data.residue == 0) {
                 card_stack_view.rewind()
                 ChargeVipDialog(activity!!).show()
@@ -609,7 +618,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-            mPresenter.likeUser(params,matchUserAdapter.data[manager.topPosition - 1])
+            mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
         } else if (direction == Direction.Top) {//上滑打招呼
             mPresenter.greetState(
                 UserManager.getToken(),
