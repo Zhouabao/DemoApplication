@@ -39,12 +39,15 @@ import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
 import com.sdy.jitangapplication.nim.NimSDKOptionConfig
+import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
 import com.sdy.jitangapplication.nim.mixpush.DemoMixPushMessageHandler
 import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
 import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.MessageHiActivity
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.bugly.Bugly
@@ -94,16 +97,17 @@ class MyApplication : BaseApplication() {
                     2 -> {//对方删除自己,本地删除会话列表
                         NIMClient.getService(MsgService::class.java)
                             .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
-                        if (AppUtils.isAppForeground() && ActivityUtils.getTopActivity()::class.java.simpleName != MainActivity::class.java.simpleName) {
-                            val intent = Intent()
-                            intent.setClass(this, MainActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(intent)
-                        }
+                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(MessageInfoActivity::class.java)
+                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(ChatActivity::class.java)
+                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(MessageHiActivity::class.java)
+                        EventBus.getDefault().post(UpdateHiEvent())
+
                     }
-                    3 -> { //新的招呼刷新界面
+                    3 -> {
+                        //新的招呼刷新界面
                         EventBus.getDefault().post(UpdateHiEvent())
                     }
                     //4人脸认证不通过
@@ -159,7 +163,12 @@ class MyApplication : BaseApplication() {
         //系统状态栏显示的小图标
         builder.setSmallIcon(com.sdy.jitangapplication.R.drawable.icon_logo)
         //下拉显示的大图标
-        builder.setLargeIcon(BitmapFactory.decodeResource(resources, com.sdy.jitangapplication.R.drawable.icon_logo))
+        builder.setLargeIcon(
+            BitmapFactory.decodeResource(
+                resources,
+                com.sdy.jitangapplication.R.drawable.icon_logo
+            )
+        )
         val intent = Intent(this, MainActivity::class.java)
         val pIntent = PendingIntent.getActivity(this, 1, intent, 0)
         //点击跳转的intent
@@ -226,7 +235,11 @@ class MyApplication : BaseApplication() {
             MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
 
             //微博平台
-            PlatformConfig.setSinaWeibo(Constants.SINA_APP_KEY, Constants.SINA_APP_SECRET, "http://sns.whalecloud.com")
+            PlatformConfig.setSinaWeibo(
+                Constants.SINA_APP_KEY,
+                Constants.SINA_APP_SECRET,
+                "http://sns.whalecloud.com"
+            )
             //微信平台
             PlatformConfig.setWeixin(Constants.WECHAT_APP_ID, Constants.WECHAT_APP_KEY)
             //qq空间平台

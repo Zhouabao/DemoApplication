@@ -325,7 +325,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 try {
                     Thread.sleep(2000L);
                     getTargetInfo(sessionId);
-                    EventBus.getDefault().post(new UpdateHiEvent());
+//                    EventBus.getDefault().post(new UpdateHiEvent());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -523,7 +523,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
 
-    //进入聊天界面 获取对方用户的个人信息
+    /**
+     * 进入聊天界面 获取对方用户的个人信息
+     * 并且实时更新招呼的状态
+     * @param target_accid
+     */
     public void getTargetInfo(String target_accid) {
         HashMap<String, String> params = new HashMap<>();
         params.put("token", UserManager.INSTANCE.getToken());

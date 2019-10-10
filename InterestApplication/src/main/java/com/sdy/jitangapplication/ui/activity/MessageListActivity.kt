@@ -607,7 +607,7 @@ class MessageListActivity : BaseMvpActivity<MessageListPresenter>(), MessageList
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateHiEvent(event: UpdateHiEvent) {
-//        mPresenter.messageCensus(params)
+        mPresenter.messageCensus(params)
     }
 
 

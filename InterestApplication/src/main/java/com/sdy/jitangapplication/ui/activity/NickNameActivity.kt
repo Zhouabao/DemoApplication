@@ -46,6 +46,7 @@ class NickNameActivity : BaseActivity() {
             changeEt.layoutParams = params
             if (!(intent.getStringExtra("content").isNullOrBlank())) {
                 changeEt.setText(intent.getStringExtra("content"))
+                changeEt.setSelection(changeEt.text.length)
             }
         }
         changeEtInputLength.text = SpanUtils.with(changeEtInputLength)
