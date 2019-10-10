@@ -186,7 +186,7 @@ object UserManager {
      * 获取城市码
      */
     fun getCityCode(): String {
-        return SPUtils.getInstance(Constants.SPNAME).getString("citycode", "")
+        return SPUtils.getInstance(Constants.SPNAME).getString("citycode", "0")
     }
 
     /**

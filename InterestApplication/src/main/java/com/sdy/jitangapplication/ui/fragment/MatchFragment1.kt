@@ -79,7 +79,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             "_timestamp" to System.currentTimeMillis(),
             "tagid" to UserManager.getGlobalLabelId(),
             "lng" to UserManager.getlongtitude().toFloat(),
-            "lat" to UserManager.getlatitude().toFloat()
+            "lat" to UserManager.getlatitude().toFloat(),
+            "city_code" to UserManager.getCityCode()
         )
 
     }
