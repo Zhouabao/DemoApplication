@@ -14,10 +14,7 @@ import android.widget.RelativeLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.ui.fragment.BaseMvpFragment
@@ -302,6 +299,9 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                 activity!!.getString(R.string.retry_net_error)
             }
         }
+
+        if (fragmentManager?.let { FragmentUtils.getTopShow(it) } == this)
+            EventBus.getDefault().postSticky(EnableLabelEvent(true))
     }
 
     /**

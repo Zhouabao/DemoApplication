@@ -451,23 +451,35 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                         "from" to "mainactivity"
                     )
                 } else {
-                    for (index in 0 until labelAdapter.dataList.size) {
-                        labelAdapter.dataList[index].checked = index == position - 1
-                    }
-                    labelAdapter.notifyDataSetChanged()
+                    if (labelAdapter.enable) {
+                        for (index in 0 until labelAdapter.dataList.size) {
+                            labelAdapter.dataList[index].checked = index == position - 1
+                        }
+                        labelAdapter.notifyDataSetChanged()
 
-                    if (labelAdapter.dataList[position - 1].id == UserManager.getGlobalLabelId()) {
-                        return
-                    } else {
-                        SPUtils.getInstance(Constants.SPNAME)
-                            .put("globalLabelId", labelAdapter.dataList[position - 1].id)
-                        EventBus.getDefault().postSticky(UpdateLabelEvent(labelList[position - 1]))
+                        if (labelAdapter.dataList[position - 1].id == UserManager.getGlobalLabelId()) {
+                            return
+                        } else {
+                            SPUtils.getInstance(Constants.SPNAME)
+                                .put("globalLabelId", labelAdapter.dataList[position - 1].id)
+                            EventBus.getDefault().postSticky(UpdateLabelEvent(labelList[position - 1]))
+
+                            enableHeadRv(false)
+                        }
                     }
                 }
             }
 
         })
         initData()
+    }
+
+    /**
+     * 禁用或者启用标签点击选择
+     */
+    private fun enableHeadRv(enable: Boolean) {
+        labelAdapter.enable = enable
+//        labelAdapter.notifyDataSetChanged()
     }
 
     private fun initData() {
@@ -548,19 +560,26 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         tabMain.navigator = commonNavigator
         ViewPagerHelper.bind(tabMain, vpMain)
     }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateAvatorEvent(event: UpdateAvatorEvent) {
-        if (event.update) {
-            GlideUtil.loadAvatorImg(this, SPUtils.getInstance(Constants.SPNAME).getString("avatar"), ivUserFace)
-        }
-    }
+//
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    fun onUpdateAvatorEvent(event: UpdateAvatorEvent) {
+//        if (event.update) {
+//            GlideUtil.loadAvatorImg(this, SPUtils.getInstance(Constants.SPNAME).getString("avatar"), ivUserFace)
+//        }
+//    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNewLabelEvent(event: UpdateAvatorEvent) {
         initData()
+        GlideUtil.loadAvatorImg(this, UserManager.getAvator(), ivUserFace)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    fun onNewLabelEvent(event: EnableLabelEvent) {
+        enableHeadRv(event.enable)
     }
 
 

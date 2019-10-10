@@ -13,10 +13,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.google.gson.Gson
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -293,8 +290,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             adapter.data[position].isliked = 1
             adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
         }
-//        adapter.refreshNotifyItemChanged(position)
-        adapter.notifyDataSetChanged()
+        adapter.refreshNotifyItemChanged(position)
+//        adapter.notifyDataSetChanged()
         Handler().postDelayed({
             if (adapter.data[position].originalLike == adapter.data[position].isliked) {
                 return@postDelayed
@@ -503,8 +500,8 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
         resetAudio()
 
-        friendsAdapter.data.clear()
-        friendsAdapter.notifyDataSetChanged()
+//        friendsAdapter.data.clear()
+//        friendsAdapter.notifyDataSetChanged()
 
         refreshLayout.setNoMoreData(false)
         mPresenter.getSquareList(listParams, true)
@@ -562,6 +559,13 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                 }
                 adapter.addData(data!!.list!!)
             }
+
+            refreshLayout.finishRefresh(result)
+            refreshLayout.finishLoadMore(result)
+            refreshLayout.setEnableLoadMoreWhenContentNotFull(false)
+            if (fragmentManager?.let { FragmentUtils.getTopShow(it) } == this)
+//            EventBus.getDefault().postSticky(EnableLabelEvent(true))
+                refreshLayout.postDelayed({ EventBus.getDefault().postSticky(EnableLabelEvent(true)) }, 1000L)
         } else {
             setViewState(ERROR)
             errorMsg.text = if (mPresenter.checkNetWork()) {
@@ -569,11 +573,17 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             } else {
                 activity!!.getString(R.string.retry_net_error)
             }
+            refreshLayout.finishRefresh(result)
+            refreshLayout.finishLoadMore(result)
+            refreshLayout.setEnableLoadMoreWhenContentNotFull(false)
+            adapter.notifyDataSetChanged()
+            if (fragmentManager?.let { FragmentUtils.getTopShow(it) } == this)
+                EventBus.getDefault().postSticky(EnableLabelEvent(true))
+
         }
-        adapter.notifyDataSetChanged()
-        refreshLayout.finishRefresh(result)
-        refreshLayout.finishLoadMore(result)
-        refreshLayout.setEnableLoadMoreWhenContentNotFull(false)
+
+
+
     }
 
     override fun onGetSquareLikeResult(position: Int, result: Boolean) {
@@ -590,7 +600,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         } else {
             adapter.data[position].iscollected = 1
         }
-        adapter.notifyDataSetChanged()
+        adapter.refreshNotifyItemChanged(position)
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }

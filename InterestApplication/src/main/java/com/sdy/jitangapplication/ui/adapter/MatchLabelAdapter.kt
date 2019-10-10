@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.item_label_match.view.*
  *    desc   :匹配页面标签的adapter  标签点击更改状态并且要实时更新用户
  *    version: 1.0
  */
-class MatchLabelAdapter(var context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MatchLabelAdapter(var context: Context, var enable: Boolean = true) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         val TYPE_INDEX = 0 //首个添加
         val TYPE_CONTENT = 1 //标签内容
@@ -67,12 +68,25 @@ class MatchLabelAdapter(var context: Context) : RecyclerView.Adapter<RecyclerVie
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            mItemClickListener?.onItemClick(holder.itemView, position)
-        }
         if (holder is ViewHolder) {
             holder.itemView.labelTv.text = dataList[position - 1].title
-            holder.itemView.labelTv.isChecked = dataList[position - 1].checked
+            if (dataList[position - 1].checked) {
+                holder.itemView.labelTv.setTextColor(context.resources.getColor(R.color.colorWhite))
+                holder.itemView.labelTv.setBackgroundResource(R.drawable.cb_label_checked_orange)
+            } else {
+                holder.itemView.labelTv.setTextColor(context.resources.getColor(R.color.colorBlackTitle))
+                holder.itemView.labelTv.setBackgroundResource(R.drawable.cb_label_unchecked)
+            }
+
+//            holder.itemView.labelTv.isChecked = dataList[position - 1].checked
+            holder.itemView.setOnClickListener {
+                //                if (enable)
+                mItemClickListener?.onItemClick(holder.itemView, position)
+            }
+        } else {
+            holder.itemView.setOnClickListener {
+                mItemClickListener?.onItemClick(holder.itemView, position)
+            }
         }
 
     }

@@ -78,7 +78,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                             holder.itemView.matchUserDynamicLl.visibility = View.GONE
                         } else {
                             holder.itemView.matchUserDynamicLl.visibility = View.GONE
-                            if (item.sign.isNullOrEmpty()) {
+                            if (item.sign.isNullOrBlank()) {
                                 holder.itemView.matchUserIntroduce.visibility = View.GONE
                                 holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
                             } else {
@@ -94,7 +94,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                             holder.itemView.matchUserDynamicLl.visibility = View.GONE
                         } else {
                             holder.itemView.matchUserDynamicLl.visibility = View.GONE
-                            if (item.sign.isNullOrEmpty()) {
+                            if (item.sign.isNullOrBlank()) {
                                 holder.itemView.matchUserIntroduce.visibility = View.GONE
                                 holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
                             } else {

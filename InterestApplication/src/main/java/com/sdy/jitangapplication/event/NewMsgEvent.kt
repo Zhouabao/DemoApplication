@@ -17,3 +17,6 @@ class ReVerifyEvent(val type: Int, var avator: String = UserManager.getAvator())
 
 
 class UpdateAvatorEvent(val update: Boolean)
+
+
+class EnableLabelEvent(val enable: Boolean)

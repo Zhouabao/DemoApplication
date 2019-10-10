@@ -62,12 +62,13 @@ import org.greenrobot.eventbus.EventBus
 class MyApplication : BaseApplication() {
     init {
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
-            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
-            ClassicsHeader(context)
+            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite).setReboundDuration(200)
+            ClassicsHeader(context).setFinishDuration(200)
 
         }
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context, layout ->
-            ClassicsFooter(context).setDrawableSize(20F)
+            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite).setReboundDuration(200)
+            ClassicsFooter(context).setFinishDuration(200).setDrawableSize(20F)
         }
 
     }
