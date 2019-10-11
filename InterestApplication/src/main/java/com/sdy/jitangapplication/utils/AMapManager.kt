@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.utils
 
 import android.content.Context
+import android.util.Log
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 
@@ -49,6 +50,8 @@ object AMapManager {
                         it.district,
                         it.cityCode
                     )
+
+                    Log.d("location===", "${it.city},      ${it.cityCode},      ${it.latitude},      ${it.longitude}")
                 }
             }
         }

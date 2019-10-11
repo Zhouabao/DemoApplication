@@ -22,6 +22,7 @@ import java.util.*
  *    version: 1.0
  */
 object UserManager {
+    //认证和替换的参数
     var motion = -1//1，强制替换 2，引导替换 3，引导添加相册 其他不管
     var slide_times = 0
     var perfect_times = 0 //滑动x次数跳【完善相册】
@@ -72,6 +73,9 @@ object UserManager {
     }
 
 
+    /**
+     * 清除发布的参数
+     */
     fun clearPublishParams() {
         publishState = 0
         publishParams.clear()
@@ -81,7 +85,9 @@ object UserManager {
         cancelUpload = false
     }
 
-
+    /**
+     * 清除认证数据
+     */
     fun cleanVerifyData() {
         motion = -1
         replace_times = 0
@@ -90,6 +96,68 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
+    }
+
+    /**
+     * 保存发送tip消息
+     * 打招呼方-送出招呼消息
+     * 点击打招呼/聊天icon时显示「在收到对方回复前只能发送三条消息」
+     */
+    fun saveTipSend(isTip: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("TipSend", isTip)
+    }
+
+    fun getTipSend(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("TipSend", false)
+    }
+
+    /**
+     * 保存是否提示过三次机会
+     * 打招呼方-发送3条后
+     * 你已发送三条消息，请等待对方回复
+     */
+    fun saveTipThreeTimes(isTip: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("threetimes", isTip)
+    }
+
+    fun getTipThreeTimes(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("threetimes", false)
+    }
+
+    /**
+     * 打招呼方-被读消息后
+     * 对方已读你的消息，10分钟内对方未回复消息将过期
+     */
+    fun saveHeRead(isTip: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("heread", isTip)
+    }
+
+    fun getHeRead(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("heread", false)
+    }
+
+    /**
+     * 收消息方-已读消息后
+     * 已读对方招呼，如不回复10分钟后招呼将过期
+     */
+    fun saveReadHe(isTip: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("readhe", isTip)
+    }
+
+    fun getReadHe(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("readhe", false)
+    }
+
+    /**
+     * 收消息方-第二轮回复
+     * 聊得来就与他/她（根据性别）成为好友吧（此时成为好友最好有点动效果UI）
+     */
+    fun saveSecondReply(isTip: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("secondReply", isTip)
+    }
+
+    fun getSecondReply(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("secondReply", false)
     }
 
 
@@ -267,7 +335,7 @@ object UserManager {
         parmas["limit_age_low"] = sp.getInt("limit_age_low", 18)
         parmas["limit_age_high"] = sp.getInt("limit_age_high", 35)
         parmas["local_only"] = sp.getInt("local_only", 1)
-        parmas["city_code"] = sp.getString("city_code", "0")
+        parmas["city_code"] = getCityCode()
         parmas["audit_only"] = sp.getInt("audit_only", 1)
         parmas["gender"] = sp.getInt("filter_gender", 3)
 
