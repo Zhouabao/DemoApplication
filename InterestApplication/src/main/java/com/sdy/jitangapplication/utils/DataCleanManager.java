@@ -81,7 +81,7 @@ public class DataCleanManager {
         Log.v(TAG, "size==" + size);
         double kiloByte = size / 1024;
         if (kiloByte < 1) {
-            return size / 1024 + "kB";
+            return size / 1024 + "KB";
         }
         double megaByte = kiloByte / 1024;
         if (megaByte < 1) {
