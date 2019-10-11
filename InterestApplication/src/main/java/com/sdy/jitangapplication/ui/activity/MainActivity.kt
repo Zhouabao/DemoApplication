@@ -612,6 +612,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 //    const val TYPE_CHANGE_AVATOR_PASS = 6//头像通过,但是不是真人
 //    const val TYPE_CHANGE_ABLUM = 7//完善相册
 
+    private var dialog: GotoVerifyDialog? = null
+
     private fun showGotoVerifyDialog(type: Int, avator: String = UserManager.getAvator()) {
         var content = ""
         var title = ""
@@ -639,7 +641,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 confirmText = "修改头像"
             }
         }
-        GotoVerifyDialog.Builder(ActivityUtils.getTopActivity())
+        if (dialog != null) {
+            dialog!!.dismiss()
+            dialog = null
+        }
+
+        dialog = GotoVerifyDialog.Builder(ActivityUtils.getTopActivity())
             .setTitle(title)
             .setContent(content)
             .setConfirmText(confirmText)
@@ -649,7 +656,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             .setCancelIconIsVisibility(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
             .setOnCancelable(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
             .create()
-            .show()
+        dialog?.show()
     }
 
 

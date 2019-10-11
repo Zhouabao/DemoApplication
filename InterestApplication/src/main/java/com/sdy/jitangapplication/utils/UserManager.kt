@@ -93,9 +93,9 @@ object UserManager {
         replace_times = 0
         perfect_times = 0
         slide_times = 0
-        SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
-        SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
-        SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
+//        SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
+//        SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
+//        SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
     }
 
     /**
@@ -149,6 +149,18 @@ object UserManager {
     }
 
     /**
+     * 收消息方-回复消息后
+     * 已停止倒数k
+     */
+    fun saveStopTime(isTip: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("StopTime", isTip)
+    }
+
+    fun getStopTime(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("StopTime", false)
+    }
+
+    /**
      * 收消息方-第二轮回复
      * 聊得来就与他/她（根据性别）成为好友吧（此时成为好友最好有点动效果UI）
      */
@@ -158,6 +170,19 @@ object UserManager {
 
     fun getSecondReply(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("secondReply", false)
+    }
+
+
+    /**
+     * 清除打招呼轻提示
+     */
+    fun cleanHiTime() {
+        SPUtils.getInstance(Constants.SPNAME).remove("TipSend")
+        SPUtils.getInstance(Constants.SPNAME).remove("threetimes")
+        SPUtils.getInstance(Constants.SPNAME).remove("heread")
+        SPUtils.getInstance(Constants.SPNAME).remove("readhe")
+        SPUtils.getInstance(Constants.SPNAME).remove("StopTime")
+        SPUtils.getInstance(Constants.SPNAME).remove("secondReply")
     }
 
 
@@ -438,8 +463,27 @@ object UserManager {
 
         clearPublishParams()
         cleanVerifyData()
+        SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
+        cleanHiTime()
 
         EventBus.getDefault().removeAllStickyEvents()//移除全部
+    }
+
+
+    /**
+     * 保存剩余滑动次数
+     */
+    fun saveSlideCount(slideTimes: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("slideCount", slideTimes)
+    }
+
+    /**
+     * 获取剩余滑动次数
+     */
+    fun getSlideCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("slideCount", 0)
     }
 
 
