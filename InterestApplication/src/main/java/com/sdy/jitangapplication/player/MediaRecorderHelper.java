@@ -41,7 +41,7 @@ public class MediaRecorderHelper {
             path = context.getCacheDir().getAbsolutePath();
 
         }
-        return path + File.separator + "demoapplicaiton" + File.separator + "audio";
+        return path + File.separator + "jitangapplicaiton" + File.separator + "audio";
     }
 
 

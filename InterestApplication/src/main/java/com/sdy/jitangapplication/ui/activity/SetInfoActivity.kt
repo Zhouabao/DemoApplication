@@ -1,7 +1,9 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
@@ -9,18 +11,18 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.TimeUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
@@ -36,6 +38,7 @@ import com.sdy.jitangapplication.ui.adapter.UploadAvatorAdapter
 import com.sdy.jitangapplication.ui.dialog.UploadAvatorDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_set_info.*
 import kotlinx.android.synthetic.main.dialog_upload_avator.*
 import org.jetbrains.anko.startActivity
@@ -408,7 +411,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         return try {
             var rootFile = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                "demoapplicaiton/camera"
+                "jitangapplicaiton/camera"
             )
             if (!rootFile.exists())
                 rootFile.mkdirs()
@@ -426,4 +429,64 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
     }
 
+
+    /**
+     * 0-相机
+     * 1-相册
+     */
+    fun requestForCamera(typeCode: Int) {
+        //TODO 请求接口看是否已经屏蔽过通讯录
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            //申请权限
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_CONTACTS), typeCode)
+        } else {
+            startToCamera(typeCode)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == 1 || requestCode == 0) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startToCamera(requestCode)
+            } else {
+                CommonAlertDialog.Builder(this)
+                    .setTitle("权限开启")
+                    .setContent("您已拒绝相机权限的开启，请到设置界面打开权限后再操作")
+                    .setConfirmText("确定")
+                    .setCancelIconIsVisibility(false)
+                    .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+                        override fun onClick(dialog: Dialog) {
+                            val packageURI = Uri.parse("package:${AppUtils.getAppPackageName()}" )
+                            val  intent =   Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,packageURI)
+                            startActivity(intent)
+                            dialog.dismiss()
+                        }
+                    })
+
+
+
+
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    /**
+     * 0-相机
+     * 1-相册
+     */
+    private fun startToCamera(typeCode: Int) {
+        when (typeCode) {
+            0 -> {
+                choosePhoto()
+            }
+            1 -> {
+                takePhoto()
+            }
+        }
+    }
 }

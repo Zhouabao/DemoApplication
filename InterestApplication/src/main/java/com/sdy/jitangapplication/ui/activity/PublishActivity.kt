@@ -595,12 +595,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             if (!isCamera) {
                 rootFile = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                    "demoapplicaiton/video"
+                    "jitangapplicaiton/video"
                 )
             } else {
                 rootFile = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                    "demoapplicaiton/camera"
+                    "jitangapplicaiton/camera"
                 )
             }
             if (!rootFile.exists())
@@ -1030,6 +1030,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                                             height = pickedPhotos[index].height
                                         )
                                     )
+                                    pickedPhotos[index].filePath = file.absolutePath
                                     index++
                                 }
                                 if (index == pickedPhotos.size)
