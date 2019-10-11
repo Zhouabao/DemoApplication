@@ -49,59 +49,27 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                     (holder.itemView.vpIndicator[i] as RadioButton).isChecked = i == position
                 }
                 when (position) {
-                    0 -> {
-                        if (item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
-                            holder.itemView.matchUserIntroduce.visibility = View.GONE
-                            holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
-                        } else {
-                            holder.itemView.matchUserDynamicLl.visibility = View.VISIBLE
-                            holder.itemView.matchUserIntroduce.visibility = View.GONE
-                            holder.itemView.matchUserInfoCl.visibility = View.GONE
-                        }
+                    0 -> {  //0显示广场
+                        holder.itemView.matchUserDynamicLl.isVisible = !item.square.isNullOrEmpty()
+                        holder.itemView.matchUserIntroduce.visibility = View.GONE
+                        holder.itemView.matchUserInfoCl.isVisible = item.square.isNullOrEmpty()
                     }
-                    1 -> {
+                    1 -> {//如果广场动态有，就显示个人信息
+                        //如果广场动态没有,就判断有没有签名,    如果有签名显示签名 ,如果没有就显示个人信息
+                        // 如果有个人信息显示个人信息
+                        holder.itemView.matchUserDynamicLl.visibility = View.GONE
                         if (item.square.isNullOrEmpty()) {
                             holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
-                            holder.itemView.matchUserInfoCl.visibility = View.GONE
-                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
+                            holder.itemView.matchUserInfoCl.isVisible = item.sign.isNullOrBlank()
                         } else {
-                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
-                            holder.itemView.matchUserIntroduce.visibility = View.GONE
-                            holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
-                        }
-                    }
-                    2 -> {
-                        if (item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
-                            holder.itemView.matchUserInfoCl.visibility = View.GONE
-                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
-                        } else {
-                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
-                            if (item.sign.isNullOrBlank()) {
-                                holder.itemView.matchUserIntroduce.visibility = View.GONE
-                                holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
-                            } else {
-                                holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
-                                holder.itemView.matchUserInfoCl.visibility = View.GONE
-                            }
+                            holder.itemView.matchUserIntroduce.isVisible = false
+                            holder.itemView.matchUserInfoCl.isVisible = true
                         }
                     }
                     else -> {
-                        if (item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
-                            holder.itemView.matchUserInfoCl.visibility = View.GONE
-                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
-                        } else {
-                            holder.itemView.matchUserDynamicLl.visibility = View.GONE
-                            if (item.sign.isNullOrBlank()) {
-                                holder.itemView.matchUserIntroduce.visibility = View.GONE
-                                holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
-                            } else {
-                                holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
-                                holder.itemView.matchUserInfoCl.visibility = View.GONE
-                            }
-                        }
+                        holder.itemView.matchUserDynamicLl.isVisible = false
+                        holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
+                        holder.itemView.matchUserInfoCl.isVisible = item.sign.isNullOrBlank()
                     }
                 }
             }
