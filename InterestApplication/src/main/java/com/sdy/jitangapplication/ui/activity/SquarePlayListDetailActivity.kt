@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -19,6 +20,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.demoap.MultiListDetailPlayAdapter
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.model.SquareBean
@@ -93,7 +95,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             }
 
             override fun onError(position: Int) {
-                toast("音频播放出错")
+                CommonFunction.toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
 //                adapter.notifyItemChanged(position)
                 adapter.notifyDataSetChanged()
@@ -171,7 +173,10 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
     private fun initView() {
         ScreenUtils.setFullScreen(this)
-        btnBack.onClick { finish() }
+        btnBack.onClick {
+            setResult(Activity.RESULT_OK,intent)
+            finish()
+        }
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
         mPresenter = SquarePlayDetaiPresenter()
         mPresenter.mView = this
@@ -237,7 +242,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                             ), position
                         )
                     else
-                        toast("说点什么吧")
+                        CommonFunction.toast("说点什么吧")
                 }
                 //更多操作
                 R.id.detailPlayMoreActions -> {
@@ -380,12 +385,12 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             CommonAlertDialog.Builder(this)
                 .setTitle("举报")
                 .setContent("是否确认举报该动态？")
-                .setOnCancelListener(object :CommonAlertDialog.OnCancelListener{
+                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
                     override fun onClick(dialog: Dialog) {
                         dialog.cancel()
                     }
                 })
-                .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                     override fun onClick(dialog: Dialog) {
                         mPresenter.getSquareReport(
                             hashMapOf(
@@ -409,7 +414,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
     override fun onGetSquareReport(t: Boolean) {
         if (t) {
-            ToastUtils.showShort("举报成功！")
+            CommonFunction.toast("举报成功！")
         } else {
             ToastUtils.showShort("举报失败！")
         }
@@ -502,19 +507,21 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
     override fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>) {
         toast(data.msg)
-        if (adapter.data[position].iscollected == 1) {
-            adapter.data[position].iscollected = 0
-        } else {
-            adapter.data[position].iscollected = 1
+        if (data.code == 200) {
+            if (adapter.data[position].iscollected == 1) {
+                adapter.data[position].iscollected = 0
+            } else {
+                adapter.data[position].iscollected = 1
+            }
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
-        EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
     }
 
     override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
-        toast(data.msg)
+        CommonFunction.toast(data.msg)
         if (data.code == 200) {
             adapter.data[position].comment = ""
             adapter.notifyItemChanged(position)
@@ -545,13 +552,14 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
 
     override fun finish() {
-        super.finish()
+        setResult(Activity.RESULT_OK)
         //释放所有
         GSYVideoManager.releaseAllVideos()
         if (mediaPlayer != null) {
             mediaPlayer!!.resetMedia()
             mediaPlayer = null
         }
+        super.finish()
     }
 
     override fun onError(text: String) {

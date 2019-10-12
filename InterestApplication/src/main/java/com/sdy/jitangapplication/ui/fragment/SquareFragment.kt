@@ -1,7 +1,9 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -13,7 +15,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.FragmentUtils
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -28,6 +33,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.FriendBean
@@ -66,7 +72,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.toast
+import org.jetbrains.anko.support.v4.startActivityForResult
 
 
 /**
@@ -140,7 +146,10 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         friendsAdapter.addData(userList)
         friendsAdapter.setOnItemClickListener { adapter, view, position ->
             resetAudio()
-            startActivity<SquarePlayListDetailActivity>("target_accid" to (friendsAdapter.data[position].accid ?: 0))
+            startActivityForResult<SquarePlayListDetailActivity>(
+                200,
+                "target_accid" to (friendsAdapter.data[position].accid ?: 0)
+            )
         }
 
         return friendsView
@@ -337,7 +346,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             }
 
             override fun onError(position: Int) {
-                toast("音频播放出错")
+                CommonFunction.toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 resetAudio()
                 adapter.refreshNotifyItemChanged(position)
@@ -556,6 +565,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
                         else -> SquareBean.PIC
                     }
                     data!!.list!![tempData].originalLike = data!!.list!![tempData].isliked
+                    data!!.list!![tempData].originalLikeCount = data!!.list!![tempData].like_cnt
                 }
                 adapter.addData(data!!.list!!)
             }
@@ -583,24 +593,30 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
         }
 
 
-
     }
 
     override fun onGetSquareLikeResult(position: Int, result: Boolean) {
         if (result) {
             adapter.data[position].originalLike = adapter.data[position].isliked
+        } else {
+            adapter.data[position].isliked = adapter.data[position].originalLike
+            adapter.data[position].like_cnt = adapter.data[position].originalLikeCount
+            adapter.refreshNotifyItemChanged(position)
         }
     }
 
     override fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>?) {
-        if (data != null)
-            toast(data.msg)
-        if (adapter.data[position].iscollected == 1) {
-            adapter.data[position].iscollected = 0
-        } else {
-            adapter.data[position].iscollected = 1
+        if (data != null) {
+            CommonFunction.toast(data.msg)
+            if (data.code == 200) {
+                if (adapter.data[position].iscollected == 1) {
+                    adapter.data[position].iscollected = 0
+                } else {
+                    adapter.data[position].iscollected = 1
+                }
+                adapter.refreshNotifyItemChanged(position)
+            }
         }
-        adapter.refreshNotifyItemChanged(position)
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
@@ -608,7 +624,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int) {
         if (baseResp != null)
-            toast(baseResp.msg)
+            CommonFunction.toast(baseResp.msg)
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
@@ -856,7 +872,7 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             from = 1
         }
         if (UserManager.publishState == 1) {//正在发布中
-            ToastUtils.showShort("还有动态正在发布哦~请稍候")
+            CommonFunction.toast("还有动态正在发布哦~请稍候")
             return
         } else if (UserManager.publishState == -2) {//发布失败
             CommonAlertDialog.Builder(event.context)
@@ -1040,6 +1056,14 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
             UserManager.checkIds,
             UserManager.keyList
         )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        //查看好友的，出来请求
+        if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
+            mPresenter.getFrinedsList(friendsParams)
+        }
     }
 
 
