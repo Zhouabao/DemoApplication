@@ -961,9 +961,9 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                             resetActions();
                                         }
                                     }
-                                    if (checkGreetSendBean.getIslimit() && checkGreetSendBean.getResidue_msg_cnt() == 3) {
+                                    if (checkGreetSendBean.getIslimit() && checkGreetSendBean.getResidue_msg_cnt() == 3 && !UserManager.INSTANCE.getHeRead()) {
                                         IMMessage tipMessage = MessageBuilder.createTipMessage(container.account, container.sessionType);
-                                        tipMessage.setContent("在收到消息回复前，只能发送三条消息哦");
+                                        tipMessage.setContent("在收到对方回复前只能发送三条消息");
                                         tipMessage.setStatus(MsgStatusEnum.success);
                                         CustomMessageConfig config = new CustomMessageConfig();
                                         config.enablePush = false;//不推送
@@ -973,10 +973,10 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                         NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
                                     }
                                 } else if (checkGreetSendBean.getResidue_msg_cnt() == 0) {//次数用尽不能再发消息
-                                    if (!sendTip) {
+                                    if (!sendTip && !UserManager.INSTANCE.getHeRead()) {
                                         resetActions();
                                         IMMessage msg = MessageBuilder.createTipMessage(container.account, container.sessionType);
-                                        msg.setContent("您已发送三条消息，请耐心等待对方回复");
+                                        msg.setContent("你已发送三条消息，请等待对方回复");
                                         msg.setStatus(MsgStatusEnum.success);
                                         CustomMessageConfig config = new CustomMessageConfig();
                                         config.enablePush = false;//不推送

@@ -17,7 +17,8 @@ data class NimBean(
     val timeout_time: String = "",//过期时间
     val countdown_total: Int = 0,//总倒计时
     val countdown: Int = 0,//剩余时间
-    val residue_msg_cnt: Int = 0//	该条招呼的剩余发起消息次数
+    val residue_msg_cnt: Int = 0,//	该条招呼的剩余发起消息次数
+    val isread: Boolean = false
 
 
 )
@@ -36,7 +37,8 @@ data class CustomerMsgBean(
     val msg: String = "",
     val accid: String? = "",
     val type: Int = 0,
-    val extra: Any?)
+    val extra: Any?
+)
 
 /**
  * 所有消息的集合

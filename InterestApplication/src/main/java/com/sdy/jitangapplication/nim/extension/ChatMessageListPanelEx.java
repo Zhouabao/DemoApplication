@@ -94,6 +94,13 @@ public class ChatMessageListPanelEx {
 
     // message list view
     private RecyclerView messageListView;
+
+
+
+    public List<IMMessage> getItems() {
+        return items;
+    }
+
     private List<IMMessage> items;
     private MsgAdapter adapter;
     private ImageView ivBackground;
@@ -364,9 +371,6 @@ public class ChatMessageListPanelEx {
             return;
         }
 
-        if (message.getFromAccount().equals(UserManager.INSTANCE.getAccid())) {
-
-        }
         List<IMMessage> addedListItems = new ArrayList<>(1);
         addedListItems.add(message);
         adapter.updateShowTimeItem(addedListItems, false, true);
@@ -533,7 +537,7 @@ public class ChatMessageListPanelEx {
         }
     }
 
-    private boolean isMyMessage(IMMessage message) {
+    public boolean isMyMessage(IMMessage message) {
         return message.getSessionType() == container.sessionType
                 && message.getSessionId() != null
                 && message.getSessionId().equals(container.account);
