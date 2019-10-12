@@ -841,10 +841,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         super.onStart()
         Log.d(TAG1, "super.onStart()")
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
-        if (!enterPosition.isNullOrEmpty()) {
-            showCommentEt.isFocusable = true
-            showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 500L)
-        }
+//        if (!enterPosition.isNullOrEmpty()) {
+//            showCommentEt.isFocusable = true
+//            showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 500L)
+//        }
     }
 
     override fun onResume() {

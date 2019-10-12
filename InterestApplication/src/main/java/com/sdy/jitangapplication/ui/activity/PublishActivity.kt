@@ -876,7 +876,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             changeToNormalState()
         }
         if (KeyboardUtils.isSoftInputVisible(this)) {
-            KeyboardUtils.showSoftInput(publishContent)
+            KeyboardUtils.hideSoftInput(publishContent)
         }
     }
 

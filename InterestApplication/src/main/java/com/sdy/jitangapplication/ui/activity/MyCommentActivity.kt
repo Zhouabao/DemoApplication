@@ -8,6 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.MyCommentList
@@ -16,13 +23,6 @@ import com.sdy.jitangapplication.presenter.view.MyCommentView
 import com.sdy.jitangapplication.ui.adapter.MyCommentAdapter
 import com.sdy.jitangapplication.ui.dialog.CommentActionDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_my_comment.*
 import kotlinx.android.synthetic.main.activity_my_comment.btnBack
 import kotlinx.android.synthetic.main.activity_publish.*
@@ -174,7 +174,7 @@ class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, 
     override fun onDestroy() {
         super.onDestroy()
         if (KeyboardUtils.isSoftInputVisible(this)) {
-            KeyboardUtils.showSoftInput(publishContent)
+            KeyboardUtils.hideSoftInput(publishContent)
         }
     }
 
