@@ -1,16 +1,17 @@
 package com.sdy.jitangapplication.presenter
 
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.SquareListBean
-import com.sdy.jitangapplication.presenter.view.MyCollectionView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.SquareListBean
+import com.sdy.jitangapplication.presenter.view.MyCollectionView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 
 /**
  *    author : ZFM
@@ -54,7 +55,10 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                     super.onNext(t)
                     if (t.code == 200) {
                         mView.onGetSquareLikeResult(position, true)
+                    } else if (t.code == 403) {
+                        TickDialog(context).show()
                     } else {
+                        CommonFunction.toast(t.msg)
                         mView.onGetSquareLikeResult(position, false)
                     }
 
@@ -83,7 +87,7 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetSquareCollectResult(position, t)
-                    else  {
+                    else {
                         mView.onGetSquareCollectResult(position, t)
                     }
                 }
@@ -112,7 +116,7 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetSquareReport(t, position)
-                    else  {
+                    else {
                         mView.onGetSquareReport(t, position)
                     }
                 }
@@ -130,7 +134,7 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
     }
 
     /**
-     * 广场举报
+     * 删除广场
      */
     fun removeMySquare(params: HashMap<String, Any>, position: Int) {
         RetrofitFactory.instance.create(Api::class.java)
@@ -140,7 +144,8 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onRemoveMySquareResult(true, position)
-                    else  {
+                    else {
+                        CommonFunction.toast(t.msg)
                         mView.onRemoveMySquareResult(false, position)
                     }
                 }

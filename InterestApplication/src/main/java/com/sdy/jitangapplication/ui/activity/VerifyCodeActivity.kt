@@ -14,6 +14,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.nim.DemoCache
@@ -24,7 +25,6 @@ import com.sdy.jitangapplication.receiver.SMSBroadcastReceiver
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_verify_code.*
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
 
 /**
@@ -110,7 +110,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
         when (view.id) {
             R.id.btnVerifyCode -> {
                 if (verifyCode.length != 6) {
-                    toast("请输入验证码！")
+                    CommonFunction.toast("请输入验证码！")
                     return
                 } else {
                     mPresenter.checkVerifyCode(
@@ -185,7 +185,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
                 }
             }
         } else {
-            toast("登录失败！请重试")
+            CommonFunction.toast("登录失败！请重试")
         }
     }
 

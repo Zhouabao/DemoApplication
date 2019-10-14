@@ -31,6 +31,7 @@ import com.luck.picture.lib.config.PictureMimeType
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.presenter.SetInfoPresenter
 import com.sdy.jitangapplication.presenter.view.SetInfoView
@@ -164,7 +165,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                 val drawableRight = resources.getDrawable(R.drawable.icon_error_tip1)
                 drawableRight.setBounds(0, 0, drawableRight.intrinsicWidth, drawableRight.intrinsicHeight)
                 userNickNameEt.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null)
-                toast("昵称不合法")
+                CommonFunction.toast("昵称不合法")
                 nickNameValidate = false
                 break
             } else {

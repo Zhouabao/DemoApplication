@@ -54,7 +54,7 @@ class BlackListPresenter : BasePresenter<BlackListView>() {
                     if (t.code == 200) {
                         mView.onRemoveBlockResult(true,position)
                     } else {
-                        mView.onRemoveBlockResult(false,position)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 

@@ -70,7 +70,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
                     if (t.code == 200) {
                         mView.onGetDislikeResult(true, t.data)
                     } else {
-//                        mView.onError(t.msg)
+                        CommonFunction.toast(t.msg)
                         mView.onGetDislikeResult(false, t.data)
                     }
                 }
@@ -99,7 +99,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
                     if (t.code == 200) {
                         mView.onGetLikeResult(true, t.data ?: null, matchBean)
                     } else {
-                        mView.onError(t.msg)
+                        CommonFunction.toast(t.msg)
                         mView.onGetLikeResult(false, t.data ?: null, matchBean)
                     }
                 }
@@ -128,6 +128,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
                     if (t.code == 200) {
                         mView.onGreetSResult(true, t.code, matchBean)
                     } else {
+                        CommonFunction.toast(t.msg)
                         mView.onGreetSResult(false, t.code, matchBean)
                     }
                 }

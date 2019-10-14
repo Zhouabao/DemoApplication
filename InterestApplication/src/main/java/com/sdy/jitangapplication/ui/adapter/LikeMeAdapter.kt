@@ -104,7 +104,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                                             }
                                         }
                                     } else {
-                                        ToastUtils.showShort(t.msg)
+                                        CommonFunction.toast(t.msg)
                                     }
                                 }
 

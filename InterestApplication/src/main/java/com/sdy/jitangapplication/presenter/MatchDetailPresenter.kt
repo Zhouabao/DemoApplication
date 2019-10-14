@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.presenter
 
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -70,7 +69,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                     if (t.code == 200) {
                         mView.onGetUserActionResult(true, t.msg)
                     } else {
-                        mView.onError(t.msg)
+                        CommonFunction.toast(t.msg)
                         mView.onGetUserActionResult(false, "")
                     }
                 }
@@ -104,7 +103,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                     if (t.code == 200) {
                         mView.onGetUserActionResult(true, t.msg)
                     }else {
-                        mView.onError(t.msg)
+                        CommonFunction.toast(t.msg)
                         mView.onGetUserActionResult(false, null)
                     }
                 }
@@ -139,8 +138,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                     if (t.code == 200) {
                         mView.onGetUserActionResult(true, t.msg)
                     } else {
-                        mView.onError(t.msg)
-                        mView.onGetUserActionResult(false, null)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 
@@ -171,7 +169,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                     if (t.code == 200) {
                         mView.onGetLikeResult(true, t)
                     }else {
-                        mView.onError(t.msg)
+                        CommonFunction.toast(t.msg)
                         mView.onGetLikeResult(false, t)
                     }
                 }
@@ -200,7 +198,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                     if (t.code == 200) {
                         mView.onGreetSResult(true)
                     } else {
-                        ToastUtils.showShort(t.msg)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 

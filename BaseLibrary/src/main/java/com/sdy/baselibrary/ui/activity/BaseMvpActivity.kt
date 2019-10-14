@@ -1,10 +1,10 @@
 package com.kotlin.base.ui.activity
 
 import android.os.Bundle
+import android.view.Gravity
 import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.presenter.view.BaseView
-import org.jetbrains.anko.toast
 
 
 /*
@@ -46,7 +46,8 @@ abstract open class BaseMvpActivity<T : BasePresenter<*>> : BaseActivity(), Base
         错误信息提示，默认实现
      */
     override fun onError(text: String) {
-       // SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE).setContentText(text).show()
+        // SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE).setContentText(text).show()
+        ToastUtils.setGravity(Gravity.CENTER, 0, 0)
         ToastUtils.showShort(text)
     }
 }

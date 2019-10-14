@@ -55,7 +55,8 @@ data class SquareBean(
     var type: Int = 1,
     var duration: Long = 0L,
     var clickTime: Int = 0,
-    var originalLike: Int = 0
+    var originalLike: Int = 0,
+    var originalLikeCount: Int = 0
 
 ) :
     Serializable, MultiItemEntity {

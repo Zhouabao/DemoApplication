@@ -165,7 +165,11 @@ class ShareToFriendsDialog constructor(
             .addShare(UserManager.getToken(), UserManager.getAccid(), squareBean.id ?: 0)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
-                    ToastUtils.showShort("转发成功!")
+                    ToastUtils.setGravity(Gravity.CENTER,0,0)
+                    if (t.code == 200)
+                        ToastUtils.showShort("转发成功!")
+                    else
+                        ToastUtils.showShort(t.msg)
                     dismiss()
                     (myContext as Activity).finish()
                 }

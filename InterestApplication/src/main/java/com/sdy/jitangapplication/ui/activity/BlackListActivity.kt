@@ -4,6 +4,12 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -13,12 +19,6 @@ import com.sdy.jitangapplication.presenter.view.BlackListView
 import com.sdy.jitangapplication.ui.adapter.BlackListAdapter
 import com.sdy.jitangapplication.ui.dialog.ResolveBlackDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.kennyc.view.MultiStateView
-import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_black_list.*
 import kotlinx.android.synthetic.main.dialog_resolve_black.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -115,8 +115,6 @@ class BlackListActivity : BaseMvpActivity<BlackListPresenter>(), BlackListView, 
         if (success) {
             ToastUtils.showShort("解除拉黑成功！")
             adapter.remove(position)
-        } else {
-            ToastUtils.showShort("解除拉黑失败！")
         }
     }
 

@@ -207,7 +207,7 @@ interface Api {
 
 
     /**
-     * 评论举报
+     * 广场发布
      */
     @FormUrlEncoded
     @POST("square/announce${Constants.END_BASE_URL}")

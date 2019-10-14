@@ -1,17 +1,18 @@
 package com.sdy.jitangapplication.presenter
 
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.SquareBean
-import com.sdy.jitangapplication.model.SquareRecentlyListBean
-import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.SquareBean
+import com.sdy.jitangapplication.model.SquareRecentlyListBean
+import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 
 /**
  *    author : ZFM
@@ -87,7 +88,10 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     super.onNext(t)
                     if (t.code == 200) {
                         mView.onGetSquareLikeResult(position, true)
-                    } else{
+                    } else if (t.code == 403) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError(t.msg)
                         mView.onGetSquareLikeResult(position, false)
                     }
 
@@ -141,6 +145,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     if (t.code == 200)
                         mView.onAddCommentResult(position, t)
                     else  {
+                        CommonFunction.toast(t.msg)
                         mView.onAddCommentResult(position, t)
                     }
                 }
@@ -167,6 +172,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     if (t.code == 200)
                         mView.onRemoveMySquareResult(true, position)
                     else  {
+                        CommonFunction.toast(t.msg)
                         mView.onRemoveMySquareResult(false, position)
                     }
                 }

@@ -241,7 +241,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             inputPanel.reload(container, customization);
         }
 
-        initAitManager();
+//        initAitManager();
 
         inputPanel.switchRobotMode(NimUIKitImpl.getRobotInfoProvider().getRobotByAccount(sessionId) != null);
 
@@ -327,14 +327,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             Log.d("已读回执----", "对方已读你的消息，10分钟内对方未回复消息将过期");
 
             if (!sessionId.equals(Constants.ASSISTANT_ACCID) && (nimBean == null || !nimBean.getIsfriend())) {
-//                try {
-//                    Thread.sleep(1000L);
                 getTargetInfo(sessionId);
-                EventBus.getDefault().post(new UpdateHiEvent());
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-
             }
         }
     };
@@ -355,7 +348,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             messageListPanel.onMsgSend(message);
             //var type: Int = 0,//类型1，新消息 2，倒计时 3，普通样式 4 过期
             if (!sessionId.equals(Constants.ASSISTANT_ACCID) && nimBean != null && !nimBean.getIsfriend()) {
-                if (nimBean.getType() == 2) {
+                if (nimBean.getType() == 2 && !nimBean.getIsinitiated()) {
                     nimBean.setType(3);
                     outdateTime.setVisibility(View.GONE);
                     outdateTimeText.stopTime();

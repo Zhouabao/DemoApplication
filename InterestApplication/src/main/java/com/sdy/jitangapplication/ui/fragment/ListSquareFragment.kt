@@ -16,6 +16,7 @@ import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.ListDataEvent
 import com.sdy.jitangapplication.event.NotifyEvent
@@ -46,7 +47,6 @@ import kotlinx.android.synthetic.main.fragment_list_square.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.support.v4.toast
 
 
 /**
@@ -269,6 +269,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
     override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
 
     }
+
     override fun onSquareAnnounceResult(type: Int, b: Boolean, code: Int) {
     }
 
@@ -295,6 +296,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                         else -> SquareBean.PIC
                     }
                     data.list!![tempData].originalLike = data.list!![tempData].isliked
+                    data.list!![tempData].originalLikeCount = data.list!![tempData].like_cnt
                 }
                 adapter.addData(data!!.list!!)
                 listRefresh.finishLoadMore(true)
@@ -311,28 +313,34 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         if (result) {
             adapter.data[position].originalLike = adapter.data[position].isliked
             EventBus.getDefault().post(RefreshSquareEvent(refresh = true, from = TAG))
+        } else {
+            adapter.data[position].isliked = adapter.data[position].originalLike
+            adapter.data[position].like_cnt = adapter.data[position].originalLikeCount
+            adapter.refreshNotifyItemChanged(position)
         }
     }
 
     override fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>?) {
-        if (data != null)
-            toast(data.msg)
-        if (adapter.data[position].iscollected == 1) {
-            adapter.data[position].iscollected = 0
-        } else {
-            adapter.data[position].iscollected = 1
+        if (data != null) {
+            CommonFunction.toast(data.msg)
+            if (data.code == 200) {
+                if (adapter.data[position].iscollected == 1) {
+                    adapter.data[position].iscollected = 0
+                } else {
+                    adapter.data[position].iscollected = 1
+                }
+                adapter.notifyItemChanged(position)
+                EventBus.getDefault().post(RefreshSquareEvent(refresh = true, from = TAG))
+            }
         }
-        adapter.notifyItemChanged(position)
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
-        EventBus.getDefault().post(RefreshSquareEvent(refresh = true, from = TAG))
-
     }
 
     override fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int) {
         if (baseResp != null)
-            toast(baseResp.msg)
+            CommonFunction.toast(baseResp.msg)
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
@@ -377,7 +385,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             }
 
             override fun onError(position: Int) {
-                toast("音频播放出错")
+                CommonFunction.toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 currPlayIndex = -1
 //                adapter.notifyItemChanged(position)

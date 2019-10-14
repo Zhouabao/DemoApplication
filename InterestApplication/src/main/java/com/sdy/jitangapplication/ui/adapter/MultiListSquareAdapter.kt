@@ -30,6 +30,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.UpdateHiCountEvent
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.SquareBean
@@ -371,7 +372,7 @@ class MultiListSquareAdapter(
                     } else if (t.code == 403) {
                         UserManager.startToLogin(mContext as Activity)
                     } else {
-                        onGreetSResult(false)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 
@@ -387,8 +388,6 @@ class MultiListSquareAdapter(
     fun onGreetSResult(greetBean: Boolean) {
         if (greetBean) {
             sendChatHiMessage(mData[clickPos])
-        } else {
-            ToastUtils.showShort("打招呼失败，重新试一次吧")
         }
     }
 

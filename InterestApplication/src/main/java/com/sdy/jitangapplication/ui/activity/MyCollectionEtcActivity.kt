@@ -19,6 +19,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.model.SquareBean
@@ -46,7 +47,6 @@ import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.toast
 
 /**
  * 我的收藏、我的点赞、我的动态
@@ -223,8 +223,6 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
     }
 
 
-
-
     /**
      * 点赞按钮
      */
@@ -287,7 +285,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
             }
 
             override fun onError(position: Int) {
-                toast("音频播放出错")
+                CommonFunction.toast("音频播放出错")
                 adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 resetAudio()
 //                adapter.notifyDataSetChanged()
@@ -414,11 +412,11 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         if (result) {
             if (adapter.data[position].type == SquareBean.AUDIO) {
                 resetAudio()
-            }else if (adapter.data[position].type == SquareBean.VIDEO) {
+            } else if (adapter.data[position].type == SquareBean.VIDEO) {
                 GSYVideoManager.releaseAllVideos()
             }
             adapter.data.removeAt(position)
-            adapter.notifyItemRemoved(position+adapter.headerLayoutCount)
+            adapter.notifyItemRemoved(position + adapter.headerLayoutCount)
 
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
@@ -481,6 +479,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                     else -> SquareBean.PIC
                 }
                 data.list!![tempData].originalLike = data.list!![tempData].isliked
+                data.list!![tempData].originalLikeCount = data.list!![tempData].like_cnt
             }
             adapter.addData(data.list!!)
         }
@@ -494,27 +493,34 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         if (result) {
             adapter.data[position].originalLike = adapter.data[position].isliked
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+        } else {
+            adapter.data[position].isliked = adapter.data[position].originalLike
+            adapter.data[position].like_cnt = adapter.data[position].originalLikeCount
+            adapter.refreshNotifyItemChanged(position)
         }
     }
 
     override fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>?) {
-        if (data != null)
-            toast(data.msg)
-        if (adapter.data[position].iscollected == 1) {
-            adapter.data[position].iscollected = 0
-        } else {
-            adapter.data[position].iscollected = 1
+        if (data != null) {
+            CommonFunction.toast(data.msg)
+            if (data.code == 200) {
+                if (adapter.data[position].iscollected == 1) {
+                    adapter.data[position].iscollected = 0
+                } else {
+                    adapter.data[position].iscollected = 1
+                }
+                adapter.notifyDataSetChanged()
+                if (moreActionDialog != null && moreActionDialog.isShowing) {
+                    moreActionDialog.dismiss()
+                }
+                EventBus.getDefault().post(RefreshSquareEvent(true))
+            }
         }
-        adapter.notifyDataSetChanged()
-        if (moreActionDialog != null && moreActionDialog.isShowing) {
-            moreActionDialog.dismiss()
-        }
-        EventBus.getDefault().post(RefreshSquareEvent(true))
     }
 
     override fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int) {
         if (baseResp != null)
-            toast(baseResp.msg)
+            CommonFunction.toast(baseResp.msg)
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }

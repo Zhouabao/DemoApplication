@@ -1,19 +1,20 @@
 package com.sdy.jitangapplication.presenter
 
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.AllCommentBean
-import com.sdy.jitangapplication.model.GreetBean
-import com.sdy.jitangapplication.model.SquareBean
-import com.sdy.jitangapplication.model.StatusBean
-import com.sdy.jitangapplication.presenter.view.SquareDetailView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.AllCommentBean
+import com.sdy.jitangapplication.model.GreetBean
+import com.sdy.jitangapplication.model.SquareBean
+import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.presenter.view.SquareDetailView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 
 /**
  *    author : ZFM
@@ -92,7 +93,10 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     super.onNext(t)
                     if (t.code == 200) {
                         mView.onGetSquareLikeResult(true)
+                    } else if (t.code == 403) {
+                        TickDialog(context).show()
                     } else {
+                        CommonFunction.toast(t.msg)
                         mView.onGetSquareLikeResult(false)
                     }
                 }
@@ -172,6 +176,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     if (t.code == 200)
                         mView.onAddCommentResult(t, true)
                     else  {
+                        CommonFunction.toast(t.msg)
                         mView.onAddCommentResult(t, false)
                     }
                 }
@@ -313,6 +318,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     if (t.code == 200) {
                         mView.onGreetSResult(true)
                     } else {
+                        CommonFunction.toast(t.msg)
                         mView.onGreetSResult(false)
                     }
                 }

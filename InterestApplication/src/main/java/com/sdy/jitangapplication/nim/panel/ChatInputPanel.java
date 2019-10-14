@@ -46,6 +46,7 @@ import com.netease.nimlib.sdk.msg.model.CustomNotificationConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
+import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.event.EnablePicEvent;
 import com.sdy.jitangapplication.model.CheckGreetSendBean;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
@@ -941,61 +942,64 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
                     @Override
                     public void onNext(BaseResp<CheckGreetSendBean> checkGreetSendBeanBaseResp) {
-                        if (checkGreetSendBeanBaseResp != null && checkGreetSendBeanBaseResp.getData() != null) {
-                            CheckGreetSendBean checkGreetSendBean = checkGreetSendBeanBaseResp.getData();
-                            if (checkGreetSendBean.getIsfriend()) {//是好友，发送好友通知
-                                //todo 发送成为好友通知
-                                //发送通知
-                                updateActionsState(true);
-                                view.findViewById(com.sdy.jitangapplication.R.id.btnMakeFriends).setVisibility(View.GONE);
-                            } else {
-                                if (checkGreetSendBean.getResidue_msg_cnt() > 0 || checkGreetSendBean.getIslimit() == false) {//次数大于0就发送消息
-                                    if (type == 1) {
-                                        onTextMessageSendButtonPressed();
-                                    } else if (type == 2) {
-                                        if (audioFile != null && audioLength > 0) {
-                                            IMMessage audioMessage = MessageBuilder.createAudioMessage(container.account, container.sessionType, audioFile, audioLength);
-                                            container.proxy.sendMessage(audioMessage);
-                                            audioFile = null;
-                                            audioLength = 0;
-                                            resetActions();
+                        if (checkGreetSendBeanBaseResp != null)
+                            if (checkGreetSendBeanBaseResp.getCode() == 200 && checkGreetSendBeanBaseResp.getData() != null) {
+                                CheckGreetSendBean checkGreetSendBean = checkGreetSendBeanBaseResp.getData();
+                                if (checkGreetSendBean.getIsfriend()) {//是好友，发送好友通知
+                                    //todo 发送成为好友通知
+                                    //发送通知
+                                    updateActionsState(true);
+                                    view.findViewById(com.sdy.jitangapplication.R.id.btnMakeFriends).setVisibility(View.GONE);
+                                } else {
+                                    if (checkGreetSendBean.getResidue_msg_cnt() > 0 || checkGreetSendBean.getIslimit() == false) {//次数大于0就发送消息
+                                        if (type == 1) {
+                                            onTextMessageSendButtonPressed();
+                                        } else if (type == 2) {
+                                            if (audioFile != null && audioLength > 0) {
+                                                IMMessage audioMessage = MessageBuilder.createAudioMessage(container.account, container.sessionType, audioFile, audioLength);
+                                                container.proxy.sendMessage(audioMessage);
+                                                audioFile = null;
+                                                audioLength = 0;
+                                                resetActions();
+                                            }
                                         }
-                                    }
-                                    if (checkGreetSendBean.getIslimit() && checkGreetSendBean.getResidue_msg_cnt() == 3 && !UserManager.INSTANCE.getHeRead()) {
-                                        IMMessage tipMessage = MessageBuilder.createTipMessage(container.account, container.sessionType);
-                                        tipMessage.setContent("在收到对方回复前只能发送三条消息");
-                                        tipMessage.setStatus(MsgStatusEnum.success);
-                                        CustomMessageConfig config = new CustomMessageConfig();
-                                        config.enablePush = false;//不推送
-                                        config.enableUnreadCount = false;
-                                        tipMessage.setConfig(config);
+                                        if (checkGreetSendBean.getIslimit() && checkGreetSendBean.getResidue_msg_cnt() == 3 && !UserManager.INSTANCE.getHeRead()) {
+                                            IMMessage tipMessage = MessageBuilder.createTipMessage(container.account, container.sessionType);
+                                            tipMessage.setContent("在收到对方回复前只能发送三条消息");
+                                            tipMessage.setStatus(MsgStatusEnum.success);
+                                            CustomMessageConfig config = new CustomMessageConfig();
+                                            config.enablePush = false;//不推送
+                                            config.enableUnreadCount = false;
+                                            tipMessage.setConfig(config);
 //                                        container.proxy.sendMessage(tipMessage);
-                                        NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
-                                    }
-                                } else if (checkGreetSendBean.getResidue_msg_cnt() == 0) {//次数用尽不能再发消息
-                                    if (!sendTip && !UserManager.INSTANCE.getHeRead()) {
-                                        resetActions();
-                                        IMMessage msg = MessageBuilder.createTipMessage(container.account, container.sessionType);
-                                        msg.setContent("你已发送三条消息，请等待对方回复");
-                                        msg.setStatus(MsgStatusEnum.success);
-                                        CustomMessageConfig config = new CustomMessageConfig();
-                                        config.enablePush = false;//不推送
-                                        config.enableUnreadCount = false;
-                                        msg.setConfig(config);
+                                            NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
+                                        }
+                                    } else if (checkGreetSendBean.getResidue_msg_cnt() == 0) {//次数用尽不能再发消息
+                                        if (!sendTip && !UserManager.INSTANCE.getHeRead()) {
+                                            resetActions();
+                                            IMMessage msg = MessageBuilder.createTipMessage(container.account, container.sessionType);
+                                            msg.setContent("你已发送三条消息，请等待对方回复");
+                                            msg.setStatus(MsgStatusEnum.success);
+                                            CustomMessageConfig config = new CustomMessageConfig();
+                                            config.enablePush = false;//不推送
+                                            config.enableUnreadCount = false;
+                                            msg.setConfig(config);
 //                                        container.proxy.sendMessage(msg);
 
-                                        NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
-                                        sendTip = true;
-                                    }
+                                            NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
+                                            sendTip = true;
+                                        }
 //                                    CustomMessageConfig config = new CustomMessageConfig();
 //                                    config.enablePush = false; // 不推送
 //                                    msg.setConfig(config);
 //                                    container.proxy.sendMessage(msg);
 //                                    ToastUtils.showShort("消息次数已用完！");
+                                    }
                                 }
-                            }
 
-                        }
+                            } else {
+                                CommonFunction.INSTANCE.toast(checkGreetSendBeanBaseResp.getMsg());
+                            }
                     }
                 });
     }

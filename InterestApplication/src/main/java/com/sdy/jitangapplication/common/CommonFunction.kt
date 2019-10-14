@@ -1,7 +1,9 @@
 package com.sdy.jitangapplication.common
 
 import android.content.Context
+import android.view.Gravity
 import com.blankj.utilcode.util.NetworkUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.sdy.jitangapplication.R
 
 /**
@@ -21,21 +23,8 @@ object CommonFunction {
     }
 
 
-    /**
-     *  点击聊天
-     *  1. 好友 直接聊天 已经匹配过了
-     *
-     *  2. 不是好友 判断是否打过招呼
-     *
-     *     2.1 打过招呼 且没有过期  直接跳转界面
-     *
-     *     2.2 未打过招呼 判断招呼剩余次数
-     *
-     *         2.2.1 有次数 直接打招呼
-     *
-     *         2.2.2 无次数 其他操作--如:请求充值会员
-     */
-    fun sayHi(context: Context, targetAccid: String, hiCount: Int, isVip: Boolean) {
-
+    fun toast(msg: String) {
+        ToastUtils.setGravity(Gravity.CENTER,0,0)
+        ToastUtils.showShort(msg)
     }
 }

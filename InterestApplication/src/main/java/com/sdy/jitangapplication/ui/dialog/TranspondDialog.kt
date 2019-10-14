@@ -9,13 +9,13 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.ui.activity.ContactBookActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -216,7 +216,7 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
          */
         override fun onError(p0: SHARE_MEDIA, p1: Throwable) {
             Log.d("share===", "${p0.getName()}================${p1.message ?: ""}")
-            ToastUtils.showShort("分享失败")
+            CommonFunction.toast("分享失败")
         }
 
         /**
@@ -237,6 +237,7 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
             .addShare(UserManager.getToken(), UserManager.getAccid(), squareBean?.id ?: 0)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
+                    CommonFunction.toast(t.msg)
                     dismiss()
                 }
 

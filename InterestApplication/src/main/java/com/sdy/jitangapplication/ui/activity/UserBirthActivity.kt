@@ -6,10 +6,10 @@ import android.view.View
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.presenter.UserBirthPresenter
 import com.sdy.jitangapplication.presenter.view.UserBirthView
 import kotlinx.android.synthetic.main.activity_user_birth.*
-import org.jetbrains.anko.toast
 import java.util.*
 
 
@@ -86,7 +86,7 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
         val month = monthAndDay!!.substring(0, 2).toInt()
         val day = monthAndDay!!.substring(2, 4).toInt()
         if (!judgeBirth(month, day)) { //月份不正确
-            toast("请输入正确的月份日期！")
+            CommonFunction.toast("请输入正确的月份日期！")
             userBirthMonth.clear()
             userXingzuo.text = ""
             userXingzuo.visibility = View.GONE
@@ -109,10 +109,10 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
      */
     private fun judgeYear(year: Int): Boolean {
         if (Calendar.getInstance().get(Calendar.YEAR) - year < 18){
-            toast("年龄必须大于等于18岁哦")
+            CommonFunction.toast("年龄必须大于等于18岁哦")
             return false
         }else if (Calendar.getInstance().get(Calendar.YEAR) - year > 50) {
-            toast("年龄必须在50岁以内哦")
+            CommonFunction.toast("年龄必须在50岁以内哦")
             return false
         }
         return true

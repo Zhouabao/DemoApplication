@@ -13,6 +13,7 @@ import com.qiniu.android.storage.UpProgressHandler
 import com.qiniu.android.storage.UploadOptions
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UploadEvent
 import com.sdy.jitangapplication.model.FriendListBean
@@ -97,6 +98,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     } else if (t.code == 403) {
                         TickDialog(context).show()
                     } else {
+                        CommonFunction.toast(t.msg)
                         mView.onGetSquareLikeResult(position, false)
                     }
 
@@ -222,6 +224,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     else if (t.code == 403) {
                         UserManager.startToLogin(context as Activity)
                     } else {
+                        CommonFunction.toast(t.msg)
                         mView.onRemoveMySquareResult(false, position)
                     }
                 }
@@ -259,7 +262,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
                         }
                         mView.onSquareAnnounceResult(type, true, 200)
                     } else {
-                        mView.onError(t.msg)
+                        CommonFunction.toast(t.msg)
                         mView.onSquareAnnounceResult(type, false, t.code)
                     }
                 }

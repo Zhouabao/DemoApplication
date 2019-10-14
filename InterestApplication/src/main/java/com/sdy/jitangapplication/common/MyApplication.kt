@@ -96,8 +96,9 @@ class MyApplication : BaseApplication() {
                         initNotificationManager(customerMsgBean.msg)
                     }
                     2 -> {//对方删除自己,本地删除会话列表
-                        NIMClient.getService(MsgService::class.java)
-                            .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        // 删除与某个聊天对象的全部消息记录
+                        NIMClient.getService(MsgService::class.java).clearChattingHistory(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))

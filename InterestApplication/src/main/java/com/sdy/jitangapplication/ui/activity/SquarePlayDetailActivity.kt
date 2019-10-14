@@ -19,6 +19,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.model.SquareBean
@@ -37,7 +38,6 @@ import kotlinx.android.synthetic.main.activity_square_play_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
 import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.toast
 
 /**
  * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
@@ -306,20 +306,21 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     }
 
     override fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>) {
-        toast(data.msg)
-        if (squareBean.iscollected == 1) {
-            squareBean.iscollected = 0
-        } else {
-            squareBean.iscollected = 1
+        CommonFunction.toast(data.msg)
+        if (data.code == 200) {
+            if (squareBean.iscollected == 1) {
+                squareBean.iscollected = 0
+            } else {
+                squareBean.iscollected = 1
+            }
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
-        EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         if (moreActionDialog != null && moreActionDialog.isShowing) {
             moreActionDialog.dismiss()
         }
     }
 
     override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
-        toast(data.msg)
         EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
     }
 
@@ -365,7 +366,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                         ), 0
                     )
                 else
-                    toast("说点什么吧")
+                    CommonFunction.toast("说点什么吧")
             }
 
         }

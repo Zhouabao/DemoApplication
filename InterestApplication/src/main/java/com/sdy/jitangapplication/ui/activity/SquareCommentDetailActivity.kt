@@ -36,6 +36,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
@@ -70,7 +71,6 @@ import kotlinx.android.synthetic.main.layout_record_audio.*
 import kotlinx.android.synthetic.main.switch_video.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
 
 /**
@@ -361,7 +361,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
 
             override fun onError(position: Int) {
-                toast("音频播放出错")
+                CommonFunction.toast("音频播放出错")
                 squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
                 voicePlayView.cancelAnimation()
                 UpdateVoiceTimeThread.getInstance(
@@ -540,7 +540,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onGetSquareCollectResult(data: BaseResp<Any?>?) {
         if (data != null) {
-            toast(data.msg)
+            CommonFunction.toast(data.msg)
             if (data.code == 200) {
                 squareBean!!.iscollected = if (squareBean!!.iscollected == 1) {
                     0
@@ -571,7 +571,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onGetSquareReport(data: BaseResp<Any?>?) {
         if (data != null)
-            toast(data.msg)
+            CommonFunction.toast(data.msg)
     }
 
 
@@ -586,14 +586,18 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     override fun onLikeCommentResult(data: BaseResp<Any?>, position: Int) {
-        adapter.data[position].isliked = if (adapter.data[position].isliked == 0) {
-            adapter.data[position].like_count = adapter.data[position].like_count!!.plus(1)
-            1
+        if (data.code == 200) {
+            adapter.data[position].isliked = if (adapter.data[position].isliked == 0) {
+                adapter.data[position].like_count = adapter.data[position].like_count!!.plus(1)
+                1
+            } else {
+                adapter.data[position].like_count = adapter.data[position].like_count!!.minus(1)
+                0
+            }
+            adapter.notifyItemChanged(position)
         } else {
-            adapter.data[position].like_count = adapter.data[position].like_count!!.minus(1)
-            0
+            CommonFunction.toast(data.msg)
         }
-        adapter.notifyItemChanged(position)
     }
 
     override fun onDeleteCommentResult(data: BaseResp<Any?>, position: Int) {
@@ -606,7 +610,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     override fun onReportCommentResult(data: BaseResp<Any?>, position: Int) {
-        toast(data.msg)
+        CommonFunction.toast(data.msg)
     }
 
 
@@ -737,11 +741,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onRemoveMySquareResult(result: Boolean) {
         if (result) {
-            toast("动态删除成功!")
+            CommonFunction.toast("动态删除成功!")
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
             finish()
         } else {
-            toast("动态删除失败！")
+            CommonFunction.toast("动态删除失败！")
         }
     }
 
@@ -814,7 +818,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         val clipData = ClipData.newPlainText("label", "${adapter.data[position].content}")
         //将clipdata内容放到系统剪贴板里
         cm.setPrimaryClip(clipData)
-        toast("已复制内容到剪贴板")
+        CommonFunction.toast("已复制内容到剪贴板")
     }
 
     override fun onError(text: String) {
@@ -1003,8 +1007,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     override fun onGreetSResult(b: Boolean) {
         if (b) {
             sendChatHiMessage()
-        } else {
-            toast("打招呼失败！")
         }
     }
 

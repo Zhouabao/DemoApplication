@@ -242,7 +242,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             sendChatHiMessage(ChatHiAttachment.CHATHI_HI, matchBean)
         } else {
             card_stack_view.rewind()
-            ToastUtils.showShort("打招呼失败，重新试一次吧")
         }
     }
 
@@ -308,7 +307,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
      * 左滑不喜欢结果
      */
     override fun onGetDislikeResult(success: Boolean, data: StatusBean?) {
-        if (data != null) {
+        if (data != null && success) {
             if (data.residue == 10) {
                 ToastUtils.setGravity(Gravity.CENTER, 0, 0)
                 ToastUtils.showShort("剩余10次滑动机会")
@@ -317,6 +316,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                 card_stack_view.rewind()
                 ChargeVipDialog(activity!!).show()
             }
+        } else {
+            card_stack_view.rewind()
         }
 
 
@@ -324,7 +325,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     //status :1.喜欢成功  2.匹配成功
     override fun onGetLikeResult(success: Boolean, data: StatusBean?, matchBean: MatchBean) {
-        if (data != null) {
+        if (data != null && success) {
             if (data.residue == 10) {
                 ToastUtils.setGravity(Gravity.CENTER, 0, 0)
                 ToastUtils.showShort("剩余10次滑动机会")
@@ -337,6 +338,8 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
                 sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH, matchBean)
             }
 
+        } else {
+            card_stack_view.rewind()
         }
     }
 
@@ -732,12 +735,10 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             }
 
             override fun onFailed(code: Int) {
-                toast("$code")
                 card_stack_view.rewind()
             }
 
             override fun onException(exception: Throwable) {
-                toast("${exception.message}")
                 card_stack_view.rewind()
             }
         })

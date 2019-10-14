@@ -48,7 +48,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
 /**
  * 好友信息界面
@@ -186,7 +185,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                             }
 
                             override fun onNext(t: BaseResp<Any?>) {
-                                toast(t.msg)
+                                CommonFunction.toast(t.msg)
                                 dialog.dismiss()
 
                             }
@@ -195,7 +194,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                                 if (e is BaseException) {
                                     TickDialog(this@MessageInfoActivity).show()
                                 } else {
-                                    toast(CommonFunction.getErrorMsg(this@MessageInfoActivity))
+                                    CommonFunction.toast(CommonFunction.getErrorMsg(this@MessageInfoActivity))
                                 }
                             }
                         })
@@ -417,6 +416,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         NIMClient.getService(MsgService::class.java).deleteRecentContact2(account, SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java).clearServerHistory(account, SessionTypeEnum.P2P)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
@@ -453,6 +453,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         NIMClient.getService(MsgService::class.java).deleteRecentContact2(account, SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java).clearServerHistory(account, SessionTypeEnum.P2P)
                         EventBus.getDefault().post(UpdateContactBookEvent())
 
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
@@ -464,7 +465,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         EventBus.getDefault().post(UpdateHiEvent())
 
                     } else {
-                        ToastUtils.showShort(t.msg)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 

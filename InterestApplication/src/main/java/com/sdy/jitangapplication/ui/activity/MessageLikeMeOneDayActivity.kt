@@ -100,7 +100,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
 
         adapter.setOnItemClickListener { _, view, position ->
             if (UserManager.isUserVip())
-                MatchDetailActivity.start(this, adapter.data[position].accid ?: "",position)
+                MatchDetailActivity.start(this, adapter.data[position].accid ?: "", position)
         }
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
@@ -158,7 +158,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
 
 
     override fun onGetLikeResult(b: Boolean, statusBean: BaseResp<StatusBean?>, position: Int) {
-        if (statusBean != null) {
+        if (statusBean != null && b) {
             if (statusBean.data?.status == 2) {//匹配成功
                 adapter.data[clickPos].isfriend = 1
                 adapter.notifyItemChanged(clickPos)
@@ -241,7 +241,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLikemeOnePosEvent(event: UpdateLikemeOnePosEvent) {
         if (event.parPos != -1 && event.childPos == -1) {
-            adapter.data[event.parPos].isfriend  = 1
+            adapter.data[event.parPos].isfriend = 1
             adapter.notifyDataSetChanged()
         }
     }
