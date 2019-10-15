@@ -1,13 +1,17 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SPUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
@@ -18,24 +22,37 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.UpdateAllNewLabelEvent
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
+import com.sdy.jitangapplication.event.UpdateChooseAllLabelEvent
+import com.sdy.jitangapplication.event.UpdateChooseLabelEvent
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.presenter.NewLabelsPresenter
 import com.sdy.jitangapplication.presenter.view.NewLabelsView
-import com.sdy.jitangapplication.ui.adapter.AllNewLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.ChooseNewLabelAdapter
-import com.sdy.jitangapplication.ui.adapter.LabelTabAdapter
+import com.sdy.jitangapplication.ui.fragment.NewLabelFragment
 import com.sdy.jitangapplication.utils.UserManager
-import kotlinx.android.synthetic.main.activity_new_labels.*
+import com.sdy.jitangapplication.widgets.ColorFlipPagerTitleView
+
+import kotlinx.android.synthetic.main.activity_new_labels1.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import net.lucode.hackware.magicindicator.ViewPagerHelper
+import net.lucode.hackware.magicindicator.buildins.UIUtil
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
  * 新的标签页面
  */
-class NewLabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, View.OnClickListener {
+class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, View.OnClickListener {
     override fun onUploadLabelsResult(success: Boolean, data: LoginBean?) {
         if (success) {
             if (data != null) {
@@ -76,23 +93,21 @@ class NewLabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, 
             }
         }
 
-        labelTabAdapter.setNewData(newLabels)
-        allLabekAdapter.setNewData(newLabels[0].son)
+        initIndicator()
         checkConfirmBtnEnable()
     }
 
     //所有的标签数据源
     private val newLabels: MutableList<NewLabel> = mutableListOf()
     //所有标签的adapter
-    private val allLabekAdapter by lazy { AllNewLabelAdapter() }
+//    private val allLabekAdapter by lazy { AllNewLabelAdapter() }
     //选中的标签的adapter
     private val chooseLabelsAdapter by lazy { ChooseNewLabelAdapter() }
-    //初始化指示器
-    private val labelTabAdapter by lazy { LabelTabAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_labels)
+        EventBus.getDefault().register(this)
+        setContentView(R.layout.activity_new_labels1)
         initView()
         mPresenter.tagListv2(UserManager.getToken(), UserManager.getAccid())
     }
@@ -103,8 +118,9 @@ class NewLabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, 
         mPresenter.context = this
 
 
-        if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity"
-                    || intent.getStringExtra("from") == "publish" || intent.getStringExtra("from") == "usercenter")
+        if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity" || intent.getStringExtra(
+                "from"
+            ) == "publish" || intent.getStringExtra("from") == "usercenter")
         ) {
             btnBack.setVisible(true)
         } else {
@@ -118,41 +134,6 @@ class NewLabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, 
 
         completeLabelLL.setOnClickListener(this)
         btnBack.setOnClickListener(this)
-
-        initIndicator()
-
-
-        //所有标签
-        allLabelsRv.layoutManager = GridLayoutManager(this, 3, RecyclerView.VERTICAL, false)
-        allLabelsRv.adapter = allLabekAdapter
-        allLabekAdapter.setOnItemClickListener { _, view, position ->
-            allLabekAdapter.data[position].checked = !allLabekAdapter.data[position].checked
-            //在所有标签中选中状态
-            for (label in newLabels) {
-                for (label1 in label.son) {
-                    if (label1.parent_id == allLabekAdapter.data[position].parent_id && label1.id == allLabekAdapter.data[position].id) {
-                        label1.checked = allLabekAdapter.data[position].checked
-                    }
-                }
-            }
-
-            if (allLabekAdapter.data[position].checked) {
-                //选中标签中添加
-                if (!chooseLabelsAdapter.data.contains(allLabekAdapter.data[position])) {
-                    chooseLabelsAdapter.addData(allLabekAdapter.data[position])
-                }
-            } else {
-                //选中标签中取消选中
-                if (chooseLabelsAdapter.data.contains(allLabekAdapter.data[position])) {
-                    chooseLabelsAdapter.data.remove(allLabekAdapter.data[position])
-                    chooseLabelsAdapter.notifyDataSetChanged()
-//                    chooseLabelsAdapter.remove(position)
-                }
-            }
-            allLabekAdapter.notifyItemChanged(position)
-            checkConfirmBtnEnable()
-
-        }
 
 
         val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
@@ -175,26 +156,84 @@ class NewLabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, 
                         }
                     }
                 }
-                allLabekAdapter.notifyDataSetChanged()
+                //todo 更新vp选中状态
+                EventBus.getDefault().post(UpdateChooseAllLabelEvent(removeLabel))
+//                allLabekAdapter.notifyDataSetChanged()
                 checkConfirmBtnEnable()
             }
         }
 
     }
 
-
+    private val labelFragments by lazy { mutableListOf<NewLabelFragment>() }
     private fun initIndicator() {
-        tabLabelParent.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        tabLabelParent.adapter = labelTabAdapter
-        labelTabAdapter.setOnItemClickListener { _, view, position ->
-            for (data in labelTabAdapter.data.withIndex()) {
-                data.value.checked = data.index == position
-            }
-            allLabekAdapter.setNewData(newLabels[position].son)
-
-            labelTabAdapter.notifyDataSetChanged()
-            tabLabelParent.smoothScrollToPosition(position)
+        for (i in 0 until newLabels.size) {
+            labelFragments.add(NewLabelFragment())
         }
+        vpLabelNew.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
+            override fun getItem(position: Int): Fragment {
+                return labelFragments[position]
+            }
+
+            override fun getCount(): Int {
+                return labelFragments.size
+            }
+
+            override fun getPageTitle(position: Int): CharSequence? {
+                return newLabels[position].title
+            }
+
+        }
+        vpLabelNew.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                EventBus.getDefault().post(UpdateAllNewLabelEvent(newLabels[position].son))
+            }
+
+        })
+        vpLabelNew.currentItem = 0
+        EventBus.getDefault().post(UpdateAllNewLabelEvent(newLabels[0].son))
+
+
+        tabLabelNew.setBackgroundColor(Color.WHITE)
+        val commonNavigator = CommonNavigator(this)
+        commonNavigator.adapter = object : CommonNavigatorAdapter() {
+            override fun getCount(): Int {
+                return newLabels.size
+            }
+
+            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
+                val simplePagerTitleView = ColorFlipPagerTitleView(context)
+                simplePagerTitleView.text = newLabels[index].title
+                simplePagerTitleView.textSize = 16f
+                simplePagerTitleView.normalColor = resources.getColor(R.color.colorBlackTitle)
+                simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlackTitle)
+                simplePagerTitleView.onClick {
+                    vpLabelNew.currentItem = index
+                }
+                return simplePagerTitleView
+            }
+
+            override fun getIndicator(context: Context): IPagerIndicator {
+                val indicator = LinePagerIndicator(context)
+                indicator.mode = LinePagerIndicator.MODE_EXACTLY
+                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
+                indicator.lineWidth = UIUtil.dip2px(context, 35.0).toFloat()
+                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
+                indicator.startInterpolator = AccelerateInterpolator()
+                indicator.endInterpolator = DecelerateInterpolator(1.0f)
+                indicator.setColors(resources.getColor(R.color.colorOrange))
+                return indicator
+            }
+        }
+        tabLabelNew.navigator = commonNavigator
+        ViewPagerHelper.bind(tabLabelNew, vpLabelNew)
     }
 
     /**
@@ -261,5 +300,37 @@ class NewLabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, 
             super.onBackPressed()
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updateChooseLabelEvent(chooseLabel: UpdateChooseLabelEvent) {
+        //在所有标签中选中状态
+        for (label in newLabels) {
+            for (label1 in label.son) {
+                if (label1.parent_id == chooseLabel.label.parent_id && label1.id == chooseLabel.label.id) {
+                    label1.checked = chooseLabel.label.checked
+                }
+            }
+        }
+
+        if (chooseLabel.label.checked) {
+//                //选中标签中添加
+            if (!chooseLabelsAdapter.data.contains(chooseLabel.label)) {
+                chooseLabelsAdapter.addData(chooseLabel.label)
+            }
+        } else {
+//                //选中标签中取消选中
+            if (chooseLabelsAdapter.data.contains(chooseLabel.label)) {
+                chooseLabelsAdapter.data.remove(chooseLabel.label)
+                chooseLabelsAdapter.notifyDataSetChanged()
+            }
+        }
+        checkConfirmBtnEnable()
     }
 }

@@ -13,10 +13,10 @@ import kotlinx.android.synthetic.main.item_label_tab.view.labelName
 /**
  *    author : ZFM
  *    date   : 2019/10/910:30
- *    desc   :
+ *    desc   : 所有新标签的数据
  *    version: 1.0
  */
-class AllLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all) {
+class AllNewLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all) {
     override fun convert(helper: BaseViewHolder, item: NewLabel) {
 
         helper.itemView.labelName.text = item.title
@@ -24,7 +24,7 @@ class AllLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
         helper.itemView.labelCoverBg.isVisible = item.checked
         GlideUtil.loadRoundImgCenterCrop(
             mContext,
-            R.drawable.icon_logo,
+            item.icon,
             helper.itemView.labelCover,
             SizeUtils.dp2px(5F)
         )

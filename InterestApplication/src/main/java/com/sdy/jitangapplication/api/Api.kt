@@ -95,6 +95,14 @@ interface Api {
 
 
     /**
+     * 获取新的标签列表
+     */
+    @FormUrlEncoded
+    @POST("tags/tagListv2${Constants.END_BASE_URL}")
+    fun tagListv2(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<MutableList<NewLabel>?>>
+
+
+    /**
      * 上传标签列表
      */
     @FormUrlEncoded

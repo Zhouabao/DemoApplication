@@ -99,21 +99,20 @@
                     />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/tabLabelParent"
+            <net.lucode.hackware.magicindicator.MagicIndicator
+                    android:id="@+id/tabLabelNew"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="31dp"
                     android:layout_marginTop="26dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginBottom="15dp"
                     />
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/allLabelsRv"
-                    android:layout_marginLeft="15dp"
+            <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/vpLabelNew"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
+                    android:layout_height="match_parent"/>
+
         </LinearLayout>
 
     </com.kennyc.view.MultiStateView>

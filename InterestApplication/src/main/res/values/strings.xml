@@ -70,6 +70,9 @@
     <string name="make_friend_tip">聊得来就与TA成为好友吧</string>
     <string name="stop_count_down_tip">已停止倒数</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
     <!--拍摄照片时的滤镜    -->
 

@@ -178,7 +178,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
                         Constants.SPNAME
                     ).getStringSet("checkedLabels").isEmpty()
                 ) {//标签没有选择
-                    startActivity<LabelsActivity>()
+                    startActivity<NewLabelsActivity1>()
                 } else {//跳到主页
                     AppManager.instance.finishAllActivity()
                     startActivity<MainActivity>()

@@ -8,17 +8,7 @@ import java.io.Serializable
  *    desc   :
  *    version: 1.0
  */
-
-//可以设计一个字段来包含父级和子级之间的关系 比如A A1 A11当取消选中A时 就删除所有包含A的标签（当然一级标签不能删除 最好是以名字来连接）
-data class Label(
-    var name: String,
-    var level: Int = 1,
-    var checked: Boolean,
-    var parId: Int = -1,
-    var subId: Int = -1,
-    var subSubId: Int = -1
-)
-
+//旧的标签对象
 data class LabelBean(
     var title: String = "",
     var descr: String = "",
@@ -32,24 +22,37 @@ data class LabelBean(
     var checked: Boolean = false
 ) : Serializable
 
-
 data class Labels(
     var data: MutableList<LabelBean>,
     var version: Int
 )
 
 
-data class NewLabel(
-    val title: String,
-    val id: Int,
-    val parentId: Int,
-    var checked: Boolean = false
-)
+
+
+//-----------------新的标签-----------------
+//data class NewLabel(
+//    val title: String,
+//    val id: Int,
+//    val parentId: Int,
+//    var checked: Boolean = false
+//)
 
 data class NewLabelBean(
     val parent: String,
     val parentId: Int,
     var newLabels: MutableList<NewLabel> = mutableListOf(),
+    var checked: Boolean = false
+)
+
+
+data class NewLabel(
+    var icon: String = "",
+    var id: Int = -1,
+    var level: Int = 1,
+    var parent_id: Int = -1,
+    var son: MutableList<NewLabel> = mutableListOf(),
+    var title: String = "",
     var checked: Boolean = false
 
 )

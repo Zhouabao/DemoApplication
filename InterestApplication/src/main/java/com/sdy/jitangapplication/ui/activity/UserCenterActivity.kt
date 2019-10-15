@@ -241,6 +241,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         btnBack.setOnClickListener(this)
         settingBtn.setOnClickListener(this)
         userInfoSettingBtn.setOnClickListener(this)
+        userAvator.setOnClickListener(this)
         isVipProblem.setOnClickListener(this)
         isVipPowerBtn.setOnClickListener(this)
         userTagsBtn.setOnClickListener(this)
@@ -354,6 +355,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
                 )
             }
             //个人信息设置
+            R.id.userAvator,
             R.id.userInfoSettingBtn -> {
                 startActivityForResult<UserInfoSettingsActivity>(REQUEST_INFO_SETTING)
 
@@ -371,7 +373,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //我的标签
             R.id.userTagsBtn -> {
-                startActivityForResult<LabelsActivity>(REQUEST_LABEL_CODE, "from" to "usercenter")
+                startActivityForResult<NewLabelsActivity1>(REQUEST_LABEL_CODE, "from" to "usercenter")
             }
             //我的动态 1,我的所有动态 2我点过赞的 3 我收藏的
             R.id.userSquareCount -> {

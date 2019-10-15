@@ -174,7 +174,7 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
                 finish()
             }
             R.id.addTag -> {
-                startActivityForResult<LabelsActivity>(REQUEST_ADDTAG, "from" to "publish")
+                startActivityForResult<NewLabelsActivity1>(REQUEST_ADDTAG, "from" to "publish")
             }
         }
     }

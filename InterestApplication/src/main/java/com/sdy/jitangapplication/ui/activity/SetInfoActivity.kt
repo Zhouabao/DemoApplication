@@ -44,7 +44,6 @@ import kotlinx.android.synthetic.main.activity_set_info.*
 import kotlinx.android.synthetic.main.dialog_upload_avator.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.toast
 import top.zibin.luban.OnCompressListener
 import java.io.File
 import java.text.SimpleDateFormat
@@ -148,7 +147,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
      */
     override fun onUploadUserInfoResult(uploadResult: Boolean) {
         if (uploadResult) {
-            startActivity<LabelsActivity>()
+            startActivity<NewLabelsActivity1>()
         }
     }
 
