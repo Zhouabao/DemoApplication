@@ -28,6 +28,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.UserInfoBean
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.UserCenterPresenter
 import com.sdy.jitangapplication.presenter.view.UserCenterView
 import com.sdy.jitangapplication.ui.adapter.UserCenterCoverAdapter
@@ -253,6 +254,8 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         userDianzan.setOnClickListener(this)
         userComment.setOnClickListener(this)
         userVerifyBtn.setOnClickListener(this)
+        feedBack.setOnClickListener(this)
+
 
         multiStateView.retryBtn.onClick {
             multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -410,6 +413,10 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             R.id.userVerifyBtn -> {
                 startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
             }
+            //意见反馈
+            R.id.feedBack -> {
+                ChatActivity.start(this,Constants.ASSISTANT_ACCID)
+            }
         }
     }
 
@@ -432,7 +439,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     //发布成功后回来刷新界面数据
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRefreshEvent(event: UserCenterEvent) {
-        multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
+//        multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
         mPresenter.getMemberInfo(params)
     }
 

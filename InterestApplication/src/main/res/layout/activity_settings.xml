@@ -127,22 +127,6 @@
             app:layout_constraintTop_toBottomOf="@id/t2"
             />
 
-    <TextView
-            android:id="@+id/feedBack"
-            android:layout_width="0dp"
-            android:text="意见反馈"
-            android:textColor="@color/colorBlackTitle"
-            android:textSize="16sp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="20dp"
-            android:paddingRight="15dp"
-            android:drawableRight="@drawable/icon_more_right"
-
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/msgNotificate"
-            />
 
     <TextView
             android:id="@+id/helpCenter"
@@ -158,7 +142,7 @@
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/feedBack"
+            app:layout_constraintTop_toBottomOf="@id/msgNotificate"
             />
 
     <TextView

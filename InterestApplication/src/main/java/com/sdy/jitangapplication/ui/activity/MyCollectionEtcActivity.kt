@@ -408,6 +408,8 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
     }
 
+
+    private var deleteTag = false
     override fun onRemoveMySquareResult(result: Boolean, position: Int) {
         if (result) {
             if (adapter.data[position].type == SquareBean.AUDIO) {
@@ -419,6 +421,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
             adapter.notifyItemRemoved(position + adapter.headerLayoutCount)
 
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            deleteTag = true
         }
     }
 
@@ -444,7 +447,8 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
     }
 
     override fun finish() {
-        setResult(Activity.RESULT_OK, intent)
+        if (deleteTag)
+            setResult(Activity.RESULT_OK, intent)
         super.finish()
     }
 

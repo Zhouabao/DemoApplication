@@ -16,7 +16,6 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.AuthService
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.VersionBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.SettingsPresenter
 import com.sdy.jitangapplication.presenter.view.SettingsView
 import com.sdy.jitangapplication.utils.DataCleanManager
@@ -24,7 +23,9 @@ import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_settings.*
-import kotlinx.android.synthetic.main.layout_actionbar.*
+import kotlinx.android.synthetic.main.activity_user_center.*
+import kotlinx.android.synthetic.main.layout_actionbar.btnBack
+import kotlinx.android.synthetic.main.layout_actionbar.hotT1
 import org.jetbrains.anko.startActivity
 
 /**
@@ -54,7 +55,6 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
         blackListBtn.setOnClickListener(this)
         msgNotificate.setOnClickListener(this)
-        feedBack.setOnClickListener(this)
         helpCenter.setOnClickListener(this)
         aboutUs.setOnClickListener(this)
         clearData.setOnClickListener(this)
@@ -79,10 +79,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             R.id.msgNotificate -> {
                 startActivity<NotificationActivity>()
             }
-            //意见反馈
-            R.id.feedBack -> {
-                ChatActivity.start(this, com.sdy.jitangapplication.common.Constants.ASSISTANT_ACCID)
-            }
+
             //进入帮助
             R.id.helpCenter -> {
             }
