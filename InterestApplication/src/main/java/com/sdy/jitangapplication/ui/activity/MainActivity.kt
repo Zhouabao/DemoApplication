@@ -1,24 +1,20 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.animation.Animator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
+import android.view.animation.*
+import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
+import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.*
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.kotlin.base.common.AppManager
@@ -46,6 +42,7 @@ import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.GuideDialog
 import com.sdy.jitangapplication.ui.fragment.MatchFragment1
+import com.sdy.jitangapplication.ui.fragment.MessageListFragment
 import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
@@ -82,7 +79,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val matchFragment by lazy { MatchFragment1() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
-    private val titles = arrayOf("匹配", "发现")
+    //消息
+    private val messageListFragment by lazy { MessageListFragment() }
+
+    private val titles = arrayOf("匹配", "发现", "消息")
 
     private val guideDialog by lazy { GuideDialog(this) }
 
@@ -137,7 +137,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         setSwipeBackEnable(false)
 
         filterBtn.setOnClickListener(this)
-        notificationBtn.setOnClickListener(this)
+        llMsgCount.setOnClickListener(this)
         ivUserFace.setOnClickListener(this)
         mPresenter = MainPresenter()
         mPresenter.mView = this
@@ -151,22 +151,19 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             || NIMClient.getService(MsgService::class.java).totalUnreadCount > 0
         ) {
             //喜欢我的个数
+            msgLike.isVisible = UserManager.getLikeCount() > 0
             msgLike.text = UserManager.getLikeCount().toString()
             //打招呼个数
+            msgHi.isVisible = UserManager.getHiCount() > 0
             msgHi.text = UserManager.getHiCount().toString()
             //广场消息个数
+            msgSquare.isVisible = UserManager.getSquareCount() > 0
             msgSquare.text = UserManager.getSquareCount().toString()
             //未读消息个数
             val msgCount = NIMClient.getService(MsgService::class.java).totalUnreadCount
+            msgChat.isVisible = msgCount > 0
             msgChat.text = "$msgCount"
-            ivNewMsg.isVisible = true
-            llMsgCount.visibility = View.VISIBLE
-            try {
-                llMsgCount.visibility = View.VISIBLE
-                Thread.sleep(3000L)
-                llMsgCount.visibility = View.GONE
-            } catch (e: Exception) {
-            }
+            startMsgAnimation()
         }
 
     }
@@ -178,10 +175,37 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun initFragment() {
         mStack.add(matchFragment)
         mStack.add(squareFragment)
+        mStack.add(messageListFragment)
         vpMain.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
         initIndicator()
         vpMain.currentItem = 0
-        vpMain.setScrollable(false)
+        vpMain.setScrollable(true)
+        vpMain.offscreenPageLimit = 3
+        vpMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                val params = vpMain.layoutParams as FrameLayout.LayoutParams
+                if (position == 2) {
+                    filterBtn.setImageResource(R.drawable.icon_contact_book)
+                    headRvLabels.isVisible = false
+                    params.topMargin = SizeUtils.dp2px(0F)
+                } else {
+                    filterBtn.setImageResource(R.drawable.icon_filter)
+                    headRvLabels.isVisible = true
+                    params.topMargin = SizeUtils.dp2px(40F)
+
+                }
+                vpMain.layoutParams = params
+            }
+
+        })
     }
 
     //筛选对话框
@@ -302,10 +326,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     override fun onClick(view: View) {
         when (view.id) {
             R.id.filterBtn -> {
-                showFilterDialog()
+                if (vpMain.currentItem != 2)
+                    showFilterDialog()
+                else
+                    startActivity<ContactBookActivity>()
             }
-            R.id.llMsgCount, R.id.notificationBtn -> {//点击通知，进入消息列表
-                startActivity<MessageListActivity>()
+            R.id.llMsgCount -> {
+                vpMain.currentItem = 2
             }
             R.id.ivUserFace -> {//点击头像，进入个人中心
                 startActivity<UserCenterActivity>()
@@ -371,11 +398,15 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             UserManager.saveLikeCount(allMsgCount.likecount)
             UserManager.saveSquareCount(allMsgCount.square_count)
             //喜欢我的个数
-            msgLike.text = allMsgCount.likecount.toString()
+            msgLike.isVisible = UserManager.getLikeCount() > 0
+            msgLike.text = UserManager.getLikeCount().toString()
             //打招呼个数
-            msgHi.text = allMsgCount.greetcount.toString()
+            msgHi.isVisible = UserManager.getHiCount() > 0
+            msgHi.text = UserManager.getHiCount().toString()
             //广场消息个数
-            msgSquare.text = allMsgCount.square_count.toString()
+            msgSquare.isVisible = UserManager.getSquareCount() > 0
+            msgSquare.text = UserManager.getSquareCount().toString()
+
             //未读消息个数
             val msgCount = NIMClient.getService(MsgService::class.java).totalUnreadCount
             var totalMsgUnread = 0
@@ -383,33 +414,125 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 UserManager.saveHiCount(0)
             else if (msgCount > allMsgCount.greetcount)
                 totalMsgUnread = msgCount - allMsgCount.greetcount
-
+            msgChat.isVisible = totalMsgUnread > 0
             msgChat.text = "$totalMsgUnread"
             if ((allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || totalMsgUnread > 0)) {
-                ivNewMsg.isVisible = true
-                llMsgCount.isVisible = true
-                YoYo.with(Techniques.Bounce)
-                    .duration(3000)
-                    .withListener(object : Animator.AnimatorListener {
-                        override fun onAnimationRepeat(p0: Animator?) {
-                        }
-
-                        override fun onAnimationCancel(p0: Animator?) {
-                        }
-
-                        override fun onAnimationStart(p0: Animator?) {
-                        }
-
-                        override fun onAnimationEnd(p0: Animator?) {
-                            llMsgCount.visibility = View.GONE
-                        }
-
-                    })
-                    .playOn(llMsgCount)
+                startMsgAnimation()
             }
 
 
         }
+    }
+
+    fun startMsgAnimation() {
+
+        //消息圆点向下动画
+        val translateAnimationDown = TranslateAnimation(
+            TranslateAnimation.RELATIVE_TO_SELF,
+            0f,
+            TranslateAnimation.RELATIVE_TO_SELF,
+            0f,
+            TranslateAnimation.RELATIVE_TO_SELF,
+            0F,
+            TranslateAnimation.ABSOLUTE,
+            SizeUtils.dp2px(12F).toFloat()
+        )
+        translateAnimationDown.duration = 200
+        translateAnimationDown.fillAfter = true
+        translateAnimationDown.interpolator = DecelerateInterpolator()
+        //消息展开的动画
+        val scaleAnimationBig =
+            ScaleAnimation(0f, 1f, 0f, 1f, ScaleAnimation.RELATIVE_TO_SELF, 0F, ScaleAnimation.RELATIVE_TO_SELF, 0.5F)
+        scaleAnimationBig.duration = 200
+        scaleAnimationBig.fillAfter = true
+        scaleAnimationBig.interpolator = OvershootInterpolator()
+        //消息收起来的动画
+        val scaleAnimationSmall =
+            ScaleAnimation(1f, 0f, 1f, 0f, ScaleAnimation.RELATIVE_TO_SELF, 0f, ScaleAnimation.RELATIVE_TO_SELF, 0.5F)
+        scaleAnimationSmall.duration = 200
+        scaleAnimationSmall.fillAfter = true
+        scaleAnimationSmall.startOffset = 3000
+        scaleAnimationSmall.interpolator = DecelerateInterpolator()
+        //消息圆点向上动画
+        val translateAnimationTop = TranslateAnimation(
+            TranslateAnimation.RELATIVE_TO_SELF,
+            0f,
+            TranslateAnimation.RELATIVE_TO_SELF,
+            0f,
+            TranslateAnimation.RELATIVE_TO_SELF,
+            0F,
+            TranslateAnimation.ABSOLUTE,
+            -SizeUtils.dp2px(4F).toFloat()
+        )
+        translateAnimationTop.duration = 200
+        translateAnimationTop.fillAfter = true
+        translateAnimationTop.interpolator = DecelerateInterpolator()
+        //开始动画
+        ivNewMsg.isVisible = true
+        ivNewMsg.startAnimation(translateAnimationDown)
+
+        translateAnimationDown.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                ivNewMsg.clearAnimation()
+                ivNewMsg.isVisible = false
+                llMsgCount.isVisible = true
+                llMsgCount.startAnimation(scaleAnimationBig)
+            }
+
+            override fun onAnimationStart(p0: Animation?) {
+            }
+
+        })
+
+        scaleAnimationBig.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                llMsgCount.startAnimation(scaleAnimationSmall)
+
+            }
+
+            override fun onAnimationStart(p0: Animation?) {
+
+            }
+
+        })
+
+        scaleAnimationSmall.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationEnd(p0: Animation?) {
+                ivNewMsg.isVisible = true
+                ivNewMsg.startAnimation(translateAnimationTop)
+            }
+
+            override fun onAnimationStart(p0: Animation?) {
+
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+
+            }
+
+        })
+
+        translateAnimationTop.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(p0: Animation?) {
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                ivNewMsg.clearAnimation()
+                llMsgCount.clearAnimation()
+                llMsgCount.isVisible = false
+            }
+
+            override fun onAnimationStart(p0: Animation?) {
+            }
+
+        })
+
     }
 
 
@@ -536,11 +659,18 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             override fun getTitleView(context: Context, index: Int): IPagerTitleView {
                 val simplePagerTitleView = ScaleTransitionPagerTitleView(context)
                 simplePagerTitleView.text = titles[index]
+                simplePagerTitleView.minScale = 0.9F
                 simplePagerTitleView.textSize = 20f
+                simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                 simplePagerTitleView.normalColor = resources.getColor(R.color.colorGrayText)
                 simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlackTitle)
                 simplePagerTitleView.onClick {
                     vpMain.currentItem = index
+                    if (index == 2) {
+                        filterBtn.setImageResource(R.drawable.icon_contact_book)
+                    } else {
+                        filterBtn.setImageResource(R.drawable.icon_filter)
+                    }
                 }
                 return simplePagerTitleView
             }
@@ -552,7 +682,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 indicator.lineWidth = UIUtil.dip2px(context, 35.0).toFloat()
                 indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
                 indicator.startInterpolator = AccelerateInterpolator()
-                indicator.endInterpolator = DecelerateInterpolator(2.0f)
+                indicator.endInterpolator = DecelerateInterpolator(1.0f)
                 indicator.setColors(resources.getColor(R.color.colorOrange))
                 return indicator
             }

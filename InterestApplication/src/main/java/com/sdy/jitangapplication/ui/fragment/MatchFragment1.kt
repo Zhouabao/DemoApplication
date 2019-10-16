@@ -50,7 +50,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.toast
 
 /**
  * 匹配页面(新版)
@@ -82,7 +81,10 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
 
     }
 
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        EventBus.getDefault().register(this)
+    }
     //    private val matchUserAdapter by lazy { CardAdapter() }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_match1, container, false)
@@ -99,7 +101,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     private val manager by lazy { CardStackLayoutManager(activity!!, this) }
 
     private fun initView() {
-        EventBus.getDefault().register(this)
 
         mPresenter = MatchPresenter()
         mPresenter.mView = this

@@ -88,9 +88,11 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.NewLabelsActivity">
+        <activity android:name=".ui.activity.NewLabelsActivity"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.NewLabelsActivity1">
+        <activity android:name=".ui.activity.NewLabelsActivity1"
+                android:screenOrientation="portrait">
 
         </activity>
         <activity

@@ -198,7 +198,7 @@ class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView,
 
         })
         vpLabelNew.currentItem = 0
-        EventBus.getDefault().post(UpdateAllNewLabelEvent(newLabels[0].son))
+        EventBus.getDefault().postSticky(UpdateAllNewLabelEvent(newLabels[0].son))
 
 
         tabLabelNew.setBackgroundColor(Color.WHITE)

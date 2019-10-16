@@ -71,7 +71,7 @@ class NewLabelFragment : BaseFragment() {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     fun onUpdateNewLabelEvent(event: UpdateAllNewLabelEvent) {
         allLabekAdapter.setNewData(event.labels)
     }
