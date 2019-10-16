@@ -17,8 +17,8 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
-import com.sdy.jitangapplication.ui.activity.LabelsActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.NewLabelsActivity1
 import com.sdy.jitangapplication.ui.activity.PhoneActivity
 import com.sdy.jitangapplication.ui.activity.SetInfoActivity
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
@@ -144,7 +144,7 @@ class WXEntryActivity : WXCallbackActivity() {
                         Constants.SPNAME
                     ).getStringSet("checkedLabels").isEmpty()
                 ) {//标签没有选择
-                    startActivity<LabelsActivity>()
+                    startActivity<NewLabelsActivity1>()
                 } else {//跳到主页
                     AppManager.instance.finishAllActivity()
                     startActivity<MainActivity>()

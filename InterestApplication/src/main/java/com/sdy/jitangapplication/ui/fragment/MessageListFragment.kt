@@ -142,8 +142,7 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListV
                 R.id.content -> {
                     // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
                     // 通知中的 RecentContact 对象的未读数为0
-                    NIMClient.getService(MsgService::class.java)
-                        .clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
+                    NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
                     if (UserManager.getHiCount() > 0) {
                         UserManager.saveHiCount(UserManager.getHiCount() - 1)
                     }
@@ -220,7 +219,15 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListV
         headAdapter.setOnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {//官方助手
+                    // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
+                    // 通知中的 RecentContact 对象的未读数为0
+                    NIMClient.getService(MsgService::class.java).clearUnreadCount(Constants.ASSISTANT_ACCID, SessionTypeEnum.P2P)
+                    try {
+                        Thread.sleep(500)
+                    } catch (e: Exception) {
+                    }
                     ChatActivity.start(activity!!, Constants.ASSISTANT_ACCID)
+                    EventBus.getDefault().post(NewMsgEvent())
                     headAdapter.data[0].count = 0
                     headAdapter.notifyItemChanged(0)
                 }

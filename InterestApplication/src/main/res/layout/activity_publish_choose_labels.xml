@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:background="@color/colorWhite"
         android:layout_height="match_parent"
-        tools:context=".ui.activity.LabelsActivity">
+        tools:context=".ui.activity.PublishChooseLabelsActivity">
 
     <ImageView
             android:id="@+id/btnBack"

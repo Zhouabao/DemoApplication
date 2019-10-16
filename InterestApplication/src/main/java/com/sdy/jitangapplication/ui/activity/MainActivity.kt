@@ -424,7 +424,14 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
     }
 
-    fun startMsgAnimation() {
+    private fun startMsgAnimation() {
+        if (vpMain.currentItem == 2) {
+            ivNewMsg.isVisible = true
+            return
+        }
+
+        llMsgCount.clearAnimation()
+        ivNewMsg.clearAnimation()
 
         //消息圆点向下动画
         val translateAnimationDown = TranslateAnimation(
