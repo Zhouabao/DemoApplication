@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -22,10 +21,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.UpdateAllNewLabelEvent
-import com.sdy.jitangapplication.event.UpdateAvatorEvent
-import com.sdy.jitangapplication.event.UpdateChooseAllLabelEvent
-import com.sdy.jitangapplication.event.UpdateChooseLabelEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.presenter.NewLabelsPresenter
@@ -34,7 +30,6 @@ import com.sdy.jitangapplication.ui.adapter.ChooseNewLabelAdapter
 import com.sdy.jitangapplication.ui.fragment.NewLabelFragment
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.ColorFlipPagerTitleView
-
 import kotlinx.android.synthetic.main.activity_new_labels1.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -69,7 +64,6 @@ class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView,
                 AppManager.instance.finishAllActivity()
                 startActivity<MainActivity>()
             }
-            CommonFunction.toast("上传成功！")
         }
 
     }
@@ -278,7 +272,6 @@ class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView,
                 for (index in 0 until chooseLabelsAdapter.data.size) {
                     checkIds[index] = chooseLabelsAdapter.data[index].id
                 }
-                Log.i("params", "${android.os.Build.BRAND},${android.os.Build.HOST},${android.os.Build.PRODUCT}")
                 mPresenter.uploadLabels(params, checkIds)
             }
             R.id.btnBack -> {
@@ -332,5 +325,7 @@ class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView,
             }
         }
         checkConfirmBtnEnable()
+        EventBus.getDefault().post(ChooseLabelCountEvent(chooseLabelsAdapter.data.size))
     }
+
 }

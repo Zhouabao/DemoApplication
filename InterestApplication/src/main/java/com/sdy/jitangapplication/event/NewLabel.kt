@@ -14,3 +14,6 @@ class UpdateAllNewLabelEvent(var labels: MutableList<NewLabel> = mutableListOf()
 class UpdateChooseLabelEvent(var label: NewLabel)
 
 class UpdateChooseAllLabelEvent(var label: NewLabel)
+
+
+class ChooseLabelCountEvent(var count: Int)

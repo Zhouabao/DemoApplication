@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kotlin.base.ui.fragment.BaseFragment
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.event.ChooseLabelCountEvent
 import com.sdy.jitangapplication.event.UpdateAllNewLabelEvent
 import com.sdy.jitangapplication.event.UpdateChooseAllLabelEvent
 import com.sdy.jitangapplication.event.UpdateChooseLabelEvent
@@ -34,6 +35,8 @@ private const val ARG_PARAM2 = "param2"
 class NewLabelFragment : BaseFragment() {
     //所有标签的adapter
     private val allLabekAdapter by lazy { AllNewLabelAdapter() }
+    //选中的标签的数量
+    private var checkLabelsSize = 0
 
     //所有的标签数据源
     private val newLabels: MutableList<NewLabel> = mutableListOf()
@@ -42,6 +45,7 @@ class NewLabelFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         EventBus.getDefault().register(this)
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_new_label, container, false)
@@ -56,6 +60,10 @@ class NewLabelFragment : BaseFragment() {
         allLabelsRv.layoutManager = GridLayoutManager(activity!!, 3, RecyclerView.VERTICAL, false)
         allLabelsRv.adapter = allLabekAdapter
         allLabekAdapter.setOnItemClickListener { _, view, position ->
+            if (!allLabekAdapter.data[position].checked && checkLabelsSize == com.sdy.jitangapplication.common.Constants.LABEL_MAX_COUNT + 1) {
+                return@setOnItemClickListener
+            }
+
             allLabekAdapter.data[position].checked = !allLabekAdapter.data[position].checked
             //todo 发送通知更新选中状态
             EventBus.getDefault().post(UpdateChooseLabelEvent(allLabekAdapter.data[position]))
@@ -71,7 +79,7 @@ class NewLabelFragment : BaseFragment() {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onUpdateNewLabelEvent(event: UpdateAllNewLabelEvent) {
         allLabekAdapter.setNewData(event.labels)
     }
@@ -86,5 +94,10 @@ class NewLabelFragment : BaseFragment() {
                 break
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onChooseLabelCountEvent(event: ChooseLabelCountEvent) {
+        checkLabelsSize = event.count
     }
 }

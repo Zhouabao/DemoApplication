@@ -8,6 +8,7 @@ import com.google.android.flexbox.*
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.presenter.LabelsPresenter
@@ -61,6 +62,11 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
         //设置添加和移除动画
         labelRecyclerview.itemAnimator = ScaleInLeftAnimator()
         adapter.setOnItemClickListener { _, view, position ->
+            val tempData = adapter.data[position]
+            if (!tempData.checked && checkedLabels.size==3) {
+                return@setOnItemClickListener
+            }
+
             //                adapter.dataList[position].checked = !item.checked
             adapter.data[position].checked = !adapter.data[position].checked
             adapter.notifyItemChanged(position)
@@ -149,7 +155,10 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
                 checkedLabels.remove(label)
             }
         }
-        if (checkedLabels.size == 0) {
+        if (checkedLabels.size == 0 || checkedLabels.size > 3) {
+            if (checkedLabels.size>3){
+                CommonFunction.toast("最多只能选择3个标签")
+            }
 //            shape_rectangle_unable_btn_15dp
             completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_unable_btn_15dp)
             completeLabelBtn.setTextColor(resources.getColor(R.color.colorBlackText))
