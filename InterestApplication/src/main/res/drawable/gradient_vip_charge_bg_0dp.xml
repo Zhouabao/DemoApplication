@@ -12,9 +12,8 @@
     <!--android:angle="180"/>-->
     <gradient
             android:type="linear"
-            android:useLevel="true"
             android:startColor="#FF7326"
             android:endColor="#FFCB75"
-            android:angle="135"/>
+            android:angle="90"/>
 
 </shape>
