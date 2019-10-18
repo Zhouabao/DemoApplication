@@ -138,7 +138,9 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
     override fun onClick(view: View) {
         when (view.id) {
             R.id.sendMsg -> {
+                sendMsg.isEnabled = false
                 sendMatchHiMessage()
+
             }
         }
     }
@@ -167,10 +169,12 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
             override fun onFailed(code: Int) {
                 CommonFunction.toast("发送失败！")
+                sendMsg.isEnabled = true
             }
 
             override fun onException(exception: Throwable) {
                 CommonFunction.toast("发送失败！")
+                sendMsg.isEnabled = true
             }
         })
         return true
