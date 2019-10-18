@@ -638,6 +638,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         when (view.id) {
             R.id.squareEdit -> {
                 mPresenter.checkBlock(UserManager.getToken(),UserManager.getAccid())
+                squareEdit.isEnabled = false
             }
         }
     }
@@ -1042,6 +1043,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         if (result) {
             onRePublishEvent(RePublishEvent(true, activity!!))
         }
+        squareEdit.isEnabled = true
     }
 
 

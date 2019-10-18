@@ -285,9 +285,8 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         val headView = LayoutInflater.from(this).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
         coverAdapter.headerLayout.onClick {
-
             mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
-
+            coverAdapter.headerLayout.isEnabled = false
         }
 
         //我的访客封面
@@ -313,6 +312,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     override fun onCheckBlockResult(b: Boolean) {
         if (b)
             EventBus.getDefault().postSticky(RePublishEvent(true, this))
+        coverAdapter.headerLayout.isEnabled = true
     }
 
     override fun onError(text: String) {
