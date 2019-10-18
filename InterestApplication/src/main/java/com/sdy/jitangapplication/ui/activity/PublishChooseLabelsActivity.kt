@@ -64,6 +64,7 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
         adapter.setOnItemClickListener { _, view, position ->
             val tempData = adapter.data[position]
             if (!tempData.checked && checkedLabels.size==3) {
+                CommonFunction.toast("最多只能选择3个标签")
                 return@setOnItemClickListener
             }
 

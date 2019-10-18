@@ -54,6 +54,9 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoadMoreListener,
     MultiListSquareAdapter.ResetAudioListener {
+    override fun onCheckBlockResult(result: Boolean) {
+
+    }
 
     private val TAG = ListSquareFragment::class.java.simpleName
     private lateinit var scrollCalculatorHelper: ScrollCalculatorHelper

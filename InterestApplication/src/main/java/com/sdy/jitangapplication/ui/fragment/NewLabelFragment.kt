@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kotlin.base.ui.fragment.BaseFragment
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.ChooseLabelCountEvent
 import com.sdy.jitangapplication.event.UpdateAllNewLabelEvent
 import com.sdy.jitangapplication.event.UpdateChooseAllLabelEvent
@@ -60,7 +62,8 @@ class NewLabelFragment : BaseFragment() {
         allLabelsRv.layoutManager = GridLayoutManager(activity!!, 3, RecyclerView.VERTICAL, false)
         allLabelsRv.adapter = allLabekAdapter
         allLabekAdapter.setOnItemClickListener { _, view, position ->
-            if (!allLabekAdapter.data[position].checked && checkLabelsSize == com.sdy.jitangapplication.common.Constants.LABEL_MAX_COUNT + 1) {
+            if (!allLabekAdapter.data[position].checked && checkLabelsSize == Constants.LABEL_MAX_COUNT + 1) {
+                CommonFunction.toast("最多只能选${Constants.LABEL_MAX_COUNT}个标签")
                 return@setOnItemClickListener
             }
 
@@ -96,7 +99,7 @@ class NewLabelFragment : BaseFragment() {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     fun onChooseLabelCountEvent(event: ChooseLabelCountEvent) {
         checkLabelsSize = event.count
     }

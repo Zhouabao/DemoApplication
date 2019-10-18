@@ -492,10 +492,16 @@ interface Api {
     @POST("Relationship/greetApprove${Constants.END_BASE_URL}")
     fun greetApprove(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<Any?>>
 
+    /**
+     * 发布动态验证是否被禁封
+     */
+    @FormUrlEncoded
+    @POST("Square/checkBlock${Constants.END_BASE_URL}")
+    fun checkBlock(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<Any?>>
+
 
     /**
-     * 招呼认证
-     * 防骚扰
+     * 设置开关
      */
     @FormUrlEncoded
     @POST("MemberInfo/mySettings${Constants.END_BASE_URL}")

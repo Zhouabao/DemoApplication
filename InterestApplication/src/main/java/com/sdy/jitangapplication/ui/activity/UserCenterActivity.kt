@@ -51,6 +51,8 @@ import org.jetbrains.anko.startActivityForResult
  * 个人中心
  */
 class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterView, View.OnClickListener {
+
+
     companion object {
         const val REQUEST_LABEL_CODE = 10
         const val REQUEST_INFO_SETTING = 11
@@ -283,7 +285,9 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         val headView = LayoutInflater.from(this).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
         coverAdapter.headerLayout.onClick {
-            EventBus.getDefault().postSticky(RePublishEvent(true, this))
+
+            mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
+
         }
 
         //我的访客封面
@@ -303,6 +307,12 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             userInfoBean = userinfo
             initData()
         }
+    }
+
+
+    override fun onCheckBlockResult(b: Boolean) {
+        if (b)
+            EventBus.getDefault().postSticky(RePublishEvent(true, this))
     }
 
     override fun onError(text: String) {

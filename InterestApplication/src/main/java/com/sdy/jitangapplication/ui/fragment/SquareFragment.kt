@@ -80,6 +80,7 @@ import org.jetbrains.anko.support.v4.startActivityForResult
  */
 class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
     View.OnClickListener, MultiListSquareAdapter.ResetAudioListener {
+
     override fun loadData() {
         initView()
 
@@ -636,7 +637,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     override fun onClick(view: View) {
         when (view.id) {
             R.id.squareEdit -> {
-                onRePublishEvent(RePublishEvent(true, activity!!))
+                mPresenter.checkBlock(UserManager.getToken(),UserManager.getAccid())
             }
         }
     }
@@ -829,7 +830,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             llRetry.isVisible = true
             btnClose.isVisible = true
 
-            if (event.code == 400) { //内容违规重新去编辑
+            if (event.code == 402) { //内容违规重新去编辑
                 UserManager.publishState = -1
                 uploadProgressTv.text = "内容违规请重新编辑"
                 iconRetry.setImageResource(R.drawable.icon_edit_retry)
@@ -1034,6 +1035,15 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
         from = 1
     }
+
+
+    //验证用户是否被封禁结果
+    override fun onCheckBlockResult(result: Boolean) {
+        if (result) {
+            onRePublishEvent(RePublishEvent(true, activity!!))
+        }
+    }
+
 
     private fun uploadPictures() {
         //上传图片

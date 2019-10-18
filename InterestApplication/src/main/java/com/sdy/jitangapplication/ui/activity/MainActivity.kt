@@ -643,13 +643,26 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LABEL_CODE) {
+                var checked = false
                 val list = UserManager.getSpLabels()
                 for (i in 0 until labelList.size) {
                     for (j in 0 until list.size) {
                         if (labelList[i].id == list[j].id) {
                             list[j].checked = labelList[i].checked
+                            if (list[j].checked) {
+                                checked = true
+                                if (UserManager.getGlobalLabelId() != list[j].id) {
+                                    SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", list[j].id)
+                                    EventBus.getDefault().postSticky(UpdateLabelEvent(list[j]))
+                                }
+                            }
                         }
                     }
+                }
+                if (!checked) {
+                    list[0].checked = true
+                    SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", list[0].id)
+                    EventBus.getDefault().postSticky(UpdateLabelEvent(list[0]))
                 }
                 labelList = list
                 labelAdapter.setData(labelList)

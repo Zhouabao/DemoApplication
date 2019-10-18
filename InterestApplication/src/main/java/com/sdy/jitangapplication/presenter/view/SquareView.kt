@@ -24,6 +24,11 @@ interface SquareView : BaseView {
     fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean = false)
 
     /**
+     * 设置用户封禁
+     */
+    fun onCheckBlockResult( result: Boolean)
+
+    /**
      * 广场点赞
      */
     fun onGetSquareLikeResult(position: Int, result: Boolean)

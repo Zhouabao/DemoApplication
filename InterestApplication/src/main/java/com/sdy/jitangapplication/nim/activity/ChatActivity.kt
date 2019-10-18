@@ -35,9 +35,8 @@ import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.EnablePicEvent
-import com.sdy.jitangapplication.event.NimHeadEvent
 import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.model.NimBean
@@ -55,27 +54,6 @@ import org.greenrobot.eventbus.EventBus
 class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
 
-    public fun getTargetInfo(target_accid: String) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .getTargetInfo(
-                hashMapOf(
-                    "accid" to UserManager.getAccid(),
-                    "token" to UserManager.getToken(),
-                    "target_accid" to target_accid
-                )
-            )
-            .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
-                override fun onNext(t: BaseResp<NimBean?>) {
-                    super.onNext(t)
-                    if (t.code == 200 && t.data != null) {
-                        EventBus.getDefault().postSticky(NimHeadEvent(t.data!!))
-                        EventBus.getDefault().postSticky(EnablePicEvent(t.data!!.isfriend))
-                    }
-                }
-            })
-    }
-
-
     private var isResume = false
 
     companion object {
@@ -85,16 +63,47 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
             customization: SessionCustomization = DefaultP2PSessionCustomization(),
             anchor: IMMessage? = null
         ) {
-            val intent = Intent()
-            intent.putExtra(Extras.EXTRA_ACCOUNT, contactId)
-            intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
-            if (anchor != null) {
-                intent.putExtra(Extras.EXTRA_ANCHOR, anchor)
-            }
-            intent.setClass(context, ChatActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            if (contactId == Constants.ASSISTANT_ACCID) {
+                val intent = Intent()
+                intent.putExtra(Extras.EXTRA_ACCOUNT, contactId)
+                intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
+                if (anchor != null) {
+                    intent.putExtra(Extras.EXTRA_ANCHOR, anchor)
+                }
+                intent.setClass(context, ChatActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-            context.startActivity(intent)
+                context.startActivity(intent)
+            } else
+                RetrofitFactory.instance.create(Api::class.java)
+                    .getTargetInfo(
+                        hashMapOf(
+                            "accid" to UserManager.getAccid(),
+                            "token" to UserManager.getToken(),
+                            "target_accid" to contactId
+                        )
+                    )
+                    .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
+                        override fun onNext(t: BaseResp<NimBean?>) {
+                            super.onNext(t)
+                            if (t.code == 200) {
+                                val intent = Intent()
+                                intent.putExtra(Extras.EXTRA_ACCOUNT, contactId)
+                                intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
+                                if (anchor != null) {
+                                    intent.putExtra(Extras.EXTRA_ANCHOR, anchor)
+                                }
+                                intent.setClass(context, ChatActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+                                context.startActivity(intent)
+                            } else if (t.code == 400) {
+                                CommonFunction.toast(t.msg)
+                            }
+                        }
+                    })
+
+
         }
     }
 
@@ -109,7 +118,8 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                     Gson().fromJson<CustomerMsgBean>(customNotification.content, CustomerMsgBean::class.java)
                 when (customerMsgBean.type) {
                     2 -> {//对方删除自己,本地删除会话列表
-                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java)
+                            .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
                         EventBus.getDefault().post(UpdateContactBookEvent())
                         val intent = Intent()
                         intent.setClass(this@ChatActivity, MainActivity::class.java)
@@ -121,9 +131,6 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                 Log.d("OkHttp", "${customerMsgBean.type}=================${customerMsgBean.msg}=================")
             }
         }
-
-
-
 
 
     /**
@@ -145,9 +152,6 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         }
         requestBuddyInfo()
     }
-
-
-
 
 
     /**
@@ -195,7 +199,6 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         requestBuddyInfo()
         displayOnlineState()
         registerObservers(true)
-//        getTargetInfo(sessionId)
     }
 
     override fun onDestroy() {

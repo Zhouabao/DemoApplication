@@ -79,8 +79,16 @@ class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView,
                     for (label2 in label1.son) {
                         if (label.id == label2.id && label.id != Constants.RECOMMEND_TAG_ID) { //剔除推荐标签
                             label2.checked = true
-                            if (!chooseLabelsAdapter.data.contains(label2))
+                            var hasChecked = false
+                            for (data in chooseLabelsAdapter.data) {
+                                if (data.id == label2.id) {
+                                    hasChecked = true
+                                    break
+                                }
+                            }
+                            if (!hasChecked) {
                                 chooseLabelsAdapter.addData(label2)
+                            }
                         }
                     }
                 }
@@ -88,6 +96,7 @@ class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView,
         }
 
         initIndicator()
+        EventBus.getDefault().postSticky(ChooseLabelCountEvent(chooseLabelsAdapter.data.size))
         checkConfirmBtnEnable()
     }
 
@@ -152,6 +161,7 @@ class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView,
                 }
                 //todo 更新vp选中状态
                 EventBus.getDefault().post(UpdateChooseAllLabelEvent(removeLabel))
+                EventBus.getDefault().postSticky(ChooseLabelCountEvent(chooseLabelsAdapter.data.size))
 //                allLabekAdapter.notifyDataSetChanged()
                 checkConfirmBtnEnable()
             }
@@ -325,7 +335,7 @@ class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView,
             }
         }
         checkConfirmBtnEnable()
-        EventBus.getDefault().post(ChooseLabelCountEvent(chooseLabelsAdapter.data.size))
+        EventBus.getDefault().postSticky(ChooseLabelCountEvent(chooseLabelsAdapter.data.size))
     }
 
 }

@@ -211,6 +211,41 @@ class SquarePresenter : BasePresenter<SquareView>() {
 
 
     /**
+     * 获取广场列表
+     */
+    fun checkBlock(token: String, accid: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .checkBlock(token, accid)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onCheckBlockResult(true)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        CommonFunction.toast(t.msg)
+                        mView.onCheckBlockResult(false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError("服务器错误~")
+                        mView.onCheckBlockResult(false)
+                    }
+                }
+            })
+    }
+
+
+    /**
      * 广场举报
      */
     fun removeMySquare(params: HashMap<String, Any>, position: Int) {
