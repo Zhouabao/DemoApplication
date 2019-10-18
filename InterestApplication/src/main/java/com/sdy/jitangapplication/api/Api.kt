@@ -27,7 +27,7 @@ interface Api {
     /**
      * 版本更新
      */
-    @POST("member_info/getVersion${Constants.END_BASE_URL}")
+    @POST("OpenApi/getVersion${Constants.END_BASE_URL}")
     fun getVersion(@Query("token") token: String, @Query("accid") accid: String): Observable<BaseResp<VersionBean?>>
 
 
