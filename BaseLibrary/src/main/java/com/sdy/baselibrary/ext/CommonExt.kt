@@ -1,16 +1,19 @@
 package com.kotlin.base.ext
 
+import android.graphics.Color
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import com.sdy.baselibrary.glide.GlideUtil
+import com.blankj.utilcode.util.ToastUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.rx.BaseFunc
 import com.kotlin.base.rx.BaseFuncBoolean
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.widgets.DefaultTextWatcher
+import com.sdy.baselibrary.glide.GlideUtil
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -92,4 +95,12 @@ fun View.setVisible(visible: Boolean) {
  */
 fun ImageView.loadUrl(url: String) {
     GlideUtil.loadImg(context, url, this)
+}
+
+
+fun toast(msg: String) {
+    ToastUtils.setBgColor(Color.parseColor("#80000000"))
+    ToastUtils.setMsgColor(Color.WHITE)
+    ToastUtils.setGravity(Gravity.CENTER, 0, 0)
+    ToastUtils.showShort(msg)
 }

@@ -101,6 +101,11 @@
         <item name="android:windowExitAnimation">@anim/dialog_bottom_exit</item>
     </style>
 
+    <style name="MyDialogCenterAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_center_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_center_exit</item>
+    </style>
+
     <!--横向的progressBar-->
     <style name="progressBarHorizontal" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>

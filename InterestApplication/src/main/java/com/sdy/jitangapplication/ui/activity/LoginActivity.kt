@@ -4,10 +4,10 @@ import android.os.Bundle
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.mm.opensdk.modelmsg.SendAuth
@@ -73,7 +73,7 @@ class LoginActivity : BaseActivity() {
         val wxapi = WXAPIFactory.createWXAPI(this, null)
         wxapi.registerApp(Constants.WECHAT_APP_ID)
         if (!wxapi.isWXAppInstalled) {
-            ToastUtils.showShort("你没有安装微信")
+            CommonFunction.toast("你没有安装微信")
             return
         }
         val req = SendAuth.Req()

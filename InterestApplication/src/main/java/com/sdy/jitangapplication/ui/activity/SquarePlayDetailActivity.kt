@@ -259,21 +259,21 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onRemoveMySquareResult(b: Boolean, position: Int) {
         if (b) {
-            ToastUtils.showShort("删除动态成功！")
+            CommonFunction.toast("删除动态成功！")
             finish()
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         } else {
-            ToastUtils.showShort("删除动态失败！")
+            CommonFunction.toast("删除动态失败！")
         }
 
     }
 
     override fun onGetSquareReport(t: Boolean) {
         if (t) {
-            ToastUtils.showShort("举报成功！")
+            CommonFunction.toast("举报成功！")
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         } else {
-            ToastUtils.showShort("举报失败！")
+            CommonFunction.toast("举报失败！")
         }
     }
 

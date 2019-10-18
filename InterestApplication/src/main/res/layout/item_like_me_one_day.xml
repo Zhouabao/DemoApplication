@@ -31,6 +31,14 @@
             app:layout_constraintRight_toRightOf="@id/likeMeAvator"
             app:layout_constraintTop_toTopOf="@id/likeMeAvator"/>
 
+    <View
+            android:background="@drawable/gradient_like_me_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/likeMeTag"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
     <TextView
             android:id="@+id/likeMeTag"
             tools:text="游戏"

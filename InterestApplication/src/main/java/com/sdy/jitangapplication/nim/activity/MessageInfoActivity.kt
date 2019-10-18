@@ -370,12 +370,12 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         friendStar.isChecked = false
                         EventBus.getDefault().post(UpdateContactBookEvent())
                     } else {
-                        ToastUtils.showShort(t.msg)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    ToastUtils.showShort(CommonFunction.getErrorMsg(this@MessageInfoActivity))
+                    CommonFunction.toast(CommonFunction.getErrorMsg(this@MessageInfoActivity))
                 }
             })
     }
@@ -393,12 +393,12 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         friendStar.isChecked = true
                         EventBus.getDefault().post(UpdateContactBookEvent())
                     } else {
-                        ToastUtils.showShort(t.msg)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    ToastUtils.showShort(CommonFunction.getErrorMsg(this@MessageInfoActivity))
+                    CommonFunction.toast(CommonFunction.getErrorMsg(this@MessageInfoActivity))
 
                 }
             })
@@ -425,12 +425,12 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                             ActivityUtils.finishActivity(MessageHiActivity::class.java)
                         EventBus.getDefault().post(UpdateHiEvent())
                     } else {
-                        ToastUtils.showShort(t.msg)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    ToastUtils.showShort(CommonFunction.getErrorMsg(this@MessageInfoActivity))
+                    CommonFunction.toast(CommonFunction.getErrorMsg(this@MessageInfoActivity))
                 }
             })
 
@@ -470,7 +470,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 }
 
                 override fun onError(e: Throwable?) {
-                    ToastUtils.showShort(CommonFunction.getErrorMsg(this@MessageInfoActivity))
+                    CommonFunction.toast(CommonFunction.getErrorMsg(this@MessageInfoActivity))
 
                 }
             })

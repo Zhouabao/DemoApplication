@@ -13,6 +13,7 @@ import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.nim.DemoCache
@@ -28,7 +29,6 @@ import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.umeng.socialize.weixin.view.WXCallbackActivity
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
 /**
  * 微信回调界面
@@ -151,7 +151,7 @@ class WXEntryActivity : WXCallbackActivity() {
                 }
             }
         } else {
-            toast("登录失败！请重试")
+            CommonFunction.toast("登录失败！请重试")
         }
     }
 

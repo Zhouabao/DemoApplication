@@ -29,6 +29,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.utils.UserManager
@@ -165,17 +166,16 @@ class ShareToFriendsDialog constructor(
             .addShare(UserManager.getToken(), UserManager.getAccid(), squareBean.id ?: 0)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
-                    ToastUtils.setGravity(Gravity.CENTER,0,0)
                     if (t.code == 200)
-                        ToastUtils.showShort("转发成功!")
+                        CommonFunction.toast("转发成功!")
                     else
-                        ToastUtils.showShort(t.msg)
+                        CommonFunction.toast(t.msg)
                     dismiss()
                     (myContext as Activity).finish()
                 }
 
                 override fun onError(e: Throwable?) {
-                    ToastUtils.showShort("转发成功!")
+                    CommonFunction.toast("转发成功!")
                     dismiss()
                     (myContext as Activity).finish()
                 }
@@ -226,11 +226,11 @@ class ShareToFriendsDialog constructor(
             }
 
             override fun onFailed(code: Int) {
-                ToastUtils.showShort("$code")
+
             }
 
             override fun onException(exception: Throwable) {
-                ToastUtils.showShort(exception.message ?: "")
+
             }
         })
         return true

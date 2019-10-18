@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.presenter
 
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -8,6 +7,8 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.SettingsBean
 import com.sdy.jitangapplication.model.VersionBean
 import com.sdy.jitangapplication.presenter.view.SettingsView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -35,7 +36,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     } else {
                         mView.onBlockedAddressBookResult(false)
                     }
-                    ToastUtils.showShort(t.msg)
+                    CommonFunction.toast(t.msg)
 
                 }
 
@@ -62,7 +63,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     } else {
                         mView.onHideDistanceResult(false)
                     }
-                    ToastUtils.showShort(t.msg)
+                    CommonFunction.toast(t.msg)
                 }
 
                 override fun onError(e: Throwable?) {
@@ -82,6 +83,30 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     if (t.code == 200) {
                         mView.onGetVersionResult(t.data)
                     }
+                }
+            })
+    }
+
+
+    fun greetApprove(token: String, accid: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .greetApprove(token, accid)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    CommonFunction.toast(t.msg)
+                    mView.onGreetApproveResult(t.code == 200)
+                }
+            })
+    }
+
+
+    fun mySettings(token: String, accid: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .mySettings(token, accid)
+            .excute(object : BaseSubscriber<BaseResp<SettingsBean?>>(mView) {
+                override fun onNext(t: BaseResp<SettingsBean?>) {
+                    if (t.code == 200 && t.data != null)
+                        mView.onSettingsBeanResult(t.data!!)
                 }
             })
     }

@@ -14,6 +14,7 @@ import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchView
+import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 
 /**
@@ -127,6 +128,9 @@ class MatchPresenter : BasePresenter<MatchView>() {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
                         mView.onGreetSResult(true, t.code, matchBean)
+                    } else if (t.code == 401) {
+                        HarassmentDialog(context, HarassmentDialog.CHATHI).show()
+                        mView.onGreetSResult(false, t.code, matchBean)
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onGreetSResult(false, t.code, matchBean)
@@ -155,14 +159,17 @@ class MatchPresenter : BasePresenter<MatchView>() {
                         mView.onGreetStateResult(t.data, matchBean)
                     } else {
                         mView.onGreetStateResult(t.data, matchBean)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
                     if (e is BaseException) {
                         TickDialog(context).show()
-                    } else
+                    } else {
                         mView.onGreetStateResult(null, matchBean)
+                        CommonFunction.toast("请求失败，请重试")
+                    }
                 }
             })
     }

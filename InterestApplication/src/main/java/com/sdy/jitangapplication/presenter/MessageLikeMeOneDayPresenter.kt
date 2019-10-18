@@ -58,7 +58,7 @@ class MessageLikeMeOneDayPresenter : BasePresenter<MessageLikeMeOneDayView>() {
                     if (t.code == 200) {
                         mView.onGetLikeResult(true, t, position)
                     } else {
-                        ToastUtils.showShort(t.msg)
+                        CommonFunction.toast(t.msg)
                         mView.onGetLikeResult(false, t, position)
                     }
                 }
@@ -67,7 +67,7 @@ class MessageLikeMeOneDayPresenter : BasePresenter<MessageLikeMeOneDayView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else
-                        ToastUtils.showShort(CommonFunction.getErrorMsg(context))
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
                 }
             })
     }

@@ -9,12 +9,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.AuthService
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.SettingsBean
 import com.sdy.jitangapplication.model.VersionBean
 import com.sdy.jitangapplication.presenter.SettingsPresenter
 import com.sdy.jitangapplication.presenter.view.SettingsView
@@ -23,9 +24,7 @@ import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_settings.*
-import kotlinx.android.synthetic.main.activity_user_center.*
-import kotlinx.android.synthetic.main.layout_actionbar.btnBack
-import kotlinx.android.synthetic.main.layout_actionbar.hotT1
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 
 /**
@@ -39,7 +38,9 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         initView()
+        mPresenter.mySettings(UserManager.getToken(), UserManager.getAccid())
         mPresenter.getVersion()
+
         initData()
     }
 
@@ -62,10 +63,8 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         btnBack.setOnClickListener(this)
         filterContacts.setOnClickListener(this)
         filterDistance.setOnClickListener(this)
+        verifyHi.setOnClickListener(this)
         hotT1.text = "设置"
-
-        switchDistance.isChecked = intent.getBooleanExtra("hide_distance", false)
-        switchContacts.isChecked = intent.getBooleanExtra("hide_book", false)
 
     }
 
@@ -91,7 +90,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             R.id.clearData -> {
                 DataCleanManager.clearAllCache(this)
                 cacheDataSize.text = DataCleanManager.getTotalCacheSize(this)
-                ToastUtils.showShort("缓存清理成功")
+                CommonFunction.toast("缓存清理成功")
 
             }
             //退出登录，同时退出IM和服务器
@@ -152,6 +151,11 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                     }
                 }
             }
+
+            //开启招呼认证
+            R.id.verifyHi -> {
+                mPresenter.greetApprove(UserManager.getToken(), UserManager.getAccid())
+            }
         }
     }
 
@@ -161,7 +165,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 obtainContacts()
             } else {
-                ToastUtils.showShort("您已拒绝获取联系人列表权限的开启！")
+                CommonFunction.toast("您已拒绝获取联系人列表权限的开启！")
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -200,4 +204,16 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         newVersionTip.isVisible = versionBean != null && versionBean.version != AppUtils.getAppVersionName()
     }
 
+
+    override fun onGreetApproveResult(success: Boolean) {
+        if (success) {
+            switchVerifyHi.isChecked = !switchVerifyHi.isChecked
+        }
+    }
+
+    override fun onSettingsBeanResult(settingsBean: SettingsBean) {
+        switchDistance.isChecked = settingsBean.hide_distance
+        switchContacts.isChecked = settingsBean.hide_book
+        switchVerifyHi.isChecked = settingsBean.greet_status
+    }
 }

@@ -14,6 +14,7 @@ import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.SquareDetailView
+import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 
 /**
@@ -63,7 +64,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     super.onNext(t)
                     if (t.code == 200 && t.data != null) {
                         mView.onGetCommentListResult(t.data!!, refresh)
-                    } else  {
+                    } else {
                         mView.onError(t.msg)
                     }
                 }
@@ -149,7 +150,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetSquareReport(t)
-                    else  {
+                    else {
                         mView.onGetSquareReport(t)
                     }
                 }
@@ -175,7 +176,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onAddCommentResult(t, true)
-                    else  {
+                    else {
                         CommonFunction.toast(t.msg)
                         mView.onAddCommentResult(t, false)
                     }
@@ -203,7 +204,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onLikeCommentResult(t, position)
-                    else  {
+                    else {
                         mView.onLikeCommentResult(t, position)
                     }
                 }
@@ -258,7 +259,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onReportCommentResult(t, position)
-                    else  {
+                    else {
                         mView.onReportCommentResult(t, position)
                     }
                 }
@@ -301,9 +302,6 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
     }
 
 
-
-
-
     /**
      * 打招呼
      */
@@ -317,6 +315,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
                         mView.onGreetSResult(true)
+                    } else if (t.code == 401) {
+                        HarassmentDialog(context, HarassmentDialog.CHATHI).show()
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onGreetSResult(false)

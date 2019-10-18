@@ -13,6 +13,7 @@ import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
+import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 
 /**
@@ -102,7 +103,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         mView.onGetUserActionResult(true, t.msg)
-                    }else {
+                    } else {
                         CommonFunction.toast(t.msg)
                         mView.onGetUserActionResult(false, null)
                     }
@@ -168,7 +169,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
                         mView.onGetLikeResult(true, t)
-                    }else {
+                    } else {
                         CommonFunction.toast(t.msg)
                         mView.onGetLikeResult(false, t)
                     }
@@ -197,6 +198,8 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
                         mView.onGreetSResult(true)
+                    } else if (t.code == 401) {
+                        HarassmentDialog(context, HarassmentDialog.CHATHI).show()
                     } else {
                         CommonFunction.toast(t.msg)
                     }

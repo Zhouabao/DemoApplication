@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:background="@color/colorTransparent"
+              android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical"
+            android:layout_width="300dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_rectangle_gray_white_9dp"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/harassmentClose"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:src="@drawable/icon_close"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+        <ImageView
+                android:id="@+id/harassmentIcon"
+                android:layout_marginTop="6dp"
+                android:src="@drawable/icon_open_verify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/harassmentClose"/>
+
+        <TextView
+                android:id="@+id/harassmentTitle"
+                android:layout_marginTop="43dp"
+                android:text="实名认证"
+                android:textStyle="bold"
+                android:textColor="#131415"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/harassmentIcon"/>
+
+        <TextView
+                android:id="@+id/harassmentContent"
+                android:textSize="14sp"
+                android:layout_marginTop="9dp"
+                android:text="对方已开启认证招呼，请先进行实名认证"
+                android:textColor="#B6BABF"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/harassmentTitle"/>
+
+        <TextView
+                android:id="@+id/harassmentBtn"
+                android:text="前往认证"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp"
+                android:background="@drawable/shape_rectangle_enable_btn_15dp"
+                android:layout_width="232dp"
+                android:layout_height="40dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="26dp"
+                app:layout_constraintTop_toBottomOf="@id/harassmentContent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

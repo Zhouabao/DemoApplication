@@ -13,7 +13,6 @@ import com.baidu.idl.face.platform.ui.FaceLivenessActivity
 import com.baidu.idl.face.platform.utils.Base64Utils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.google.gson.Gson
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.common.BaseApplication.Companion.context
@@ -29,6 +28,7 @@ import com.sdy.baselibrary.widgets.swipeback.Utils
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.MyApplication
 import com.sdy.jitangapplication.model.AccessTokenBean
@@ -41,7 +41,6 @@ import com.zhy.http.okhttp.callback.Callback
 import okhttp3.Call
 import okhttp3.Request
 import okhttp3.Response
-import org.jetbrains.anko.toast
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -74,6 +73,8 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setFaceConfig()
+
         super.onCreate(savedInstanceState)
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
@@ -96,9 +97,9 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         // 申请License取得的APPID
         // assets目录下License文件名
         FaceSDKManager.getInstance().initialize(this, Constants.licenseID, Constants.licenseFileName)
-        setFaceConfig()
 
-        ToastUtils.showLong("审核将与用户头像做比对，请确认头像为本人")
+
+        CommonFunction.toast("审核将与用户头像做比对，请确认头像为本人")
         //获取accesstoken
 //        getAccessToken()
         //获取图片的base64
@@ -135,7 +136,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         //人脸检测使用线程数量
         config.setFaceDecodeNumberOfThreads(2)
         //是否开启提示声音
-        config.setSound(true)
+        config.setSound(false)
         FaceSDKManager.getInstance().faceConfig = config
 
     }
@@ -162,7 +163,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
             || status == FaceStatusEnum.Error_LivenessTimeout ||
             status == FaceStatusEnum.Error_Timeout
         ) {
-            toast("采集超时,请退出重试")
+            CommonFunction.toast("采集超时,请退出重试")
         }
     }
 
@@ -191,7 +192,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                         )
                     )
                 } else {
-                    toast("认证审核提交失败，请重新进入认证")
+                    CommonFunction.toast("认证审核提交失败，请重新进入认证")
                 }
             }, null
         )
@@ -208,14 +209,14 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     loadingDialog.dismiss()
                     when {
                         t.code == 200 -> {
-                            toast("审核提交成功")
+                            CommonFunction.toast("审核提交成功")
                             UserManager.saveUserVerify(2)
                             setResult(Activity.RESULT_OK)
                             finish()
                         }
                         t.code == 403 -> UserManager.startToLogin(context as Activity)
                         else -> {
-                            toast("认证审核提交失败，请重新进入认证")
+                            CommonFunction.toast("认证审核提交失败，请重新进入认证")
                         }
                     }
                 }
@@ -225,7 +226,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
                     }
                     loadingDialog.dismiss()
-                    toast("认证审核提交失败，请重新进入认证")
+                    CommonFunction.toast("认证审核提交失败，请重新进入认证")
                 }
             })
 
@@ -324,10 +325,10 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     Log.d("OkHttp", response.toString())
                     if (response?.result?.score != null && response?.result.score >= 80) {
                         loadingDialog.dismiss()
-                        toast("认证成功！")
+                        CommonFunction.toast("认证成功！")
                         finish()
                     } else {
-                        toast("认证失败！")
+                        CommonFunction.toast("认证失败！")
                     }
                 }
 
@@ -341,10 +342,9 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
                 override fun onError(call: Call?, e: java.lang.Exception?, id: Int) {
                     loadingDialog.dismiss()
-                    toast("认证失败！")
+                    CommonFunction.toast("认证失败！")
 
                     Log.d("OkHttp", "${id},${e?.message}")
-                    toast("${id},${e?.message}")
                 }
             })
 

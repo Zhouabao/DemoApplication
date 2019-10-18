@@ -113,7 +113,7 @@ class BlackListActivity : BaseMvpActivity<BlackListPresenter>(), BlackListView, 
 
     override fun onRemoveBlockResult(success: Boolean, position: Int) {
         if (success) {
-            ToastUtils.showShort("解除拉黑成功！")
+            CommonFunction.toast("解除拉黑成功！")
             adapter.remove(position)
         }
     }

@@ -77,7 +77,7 @@ class NewLabelsActivity1 : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView,
             for (label in UserManager.getSpLabels()) {
                 for (label1 in newLabels) {
                     for (label2 in label1.son) {
-                        if (label.id == label2.id && label.id != Constants.RECOMMEND_TAG_ID) {
+                        if (label.id == label2.id && label.id != Constants.RECOMMEND_TAG_ID) { //剔除推荐标签
                             label2.checked = true
                             if (!chooseLabelsAdapter.data.contains(label2))
                                 chooseLabelsAdapter.addData(label2)

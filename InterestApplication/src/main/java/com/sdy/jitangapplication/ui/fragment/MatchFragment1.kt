@@ -17,7 +17,7 @@ import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.*
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
-import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.msg.MessageBuilder
@@ -26,6 +26,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.GreetBean
@@ -54,7 +55,12 @@ import org.jetbrains.anko.support.v4.startActivity
 /**
  * 匹配页面(新版)
  */
-class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
+class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
+
+    override fun loadData() {
+
+        initView()
+    }
 
     private var hasMore = false
 
@@ -85,6 +91,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
         super.onCreate(savedInstanceState)
         EventBus.getDefault().register(this)
     }
+
     //    private val matchUserAdapter by lazy { CardAdapter() }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_match1, container, false)
@@ -94,7 +101,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initView()
     }
 
 
@@ -231,7 +237,6 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
             }
         } else {
             card_stack_view.rewind()
-            ToastUtils.showShort("请求失败，请重试")
         }
     }
 
@@ -310,8 +315,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     override fun onGetDislikeResult(success: Boolean, data: StatusBean?) {
         if (data != null && success) {
             if (data.residue == 10) {
-                ToastUtils.setGravity(Gravity.CENTER, 0, 0)
-                ToastUtils.showShort("剩余10次滑动机会")
+                CommonFunction.toast("剩余10次滑动机会")
             }
             if (data.residue == 0) {
                 card_stack_view.rewind()
@@ -328,8 +332,7 @@ class MatchFragment1 : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClic
     override fun onGetLikeResult(success: Boolean, data: StatusBean?, matchBean: MatchBean) {
         if (data != null && success) {
             if (data.residue == 10) {
-                ToastUtils.setGravity(Gravity.CENTER, 0, 0)
-                ToastUtils.showShort("剩余10次滑动机会")
+                CommonFunction.toast("剩余10次滑动机会")
             }
             if (data.residue == 0) {
                 card_stack_view.rewind()

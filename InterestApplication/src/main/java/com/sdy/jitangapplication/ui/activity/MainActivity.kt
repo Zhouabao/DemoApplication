@@ -14,7 +14,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.kotlin.base.common.AppManager
@@ -29,6 +32,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
@@ -64,7 +68,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.toast
 import java.util.*
 
 //在支持路由的页面上添加注解（必选）
@@ -106,6 +109,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (!UserManager.isShowGuide()) {
             guideDialog.show()
         }
+
     }
 
 
@@ -180,7 +184,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         initIndicator()
         vpMain.currentItem = 0
         vpMain.setScrollable(true)
-        vpMain.offscreenPageLimit = 3
+        vpMain.offscreenPageLimit = 2
         vpMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
@@ -197,6 +201,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     headRvLabels.isVisible = false
                     params.topMargin = SizeUtils.dp2px(0F)
                 } else {
+//                    HarassmentDialog(this@MainActivity,HarassmentDialog.CHATHI).show()
                     filterBtn.setImageResource(R.drawable.icon_filter)
                     headRvLabels.isVisible = true
                     params.topMargin = SizeUtils.dp2px(40F)
@@ -271,7 +276,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
         filterUserDialog.btnVerify.onClick {
             if (UserManager.isUserVerify() == 2 || UserManager.isUserVerify() == 3) {
-                toast("认证正在审核中，请耐心等待哦~")
+                CommonFunction.toast("认证正在审核中，请耐心等待哦~")
             } else {
                 startActivity<IDVerifyActivity>()
             }
@@ -378,7 +383,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         val secondTime = System.currentTimeMillis()
         if (secondTime - firstClickTime > 2000) {
-            ToastUtils.showShort("再按一次退出程序")
+            CommonFunction.toast("再按一次退出程序")
             firstClickTime = secondTime
         } else {
             AppManager.instance.finishAllActivity()

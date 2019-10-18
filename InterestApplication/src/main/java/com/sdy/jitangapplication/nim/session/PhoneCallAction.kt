@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.nim.session
 
-import com.blankj.utilcode.util.ToastUtils
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 
 /**
  *    author : ZFM
@@ -11,7 +11,7 @@ import com.sdy.jitangapplication.R
  */
 class PhoneCallAction : ChatBaseAction(R.drawable.send_phone_check, R.drawable.send_phone_uncheck,R.string.phone) {
     override fun onClick() {
-        ToastUtils.showShort("暂未开放哦~敬请期待")
+        CommonFunction.toast("暂未开放哦~敬请期待")
 
     }
 }

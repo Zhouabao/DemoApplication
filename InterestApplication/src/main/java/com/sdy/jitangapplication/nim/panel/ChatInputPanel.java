@@ -14,7 +14,6 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.alibaba.fastjson.JSONObject;
-import com.blankj.utilcode.util.ToastUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.kotlin.base.utils.NetWorkUtils;
@@ -837,7 +836,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (disable) {
                     if (position != 0 && position != 1) {
-                        ToastUtils.showShort("打招呼仅限语音,文本,表情");
+                        CommonFunction.INSTANCE.toast("打招呼仅限语音,文本,表情");
                         return;
                     }
                 }
@@ -921,7 +920,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     private void checkGreetSendMsg(final int type) {
         if (!NetWorkUtils.INSTANCE.isNetWorkAvailable(container.activity)) {
-            ToastUtils.showShort("请打开网络");
+            CommonFunction.INSTANCE.toast("请打开网络");
             return;
         }
         RetrofitFactory.Companion.getInstance().create(Api.class)

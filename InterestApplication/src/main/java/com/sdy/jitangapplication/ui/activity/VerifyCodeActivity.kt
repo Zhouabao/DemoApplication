@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -204,7 +203,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
     }
 
     override fun onError(text: String) {
-        ToastUtils.showShort(text)
+        CommonFunction.toast(text)
     }
 
     override fun onDestroy() {

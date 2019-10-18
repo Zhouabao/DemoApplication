@@ -3,12 +3,12 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
-import com.blankj.utilcode.util.ToastUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.presenter.MyJobPresenter
 import com.sdy.jitangapplication.presenter.view.MyJobView
@@ -134,11 +134,11 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
 
     override fun onSavePersonal(b: Boolean) {
         if (b) {
-            ToastUtils.showShort("职业设置成功")
+            CommonFunction.toast("职业设置成功")
             setResult(Activity.RESULT_OK, intent.putExtra("job", checkJob?.title))
             finish()
         } else {
-            ToastUtils.showShort("职业设置失败，请重试")
+            CommonFunction.toast("职业设置失败，请重试")
         }
     }
 

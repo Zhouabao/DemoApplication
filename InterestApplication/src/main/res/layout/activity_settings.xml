@@ -26,7 +26,7 @@
 
 
     <Switch
-            android:id="@+id/switchContacts"
+            android:id="@+id/switchVerifyHi"
             android:enabled="false"
             android:layout_width="48dp"
             android:layout_height="24dp"
@@ -37,6 +37,34 @@
             android:track="@drawable/selector_switch_ios_track"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/t1"
+            />
+
+    <TextView
+            android:id="@+id/verifyHi"
+            android:layout_width="0dp"
+            android:text="认证招呼"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/switchVerifyHi"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/switchVerifyHi"
+            app:layout_constraintTop_toTopOf="@id/switchVerifyHi"/>
+
+
+    <Switch
+            android:id="@+id/switchContacts"
+            android:enabled="false"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:showText="false"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
+            android:thumb="@drawable/switch_ios_thumb"
+            android:track="@drawable/selector_switch_ios_track"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/switchVerifyHi"
             />
 
     <TextView

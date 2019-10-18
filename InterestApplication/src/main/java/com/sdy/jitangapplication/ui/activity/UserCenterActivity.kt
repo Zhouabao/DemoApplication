@@ -346,16 +346,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             //设置
             R.id.settingBtn -> {
 
-                startActivity<SettingsActivity>(
-                    "hide_distance" to if (userInfoBean == null) {
-                        false
-                    } else {
-                        userInfoBean?.hide_distance
-                    },
-                    "hide_book" to if (userInfoBean == null) {
-                        false
-                    } else userInfoBean?.hide_book
-                )
+                startActivity<SettingsActivity>()
             }
             //个人信息设置
             R.id.userAvator,
@@ -415,7 +406,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //意见反馈
             R.id.feedBack -> {
-                ChatActivity.start(this,Constants.ASSISTANT_ACCID)
+                ChatActivity.start(this, Constants.ASSISTANT_ACCID)
             }
         }
     }

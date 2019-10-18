@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.presenter
 
 import android.util.Log
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -12,6 +11,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.qiniu.android.storage.UpProgressHandler
 import com.qiniu.android.storage.UploadOptions
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UploadEvent
 import com.sdy.jitangapplication.presenter.view.PublishView
@@ -33,7 +33,7 @@ class PublishPresenter : BasePresenter<PublishView>() {
      */
     fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: Array<Int?>, keyList: Array<String?>?) {
         if (!checkNetWork()) {
-            ToastUtils.showShort("网络不可用")
+            CommonFunction.toast("网络不可用")
             return
         }
         RetrofitFactory.instance.create(Api::class.java)
@@ -81,7 +81,7 @@ class PublishPresenter : BasePresenter<PublishView>() {
             return
         }
         if (!checkNetWork()) {
-            ToastUtils.showShort("网络不可用")
+            CommonFunction.toast("网络不可用")
             return
         }
         QNUploadManager.getInstance().put(

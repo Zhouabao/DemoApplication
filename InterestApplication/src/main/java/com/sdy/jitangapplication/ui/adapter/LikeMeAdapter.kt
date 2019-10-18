@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.kotlin.base.data.net.RetrofitFactory
@@ -112,7 +111,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                                     if (e is BaseException) {
                                         TickDialog(mContext).show()
                                     } else
-                                        ToastUtils.showShort(CommonFunction.getErrorMsg(mContext))
+                                        CommonFunction.toast(CommonFunction.getErrorMsg(mContext))
                                 }
                             })
                     }

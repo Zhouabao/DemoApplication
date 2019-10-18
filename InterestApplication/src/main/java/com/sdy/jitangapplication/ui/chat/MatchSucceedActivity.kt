@@ -10,7 +10,6 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.ext.onClick
@@ -25,6 +24,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_match_succeed.*
 
@@ -161,16 +161,16 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                ToastUtils.showShort("发送成功！")
+                CommonFunction.toast("发送成功！")
                 finish()
             }
 
             override fun onFailed(code: Int) {
-                ToastUtils.showShort("发送失败！")
+                CommonFunction.toast("发送失败！")
             }
 
             override fun onException(exception: Throwable) {
-                ToastUtils.showShort("发送失败！")
+                CommonFunction.toast("发送失败！")
             }
         })
         return true

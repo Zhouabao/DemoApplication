@@ -485,6 +485,24 @@ interface Api {
 
 
     /**
+     * 招呼认证
+     * 防骚扰
+     */
+    @FormUrlEncoded
+    @POST("Relationship/greetApprove${Constants.END_BASE_URL}")
+    fun greetApprove(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 招呼认证
+     * 防骚扰
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/mySettings${Constants.END_BASE_URL}")
+    fun mySettings(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<SettingsBean?>>
+
+
+    /**
      * 屏蔽通讯录
      */
     @FormUrlEncoded
@@ -498,6 +516,7 @@ interface Api {
     @FormUrlEncoded
     @POST("StrageBlock/isHideDistance${Constants.END_BASE_URL}")
     fun isHideDistance(@Field("token") token: String, @Field("accid") accid: String, @Field("state") content: Int): Observable<BaseResp<Any?>>
+
 
 
     /*---------------------聊天界面请求--------------------------------*/

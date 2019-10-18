@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.common.AppManager
@@ -403,7 +402,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 //                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = UserManager.getGlobalLabelId())))
 
             }
-            ToastUtils.showShort(result)
+            CommonFunction.toast("$result")
         }
     }
 
@@ -553,7 +552,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 }
             }
         } else {
-            ToastUtils.showShort("请求失败，请重试")
+            CommonFunction.toast("请求失败，请重试")
         }
     }
 

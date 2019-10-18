@@ -21,12 +21,12 @@ import com.amap.api.services.core.PoiItem
 import com.amap.api.services.poisearch.PoiResult
 import com.amap.api.services.poisearch.PoiSearch
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.ui.adapter.LocationAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import com.kotlin.base.ext.onClick
 import kotlinx.android.synthetic.main.activity_location.*
 
 /**
@@ -121,7 +121,6 @@ class LocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener, Vie
                     moveMapCamera(location!!.latitude, location!!.longitude)
                 } else {
                     //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-                    ToastUtils.showShort("${it.errorCode},${it.errorInfo}")
                 }
             }
         }

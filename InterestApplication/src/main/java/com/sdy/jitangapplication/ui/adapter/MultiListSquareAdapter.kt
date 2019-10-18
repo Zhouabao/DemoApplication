@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.NetworkUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.kotlin.base.data.net.RetrofitFactory
@@ -44,6 +43,7 @@ import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
+import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -291,7 +291,7 @@ class MultiListSquareAdapter(
      */
     fun greetState(token: String, accid: String, target_accid: String, btn: LinearLayout) {
         if (!NetworkUtils.isConnected()) {
-            ToastUtils.showShort("请连接网络！")
+            CommonFunction.toast("请连接网络！")
             return
         }
         RetrofitFactory.instance.create(Api::class.java)
@@ -323,10 +323,10 @@ class MultiListSquareAdapter(
                                 }
                             }
                         } else {
-                            ToastUtils.showShort(t.msg)
+                            CommonFunction.toast(t.msg)
                         }
                     } else {
-                        ToastUtils.showShort(t.msg)
+                        CommonFunction.toast(t.msg)
                     }
                     btn.isEnabled = true
                 }
@@ -360,7 +360,7 @@ class MultiListSquareAdapter(
      */
     fun greet(token: String, accid: String, target_accid: String) {
         if (!NetworkUtils.isConnected()) {
-            ToastUtils.showShort("请连接网络！")
+            CommonFunction.toast("请连接网络！")
             return
         }
         RetrofitFactory.instance.create(Api::class.java)
@@ -371,13 +371,15 @@ class MultiListSquareAdapter(
                         onGreetSResult(true)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(mContext as Activity)
+                    } else if (t.code == 401) {
+                        HarassmentDialog(mContext, HarassmentDialog.CHATHI).show()
                     } else {
                         CommonFunction.toast(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    ToastUtils.showShort(mContext.getString(R.string.service_error))
+                    CommonFunction.toast(mContext.getString(R.string.service_error))
                 }
             })
     }
@@ -422,11 +424,11 @@ class MultiListSquareAdapter(
             }
 
             override fun onFailed(code: Int) {
-                ToastUtils.showShort("$code")
+
             }
 
             override fun onException(exception: Throwable) {
-                ToastUtils.showShort(exception.message ?: "")
+
             }
         })
         return true

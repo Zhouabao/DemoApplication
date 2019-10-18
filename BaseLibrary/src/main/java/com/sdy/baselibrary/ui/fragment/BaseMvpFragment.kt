@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.blankj.utilcode.util.ToastUtils
+import com.kotlin.base.ext.toast
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.presenter.view.BaseView
 
@@ -50,6 +50,6 @@ abstract open class BaseMvpFragment<T : BasePresenter<*>> : BaseFragment(), Base
         错误信息提示，默认实现
      */
     override fun onError(text:String) {
-        ToastUtils.showShort(text)
+        toast(text)
     }
 }

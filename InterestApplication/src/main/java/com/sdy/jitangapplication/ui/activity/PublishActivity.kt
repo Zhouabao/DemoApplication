@@ -36,6 +36,7 @@ import com.sdy.baselibrary.emoj.EmojiSource
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.AnnounceEvent
 import com.sdy.jitangapplication.event.UpdateLabelEvent
@@ -399,7 +400,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 R.id.choosePhotoDel -> {
                     //相册的选择与取消选择
                     if (pickedPhotos.size == 9) {
-                        ToastUtils.showShort("最多只能选9张图片")
+                        CommonFunction.toast("最多只能选9张图片")
                         return@setOnItemChildClickListener
                     }
                     allPhotoAdapter.data[position].ischecked = !(allPhotoAdapter.data[position].ischecked)
@@ -434,7 +435,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 R.id.chooseCamera -> {
                     //相册的选择与取消选择
                     if (pickedPhotos.size == 9) {
-                        ToastUtils.showShort("最多只能选9张图片")
+                        CommonFunction.toast("最多只能选9张图片")
                         return@setOnItemChildClickListener
                     }
                     gotoCaptureRaw(true)
@@ -468,7 +469,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 }
                 R.id.chooseCamera -> {
                     if (pickedPhotos.size == 1) {
-                        ToastUtils.showShort("最多只能选择1个视频")
+                        CommonFunction.toast("最多只能选择1个视频")
                         return@setOnItemChildClickListener
                     }
                     go2TakeVideo()
@@ -477,14 +478,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     //视频的选择与取消选择
                     if (!allVideoThumbAdapter.data[position].ischecked) {
                         if (pickedPhotos.size == 1) {
-                            ToastUtils.showShort("最多只能选择1个视频")
+                            CommonFunction.toast("最多只能选择1个视频")
                             return@setOnItemChildClickListener
                         }
                         if (allVideoThumbAdapter.data[position].duration / 1000 < 3) {
-                            ToastUtils.showShort("视频时长过短")
+                            CommonFunction.toast("视频时长过短")
                             return@setOnItemChildClickListener
                         } else if (allVideoThumbAdapter.data[position].duration / 1000 > 120) {
-                            ToastUtils.showShort("视频时长过长")
+                            CommonFunction.toast("视频时长过长")
                             return@setOnItemChildClickListener
                         }
                         allVideoThumbAdapter.data[position].ischecked =
@@ -658,7 +659,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 }
 
                 if (totalSecond == 170) {
-                    ToastUtils.showShort("还可以录制10秒钟哦，抓紧时间")
+                    CommonFunction.toast("还可以录制10秒钟哦，抓紧时间")
                 }
                 recordTime.text = UriUtils.getShowTime(totalSecond)
                 recordTime.setTextColor(resources.getColor(R.color.colorOrange))
@@ -794,7 +795,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             R.id.publishPhotos -> {
                 if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.VIDEO || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
                     tabPublishWay.check(currentWayId)
-                    ToastUtils.showShort("不支持图片和其他媒体一起上传哦")
+                    CommonFunction.toast("不支持图片和其他媒体一起上传哦")
                     return
                 }
                 currentWayId = checkedId
@@ -805,7 +806,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             R.id.publishVideo -> {
                 if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
                     tabPublishWay.check(currentWayId)
-                    ToastUtils.showShort("不支持视频和其他媒体一起上传哦")
+                    CommonFunction.toast("不支持视频和其他媒体一起上传哦")
                     return
                 }
                 currentWayId = checkedId
@@ -816,7 +817,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             R.id.publishAudio -> {
                 if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
                     tabPublishWay.check(currentWayId)
-                    ToastUtils.showShort("不支持语音和其他媒体一起上传哦")
+                    CommonFunction.toast("不支持语音和其他媒体一起上传哦")
                     return
                 }
                 currentWayId = checkedId
@@ -832,7 +833,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         if (p0.length > 200) {
             publishContent.setText(publishContent.text.subSequence(0, 200))
             publishContent.setSelection(publishContent.text.length)
-            ToastUtils.showShort("超出字数限制")
+            CommonFunction.toast("超出字数限制")
             KeyboardUtils.hideSoftInput(publishContent)
         }
     }
@@ -909,22 +910,22 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         when (view.id) {
             R.id.publishBtn -> {
                 if (checkTags.size <= 0) {
-                    ToastUtils.showShort("标签是必选项哦~")
+                    CommonFunction.toast("标签是必选项哦~")
                     return
                 }
 
                 if (publishContent.text.isNullOrEmpty()) {
-                    ToastUtils.showShort("文本内容是必填的哦~")
+                    CommonFunction.toast("文本内容是必填的哦~")
                     return
                 }
 
 //                if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-//                    ToastUtils.showShort("语音、图片、视频至少要选择一种发布哦~")
+//                    CommonFunction.toast("语音、图片、视频至少要选择一种发布哦~")
 //                    return
 //                }
 
                 if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != ACTION_DONE && !isTopPreview) {
-                    ToastUtils.showShort("请录制完语音再发布")
+                    CommonFunction.toast("请录制完语音再发布")
                     return
                 }
 
@@ -933,7 +934,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     emojRv.visibility = View.GONE
                 }
                 if (!mPresenter.checkNetWork()) {
-                    ToastUtils.showShort("网络不可用,请检查网络设置")
+                    CommonFunction.toast("网络不可用,请检查网络设置")
                     return
                 }
 
@@ -1089,7 +1090,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     emojRv.visibility = View.GONE
                 if (currentActionState == ACTION_RECORDING) {
                     if (totalSecond < 5) {
-                        ToastUtils.showShort("再录制长一点吧")
+                        CommonFunction.toast("再录制长一点吧")
                         return
                     }
                 }
@@ -1273,7 +1274,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         }
                         checkCompleteBtnEnable()
                     } else {
-                        ToastUtils.showShort("视频拍摄最短为3S")
+                        CommonFunction.toast("视频拍摄最短为3S")
                     }
                 }
             }

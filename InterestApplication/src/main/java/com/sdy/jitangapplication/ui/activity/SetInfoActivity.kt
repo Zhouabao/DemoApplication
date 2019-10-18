@@ -15,7 +15,6 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -97,8 +96,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
         sexGroup.setOnCheckedChangeListener { radioGroup, i ->
             if (!sexTip) {
-                ToastUtils.setGravity(Gravity.CENTER, 0, 0)
-                ToastUtils.showShort("性别是不可更改项仅可选择一次")
+                CommonFunction.toast("性别是不可更改项仅可选择一次")
                 sexTip = true
             }
             checkConfirmBtnEnable()

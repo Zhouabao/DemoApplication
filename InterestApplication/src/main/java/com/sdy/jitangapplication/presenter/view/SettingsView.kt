@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.SettingsBean
 import com.sdy.jitangapplication.model.VersionBean
 
 /**
@@ -16,5 +17,11 @@ interface SettingsView : BaseView {
     fun onHideDistanceResult(success: Boolean)
 
 
-    fun onGetVersionResult(versionBean:  VersionBean?)
+    fun onGreetApproveResult(success: Boolean)
+
+
+    fun onGetVersionResult(versionBean: VersionBean?)
+
+
+    fun onSettingsBeanResult(settingsBean: SettingsBean)
 }

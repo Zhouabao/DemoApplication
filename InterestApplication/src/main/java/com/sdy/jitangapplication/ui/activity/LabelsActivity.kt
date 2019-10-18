@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.common.AppManager
@@ -13,6 +12,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.model.LabelBean
@@ -201,7 +201,7 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
             completeLabelBtn.text = if (checkedLabels.size < 4) {
                 "再选${4 - checkedLabels.size}个"
             } else {
-                ToastUtils.showShort("最多只能选${Constants.LABEL_MAX_COUNT}个标签")
+                CommonFunction.toast("最多只能选${Constants.LABEL_MAX_COUNT}个标签")
                 "完成"
             }
             completeLabelLL.isEnabled = false

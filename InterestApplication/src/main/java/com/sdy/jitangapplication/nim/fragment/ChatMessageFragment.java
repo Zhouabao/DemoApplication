@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.blankj.utilcode.util.TimeUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.api.UIKitOptions;
@@ -46,6 +45,7 @@ import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.netease.nimlib.sdk.robot.model.RobotMsgType;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
+import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.event.*;
 import com.sdy.jitangapplication.model.NimBean;
@@ -150,14 +150,14 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                     //发送通知，可以发所有类型的消息
                                     EventBus.getDefault().post(new EnablePicEvent(true));
                                     EventBus.getDefault().post(new UpdateContactBookEvent());
-                                    ToastUtils.showShort(objectBaseResp.getMsg());
+                                    CommonFunction.INSTANCE.toast(objectBaseResp.getMsg());
 
                                     //并且发送成为好友消息，
                                     IMMessage message = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, "", new ChatHiAttachment(null, ChatHiAttachment.CHATHI_RFIEND), new CustomMessageConfig());
                                     sendMessage(message);
 
                                 } else {
-                                    ToastUtils.showShort("添加好友失败哦~");
+                                    CommonFunction.INSTANCE.toast("添加好友失败哦~");
                                 }
                             }
                         });

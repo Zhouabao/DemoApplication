@@ -65,7 +65,8 @@ data class MessageListBean1(
     val square_nickname: String? = "",//广场消息的用户昵称
     val square_type: Int? = 0,//广场消息的内容1广场点赞 2评论我的 3为我评论点赞的
     val square_time: String? = "",//最新一条广场消息
-    val square_cnt: Int? = 0//广场消息总数
+    val square_cnt: Int? = 0,//广场消息总数
+    val greet_toast: Boolean = false //是否弹起开启招呼认证弹窗
 )
 
 data class SquareMsg(

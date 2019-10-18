@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.common
 
 import android.content.Context
+import android.graphics.Color
 import android.view.Gravity
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -24,6 +25,8 @@ object CommonFunction {
 
 
     fun toast(msg: String) {
+        ToastUtils.setBgColor(Color.parseColor("#80000000"))
+        ToastUtils.setMsgColor(Color.WHITE)
         ToastUtils.setGravity(Gravity.CENTER,0,0)
         ToastUtils.showShort(msg)
     }

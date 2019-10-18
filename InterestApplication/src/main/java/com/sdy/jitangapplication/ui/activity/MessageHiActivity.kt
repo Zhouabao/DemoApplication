@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -19,6 +18,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.NewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
@@ -137,7 +137,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
             }
             EventBus.getDefault().post(UpdateHiEvent())
         } else {
-            ToastUtils.showShort("删除超时消息失败！")
+            CommonFunction.toast("删除超时消息失败！")
         }
     }
 

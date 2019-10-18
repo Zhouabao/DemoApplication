@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<com.kennyc.view.MultiStateView-->
-<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--xmlns:tools="http://schemas.android.com/tools"-->
-<!--android:id="@+id/matchStateview"-->
-<!--android:orientation="vertical"-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent"-->
-<!--app:msv_animateViewChanges="false"-->
-<!--app:msv_emptyView="@layout/loading_layout_match_lottie"-->
-<!--app:msv_errorView="@layout/error_layout"-->
-<!--app:msv_loadingView="@layout/loading_layout_match_lottie"-->
-<!--app:msv_viewState="loading">-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
@@ -22,7 +9,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/contentLayout"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.fragment.MatchFragment1">
@@ -46,7 +33,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
-
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:visibility="visible"
                     android:layout_width="wrap_content"
@@ -83,6 +69,41 @@
                         app:layout_constraintTop_toTopOf="parent"
                         />
             </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--<FrameLayout-->
+                    <!--android:visibility="visible"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_marginRight="20dp"-->
+                    <!--android:layout_above="@id/actionCl"-->
+                    <!--android:layout_marginBottom="34dp"-->
+                    <!--android:clipChildren="false"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                <!--<ImageView-->
+                        <!--android:id="@+id/btnChat"-->
+                        <!--android:background="@drawable/shape_oval_white"-->
+                        <!--android:elevation="2dp"-->
+                        <!--android:scaleType="center"-->
+                        <!--android:src="@drawable/icon_flash_small"-->
+                        <!--android:layout_width="72dp"-->
+                        <!--android:layout_height="72dp"-->
+                        <!--/>-->
+
+                <!--<TextView-->
+                        <!--android:id="@+id/tvLeftChatTime"-->
+                        <!--android:elevation="2dp"-->
+                        <!--android:textColor="@color/colorWhite"-->
+                        <!--android:background="@drawable/shape_oval_orange"-->
+                        <!--android:gravity="center"-->
+                        <!--android:textSize="26sp"-->
+                        <!--android:text="0"-->
+                        <!--android:textStyle="bold"-->
+                        <!--android:layout_width="72dp"-->
+                        <!--android:layout_height="72dp"-->
+                        <!--/>-->
+
+
+            <!--</FrameLayout>-->
 
             <ImageView
                     android:id="@+id/animation_like"
@@ -116,9 +137,9 @@
     </LinearLayout>
 
     <include
-            android:visibility="visible"
             android:id="@+id/loadingLayout"
-            layout="@layout/loading_layout_match_lottie"/>
+            layout="@layout/loading_layout_match_lottie"
+            android:visibility="visible"/>
 
     <include
             android:id="@+id/errorLayout"
@@ -131,4 +152,3 @@
             android:visibility="gone"/>
 </FrameLayout>
 
-        <!--</com.kennyc.view.MultiStateView>-->

@@ -26,7 +26,7 @@ import com.kotlin.base.ui.activity.BaseActivity.Companion.CONTENT
 import com.kotlin.base.ui.activity.BaseActivity.Companion.EMPTY
 import com.kotlin.base.ui.activity.BaseActivity.Companion.ERROR
 import com.kotlin.base.ui.activity.BaseActivity.Companion.LOADING
-import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -78,8 +78,12 @@ import org.jetbrains.anko.support.v4.startActivityForResult
 /**
  * 广场列表
  */
-class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
+class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
     View.OnClickListener, MultiListSquareAdapter.ResetAudioListener {
+    override fun loadData() {
+        initView()
+
+    }
 
 
     override fun resetAudioState() {
@@ -131,7 +135,6 @@ class SquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnRefresh
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
 
     }
 

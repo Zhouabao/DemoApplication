@@ -468,6 +468,10 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
         cleanHiTime()
 
+        SPUtils.getInstance(Constants.SPNAME).remove("isShowHarassment")
+
+
+
         EventBus.getDefault().removeAllStickyEvents()//移除全部
     }
 

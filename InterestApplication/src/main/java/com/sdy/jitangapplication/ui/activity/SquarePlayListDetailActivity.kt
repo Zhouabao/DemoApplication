@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -416,7 +415,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         if (t) {
             CommonFunction.toast("举报成功！")
         } else {
-            ToastUtils.showShort("举报失败！")
+            CommonFunction.toast("举报失败！")
         }
 
     }
@@ -459,7 +458,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             }
             adapter.addData(mutableList)
         } else {
-            ToastUtils.showLong("该动态已经被删除了")
+            CommonFunction.toast("该动态已经被删除了")
             finish()
         }
     }
@@ -501,7 +500,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             adapter.notifyItemChanged(position, "hahah")
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         } else {
-            ToastUtils.showShort("点赞失败！")
+            CommonFunction.toast("点赞失败！")
         }
     }
 

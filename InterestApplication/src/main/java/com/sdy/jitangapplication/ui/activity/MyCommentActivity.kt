@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -16,6 +15,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.MyCommentList
 import com.sdy.jitangapplication.presenter.MyCommentPresenter
@@ -152,11 +152,11 @@ class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, 
 
     override fun onDeleteCommentResult(t: BaseResp<Any?>?, position: Int) {
         if (t != null && t.code == 200) {
-            ToastUtils.showShort(t.msg)
+            CommonFunction.toast(t.msg)
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
         } else {
-            ToastUtils.showShort("删除失败")
+            CommonFunction.toast("删除失败")
         }
 
     }

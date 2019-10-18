@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.item_new_choose_label.view.*
 class ChooseNewLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_new_choose_label) {
     override fun convert(helper: BaseViewHolder, item: NewLabel) {
         if (helper.layoutPosition == 0) {
-            helper.itemView.llroot.setBackgroundResource(R.drawable.shape_rectangle_unable_btn_15dp)
+            helper.itemView.llroot.setBackgroundResource(R.drawable.shape_rectangle_gray_btn_15dp)
             helper.itemView.labelCheckedIcon.setVisible(false)
         } else {
             helper.itemView.labelCheckedIcon.setVisible(true)

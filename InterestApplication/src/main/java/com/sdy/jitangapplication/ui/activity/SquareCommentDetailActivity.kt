@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -489,7 +488,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             commentParams["square_id"] = "${squareBean!!.id}"
             mPresenter.getCommentList(commentParams, true)
         } else {
-            ToastUtils.showLong("该动态已经被删除了")
+            CommonFunction.toast("该动态已经被删除了")
             finish()
         }
     }
@@ -1074,11 +1073,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
 
             override fun onFailed(code: Int) {
-                ToastUtils.showShort("$code")
+
             }
 
             override fun onException(exception: Throwable) {
-                ToastUtils.showShort(exception.message ?: "")
             }
         })
         return true

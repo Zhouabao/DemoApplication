@@ -11,10 +11,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
-import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
 import com.netease.nim.uikit.api.model.main.OnlineStateChangeObserver
@@ -53,6 +54,7 @@ import com.sdy.jitangapplication.ui.activity.MessageSquareActivity
 import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListFriensAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
+import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_message_list.*
@@ -70,7 +72,14 @@ import kotlin.Comparator
  * A simple [Fragment] subclass.
  *
  */
-class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListView {
+class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), MessageListView {
+    override fun loadData() {
+        initView()
+        registerObservers(true)
+        registerDropCompletedListener(true)
+        registerOnlineStateChangeListener(true)
+        mPresenter.messageCensus(params)
+    }
 
     private var cached: MutableMap<String, RecentContact> = mutableMapOf() // 暂缓刷上列表的数据（未读数红点拖拽动画运行时用）
 
@@ -81,18 +90,10 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListV
         super.onCreate(savedInstanceState)
         EventBus.getDefault().register(this)
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_message_list, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-        registerObservers(true)
-        registerDropCompletedListener(true)
-        registerOnlineStateChangeListener(true)
-        mPresenter.messageCensus(params)
     }
 
 
@@ -142,7 +143,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListV
                 R.id.content -> {
                     // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
                     // 通知中的 RecentContact 对象的未读数为0
-                    NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
+                    NIMClient.getService(MsgService::class.java)
+                        .clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
                     if (UserManager.getHiCount() > 0) {
                         UserManager.saveHiCount(UserManager.getHiCount() - 1)
                     }
@@ -181,7 +183,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListV
         }
         hiAdapter.setOnItemClickListener { _, view, position ->
             //发送通知告诉剩余时间，并且开始倒计时
-            NIMClient.getService(MsgService::class.java).clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
+            NIMClient.getService(MsgService::class.java)
+                .clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
 
             // 通知中的 RecentContact 对象的未读数为0
             //做招呼的已读状态更新
@@ -221,7 +224,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListV
                 0 -> {//官方助手
                     // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
                     // 通知中的 RecentContact 对象的未读数为0
-                    NIMClient.getService(MsgService::class.java).clearUnreadCount(Constants.ASSISTANT_ACCID, SessionTypeEnum.P2P)
+                    NIMClient.getService(MsgService::class.java)
+                        .clearUnreadCount(Constants.ASSISTANT_ACCID, SessionTypeEnum.P2P)
                     try {
                         Thread.sleep(500)
                     } catch (e: Exception) {
@@ -266,6 +270,12 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListV
         UserManager.saveLikeCount(data?.liked_unread_cnt ?: 0)
         if (UserManager.getLikeCount() > 0 || UserManager.getSquareCount() > 0)
             EventBus.getDefault().post(NewMsgEvent())
+
+        //如果满足招呼认证提醒，就开启认证提醒
+        if (data?.greet_toast == true && !SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowHarassment", false)) {
+            HarassmentDialog(activity!!, HarassmentDialog.CHATEDHI).show()
+            SPUtils.getInstance(Constants.SPNAME).put("isShowHarassment", true)
+        }
 
         val squa = MessageListBean(
             "发现", when (data?.square_type) {
@@ -406,7 +416,8 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListV
 
     private val comp = Comparator<RecentContact> { o1, o2 ->
         // 先比较置顶tag
-        val sticky = (o1.tag and RecentContactsFragment.RECENT_TAG_STICKY) - (o2.tag and RecentContactsFragment.RECENT_TAG_STICKY)
+        val sticky =
+            (o1.tag and RecentContactsFragment.RECENT_TAG_STICKY) - (o2.tag and RecentContactsFragment.RECENT_TAG_STICKY)
         if (sticky != 0L) {
             if (sticky > 0) -1 else 1
         } else {
@@ -626,8 +637,6 @@ class MessageListFragment : BaseMvpFragment<MessageListPresenter>(),MessageListV
     fun onUpdateHiEvent(event: UpdateHiEvent) {
         mPresenter.messageCensus(params)
     }
-
-
 
 
     private fun setViewState(state: Int) {

@@ -188,12 +188,12 @@ class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog
                         //发起微信
                         start2Pay(payment_type, t.data)
                     } else {
-                        ToastUtils.showShort(t.msg)
+                        CommonFunction.toast(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    ToastUtils.showShort(CommonFunction.getErrorMsg(context1))
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context1))
                 }
             })
     }
@@ -245,7 +245,7 @@ class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog
             val wxapi = WXAPIFactory.createWXAPI(context1, null)
             wxapi.registerApp(Constants.WECHAT_APP_ID)
             if (!wxapi.isWXAppInstalled) {
-                ToastUtils.showShort("你没有安装微信")
+                CommonFunction.toast("你没有安装微信")
                 return
             }
 
