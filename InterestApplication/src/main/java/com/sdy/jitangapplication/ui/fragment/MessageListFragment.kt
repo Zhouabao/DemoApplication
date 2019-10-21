@@ -57,8 +57,8 @@ import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import kotlinx.android.synthetic.main.activity_message_list.*
 import kotlinx.android.synthetic.main.error_layout.*
+import kotlinx.android.synthetic.main.fragment_message_list.*
 import kotlinx.android.synthetic.main.headerview_hi.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
