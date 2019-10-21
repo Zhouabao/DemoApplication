@@ -21,7 +21,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
@@ -234,6 +237,22 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
             }
             //点击跳转到标签选择页
             R.id.confirmBtn -> {
+                if (userBirthTv.text.isNullOrEmpty() || userBirthTv.text == "点击填写生日") {
+                    CommonFunction.toast("请填写生日!")
+                    confirmBtn.isEnabled = false
+                    return
+                }
+                if (sexGroup.checkedRadioButtonId != R.id.userSexMan && sexGroup.checkedRadioButtonId != R.id.userSexWoman) {
+                    CommonFunction.toast("请选择性别!")
+                    confirmBtn.isEnabled = false
+                    return
+                }
+                if (userNickNameEt.text.isNullOrEmpty()) {
+                    CommonFunction.toast("请填写昵称!")
+                    confirmBtn.isEnabled = false
+                    return
+                }
+
                 params["city_code"] = UserManager.getCityCode()
                 params["lat"] = UserManager.getlatitude()
                 params["lng"] = UserManager.getlongtitude()
@@ -375,9 +394,10 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
 
 
     private fun checkConfirmBtnEnable() {
-        confirmBtn.isEnabled = !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty()
-                && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
-                && (sexGroup.checkedRadioButtonId == R.id.userSexWoman || sexGroup.checkedRadioButtonId == R.id.userSexMan)
+        confirmBtn.isEnabled =
+            !userProfile.isNullOrEmpty() && userBirthTv.text.toString().isNotEmpty() && userBirthTv.text != "点击填写生日"
+                    && userNickNameEt.text.toString().isNotEmpty() && nickNameValidate
+                    && (sexGroup.checkedRadioButtonId == R.id.userSexWoman || sexGroup.checkedRadioButtonId == R.id.userSexMan)
     }
 
 
@@ -456,16 +476,14 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                     .setContent("您已拒绝相机权限的开启，请到设置界面打开权限后再操作")
                     .setConfirmText("确定")
                     .setCancelIconIsVisibility(false)
-                    .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+                    .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                         override fun onClick(dialog: Dialog) {
-                            val packageURI = Uri.parse("package:${AppUtils.getAppPackageName()}" )
-                            val  intent =   Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,packageURI)
+                            val packageURI = Uri.parse("package:${AppUtils.getAppPackageName()}")
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI)
                             startActivity(intent)
                             dialog.dismiss()
                         }
                     })
-
-
 
 
             }
