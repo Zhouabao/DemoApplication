@@ -135,10 +135,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             data.moveToFirst()
             if (count > 0) {
                 do {
-                    val imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]))
+                    val imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]))?:""
                     val size = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1])) / 1024L
                     val id = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]))
-                    val displayName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]))
+                    val displayName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]))?:""
                     val width = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]))
                     val height = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]))
                     allPhotoAdapter.addData(
