@@ -145,7 +145,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
     override fun onClick(view: View) {
         when (view.id) {
             R.id.lockToSee -> {
-                ChargeVipDialog(this).show()
+                ChargeVipDialog(ChargeVipDialog.LIKED_ME, this).show()
             }
         }
 

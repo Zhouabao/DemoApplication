@@ -318,7 +318,7 @@ class MultiListSquareAdapter(
                                     if (UserManager.isUserVip()) {
                                         CountDownChatHiDialog(mContext).show()
                                     } else {
-                                        ChargeVipDialog(mContext).show()
+                                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, mContext).show()
                                     }
                                 }
                             }

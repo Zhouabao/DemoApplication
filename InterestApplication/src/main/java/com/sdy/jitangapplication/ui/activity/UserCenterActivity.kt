@@ -38,7 +38,6 @@ import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_user_center.*
-import kotlinx.android.synthetic.main.dialog_charge_vip.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.item_not_vip_viewpager.view.*
 import org.greenrobot.eventbus.EventBus
@@ -203,11 +202,6 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
                 view.vpMsg.text = userInfoBean?.vip_descr?.get(position)?.rule ?: ""
                 view.setOnClickListener {
                     vipDialog.show()
-                    if (vipDialog.bannerVip.childCount == 0) {
-                        vipDialog.position = position
-                    } else {
-                        vipDialog.setCurrent(position)
-                    }
                 }
                 container.addView(view)
                 return view
@@ -298,7 +292,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
 
 
         //初始化vipDialog
-        vipDialog = ChargeVipDialog(this)
+        vipDialog = ChargeVipDialog(ChargeVipDialog.VIP_LOGO, this)
     }
 
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {

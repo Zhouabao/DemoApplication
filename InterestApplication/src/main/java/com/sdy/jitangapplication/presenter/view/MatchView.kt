@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter.view
 
+import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.MatchBean
@@ -16,9 +17,9 @@ interface MatchView : BaseView {
 
     fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?)
 
-    fun onGetDislikeResult(success: Boolean, data: StatusBean?)
+    fun onGetDislikeResult(success: Boolean, data: BaseResp<StatusBean?>)
 
-    fun onGetLikeResult(success: Boolean, data: StatusBean?, matchBean: MatchBean)
+    fun onGetLikeResult(success: Boolean, data: BaseResp<StatusBean?>, matchBean: MatchBean)
 
     fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean)
 

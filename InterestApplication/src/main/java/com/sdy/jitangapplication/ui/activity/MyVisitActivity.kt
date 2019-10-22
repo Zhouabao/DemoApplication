@@ -70,7 +70,7 @@ class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefr
 
         lockToSee.isVisible = !visitAdapter.freeShow
         lockToSee.onClick {
-            ChargeVipDialog(this).show()
+            ChargeVipDialog(ChargeVipDialog.LOOKED_ME, this).show()
         }
 
         visitAdapter.setOnItemClickListener { _, view, position ->

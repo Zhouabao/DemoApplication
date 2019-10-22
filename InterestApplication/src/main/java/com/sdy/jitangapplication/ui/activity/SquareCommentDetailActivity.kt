@@ -1036,7 +1036,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                         //TODO 会员充值
                         CountDownChatHiDialog(this).show()
                     } else {
-                        ChargeVipDialog(this).show()
+                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, this).show()
                     }
                 }
             }

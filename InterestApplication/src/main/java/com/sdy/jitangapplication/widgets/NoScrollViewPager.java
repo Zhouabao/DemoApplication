@@ -31,15 +31,15 @@ public class NoScrollViewPager extends ViewPager {
     private boolean isCanScroll = true;
 
     //----------禁止左右滑动------------------
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        if (isCanScroll) {
-            return super.onTouchEvent(ev);
-        } else {
-            return false;
-        }
-
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//        if (isCanScroll) {
+//            return super.onTouchEvent(ev);
+//        } else {
+//            return false;
+//        }
+//
+//    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent arg0) {

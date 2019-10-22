@@ -13,60 +13,89 @@ interface Api {
     /**
      * 获取消息总的个数汇总数据
      */
+    @FormUrlEncoded
     @POST("Index/msgList${Constants.END_BASE_URL}")
-    fun msgList(@Query("token") token: String, @Query("accid") accid: String): Observable<BaseResp<AllMsgCount?>>
+    fun msgList(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<AllMsgCount?>>
+
+
+    /**
+     * 获取调查问卷
+     */
+    @FormUrlEncoded
+    @POST("Survey/getQuestion${Constants.END_BASE_URL}")
+    fun getQuestion(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<InvestigateBean?>>
+
+
+    /**
+     * 回答调查问卷
+     */
+    @FormUrlEncoded
+    @POST("Survey/answer${Constants.END_BASE_URL}")
+    fun answer(
+//        @FieldMap params: HashMap<String, Any>
+        @Field("token") token: String, @Field("accid") accid: String,
+        @Field("statistics_id") statistics_id: Int, @Field("answer_id") answer_id: Int,
+        @Field("answer") answer: String
+    ): Observable<BaseResp<Any?>>
 
 
     /**
      * 启动统计
      */
+    @FormUrlEncoded
     @POST("MemberInfo/startupRecord${Constants.END_BASE_URL}")
-    fun startupRecord(@Query("token") token: String, @Query("accid") accid: String): Observable<BaseResp<Any?>>
+    fun startupRecord(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<Any?>>
 
 
     /**
      * 版本更新
      */
+    @FormUrlEncoded
     @POST("OpenApi/getVersion${Constants.END_BASE_URL}")
-    fun getVersion(@Query("token") token: String, @Query("accid") accid: String): Observable<BaseResp<VersionBean?>>
+    fun getVersion(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<VersionBean?>>
 
 
     /**
      * 人工审核
      * 1 人工认证 2重传头像或则取消
      */
+    @FormUrlEncoded
     @POST("member_info/humanAduit/v1.json${Constants.END_BASE_URL}")
-    fun humanAduit(@Query("token") token: String, @Query("accid") accid: String, @Query("type") type: Int): Observable<BaseResp<Any?>>
+    fun humanAduit(@Field("token") token: String, @Field("accid") accid: String, @Field("type") type: Int): Observable<BaseResp<Any?>>
 
 
     /**
      * 发送验证码
      */
+    @FormUrlEncoded
     @POST("Open_Api/SendSms${Constants.END_BASE_URL}")
-    fun getVerifyCode(@Query("phone") phone: String, @Query("scene") scene: String): Observable<BaseResp<Any?>>
+    fun getVerifyCode(@Field("phone") phone: String, @Field("scene") scene: String): Observable<BaseResp<Any?>>
 
 
     /**
      * 检查验证码是否一致,即登录
      */
+    @FormUrlEncoded
     @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")
     fun loginOrAlloc(
-        @Query("uni_account") phone: String = "", @Query("type") scene: String = "1",
-        @Query("password") password: String = "", @Query("code") code: String = "",
-        @Query("wxcode") wxcode: String = ""
+        @Field("uni_account") phone: String = "", @Field("type") scene: String = "1",
+        @Field("password") password: String = "", @Field("code") code: String = "",
+        @Field("wxcode") wxcode: String = ""
     ): Observable<BaseResp<LoginBean>>
 
 
     /**
      * 检查验证码是否一致,即登录
      */
+    @FormUrlEncoded
     @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")
-    fun loginOWithWechat(@Query("type") scene: String = "1", @Query("wxcode") wxcode: String = ""): Observable<BaseResp<LoginBean?>>
+    fun loginOWithWechat(@Field("type") scene: String = "1", @Field("wxcode") wxcode: String = ""): Observable<BaseResp<LoginBean?>>
 
 
     /**
      * 验证短信(已经过期)
      */
+    @FormUrlEncoded
     @POST("Open_Api/CheckSms${Constants.END_BASE_URL}")
     fun checkVerifyCode(@Path("phone") phone: String, @Path("scene") scene: String, @Path("code") code: String): Observable<BaseResp<CheckBean>>
 
@@ -522,7 +551,6 @@ interface Api {
     @FormUrlEncoded
     @POST("StrageBlock/isHideDistance${Constants.END_BASE_URL}")
     fun isHideDistance(@Field("token") token: String, @Field("accid") accid: String, @Field("state") content: Int): Observable<BaseResp<Any?>>
-
 
 
     /*---------------------聊天界面请求--------------------------------*/

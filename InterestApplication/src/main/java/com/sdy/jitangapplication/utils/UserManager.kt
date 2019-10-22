@@ -357,12 +357,22 @@ object UserManager {
     fun getFilterConditions(): HashMap<String, Any> {
         var parmas = hashMapOf<String, Any>()
         val sp = SPUtils.getInstance(Constants.SPNAME)
-        parmas["limit_age_low"] = sp.getInt("limit_age_low", 18)
-        parmas["limit_age_high"] = sp.getInt("limit_age_high", 35)
-        parmas["local_only"] = sp.getInt("local_only", 1)
+        if (sp.getInt("limit_age_low", -1) != -1) {
+            parmas["limit_age_low"] = sp.getInt("limit_age_low", -1)
+        }
+        if (sp.getInt("limit_age_high", 35) != -1) {
+            parmas["limit_age_high"] = sp.getInt("limit_age_high", 35)
+        }
+        if (sp.getInt("local_only", -1) != -1) {
+            parmas["local_only"] = sp.getInt("local_only", -1)
+        }
+        if (sp.getInt("audit_only", -1) != -1) {
+            parmas["audit_only"] = sp.getInt("audit_only", -1)
+        }
+        if (sp.getInt("filter_gender", -1) != -1) {
+            parmas["gender"] = sp.getInt("filter_gender", -1)
+        }
         parmas["city_code"] = getCityCode()
-        parmas["audit_only"] = sp.getInt("audit_only", 1)
-        parmas["gender"] = sp.getInt("filter_gender", 3)
 
         return parmas
     }
@@ -441,12 +451,12 @@ object UserManager {
 
 
         //位置信息
-        SPUtils.getInstance(Constants.SPNAME).remove("latitude")
-        SPUtils.getInstance(Constants.SPNAME).remove("longtitude")
-        SPUtils.getInstance(Constants.SPNAME).remove("province")
-        SPUtils.getInstance(Constants.SPNAME).remove("city")
-        SPUtils.getInstance(Constants.SPNAME).remove("district")
-        SPUtils.getInstance(Constants.SPNAME).remove("citycode")
+//        SPUtils.getInstance(Constants.SPNAME).remove("latitude")
+//        SPUtils.getInstance(Constants.SPNAME).remove("longtitude")
+//        SPUtils.getInstance(Constants.SPNAME).remove("province")
+//        SPUtils.getInstance(Constants.SPNAME).remove("city")
+//        SPUtils.getInstance(Constants.SPNAME).remove("district")
+//        SPUtils.getInstance(Constants.SPNAME).remove("citycode")
 
         //筛选信息
         SPUtils.getInstance(Constants.SPNAME).remove("filter_gender")

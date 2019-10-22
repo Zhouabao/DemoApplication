@@ -7,6 +7,7 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.AllMsgCount
+import com.sdy.jitangapplication.model.InvestigateBean
 import com.sdy.jitangapplication.presenter.view.MainView
 
 /**
@@ -23,8 +24,8 @@ class MainPresenter : BasePresenter<MainView>() {
      */
     fun msgList(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .msgList(token,accid)
-            .excute(object :BaseSubscriber<BaseResp<AllMsgCount?>>(mView){
+            .msgList(token, accid)
+            .excute(object : BaseSubscriber<BaseResp<AllMsgCount?>>(mView) {
                 override fun onNext(t: BaseResp<AllMsgCount?>) {
                     if (t.code == 200) {
                         mView.onMsgListResult(t.data)
@@ -45,8 +46,8 @@ class MainPresenter : BasePresenter<MainView>() {
      */
     fun startupRecord(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .startupRecord(token,accid)
-            .excute(object :BaseSubscriber<BaseResp<Any?>>(mView){
+            .startupRecord(token, accid)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
 
                 }
@@ -57,5 +58,26 @@ class MainPresenter : BasePresenter<MainView>() {
             })
 
 
+    }
+
+
+    /**
+     * 调查问卷请求
+     */
+    fun getQuestion(token: String, accid: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getQuestion(token, accid)
+            .excute(object : BaseSubscriber<BaseResp<InvestigateBean?>>(mView) {
+                override fun onNext(t: BaseResp<InvestigateBean?>) {
+                    if (t.code == 200 && t.data != null) {
+                        mView.onInvestigateResult(t.data!!)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+
+                }
+
+            })
     }
 }

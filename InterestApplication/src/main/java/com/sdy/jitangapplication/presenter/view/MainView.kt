@@ -1,7 +1,8 @@
 package com.sdy.jitangapplication.presenter.view
 
-import com.sdy.jitangapplication.model.AllMsgCount
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.AllMsgCount
+import com.sdy.jitangapplication.model.InvestigateBean
 
 /**
  *    author : ZFM
@@ -12,4 +13,7 @@ import com.kotlin.base.presenter.view.BaseView
 interface MainView : BaseView {
 
     fun onMsgListResult(allMsgCount: AllMsgCount?)
+
+
+    fun onInvestigateResult(investigateBean: InvestigateBean)
 }

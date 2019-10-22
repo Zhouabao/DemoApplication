@@ -395,8 +395,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 //更新数据
 //                initData()
             } else if (result == "拉黑成功!") {
-                NIMClient.getService(MsgService::class.java).deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
-                NIMClient.getService(MsgService::class.java).clearServerHistory(matchBean!!.accid,SessionTypeEnum.P2P)
+                NIMClient.getService(MsgService::class.java)
+                    .deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
+                NIMClient.getService(MsgService::class.java).clearServerHistory(matchBean!!.accid, SessionTypeEnum.P2P)
                 AppManager.instance.finishAllActivity()
                 startActivity<MainActivity>()
 //                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = UserManager.getGlobalLabelId())))
@@ -410,7 +411,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     override fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?) {
         if (statusBean != null && success) {
             if (statusBean.data?.residue == 0) {
-                ChargeVipDialog(this).show()
+                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
             } else {
                 if (statusBean.data?.status == 1) {  //喜欢成功
                     detailUserLikeBtn.isEnabled = false
@@ -467,7 +468,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                                 countDownDialog.show()
 //                                CountDownChatHiDialog(this).show()
                             } else {
-                                ChargeVipDialog(this).show()
+                                ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, this).show()
                             }
                         } else {
                             mPresenter.greetState(
@@ -547,7 +548,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     if (UserManager.isUserVip() && !countDownDialog.isShowing) {
                         countDownDialog.show()
                     } else {
-                        ChargeVipDialog(this).show()
+                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI,this).show()
                     }
                 }
             }

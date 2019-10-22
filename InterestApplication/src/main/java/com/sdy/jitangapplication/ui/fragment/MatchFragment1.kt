@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +13,13 @@ import android.widget.RelativeLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.FragmentUtils
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
@@ -104,6 +107,19 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     }
 
 
+    fun updateLocation() {
+        //加入本地的筛选对话框的筛选条件
+        val params = UserManager.getFilterConditions()
+        params.forEach {
+            matchParams[it.key] = it.value
+        }
+        if (matchParams["lng"].toString().toFloat() == 0.0F) {
+            matchParams["lat"] = UserManager.getlongtitude().toFloat()
+            matchParams["lng"] = UserManager.getlatitude().toFloat()
+            matchParams["city_code"] = UserManager.getCityCode()
+        }
+    }
+
     private val manager by lazy { CardStackLayoutManager(activity!!, this) }
 
     private fun initView() {
@@ -116,11 +132,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         btnChat.setOnClickListener(this)
 
         initialize()
-        //加入本地的筛选对话框的筛选条件
-        val params = UserManager.getFilterConditions()
-        params.forEach {
-            matchParams[it.key] = it.value
-        }
+
+
+        updateLocation()
         mPresenter.getMatchList(matchParams)
 
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
@@ -186,13 +200,14 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     if (UserManager.isUserVip() && !countDownChatHiDialog.isShowing)
                         countDownChatHiDialog.show()
                     else
-                        ChargeVipDialog(activity!!).show()
+                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, activity!!).show()
                 } else {
                     card_stack_view.swipe()
                 }
             }
             R.id.retryBtn -> {
                 setViewState(LOADING)
+                updateLocation()
                 mPresenter.getMatchList(matchParams)
             }
         }
@@ -231,7 +246,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                         //TODO 会员充值
                         CountDownChatHiDialog(activity!!).show()
                     } else {
-                        ChargeVipDialog(activity!!).show()
+                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, activity!!).show()
                     }
                 }
             }
@@ -312,34 +327,57 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     /**
      * 左滑不喜欢结果
      */
-    override fun onGetDislikeResult(success: Boolean, data: StatusBean?) {
-        if (data != null && success) {
-            if (data.residue == 10) {
-                CommonFunction.toast("剩余10次滑动机会")
-            }
-            if (data.residue == 0) {
-                card_stack_view.rewind()
-                ChargeVipDialog(activity!!).show()
-            }
-        } else {
-            card_stack_view.rewind()
-        }
-
-
+    override fun onGetDislikeResult(success: Boolean, data: BaseResp<StatusBean?>) {
+//        if (data.data != null) {
+//            if (data.code == 200) {
+//                if (data.data!!.residue == 10) {
+//                    CommonFunction.toast("剩余10次滑动机会")
+//                }
+//                if (data.data!!.residue == 0) {
+//                    card_stack_view.rewind()
+//                    ChargeVipDialog(activity!!).show()
+//                    return
+//                }
+//            } else if (data.code == 201) {
+//                if (data.data!!.residue == 0) {
+//                    card_stack_view.rewind()
+//                    ChargeVipDialog(activity!!).show()
+//                    return
+//                }
+//            } else {
+//                CommonFunction.toast(data.msg)
+//                card_stack_view.rewind()
+//            }
+//
+//        } else {
+//            card_stack_view.rewind()
+//        }
     }
 
     //status :1.喜欢成功  2.匹配成功
-    override fun onGetLikeResult(success: Boolean, data: StatusBean?, matchBean: MatchBean) {
-        if (data != null && success) {
-            if (data.residue == 10) {
-                CommonFunction.toast("剩余10次滑动机会")
-            }
-            if (data.residue == 0) {
+    override fun onGetLikeResult(success: Boolean, data: BaseResp<StatusBean?>, matchBean: MatchBean) {
+        if (data.data != null) {
+            if (data.code == 200) {
+                if (data.data!!.residue == 10) {
+                    CommonFunction.toast("剩余10次滑动机会")
+                }
+                if (data.data!!.residue == 0) {
+                    card_stack_view.rewind()
+                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+                    return
+                }
+                if (data.data!!.status == 2) {//status :1.喜欢成功  2.匹配成功
+                    sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH, matchBean)
+                }
+            } else if (data.code == 201) {
+                if (data.data!!.residue == 0) {
+                    card_stack_view.rewind()
+                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+                    return
+                }
+            } else {
+                CommonFunction.toast(data.msg)
                 card_stack_view.rewind()
-                ChargeVipDialog(activity!!).show()
-            }
-            if (data.status == 2) {//status :1.喜欢成功  2.匹配成功
-                sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH, matchBean)
             }
 
         } else {
@@ -411,6 +449,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         hasMore = false
         matchParams["tagid"] = event.label.id
         //这个地方还要默认设置选中第一个标签来更新数据
+        updateLocation()
         mPresenter.getMatchList(matchParams)
     }
 
@@ -427,10 +466,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         page = 1
         matchParams["page"] = page
         hasMore = false
-        val params = UserManager.getFilterConditions()
-        params.forEach {
-            matchParams[it.key] = it.value
-        }
+
+        updateLocation()
         mPresenter.getMatchList(matchParams)
     }
 
@@ -607,46 +644,47 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     //此时已经飞出去了
     //todo 放开注释
     override fun onCardSwiped(direction: Direction?) {
-        if (UserManager.slide_times != -1) {
-            UserManager.slide_times++
-            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times) { //完善相册
-//            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == 5) { //完善相册
-                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
-                UserManager.slide_times = 0
-            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times) {//引导替换
-//            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == 5) {//引导替换
-                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
-                UserManager.slide_times = 0
-            }
-        }
-
+//        if (UserManager.slide_times != -1) {
+//            UserManager.slide_times++
+//            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times) { //完善相册
+////            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == 5) { //完善相册
+//                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
+//                UserManager.slide_times = 0
+//            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times) {//引导替换
+////            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == 5) {//引导替换
+//                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
+//                UserManager.slide_times = 0
+//            }
+//        }
+//
         resetAnimation()
-        if (direction == Direction.Left) {//左滑不喜欢
-            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-            mPresenter.dislikeUser(params)
-        } else if (direction == Direction.Right) {//右滑喜欢
-            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-            mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
-        } else if (direction == Direction.Top) {//上滑打招呼
-            mPresenter.greetState(
-                UserManager.getToken(),
-                UserManager.getAccid(),
-                (matchUserAdapter.data[manager.topPosition - 1].accid ?: ""),
-                matchUserAdapter.data[manager.topPosition - 1]
-            )
-        }
-
-        //如果已经只剩5张了就请求数据(预加载).
-        if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
-            page++
-            matchParams["page"] = page
-            mPresenter.getMatchList(matchParams)
-        } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
-//            matchStateview.viewState = MultiStateView.ViewState.EMPTY
-            setViewState(EMPTY)
-            btnChat.isVisible = false
-            tvLeftChatTime.isVisible = false
-        }
+//        if (direction == Direction.Left) {//左滑不喜欢
+//            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+//            mPresenter.dislikeUser(params)
+//        } else if (direction == Direction.Right) {//右滑喜欢
+//            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+//            mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
+//        } else if (direction == Direction.Top) {//上滑打招呼
+//            mPresenter.greetState(
+//                UserManager.getToken(),
+//                UserManager.getAccid(),
+//                (matchUserAdapter.data[manager.topPosition - 1].accid ?: ""),
+//                matchUserAdapter.data[manager.topPosition - 1]
+//            )
+//        }
+//
+//        //如果已经只剩5张了就请求数据(预加载).
+//        if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
+//            page++
+//            matchParams["page"] = page
+//            updateLocation()
+//            mPresenter.getMatchList(matchParams)
+//        } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
+////            matchStateview.viewState = MultiStateView.ViewState.EMPTY
+//            setViewState(EMPTY)
+//            btnChat.isVisible = false
+//            tvLeftChatTime.isVisible = false
+//        }
     }
 
     override fun onCardCanceled() {

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.*
 import android.widget.FrameLayout
@@ -14,10 +15,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.*
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.kotlin.base.common.AppManager
@@ -36,6 +34,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
+import com.sdy.jitangapplication.model.InvestigateBean
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.MainPresenter
@@ -45,6 +44,7 @@ import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.GuideDialog
+import com.sdy.jitangapplication.ui.dialog.InvestigateDialog
 import com.sdy.jitangapplication.ui.fragment.MatchFragment1
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
 import com.sdy.jitangapplication.ui.fragment.SquareFragment
@@ -76,6 +76,7 @@ import java.util.*
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
 
+
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     //匹配
@@ -100,16 +101,18 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         //启动时间统计
         mPresenter.startupRecord(UserManager.getToken(), UserManager.getAccid())
 
+        //获取调查问卷数据
+        mPresenter.getQuestion(UserManager.getToken(), UserManager.getAccid())
+
         //如果定位信息没有就重新定位
-        if (UserManager.getlatitude().toDouble() == 0.0 || UserManager.getlongtitude().toDouble() == 0.0)
-            AMapManager.initLocation(this)
+//        if (UserManager.getlatitude().toDouble() == 0.0 || UserManager.getlongtitude().toDouble() == 0.0)
+        AMapManager.initLocation(this)
         initFragment()
         filterBtn.setOnClickListener(this)
 
         if (!UserManager.isShowGuide()) {
             guideDialog.show()
         }
-
     }
 
 
@@ -195,6 +198,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
 
             override fun onPageSelected(position: Int) {
+                banLeftDraw = position == 0//禁止左滑
                 val params = vpMain.layoutParams as FrameLayout.LayoutParams
                 if (position == 2) {
                     filterBtn.setImageResource(R.drawable.icon_contact_book)
@@ -272,7 +276,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
 
         filterUserDialog.btnGoVip.onClick {
-            ChargeVipDialog(this).show()
+            ChargeVipDialog(ChargeVipDialog.FILTER, this).show()
         }
         filterUserDialog.btnVerify.onClick {
             if (UserManager.isUserVerify() == 2 || UserManager.isUserVerify() == 3) {
@@ -314,11 +318,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             } else {
                 sp.put("local_only", 1)
             }
-            if (filterUserDialog.switchShowVerify.isChecked) {
-                sp.put("audit_only", 2)
-            } else {
-                sp.put("audit_only", 1)
-            }
+            if (UserManager.isUserVerify() == 1)
+                if (filterUserDialog.switchShowVerify.isChecked) {
+                    sp.put("audit_only", 2)
+                } else {
+                    sp.put("audit_only", 1)
+                }
 
             EventBus.getDefault().post(RefreshEvent(true))
             filterUserDialog.dismiss()
@@ -549,6 +554,30 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
     /**
+     * 获取调查问卷数据
+     */
+    private var investigateDialog: InvestigateDialog? = null
+
+    override fun onInvestigateResult(investigateBean: InvestigateBean) {
+        if (investigateDialog == null) {
+            investigateDialog = InvestigateDialog(this, investigateBean)
+        }
+        showInvestigateDialog()
+    }
+
+    /**
+     * 展示调查问卷dialog
+     */
+    private fun showInvestigateDialog() {
+        if (investigateDialog != null) {
+            if (!investigateDialog!!.isShowing) {
+                investigateDialog!!.show()
+            }
+        }
+    }
+
+
+    /**
      * 消息接收观察者
      */
     private var incomingMessageObserver: Observer<List<IMMessage>> = Observer {
@@ -714,6 +743,47 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
         tabMain.navigator = commonNavigator
         ViewPagerHelper.bind(tabMain, vpMain)
+    }
+
+
+    //是否禁止左滑标记
+    private var banLeftDraw = true
+    //手指在屏幕上的最后X坐标
+    private var lastMotionX = 0f
+
+    //如果vp当前在第一页，则禁止其右滑
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (banLeftDraw) {
+            when (ev.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    Log.d("MotionEvent", "${ev.x}")
+                    Log.d(
+                        "MotionEvent",
+                        "${SizeUtils.dp2px(15F)},${ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F)}"
+                    )
+                    if (ev.x > SizeUtils.dp2px(15F) && ev.x < ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)) {
+                        vpMain.setScrollable(false)
+                    } else {
+                        vpMain.setScrollable(true)
+                    }
+                }
+//                MotionEvent.ACTION_MOVE -> {
+//                    Log.d("MotionEvent", "${ev.x}")
+//                    Log.d("MotionEvent", "${SizeUtils.dp2px(15F)},${ ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F)}")
+//                    if (ev.x > SizeUtils.dp2px(15F) && ev.x < ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F)) {
+//                        vpMain.setScrollable(false)
+//                    } else {
+//                        vpMain.setScrollable(true)
+//                    }
+//                    lastMotionX = ev.x
+//                }
+            }
+        } else {
+            lastMotionX = 0F
+            vpMain.setScrollable(true)
+        }
+        return super.dispatchTouchEvent(ev)
+
     }
 //
 //

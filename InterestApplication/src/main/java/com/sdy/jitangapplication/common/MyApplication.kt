@@ -92,7 +92,7 @@ class MyApplication : BaseApplication() {
                 when (customerMsgBean.type) {
                     1 -> {//系统通知新的消息数量
                         EventBus.getDefault().postSticky(GetNewMsgEvent())
-                        EventBus.getDefault().post(UpdateHiEvent())
+                        EventBus.getDefault().postSticky(UpdateHiEvent())
                         initNotificationManager(customerMsgBean.msg)
                     }
                     2 -> {//对方删除自己,本地删除会话列表
@@ -105,12 +105,12 @@ class MyApplication : BaseApplication() {
                             ActivityUtils.finishActivity(ChatActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(MessageHiActivity::class.java)
-                        EventBus.getDefault().post(UpdateHiEvent())
+                        EventBus.getDefault().postSticky(UpdateHiEvent())
 
                     }
                     3 -> {
                         //新的招呼刷新界面
-                        EventBus.getDefault().post(UpdateHiEvent())
+                        EventBus.getDefault().postSticky(UpdateHiEvent())
                     }
                     //4人脸认证不通过
                     4 -> {

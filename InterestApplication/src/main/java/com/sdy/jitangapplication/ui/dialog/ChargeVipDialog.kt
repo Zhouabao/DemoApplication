@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.alipay.sdk.app.PayTask
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -49,7 +48,16 @@ import kotlinx.android.synthetic.main.dialog_charge_vip.*
  *    desc   : 充值会员底部对话框
  *    version: 1.0
  */
-class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
+class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialog(context1, R.style.MyDialog) {
+    companion object {
+        const val VIP_LOGO = 1//会员logo
+        const val INFINITE_SLIDE = 0//无限滑动
+        const val FILTER = 2//独享筛选
+        const val LOOKED_ME = 3//看过我的
+        const val LIKED_ME = 4//喜欢我的
+        const val DOUBLE_HI = 5//双倍招呼
+    }
+
     private var payways: MutableList<PaywayBean> = mutableListOf()
     private val SDK_PAY_FLAG = 1
 
@@ -90,11 +98,6 @@ class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog
      * 设置VIP的权益广告栏
      */
     private val vipBannerAdapter by lazy { VipBannerAdapter() }
-    public var position: Int = 0
-    public fun setCurrent(position: Int) {
-        bannerVip.setCurrentItem(position, true)
-    }
-
     //权益栏
     private fun initVipPowerData(banners: MutableList<VipDescr>) {
         bannerVip.adapter = vipBannerAdapter
@@ -128,7 +131,7 @@ class ChargeVipDialog(val context1: Context) : Dialog(context1, R.style.MyDialog
                     (bannerIndicator.getChildAt(child) as RadioButton).isChecked = position == child
             }
         })
-        bannerVip.setCurrentItem(position, true)
+        bannerVip.setCurrentItem(currentPos, true)
     }
 
 

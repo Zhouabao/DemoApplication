@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
 import com.chad.library.adapter.base.BaseViewHolder
 import com.kennyc.view.MultiStateView
+import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.jitangapplication.R
@@ -122,7 +123,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
 
         } else if (direction == ItemTouchHelper.RIGHT) {
             params["target_accid"] = matchUserAdapter.data[adapterPosition].accid ?: ""
-            mPresenter.likeUser(params,matchUserAdapter.data[matchUserAdapter.data.size - 1])
+            mPresenter.likeUser(params, matchUserAdapter.data[matchUserAdapter.data.size - 1])
         }
     }
 
@@ -159,7 +160,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
             R.id.btnLike -> {
                 callback.toRight(matchUserRv)
                 params["target_accid"] = matchUserAdapter.data[matchUserAdapter.data.size - 1].accid ?: ""
-                mPresenter.likeUser(params,matchUserAdapter.data[matchUserAdapter.data.size - 1])
+                mPresenter.likeUser(params, matchUserAdapter.data[matchUserAdapter.data.size - 1])
             }
             R.id.btnChat -> {
 
@@ -188,7 +189,7 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
         }
     }
 
-    override fun onGetDislikeResult(success: Boolean, data: StatusBean?) {
+    override fun onGetDislikeResult(success: Boolean, data: BaseResp<StatusBean?>) {
         if (success) {
             matchUserAdapter.data.removeAt(matchUserAdapter.data.size - 1)
         } else {
@@ -201,10 +202,10 @@ class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClick
     }
 
     //todo  这里应该还要传参数
-    override fun onGetLikeResult(success: Boolean, data: StatusBean?,matchBean: MatchBean) {
+    override fun onGetLikeResult(success: Boolean, data: BaseResp<StatusBean?>, matchBean: MatchBean) {
         if (success) {
             matchUserAdapter.data.removeAt(matchUserAdapter.data.size - 1)
-            if (data != null && data.status == 2) {
+            if (data != null && data.data!!.status == 2) {
                 startActivity<MatchSucceedActivity>()
             }
         } else {

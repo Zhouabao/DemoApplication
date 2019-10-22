@@ -69,10 +69,9 @@ class MatchPresenter : BasePresenter<MatchView>() {
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
-                        mView.onGetDislikeResult(true, t.data)
+                        mView.onGetDislikeResult(true, t)
                     } else {
-                        CommonFunction.toast(t.msg)
-                        mView.onGetDislikeResult(false, t.data)
+                        mView.onGetDislikeResult(false, t)
                     }
                 }
 
@@ -98,10 +97,9 @@ class MatchPresenter : BasePresenter<MatchView>() {
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
-                        mView.onGetLikeResult(true, t.data ?: null, matchBean)
-                    } else {
-                        CommonFunction.toast(t.msg)
-                        mView.onGetLikeResult(false, t.data ?: null, matchBean)
+                        mView.onGetLikeResult(true, t, matchBean)
+                    } else if (t.code == 201) {
+                        mView.onGetLikeResult(false, t, matchBean)
                     }
                 }
 
