@@ -644,47 +644,47 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     //此时已经飞出去了
     //todo 放开注释
     override fun onCardSwiped(direction: Direction?) {
-//        if (UserManager.slide_times != -1) {
-//            UserManager.slide_times++
-//            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times) { //完善相册
-////            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == 5) { //完善相册
-//                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
-//                UserManager.slide_times = 0
-//            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times) {//引导替换
-////            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == 5) {//引导替换
-//                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
-//                UserManager.slide_times = 0
-//            }
-//        }
-//
+        if (UserManager.slide_times != -1) {
+            UserManager.slide_times++
+            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times) { //完善相册
+//            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == 5) { //完善相册
+                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
+                UserManager.slide_times = 0
+            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times) {//引导替换
+//            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == 5) {//引导替换
+                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
+                UserManager.slide_times = 0
+            }
+        }
+
         resetAnimation()
-//        if (direction == Direction.Left) {//左滑不喜欢
-//            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-//            mPresenter.dislikeUser(params)
-//        } else if (direction == Direction.Right) {//右滑喜欢
-//            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-//            mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
-//        } else if (direction == Direction.Top) {//上滑打招呼
-//            mPresenter.greetState(
-//                UserManager.getToken(),
-//                UserManager.getAccid(),
-//                (matchUserAdapter.data[manager.topPosition - 1].accid ?: ""),
-//                matchUserAdapter.data[manager.topPosition - 1]
-//            )
-//        }
-//
-//        //如果已经只剩5张了就请求数据(预加载).
-//        if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
-//            page++
-//            matchParams["page"] = page
-//            updateLocation()
-//            mPresenter.getMatchList(matchParams)
-//        } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
-////            matchStateview.viewState = MultiStateView.ViewState.EMPTY
-//            setViewState(EMPTY)
-//            btnChat.isVisible = false
-//            tvLeftChatTime.isVisible = false
-//        }
+        if (direction == Direction.Left) {//左滑不喜欢
+            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+            mPresenter.dislikeUser(params)
+        } else if (direction == Direction.Right) {//右滑喜欢
+            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+            mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
+        } else if (direction == Direction.Top) {//上滑打招呼
+            mPresenter.greetState(
+                UserManager.getToken(),
+                UserManager.getAccid(),
+                (matchUserAdapter.data[manager.topPosition - 1].accid ?: ""),
+                matchUserAdapter.data[manager.topPosition - 1]
+            )
+        }
+
+        //如果已经只剩5张了就请求数据(预加载).
+        if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
+            page++
+            matchParams["page"] = page
+            updateLocation()
+            mPresenter.getMatchList(matchParams)
+        } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
+//            matchStateview.viewState = MultiStateView.ViewState.EMPTY
+            setViewState(EMPTY)
+            btnChat.isVisible = false
+            tvLeftChatTime.isVisible = false
+        }
     }
 
     override fun onCardCanceled() {

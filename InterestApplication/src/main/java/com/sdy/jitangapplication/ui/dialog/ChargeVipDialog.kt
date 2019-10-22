@@ -98,6 +98,7 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialo
      * 设置VIP的权益广告栏
      */
     private val vipBannerAdapter by lazy { VipBannerAdapter() }
+
     //权益栏
     private fun initVipPowerData(banners: MutableList<VipDescr>) {
         bannerVip.adapter = vipBannerAdapter
@@ -131,7 +132,8 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialo
                     (bannerIndicator.getChildAt(child) as RadioButton).isChecked = position == child
             }
         })
-        bannerVip.setCurrentItem(currentPos, true)
+        if (banners.size > currentPos)
+            bannerVip.setCurrentItem(currentPos, true)
     }
 
 

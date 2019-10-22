@@ -102,7 +102,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         mPresenter.startupRecord(UserManager.getToken(), UserManager.getAccid())
 
         //获取调查问卷数据
-        mPresenter.getQuestion(UserManager.getToken(), UserManager.getAccid())
+        if (UserManager.getCurrentSurveyVersion().isEmpty() || UserManager.getCurrentSurveyVersion() != AppUtils.getAppVersionName())
+            mPresenter.getQuestion(UserManager.getToken(), UserManager.getAccid())
 
         //如果定位信息没有就重新定位
 //        if (UserManager.getlatitude().toDouble() == 0.0 || UserManager.getlongtitude().toDouble() == 0.0)
@@ -198,7 +199,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
 
             override fun onPageSelected(position: Int) {
-                banLeftDraw = position == 0//禁止左滑
+                banSlideInCard = position == 0//禁止在卡片的区域滑动
+                banSlideLeft = position == 2//禁止左滑
                 val params = vpMain.layoutParams as FrameLayout.LayoutParams
                 if (position == 2) {
                     filterBtn.setImageResource(R.drawable.icon_contact_book)
@@ -572,6 +574,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (investigateDialog != null) {
             if (!investigateDialog!!.isShowing) {
                 investigateDialog!!.show()
+                UserManager.saveCurrentSurveyVersion()
             }
         }
     }
@@ -746,41 +749,42 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
+    //是否禁止右滑标记
+    private var banSlideInCard = true
     //是否禁止左滑标记
-    private var banLeftDraw = true
+    private var banSlideLeft = true
     //手指在屏幕上的最后X坐标
     private var lastMotionX = 0f
 
     //如果vp当前在第一页，则禁止其右滑
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (banLeftDraw) {
-            when (ev.action) {
+        when {
+            //禁止在卡片区域滑动
+            banSlideInCard -> when (ev.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    Log.d("MotionEvent", "${ev.x}")
-                    Log.d(
-                        "MotionEvent",
-                        "${SizeUtils.dp2px(15F)},${ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F)}"
-                    )
                     if (ev.x > SizeUtils.dp2px(15F) && ev.x < ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)) {
                         vpMain.setScrollable(false)
                     } else {
                         vpMain.setScrollable(true)
                     }
                 }
-//                MotionEvent.ACTION_MOVE -> {
-//                    Log.d("MotionEvent", "${ev.x}")
-//                    Log.d("MotionEvent", "${SizeUtils.dp2px(15F)},${ ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F)}")
-//                    if (ev.x > SizeUtils.dp2px(15F) && ev.x < ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F)) {
-//                        vpMain.setScrollable(false)
-//                    } else {
-//                        vpMain.setScrollable(true)
-//                    }
-//                    lastMotionX = ev.x
-//                }
             }
-        } else {
-            lastMotionX = 0F
-            vpMain.setScrollable(true)
+            //最后一张禁止左滑
+            banSlideLeft -> when (ev.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    lastMotionX = ev.x
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (ev.x - lastMotionX < 0) {
+                        vpMain.setScrollable(false)
+                    } else {
+                        vpMain.setScrollable(true)
+                    }
+                }
+            }
+            else -> {
+                vpMain.setScrollable(true)
+            }
         }
         return super.dispatchTouchEvent(ev)
 

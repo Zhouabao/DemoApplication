@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.utils
 
 import android.app.Activity
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.common.AppManager
 import com.netease.nimlib.sdk.auth.LoginInfo
@@ -44,6 +45,18 @@ object UserManager {
     var mediaBeans: MutableList<MediaParamBean> = mutableListOf()
     //发布的对象keylist
     var keyList: Array<String?>? = arrayOfNulls<String>(10)
+
+
+    /**
+     * 保存当前弹窗的版本号
+     */
+    fun saveCurrentSurveyVersion() {
+        SPUtils.getInstance(Constants.SPNAME).put("currentVersion", AppUtils.getAppVersionName())
+    }
+
+    fun getCurrentSurveyVersion(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("currentVersion")
+    }
 
     //是否已经强制替换过头像
     fun saveForceChangeAvator(isForceChangeAvator: Boolean) {
@@ -479,6 +492,7 @@ object UserManager {
         cleanHiTime()
 
         SPUtils.getInstance(Constants.SPNAME).remove("isShowHarassment")
+        SPUtils.getInstance(Constants.SPNAME).remove("currentVersion")
 
 
 
