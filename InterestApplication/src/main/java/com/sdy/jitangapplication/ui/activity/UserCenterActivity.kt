@@ -96,6 +96,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         EventBus.getDefault().post(UpdateAvatorEvent(true))
         getTagData()
         coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
+        visitsAdapter.freeShow = userInfoBean?.free_show ?: false
         visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
         GlideUtil.loadAvatorImg(this, userInfoBean?.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean?.userinfo?.nickname ?: ""
@@ -400,7 +401,8 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
                 startActivity<MyVisitActivity>(
                     "isVip" to (userInfoBean?.userinfo?.isvip == 1),
                     "today" to userInfoBean?.userinfo?.todayvisit,
-                    "all" to userInfoBean?.userinfo?.allvisit
+                    "all" to userInfoBean?.userinfo?.allvisit,
+                    "freeShow" to userInfoBean?.free_show
                 )
             }
             //我的问题

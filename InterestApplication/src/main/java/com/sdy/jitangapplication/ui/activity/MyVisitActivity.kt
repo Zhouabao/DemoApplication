@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.item_visit_headview.view.*
 class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefreshListener, OnLoadMoreListener {
 
     private var page = 1
-    private val visitAdapter by lazy { MyVisitAdater() }
+    private val visitAdapter by lazy { MyVisitAdater(intent.getBooleanExtra("freeShow", false)) }
     private val params by lazy {
         hashMapOf(
             "token" to UserManager.getToken(),
@@ -68,13 +68,13 @@ class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefr
         view.visitAllCount.text = "总来访：${intent.getIntExtra("all", 0)}"
         visitAdapter.addHeaderView(view)
 
-        lockToSee.isVisible = !UserManager.isUserVip()
+        lockToSee.isVisible = !visitAdapter.freeShow
         lockToSee.onClick {
             ChargeVipDialog(this).show()
         }
 
         visitAdapter.setOnItemClickListener { _, view, position ->
-            if (UserManager.isUserVip() && UserManager.getAccid() != visitAdapter.data[position].accid)
+            if (visitAdapter.freeShow && UserManager.getAccid() != visitAdapter.data[position].accid)
                 MatchDetailActivity.start(this, visitAdapter.data[position].accid ?: "")
         }
 

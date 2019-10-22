@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
-import com.sdy.jitangapplication.model.LikeMeBean
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.LikeMeBean
 
 /**
  *    author : ZFM
@@ -9,7 +9,7 @@ import com.kotlin.base.presenter.view.BaseView
  *    desc   :
  *    version: 1.0
  */
-interface MessageLikeMeView:BaseView {
-    fun onLikeListsResult(mutableList: MutableList<LikeMeBean>)
+interface MessageLikeMeView : BaseView {
+    fun onLikeListsResult(freeshow: Boolean, mutableList: MutableList<LikeMeBean>)
 
 }

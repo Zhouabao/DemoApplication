@@ -71,7 +71,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         mPresenter.likeListsCategory(params)
     }
 
-    private val adapter by lazy { LikeMeOneDayGirdAdapter() }
+    private val adapter by lazy { LikeMeOneDayGirdAdapter(intent.getBooleanExtra("freeShow",false)) }
     private fun initView() {
         btnBack.onClick {
             finish()
@@ -99,7 +99,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         adapter.setHeaderAndEmpty(true)
 
         adapter.setOnItemClickListener { _, view, position ->
-            if (UserManager.isUserVip())
+            if (adapter.freeShow)
                 MatchDetailActivity.start(this, adapter.data[position].accid ?: "", position)
         }
         adapter.setOnItemChildClickListener { _, view, position ->

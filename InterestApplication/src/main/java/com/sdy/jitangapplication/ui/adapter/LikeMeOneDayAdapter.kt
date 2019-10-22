@@ -13,7 +13,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.LikeMeOneDayBean
-import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_like_me_one_day.view.*
@@ -24,7 +23,8 @@ import kotlinx.android.synthetic.main.item_like_me_one_day.view.*
  *    desc   :
  *    version: 1.0
  */
-class LikeMeOneDayAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolder>(R.layout.item_like_me_one_day) {
+class LikeMeOneDayAdapter(var freeShow: Boolean) :
+    BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolder>(R.layout.item_like_me_one_day) {
     override fun convert(holder: BaseViewHolder, item: LikeMeOneDayBean) {
         val itemView = holder.itemView
 
@@ -46,7 +46,7 @@ class LikeMeOneDayAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolder>(R
         }}"
 
         itemView.view.isVisible = !(item.is_read ?: true)
-        if (UserManager.isUserVip()) {
+        if (freeShow) {
             itemView.likeMeTagCover.visibility = View.GONE
             itemView.likeMeInfoCover.visibility = View.GONE
             itemView.likeMeNicknameCover.visibility = View.GONE

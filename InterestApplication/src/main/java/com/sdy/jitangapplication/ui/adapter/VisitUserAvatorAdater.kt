@@ -8,7 +8,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.item_user_center_visit_cover.view.*
 
@@ -21,6 +20,7 @@ import kotlinx.android.synthetic.main.item_user_center_visit_cover.view.*
 class VisitUserAvatorAdater :
     BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_user_center_visit_cover) {
 
+    public var freeShow = false
     override fun convert(holder: BaseViewHolder, item: String) {
         if (holder.layoutPosition != 0) {
             val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
@@ -29,7 +29,7 @@ class VisitUserAvatorAdater :
         }
 
         //如果不是会员，就高斯模糊看过我的
-        if (UserManager.isUserVip()) {
+        if (freeShow) {
             GlideUtil.loadImg(mContext, item, holder.itemView.visitCoverImg)
         } else {
             Glide.with(mContext)

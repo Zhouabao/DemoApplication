@@ -13,7 +13,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.LikeMeOneDayBean
-import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_like_me_one_day_all.view.*
@@ -24,7 +23,9 @@ import kotlinx.android.synthetic.main.item_like_me_one_day_all.view.*
  *    desc   :
  *    version: 1.0
  */
-class LikeMeOneDayGirdAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolder>(R.layout.item_like_me_one_day_all) {
+class LikeMeOneDayGirdAdapter(public var freeShow: Boolean = false) :
+    BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolder>(R.layout.item_like_me_one_day_all) {
+
     private val SPAN_COUNT = 3
     override fun convert(holder: BaseViewHolder, item: LikeMeOneDayBean) {
         val itemView = holder.itemView
@@ -42,7 +43,7 @@ class LikeMeOneDayGirdAdapter : BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolde
             }, 0, 0
         )
         itemView.layoutParams = params
-        if (UserManager.isUserVip()) {
+        if (freeShow) {
             itemView.likeMeOneDayType.visibility = View.VISIBLE
             GlideUtil.loadRoundImgCenterCrop(mContext, item.avatar, itemView.likeMeOneDayAvator, SizeUtils.dp2px(5F))
 

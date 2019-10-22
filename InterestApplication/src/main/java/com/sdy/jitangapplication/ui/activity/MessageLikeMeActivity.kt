@@ -68,7 +68,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         }
 
         lockToSee.setOnClickListener(this)
-        lockToSee.isVisible = !UserManager.isUserVip()
+        lockToSee.isVisible = !adapter.freeShow
         mPresenter = MessageLikeMePresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -92,11 +92,13 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.likeMeCount -> {
-                    startActivity<MessageLikeMeOneDayActivity>(
-                        "date" to "${adapter.data[position].date}",
-                        "count" to adapter.data[position].count,
-                        "hasread" to adapter.data[position].hasread
-                    )
+                    if (adapter.freeShow)
+                        startActivity<MessageLikeMeOneDayActivity>(
+                            "date" to "${adapter.data[position].date}",
+                            "count" to adapter.data[position].count,
+                            "hasread" to adapter.data[position].hasread,
+                            "freeShow" to adapter.freeShow
+                        )
                 }
             }
         }
@@ -118,10 +120,11 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
     }
 
 
-    override fun onLikeListsResult(data: MutableList<LikeMeBean>) {
+    override fun onLikeListsResult(freeShow: Boolean, data: MutableList<LikeMeBean>) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+        adapter.freeShow = freeShow
         adapter.addData(data)
-        lockToSee.isVisible = !UserManager.isUserVip() && adapter.data.size > 0
+        lockToSee.isVisible = !adapter.freeShow && adapter.data.size > 0
         if (adapter.data.size < Constants.PAGESIZE * page) {
             refreshLayout.finishLoadMoreWithNoMoreData()
         } else {
@@ -185,7 +188,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateLikemeOnePosEvent(event: UpdateLikemeOnePosEvent) {
         if (event.parPos != -1 && event.childPos != -1) {
-            adapter.data[event.parPos].list?.get(event.childPos)?.isfriend  = 1
+            adapter.data[event.parPos].list?.get(event.childPos)?.isfriend = 1
             adapter.notifyDataSetChanged()
         }
     }

@@ -38,6 +38,7 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item_like_me) {
+    public var freeShow = false
     override fun convert(holder: BaseViewHolder, item: LikeMeBean) {
         holder.addOnClickListener(R.id.likeMeCount)
         val itemView = holder.itemView
@@ -46,7 +47,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
         itemView.likeMeNew.isVisible = item.hasread ?: false
 
         itemView.likeOneDayRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-        val adapter = LikeMeOneDayAdapter()
+        val adapter = LikeMeOneDayAdapter(freeShow)
         itemView.likeOneDayRv.adapter = adapter
         adapter.setNewData(item.list ?: mutableListOf())
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -120,7 +121,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
         }
 
         adapter.setOnItemClickListener { _, view, position ->
-            if (UserManager.isUserVip())
+            if (freeShow)
                 MatchDetailActivity.start(mContext, adapter.data[position].accid ?: "", holder.layoutPosition, position)
         }
     }

@@ -85,6 +85,7 @@ data class SquareMsg(
 /*-------------------对我感兴趣的-----------------------------*/
 data class LikeMeListBean(
     val isvip: Int? = 0,
+    val free_show: Boolean = false,//true（显示）  false(模糊)
     val list: MutableList<LikeMeBean>? = mutableListOf()
 )
 

@@ -9,7 +9,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.VisitorBean
-import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.item_visit.view.*
 
@@ -19,10 +18,12 @@ import kotlinx.android.synthetic.main.item_visit.view.*
  *    desc   : 我的访客
  *    version: 1.0
  */
-class MyVisitAdater : BaseQuickAdapter<VisitorBean, BaseViewHolder>(R.layout.item_visit) {
+class MyVisitAdater(var freeShow: Boolean = false) :
+    BaseQuickAdapter<VisitorBean, BaseViewHolder>(R.layout.item_visit) {
+
 
     override fun convert(holder: BaseViewHolder, item: VisitorBean) {
-        if (UserManager.isUserVip()) {
+        if (freeShow) {
             holder.itemView.visitHideName.visibility = View.GONE
             holder.itemView.visitHideInfo.visibility = View.GONE
             GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.visitImg)
