@@ -5,10 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
-import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.ui.activity.SettingsActivity
 import kotlinx.android.synthetic.main.dialog_harassment.*
@@ -17,7 +15,7 @@ import org.jetbrains.anko.startActivity
 /**
  *    author : ZFM
  *    date   : 2019/10/1614:30
- *    desc   :
+ *    desc   :开启招呼提示
  *    version: 1.0
  */
 class HarassmentDialog(val context1: Context, var from: Int) : Dialog(context1, R.style.MyDialog) {
