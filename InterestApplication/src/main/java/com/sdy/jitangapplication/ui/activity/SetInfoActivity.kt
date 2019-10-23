@@ -147,6 +147,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
      * 上传信息成功
      */
     override fun onUploadUserInfoResult(uploadResult: Boolean) {
+        confirmBtn.isEnabled = true
         if (uploadResult) {
             startActivity<NewLabelsActivity1>()
         }
@@ -273,6 +274,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                 params["sign"] = ""
                 params["tags"] = ""
                 mPresenter.uploadUserInfo(params)
+                confirmBtn.isEnabled = false
 //                        startActivity<LabelsActivity>("params" to params)
 
             }

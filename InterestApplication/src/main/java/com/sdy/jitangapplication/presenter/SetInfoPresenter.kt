@@ -55,7 +55,13 @@ class SetInfoPresenter : BasePresenter<SetInfoView>() {
                         mView.onUploadUserInfoResult(true)
                     } else {
                         mView.onError(t.msg)
+                        mView.onUploadUserInfoResult(false)
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    mView.onUploadUserInfoResult(false)
                 }
             })
     }
