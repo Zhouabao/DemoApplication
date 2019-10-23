@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -44,8 +45,27 @@ class ProtocolActivity : BaseActivity() {
         initWebview()
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun initWebview() {
+
+//         //支持javascript web.getSettings().setJavaScriptEnabled(true);
+//
+//// 设置可以支持缩放 web.getSettings().setSupportZoom(true);
+//
+//// 设置出现缩放工具 web.getSettings().setBuiltInZoomControls(true);
+//
+////扩大比例的缩放 web.getSettings().setUseWideViewPort(true);
+//
+////自适应屏幕 web.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+//
+//web.getSettings().setLoadWithOverviewMode(true);
+
+
+
+
+
         //支持javascript
+        webView.settings.javaScriptEnabled = true
         // 设置可以支持缩放
         webView.settings.setSupportZoom(true)
         // 设置出现缩放工具
