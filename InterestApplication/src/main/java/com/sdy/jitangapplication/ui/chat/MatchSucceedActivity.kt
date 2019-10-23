@@ -10,8 +10,6 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.netease.nim.uikit.business.session.module.Container
@@ -84,7 +82,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
         //我的头像动画集合
         val animator = AnimatorSet()
-        animator.duration = 2000L
+        animator.duration = 500L
         animator.interpolator = LinearInterpolator()
         animator.playTogether(
             ObjectAnimator.ofFloat(iconMine, "scaleX", 0.45f, 1f),
@@ -96,7 +94,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
         //对方的头像动画集合
         val animator1 = AnimatorSet()
-        animator1.duration = 2000L
+        animator1.duration = 500L
         animator1.interpolator = LinearInterpolator()
         animator1.playTogether(
             ObjectAnimator.ofFloat(iconOther, "scaleX", 0.45f, 1f),
@@ -107,9 +105,9 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         animator1.start()
 
         //笑脸动画
-        YoYo.with(Techniques.RubberBand)
-            .duration(2000)
-            .playOn(iconLike)
+//        YoYo.with(Techniques.RubberBand)
+//            .duration(2000)
+//            .playOn(iconLike)
     }
 
 
