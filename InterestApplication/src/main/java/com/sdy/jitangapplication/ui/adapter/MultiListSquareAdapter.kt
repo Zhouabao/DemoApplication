@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.NetworkUtils
@@ -289,7 +288,7 @@ class MultiListSquareAdapter(
     /**
      * 判断当前能否打招呼
      */
-    fun greetState(token: String, accid: String, target_accid: String, btn: LinearLayout) {
+    fun greetState(token: String, accid: String, target_accid: String, btn: ImageView) {
         if (!NetworkUtils.isConnected()) {
             CommonFunction.toast("请连接网络！")
             return

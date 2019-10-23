@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.guanaj.easyswipemenulibrary.EasySwipeMenuLayout
+<com.sdy.jitangapplication.widgets.swipemenu.EasySwipeMenuLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/msgSwipeMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
+        app:canRightSwipe="false"
+        app:fraction="0.1"
         app:contentView="@id/content"
         app:rightMenuView="@id/right">
 
@@ -127,4 +129,4 @@
                 android:layout_marginRight="15dp"
                 />
     </LinearLayout>
-</com.guanaj.easyswipemenulibrary.EasySwipeMenuLayout>
+</com.sdy.jitangapplication.widgets.swipemenu.EasySwipeMenuLayout>

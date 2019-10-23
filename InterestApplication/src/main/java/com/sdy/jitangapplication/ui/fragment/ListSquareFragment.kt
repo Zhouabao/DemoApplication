@@ -33,7 +33,7 @@ import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
-import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
+import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
@@ -42,7 +42,7 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
-import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.fragment_list_square.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -426,37 +426,114 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
     }
 
 
-    lateinit var moreActionDialog: MoreActionDialog
+//    lateinit var moreActionDialog: MoreActionDialog
+//    /**
+//     * 展示更多操作对话框
+//     */
+//    private fun showMoreDialog(position: Int) {
+//        moreActionDialog = MoreActionDialog(activity!!, "square")
+//        moreActionDialog.show()
+//
+//        if (adapter.data[position]?.iscollected == 0) {
+//            moreActionDialog.collect.text = "收藏"
+//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
+//        } else {
+//            moreActionDialog.collect.text = "取消收藏"
+//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
+//        }
+//        if (adapter.data[position].accid == UserManager.getAccid()) {
+//            moreActionDialog.llDelete.visibility = View.VISIBLE
+//        } else {
+//            moreActionDialog.llDelete.visibility = View.GONE
+//        }
+//
+//        if (adapter.data[position].accid == UserManager.getAccid()) {
+//            moreActionDialog.llDelete.visibility = View.VISIBLE
+//            moreActionDialog.llJubao.visibility = View.GONE
+//            moreActionDialog.llCollect.visibility = View.GONE
+//        } else {
+//            moreActionDialog.llDelete.visibility = View.GONE
+//            moreActionDialog.llJubao.visibility = View.VISIBLE
+//            moreActionDialog.llCollect.visibility = View.VISIBLE
+//        }
+//        moreActionDialog.llDelete.onClick {
+//            val params = hashMapOf(
+//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+//                "square_id" to adapter.data[position].id!!
+//            )
+//            mPresenter.removeMySquare(params, position)
+//            moreActionDialog.dismiss()
+//        }
+//
+//
+//        moreActionDialog.llCollect.onClick {
+//
+//            //发起收藏请求
+//            val params = hashMapOf(
+//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+//                "type" to if (adapter.data[position].iscollected == 0) {
+//                    1
+//                } else {
+//                    2
+//                },
+//                "square_id" to adapter.data[position].id!!,
+//                "_timestamp" to System.currentTimeMillis()
+//            )
+//            mPresenter.getSquareCollect(params, position)
+//        }
+//        moreActionDialog.llJubao.onClick {
+//            //发起举报请求
+//            val params = hashMapOf(
+//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+//                "type" to if (adapter.data[position].iscollected == 0) {
+//                    1
+//                } else {
+//                    2
+//                },
+//                "square_id" to adapter.data[position].id!!,
+//                "_timestamp" to System.currentTimeMillis()
+//            )
+//            mPresenter.getSquareReport(params, position)
+//        }
+//        moreActionDialog.cancel.onClick {
+//            moreActionDialog.dismiss()
+//        }
+//
+//    }
+
+
+
+
+    lateinit var moreActionDialog: MoreActionNewDialog
     /**
      * 展示更多操作对话框
      */
     private fun showMoreDialog(position: Int) {
-        moreActionDialog = MoreActionDialog(activity!!, "square")
+        moreActionDialog = MoreActionNewDialog(activity!!, adapter.data[position])
         moreActionDialog.show()
 
         if (adapter.data[position]?.iscollected == 0) {
             moreActionDialog.collect.text = "收藏"
-            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
+            val top = resources.getDrawable(R.drawable.icon_collect1)
+            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         } else {
             moreActionDialog.collect.text = "取消收藏"
-            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
+            val top = resources.getDrawable(R.drawable.icon_collected1)
+            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         }
         if (adapter.data[position].accid == UserManager.getAccid()) {
-            moreActionDialog.llDelete.visibility = View.VISIBLE
+            moreActionDialog.delete.visibility = View.VISIBLE
+            moreActionDialog.report.visibility = View.GONE
+            moreActionDialog.collect.visibility = View.GONE
         } else {
-            moreActionDialog.llDelete.visibility = View.GONE
+            moreActionDialog.delete.visibility = View.GONE
+            moreActionDialog.report.visibility = View.VISIBLE
+            moreActionDialog.collect.visibility = View.VISIBLE
         }
-
-        if (adapter.data[position].accid == UserManager.getAccid()) {
-            moreActionDialog.llDelete.visibility = View.VISIBLE
-            moreActionDialog.llJubao.visibility = View.GONE
-            moreActionDialog.llCollect.visibility = View.GONE
-        } else {
-            moreActionDialog.llDelete.visibility = View.GONE
-            moreActionDialog.llJubao.visibility = View.VISIBLE
-            moreActionDialog.llCollect.visibility = View.VISIBLE
-        }
-        moreActionDialog.llDelete.onClick {
+        moreActionDialog.delete.onClick {
             val params = hashMapOf(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
@@ -464,10 +541,11 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             )
             mPresenter.removeMySquare(params, position)
             moreActionDialog.dismiss()
+
         }
 
 
-        moreActionDialog.llCollect.onClick {
+        moreActionDialog.collect.onClick {
 
             //发起收藏请求
             val params = hashMapOf(
@@ -483,7 +561,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             )
             mPresenter.getSquareCollect(params, position)
         }
-        moreActionDialog.llJubao.onClick {
+        moreActionDialog.report.onClick {
             //发起举报请求
             val params = hashMapOf(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
@@ -498,12 +576,9 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             )
             mPresenter.getSquareReport(params, position)
         }
-        moreActionDialog.cancel.onClick {
-            moreActionDialog.dismiss()
-        }
+
 
     }
-
 
     override fun onRemoveMySquareResult(result: Boolean, position: Int) {
         if (result) {

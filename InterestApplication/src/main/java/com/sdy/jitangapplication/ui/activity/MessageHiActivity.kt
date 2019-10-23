@@ -82,6 +82,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
                     "accid" to UserManager.getAccid()
                 )
             )
+            tagAllRead.isEnabled = false
         }
 
         mPresenter = MessageHiPresenter()
@@ -105,7 +106,8 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
 
         adapter.setOnItemClickListener { _, view, position ->
             //发送通知告诉剩余时间，并且开始倒计时
-            NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
+            NIMClient.getService(MsgService::class.java)
+                .clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
 
             // 通知中的 RecentContact 对象的未读数为0
             //做招呼的已读状态更新
@@ -135,9 +137,16 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
                     NIMClient.getService(MsgService::class.java).deleteRecentContact2(accid, SessionTypeEnum.P2P)
                 }
             }
-            EventBus.getDefault().post(UpdateHiEvent())
+            refreshLayout.resetNoMoreData()
+            page = 1
+            params["page"] = page
+            adapter.data.clear()
+//            adapter.notifyDataSetChanged()
+            mPresenter.greatLists(params)
         } else {
             CommonFunction.toast("删除超时消息失败！")
+            adapter.notifyDataSetChanged()
+            checkTagAllReadEnable()
         }
     }
 
@@ -174,23 +183,26 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
                     } else {
                         data.content = recentContactt.content
                     }
+                    data.count = recentContactt.unreadCount
                 }
             }
         }
         adapter.addData(t.data ?: mutableListOf())
+        checkTagAllReadEnable()
 
+    }
 
+    private fun checkTagAllReadEnable() {
         if (adapter.data.isNullOrEmpty()) {
             tagAllRead.isEnabled = false
         } else {
-            for (tempdata in t.data!!) {
+            for (tempdata in adapter.data) {
                 if (tempdata.type == 4) {
                     tagAllRead.isEnabled = true
                     break
                 }
             }
         }
-
     }
 
 

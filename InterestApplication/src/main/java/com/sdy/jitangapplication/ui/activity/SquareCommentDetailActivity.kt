@@ -319,7 +319,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 R.id.commentReplyBtn -> {
                     reply = true
                     reply_id = adapter.data[position].id!!
-                    showCommentEt.isFocusable = true
                     showCommentEt.hint = "『回复${adapter.data[position].replyed_nickname}：』"
                     KeyboardUtils.showSoftInput(showCommentEt)
                 }
@@ -858,7 +857,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         commentActionDialog!!.replyComment.onClick {
             reply = true
             reply_id = adapter.data[position].id!!
-            showCommentEt.isFocusable = true
             showCommentEt.hint = "『回复\t${adapter.data[position].nickname}：』"
             showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 100L)
 

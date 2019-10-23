@@ -85,6 +85,24 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getString("ChangeAvator")
     }
 
+    //是否提示过引导替换头像
+    fun saveAlertChangeAvator(isNeedChangeAvator: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("AlertChangeAvator", isNeedChangeAvator)
+    }
+
+    fun getAlertChangeAvator(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAvator",false)
+    }
+
+    //是否提示过引导替换相册
+    fun saveAlertChangeAlbum(isNeedChangeAvator: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("AlertChangeAlbum", isNeedChangeAvator)
+    }
+
+    fun getAlertChangeAlbum(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAlbum",false)
+    }
+
 
     /**
      * 清除发布的参数
@@ -489,6 +507,8 @@ object UserManager {
         clearPublishParams()
         cleanVerifyData()
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
         SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
         cleanHiTime()

@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.item_message_list.view.*
  */
 class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.layout.item_message_list) {
     override fun convert(holder: BaseViewHolder, item: RecentContact) {
-        holder.itemView.msgSwipeMenu.isCanRightSwipe = false//禁止右滑
         holder.addOnClickListener(R.id.menuTop)
         holder.addOnClickListener(R.id.menuDetele)
         holder.addOnClickListener(R.id.content)

@@ -393,6 +393,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             CommonFunction.toast("再按一次退出程序")
             firstClickTime = secondTime
         } else {
+            SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAvator")
+            SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
             AppManager.instance.finishAllActivity()
             System.exit(0)//正常退出
 //            AppManager.instance.exitApp(this)
@@ -762,7 +764,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             //禁止在卡片区域滑动
             banSlideInCard -> when (ev.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (ev.x > SizeUtils.dp2px(15F) && ev.x < ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)) {
+                    if (ev.x > SizeUtils.dp2px(15F) && ev.x < ScreenUtils.getScreenWidth() - SizeUtils.dp2px(45F)) {
                         vpMain.setScrollable(false)
                     } else {
                         vpMain.setScrollable(true)
@@ -893,6 +895,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     fun onReVerifyEvent(event: ReVerifyEvent) {
         if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
             UserManager.saveNeedChangeAvator(true)
+        else if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS)
+            UserManager.saveAlertChangeAvator(true)
+        else if (event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM)
+            UserManager.saveAlertChangeAlbum(true)
+
         showGotoVerifyDialog(event.type, event.avator)
     }
 
