@@ -67,6 +67,7 @@
     </LinearLayout>
 
     <LinearLayout
+            android:id="@+id/privacyPolicy"
             android:layout_width="match_parent"
             android:paddingLeft="15dp"
             android:layout_height="wrap_content">
@@ -81,7 +82,6 @@
                 android:layout_height="wrap_content"/>
 
         <ImageView
-                android:id="@+id/privacyPolicy"
                 android:layout_gravity="center_vertical"
                 android:scaleType="centerInside"
                 android:padding="15dp"
@@ -91,6 +91,7 @@
     </LinearLayout>
 
     <LinearLayout
+            android:id="@+id/userAgreement"
             android:layout_width="match_parent"
             android:paddingLeft="15dp"
             android:layout_height="wrap_content">
@@ -105,7 +106,6 @@
                 android:layout_height="wrap_content"/>
 
         <ImageView
-                android:id="@+id/userAgreement"
                 android:layout_gravity="center_vertical"
                 android:scaleType="centerInside"
                 android:padding="15dp"
@@ -115,6 +115,7 @@
     </LinearLayout>
 
     <LinearLayout
+            android:id="@+id/contactUs"
             android:layout_width="match_parent"
             android:paddingLeft="15dp"
             android:layout_height="wrap_content">
@@ -129,7 +130,6 @@
                 android:layout_height="wrap_content"/>
 
         <ImageView
-                android:id="@+id/contactUs"
                 android:layout_gravity="center_vertical"
                 android:scaleType="centerInside"
                 android:padding="15dp"

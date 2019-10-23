@@ -7,8 +7,6 @@ import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
-import com.blankj.utilcode.util.AppUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -201,7 +199,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
 
     override fun onGetVersionResult(versionBean: VersionBean?) {
-        newVersionTip.isVisible = versionBean != null && versionBean.version != AppUtils.getAppVersionName()
+        //newVersionTip.isVisible = versionBean != null && versionBean.version != AppUtils.getAppVersionName()
     }
 
 
