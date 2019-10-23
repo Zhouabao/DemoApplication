@@ -143,10 +143,10 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
                     if (t.code == 200)
-                        mView.onAddCommentResult(position, t)
+                        mView.onAddCommentResult(position, t,true)
                     else  {
                         CommonFunction.toast(t.msg)
-                        mView.onAddCommentResult(position, t)
+                        mView.onAddCommentResult(position, t,false)
                     }
                 }
 
@@ -155,6 +155,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                         TickDialog(context).show()
                     } else
                         mView.onError(context.getString(R.string.service_error))
+                    mView.onAddCommentResult(position, null,false)
                 }
             })
     }

@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -13,7 +12,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -26,16 +24,15 @@ import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.presenter.SquarePlayDetaiPresenter
 import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
-import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
+import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_square_play_detail.*
-import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
 import org.greenrobot.eventbus.EventBus
 
@@ -169,93 +166,167 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     }
 
 
-    lateinit var moreActionDialog: MoreActionDialog
+//    lateinit var moreActionDialog: MoreActionDialog
+//
+//    /**
+//     * 展示更多操作对话框
+//     */
+//    private fun showMoreDialog(position: Int) {
+//        moreActionDialog = MoreActionDialog(this, "square_detail")
+//        moreActionDialog.show()
+//
+//        if (squareBean?.iscollected == 0) {
+//            moreActionDialog.collect.text = "收藏"
+//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
+//        } else {
+//            moreActionDialog.collect.text = "取消收藏"
+//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
+//        }
+//
+//        if (squareBean.accid == UserManager.getAccid()) {
+//            moreActionDialog.llDelete.visibility = View.VISIBLE
+//            moreActionDialog.llJubao.visibility = View.GONE
+//            moreActionDialog.llCollect.visibility = View.GONE
+//        } else {
+//            moreActionDialog.llDelete.visibility = View.GONE
+//            moreActionDialog.llJubao.visibility = View.VISIBLE
+//            moreActionDialog.llCollect.visibility = View.VISIBLE
+//        }
+//        moreActionDialog.llDelete.onClick {
+//            val params = hashMapOf(
+//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+//                "square_id" to squareBean.id!!
+//            )
+//            mPresenter.removeMySquare(params, position)
+//            moreActionDialog.dismiss()
+//
+//        }
+//
+//        moreActionDialog.llShare.onClick {
+//            showTranspondDialog()
+//        }
+//        moreActionDialog.llCollect.onClick {
+//
+//            //发起收藏请求
+//            val params = hashMapOf(
+//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+//                "type" to if (squareBean.iscollected == 0) {
+//                    1
+//                } else {
+//                    2
+//                },
+//                "square_id" to squareBean.id!!,
+//                "_timestamp" to System.currentTimeMillis()
+//            )
+//            mPresenter.getSquareCollect(params, position)
+//        }
+//        moreActionDialog.llJubao.onClick {
+//            CommonAlertDialog.Builder(this)
+//                .setTitle("举报")
+//                .setContent("是否确认举报该动态？")
+//                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+//                    override fun onClick(dialog: Dialog) {
+//                        mPresenter.getSquareReport(
+//                            hashMapOf(
+//                                "accid" to UserManager.getAccid(),
+//                                "token" to UserManager.getToken(),
+//                                "square_id" to squareBean.id!!,
+//                                "_timestamp" to System.currentTimeMillis()
+//                            )
+//                        )
+//                    }
+//
+//                })
+//                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
+//                    override fun onClick(dialog: Dialog) {
+//                        dialog.cancel()
+//                    }
+//
+//                })
+//                .create()
+//                .show()
+//        }
+//        moreActionDialog.cancel.onClick {
+//            moreActionDialog.dismiss()
+//        }
+//
+//    }
 
+
+    lateinit var moreActionDialog: MoreActionNewDialog
     /**
      * 展示更多操作对话框
      */
     private fun showMoreDialog(position: Int) {
-        moreActionDialog = MoreActionDialog(this, "square_detail")
+        moreActionDialog = MoreActionNewDialog(this, squareBean)
         moreActionDialog.show()
 
-        if (squareBean?.iscollected == 0) {
+        if (squareBean!!.iscollected == 0) {
             moreActionDialog.collect.text = "收藏"
-            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
+            val top = resources.getDrawable(R.drawable.icon_collect1)
+            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         } else {
             moreActionDialog.collect.text = "取消收藏"
-            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
+            val top = resources.getDrawable(R.drawable.icon_collected1)
+            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         }
-
-        if (squareBean.accid == UserManager.getAccid()) {
-            moreActionDialog.llDelete.visibility = View.VISIBLE
-            moreActionDialog.llJubao.visibility = View.GONE
-            moreActionDialog.llCollect.visibility = View.GONE
+        if (squareBean!!.accid == UserManager.getAccid()) {
+            moreActionDialog.delete.visibility = View.VISIBLE
+            moreActionDialog.report.visibility = View.GONE
+            moreActionDialog.collect.visibility = View.GONE
         } else {
-            moreActionDialog.llDelete.visibility = View.GONE
-            moreActionDialog.llJubao.visibility = View.VISIBLE
-            moreActionDialog.llCollect.visibility = View.VISIBLE
+            moreActionDialog.delete.visibility = View.GONE
+            moreActionDialog.report.visibility = View.VISIBLE
+            moreActionDialog.collect.visibility = View.VISIBLE
         }
-        moreActionDialog.llDelete.onClick {
+        moreActionDialog.delete.onClick {
             val params = hashMapOf(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "square_id" to squareBean.id!!
+                "square_id" to squareBean!!.id!!
             )
             mPresenter.removeMySquare(params, position)
             moreActionDialog.dismiss()
 
         }
 
-        moreActionDialog.llShare.onClick {
-            showTranspondDialog()
-        }
-        moreActionDialog.llCollect.onClick {
 
+        moreActionDialog.collect.onClick {
             //发起收藏请求
             val params = hashMapOf(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "type" to if (squareBean.iscollected == 0) {
+                "type" to if (squareBean!!.iscollected == 0) {
                     1
                 } else {
                     2
                 },
-                "square_id" to squareBean.id!!,
+                "square_id" to squareBean!!.id!!,
                 "_timestamp" to System.currentTimeMillis()
             )
             mPresenter.getSquareCollect(params, position)
-        }
-        moreActionDialog.llJubao.onClick {
-            CommonAlertDialog.Builder(this)
-                .setTitle("举报")
-                .setContent("是否确认举报该动态？")
-                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                    override fun onClick(dialog: Dialog) {
-                        mPresenter.getSquareReport(
-                            hashMapOf(
-                                "accid" to UserManager.getAccid(),
-                                "token" to UserManager.getToken(),
-                                "square_id" to squareBean.id!!,
-                                "_timestamp" to System.currentTimeMillis()
-                            )
-                        )
-                    }
-
-                })
-                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
-                    override fun onClick(dialog: Dialog) {
-                        dialog.cancel()
-                    }
-
-                })
-                .create()
-                .show()
-        }
-        moreActionDialog.cancel.onClick {
             moreActionDialog.dismiss()
         }
-
+        moreActionDialog.report.onClick {
+            //发起举报请求
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "type" to if (squareBean!!.iscollected == 0) {
+                    1
+                } else {
+                    2
+                },
+                "square_id" to squareBean!!.id!!,
+                "_timestamp" to System.currentTimeMillis()
+            )
+            mPresenter.getSquareReport(params)
+            moreActionDialog.dismiss()
+        }
     }
+
 
     override fun onRemoveMySquareResult(b: Boolean, position: Int) {
         if (b) {
@@ -320,8 +391,10 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         }
     }
 
-    override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
-        EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+    override fun onAddCommentResult(position: Int, data: BaseResp<Any?>?, success: Boolean) {
+        detailPlayCommentSend.isEnabled = true
+        if (success)
+            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
     }
 
 
@@ -356,7 +429,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                 SquareCommentDetailActivity.start(this, squareBean)
             }
             R.id.detailPlayCommentSend -> {
-                if (!detailPlayComment.text.toString().isEmpty())
+                if (!detailPlayComment.text.toString().isEmpty()) {
                     mPresenter.addComment(
                         hashMapOf(
                             "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
@@ -365,7 +438,8 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                             "content" to detailPlayComment.text.toString()
                         ), 0
                     )
-                else
+                    detailPlayCommentSend.isEnabled = false
+                } else
                     CommonFunction.toast("说点什么吧")
             }
 

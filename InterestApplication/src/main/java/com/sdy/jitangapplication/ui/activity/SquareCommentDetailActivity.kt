@@ -64,9 +64,11 @@ import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_square_comment_detail.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
-import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
+import kotlinx.android.synthetic.main.layout_square_list_bottom.*
+import kotlinx.android.synthetic.main.layout_square_list_top.*
 import kotlinx.android.synthetic.main.switch_video.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
@@ -166,7 +168,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 initVideo()
             }
             else -> {
-                audioRecordLl.visibility = View.VISIBLE
+                audioRecordLl.isVisible = true
 //                initAudio()
                 initAudio(0)
                 mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
@@ -174,32 +176,38 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
 
 
-        GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv)
+        GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv1)
 
-        squareDianzanBtnImg.setImageResource(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
 
-        squareDianzanBtn.text = "${if (squareBean!!.like_cnt < 0) {
+        squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
+            resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
+            null,
+            null,
+            null
+        )
+
+        squareDianzanBtn1.text = "${if (squareBean!!.like_cnt < 0) {
             0
         } else {
             squareBean!!.like_cnt
         }}"
-        squareCommentBtn.text = "${squareBean!!.comment_cnt}"
-        squareContent.setContent("${squareBean!!.descr}")
-        squareZhuanfaBtn.text = "${squareBean!!.share_cnt}"
-        detailPlayUserName.text = "${squareBean!!.nickname}"
-        detailPlayUserVipIv.isVisible = squareBean!!.isvip == 1
+        squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
+        squareContent1.setContent("${squareBean!!.descr}")
+        squareZhuanfaBtn1.text = "${squareBean!!.share_cnt}"
+        squareUserName1.text = "${squareBean!!.nickname}"
+        squareUserVipIv1.isVisible = squareBean!!.isvip == 1
 
-        btnChat.isVisible = !(UserManager.getAccid() == squareBean!!.accid)
-        btnChat.onClick {
-            btnChat.isEnabled = false
+        squareChatBtn1.isVisible = !(UserManager.getAccid() == squareBean!!.accid)
+        squareChatBtn1.onClick {
+            squareChatBtn1.isEnabled = false
             mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid ?: "")
         }
-        squareUserIv.onClick {
+        squareUserIv1.onClick {
             if ((squareBean?.accid ?: "") != UserManager.getAccid())
                 MatchDetailActivity.start(this, squareBean?.accid ?: "")
         }
 
-        detailPlayUserLocationAndTime.text =
+        squareLocationAndTime1.text =
             "${squareBean!!.province_name}${squareBean!!.city_name}\t${squareBean!!.out_time}"
 
     }
@@ -241,10 +249,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
 
 
-        squareZhuanfaLl.setOnClickListener(this)
-        squareDianzanlL.setOnClickListener(this)
-        squareCommentlL.setOnClickListener(this)
-        squareMoreBtn.setOnClickListener(this)
+        squareZhuanfaBtn1.setOnClickListener(this)
+        squareDianzanBtn1.setOnClickListener(this)
+        squareCommentBtn1.setOnClickListener(this)
+        squareMoreBtn1.setOnClickListener(this)
         sendCommentBtn.setOnClickListener(this)
 
         showCommentEt.addTextChangedListener(object : TextWatcher {
@@ -560,8 +568,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 squareBean!!.like_cnt = squareBean!!.like_cnt?.minus(1)
                 0
             }
-            squareDianzanBtn.text = "${squareBean!!.like_cnt}"
-            squareDianzanBtnImg.setImageResource(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
+            squareDianzanBtn1.text = "${squareBean!!.like_cnt}"
+            squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
+                resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
+                null,
+                null,
+                null
+            )
 
             EventBus.getDefault().post(RefreshLikeEvent(squareBean?.isliked ?: 0, intent.getIntExtra("position", -1)))
 //            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
@@ -575,12 +588,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
     override fun onAddCommentResult(data: BaseResp<Any?>?, result: Boolean) {
+        resetCommentEt()
         if (result) {
-            resetCommentEt()
             refreshLayout.autoRefresh()
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.plus(1)
-            squareCommentBtn.text = "${squareBean!!.comment_cnt}"
+            squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         }
     }
 
@@ -604,7 +617,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.minus(1)
-            squareCommentBtn.text = "${squareBean!!.comment_cnt}"
+            squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         }
     }
 
@@ -615,10 +628,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.squareZhuanfaLl -> {
+            R.id.squareZhuanfaBtn1 -> {
                 showTranspondDialog()
             }
-            R.id.squareDianzanlL -> {
+            R.id.squareDianzanBtn1 -> {
                 val params = hashMapOf(
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
@@ -632,10 +645,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 )
                 mPresenter.getSquareLike(params)
             }
-            R.id.squareCommentlL -> {
+            R.id.squareCommentBtn1 -> {
                 squareScrollView.smoothScrollTo(commentList.left, commentList.top)
             }
-            R.id.squareMoreBtn -> {
+            R.id.squareMoreBtn1 -> {
                 showMoreDialog()
             }
             R.id.sendCommentBtn -> {
@@ -648,6 +661,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                         "reply_id" to reply_id
                     )
                 )
+                sendCommentBtn.isEnabled = false
 
             }
         }
@@ -663,48 +677,125 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
 
-    var moreActionDialog: MoreActionDialog? = null
+//    var moreActionDialog: MoreActionDialog? = null
+//    /**
+//     * 展示更多操作对话框
+//     */
+//    private fun showMoreDialog() {
+//        if (moreActionDialog == null)
+//            moreActionDialog = MoreActionDialog(this!!, "square")
+//        moreActionDialog!!.show()
+//
+//        if (squareBean!!.iscollected == 0) {
+//            moreActionDialog!!.collect.text = "收藏"
+//            moreActionDialog!!.collectBtn.setImageResource(R.drawable.icon_collect_no)
+//        } else {
+//            moreActionDialog!!.collect.text = "取消收藏"
+//            moreActionDialog!!.collectBtn.setImageResource(R.drawable.icon_collectt)
+//        }
+//
+//        if (squareBean!!.accid == UserManager.getAccid()) {
+//            moreActionDialog!!.llDelete.visibility = View.VISIBLE
+//            moreActionDialog!!.llJubao.visibility = View.GONE
+//            moreActionDialog!!.llCollect.visibility = View.GONE
+//        } else {
+//            moreActionDialog!!.llDelete.visibility = View.GONE
+//            moreActionDialog!!.llJubao.visibility = View.VISIBLE
+//            moreActionDialog!!.llCollect.visibility = View.VISIBLE
+//        }
+//        moreActionDialog!!.llDelete.onClick {
+//            val params = hashMapOf(
+//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+//                "square_id" to squareBean!!.id!!
+//            )
+//            mPresenter.removeMySquare(params)
+//            moreActionDialog!!.dismiss()
+//
+//        }
+//
+//        moreActionDialog!!.llCollect.onClick {
+//            //发起收藏请求
+//            val params = hashMapOf(
+//                "accid" to UserManager.getAccid(),
+//                "token" to UserManager.getToken(),
+//                "type" to if (squareBean!!.iscollected == 0) {
+//                    1
+//                } else {
+//                    2
+//                },
+//                "square_id" to squareBean!!.id!!,
+//                "_timestamp" to System.currentTimeMillis()
+//            )
+//            mPresenter.getSquareCollect(params)
+//            moreActionDialog!!.dismiss()
+//        }
+//        moreActionDialog!!.llJubao.onClick {
+//            //发起举报请求
+//            mPresenter.getSquareReport(
+//                hashMapOf(
+//                    "accid" to UserManager.getAccid(),
+//                    "token" to UserManager.getToken(),
+//                    "square_id" to squareBean!!.id!!,
+//                    "_timestamp" to System.currentTimeMillis()
+//                )
+//            )
+//            moreActionDialog!!.dismiss()
+//
+//        }
+//        moreActionDialog!!.cancel.onClick {
+//            moreActionDialog!!.dismiss()
+//        }
+//        moreActionDialog!!.setOnDismissListener {
+//            moreActionDialog = null
+//        }
+//
+//    }
+
+
+    lateinit var moreActionDialog: MoreActionNewDialog
     /**
      * 展示更多操作对话框
      */
     private fun showMoreDialog() {
-        if (moreActionDialog == null)
-            moreActionDialog = MoreActionDialog(this!!, "square")
-        moreActionDialog!!.show()
+        moreActionDialog = MoreActionNewDialog(this, squareBean)
+        moreActionDialog.show()
 
         if (squareBean!!.iscollected == 0) {
-            moreActionDialog!!.collect.text = "收藏"
-            moreActionDialog!!.collectBtn.setImageResource(R.drawable.icon_collect_no)
+            moreActionDialog.collect.text = "收藏"
+            val top = resources.getDrawable(R.drawable.icon_collect1)
+            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         } else {
-            moreActionDialog!!.collect.text = "取消收藏"
-            moreActionDialog!!.collectBtn.setImageResource(R.drawable.icon_collectt)
+            moreActionDialog.collect.text = "取消收藏"
+            val top = resources.getDrawable(R.drawable.icon_collected1)
+            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         }
-
         if (squareBean!!.accid == UserManager.getAccid()) {
-            moreActionDialog!!.llDelete.visibility = View.VISIBLE
-            moreActionDialog!!.llJubao.visibility = View.GONE
-            moreActionDialog!!.llCollect.visibility = View.GONE
+            moreActionDialog.delete.visibility = View.VISIBLE
+            moreActionDialog.report.visibility = View.GONE
+            moreActionDialog.collect.visibility = View.GONE
         } else {
-            moreActionDialog!!.llDelete.visibility = View.GONE
-            moreActionDialog!!.llJubao.visibility = View.VISIBLE
-            moreActionDialog!!.llCollect.visibility = View.VISIBLE
+            moreActionDialog.delete.visibility = View.GONE
+            moreActionDialog.report.visibility = View.VISIBLE
+            moreActionDialog.collect.visibility = View.VISIBLE
         }
-        moreActionDialog!!.llDelete.onClick {
+        moreActionDialog.delete.onClick {
             val params = hashMapOf(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "square_id" to squareBean!!.id!!
             )
             mPresenter.removeMySquare(params)
-            moreActionDialog!!.dismiss()
+            moreActionDialog.dismiss()
 
         }
 
-        moreActionDialog!!.llCollect.onClick {
+
+        moreActionDialog.collect.onClick {
             //发起收藏请求
             val params = hashMapOf(
-                "accid" to UserManager.getAccid(),
-                "token" to UserManager.getToken(),
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                 "type" to if (squareBean!!.iscollected == 0) {
                     1
                 } else {
@@ -714,28 +805,24 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 "_timestamp" to System.currentTimeMillis()
             )
             mPresenter.getSquareCollect(params)
-            moreActionDialog!!.dismiss()
+            moreActionDialog.dismiss()
         }
-        moreActionDialog!!.llJubao.onClick {
+        moreActionDialog.report.onClick {
             //发起举报请求
-            mPresenter.getSquareReport(
-                hashMapOf(
-                    "accid" to UserManager.getAccid(),
-                    "token" to UserManager.getToken(),
-                    "square_id" to squareBean!!.id!!,
-                    "_timestamp" to System.currentTimeMillis()
-                )
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "type" to if (squareBean!!.iscollected == 0) {
+                    1
+                } else {
+                    2
+                },
+                "square_id" to squareBean!!.id!!,
+                "_timestamp" to System.currentTimeMillis()
             )
-            moreActionDialog!!.dismiss()
-
+            mPresenter.getSquareReport(params)
+            moreActionDialog.dismiss()
         }
-        moreActionDialog!!.cancel.onClick {
-            moreActionDialog!!.dismiss()
-        }
-        moreActionDialog!!.setOnDismissListener {
-            moreActionDialog = null
-        }
-
     }
 
     override fun onRemoveMySquareResult(result: Boolean) {
@@ -1041,7 +1128,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 }
             }
         }
-        btnChat.isEnabled = true
+        squareChatBtn1.isEnabled = true
 
     }
 

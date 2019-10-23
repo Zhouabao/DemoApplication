@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -27,17 +26,18 @@ import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
 import com.sdy.jitangapplication.presenter.SquarePlayDetaiPresenter
 import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
-import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
+import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_square_play_detail.btnBack
 import kotlinx.android.synthetic.main.activity_square_play_list_detail.*
-import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.item_square_detail_play_cover.*
+
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -173,7 +173,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     private fun initView() {
         ScreenUtils.setFullScreen(this)
         btnBack.onClick {
-            setResult(Activity.RESULT_OK,intent)
+            setResult(Activity.RESULT_OK, intent)
             finish()
         }
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
@@ -231,7 +231,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 }
                 //评论
                 R.id.detailPlayCommentSend -> {
-                    if (!adapter.data[position].comment.isNullOrEmpty())
+                    if (!adapter.data[position].comment.isNullOrEmpty()) {
                         mPresenter.addComment(
                             hashMapOf(
                                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
@@ -240,7 +240,8 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                                 "content" to (adapter.data[position].comment ?: "")
                             ), position
                         )
-                    else
+                        detailPlayCommentSend.isEnabled = false
+                    } else
                         CommonFunction.toast("说点什么吧")
                 }
                 //更多操作
@@ -325,90 +326,163 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         }
     }
 
-    lateinit var moreActionDialog: MoreActionDialog
+//    lateinit var moreActionDialog: MoreActionDialog
+//
+//    /**
+//     * 展示更多操作对话框
+//     */
+//    private fun showMoreDialog(position: Int) {
+//        moreActionDialog = MoreActionDialog(this, "square_detail")
+//        moreActionDialog.show()
+//
+//        if (adapter.data[position]?.iscollected == 0) {
+//            moreActionDialog.collect.text = "收藏"
+//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
+//        } else {
+//            moreActionDialog.collect.text = "取消收藏"
+//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
+//        }
+//
+//        if (adapter.data[position].accid == UserManager.getAccid()) {
+//            moreActionDialog.llDelete.visibility = View.VISIBLE
+//            moreActionDialog.llJubao.visibility = View.GONE
+//            moreActionDialog.llCollect.visibility = View.GONE
+//        } else {
+//            moreActionDialog.llDelete.visibility = View.GONE
+//            moreActionDialog.llJubao.visibility = View.VISIBLE
+//            moreActionDialog.llCollect.visibility = View.VISIBLE
+//        }
+//        moreActionDialog.llDelete.onClick {
+//            val params = hashMapOf(
+//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+//                "square_id" to adapter.data[position].id!!
+//            )
+//            mPresenter.removeMySquare(params, position)
+//            moreActionDialog.dismiss()
+//        }
+//
+//
+//        moreActionDialog.llShare.onClick {
+//            showTranspondDialog(adapter.data[position])
+//        }
+//        moreActionDialog.llCollect.onClick {
+//            //发起收藏请求
+//            val params = hashMapOf(
+//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+//                "type" to if (adapter.data[position].iscollected == 0) {
+//                    1
+//                } else {
+//                    2
+//                },
+//                "square_id" to adapter.data[position].id!!,
+//                "_timestamp" to System.currentTimeMillis()
+//            )
+//            mPresenter.getSquareCollect(params, position)
+//        }
+//        moreActionDialog.llJubao.onClick {
+//            CommonAlertDialog.Builder(this)
+//                .setTitle("举报")
+//                .setContent("是否确认举报该动态？")
+//                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
+//                    override fun onClick(dialog: Dialog) {
+//                        dialog.cancel()
+//                    }
+//                })
+//                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+//                    override fun onClick(dialog: Dialog) {
+//                        mPresenter.getSquareReport(
+//                            hashMapOf(
+//                                "accid" to UserManager.getAccid(),
+//                                "token" to UserManager.getToken(),
+//                                "square_id" to adapter.data[position].id!!,
+//                                "_timestamp" to System.currentTimeMillis()
+//                            )
+//                        )
+//                    }
+//
+//                })
+//                .create()
+//                .show()
+//        }
+//        moreActionDialog.cancel.onClick {
+//            moreActionDialog.dismiss()
+//        }
+//
+//    }
 
+
+    lateinit var moreActionDialog: MoreActionNewDialog
     /**
      * 展示更多操作对话框
      */
     private fun showMoreDialog(position: Int) {
-        moreActionDialog = MoreActionDialog(this, "square_detail")
+        moreActionDialog = MoreActionNewDialog(this, adapter.data[position])
         moreActionDialog.show()
 
         if (adapter.data[position]?.iscollected == 0) {
             moreActionDialog.collect.text = "收藏"
-            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
+            val top = resources.getDrawable(R.drawable.icon_collect1)
+            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         } else {
             moreActionDialog.collect.text = "取消收藏"
-            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
+            val top = resources.getDrawable(R.drawable.icon_collected1)
+            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
         }
-
-        if (adapter.data[position].accid == UserManager.getAccid()) {
-            moreActionDialog.llDelete.visibility = View.VISIBLE
-            moreActionDialog.llJubao.visibility = View.GONE
-            moreActionDialog.llCollect.visibility = View.GONE
+        if (adapter.data[position]?.accid == UserManager.getAccid()) {
+            moreActionDialog.delete.visibility = View.VISIBLE
+            moreActionDialog.report.visibility = View.GONE
+            moreActionDialog.collect.visibility = View.GONE
         } else {
-            moreActionDialog.llDelete.visibility = View.GONE
-            moreActionDialog.llJubao.visibility = View.VISIBLE
-            moreActionDialog.llCollect.visibility = View.VISIBLE
+            moreActionDialog.delete.visibility = View.GONE
+            moreActionDialog.report.visibility = View.VISIBLE
+            moreActionDialog.collect.visibility = View.VISIBLE
         }
-        moreActionDialog.llDelete.onClick {
+        moreActionDialog.delete.onClick {
             val params = hashMapOf(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "square_id" to adapter.data[position].id!!
+                "square_id" to adapter.data[position]?.id!!
             )
             mPresenter.removeMySquare(params, position)
             moreActionDialog.dismiss()
+
         }
 
 
-        moreActionDialog.llShare.onClick {
-            showTranspondDialog(adapter.data[position])
-        }
-        moreActionDialog.llCollect.onClick {
+        moreActionDialog.collect.onClick {
             //发起收藏请求
             val params = hashMapOf(
                 "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
                 "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "type" to if (adapter.data[position].iscollected == 0) {
+                "type" to if (adapter.data[position]?.iscollected == 0) {
                     1
                 } else {
                     2
                 },
-                "square_id" to adapter.data[position].id!!,
+                "square_id" to adapter.data[position]?.id!!,
                 "_timestamp" to System.currentTimeMillis()
             )
             mPresenter.getSquareCollect(params, position)
-        }
-        moreActionDialog.llJubao.onClick {
-            CommonAlertDialog.Builder(this)
-                .setTitle("举报")
-                .setContent("是否确认举报该动态？")
-                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
-                    override fun onClick(dialog: Dialog) {
-                        dialog.cancel()
-                    }
-                })
-                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                    override fun onClick(dialog: Dialog) {
-                        mPresenter.getSquareReport(
-                            hashMapOf(
-                                "accid" to UserManager.getAccid(),
-                                "token" to UserManager.getToken(),
-                                "square_id" to adapter.data[position].id!!,
-                                "_timestamp" to System.currentTimeMillis()
-                            )
-                        )
-                    }
-
-                })
-                .create()
-                .show()
-        }
-        moreActionDialog.cancel.onClick {
             moreActionDialog.dismiss()
         }
-
+        moreActionDialog.report.onClick {
+            //发起举报请求
+            val params = hashMapOf(
+                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                "type" to if (adapter.data[position]?.iscollected == 0) {
+                    1
+                } else {
+                    2
+                },
+                "square_id" to adapter.data[position]?.id!!,
+                "_timestamp" to System.currentTimeMillis()
+            )
+            mPresenter.getSquareReport(params)
+            moreActionDialog.dismiss()
+        }
     }
 
     override fun onGetSquareReport(t: Boolean) {
@@ -519,12 +593,15 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         }
     }
 
-    override fun onAddCommentResult(position: Int, data: BaseResp<Any?>) {
-        CommonFunction.toast(data.msg)
-        if (data.code == 200) {
-            adapter.data[position].comment = ""
-            adapter.notifyItemChanged(position)
-            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+    override fun onAddCommentResult(position: Int, data: BaseResp<Any?>?, success: Boolean) {
+        detailPlayCommentSend.isEnabled = true
+        if (data != null) {
+            CommonFunction.toast(data.msg)
+            if (data.code == 200) {
+                adapter.data[position].comment = ""
+                adapter.notifyItemChanged(position)
+                EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            }
         }
     }
 

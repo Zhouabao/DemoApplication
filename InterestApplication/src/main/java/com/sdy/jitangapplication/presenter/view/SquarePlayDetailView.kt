@@ -1,8 +1,8 @@
 package com.sdy.jitangapplication.presenter.view
 
-import com.sdy.jitangapplication.model.SquareBean
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.SquareBean
 
 /**
  *    author : ZFM
@@ -19,7 +19,7 @@ interface SquarePlayDetailView : BaseView {
 
     fun onGetSquareCollectResult(position: Int, data: BaseResp<Any?>)
 
-    fun onAddCommentResult(position: Int, data: BaseResp<Any?>)
+    fun onAddCommentResult(position: Int, data: BaseResp<Any?>?, result: Boolean)
     fun onRemoveMySquareResult(b: Boolean, position: Int)
     fun onGetSquareReport(t: Boolean)
 
