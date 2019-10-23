@@ -243,7 +243,9 @@ object UserManager {
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
 //                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0)
-                SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty())
+                SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty() ||
+                SPUtils.getInstance(Constants.SPNAME).getString("birth").toLong() == 0L
+                )
     }
 
 
