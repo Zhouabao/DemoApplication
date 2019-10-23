@@ -7,6 +7,8 @@
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         tools:context=".ui.activity.SquareCommentDetailActivity">
 
     <RelativeLayout
@@ -82,7 +84,6 @@
                         <include
                                 android:id="@+id/topLayout"
                                 layout="@layout/layout_square_list_top"
-                                android:layout_marginTop="20dp"
                                 android:layout_height="wrap_content"
                                 android:layout_width="match_parent"
                                 app:layout_constraintLeft_toLeftOf="parent"
@@ -129,7 +130,6 @@
                                 layout="@layout/layout_square_list_bottom"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="20dp"
                                 app:layout_constraintBottom_toTopOf="@id/commentList"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 />

@@ -54,9 +54,21 @@ class ListSquareImgsAdapter(
                     } else {
                         (item.width / item.height * layoutParams.height).toInt()
                     }
-                layoutParams.leftMargin = SizeUtils.dp2px(10F)
+                layoutParams.leftMargin = SizeUtils.dp2px(
+                    if (position == 0) {
+                        15F
+                    } else {
+                        10F
+                    }
+                )
                 if (position == datas.size - 1) {
-                    layoutParams.rightMargin = SizeUtils.dp2px(10F)
+                    layoutParams.rightMargin = SizeUtils.dp2px(
+                        if (position == datas.size - 1) {
+                            15F
+                        } else {
+                            10F
+                        }
+                    )
                 }
                 holder.itemView.ivUser.layoutParams = layoutParams
                 GlideUtil.loadRoundImgCenterCrop(

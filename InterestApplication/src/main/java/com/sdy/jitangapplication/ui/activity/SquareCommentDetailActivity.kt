@@ -208,7 +208,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
 
         squareLocationAndTime1.text =
-            "${squareBean!!.province_name}${squareBean!!.city_name}\t${squareBean!!.out_time}"
+            "${squareBean!!.province_name}${if (squareBean!!.city_name.isNotEmpty() && squareBean!!.city_name != squareBean!!.province_name) {
+                squareBean!!.city_name
+            } else {
+                ""
+            }}"
+
+        squareTime.text = "${squareBean!!.out_time}"
 
     }
 
@@ -575,7 +581,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 null
             )
 
-            EventBus.getDefault().post(RefreshLikeEvent(squareBean?.isliked ?: 0, intent.getIntExtra("position", -1)))
+            EventBus.getDefault()
+                .post(RefreshLikeEvent(squareBean?.isliked ?: 0, intent.getIntExtra("position", -1)))
 //            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
@@ -975,20 +982,20 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     override fun onBackPressed() {
         if (showCommentEt.isFocused) {
             resetCommentEt()
-        } else {
-            if (mediaPlayer != null) {
-                mediaPlayer!!.resetMedia()
-                mediaPlayer = null
-            }
-
-            //释放所有
-            squareUserVideo.gsyVideoManager.setListener(squareUserVideo.gsyVideoManager.lastListener())
-            squareUserVideo.gsyVideoManager.setLastListener(null)
-            squareUserVideo.release()
-            GSYVideoManager.releaseAllVideos()
-            SwitchUtil.release()
-            super.onBackPressed()
         }
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+
+        //释放所有
+        squareUserVideo.gsyVideoManager.setListener(squareUserVideo.gsyVideoManager.lastListener())
+        squareUserVideo.gsyVideoManager.setLastListener(null)
+        squareUserVideo.release()
+        GSYVideoManager.releaseAllVideos()
+        SwitchUtil.release()
+        super.onBackPressed()
+
 
     }
 

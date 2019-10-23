@@ -136,14 +136,15 @@ class MultiListSquareAdapter(
         } else {
             View.GONE
         }
-        GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", holder.itemView.squareUserIv1)
-        holder.itemView.squareLocationAndTime1.text = item.province_name.plus(item.city_name).plus(
-            if (item.city_name.isNullOrEmpty()) {
+        GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.squareUserIv1)
+        holder.itemView.squareLocationAndTime1.text = item.province_name.plus(
+            if (item.city_name.isEmpty() || item.city_name == item.province_name) {
                 ""
             } else {
-                "\t\t"
+                item.city_name
             }
-        ).plus(item.out_time)
+        )
+        holder.itemView.squareTime.text = "${item.out_time}"
         holder.itemView.squareUserIv1.onClick {
             if (!(UserManager.getAccid() == item.accid || !chat)) {
                 MatchDetailActivity.start(mContext, item.accid)

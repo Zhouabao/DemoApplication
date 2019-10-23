@@ -66,7 +66,20 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
 
         GlideUtil.loadAvatorImg(context, item.avatar, holder.itemView.detailPlayUserAvatar)
         holder.itemView.detailPlayUserLocationAndTime.text =
-            item.province_name.plus(item.city_name).plus("\t\t").plus(item.out_time)
+
+            item.province_name.plus(
+                if (item.city_name != item.province_name) {
+                    item.city_name
+                } else {
+                    ""
+                }
+            ).plus(
+                if (!item.province_name.isNullOrEmpty() || !item.city_name.isNullOrEmpty()) {
+                    "\t\t"
+                } else {
+                    ""
+                }
+            ).plus(item.out_time)
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
         holder.itemView.detailPlayContent.text = item.descr
         holder.itemView.detailPlayUserVipIv.isVisible = item.isvip == 1
