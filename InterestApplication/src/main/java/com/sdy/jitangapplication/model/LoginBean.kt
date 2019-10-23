@@ -25,10 +25,10 @@ data class Userinfo(
     val accid: String = "",
     val allvisit: Int = 0,
     val face_audit_state: Int? = 0,
-    val isvip: Int? = 0,
+    val isvip: Int = -1,
     val todayvisit: Int = 0,
     val vip_express: String = "",
-    var isfaced: Int = 0//   0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
+    var isfaced: Int = -1//   0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
 )
 
 data class TagBean(

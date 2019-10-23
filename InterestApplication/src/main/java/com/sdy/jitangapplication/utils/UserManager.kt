@@ -91,7 +91,7 @@ object UserManager {
     }
 
     fun getAlertChangeAvator(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAvator",false)
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAvator", false)
     }
 
     //是否提示过引导替换相册
@@ -100,7 +100,7 @@ object UserManager {
     }
 
     fun getAlertChangeAlbum(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAlbum",false)
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAlbum", false)
     }
 
 
@@ -248,8 +248,14 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
             SPUtils.getInstance(Constants.SPNAME).put("birth", "${data.userinfo.birth}")
-            data.userinfo.isvip?.let { saveUserVip(it) }
-            data.userinfo.isfaced?.let { saveUserVerify(it) }
+
+
+            if (data.userinfo.isvip != -1) {
+                saveUserVip(data.userinfo.isvip)
+            }
+
+            if (data.userinfo.isfaced != -1)
+                saveUserVerify(data.userinfo.isfaced)
         }
     }
 
