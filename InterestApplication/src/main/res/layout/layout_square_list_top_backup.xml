@@ -5,6 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/llTOP"
+        android:layout_marginTop="20dp"
         xmlns:tools="http://schemas.android.com/tools">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -12,6 +13,7 @@
             android:layout_width="40dp"
             android:layout_marginLeft="15dp"
             android:layout_height="40dp"
+            android:src="@drawable/icon_default_avator"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -27,7 +29,7 @@
     <TextView
             android:id="@+id/squareUserName1"
             tools:text="Kimberly Davis"
-            android:layout_marginLeft="9dp"
+            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
             android:textColor="@color/colorBlack22"
@@ -50,22 +52,17 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:layout_marginRight="2dp"
-            app:layout_constraintRight_toLeftOf="@id/squareChatBtn1"
+            app:layout_constraintRight_toLeftOf="@id/squareMoreBtn1"
             app:layout_constraintLeft_toLeftOf="@id/squareUserName1"
             app:layout_constraintTop_toBottomOf="@id/squareUserName1"
             />
 
-
     <ImageView
-            android:id="@+id/squareChatBtn1"
-            android:paddingRight="15dp"
-            android:paddingLeft="15dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:layout_marginRight="12dp"
-            android:background="@drawable/icon_chat1"
-            android:layout_width="80dp"
-            android:layout_height="28dp"
+            android:id="@+id/squareMoreBtn1"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/icon_more_black"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             app:layout_constraintBottom_toBottomOf="@id/squareLocationAndTime1"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/squareUserName1"/>
