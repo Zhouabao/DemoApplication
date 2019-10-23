@@ -96,7 +96,6 @@ public class ChatMessageListPanelEx {
     private RecyclerView messageListView;
 
 
-
     public List<IMMessage> getItems() {
         return items;
     }
@@ -326,7 +325,6 @@ public class ChatMessageListPanelEx {
 
     public void onIncomingMessage(List<IMMessage> messages) {
         try {
-            boolean needScrollToBottom = isLastMessageVisible();
             boolean needRefresh = false;
             List<IMMessage> addedListItems = new ArrayList<>(messages.size());
             for (IMMessage message : messages) {
@@ -343,16 +341,7 @@ public class ChatMessageListPanelEx {
 
             adapter.updateShowTimeItem(addedListItems, false, true);
 
-            // incoming messages tip
-            IMMessage lastMsg = messages.get(messages.size() - 1);
-            if (isMyMessage(lastMsg) && lastMsg.getMsgType() != MsgTypeEnum.tip) {
-                if (needScrollToBottom) {
-                    doScrollToBottom();
-                }
-                //            else if (incomingMsgPrompt != null && lastMsg.getSessionType() != SessionTypeEnum.ChatRoom) {
-                //             incomingMsgPrompt.show(lastMsg);
-                //            }
-            }
+            doScrollToBottom();
         } catch (Exception e) {
             Log.d("error", e.getMessage());
             e.printStackTrace();
@@ -623,19 +612,24 @@ public class ChatMessageListPanelEx {
         private RequestCallback<List<IMMessage>> callback = new RequestCallbackWrapper<List<IMMessage>>() {
             @Override
             public void onResult(int code, List<IMMessage> messages, Throwable exception) {
-                mIsInitFetchingLocal = false;
-                if (code != ResponseCode.RES_SUCCESS || exception != null) {
-                    if (direction == QueryDirectionEnum.QUERY_OLD) {
-                        adapter.fetchMoreFailed();
-                    } else if (direction == QueryDirectionEnum.QUERY_NEW) {
-                        adapter.loadMoreFail();
+                try {
+                    mIsInitFetchingLocal = false;
+                    if (code != ResponseCode.RES_SUCCESS || exception != null) {
+                        if (direction == QueryDirectionEnum.QUERY_OLD) {
+                            adapter.fetchMoreFailed();
+                        } else if (direction == QueryDirectionEnum.QUERY_NEW) {
+                            adapter.loadMoreFail();
+                        }
+
+                        return;
                     }
 
-                    return;
-                }
-
-                if (messages != null) {
-                    onMessageLoaded(messages);
+                    if (messages != null) {
+                        onMessageLoaded(messages);
+                    }
+                } catch (Exception e) {
+                    Log.e("Exception", e.getCause().getMessage().toString());
+                    e.printStackTrace();
                 }
             }
         };
@@ -744,10 +738,10 @@ public class ChatMessageListPanelEx {
             }
 
             // 如果是第一次加载，updateShowTimeItem返回的就是lastShowTimeItem
-            if (firstLoad) {
-                doScrollToBottom();
-                sendReceipt(); // 发送已读回执
-            }
+//            if (firstLoad) {
+            doScrollToBottom();
+            sendReceipt(); // 发送已读回执
+//            }
 
             // 通过历史记录加载的群聊消息，需要刷新一下已读未读最新数据
             if (container.sessionType == SessionTypeEnum.Team) {
@@ -1214,7 +1208,7 @@ public class ChatMessageListPanelEx {
         return msg != null
                 && msg.getSessionType() == SessionTypeEnum.P2P
                 && msg.getDirect() == MsgDirectionEnum.Out
-                && msg.getMsgType() != MsgTypeEnum.tip
+                //&& msg.getMsgType() != MsgTypeEnum.tip
                 && msg.getMsgType() != MsgTypeEnum.notification
                 && msg.isRemoteRead();
 
@@ -1255,9 +1249,10 @@ public class ChatMessageListPanelEx {
     }
 
     private boolean sendReceiptCheck(final IMMessage msg) {
+
         return msg != null
                 && msg.getDirect() == MsgDirectionEnum.In
-                && msg.getMsgType() != MsgTypeEnum.tip
+//                && msg.getMsgType() != MsgTypeEnum.tip
                 && msg.getMsgType() != MsgTypeEnum.notification;
     }
 
