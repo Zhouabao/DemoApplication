@@ -11,7 +11,7 @@
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+        app:msv_viewState="content">
 
     <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,7 +33,7 @@
                 android:scrollbars="none"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="70dp">
+                >
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -223,6 +223,8 @@
                         android:layout_marginRight="10dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:overScrollMode="never"
+                        android:scrollbars="none"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/hotT1"/>
 
@@ -302,8 +304,7 @@
                 android:orientation="horizontal"
                 android:layout_alignParentLeft="true"
                 android:gravity="center"
-                android:elevation="10dp"
-                android:background="@drawable/shape_rectangle_white_shadow"
+                android:background="@drawable/icon_detail_bg1"
                 android:layout_alignParentBottom="true"
                 android:layout_height="70dp">
 

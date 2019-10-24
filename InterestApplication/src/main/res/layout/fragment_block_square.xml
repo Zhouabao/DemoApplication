@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--<com.kennyc.view.MultiStateView-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-        <!--xmlns:tools="http://schemas.android.com/tools"-->
-        <!--android:id="@+id/stateview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:msv_animateViewChanges="true"-->
-        <!--app:msv_errorView="@layout/error_layout"-->
-        <!--app:msv_emptyView="@layout/empty_layout"-->
-        <!--app:msv_viewState="content">-->
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/refreshBlock"
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:id="@+id/stateview"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--app:msv_animateViewChanges="true"-->
+<!--app:msv_errorView="@layout/error_layout"-->
+<!--app:msv_emptyView="@layout/empty_layout"-->
+<!--app:msv_viewState="content">-->
+<com.scwang.smartrefresh.layout.SmartRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/refreshBlock"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:layout_marginBottom="80dp"
+        app:srlEnableAutoLoadMore="true"
+        app:srlEnableLoadMore="true"
+        app:srlEnableLoadMoreWhenContentNotFull="true"
+        app:srlEnableNestedScrolling="true"
+        app:srlEnableRefresh="false">
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/blockRv"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srlEnableLoadMore="true"
-            app:srlEnableAutoLoadMore="true"
-            app:srlEnableNestedScrolling="true"
-            app:srlEnableLoadMoreWhenContentNotFull="true"
+            android:layout_height="wrap_content"
             android:background="@color/colorWhite"
-            app:srlEnableRefresh="false">
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            tools:context=".ui.fragment.BlockSquareFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/blockRv"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
-                tools:context=".ui.fragment.BlockSquareFragment">
-
-        </androidx.recyclerview.widget.RecyclerView>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-<!--</com.kennyc.view.MultiStateView>-->
+    </androidx.recyclerview.widget.RecyclerView>
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        <!--</com.kennyc.view.MultiStateView>-->
