@@ -203,6 +203,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                         ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, activity!!).show()
                 } else {
                     card_stack_view.swipe()
+                    btnChat.isEnabled = false
                 }
             }
             R.id.retryBtn -> {
@@ -228,9 +229,10 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
      *         2.2.2 无次数 其他操作--如:请求充值会员
      */
     override fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean) {
-        if (greetBean != null) {
+        if (greetBean != null && greetBean.lightningcnt != -1) {
             if (greetBean.isfriend || greetBean.isgreet) {
                 ChatActivity.start(activity!!, matchBean?.accid ?: "")
+                btnChat.isEnabled = true
             } else {
                 if (greetBean.lightningcnt > 0) {
                     mPresenter.greet(
@@ -248,10 +250,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     } else {
                         ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, activity!!).show()
                     }
+                    btnChat.isEnabled = true
                 }
             }
         } else {
             card_stack_view.rewind()
+            btnChat.isEnabled = true
         }
     }
 
@@ -259,6 +263,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
      * 打招呼结果（先请求服务器）
      */
     override fun onGreetSResult(greetBean: Boolean, code: Int, matchBean: MatchBean) {
+        btnChat.isEnabled = true
         if (greetBean) {
             sendChatHiMessage(ChatHiAttachment.CHATHI_HI, matchBean)
         } else {
@@ -328,8 +333,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
      * 左滑不喜欢结果
      */
     override fun onGetDislikeResult(success: Boolean, data: BaseResp<StatusBean?>) {
-        if (data.data != null) {
-            if (data.code == 200) {
+
+        if (data.code == 200) {
+            if (data.data != null) {
                 if (UserManager.getCurrentSurveyVersion().isEmpty()) {
                     UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
                     EventBus.getDefault().post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
@@ -342,26 +348,28 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
                     return
                 }
-            } else if (data.code == 201) {
-                if (data.data!!.residue == 0) {
-                    card_stack_view.rewind()
-                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
-                    return
-                }
             } else {
                 CommonFunction.toast(data.msg)
                 card_stack_view.rewind()
             }
-
+        } else if (data.code == 201) {
+            if (data.data!!.residue == 0) {
+                card_stack_view.rewind()
+                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+                return
+            }
         } else {
+            CommonFunction.toast(data.msg)
             card_stack_view.rewind()
         }
+
+
     }
 
     //status :1.喜欢成功  2.匹配成功
     override fun onGetLikeResult(success: Boolean, data: BaseResp<StatusBean?>, matchBean: MatchBean) {
-        if (data.data != null) {
-            if (data.code == 200) {
+        if (data.code == 200) {
+            if (data.data != null) {
                 if (UserManager.getCurrentSurveyVersion().isEmpty()) {
                     UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
                     EventBus.getDefault().post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
@@ -377,20 +385,22 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 if (data.data!!.status == 2) {//status :1.喜欢成功  2.匹配成功
                     sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH, matchBean)
                 }
-            } else if (data.code == 201) {
-                if (data.data!!.residue == 0) {
-                    card_stack_view.rewind()
-                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
-                    return
-                }
             } else {
                 CommonFunction.toast(data.msg)
                 card_stack_view.rewind()
             }
 
+        } else if (data.code == 201) {
+            if (data.data!!.residue == 0) {
+                card_stack_view.rewind()
+                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+                return
+            }
         } else {
+            CommonFunction.toast(data.msg)
             card_stack_view.rewind()
         }
+
     }
 
 

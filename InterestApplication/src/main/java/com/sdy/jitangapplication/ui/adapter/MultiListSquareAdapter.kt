@@ -305,7 +305,7 @@ class MultiListSquareAdapter(
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {
                         val greetBean = t.data
-                        if (greetBean != null) {
+                        if (greetBean != null && greetBean.lightningcnt != -1) {
                             if (greetBean.isfriend || greetBean.isgreet) {
                                 ChatActivity.start(mContext as Activity, target_accid ?: "")
                                 clickPos = -1

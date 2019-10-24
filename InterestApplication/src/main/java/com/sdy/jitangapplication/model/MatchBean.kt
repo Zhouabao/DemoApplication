@@ -103,7 +103,7 @@ data class Photos(
 data class GreetBean(
     val isfriend: Boolean = false,//是否好友
     val isgreet: Boolean = false,//是否打过招呼
-    val lightningcnt: Int = 0,//剩余招呼次数
+    val lightningcnt: Int = -1,//剩余招呼次数
     var countdown: Int = 0
 
 )

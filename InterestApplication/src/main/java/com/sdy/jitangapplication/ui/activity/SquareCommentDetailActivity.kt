@@ -1110,7 +1110,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
      * 判断当前能否打招呼
      */
     override fun onGreetStateResult(greetBean: GreetBean?) {
-        if (greetBean != null) {
+        if (greetBean != null && greetBean.lightningcnt != -1) {
             if (greetBean.isfriend || greetBean.isgreet) {
                 ChatActivity.start(this, squareBean?.accid ?: "")
             } else {

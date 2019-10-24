@@ -532,7 +532,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      *                                无次数 其他操作--如:请求充值会员
      */
     override fun onGreetStateResult(data: GreetBean?) {
-        if (data != null) {
+        if (data != null && data.lightningcnt != -1) {
             updateLightCount(data.lightningcnt, data.countdown)
             if (data.isfriend || data.isgreet) {
                 ChatActivity.start(this, matchBean?.accid ?: "")
@@ -548,7 +548,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     if (UserManager.isUserVip() && !countDownDialog.isShowing) {
                         countDownDialog.show()
                     } else {
-                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI,this).show()
+                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, this).show()
                     }
                 }
             }

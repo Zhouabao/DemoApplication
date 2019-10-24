@@ -98,7 +98,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
                         mView.onGetLikeResult(true, t, matchBean)
-                    } else if (t.code == 201) {
+                    } else {
                         mView.onGetLikeResult(false, t, matchBean)
                     }
                 }
