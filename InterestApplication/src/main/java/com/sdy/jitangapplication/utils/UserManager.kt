@@ -48,7 +48,7 @@ object UserManager {
 
 
     /**
-     * 保存当前弹窗的版本号
+     * 保存当前调研弹窗的版本号
      */
     fun saveCurrentSurveyVersion() {
         SPUtils.getInstance(Constants.SPNAME).put("currentVersion", AppUtils.getAppVersionName())
@@ -57,6 +57,30 @@ object UserManager {
     fun getCurrentSurveyVersion(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("currentVersion")
     }
+
+    /**
+     * 保存滑动多少次弹调研弹窗
+     */
+    fun saveShowSurveyCount(showcard_cnt: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("showcard_cnt", showcard_cnt)
+    }
+
+    fun getShowSurveyCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("showcard_cnt", 0)
+    }
+
+
+    /**
+     * 保存匹配页面用户滑动的次数
+     */
+    fun saveSlideSurveyCount(slideCount: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("SlideSurveyCount", slideCount)
+    }
+
+    fun getSlideSurveyCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("SlideSurveyCount", 0)
+    }
+
 
     //是否已经强制替换过头像
     fun saveForceChangeAvator(isForceChangeAvator: Boolean) {
@@ -511,6 +535,9 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("draft")
 
         clearPublishParams()
+        /**
+         * 认证相关缓存清空
+         */
         cleanVerifyData()
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAvator")
@@ -519,8 +546,13 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
         cleanHiTime()
 
+        /**
+         * 弹窗缓存信息清空
+         */
         SPUtils.getInstance(Constants.SPNAME).remove("isShowHarassment")
         SPUtils.getInstance(Constants.SPNAME).remove("currentVersion")
+        SPUtils.getInstance(Constants.SPNAME).remove("showcard_cnt")
+        SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
 
 
 

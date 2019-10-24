@@ -563,10 +563,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private var investigateDialog: InvestigateDialog? = null
 
     override fun onInvestigateResult(investigateBean: InvestigateBean) {
+        //保存滑动多少次引导弹窗
+        UserManager.saveShowSurveyCount(investigateBean.showcard_cnt)
         if (investigateDialog == null) {
             investigateDialog = InvestigateDialog(this, investigateBean)
         }
-        showInvestigateDialog()
     }
 
     /**
@@ -576,7 +577,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (investigateDialog != null) {
             if (!investigateDialog!!.isShowing) {
                 investigateDialog!!.show()
+                //显示了调研结果，就保存当前版本号
                 UserManager.saveCurrentSurveyVersion()
+                //清除保存的展示次数
+                SPUtils.getInstance(Constants.SPNAME).remove("showcard_cnt")
+                //清除用于显示调研结果弹窗的滑动次数
+                SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
             }
         }
     }
@@ -802,9 +808,17 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNewLabelEvent(event: UpdateAvatorEvent) {
+    fun onUpdateAvatorEvent(event: UpdateAvatorEvent) {
         initData()
         GlideUtil.loadAvatorImg(this, UserManager.getAvator(), ivUserFace)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onShowSurveyDialogEvent(event: ShowSurveyDialogEvent) {
+        if (event.slideCount == UserManager.getShowSurveyCount()) {
+            showInvestigateDialog()
+        }
     }
 
 

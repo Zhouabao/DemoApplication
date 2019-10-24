@@ -20,3 +20,7 @@ class UpdateAvatorEvent(val update: Boolean)
 
 
 class EnableLabelEvent(val enable: Boolean)
+
+
+//展示调研弹窗的event
+class ShowSurveyDialogEvent(val slideCount: Int)
