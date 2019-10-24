@@ -120,16 +120,23 @@
             </RelativeLayout>
         </FrameLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <LinearLayout
                 android:id="@+id/squareEdit"
-                android:layout_marginRight="15dp"
-                android:layout_gravity="end|bottom"
-                android:backgroundTint="@color/colorOrange"
-                android:src="@drawable/icon_edit"
                 android:layout_marginBottom="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_anchorGravity="bottom|right|end"/>
+                android:layout_gravity="end|bottom|right"
+                android:background="@drawable/icon_publish_bakcground"
+                android:layout_width="80dp"
+                android:gravity="center"
+                android:layout_height="80dp">
+
+            <ImageView
+                    android:src="@drawable/icon_edit"
+                    android:scaleType="center"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    />
+
+        </LinearLayout>
 
     </FrameLayout>
 
