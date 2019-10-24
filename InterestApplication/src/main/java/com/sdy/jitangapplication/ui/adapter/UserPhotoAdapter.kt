@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_user_info_img.view.*
  *    desc   : 用户照片adapter
  *    version: 1.0
  */
-class UserPhotoAdapter(var domain: String? = null, datas: MutableList<MyPhotoBean>) :
+class UserPhotoAdapter(datas: MutableList<MyPhotoBean>) :
     BaseMultiItemDragQuickAdapter<MyPhotoBean, BaseViewHolder>(datas) {
 
     init {
@@ -40,7 +40,7 @@ class UserPhotoAdapter(var domain: String? = null, datas: MutableList<MyPhotoBea
                 holder.itemView.userImg.visibility = View.VISIBLE
                 GlideUtil.loadRoundImgCenterCrop(
                     mContext,
-                    domain.plus(item.url),
+                    item.url,
                     holder.itemView.userImg,
                     SizeUtils.dp2px(5F)
                 )

@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.model.UserInfoSettingBean
 
 /**
@@ -18,6 +19,11 @@ interface UserInfoSettingsView : BaseView {
      * type  1 个人信息 2 头像
      */
     fun onSavePersonalResult(result: Boolean, type: Int)
+
+    /**
+     * 单张上传照片结果
+     */
+    fun onAddPhotoWallResult(replaceAvator: Boolean, result: MyPhotoBean)
 
     fun uploadImgResult(b: Boolean, key: String, replaceAvator: Boolean = false)
 }

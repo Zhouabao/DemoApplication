@@ -425,6 +425,22 @@ interface Api {
 
 
     /**
+     *   保存相册信息
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/addPhotoV2${Constants.END_BASE_URL}")
+    fun addPhotoV2(@Field("token") token: String, @Field("accid") accid: String, @Field("photos[]") photos: Array<Int?>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 单张相册上传
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/addPhotoWall${Constants.END_BASE_URL}")
+    fun addPhotoWall(@Field("token") token: String, @Field("accid") accid: String, @Field("photo") key: String): Observable<BaseResp<MyPhotoBean?>>
+
+
+    /**
      * 获取职业列表
      */
     @FormUrlEncoded

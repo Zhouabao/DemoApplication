@@ -93,12 +93,21 @@ data class UserInfoSettingBean(
     val job: String? = "",
     val nickname: String? = "",
     val photos: MutableList<String>? = mutableListOf(),
+    val photos_wall: MutableList<MyPhotoBean?>? = mutableListOf(),
     val qiniu_domain: String? = "",
     val sign: String? = ""
 )
 
 
-data class MyPhotoBean(val type: Int, val url: String) : MultiItemEntity {
+/**
+ * 照片墙
+ */
+data class MyPhotoBean(
+    var has_face: Int = 0,//1 没有 2 有
+    var id: Int = 0,
+    var type: Int,
+    var url: String = ""
+) : MultiItemEntity {
     override fun getItemType(): Int {
         return type
     }

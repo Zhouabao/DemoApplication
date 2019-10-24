@@ -9,7 +9,9 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -86,6 +88,51 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.onSavePersonalResult(false, 2)
+                }
+            })
+    }
+
+
+    /**
+     * 保存相册
+     */
+    fun addPhotoV2(token: String, accid: String, photos: Array<Int?>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .addPhotoV2(token, accid, photos)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    CommonFunction.toast(t.msg)
+                    if (t.code == 200) {
+                        mView.onSavePersonalResult(true, 2)
+                    } else {
+                        mView.onSavePersonalResult(false, 2)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onSavePersonalResult(false, 2)
+                }
+            })
+    }
+
+
+    /**
+     * 保存头像
+     */
+    fun addPhotoWall(replaceAvator: Boolean, token: String, accid: String, key: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .addPhotoWall(token, accid, key)
+            .excute(object : BaseSubscriber<BaseResp<MyPhotoBean?>>(mView) {
+                override fun onNext(t: BaseResp<MyPhotoBean?>) {
+                    if (t.code == 200 && t.data != null) {
+                        mView.onAddPhotoWallResult(replaceAvator, t.data!!)
+                    } else {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
                 }
             })
     }

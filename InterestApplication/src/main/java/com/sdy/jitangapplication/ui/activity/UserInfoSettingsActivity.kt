@@ -24,9 +24,9 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
-import com.luck.picture.lib.entity.LocalMedia
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.LabelBean
@@ -59,6 +59,7 @@ import java.util.*
  */
 class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), UserInfoSettingsView,
     OnItemDragListener, View.OnClickListener {
+
     companion object {
         const val IMAGE_SIZE = 9
         const val REPLACE_REQUEST = 187
@@ -66,7 +67,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     val params by lazy { hashMapOf("token" to UserManager.getToken(), "accid" to UserManager.getAccid()) }
     private var isChange = false
-    private var photos: MutableList<MyPhotoBean> = mutableListOf()
+    private var photos: MutableList<MyPhotoBean?> = mutableListOf()
     private val adapter by lazy { UserPhotoAdapter(datas = mutableListOf()) }
     private var data: UserInfoSettingBean? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,6 +114,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         userNickName.setOnClickListener(this)
         userNickSign.setOnClickListener(this)
         userBirth.setOnClickListener(this)
+        saveBtn.setOnClickListener(this)
 
         mPresenter = UserInfoSettingsPresenter()
         mPresenter.mView = this
@@ -134,10 +136,6 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             )
         )
         userPhotosRv.adapter = adapter
-//        adapter.setEmptyView(R.layout.empty_user_photo_layout, userPhotosRv)
-//        adapter.emptyView.onClick {
-//            onTakePhoto(IMAGE_SIZE - photos.size + 1)
-//        }
         val itemDragAndSwpieCallBack = ItemDragAndSwipeCallback(adapter)
         val itemTouchHelper = ItemTouchHelper(itemDragAndSwpieCallBack)
         itemTouchHelper.attachToRecyclerView(userPhotosRv)
@@ -148,8 +146,12 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         userPhotosRv.addOnItemTouchListener(object : OnRecyclerItemClickListener(userPhotosRv) {
             override fun onItemClick(vh: RecyclerView.ViewHolder) {
                 if (vh.itemViewType == MyPhotoBean.COVER) {
+                    if (adapter.data.size == IMAGE_SIZE + 1) {
+                        CommonFunction.toast("最多只能上传9张，请删除后上传")
+                        return
+                    }
                     choosePosition = vh.layoutPosition
-                    onTakePhoto(IMAGE_SIZE - photos.size + 1)
+                    onTakePhoto(1)
                 } else {
                     if (adapter.data.size > 2)
                         showDeleteDialog(vh.layoutPosition)
@@ -186,17 +188,15 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             userBirth.text = "${data.birth}"
             userJob.text = "${data.job}"
 
-            adapter.domain = data.qiniu_domain
-            for (url in (data.photos ?: mutableListOf()).withIndex()) {
-                photos.add(MyPhotoBean(MyPhotoBean.PHOTO, url.value))
-                if (url.index == 0) {
-                    originalAvator = data.qiniu_domain.plus(url.value)
+            for (photoWallBean in (data.photos_wall ?: mutableListOf()).withIndex()) {
+                photoWallBean.value?.type = MyPhotoBean.PHOTO
+                if (photoWallBean.index == 0) {
+                    originalAvator = photoWallBean.value?.url ?: ""
                 }
             }
-            adapter.setNewData(photos)
-//            if ((data.photos ?: mutableListOf()).size < IMAGE_SIZE) {
-            adapter.addData(MyPhotoBean(MyPhotoBean.COVER, ""))
-//            }
+            adapter.setNewData(data.photos_wall ?: mutableListOf())
+            photos.addAll(data.photos_wall ?: mutableListOf())
+            adapter.addData(MyPhotoBean(type = MyPhotoBean.COVER))
             refreshLayout()
         }
     }
@@ -235,34 +235,32 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
         dialog.makeAvator.onClick {
             if (position != 0) {
-                isChange = true
-                val myPhotoBean0 = adapter.data[0]
-                val myPhotoBeanP = adapter.data[position]
-                photos[0] = myPhotoBeanP
-                photos[position] = myPhotoBean0
-                adapter.data[0] = myPhotoBeanP
-                adapter.data[position] = myPhotoBean0
+                if (adapter.data[position].has_face != 2) {
+                    CommonFunction.toast(getString(R.string.real_avator_tip))
+                    dialog.dismiss()
+                    return@onClick
+                }
+                Collections.swap(photos, position, 0)
+                Collections.swap(adapter.data, position, 0)
                 adapter.notifyDataSetChanged()
-//            Collections.swap(photos, position, 0)
-//            Collections.swap(adapter.data, position, 0)
-                updatePhotos()
+                isChange = true
+                checkSaveEnable()
                 dialog.dismiss()
             } else {
                 choosePosition = 0
                 onTakePhoto(1, true)
                 dialog.dismiss()
-
             }
         }
 
 
         dialog.lldelete.onClick {
             isChange = true
-
-            adapter.remove(position)
+            checkSaveEnable()
+            adapter.data.removeAt(position)
+            photos.removeAt(position)
             adapter.notifyDataSetChanged()
             refreshLayout()
-            updatePhotos()
             dialog.dismiss()
         }
 
@@ -273,7 +271,9 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     private var fromPos = -1
     private var toPos = -1
-    override fun onItemDragMoving(hF: RecyclerView.ViewHolder?, pF: Int, hT: RecyclerView.ViewHolder?, pT: Int) {}
+    override fun onItemDragMoving(hF: RecyclerView.ViewHolder?, pF: Int, hT: RecyclerView.ViewHolder?, pT: Int) {
+
+    }
 
     override fun onItemDragStart(holder: RecyclerView.ViewHolder?, position: Int) {
         fromPos = position
@@ -281,29 +281,49 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     override fun onItemDragEnd(holder: RecyclerView.ViewHolder?, position: Int) {
         toPos = position
-        if (fromPos != toPos && fromPos != -1 && toPos != -1) {
+        if (toPos == 0 || fromPos == 0) {//from 大于 to
+            if (adapter.data[if (toPos == 0) {
+                    toPos
+                } else {
+                    fromPos
+                }].has_face != 2
+            ) {
+                Collections.swap(adapter.data, toPos, fromPos)
+                adapter.notifyItemMoved(toPos, fromPos)
+                CommonFunction.toast(getString(R.string.real_avator_tip))
+            } else {
+                isChange = true
+                val data = photos[fromPos]
+                photos.removeAt(fromPos)
+                photos.add(toPos, data)
+                adapter.notifyDataSetChanged()
+            }
+        } else if (fromPos != toPos && fromPos != -1 && toPos != -1) {
             isChange = true
-            Collections.swap(photos, fromPos, toPos)
-            Collections.swap(adapter.data, fromPos, toPos)
+            val data = photos[fromPos]
+            photos.removeAt(fromPos)
+            photos.add(toPos, data)
             adapter.notifyDataSetChanged()
-        } else {
-            fromPos = -1
-            toPos = -1
         }
+        fromPos = -1
+        toPos = -1
+        checkSaveEnable()
         refreshLayout()
-        updatePhotos()
+    }
+
+    private fun checkSaveEnable() {
+        saveBtn.isEnabled = isChange
     }
 
     private fun updatePhotos() {
-        if (isChange) {
-            val photos = arrayOfNulls<String>(10)
-            for (data in adapter.data.withIndex()) {
-                if (data.value.type == MyPhotoBean.PHOTO) {
-                    photos[data.index] = data.value.url
-                }
+        val photosId = arrayOfNulls<Int>(10)
+        for (data in photos.withIndex()) {
+            if (data.value?.type == MyPhotoBean.PHOTO) {
+                photosId[data.index] = data.value?.id
             }
-            mPresenter.addPhotos(UserManager.getToken(), UserManager.getAccid(), photos)
         }
+        loading.show()
+        mPresenter.addPhotoV2(UserManager.getToken(), UserManager.getAccid(), photosId)
     }
 
 
@@ -352,7 +372,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             .maxSelectNum(count)
             .minSelectNum(0)
             .imageSpanCount(4)
-            .selectionMode(PictureConfig.MULTIPLE)
+            .selectionMode(PictureConfig.SINGLE)
             .previewImage(true)
             .isCamera(true)
             .enableCrop(false)
@@ -375,34 +395,37 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     private val loading by lazy { LoadingDialog(this) }
     override fun uploadImgResult(b: Boolean, key: String, replaceAvator: Boolean) {
+        if (b) {
+            mPresenter.addPhotoWall(replaceAvator, UserManager.getToken(), UserManager.getAccid(), key)
+        }
+    }
+
+
+    /**
+     * 添加单张照片回调结果
+     */
+    override fun onAddPhotoWallResult(replaceAvator: Boolean, result: MyPhotoBean) {
+        if (loading.isShowing)
+            loading.dismiss()
+        isChange = true
+        checkSaveEnable()
+        result.type = MyPhotoBean.PHOTO
         if (replaceAvator) {
-            if (b) {
-                if (loading.isShowing)
-                    loading.dismiss()
-                isChange = true
-                adapter.setData(choosePosition, MyPhotoBean(MyPhotoBean.PHOTO, key))
+            if (result.has_face == 2) {//有人脸
+                adapter.setData(0, result)
+                photos[0] = result
                 refreshLayout()
-                updatePhotos()
+            } else {
+                CommonFunction.toast(getString(R.string.real_avator_tip))
             }
         } else {
-            chooseCount++
-            if (b) {
-                if (loading.isShowing)
-                    loading.dismiss()
-                isChange = true
-                adapter.addData(choosePosition, MyPhotoBean(MyPhotoBean.PHOTO, key))
-                adapter.notifyDataSetChanged()
-                refreshLayout()
-                if (chooseCount < selectList.size)
-                    uploadPicture()
-                else {
-                    updatePhotos()
-                }
-            }
+            adapter.data.add(adapter.data.size - 1, result)
+            photos.add(result)
+            adapter.notifyDataSetChanged()
+            refreshLayout()
         }
-
-
     }
+
 
     override fun onPersonalInfoResult(data: UserInfoSettingBean?) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -411,14 +434,17 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     override fun onSavePersonalResult(result: Boolean, type: Int) {
         if (type == 2) {
+            if (loading.isShowing)
+                loading.dismiss()
             if (result) {
+                saveBtn.isEnabled = false
                 EventBus.getDefault().postSticky(UserCenterEvent(true))
+            } else {
+                saveBtn.isEnabled = true
             }
         }
     }
 
-    private var chooseCount = 0
-    private var selectList: MutableList<LocalMedia> = mutableListOf()
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -459,28 +485,28 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
                     }
                 }
-                //选中
-                PictureConfig.CHOOSE_REQUEST -> {
+
+                REPLACE_REQUEST,//替换头像
+                PictureConfig.CHOOSE_REQUEST//选中
+                -> {
                     if (data != null) {
-                        chooseCount = 0
-                        selectList = PictureSelector.obtainMultipleResult(data)
-                        loading.show()
-                        uploadPicture()
-                    }
-                }
-                //替换头像
-                REPLACE_REQUEST -> {
-                    if (data != null) {
-                        selectList = PictureSelector.obtainMultipleResult(data)
-                        loading.show()
-                        uploadPicture(true)
+                        if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {
+                            loading.show()
+                            uploadPicture(
+                                requestCode == REPLACE_REQUEST, PictureSelector.obtainMultipleResult(data)[0].path
+                            )
+
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun uploadPicture(replaceAvator: Boolean = false) {
+    /**
+     * 七牛上传图片
+     */
+    private fun uploadPicture(replaceAvator: Boolean = false, path: String) {
         val userProfile =
             "${Constants.FILE_NAME_INDEX}${Constants.USERCENTER}${SPUtils.getInstance(Constants.SPNAME).getString(
                 "accid"
@@ -488,21 +514,21 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 16
             )}"
         UriUtils.getLubanBuilder(this)
-            .load(selectList[chooseCount].path)
+            .load(path)
             .setCompressListener(object : OnCompressListener {
                 override fun onSuccess(file: File?) {
                     mPresenter.uploadProfile(
                         if (file != null) {
                             file.absolutePath
                         } else {
-                            selectList[chooseCount].path
+                            path
                         }, userProfile
                         , replaceAvator
                     )
                 }
 
                 override fun onError(e: Throwable?) {
-                    mPresenter.uploadProfile(selectList[chooseCount].path, userProfile)
+                    mPresenter.uploadProfile(path, userProfile)
                 }
 
                 override fun onStart() {
@@ -531,6 +557,9 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             R.id.userJob -> {
                 startActivityForResult<MyJobActivity>(103, "job" to userJob.text.toString())
             }
+            R.id.saveBtn -> {
+                updatePhotos()
+            }
         }
 
     }
@@ -538,18 +567,6 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     override fun onBackPressed() {
         checkIsForceChangeAvator()
         super.onBackPressed()
-//        if (isChange) {
-//            val photos = arrayOfNulls<String>(10)
-//            for (data in adapter.data.withIndex()) {
-//                if (data.value.type == MyPhotoBean.PHOTO) {
-//                    photos[data.index] = data.value.url
-//                }
-//            }
-//            mPresenter.addPhotos(UserManager.getToken(), UserManager.getAccid(), photos)
-//        } else {
-//            finish()
-//        }
-
     }
 
     override fun scrollToFinishActivity() {
@@ -560,7 +577,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     private var originalAvator = ""
     private fun checkIsForceChangeAvator() {
-        if (adapter.data.isNotEmpty() && originalAvator != adapter.domain.plus(adapter.data[0].url) && UserManager.isNeedChangeAvator()) {
+        if (adapter.data.isNotEmpty() && originalAvator != adapter.data[0].url && UserManager.isNeedChangeAvator()) {
             UserManager.saveForceChangeAvator(true)
         }
     }
