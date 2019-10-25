@@ -35,6 +35,7 @@ import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.adapter.UserPhotoAdapter
+import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -43,7 +44,9 @@ import com.sdy.jitangapplication.widgets.GotoVerifyDialog
 import com.sdy.jitangapplication.widgets.OnRecyclerItemClickListener
 import kotlinx.android.synthetic.main.activity_user_center.btnBack
 import kotlinx.android.synthetic.main.activity_user_info_settings.*
+import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_delete_photo.*
+import kotlinx.android.synthetic.main.dialog_delete_photo.cancel
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
@@ -75,6 +78,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         setContentView(R.layout.activity_user_info_settings)
         initView()
         mPresenter.personalInfo(params)
+        setSwipeBackEnable(false)
     }
 
     private fun initView() {
@@ -447,10 +451,12 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             if (loading.isShowing)
                 loading.dismiss()
             if (result) {
-                saveBtn.isEnabled = false
+                isChange = false
+                checkSaveEnable()
                 EventBus.getDefault().postSticky(UserCenterEvent(true))
             } else {
-                saveBtn.isEnabled = true
+                isChange = true
+                checkSaveEnable()
             }
         }
     }
@@ -574,9 +580,21 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     }
 
+
+    val dialog by lazy { DeleteDialog(this) }
+
     override fun onBackPressed() {
         checkIsForceChangeAvator()
-        super.onBackPressed()
+
+        if (isChange) {
+            dialog.show()
+            dialog.tip.text = "是否放弃已修改的相册信息？"
+            dialog.confirm.onClick {
+                dialog.dismiss()
+                super.onBackPressed()
+            }
+        } else
+            super.onBackPressed()
     }
 
     override fun scrollToFinishActivity() {
@@ -590,5 +608,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         if (adapter.data.isNotEmpty() && originalAvator != adapter.data[0].url && UserManager.isNeedChangeAvator()) {
             UserManager.saveForceChangeAvator(true)
         }
+
+
     }
 }

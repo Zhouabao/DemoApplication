@@ -5,7 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
+import kotlinx.android.synthetic.main.delete_dialog_layout.*
 
 /**
  *    author : ZFM
@@ -18,6 +20,13 @@ class DeleteDialog(var context1: Context) : Dialog(context1, R.style.MyDialog) {
         super.onCreate(savedInstanceState)
         initWindow()
         setContentView(R.layout.delete_dialog_layout)
+        initView()
+    }
+
+    private fun initView() {
+        cancel.onClick {
+            dismiss()
+        }
     }
 
     private fun initWindow() {
