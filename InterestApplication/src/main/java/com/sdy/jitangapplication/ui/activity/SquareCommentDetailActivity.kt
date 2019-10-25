@@ -596,7 +596,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     override fun onAddCommentResult(data: BaseResp<Any?>?, result: Boolean) {
         resetCommentEt()
         if (result) {
-            refreshLayout.autoRefresh()
+            page = 1
+            adapter.data.clear()
+            commentParams["page"] = page
+            mPresenter.getCommentList(commentParams, true)
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.plus(1)
             squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
