@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.presenter
 
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -58,7 +57,8 @@ class MessageLikeMeOneDayPresenter : BasePresenter<MessageLikeMeOneDayView>() {
                     if (t.code == 200) {
                         mView.onGetLikeResult(true, t, position)
                     } else {
-                        CommonFunction.toast(t.msg)
+                        if (t.code != 201)
+                            CommonFunction.toast(t.msg)
                         mView.onGetLikeResult(false, t, position)
                     }
                 }

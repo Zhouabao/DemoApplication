@@ -26,6 +26,7 @@ import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_like_me.view.*
@@ -103,6 +104,8 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                                                     })
                                             }
                                         }
+                                    } else if (t.code == 201) {
+                                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, mContext).show()
                                     } else {
                                         CommonFunction.toast(t.msg)
                                     }

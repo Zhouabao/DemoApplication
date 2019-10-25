@@ -170,7 +170,8 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                     if (t.code == 200) {
                         mView.onGetLikeResult(true, t)
                     } else {
-                        CommonFunction.toast(t.msg)
+                        if (t.code != 201)
+                            CommonFunction.toast(t.msg)
                         mView.onGetLikeResult(false, t)
                     }
                 }

@@ -33,6 +33,7 @@ import com.sdy.jitangapplication.presenter.MessageLikeMeOneDayPresenter
 import com.sdy.jitangapplication.presenter.view.MessageLikeMeOneDayView
 import com.sdy.jitangapplication.ui.adapter.LikeMeOneDayGirdAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_like_me.btnBack
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.*
@@ -71,7 +72,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         mPresenter.likeListsCategory(params)
     }
 
-    private val adapter by lazy { LikeMeOneDayGirdAdapter(intent.getBooleanExtra("freeShow",false)) }
+    private val adapter by lazy { LikeMeOneDayGirdAdapter(intent.getBooleanExtra("freeShow", false)) }
     private fun initView() {
         btnBack.onClick {
             finish()
@@ -165,6 +166,8 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
                 EventBus.getDefault().post(UpdateLikemeEvent(clickPos))
                 sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
             }
+        } else if (statusBean.code == 201) {
+            ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
         }
     }
 

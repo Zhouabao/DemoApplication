@@ -770,7 +770,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             //禁止在卡片区域滑动
             banSlideInCard -> when (ev.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (ev.x > SizeUtils.dp2px(15F) && ev.x < ScreenUtils.getScreenWidth() - SizeUtils.dp2px(45F)) {
+                    if (ev.x > SizeUtils.dp2px(15F) && ev.x < ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)) {
                         vpMain.setScrollable(false)
                     } else {
                         vpMain.setScrollable(true)

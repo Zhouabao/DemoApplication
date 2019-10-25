@@ -409,40 +409,44 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     override fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?) {
-        if (statusBean != null && success) {
-            if (statusBean.data?.residue == 0) {
-                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
-            } else {
-                if (statusBean.data?.status == 1) {  //喜欢成功
-                    detailUserLikeBtn.isEnabled = false
-                    detailUserLikeBtn.visibility = View.GONE
-                    detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
-                } else if (statusBean.data?.status == 2) {//匹配成功
-                    //如果是来自喜欢我的界面， 就刷新
-                    if (intent.getIntExtra("parPos", -1) != -1) {
-                        EventBus.getDefault().post(
-                            UpdateLikemeOnePosEvent(
-                                intent.getIntExtra("parPos", -1), intent.getIntExtra("childPos", -1)
-                            )
-                        )
-                    }
-
-
-                    //喜欢过
-                    matchBean!!.isfriend = 1
-                    if (matchBean!!.isfriend == 1) {//是好友就显示聊天
-                        detailUserChatBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_orange)
-                        detailUserChatIv.setImageResource(R.drawable.icon_chat_white)
-                        detailUserLeftChatCount.isVisible = false
-                        detailUserChatTv.text = "聊天"
-                        detailUserLikeBtn.visibility = View.GONE
+        if (statusBean != null)
+            if (statusBean.code == 200) {
+                if (statusBean.data?.residue == 0) {
+                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
+                } else {
+                    EventBus.getDefault().post(RefreshEvent(true))
+                    if (statusBean.data?.status == 1) {  //喜欢成功
                         detailUserLikeBtn.isEnabled = false
+                        detailUserLikeBtn.visibility = View.GONE
                         detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
+                    } else if (statusBean.data?.status == 2) {//匹配成功
+                        //如果是来自喜欢我的界面， 就刷新
+                        if (intent.getIntExtra("parPos", -1) != -1) {
+                            EventBus.getDefault().post(
+                                UpdateLikemeOnePosEvent(
+                                    intent.getIntExtra("parPos", -1), intent.getIntExtra("childPos", -1)
+                                )
+                            )
+                        }
+
+
+                        //喜欢过
+                        matchBean!!.isfriend = 1
+                        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
+                            detailUserChatBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_orange)
+                            detailUserChatIv.setImageResource(R.drawable.icon_chat_white)
+                            detailUserLeftChatCount.isVisible = false
+                            detailUserChatTv.text = "聊天"
+                            detailUserLikeBtn.visibility = View.GONE
+                            detailUserLikeBtn.isEnabled = false
+                            detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
+                        }
+                        sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                     }
-                    sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                 }
+            } else if (statusBean.code == 201) {
+                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
             }
-        }
     }
 
 
