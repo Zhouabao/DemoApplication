@@ -255,13 +255,18 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
 
         dialog.lldelete.onClick {
-            isChange = true
-            checkSaveEnable()
-            adapter.data.removeAt(position)
-            photos.removeAt(position)
-            adapter.notifyDataSetChanged()
-            refreshLayout()
-            dialog.dismiss()
+            if (adapter.data[position + 1].has_face == 2) {
+                isChange = true
+                checkSaveEnable()
+                adapter.data.removeAt(position)
+                photos.removeAt(position)
+                adapter.notifyDataSetChanged()
+                refreshLayout()
+                dialog.dismiss()
+            } else {
+                CommonFunction.toast(getString(R.string.real_avator_tip))
+                dialog.dismiss()
+            }
         }
 
         dialog.cancel.onClick {
