@@ -28,6 +28,7 @@ import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.MyPhotoBean
@@ -196,8 +197,13 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 photoWallBean.value?.type = MyPhotoBean.PHOTO
                 if (photoWallBean.index == 0) {
                     originalAvator = photoWallBean.value?.url ?: ""
+                    if (photoWallBean.value?.url ?: "" != UserManager.getAvator()) {
+                        isChange = true
+                        checkSaveEnable()
+                    }
                 }
             }
+
             adapter.setNewData(data.photos_wall ?: mutableListOf())
             photos.addAll(data.photos_wall ?: mutableListOf())
             adapter.addData(MyPhotoBean(type = MyPhotoBean.COVER))
@@ -259,7 +265,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
 
         dialog.lldelete.onClick {
-            if (adapter.data[position + 1].has_face == 2) {
+            if ((position == 0 && adapter.data[1].has_face == 2) || position != 0) {
                 isChange = true
                 checkSaveEnable()
                 adapter.data.removeAt(position)
@@ -586,15 +592,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     override fun onBackPressed() {
         checkIsForceChangeAvator()
 
-        if (isChange) {
-            dialog.show()
-            dialog.tip.text = "是否放弃已修改的相册信息？"
-            dialog.confirm.onClick {
-                dialog.dismiss()
-                super.onBackPressed()
-            }
-        } else
-            super.onBackPressed()
+
     }
 
     override fun scrollToFinishActivity() {
@@ -605,9 +603,35 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     private var originalAvator = ""
     private fun checkIsForceChangeAvator() {
-        if (adapter.data.isNotEmpty() && originalAvator != adapter.data[0].url && UserManager.isNeedChangeAvator()) {
+        //强制替换头像下,如果已经换了头像
+        if (adapter.data.isNotEmpty() && UserManager.getAvator() != adapter.data[0].url && !isChange && UserManager.isNeedChangeAvator()) {
             UserManager.saveForceChangeAvator(true)
         }
+
+        //如果修改了信息 更新本地筛选信息
+        if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
+            if (UserManager.getAvator() != adapter.data[0].url) {
+                UserManager.saveUserVerify(2)
+                SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
+                //发送通知更新内容
+                EventBus.getDefault().postSticky(RefreshEvent(true))
+            }
+        }
+
+        //如果更改过相册信息并且没有是强制替换头像,就新增
+        if (isChange && !UserManager.isNeedChangeAvator()) {
+            dialog.show()
+            dialog.tip.text = "是否放弃已修改的相册信息？"
+            dialog.confirm.onClick {
+                dialog.dismiss()
+                setResult(Activity.RESULT_OK)
+                super.onBackPressed()
+            }
+        } else {
+            setResult(Activity.RESULT_OK)
+            super.onBackPressed()
+        }
+
 
 
     }

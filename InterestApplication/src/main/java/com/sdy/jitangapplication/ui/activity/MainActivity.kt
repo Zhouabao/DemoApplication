@@ -907,9 +907,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onReVerifyEvent(event: ReVerifyEvent) {
-        if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
-            UserManager.saveNeedChangeAvator(true)
-        else if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS)
+        if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS) {
+            UserManager.saveNeedChangeAvator(true)//需要换头像
+            UserManager.saveForceChangeAvator(false)//是否强制替换过头像
+        } else if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS)
             UserManager.saveAlertChangeAvator(true)
         else if (event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM)
             UserManager.saveAlertChangeAlbum(true)

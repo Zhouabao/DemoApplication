@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -191,7 +192,8 @@ class GotoVerifyDialog : Dialog {
                 dialog.verifyChange?.onClick {
                     //TODO 替换头像
                     humanVerify(2)
-                    context.startActivity<UserInfoSettingsActivity>("type" to this.type)
+                    if (ActivityUtils.getTopActivity() != UserInfoSettingsActivity::class.java)
+                        context.startActivity<UserInfoSettingsActivity>("type" to this.type)
                     if (this.cancelable)
                         dialog.cancel()
                 }
@@ -211,7 +213,8 @@ class GotoVerifyDialog : Dialog {
                         dialog.cancel()
                 }
                 dialog.btDialogConfirm?.onClick {
-                    context.startActivity<UserInfoSettingsActivity>("type" to this.type)
+                    if (ActivityUtils.getTopActivity() != UserInfoSettingsActivity::class.java)
+                        context.startActivity<UserInfoSettingsActivity>("type" to this.type)
                     dialog.cancel()
                 }
             }
