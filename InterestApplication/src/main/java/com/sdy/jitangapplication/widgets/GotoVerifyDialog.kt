@@ -162,7 +162,7 @@ class GotoVerifyDialog : Dialog {
             }
             dialog.tvDialogContent?.text = this.content
             if (icon != 0) {
-                GlideUtil.loadImg(context, this.icon, dialog.ivDialogIcon)
+                GlideUtil.loadAvatorImg(context, this.icon, dialog.ivDialogIcon)
             }
             dialog.ivDialogIcon?.isVisible = this.iconVisble
             //点击外部可取消

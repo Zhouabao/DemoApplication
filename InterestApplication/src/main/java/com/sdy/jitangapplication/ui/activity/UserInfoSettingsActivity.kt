@@ -197,7 +197,10 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 photoWallBean.value?.type = MyPhotoBean.PHOTO
                 if (photoWallBean.index == 0) {
                     originalAvator = photoWallBean.value?.url ?: ""
-                    if (photoWallBean.value?.url ?: "" != UserManager.getAvator()) {
+                    if (UserManager.isNeedChangeAvator() && !UserManager.getAvator().contains(
+                            photoWallBean.value?.url ?: ""
+                        )
+                    ) {
                         isChange = true
                         checkSaveEnable()
                     }
@@ -336,6 +339,12 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
     }
 
     private fun updatePhotos() {
+        if (photos.isNullOrEmpty()) {
+            CommonFunction.toast("请至少上传一张照片")
+            return
+        }
+
+
         val photosId = arrayOfNulls<Int>(10)
         for (data in photos.withIndex()) {
             if (data.value?.type == MyPhotoBean.PHOTO) {
@@ -603,14 +612,20 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
     private var originalAvator = ""
     private fun checkIsForceChangeAvator() {
+        if (adapter.data.isNullOrEmpty()) {
+            CommonFunction.toast("请至少上传一张照片")
+            return
+        }
+
+
         //强制替换头像下,如果已经换了头像
-        if (adapter.data.isNotEmpty() && UserManager.getAvator() != adapter.data[0].url && !isChange && UserManager.isNeedChangeAvator()) {
+        if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(adapter.data[0].url) && !isChange && UserManager.isNeedChangeAvator()) {
             UserManager.saveForceChangeAvator(true)
         }
 
         //如果修改了信息 更新本地筛选信息
         if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
-            if (UserManager.getAvator() != adapter.data[0].url) {
+            if (!UserManager.getAvator().contains(adapter.data[0].url)) {
                 UserManager.saveUserVerify(2)
                 SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
                 //发送通知更新内容
@@ -631,7 +646,6 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             setResult(Activity.RESULT_OK)
             super.onBackPressed()
         }
-
 
 
     }
