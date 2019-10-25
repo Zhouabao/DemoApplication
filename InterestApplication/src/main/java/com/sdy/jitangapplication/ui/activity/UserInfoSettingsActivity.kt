@@ -288,8 +288,13 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                     fromPos
                 }].has_face != 2
             ) {
-                Collections.swap(adapter.data, toPos, fromPos)
-                adapter.notifyItemMoved(toPos, fromPos)
+                val data = adapter.data[toPos]
+                adapter.data.removeAt(toPos)
+                adapter.data.add(fromPos, data)
+                adapter.notifyDataSetChanged()
+
+//                Collections.swap(adapter.data, toPos, fromPos)
+//                adapter.notifyDataSetChanged()
                 CommonFunction.toast(getString(R.string.real_avator_tip))
             } else {
                 isChange = true
