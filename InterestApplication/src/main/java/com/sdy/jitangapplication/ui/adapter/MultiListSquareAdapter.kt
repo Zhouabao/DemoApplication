@@ -8,6 +8,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.NetworkUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.kotlin.base.data.net.RetrofitFactory
@@ -46,6 +47,7 @@ import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import kotlinx.android.synthetic.main.item_list_square_audio.view.*
@@ -138,13 +140,31 @@ class MultiListSquareAdapter(
         }
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.squareUserIv1)
         holder.itemView.squareLocationAndTime1.text = item.province_name.plus(
-            if (item.city_name.isEmpty() || item.city_name == item.province_name) {
+            if (item.city_name.isEmpty() || item.city_name == item.province_name || item.province_name.isNullOrEmpty()) {
                 ""
             } else {
-                item.city_name
+                "\t${item.city_name}"
             }
-        )
-        holder.itemView.squareTime.text = "${item.out_time}"
+        ).plus("\t\t${item.out_time}")
+//        holder.itemView.squareTime.text = "${item.out_time}"
+
+        holder.itemView.squareTime.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+        if (holder.itemView.squareTime.itemDecorationCount == 0) {
+            holder.itemView.squareTime.addItemDecoration(
+                DividerItemDecoration(
+                    mContext,
+                    DividerItemDecoration.VERTICAL_LIST,
+                    SizeUtils.dp2px(6F),
+                    mContext.resources.getColor(R.color.colorWhite)
+                )
+            )
+        }
+
+        val squareAdapter = SquareTagAdapter()
+        holder.itemView.squareTime.adapter = squareAdapter
+        squareAdapter.setNewData(item.tags ?: mutableListOf())
+
+
         holder.itemView.squareUserIv1.onClick {
             if (!(UserManager.getAccid() == item.accid || !chat)) {
                 MatchDetailActivity.start(mContext, item.accid)
@@ -164,7 +184,10 @@ class MultiListSquareAdapter(
                         if (resetAudioListener != null) {
                             resetAudioListener!!.resetAudioState()
                         }
-                        mContext.startActivity<SquarePlayListDetailActivity>("item" to item, "picPosition" to position)
+                        mContext.startActivity<SquarePlayListDetailActivity>(
+                            "item" to item,
+                            "picPosition" to position
+                        )
                     }
                 } else {
                     holder.itemView.squareUserPics1.visibility = View.GONE

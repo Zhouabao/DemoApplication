@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -54,9 +55,11 @@ import com.sdy.jitangapplication.presenter.view.SquareDetailView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.adapter.ListSquareImgsAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListCommentAdapter
+import com.sdy.jitangapplication.ui.adapter.SquareTagAdapter
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -208,13 +211,26 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
 
         squareLocationAndTime1.text =
-            "${squareBean!!.province_name}${if (squareBean!!.city_name.isNotEmpty() && squareBean!!.city_name != squareBean!!.province_name) {
-                squareBean!!.city_name
+            "${squareBean!!.province_name}${if (!squareBean!!.province_name.isNullOrEmpty() && squareBean!!.city_name.isNotEmpty() && squareBean!!.city_name != squareBean!!.province_name) {
+                "\t${squareBean!!.city_name}"
             } else {
                 ""
-            }}"
+            }}".plus("\t\t${squareBean!!.out_time}")
 
-        squareTime.text = "${squareBean!!.out_time}"
+
+        squareTime.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        squareTime.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL_LIST,
+                SizeUtils.dp2px(6F),
+                resources.getColor(R.color.colorWhite)
+            )
+        )
+        val squareAdapter = SquareTagAdapter()
+        squareTime.adapter = squareAdapter
+        squareAdapter.setNewData(squareBean!!.tags ?: mutableListOf())
+//        squareTime.text = "\t\t${squareBean!!.out_time}"
 
     }
 

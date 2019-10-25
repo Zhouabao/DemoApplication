@@ -36,17 +36,17 @@
             tools:text="在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品"/>
 
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/squareTime"
-            android:layout_width="49dp"
-            android:layout_height="17dp"
-            android:text="10小时前"
-            android:textColor="#ff999999"
-            android:textSize="12sp"
+            android:layout_width="0dp"
+            android:layout_height="23dp"
             android:layout_marginTop="23dp"
             android:layout_marginBottom="17dp"
+            android:layout_marginRight="20dp"
+            android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/squareContent1"
+            app:layout_constraintRight_toLeftOf="@id/squareDianzanBtn1"
             app:layout_constraintTop_toBottomOf="@id/squareContent1"
             />
 
