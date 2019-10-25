@@ -127,6 +127,15 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAlbum", false)
     }
 
+    //是否提示过用户协议
+    fun saveAlertProtocol(isNeedChangeAvator: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("AlertProtocol", isNeedChangeAvator)
+    }
+
+    fun getAlertProtocol(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertProtocol", false)
+    }
+
 
     /**
      * 清除发布的参数
@@ -538,6 +547,7 @@ object UserManager {
         /**
          * 认证相关缓存清空
          */
+        SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
         cleanVerifyData()
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAvator")

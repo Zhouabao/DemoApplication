@@ -41,10 +41,7 @@ import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
-import com.sdy.jitangapplication.ui.dialog.GuideDialog
-import com.sdy.jitangapplication.ui.dialog.InvestigateDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.ui.fragment.MatchFragment1
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
 import com.sdy.jitangapplication.ui.fragment.SquareFragment
@@ -114,6 +111,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (!UserManager.isShowGuide()) {
             guideDialog.show()
         }
+
+        if (!UserManager.getAlertProtocol())
+            PrivacyDialog(this).show()
     }
 
 
