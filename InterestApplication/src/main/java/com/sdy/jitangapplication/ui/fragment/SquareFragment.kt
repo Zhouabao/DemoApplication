@@ -800,9 +800,13 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     /**
      * 全局筛选框筛选广场内容
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRefreshEvent(event: RefreshEvent) {
 //        squareDynamicRv.scrollToPosition(0)
+        if (listParams["audit_only"] != null)
+            listParams.remove("audit_only")
+        if (listParams["local_only"] != null)
+            listParams.remove("local_only")
         //这个地方还要默认设置选中第一个标签来更新数据
         val params = UserManager.getFilterConditions()
         params.forEach {

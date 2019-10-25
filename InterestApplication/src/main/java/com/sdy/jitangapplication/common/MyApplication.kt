@@ -10,10 +10,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.CrashUtils
-import com.blankj.utilcode.util.ThreadUtils
+import com.blankj.utilcode.util.*
 import com.google.gson.Gson
 import com.kotlin.base.common.BaseApplication
 import com.leon.channel.helper.ChannelReaderUtil
@@ -34,6 +31,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivity
 import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.ReVerifyEvent
+import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
@@ -96,9 +94,11 @@ class MyApplication : BaseApplication() {
                         initNotificationManager(customerMsgBean.msg)
                     }
                     2 -> {//对方删除自己,本地删除会话列表
-                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java)
+                            .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
                         // 删除与某个聊天对象的全部消息记录
-                        NIMClient.getService(MsgService::class.java).clearChattingHistory(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java)
+                            .clearChattingHistory(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
@@ -114,6 +114,14 @@ class MyApplication : BaseApplication() {
                     }
                     //4人脸认证不通过
                     4 -> {
+                        //更改本地的认证状态
+                        UserManager.saveUserVerify(0)
+                        //更改本地的筛选认证状态
+                        if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) == 2) {
+                            SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
+                            //发送通知更新内容
+                            EventBus.getDefault().postSticky(RefreshEvent(true))
+                        }
                         EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
                     }
                     //7强制替换头像

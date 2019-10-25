@@ -107,8 +107,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     }
 
 
-    fun updateLocation() {
+    private fun updateLocation() {
         //加入本地的筛选对话框的筛选条件
+        if (params["audit_only"] != null)
+            params.remove("audit_only")
+        if (params["local_only"] != null)
+            params.remove("local_only")
         val params = UserManager.getFilterConditions()
         params.forEach {
             matchParams[it.key] = it.value
@@ -475,7 +479,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     /**
      * 通过本地的筛选条件类更新数据
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRefreshEvent(event: RefreshEvent) {
 //        matchStateview.viewState = MultiStateView.VIEW_STATE_LOADING
         setViewState(LOADING)

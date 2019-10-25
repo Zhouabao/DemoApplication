@@ -39,6 +39,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.NewMsgEvent
+import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.HiMessageBean
 import com.sdy.jitangapplication.model.MessageListBean
@@ -364,6 +365,17 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     R.drawable.icon_assistant,
                     loadedRecent.contactId
                 )
+
+                //本地小助手发送通知通过认证通知，本地修改认证状态
+                if (loadedRecent.content.contains("已通过认证")) {
+                    //更改本地的认证状态
+                    UserManager.saveUserVerify(1)
+                    if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
+                        SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
+                        //发送通知更新内容
+                        EventBus.getDefault().postSticky(RefreshEvent(true))
+                    }
+                }
                 headAdapter.setData(0, ass)
                 headAdapter.notifyItemChanged(0)
                 result.remove(loadedRecent)
