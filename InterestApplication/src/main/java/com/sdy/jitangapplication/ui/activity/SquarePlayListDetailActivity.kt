@@ -54,7 +54,13 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     private val TAG = SquarePlayListDetailActivity::class.java.simpleName
 
     //广场列表内容适配器
-    private val adapter by lazy { MultiListDetailPlayAdapter(this, mutableListOf()) }
+    private val adapter by lazy {
+        MultiListDetailPlayAdapter(
+            intent.getIntExtra("picPosition", 0),
+            this,
+            mutableListOf()
+        )
+    }
     private val squareBean: SquareBean by lazy { intent.getSerializableExtra("item") as SquareBean }
 
     companion object {

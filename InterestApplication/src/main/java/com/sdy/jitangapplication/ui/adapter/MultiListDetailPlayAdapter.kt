@@ -44,7 +44,7 @@ import kotlinx.android.synthetic.main.item_square_play_detail_video.view.*
  *    desc   :
  *    version: 1.0
  */
-class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareBean>) :
+class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: Context, data: MutableList<SquareBean>) :
     BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
     val TAG = "MultiListDetailPlayAdapter"
 
@@ -161,6 +161,9 @@ class MultiListDetailPlayAdapter(var context: Context, data: MutableList<SquareB
                             holder.itemView.detailPlayVp2Indicator1.addView(indicator)
                         }
                     }
+
+                    if ((holder.itemView.detailPlayVp2.adapter?.count ?: 0) > currentPicPosition)
+                        holder.itemView.detailPlayVp2.currentItem = currentPicPosition
                 }
 
             }

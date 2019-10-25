@@ -164,7 +164,7 @@ class MultiListSquareAdapter(
                         if (resetAudioListener != null) {
                             resetAudioListener!!.resetAudioState()
                         }
-                        mContext.startActivity<SquarePlayListDetailActivity>("item" to item)
+                        mContext.startActivity<SquarePlayListDetailActivity>("item" to item, "picPosition" to position)
                     }
                 } else {
                     holder.itemView.squareUserPics1.visibility = View.GONE
