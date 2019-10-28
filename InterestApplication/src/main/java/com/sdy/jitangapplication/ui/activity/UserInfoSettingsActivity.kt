@@ -47,7 +47,6 @@ import kotlinx.android.synthetic.main.activity_user_center.btnBack
 import kotlinx.android.synthetic.main.activity_user_info_settings.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_delete_photo.*
-import kotlinx.android.synthetic.main.dialog_delete_photo.cancel
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
@@ -63,6 +62,7 @@ import java.util.*
  */
 class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), UserInfoSettingsView,
     OnItemDragListener, View.OnClickListener {
+
 
     companion object {
         const val IMAGE_SIZE = 9
@@ -282,7 +282,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             }
         }
 
-        dialog.cancel.onClick {
+        dialog.cancelDelete.onClick {
             dialog.dismiss()
         }
     }
@@ -338,7 +338,10 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         saveBtn.isEnabled = isChange
     }
 
-    private fun updatePhotos() {
+    /**
+     * type 为1表示点击返回上传信息
+     */
+    private fun updatePhotos(type: Int = 0) {
         if (photos.isNullOrEmpty()) {
             CommonFunction.toast("请至少上传一张照片")
             return
@@ -352,7 +355,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             }
         }
         loading.show()
-        mPresenter.addPhotoV2(UserManager.getToken(), UserManager.getAccid(), photosId)
+        mPresenter.addPhotoV2(UserManager.getToken(), UserManager.getAccid(), photosId, type)
     }
 
 
@@ -461,7 +464,11 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         setData(data)
     }
 
-    override fun onSavePersonalResult(result: Boolean, type: Int) {
+
+    /**
+     * type  1 个人信息 2 头像
+     */
+    override fun onSavePersonalResult(result: Boolean, type: Int, from: Int) {
         if (type == 2) {
             if (loading.isShowing)
                 loading.dismiss()
@@ -469,6 +476,12 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 isChange = false
                 checkSaveEnable()
                 EventBus.getDefault().postSticky(UserCenterEvent(true))
+                if (from == 1) {
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                    setResult(Activity.RESULT_OK)
+                    super.onBackPressed()
+                }
             } else {
                 isChange = true
                 checkSaveEnable()
@@ -589,7 +602,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 startActivityForResult<MyJobActivity>(103, "job" to userJob.text.toString())
             }
             R.id.saveBtn -> {
-                updatePhotos()
+                updatePhotos(0)
             }
         }
 
@@ -636,11 +649,18 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         //如果更改过相册信息并且没有是强制替换头像,就新增
         if (isChange && !UserManager.isNeedChangeAvator()) {
             dialog.show()
-            dialog.tip.text = "是否放弃已修改的相册信息？"
-            dialog.confirm.onClick {
-                dialog.dismiss()
+            dialog.tip.text = "是否保存此次编辑的内容？"
+            dialog.cancel.text = "不保存"
+            dialog.confirm.text = "保存"
+            dialog.cancel.onClick {
                 setResult(Activity.RESULT_OK)
                 super.onBackPressed()
+            }
+            dialog.confirm.onClick {
+                updatePhotos(1)
+                dialog.dismiss()
+//                setResult(Activity.RESULT_OK)
+//                super.onBackPressed()
             }
         } else {
             setResult(Activity.RESULT_OK)

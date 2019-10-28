@@ -96,21 +96,21 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
     /**
      * 保存相册
      */
-    fun addPhotoV2(token: String, accid: String, photos: Array<Int?>) {
+    fun addPhotoV2(token: String, accid: String, photos: Array<Int?>, type: Int) {
         RetrofitFactory.instance.create(Api::class.java)
             .addPhotoV2(token, accid, photos)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     CommonFunction.toast(t.msg)
                     if (t.code == 200) {
-                        mView.onSavePersonalResult(true, 2)
+                        mView.onSavePersonalResult(true, 2, type)
                     } else {
-                        mView.onSavePersonalResult(false, 2)
+                        mView.onSavePersonalResult(false, 2, type)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onSavePersonalResult(false, 2)
+                    mView.onSavePersonalResult(false, 2, type)
                 }
             })
     }

@@ -18,7 +18,7 @@ interface UserInfoSettingsView : BaseView {
     /**
      * type  1 个人信息 2 头像
      */
-    fun onSavePersonalResult(result: Boolean, type: Int)
+    fun onSavePersonalResult(result: Boolean, type: Int, from: Int = 0)
 
     /**
      * 单张上传照片结果
