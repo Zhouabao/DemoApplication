@@ -19,6 +19,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.ListDataEvent
 import com.sdy.jitangapplication.event.NotifyEvent
+import com.sdy.jitangapplication.event.RefreshCommentEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.model.FriendBean
 import com.sdy.jitangapplication.model.SquareBean
@@ -98,7 +99,8 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
         val linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
-        val itemdecoration = CommonItemDecoration(activity!!, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL)
+        val itemdecoration =
+            CommonItemDecoration(activity!!, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL)
         itemdecoration.setDrawable(activity!!.resources.getDrawable(R.drawable.recycler_divider))
         listSquareRv.addItemDecoration(itemdecoration)
         listSquareRv.layoutManager = linearLayoutManager
@@ -140,7 +142,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                 mediaPlayer!!.resetMedia()
                 mediaPlayer = null
             }
-            SquareCommentDetailActivity.start(activity!!, adapter.data[position])
+            SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -158,7 +160,12 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                         mediaPlayer!!.resetMedia()
                         mediaPlayer = null
                     }
-                    SquareCommentDetailActivity.start(activity!!, adapter.data[position], enterPosition = "comment")
+                    SquareCommentDetailActivity.start(
+                        activity!!,
+                        adapter.data[position],
+                        enterPosition = "comment",
+                        position = position
+                    )
                 }
                 R.id.squareDianzanBtn1 -> {
                     clickZan(position)
@@ -261,6 +268,14 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
             page = 1
             params["page"] = page
             mPresenter.getSomeoneSquare(params)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshCommentEvent(event: RefreshCommentEvent) {
+        if (event.position != -1) {
+            adapter.data[event.position].comment_cnt = event.commentNum
+            adapter.refreshNotifyItemChanged(event.position)
         }
     }
 
@@ -498,8 +513,6 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 //        }
 //
 //    }
-
-
 
 
     lateinit var moreActionDialog: MoreActionNewDialog

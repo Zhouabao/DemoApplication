@@ -15,10 +15,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.FragmentUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.*
 import com.google.gson.Gson
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -990,11 +987,12 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                         params.topMargin = SizeUtils.dp2px(10F)
                         adapter.headerLayout.friendTv.layoutParams = params
                         UserManager.clearPublishParams()
-                        if (event.context is UserCenterActivity) {
-                            event.context.startActivity<PublishActivity>("from" to 2)
-                        } else {
-                            event.context.startActivity<PublishActivity>()
-                        }
+                        if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
+                            if (event.context is UserCenterActivity) {
+                                event.context.startActivity<PublishActivity>("from" to 2)
+                            } else {
+                                event.context.startActivity<PublishActivity>()
+                            }
                     }
                 })
                 .create()
@@ -1002,21 +1000,23 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         } else if (UserManager.publishState == -1) { //400
             SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
             UserManager.clearPublishParams()
-            if (event.context is UserCenterActivity) {
-                event.context.startActivity<PublishActivity>("from" to 2)
-            } else {
-                event.context.startActivity<PublishActivity>()
-            }
+            if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
+                if (event.context is UserCenterActivity) {
+                    event.context.startActivity<PublishActivity>("from" to 2)
+                } else {
+                    event.context.startActivity<PublishActivity>()
+                }
             uploadFl.isVisible = false
             val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
             params.topMargin = SizeUtils.dp2px(10F)
             adapter.headerLayout.friendTv.layoutParams = params
         } else if (UserManager.publishState == 0) {
-            if (event.context is UserCenterActivity) {
-                event.context.startActivity<PublishActivity>("from" to 2)
-            } else {
-                event.context.startActivity<PublishActivity>()
-            }
+            if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
+                if (event.context is UserCenterActivity) {
+                    event.context.startActivity<PublishActivity>("from" to 2)
+                } else {
+                    event.context.startActivity<PublishActivity>()
+                }
         }
     }
 
@@ -1033,6 +1033,14 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 adapter.data[event.position].isliked = event.isLike
                 adapter.refreshNotifyItemChanged(event.position)
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshCommentEvent(event: RefreshCommentEvent) {
+        if (event.position != -1) {
+            adapter.data[event.position].comment_cnt = event.commentNum
+            adapter.refreshNotifyItemChanged(event.position)
         }
     }
 

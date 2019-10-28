@@ -21,6 +21,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshCommentEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.SquareListBean
@@ -175,7 +176,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
 
         adapter.setOnItemClickListener { _, view, position ->
             resetAudio()
-            SquareCommentDetailActivity.start(this, adapter.data[position])
+            SquareCommentDetailActivity.start(this, adapter.data[position], position = position)
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -185,7 +186,12 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                 }
                 R.id.squareCommentBtn1 -> {
                     resetAudio()
-                    SquareCommentDetailActivity.start(this, adapter.data[position], enterPosition = "comment")
+                    SquareCommentDetailActivity.start(
+                        this,
+                        adapter.data[position],
+                        enterPosition = "comment",
+                        position = position
+                    )
                 }
                 R.id.squareDianzanBtn1 -> {
                     clickZan(position)
@@ -676,4 +682,12 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
             refreshLayout.autoRefresh()
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshCommentEvent(event: RefreshCommentEvent) {
+        if (event.position != -1) {
+            adapter.data[event.position].comment_cnt = event.commentNum
+            adapter.refreshNotifyItemChanged(event.position)
+        }
+    }
 }

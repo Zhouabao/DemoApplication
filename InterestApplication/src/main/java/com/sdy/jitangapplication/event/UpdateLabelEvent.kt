@@ -20,7 +20,10 @@ class RefreshEvent(val refresh: Boolean)
 
 
 //刷新点赞等事件
-class RefreshLikeEvent(val isLike: Int,val position: Int)
+class RefreshLikeEvent(val isLike: Int, val position: Int)
+
+//刷新评论数量
+class RefreshCommentEvent(val commentNum: Int, val position: Int)
 
 
 //刷新事件  local 是否是本地

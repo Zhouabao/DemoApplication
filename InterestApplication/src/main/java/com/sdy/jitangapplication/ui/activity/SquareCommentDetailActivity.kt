@@ -38,6 +38,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshCommentEvent
 import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.event.UpdateHiCountEvent
@@ -616,8 +617,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             adapter.data.clear()
             commentParams["page"] = page
             mPresenter.getCommentList(commentParams, true)
-            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.plus(1)
+            EventBus.getDefault().post(RefreshCommentEvent(squareBean!!.comment_cnt, intent.getIntExtra("position", 0)))
             squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         }
     }
@@ -642,6 +643,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.minus(1)
+            EventBus.getDefault().post(RefreshCommentEvent(squareBean!!.comment_cnt, intent.getIntExtra("position", 0)))
             squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         }
     }
