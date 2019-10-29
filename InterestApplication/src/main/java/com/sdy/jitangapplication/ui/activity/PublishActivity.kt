@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.services.core.PoiItem
+import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.*
 import com.google.gson.Gson
 import com.kotlin.base.ext.onClick
@@ -166,12 +168,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_publish)
-        initView()
         //获取所有的照片信息
-        LoaderManager.getInstance(this).initLoader(0, null, this)
-//        allPhotoAdapter.setNewData(getAllPhotoInfo(this))
+        initView()
+        LoaderManager.getInstance(this@PublishActivity).initLoader(0, null, this@PublishActivity)
         //获取所有的视频封面
-        allVideoThumbAdapter.setNewData(getAllVideoInfos(this))
+        allVideoThumbAdapter.setNewData(getAllVideoInfos(this@PublishActivity))
         initData()
     }
 
@@ -438,7 +439,20 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         CommonFunction.toast("最多只能选9张图片")
                         return@setOnItemChildClickListener
                     }
-                    gotoCaptureRaw(true)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(PermissionConstants.CAMERA))
+                        PermissionUtils.permission(PermissionConstants.CAMERA)
+                            .callback(object : PermissionUtils.SimpleCallback {
+                                override fun onGranted() {
+                                    gotoCaptureRaw(true)
+                                }
+
+                                override fun onDenied() {
+                                    CommonFunction.toast("相机权限被拒,请允许权限后再进行拍照.")
+                                }
+                            })
+                            .request()
+                    else
+                        gotoCaptureRaw(true)
                 }
             }
         }
@@ -472,7 +486,21 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         CommonFunction.toast("最多只能选择1个视频")
                         return@setOnItemChildClickListener
                     }
-                    go2TakeVideo()
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(PermissionConstants.CAMERA))
+                        PermissionUtils.permission(PermissionConstants.CAMERA)
+                            .callback(object : PermissionUtils.SimpleCallback {
+                                override fun onGranted() {
+                                    go2TakeVideo()
+                                }
+
+                                override fun onDenied() {
+                                    CommonFunction.toast("相机权限被拒,请允许权限后再进行视频录制.")
+                                }
+                            })
+                            .request()
+                    else
+                        go2TakeVideo()
                 }
                 R.id.choosePhotoDel -> {
                     //视频的选择与取消选择
@@ -815,15 +843,38 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 audioLl.visibility = View.GONE
             }
             R.id.publishAudio -> {
-                if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
-                    tabPublishWay.check(currentWayId)
-                    CommonFunction.toast("不支持语音和其他媒体一起上传哦")
-                    return
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(Manifest.permission.RECORD_AUDIO))
+                    PermissionUtils.permission(PermissionConstants.MICROPHONE)
+                        .callback(object : PermissionUtils.SimpleCallback {
+                            override fun onGranted() {
+                                if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
+                                    tabPublishWay.check(currentWayId)
+                                    CommonFunction.toast("不支持语音和其他媒体一起上传哦")
+                                    return
+                                }
+                                currentWayId = checkedId
+                                allPhotosRv.visibility = View.GONE
+                                videosRv.visibility = View.GONE
+                                audioLl.visibility = View.VISIBLE
+                            }
+
+                            override fun onDenied() {
+                                CommonFunction.toast("录音权限被拒,请开启后再录音.")
+                            }
+                        }).request()
+                else {
+                    if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
+                        tabPublishWay.check(currentWayId)
+                        CommonFunction.toast("不支持语音和其他媒体一起上传哦")
+                        return
+                    }
+                    currentWayId = checkedId
+                    allPhotosRv.visibility = View.GONE
+                    videosRv.visibility = View.GONE
+                    audioLl.visibility = View.VISIBLE
                 }
-                currentWayId = checkedId
-                allPhotosRv.visibility = View.GONE
-                videosRv.visibility = View.GONE
-                audioLl.visibility = View.VISIBLE
+
+
             }
         }
     }

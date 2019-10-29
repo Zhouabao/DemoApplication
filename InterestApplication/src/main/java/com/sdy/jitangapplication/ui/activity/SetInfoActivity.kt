@@ -21,10 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.TimeUtils
+import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.*
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
@@ -216,13 +214,61 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
         uploadAvatorDialog.rvPersons.adapter = adapter
 
         uploadAvatorDialog.choosePhoto.onClick {
-            choosePhoto()
-            uploadAvatorDialog.cancel()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                (!PermissionUtils.isGranted(PermissionConstants.CAMERA) ||
+                        !PermissionUtils.isGranted(PermissionConstants.STORAGE))
+            ) {
+                PermissionUtils.permission(PermissionConstants.CAMERA)
+                    .callback(object : PermissionUtils.SimpleCallback {
+                        override fun onGranted() {
+                            if (!PermissionUtils.isGranted(PermissionConstants.STORAGE))
+                                PermissionUtils.permission(PermissionConstants.STORAGE)
+                                    .callback(object : PermissionUtils.SimpleCallback {
+                                        override fun onGranted() {
+                                            choosePhoto()
+                                            uploadAvatorDialog.cancel()
+                                        }
 
+                                        override fun onDenied() {
+                                            CommonFunction.toast("文件存储权限被拒,请允许权限后再上传头像.")
+                                            uploadAvatorDialog.cancel()
+                                        }
+
+                                    })
+                                    .request()
+                        }
+
+                        override fun onDenied() {
+                            CommonFunction.toast("相机权限被拒,请允许权限后再上传头像.")
+                            uploadAvatorDialog.cancel()
+                        }
+                    })
+                    .request()
+            } else {
+                choosePhoto()
+                uploadAvatorDialog.cancel()
+            }
         }
         uploadAvatorDialog.takePhoto.onClick {
-            takePhoto()
-            uploadAvatorDialog.cancel()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(PermissionConstants.CAMERA)) {
+                PermissionUtils.permission(PermissionConstants.CAMERA)
+                    .callback(object : PermissionUtils.SimpleCallback {
+                        override fun onGranted() {
+                            takePhoto()
+                            uploadAvatorDialog.cancel()
+                        }
+
+                        override fun onDenied() {
+                            CommonFunction.toast("相机权限被拒,请允许权限后再上传头像.")
+//                            PermissionUtils.launchAppDetailsSettings()
+                            uploadAvatorDialog.cancel()
+                        }
+                    })
+                    .request()
+            } else {
+                takePhoto()
+                uploadAvatorDialog.cancel()
+            }
         }
         uploadAvatorDialog.cancel.onClick {
             uploadAvatorDialog.cancel()

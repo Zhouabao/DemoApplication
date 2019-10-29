@@ -14,6 +14,8 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.PermissionUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.kotlin.base.utils.NetWorkUtils;
@@ -853,7 +855,25 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                         toggleEmojiLayout();
 //                        hideAudioLayout();
                     } else if (position == 1) {
-                        switchToAudioLayout();
+                        if (!PermissionUtils.isGranted(PermissionConstants.MICROPHONE)) {
+                            PermissionUtils.permission(PermissionConstants.MICROPHONE)
+                                    .callback(new PermissionUtils.SimpleCallback() {
+                                        @Override
+                                        public void onGranted() {
+                                            switchToAudioLayout();
+                                        }
+
+                                        @Override
+                                        public void onDenied() {
+                                            CommonFunction.INSTANCE.toast("请开启录音权限后再发送语音.");
+                                            switchToTextLayout(false);
+                                        }
+                                    })
+                                    .request();
+                        } else {
+                            switchToAudioLayout();
+                        }
+
 //                        hideEmojiLayout();
                     } else {//定位
                         actions.get(position).onClick();

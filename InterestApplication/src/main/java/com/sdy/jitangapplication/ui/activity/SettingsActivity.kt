@@ -1,12 +1,11 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Dialog
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.PermissionUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -137,16 +136,21 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                     mPresenter.blockedAddressBook(UserManager.getAccid(), UserManager.getToken())
                 } else {
                     //TODO 请求接口看是否已经屏蔽过通讯录
-                    if (ContextCompat.checkSelfPermission(
-                            this,
-                            android.Manifest.permission.READ_CONTACTS
-                        ) != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        //申请权限
-                        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_CONTACTS), 1)
-                    } else {
-                        obtainContacts()
+                    if (!PermissionUtils.isGranted(PermissionConstants.CONTACTS)) {
+                        PermissionUtils.permission(PermissionConstants.CONTACTS)
+                            .callback(object : PermissionUtils.SimpleCallback {
+                                override fun onGranted() {
+                                    obtainContacts()
+                                }
+
+                                override fun onDenied() {
+                                    CommonFunction.toast("您已拒绝获取联系人列表权限的开启！")
+                                }
+
+                            })
+                            .request()
                     }
+
                 }
             }
 
@@ -157,17 +161,6 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         }
     }
 
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == 1) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                obtainContacts()
-            } else {
-                CommonFunction.toast("您已拒绝获取联系人列表权限的开启！")
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
 
     private fun obtainContacts() {
         //权限申请成功

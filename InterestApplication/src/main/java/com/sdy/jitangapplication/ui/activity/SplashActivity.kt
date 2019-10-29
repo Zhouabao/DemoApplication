@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import androidx.core.app.ActivityCompat
+import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -44,13 +46,21 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         mPresenter.checkNickName()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //动态申请权限
-            if (!SPUtils.getInstance(Constants.SPNAME).getBoolean("autoPermissions", false)) {
-                showAlertDialog()
-            } else {
-                //进行定位
-                AMapManager.initLocation(this)
-                start2login()
+//            //动态申请权限
+            if (!PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位权限
+                PermissionUtils.permission(PermissionConstants.LOCATION)
+                    .callback(object : PermissionUtils.SimpleCallback {
+                        override fun onGranted() {
+                            AMapManager.initLocation(this@SplashActivity)
+                            start2login()
+
+                        }
+
+                        override fun onDenied() {
+                            start2login()
+                        }
+                    })
+                    .request()
             }
         } else {
 //            进行定位
@@ -74,15 +84,16 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
      */
     private fun requestPermissions() {
         val permissions = arrayOf(
-            Manifest.permission.GET_ACCOUNTS,
-            Manifest.permission.CAMERA,
+//            Manifest.permission.GET_ACCOUNTS,
+//            Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.RECORD_AUDIO,
+//            Manifest.permission.READ_CONTACTS,
+//            Manifest.permission.RECORD_AUDIO,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.READ_PHONE_STATE
+            Manifest.permission.ACCESS_COARSE_LOCATION
+//            ,
+//            Manifest.permission.READ_PHONE_STATE
         )
         ActivityCompat.requestPermissions(this, permissions, 100)
     }

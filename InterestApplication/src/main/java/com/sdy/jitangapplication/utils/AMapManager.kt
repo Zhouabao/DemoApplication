@@ -1,9 +1,12 @@
 package com.sdy.jitangapplication.utils
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
+import com.blankj.utilcode.constant.PermissionConstants
+import com.blankj.utilcode.util.PermissionUtils
 
 /**
  *    author : ZFM
@@ -17,8 +20,40 @@ object AMapManager {
     private lateinit var mLocationOption: AMapLocationClientOption
 
     //设置定位
-    public fun initLocation(context: Context) {
+    fun initLocation(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (!PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位权限
+                PermissionUtils.permission(PermissionConstants.LOCATION)
+                    .callback(object : PermissionUtils.SimpleCallback {
+                        override fun onGranted() {
 
+                            initLocationClient(context)
+                            startLocation()
+                        }
+
+                        override fun onDenied() {
+                            //todo 定位权限被拒
+                        }
+                    })
+                    .request()
+            }
+        } else {
+
+            initLocationClient(context)
+            startLocation()
+        }
+    }
+
+    private fun startLocation() {
+        if (null != mLocationClient) {
+            mLocationClient!!.setLocationOption(mLocationOption)
+            //设置场景模式后最好调用一次stop，再调用start以保证场景模式生效
+            mLocationClient!!.stopLocation()
+            mLocationClient!!.startLocation()
+        }
+    }
+
+    private fun initLocationClient(context: Context) {
         //创建AMapLocationClientOption对象
         mLocationOption = AMapLocationClientOption()
         //设置定位模式为高精度模式
@@ -51,18 +86,17 @@ object AMapManager {
                         it.cityCode
                     )
 
-                    Log.d("location===", "${it.city},      ${it.cityCode},      ${it.latitude},      ${it.longitude}")
+                    Log.d(
+                        "location===",
+                        "${it.city},      ${it.cityCode},      ${it.latitude},      ${it.longitude}"
+                    )
+                } else {
+                    Log.d(
+                        "location===",
+                        "${it.errorCode},${it.city},      ${it.cityCode},      ${it.latitude},      ${it.longitude}"
+                    )
                 }
             }
         }
-
-        if (null != mLocationClient) {
-            mLocationClient!!.setLocationOption(mLocationOption)
-            //设置场景模式后最好调用一次stop，再调用start以保证场景模式生效
-            mLocationClient!!.stopLocation()
-            mLocationClient!!.startLocation()
-        }
-
-
     }
 }
