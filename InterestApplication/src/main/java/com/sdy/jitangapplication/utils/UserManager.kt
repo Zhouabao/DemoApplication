@@ -432,7 +432,7 @@ object UserManager {
         if (sp.getInt("limit_age_low", -1) != -1) {
             parmas["limit_age_low"] = sp.getInt("limit_age_low", -1)
         }
-        if (sp.getInt("limit_age_high", 35) != -1) {
+        if (sp.getInt("limit_age_high", -1) != -1) {
             parmas["limit_age_high"] = sp.getInt("limit_age_high", 35)
         }
         if (sp.getInt("local_only", -1) != -1) {
