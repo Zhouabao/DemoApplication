@@ -59,7 +59,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
         //主动弹起键盘
         etMsg.postDelayed({
-            KeyboardUtils.showSoftInput(this)
+            KeyboardUtils.showSoftInput(etMsg)
         }, 200L)
 
         //编辑框
@@ -85,10 +85,9 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         animator.duration = 500L
         animator.interpolator = LinearInterpolator()
         animator.playTogether(
-            ObjectAnimator.ofFloat(iconMine, "scaleX", 0.45f, 1f),
-            ObjectAnimator.ofFloat(iconMine, "scaleY", 0.45f, 1f),
-            ObjectAnimator.ofFloat(iconMine, "alpha", 0f, 1f),
-            ObjectAnimator.ofFloat(iconMine, "rotation", 0F, -22.5F)
+            ObjectAnimator.ofFloat(iconMine, "scaleX", 0.25f, 1f),
+            ObjectAnimator.ofFloat(iconMine, "scaleY", 0.25f, 1f),
+            ObjectAnimator.ofFloat(iconMine, "alpha", 0f, 1f)
         )
         animator.start()
 
@@ -97,10 +96,9 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         animator1.duration = 500L
         animator1.interpolator = LinearInterpolator()
         animator1.playTogether(
-            ObjectAnimator.ofFloat(iconOther, "scaleX", 0.45f, 1f),
-            ObjectAnimator.ofFloat(iconOther, "scaleY", 0.45f, 1f),
-            ObjectAnimator.ofFloat(iconOther, "alpha", 0f, 1f),
-            ObjectAnimator.ofFloat(iconOther, "rotation", 0F, 22.5F)
+            ObjectAnimator.ofFloat(iconOther, "scaleX", 0.25f, 1f),
+            ObjectAnimator.ofFloat(iconOther, "scaleY", 0.25f, 1f),
+            ObjectAnimator.ofFloat(iconOther, "alpha", 0f, 1f)
         )
         animator1.start()
 

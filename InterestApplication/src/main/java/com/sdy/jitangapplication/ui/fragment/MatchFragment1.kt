@@ -335,6 +335,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     /**
      * 左滑不喜欢结果
+     * //405 封禁
+     * //201 会员提醒
      */
     override fun onGetDislikeResult(success: Boolean, data: BaseResp<StatusBean?>) {
 
@@ -362,15 +364,15 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
                 return
             }
-        } else {
+        } else if (data.code == 405) {
             CommonFunction.toast(data.msg)
             card_stack_view.rewind()
         }
-
-
     }
 
     //status :1.喜欢成功  2.匹配成功
+    //201 不是会员
+    //405 封禁
     override fun onGetLikeResult(success: Boolean, data: BaseResp<StatusBean?>, matchBean: MatchBean) {
         if (data.code == 200) {
             if (data.data != null) {
@@ -400,11 +402,10 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
                 return
             }
-        } else {
+        } else if (data.code == 405) {
             CommonFunction.toast(data.msg)
             card_stack_view.rewind()
         }
-
     }
 
 
