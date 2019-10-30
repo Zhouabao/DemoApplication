@@ -280,7 +280,7 @@ object UserManager {
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo.nickname)
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
-            SPUtils.getInstance(Constants.SPNAME).put("birth", "${data.userinfo.birth}")
+            SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
 
 
             if (data.userinfo.isvip != -1) {
@@ -296,6 +296,15 @@ object UserManager {
      * 登录成功保存用户信息
      */
     fun isUserInfoMade(): Boolean {
+        try {
+            if (SPUtils.getInstance(Constants.SPNAME).getLong("birth") != -1L) {
+                SPUtils.getInstance(Constants.SPNAME).put("birth", "${SPUtils.getInstance(Constants.SPNAME).getLong("birth", 0L)}")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+
         return !(SPUtils.getInstance(Constants.SPNAME).getString("nickname").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
