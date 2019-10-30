@@ -86,7 +86,6 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
         val month = monthAndDay!!.substring(0, 2).toInt()
         val day = monthAndDay!!.substring(2, 4).toInt()
         if (!judgeBirth(month, day)) { //月份不正确
-            CommonFunction.toast("请输入正确的月份日期！")
             userBirthMonth.clear()
             userXingzuo.text = ""
             userXingzuo.visibility = View.GONE
@@ -108,10 +107,10 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
      * 判断输入的年是否正确（18到35）
      */
     private fun judgeYear(year: Int): Boolean {
-        if (Calendar.getInstance().get(Calendar.YEAR) - year < 18){
+        if (Calendar.getInstance().get(Calendar.YEAR) - year < 18) {
             CommonFunction.toast("年龄必须大于等于18岁哦")
             return false
-        }else if (Calendar.getInstance().get(Calendar.YEAR) - year > 50) {
+        } else if (Calendar.getInstance().get(Calendar.YEAR) - year > 50) {
             CommonFunction.toast("年龄必须在50岁以内哦")
             return false
         }
@@ -122,25 +121,30 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
      * 判断输入的生日是否正确
      */
     private fun judgeBirth(month: Int, day: Int): Boolean {
-        if (month > 12) {
+        if (month > 12 || month <= 0) {
+            CommonFunction.toast("请输入正确的月份！")
             return false
         }
         when (month) {
             1, 3, 5, 7, 8, 10, 12 ->
                 if (day > 31 || day == 0) {
+                    CommonFunction.toast("请输入正确的日期！")
                     return false
                 }
             4, 6, 9, 11 -> {
                 if (day > 30 || day == 0) {
+                    CommonFunction.toast("请输入正确的日期！")
                     return false
                 }
             }
             2 -> {
                 if (year!!.toInt() % 4 == 0 && year!!.toInt() % 100 != 0 || year!!.toInt() % 400 == 0) {
                     if (day > 29 || day == 0) {
+                        CommonFunction.toast("请输入正确的日期！")
                         return false
                     }
                 } else if (day > 28 || day == 0) {
+                    CommonFunction.toast("请输入正确的日期！")
                     return false
                 }
             }
