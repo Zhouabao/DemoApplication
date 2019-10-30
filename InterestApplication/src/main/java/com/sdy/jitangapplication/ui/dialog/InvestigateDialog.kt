@@ -100,6 +100,7 @@ class InvestigateDialog(private val contex1t: Context, private val investigateBe
                                         data.value.check = true
                                     }
                                 }
+                                checkConfirmBtn()
                             }
                         }
                     }
@@ -139,7 +140,6 @@ class InvestigateDialog(private val contex1t: Context, private val investigateBe
                 inputContent = ""
             }
             checkConfirmBtn()
-
         }
 
         close.onClick {
