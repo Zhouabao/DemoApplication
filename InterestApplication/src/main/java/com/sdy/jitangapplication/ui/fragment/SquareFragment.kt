@@ -17,7 +17,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.*
 import com.google.gson.Gson
 import com.kotlin.base.data.protocol.BaseResp
@@ -1016,21 +1015,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         } else if (UserManager.publishState == 0) {
             if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    PermissionUtils.permission(PermissionConstants.STORAGE)
-                        .callback(object : PermissionUtils.SimpleCallback {
-                            override fun onGranted() {
-                                if (event.context is UserCenterActivity) {
-                                    event.context.startActivity<PublishActivity>("from" to 2)
-                                } else {
-                                    event.context.startActivity<PublishActivity>()
-                                }
-                            }
-
-                            override fun onDenied() {
-                                CommonFunction.toast("请再次点击,并允许相册权限.")
-                            }
-                        })
-                        .request()
+                    if (event.context is UserCenterActivity) {
+                        event.context.startActivity<PublishActivity>("from" to 2)
+                    } else {
+                        event.context.startActivity<PublishActivity>()
+                    }
                 } else {
                     if (event.context is UserCenterActivity) {
                         event.context.startActivity<PublishActivity>("from" to 2)

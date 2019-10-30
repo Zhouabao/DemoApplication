@@ -650,7 +650,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
         if (isChange && !UserManager.isNeedChangeAvator()) {
             dialog.show()
             dialog.tip.text = "是否保存此次编辑的内容？"
-            dialog.cancel.text = "不保存"
+            dialog.cancel.text = "放弃"
             dialog.confirm.text = "保存"
             dialog.cancel.onClick {
                 setResult(Activity.RESULT_OK)

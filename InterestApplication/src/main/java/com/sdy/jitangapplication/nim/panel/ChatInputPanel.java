@@ -95,7 +95,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     // 语音
     protected AudioRecorder audioMessageHelper;
-    private Chronometer recordTime;
+    private Chronometer recordNimTime;
     protected Button audioRecordBtn; // 录音按钮
     protected TextView audioRecordTv; // 录音按钮
     protected View audioAnimLayout; // 录音动画布局
@@ -216,7 +216,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         // 语音
         audioRecordBtn = view.findViewById(R.id.startRecordBtn);
         audioRecordTv = view.findViewById(R.id.recordTv);
-        recordTime = view.findViewById(R.id.recordTime);
+        recordNimTime = view.findViewById(R.id.recordTime);
         audioAnimLayout = view.findViewById(R.id.audioLl);
 
 
@@ -668,8 +668,8 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         container.activity.getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         audioMessageHelper.completeRecord(cancel);
         audioRecordTv.setText("按住录音");
-        recordTime.setTextColor(container.activity.getResources().getColor(R.color.colorAccent));
-        recordTime.setText(R.string.timer_default);
+        recordNimTime.setTextColor(container.activity.getResources().getColor(R.color.colorAccent));
+        recordNimTime.setText(R.string.timer_default);
         stopAudioRecordAnim();
     }
 
@@ -710,9 +710,9 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
      */
     private void playAudioRecordAnim() {
         audioAnimLayout.setVisibility(View.VISIBLE);
-        recordTime.setBase(SystemClock.elapsedRealtime());
-        recordTime.start();
-        recordTime.setTextColor(container.activity.getResources().getColor(R.color.colorAccent));
+        recordNimTime.setBase(SystemClock.elapsedRealtime());
+        recordNimTime.start();
+        recordNimTime.setTextColor(container.activity.getResources().getColor(R.color.colorAccent));
     }
 
     /**
@@ -720,18 +720,20 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
      */
     private void stopAudioRecordAnim() {
         audioAnimLayout.setVisibility(View.GONE);
-        recordTime.stop();
-        recordTime.setBase(SystemClock.elapsedRealtime());
+        recordNimTime.stop();
+        recordNimTime.setBase(SystemClock.elapsedRealtime());
     }
 
     // 录音状态回调
     @Override
     public void onRecordReady() {
-
+        Log.d("OkHttp", "..........ready");
     }
 
     @Override
     public void onRecordStart(File audioFile, RecordType recordType) {
+        Log.d("OkHttp", "..........start");
+
         started = true;
         if (!touched) {
             return;
@@ -747,6 +749,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     @Override
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
+        Log.d("OkHttp", "..........onRecordSuccess");
         //检测是否可以发消息
         if (disable) {
             this.audioFile = audioFile;
@@ -761,6 +764,8 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     @Override
     public void onRecordFail() {
+        Log.d("OkHttp", "..........onRecordFail");
+
         if (started) {
             ToastHelper.showToast(container.activity, R.string.recording_error);
             resetActions();
@@ -855,12 +860,30 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                         toggleEmojiLayout();
 //                        hideAudioLayout();
                     } else if (position == 1) {
-                        if (!PermissionUtils.isGranted(PermissionConstants.MICROPHONE)) {
+                        //获取权限后录语音
+                        if (!PermissionUtils.isGranted(PermissionConstants.MICROPHONE) || !PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
                             PermissionUtils.permission(PermissionConstants.MICROPHONE)
                                     .callback(new PermissionUtils.SimpleCallback() {
                                         @Override
                                         public void onGranted() {
-                                            switchToAudioLayout();
+                                            if (!PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
+                                                PermissionUtils.permission(PermissionConstants.STORAGE)
+                                                        .callback(new PermissionUtils.SimpleCallback() {
+                                                            @Override
+                                                            public void onGranted() {
+                                                                switchToAudioLayout();
+                                                            }
+
+                                                            @Override
+                                                            public void onDenied() {
+                                                                CommonFunction.INSTANCE.toast("请开启文件权限后再发送语音.");
+                                                                switchToTextLayout(false);
+                                                            }
+                                                        })
+                                                        .request();
+                                            } else {
+                                                switchToAudioLayout();
+                                            }
                                         }
 
                                         @Override
