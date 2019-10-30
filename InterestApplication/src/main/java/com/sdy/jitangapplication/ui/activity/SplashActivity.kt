@@ -45,25 +45,21 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         mPresenter.context = this
         mPresenter.checkNickName()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            //动态申请权限
-            if (!PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位权限
-                PermissionUtils.permission(PermissionConstants.LOCATION)
-                    .callback(object : PermissionUtils.SimpleCallback {
-                        override fun onGranted() {
-                            AMapManager.initLocation(this@SplashActivity)
-                            start2login()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位权限
+            PermissionUtils.permission(PermissionConstants.LOCATION)
+                .callback(object : PermissionUtils.SimpleCallback {
+                    override fun onGranted() {
+                        AMapManager.initLocation(this@SplashActivity)
+                        start2login()
 
-                        }
+                    }
 
-                        override fun onDenied() {
-                            start2login()
-                        }
-                    })
-                    .request()
-            }
+                    override fun onDenied() {
+                        start2login()
+                    }
+                })
+                .request()
         } else {
-//            进行定位
             AMapManager.initLocation(this)
             start2login()
         }
