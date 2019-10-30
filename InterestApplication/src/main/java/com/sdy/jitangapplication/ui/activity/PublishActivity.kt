@@ -175,14 +175,26 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         initView()
 
         //获取权限后加载相册信息
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+            && ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             //申请权限
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            )
         } else {
             LoaderManager.getInstance(this@PublishActivity).initLoader(0, null, this@PublishActivity)
             //获取所有的视频封面
             allVideoThumbAdapter.setNewData(getAllVideoInfos(this@PublishActivity))
+            allVideoThumbAdapter.data.add(0, MediaBean(-1, MediaBean.TYPE.VIDEO))
         }
 
         initData()
@@ -197,6 +209,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         LoaderManager.getInstance(this@PublishActivity).initLoader(0, null, this@PublishActivity)
                         //获取所有的视频封面
                         allVideoThumbAdapter.setNewData(getAllVideoInfos(this@PublishActivity))
+                        allVideoThumbAdapter.data.add(0, MediaBean(-1, MediaBean.TYPE.VIDEO))
                         return
                     }
                 }
@@ -872,7 +885,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 audioLl.visibility = View.GONE
             }
             R.id.publishAudio -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(Manifest.permission.RECORD_AUDIO))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(Manifest.permission.RECORD_AUDIO)) {
                     PermissionUtils.permission(PermissionConstants.MICROPHONE)
                         .callback(object : PermissionUtils.SimpleCallback {
                             override fun onGranted() {
@@ -891,7 +904,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                                 CommonFunction.toast("录音权限被拒,请开启后再录音.")
                             }
                         }).request()
-                else {
+                } else {
                     if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
                         tabPublishWay.check(currentWayId)
                         CommonFunction.toast("不支持语音和其他媒体一起上传哦")
