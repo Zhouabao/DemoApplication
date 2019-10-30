@@ -81,7 +81,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         mHelper.onActivityCreate()
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
 
-        mImageLayout.visibility = View.GONE
+        mImageLayout.visibility = View.VISIBLE
         // 根据需求添加活体动作
         MyApplication.livenessList.clear()
         MyApplication.livenessList.add(LivenessTypeEnum.Eye)
@@ -157,7 +157,12 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                         16
                     )}"
 
-                uploadProfile(bitmap2Bytes(mILivenessStrategy.bestFaceImage), fileKey)
+                if (images["bestImage0"].isNullOrEmpty()) {
+                    uploadProfile(bitmap2Bytes(mILivenessStrategy.bestFaceImage), fileKey)
+                } else {
+                    uploadProfile(bitmap2Bytes(images["bestImage0"]!!), fileKey)
+                }
+
             }
         } else if (status == FaceStatusEnum.Error_DetectTimeout
             || status == FaceStatusEnum.Error_LivenessTimeout ||
@@ -212,7 +217,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                             CommonFunction.toast("审核提交成功")
                             UserManager.saveUserVerify(2)
                             setResult(Activity.RESULT_OK)
-                            finish()
+//                            finish()
                         }
                         t.code == 403 -> UserManager.startToLogin(context as Activity)
                         else -> {
@@ -326,7 +331,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     if (response?.result?.score != null && response?.result.score >= 80) {
                         loadingDialog.dismiss()
                         CommonFunction.toast("认证成功！")
-                        finish()
+//                        finish()
                     } else {
                         CommonFunction.toast("认证失败！")
                     }
