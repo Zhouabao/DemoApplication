@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorWhite"
         tools:context=".ui.activity.NotificationActivity">
 
     <include layout="@layout/layout_actionbar"/>
@@ -75,6 +76,7 @@
 
 
     <TextView
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:text="回复提醒"
             android:textColor="@color/colorBlackTitle"
@@ -86,6 +88,7 @@
             app:layout_constraintTop_toTopOf="@id/switchReply"/>
 
     <Switch
+            android:visibility="gone"
             android:id="@+id/switchReply"
             android:layout_width="48dp"
             android:layout_height="24dp"
@@ -111,6 +114,7 @@
             app:layout_constraintTop_toTopOf="@id/switchMusic"/>
 
     <Switch
+            android:layout_marginRight="15dp"
             android:id="@+id/switchMusic"
             android:layout_width="48dp"
             android:layout_height="24dp"

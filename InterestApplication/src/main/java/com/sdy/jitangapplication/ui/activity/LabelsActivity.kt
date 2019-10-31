@@ -1,9 +1,16 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SPUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
@@ -14,209 +21,35 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.UpdateAvatorEvent
-import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.LoginBean
-import com.sdy.jitangapplication.presenter.LabelsPresenter
-import com.sdy.jitangapplication.presenter.view.LabelsView
-import com.sdy.jitangapplication.ui.adapter.LabelAdapter
+import com.sdy.jitangapplication.model.NewLabel
+import com.sdy.jitangapplication.presenter.NewLabelsPresenter
+import com.sdy.jitangapplication.presenter.view.NewLabelsView
+import com.sdy.jitangapplication.ui.adapter.ChooseNewLabelAdapter
+import com.sdy.jitangapplication.ui.fragment.NewLabelFragment
 import com.sdy.jitangapplication.utils.UserManager
-import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
-import kotlinx.android.synthetic.main.activity_labels.*
+import com.sdy.jitangapplication.widgets.ColorFlipPagerTitleView
+import kotlinx.android.synthetic.main.activity_new_labels1.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import net.lucode.hackware.magicindicator.ViewPagerHelper
+import net.lucode.hackware.magicindicator.buildins.UIUtil
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
-class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnClickListener {
-
-    private lateinit var adapter: LabelAdapter
-    //拿一个集合来存储所有的标签
-    private var allLabels: MutableList<LabelBean> = mutableListOf()
-    //拿一个集合来存储当前选中的标签
-    private val checkedLabels: MutableList<LabelBean> = mutableListOf()
-    //拿一个集合来存储之前选中的标签
-    private val saveLabels: MutableList<LabelBean> = mutableListOf()
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_labels)
-        mPresenter = LabelsPresenter()
-        mPresenter.mView = this
-        mPresenter.context = this
-        initView()
-        getLabel()
-
-
-    }
-
-    //todo 此处的version应该要更改
-    private fun getLabel() {
-        val params = HashMap<String, String>()
-        params["accid"] = UserManager.getAccid()
-        params["token"] = UserManager.getToken()
-        params["version"] = "${1}"
-        params["_timestamp"] = "${System.currentTimeMillis()}"
-        mPresenter.getLabels(params)
-    }
-
-    private fun initView() {
-        //首页禁止滑动
-        setSwipeBackEnable(false)
-
-
-        stateview.retryBtn.onClick {
-            stateview.viewState = MultiStateView.VIEW_STATE_LOADING
-            getLabel()
-        }
-
-        if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity"
-                    || intent.getStringExtra("from") == "publish" || intent.getStringExtra("from") == "usercenter")
-        ) {
-            btnBack.setVisible(true)
-        } else {
-            btnBack.visibility = View.INVISIBLE
-        }
-
-
-        btnBack.onClick {
-            finish()
-        }
-        completeLabelLL.setOnClickListener(this)
-
-        val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
-        manager.alignItems = AlignItems.STRETCH
-        manager.justifyContent = JustifyContent.CENTER
-        labelRecyclerview.layoutManager = manager
-        adapter = LabelAdapter()
-        labelRecyclerview.adapter = adapter
-        //设置添加和移除动画
-        labelRecyclerview.itemAnimator = ScaleInLeftAnimator()
-
-        adapter.setOnItemClickListener { _, view, position ->
-            if (adapter.data[position].id != Constants.RECOMMEND_TAG_ID) {
-                adapter.data[position].checked = !adapter.data[position].checked
-                adapter.notifyItemChanged(position)
-                updateCheckedLabels(adapter.data[position])
-                if (adapter.data[position].checked) {
-                    mPresenter.mView.onGetSubLabelsResult(adapter.data[position].son, position)
-                } else {
-                    //反选就清除父标签的所有子标签
-                    mPresenter.mView.onRemoveSubLablesResult(adapter.data[position], position)
-                }
-            }
-
-        }
-
-
-    }
-
-    /**
-     * 获取标签数据
-     */
-    override fun onGetLabelsResult(labels: MutableList<LabelBean>) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
-            saveLabels.addAll(UserManager.getSpLabels())
-            var index = 0
-            while (labels.iterator().hasNext()) {
-                if (index >= labels.size) {
-                    break
-                }
-                for (j in 0 until saveLabels.size) {
-                    if (labels[index].id == saveLabels[j].id || labels[index].id == Constants.RECOMMEND_TAG_ID) {
-                        labels[index].checked = true
-                        updateCheckedLabels(labels[index])
-                        labels.addAll(index + 1, labels[index].son ?: mutableListOf())
-                        break
-                    }
-                }
-                index++
-            }
-            adapter.setNewData(labels)
-
-        } else {
-            if (labels != null && labels.size > 0) {
-                //默认设置选中精选标签，并加载其子标签
-                for (label in labels)
-                    label.checked = label.id == Constants.RECOMMEND_TAG_ID
-                adapter.setNewData(labels)
-                allLabels = labels
-                //默认选中之后加载子标签
-                mPresenter.mView.onGetSubLabelsResult(labels[0].son, 0)
-            }
-            if (labels != null) {
-                for (label in labels)
-                    updateCheckedLabels(label)
-            }
-        }
-    }
-
-    /**
-     * 添加父级标签的子标签
-     */
-    override fun onGetSubLabelsResult(labels: List<LabelBean>?, parentPos: Int) {
-        if (labels != null && labels.size > 0) {
-            for (i in 0 until labels.size) {
-                adapter.addData(parentPos + (i + 1), labels[i])
-            }
-        }
-    }
-
-
-    /**
-     * 移除子级标签
-     *
-     */
-    override fun onRemoveSubLablesResult(label: LabelBean, parentPos: Int) {
-        for (tempLabel in label.son ?: mutableListOf()) {
-            tempLabel.checked = false
-            adapter.data.remove(tempLabel)
-            updateCheckedLabels(tempLabel)
-            onRemoveSubLablesResult(tempLabel, parentPos)
-        }
-        adapter.notifyDataSetChanged()
-    }
-
-
-    /**
-     * 此处判断标签最少选择三个
-     */
-    private fun updateCheckedLabels(label: LabelBean) {
-        if (label.checked) {
-            if (!checkedLabels.contains(label)) {
-                checkedLabels.add(label)
-            }
-        } else {
-            //此处应该还要删除父级的子级数据
-            if (checkedLabels.contains(label)) {
-                checkedLabels.remove(label)
-            }
-        }
-        if (checkedLabels.size < 4 || checkedLabels.size > Constants.LABEL_MAX_COUNT + 1) {
-//            shape_rectangle_unable_btn_15dp
-            completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_unable_btn_15dp)
-            completeLabelBtn.setTextColor(resources.getColor(R.color.colorBlackText))
-            iconChecked.visibility = View.GONE
-            completeLabelBtn.text = if (checkedLabels.size < 4) {
-                "再选${4 - checkedLabels.size}个"
-            } else {
-                CommonFunction.toast("最多只能选${Constants.LABEL_MAX_COUNT}个标签")
-                "完成"
-            }
-            completeLabelLL.isEnabled = false
-        } else {
-            completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_enable_btn_15dp)
-            completeLabelLL.isEnabled = true
-            completeLabelBtn.setTextColor(resources.getColor(R.color.colorWhite))
-            completeLabelBtn.text = "完成"
-            iconChecked.visibility = View.VISIBLE
-        }
-    }
-
-
-    override fun onUploadLabelsResult(result: Boolean, data: LoginBean?) {
-        if (result) {
+/**
+ * 新的标签页面
+ */
+class LabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, View.OnClickListener {
+    override fun onUploadLabelsResult(success: Boolean, data: LoginBean?) {
+        if (success) {
             if (data != null) {
                 UserManager.saveUserInfo(data)
             }
@@ -232,6 +65,203 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                 startActivity<MainActivity>()
             }
         }
+
+    }
+
+    override fun onGetLabelsResult(data: MutableList<NewLabel>) {
+        stateLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
+        chooseLabelsAdapter.addData(NewLabel(title = "推荐", checked = true))
+        data[0].checked = true//默认选中“全部”
+        newLabels.addAll(data)
+        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
+            for (label in UserManager.getSpLabels()) {
+                for (label1 in newLabels) {
+                    for (label2 in label1.son) {
+                        if (label.id == label2.id && label.id != Constants.RECOMMEND_TAG_ID) { //剔除推荐标签
+                            label2.checked = true
+                            var hasChecked = false
+                            for (data in chooseLabelsAdapter.data) {
+                                if (data.id == label2.id) {
+                                    hasChecked = true
+                                    break
+                                }
+                            }
+                            if (!hasChecked) {
+                                chooseLabelsAdapter.addData(label2)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        initIndicator()
+        EventBus.getDefault().postSticky(ChooseLabelCountEvent(chooseLabelsAdapter.data.size))
+        checkConfirmBtnEnable()
+    }
+
+    //所有的标签数据源
+    private val newLabels: MutableList<NewLabel> = mutableListOf()
+    //所有标签的adapter
+//    private val allLabekAdapter by lazy { AllNewLabelAdapter() }
+    //选中的标签的adapter
+    private val chooseLabelsAdapter by lazy { ChooseNewLabelAdapter() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        EventBus.getDefault().register(this)
+        setContentView(R.layout.activity_new_labels1)
+        initView()
+        mPresenter.tagListv2(UserManager.getToken(), UserManager.getAccid())
+    }
+
+    private fun initView() {
+        mPresenter = NewLabelsPresenter()
+        mPresenter.mView = this
+        mPresenter.context = this
+
+
+        if (intent.getStringExtra("from") != null && (intent.getStringExtra("from") == "mainactivity" || intent.getStringExtra(
+                "from"
+            ) == "publish" || intent.getStringExtra("from") == "usercenter")
+        ) {
+            btnBack.setVisible(true)
+        } else {
+            btnBack.visibility = View.INVISIBLE
+        }
+
+        stateLabel.retryBtn.onClick {
+            stateLabel.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.tagListv2(UserManager.getToken(), UserManager.getAccid())
+        }
+
+        completeLabelLL.setOnClickListener(this)
+        btnBack.setOnClickListener(this)
+
+
+        val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
+        manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.FLEX_START
+        choosedLabelsRv.layoutManager = manager
+        choosedLabelsRv.adapter = chooseLabelsAdapter
+
+        chooseLabelsAdapter.setOnItemClickListener { _, view, position ->
+            if (position != 0) {
+                //从选中的标签中移除
+//                chooseLabels.remove(chooseLabelsAdapter.data[position])
+                val removeLabel = chooseLabelsAdapter.data[position]
+                chooseLabelsAdapter.data.remove(removeLabel)
+                chooseLabelsAdapter.notifyDataSetChanged()
+                for (label in newLabels) {
+                    for (label1 in label.son) {
+                        if (label1.id == removeLabel.id && label1.parent_id == removeLabel.parent_id) {
+                            label1.checked = false
+                        }
+                    }
+                }
+                //todo 更新vp选中状态
+                EventBus.getDefault().post(UpdateChooseAllLabelEvent(removeLabel))
+                EventBus.getDefault().postSticky(ChooseLabelCountEvent(chooseLabelsAdapter.data.size))
+//                allLabekAdapter.notifyDataSetChanged()
+                checkConfirmBtnEnable()
+            }
+        }
+
+    }
+
+    private val labelFragments by lazy { mutableListOf<NewLabelFragment>() }
+    private fun initIndicator() {
+        for (i in 0 until newLabels.size) {
+            labelFragments.add(NewLabelFragment())
+        }
+        vpLabelNew.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
+            override fun getItem(position: Int): Fragment {
+                return labelFragments[position]
+            }
+
+            override fun getCount(): Int {
+                return labelFragments.size
+            }
+
+            override fun getPageTitle(position: Int): CharSequence? {
+                return newLabels[position].title
+            }
+
+        }
+        vpLabelNew.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                EventBus.getDefault().post(UpdateAllNewLabelEvent(newLabels[position].son))
+            }
+
+        })
+        vpLabelNew.currentItem = 0
+        EventBus.getDefault().postSticky(UpdateAllNewLabelEvent(newLabels[0].son))
+
+
+        tabLabelNew.setBackgroundColor(Color.WHITE)
+        val commonNavigator = CommonNavigator(this)
+        commonNavigator.adapter = object : CommonNavigatorAdapter() {
+            override fun getCount(): Int {
+                return newLabels.size
+            }
+
+            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
+                val simplePagerTitleView = ColorFlipPagerTitleView(context)
+                simplePagerTitleView.text = newLabels[index].title
+                simplePagerTitleView.textSize = 16f
+                simplePagerTitleView.normalColor = resources.getColor(R.color.colorBlackTitle)
+                simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlackTitle)
+                simplePagerTitleView.onClick {
+                    vpLabelNew.currentItem = index
+                }
+                return simplePagerTitleView
+            }
+
+            override fun getIndicator(context: Context): IPagerIndicator {
+                val indicator = LinePagerIndicator(context)
+                indicator.mode = LinePagerIndicator.MODE_EXACTLY
+                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
+                indicator.lineWidth = UIUtil.dip2px(context, 35.0).toFloat()
+                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
+                indicator.startInterpolator = AccelerateInterpolator()
+                indicator.endInterpolator = DecelerateInterpolator(1.0f)
+                indicator.setColors(resources.getColor(R.color.colorOrange))
+                return indicator
+            }
+        }
+        tabLabelNew.navigator = commonNavigator
+        ViewPagerHelper.bind(tabLabelNew, vpLabelNew)
+    }
+
+    /**
+     * 检查确定按钮是否可以启用
+     */
+    private fun checkConfirmBtnEnable() {
+        if (chooseLabelsAdapter.data.size < 4 || chooseLabelsAdapter.data.size > 11) {
+            if (chooseLabelsAdapter.data.size < 4)
+                completeLabelBtn.text = "再选${4 - chooseLabelsAdapter.data.size}个"
+            if (chooseLabelsAdapter.data.size > 11) {
+                completeLabelBtn.text = "完成"
+                CommonFunction.toast("最多只能选${Constants.LABEL_MAX_COUNT}个标签")
+            }
+            completeLabelBtn.setTextColor(resources.getColor(R.color.colorBlackText))
+            iconChecked.isVisible = false
+            completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_unable_btn_15dp)
+            completeLabelLL.isEnabled = false
+        } else {
+            completeLabelBtn.text = "完成"
+            completeLabelBtn.setTextColor(resources.getColor(R.color.colorWhite))
+            iconChecked.isVisible = true
+            completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_enable_btn_15dp)
+            completeLabelLL.isEnabled = true
+        }
     }
 
 
@@ -243,29 +273,27 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                 params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
                 params["_timestamp"] = "${System.currentTimeMillis()}"
                 val checkIds = arrayOfNulls<Int>(Constants.LABEL_MAX_COUNT)
-                for (checkLabel in checkedLabels) {
-                    if (checkLabel.id == Constants.RECOMMEND_TAG_ID) {
-                        checkedLabels.remove(checkLabel)
+                for (checkLabel in chooseLabelsAdapter.data) {
+                    if (checkLabel.id == -1) {
+                        chooseLabelsAdapter.data.remove(checkLabel)
                         break
                     }
                 }
-                for (index in 0 until checkedLabels.size) {
-                    checkIds[index] = checkedLabels[index].id
+                for (index in 0 until chooseLabelsAdapter.data.size) {
+                    checkIds[index] = chooseLabelsAdapter.data[index].id
                 }
-                Log.i("params", "${android.os.Build.BRAND},${android.os.Build.HOST},${android.os.Build.PRODUCT}")
                 mPresenter.uploadLabels(params, checkIds)
             }
+            R.id.btnBack -> {
+                finish()
+            }
         }
+
     }
 
     override fun onError(text: String) {
-        super.onError(text)
-        stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-        stateview.errorMsg.text = if (mPresenter.checkNetWork()) {
-            getString(R.string.retry_load_error)
-        } else {
-            getString(R.string.retry_net_error)
-        }
+        stateLabel.viewState = MultiStateView.VIEW_STATE_ERROR
+        stateLabel.errorMsg.text = text
     }
 
     override fun onBackPressed() {
@@ -273,7 +301,41 @@ class LabelsActivity : BaseMvpActivity<LabelsPresenter>(), LabelsView, View.OnCl
                     || intent.getStringExtra("from") == "publish" || intent.getStringExtra("from") == "usercenter")
         ) {
             super.onBackPressed()
-        } else {
         }
+
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updateChooseLabelEvent(chooseLabel: UpdateChooseLabelEvent) {
+        //在所有标签中选中状态
+        for (label in newLabels) {
+            for (label1 in label.son) {
+                if (label1.parent_id == chooseLabel.label.parent_id && label1.id == chooseLabel.label.id) {
+                    label1.checked = chooseLabel.label.checked
+                }
+            }
+        }
+
+        if (chooseLabel.label.checked) {
+//                //选中标签中添加
+            if (!chooseLabelsAdapter.data.contains(chooseLabel.label)) {
+                chooseLabelsAdapter.addData(chooseLabel.label)
+            }
+        } else {
+//                //选中标签中取消选中
+            if (chooseLabelsAdapter.data.contains(chooseLabel.label)) {
+                chooseLabelsAdapter.data.remove(chooseLabel.label)
+                chooseLabelsAdapter.notifyDataSetChanged()
+            }
+        }
+        checkConfirmBtnEnable()
+        EventBus.getDefault().postSticky(ChooseLabelCountEvent(chooseLabelsAdapter.data.size))
+    }
+
 }

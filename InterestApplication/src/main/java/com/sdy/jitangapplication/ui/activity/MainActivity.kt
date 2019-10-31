@@ -621,7 +621,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         labelAdapter.setOnItemClickListener(object : MatchLabelAdapter.OnItemClickListener {
             override fun onItemClick(item: View, position: Int) {
                 if (position == 0) {
-                    startActivityForResult<NewLabelsActivity1>(
+                    startActivityForResult<LabelsActivity>(
                         REQUEST_LABEL_CODE,
                         "from" to "mainactivity"
                     )

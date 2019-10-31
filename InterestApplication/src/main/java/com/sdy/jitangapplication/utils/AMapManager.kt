@@ -21,24 +21,21 @@ object AMapManager {
 
     //设置定位
     fun initLocation(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (!PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位权限
-                PermissionUtils.permission(PermissionConstants.LOCATION)
-                    .callback(object : PermissionUtils.SimpleCallback {
-                        override fun onGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位权限
+            PermissionUtils.permission(PermissionConstants.LOCATION)
+                .callback(object : PermissionUtils.SimpleCallback {
+                    override fun onGranted() {
 
-                            initLocationClient(context)
-                            startLocation()
-                        }
+                        initLocationClient(context)
+                        startLocation()
+                    }
 
-                        override fun onDenied() {
-                            //todo 定位权限被拒
-                        }
-                    })
-                    .request()
-            }
+                    override fun onDenied() {
+                        //todo 定位权限被拒
+                    }
+                })
+                .request()
         } else {
-
             initLocationClient(context)
             startLocation()
         }

@@ -147,7 +147,7 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
     override fun onUploadUserInfoResult(uploadResult: Boolean) {
         confirmBtn.isEnabled = true
         if (uploadResult) {
-            startActivity<NewLabelsActivity1>()
+            startActivity<LabelsActivity>()
         }
     }
 

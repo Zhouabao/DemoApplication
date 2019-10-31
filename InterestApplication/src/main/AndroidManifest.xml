@@ -86,12 +86,11 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.NewLabelsActivity"
-                android:screenOrientation="portrait">
+        <activity android:name=".ui.activity.NewUserInfoSettingsActivity">
         </activity>
-        <activity android:name=".ui.activity.NewLabelsActivity1"
+        <activity
+                android:name=".ui.activity.LabelsActivity"
                 android:screenOrientation="portrait">
-
         </activity>
         <activity
                 android:name=".ui.activity.SplashActivity"
@@ -255,10 +254,6 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.UserBirthActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
-                android:name=".ui.activity.LabelsActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity

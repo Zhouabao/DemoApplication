@@ -15,9 +15,7 @@ import com.sdy.jitangapplication.presenter.view.MyJobView
 import com.sdy.jitangapplication.ui.adapter.LabelAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator
-import kotlinx.android.synthetic.main.activity_labels.btnBack
 import kotlinx.android.synthetic.main.activity_my_job.*
-import kotlinx.android.synthetic.main.activity_my_job.stateview
 import kotlinx.android.synthetic.main.error_layout.view.*
 
 /**

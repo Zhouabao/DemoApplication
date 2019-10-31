@@ -372,7 +372,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //我的标签
             R.id.userTagsBtn -> {
-                startActivityForResult<NewLabelsActivity1>(REQUEST_LABEL_CODE, "from" to "usercenter")
+                startActivityForResult<LabelsActivity>(REQUEST_LABEL_CODE, "from" to "usercenter")
             }
             //我的动态 1,我的所有动态 2我点过赞的 3 我收藏的
             R.id.userSquareCount -> {
