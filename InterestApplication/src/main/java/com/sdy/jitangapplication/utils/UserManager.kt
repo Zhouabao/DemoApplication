@@ -298,7 +298,8 @@ object UserManager {
     fun isUserInfoMade(): Boolean {
         try {
             if (SPUtils.getInstance(Constants.SPNAME).getLong("birth") != -1L) {
-                SPUtils.getInstance(Constants.SPNAME).put("birth", "${SPUtils.getInstance(Constants.SPNAME).getLong("birth", 0L)}")
+                SPUtils.getInstance(Constants.SPNAME)
+                    .put("birth", "${SPUtils.getInstance(Constants.SPNAME).getLong("birth", 0L)}")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -574,7 +575,12 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
 
 
+        /**
+         * 点赞提醒缓存
+         */
 
+        SPUtils.getInstance(Constants.SPNAME).remove("switchDianzan")
+        SPUtils.getInstance(Constants.SPNAME).remove("switchComment")
         EventBus.getDefault().removeAllStickyEvents()//移除全部
     }
 
