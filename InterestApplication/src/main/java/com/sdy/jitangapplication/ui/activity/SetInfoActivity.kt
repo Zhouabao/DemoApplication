@@ -303,6 +303,8 @@ class SetInfoActivity : BaseMvpActivity<SetInfoPresenter>(), SetInfoView, View.O
                 params["city_code"] = UserManager.getCityCode()
                 params["lat"] = UserManager.getlatitude()
                 params["lng"] = UserManager.getlongtitude()
+                params["province_name"] = UserManager.getProvince()
+                params["city_name"] = UserManager.getCity()
 
                 params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
                 params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")

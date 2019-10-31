@@ -44,7 +44,10 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/startupRecord${Constants.END_BASE_URL}")
-    fun startupRecord(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<Any?>>
+    fun startupRecord(
+        @Field("token") token: String, @Field("accid") accid: String,
+        @Field("province_name") province_name: String?, @Field("city_name") city_name: String?
+    ): Observable<BaseResp<Any?>>
 
 
     /**

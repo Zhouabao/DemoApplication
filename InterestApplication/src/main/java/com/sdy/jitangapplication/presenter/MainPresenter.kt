@@ -44,9 +44,9 @@ class MainPresenter : BasePresenter<MainView>() {
     /**
      * 启动统计
      */
-    fun startupRecord(token: String, accid: String) {
+    fun startupRecord(token: String, accid: String, province_name: String?, city_name: String?) {
         RetrofitFactory.instance.create(Api::class.java)
-            .startupRecord(token, accid)
+            .startupRecord(token, accid, province_name, city_name)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
 

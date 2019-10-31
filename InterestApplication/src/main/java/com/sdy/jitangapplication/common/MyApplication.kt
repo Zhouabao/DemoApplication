@@ -48,6 +48,8 @@ import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.MessageHiActivity
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.shuyu.gsyvideoplayer.player.PlayerFactory
+import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
 import com.tencent.bugly.Bugly
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
@@ -260,6 +262,8 @@ class MyApplication : BaseApplication() {
     }
 
     private fun configPlayer() {
+        //系统内核模式
+        PlayerFactory.setPlayManager(SystemPlayerManager::class.java)
 //        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_4_3)
     }
 

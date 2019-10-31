@@ -47,7 +47,7 @@ import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.GotoVerifyDialog
-import com.yuyakaido.android.cardstackview.*
+import com.sdy.jitangapplication.widgets.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_match1.*
 import org.greenrobot.eventbus.EventBus
@@ -569,6 +569,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     }
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
+        Log.d("CardStackView", "onCardDragging: ($direction)")
+
         //向上超级喜欢(会员就超级喜欢 否则弹起收费窗)
         when (direction) {
             //左滑时加载动画

@@ -174,7 +174,7 @@ dependencies {
     //搜索功能
     implementation 'com.amap.api:search:latest.integration'
     //卡片模式
-    implementation "com.yuyakaido.android:card-stack-view:2.3.4"
+//    implementation "com.yuyakaido.android:card-stack-view:2.3.4"
     //伸缩的TextView
     implementation 'com.github.MZCretin:ExpandableTextView:v1.6.1'
     //跑马灯
