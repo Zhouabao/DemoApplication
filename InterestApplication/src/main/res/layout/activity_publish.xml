@@ -18,9 +18,11 @@
             android:id="@+id/hotT1"
             android:text="发布内容"
             android:textColor="@color/colorBlackTitle"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:gravity="center"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toLeftOf="@id/publishBtn"
             android:layout_height="56dp"
             app:layout_constraintLeft_toRightOf="@id/btnBack"
             app:layout_constraintTop_toTopOf="parent"/>

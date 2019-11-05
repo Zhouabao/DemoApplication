@@ -11,6 +11,7 @@ object Constants {
     const val AVATOR = "avator/" //头像
     const val PUBLISH = "publish/" //发布
     const val USERCENTER = "usecenter/"//个人中心
+    const val REPORTUSER = "report/"//舉報用户
 
 
     const val CACHE_DIR = "/jitangapplicaiton"//缓存文件夹

@@ -314,6 +314,21 @@ interface Api {
     @POST("member_info/reportUser${Constants.END_BASE_URL}")
     fun reportUser(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
+    /**
+     * 举报用户新版
+     */
+    @FormUrlEncoded
+    @POST("member_info/reportUserV2${Constants.END_BASE_URL}")
+    fun reportUserV2(@FieldMap params: MutableMap<String, Any>, @Field("photo[]") photoList: Array<String?>): Observable<BaseResp<Any?>>
+
+
+
+    /**
+     * 获取举报理由
+     */
+    @POST("OpenApi/getReportMsg${Constants.END_BASE_URL}")
+    fun getReportMsg(): Observable<BaseResp<MutableList<String>?>>
+
 
     /**
      * 拉黑用户
@@ -420,6 +435,12 @@ interface Api {
 
 
     /**
+     * 获取学校列表
+     */
+    @POST("OpenApi/getSchoolList${Constants.END_BASE_URL}")
+    fun getSchoolList(): Observable<BaseResp<MutableList<SchoolBean?>?>>
+
+    /**
      * 修改个人信息
      */
     @FormUrlEncoded
@@ -432,7 +453,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/addPhotoV2${Constants.END_BASE_URL}")
-    fun addPhotoV2(@Field("token") token: String, @Field("accid") accid: String, @Field("photos[]") photos: Array<Int?>): Observable<BaseResp<Any?>>
+    fun addPhotoV2(@FieldMap params: MutableMap<String, Any?>?,@Field("token") token: String, @Field("accid") accid: String, @Field("photos[]") photos: Array<Int?>?): Observable<BaseResp<Any?>>
 
 
     /**
@@ -446,9 +467,15 @@ interface Api {
     /**
      * 获取职业列表
      */
+    @POST("OpenApi/getOccupationList${Constants.END_BASE_URL}")
+    fun getOccupationList(): Observable<BaseResp<MutableList<NewJobBean>?>>
+
+    /**
+     * 获取模板签名
+     */
     @FormUrlEncoded
-    @POST("jobs/getJobList${Constants.END_BASE_URL}")
-    fun getJobList(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<MutableList<LabelBean>?>>
+    @POST("OpenApi/getSignTemplate${Constants.END_BASE_URL}")
+    fun getSignTemplate(@Field("page") page: Int): Observable<BaseResp<MutableList<ModelAboutBean>?>>
 
     /****************************消息************************************/
     /**

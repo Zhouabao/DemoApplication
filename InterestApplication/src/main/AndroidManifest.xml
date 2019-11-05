@@ -86,7 +86,20 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.ModelAboutMeDetailActivity">
+        </activity>
+        <activity android:name=".ui.activity.ModelAboutMeActivity">
+        </activity>
+        <activity
+                android:name=".ui.activity.AboutMeActivity"
+                android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity android:name=".ui.activity.ChooseSchoolActivity">
+        </activity>
+        <activity android:name=".ui.activity.ReportReasonActivity">
+        </activity>
         <activity android:name=".ui.activity.NewUserInfoSettingsActivity">
+
         </activity>
         <activity
                 android:name=".ui.activity.LabelsActivity"

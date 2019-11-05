@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.model
 
+import com.contrarywind.interfaces.IPickerViewData
 import java.io.Serializable
 
 /**
@@ -26,8 +27,6 @@ data class Labels(
     var data: MutableList<LabelBean>,
     var version: Int
 )
-
-
 
 
 //-----------------新的标签-----------------
@@ -57,3 +56,21 @@ data class NewLabel(
 
 )
 
+
+//旧的标签对象
+data class NewJobBean(
+    var title: String = "",
+    var descr: String = "",
+    var icon: String = "",
+    var id: Int = -1,
+    var level: Int = 0,
+    var parent_id: Int = 0,
+    var path: String = "",
+    var son: MutableList<NewJobBean>? = null,
+    var video_path: String = "",
+    var checked: Boolean = false
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return title
+    }
+}

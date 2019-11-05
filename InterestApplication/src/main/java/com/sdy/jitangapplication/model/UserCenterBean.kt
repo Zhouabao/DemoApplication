@@ -1,6 +1,8 @@
 package com.sdy.jitangapplication.model
 
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import com.contrarywind.interfaces.IPickerViewData
+import java.io.Serializable
 
 /**
  *    author : ZFM
@@ -87,15 +89,32 @@ data class MyCommentList(
  * 个人中心信息
  */
 data class UserInfoSettingBean(
-    val avatar: String? = "",
-    val birth: String? = "",
-    val gender: Int? = 0,
+    val qiniu_domain: String? = "",
     val job: String? = "",
-    val nickname: String? = "",
+    val sign: String? = "",
+    val avatar: String? = "",
+    val face_state: Boolean = false,
     val photos: MutableList<String>? = mutableListOf(),
     val photos_wall: MutableList<MyPhotoBean?>? = mutableListOf(),
-    val qiniu_domain: String? = "",
-    val sign: String? = ""
+    val nickname: String? = "",
+    val gender: Int? = 0,
+    val birth: String? = "",
+    val constellation: String? = "",
+    val height: Int = 0,
+    val emotion_state: Int = 0,
+    val emotion_list: MutableList<String> = mutableListOf(),
+    val hometown: String? = "",
+    val present_address: String? = "",
+    val personal_job: String? = "",
+    val making_friends: Int = 0,
+    val making_friends_list: MutableList<String> = mutableListOf(),
+    val school_name: String? = "",
+    val personal_drink: Int = 0,
+    val personal_drink_list: MutableList<String> = mutableListOf(),
+    val personal_smoke: Int = 0,
+    val personal_smoke_list: MutableList<String> = mutableListOf(),
+    val personal_food: Int = 0,
+    val personal_food_list: MutableList<String> = mutableListOf()
 )
 
 
@@ -117,3 +136,32 @@ data class MyPhotoBean(
         const val PHOTO = 2
     }
 }
+
+
+data class SchoolBean(
+    var id: Int? = 0,
+    var school_title: String? = ""
+) : Serializable
+
+
+data class ProvinceBean(
+    var city: MutableList<City> = mutableListOf(),
+    var name: String = ""
+) : IPickerViewData {
+    //这个用来显示在PickerView上面的字符串,PickerView会通过getPickerViewText方法获取字符串显示出来。
+    override fun getPickerViewText(): String {
+        return name
+    }
+
+}
+
+data class City(
+    var area: MutableList<String> = mutableListOf(),
+    var name: String = ""
+)
+
+//范本关于我
+data class ModelAboutBean(
+    val title: String = "",
+    val content: String = ""
+) : Serializable

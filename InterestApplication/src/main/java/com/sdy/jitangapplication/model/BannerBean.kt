@@ -41,3 +41,9 @@ data class InvestigateBean(
     var sort_num: Int = 0,
     var statistics_id: Int = 0
 )
+
+
+/**
+ * 举报对象
+ */
+data class ReportBean(var reason: String, var checked: Boolean)

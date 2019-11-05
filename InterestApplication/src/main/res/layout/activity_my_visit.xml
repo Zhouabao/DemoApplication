@@ -8,37 +8,7 @@
         android:background="@color/colorWhite"
         tools:context=".ui.activity.MyVisitActivity">
 
-    <LinearLayout
-            android:id="@+id/llTitle"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-                android:id="@+id/btnBack"
-                android:layout_width="24dp"
-                android:src="@drawable/icon_return"
-                android:layout_height="24dp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-                android:id="@+id/hotT1"
-                android:layout_marginLeft="12dp"
-                android:text="看过我的"
-                android:textColor="@color/colorBlackTitle"
-                android:textSize="20sp"
-                android:gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                />
-    </LinearLayout>
+    <include layout="@layout/layout_actionbar"/>
 
     <com.kennyc.view.MultiStateView
             android:id="@+id/stateview"

@@ -87,40 +87,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
 
     }
 
-    /**
-     * 举报用户
-     */
-    fun reportUser(params: HashMap<String, Any>) {
-        if (!checkNetWork()) {
-            return
-        }
-        RetrofitFactory.instance.create(Api::class.java)
-            .reportUser(params)
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onStart() {
-                }
 
-                override fun onNext(t: BaseResp<Any?>) {
-                    if (t.code == 200) {
-                        mView.onGetUserActionResult(true, t.msg)
-                    } else {
-                        CommonFunction.toast(t.msg)
-                        mView.onGetUserActionResult(false, null)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else {
-
-                        mView.onError(context.getString(R.string.service_error))
-                        mView.onGetUserActionResult(false, null)
-                    }
-                }
-            })
-
-    }
 
     /*
      * 解除匹配

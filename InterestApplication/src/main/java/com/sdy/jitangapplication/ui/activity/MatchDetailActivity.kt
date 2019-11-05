@@ -60,6 +60,7 @@ import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startActivityForResult
 import java.util.*
 
 /**
@@ -511,7 +512,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
         //举报
         dialog.llJubao.onClick {
-            mPresenter.reportUser(targetUserPramas)
+            startActivityForResult<ReportReasonActivity>(100,"target_accid" to matchBean!!.accid)
             dialog.dismiss()
         }
         //解除配对

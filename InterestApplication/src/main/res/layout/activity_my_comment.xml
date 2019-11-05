@@ -8,32 +8,7 @@
         android:background="@color/colorWhite"
         tools:context=".ui.activity.MyCommentActivity">
 
-    <LinearLayout
-            android:id="@+id/llTitle"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-                style="@style/BckBtnStyle"
-                android:id="@+id/btnBack"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-                android:id="@+id/hotT1"
-                android:textColor="@color/colorBlackTitle"
-                android:textSize="20sp"
-                android:text="我评论过的"
-                android:gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                />
-    </LinearLayout>
+    <include layout="@layout/layout_actionbar"/>
 
     <com.kennyc.view.MultiStateView
             android:id="@+id/stateview"

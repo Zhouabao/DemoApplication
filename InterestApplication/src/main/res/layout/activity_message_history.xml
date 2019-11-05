@@ -9,31 +9,9 @@
         android:background="@color/colorWhite"
         tools:context=".nim.activity.MessageHistoryActivity">
 
-    <LinearLayout
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="56dp">
 
-        <ImageView
-                android:id="@+id/btnBack"
-                android:paddingLeft="15dp"
-                android:src="@drawable/icon_return"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"/>
 
-        <TextView
-                android:layout_marginLeft="12dp"
-                android:text="历史记录"
-                android:gravity="center_vertical"
-                android:layout_gravity="center"
-                android:textColor="@color/colorBlackTitle"
-                android:textSize="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-    </LinearLayout>
-
+    <include layout="@layout/layout_actionbar"/>
 
     <FrameLayout
             android:id="@+id/message_activity_list_view_container"

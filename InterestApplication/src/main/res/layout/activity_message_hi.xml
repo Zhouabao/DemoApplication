@@ -8,7 +8,7 @@
         android:background="@color/colorWhite"
         tools:context=".ui.activity.MessageHiActivity">
 
-    <LinearLayout
+    <RelativeLayout
             android:id="@+id/llTitle"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -18,8 +18,8 @@
             app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-                style="@style/BckBtnStyle"
                 android:id="@+id/btnBack"
+                style="@style/BckBtnStyle"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -27,16 +27,19 @@
                 android:id="@+id/hotT1"
                 android:text="招呼列表"
                 android:textColor="@color/colorBlackTitle"
-                android:textSize="20sp"
-                android:gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 />
 
 
         <Button
                 android:id="@+id/tagAllRead"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
                 android:text="删除超时"
                 android:background="@drawable/selector_confirm_btn_15dp"
                 android:layout_gravity="center_vertical"
@@ -47,25 +50,31 @@
                 android:textSize="14sp"
                 android:layout_marginRight="15dp"
                 android:layout_height="30dp"/>
-    </LinearLayout>
+
+        <View
+                android:background="@color/colorDivider"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+    </RelativeLayout>
 
     <com.kennyc.view.MultiStateView
             android:id="@+id/stateview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:msv_viewState="loading"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/llTitle"
             app:msv_errorView="@layout/error_layout"
-            app:msv_loadingView="@layout/loading_layout">
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="loading">
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                app:srlDisableContentWhenLoading="true"
-                app:srlEnableLoadMoreWhenContentNotFull="false"
                 android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:srlDisableContentWhenLoading="true"
+                app:srlEnableLoadMoreWhenContentNotFull="false">
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/messageHiRv"

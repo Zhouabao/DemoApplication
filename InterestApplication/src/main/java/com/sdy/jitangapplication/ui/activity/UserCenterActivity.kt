@@ -356,7 +356,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             //个人信息设置
             R.id.userAvator,
             R.id.userInfoSettingBtn -> {
-                startActivityForResult<UserInfoSettingsActivity>(REQUEST_INFO_SETTING)
+                startActivityForResult<NewUserInfoSettingsActivity>(REQUEST_INFO_SETTING)
 
             }
             //会员问题

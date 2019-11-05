@@ -35,11 +35,10 @@ import com.sdy.jitangapplication.ui.adapter.LikeMeOneDayGirdAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
-import kotlinx.android.synthetic.main.activity_message_like_me.btnBack
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.*
-import kotlinx.android.synthetic.main.activity_message_like_me_one_day.stateview
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.item_like_me_one_day_header.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -77,6 +76,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         btnBack.onClick {
             finish()
         }
+        hotT1.text = "对我感兴趣的"
 
         mPresenter = MessageLikeMeOneDayPresenter()
         mPresenter.mView = this

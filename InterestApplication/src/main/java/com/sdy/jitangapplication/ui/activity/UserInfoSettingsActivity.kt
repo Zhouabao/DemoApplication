@@ -32,6 +32,7 @@ import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.MyPhotoBean
+import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
@@ -62,6 +63,9 @@ import java.util.*
  */
 class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), UserInfoSettingsView,
     OnItemDragListener, View.OnClickListener {
+    override fun onGetJobListResult(mutableList: MutableList<NewJobBean>?) {
+
+    }
 
 
     companion object {
@@ -191,7 +195,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
                 "女"
             }
             userBirth.text = "${data.birth}"
-            userJob.text = "${data.job}"
+            //userJob.text = "${data.job}"
 
             for (photoWallBean in (data.photos_wall ?: mutableListOf()).withIndex()) {
                 photoWallBean.value?.type = MyPhotoBean.PHOTO
@@ -355,7 +359,7 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
             }
         }
         loading.show()
-        mPresenter.addPhotoV2(UserManager.getToken(), UserManager.getAccid(), photosId, type)
+        mPresenter.addPhotoV2(null,UserManager.getToken(), UserManager.getAccid(), photosId, type)
     }
 
 

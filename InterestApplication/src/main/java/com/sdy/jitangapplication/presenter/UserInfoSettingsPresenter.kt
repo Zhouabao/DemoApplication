@@ -12,6 +12,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.MyPhotoBean
+import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -38,6 +39,32 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
                     } else {
                         mView.onError("")
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError("")
+                }
+            })
+    }
+
+
+    /**
+     * 获取职业列表
+     */
+    fun getOccupationList() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getOccupationList()
+            .excute(object : BaseSubscriber<BaseResp<MutableList<NewJobBean>?>>(mView) {
+                override fun onNext(t: BaseResp<MutableList<NewJobBean>?>) {
+                    if (t.code == 200) {
+                        mView.onGetJobListResult(t.data ?: mutableListOf())
+                    } else {
+                        mView.onError("")
+                    }
+
                 }
 
                 override fun onError(e: Throwable?) {
@@ -96,9 +123,9 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
     /**
      * 保存相册
      */
-    fun addPhotoV2(token: String, accid: String, photos: Array<Int?>, type: Int) {
+    fun addPhotoV2(params: HashMap<String, Any?>?, token: String, accid: String, photos: Array<Int?>?, type: Int) {
         RetrofitFactory.instance.create(Api::class.java)
-            .addPhotoV2(token, accid, photos)
+            .addPhotoV2(params, token, accid, photos)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     CommonFunction.toast(t.msg)

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/llRoot"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="@color/transparent"
+              android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:layout_marginTop="72dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="26dp">
+
+        <ImageView
+                android:visibility="gone"
+                android:id="@+id/score20"
+                android:layout_marginLeft="95dp"
+                android:src="@drawable/icon_twenty_click"
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"/>
+
+        <ImageView
+                android:id="@+id/score80"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                android:src="@drawable/icon_eighty_click"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <ImageView
+            android:id="@+id/reminderArrow"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/icon_dialog_arrow_up"
+            android:layout_width="12dp"
+            android:layout_marginLeft="100dp"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:id="@+id/reminderContent"
+            android:background="@drawable/rectangle_white_5dp"
+            android:padding="7dp"
+            android:lineSpacingMultiplier="1.1"
+            android:text="积糖送你每天20次免费右滑奥\n快去使用开始交友吧"
+            android:textColor="@color/colorBlack"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+</LinearLayout>

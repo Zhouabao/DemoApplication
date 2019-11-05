@@ -10,6 +10,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.presenter.MyJobPresenter
 import com.sdy.jitangapplication.presenter.view.MyJobView
 import com.sdy.jitangapplication.ui.adapter.LabelAdapter
@@ -45,13 +46,13 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
         saveJobBtn.setOnClickListener(this)
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.getJobList(params)
+            mPresenter.getOccupationList()
         }
 
 
         initRv()
 
-        mPresenter.getJobList(params)
+        mPresenter.getOccupationList()
 
 
     }
@@ -90,7 +91,7 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
         }
     }
 
-    override fun onGetJobListResult(mutableList: MutableList<LabelBean>?) {
+    override fun onGetJobListResult(mutableList: MutableList<NewJobBean>?) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
 
         for (job in mutableList?: mutableListOf()) {
@@ -99,7 +100,7 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
                 break
             }
         }
-        adapter.setNewData(mutableList)
+//        adapter.setNewData(mutableList)
     }
 
     override fun onError(text: String) {

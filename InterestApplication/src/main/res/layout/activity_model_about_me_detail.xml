@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.ModelAboutMeDetailActivity">
+
+    <include layout="@layout/layout_actionbar"/>
+
+    <View
+            android:background="@color/colorDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="56dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTitle"/>
+
+    <TextView
+            android:id="@+id/modelContent"
+            android:background="@drawable/shape_rectangle_gray_9dp"
+            android:layout_width="match_parent"
+            android:minHeight="258dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="77dp"
+            android:layout_marginBottom="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:lineSpacingMultiplier="1.4"
+            android:text="XX岁，有一辆XX，已经驾驶了X年了。希望找到一群XX的朋友可以一起玩车，XX岁，有一辆XX，已经驾驶了X年了。希望找到一群XX的朋友可以一起玩车，"
+            android:textColor="#ff070707"
+            android:textSize="15sp"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/confirmBtn"
+            android:background="@drawable/shape_rectangle_enable_btn"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="使用该范本"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"/>
+</RelativeLayout>

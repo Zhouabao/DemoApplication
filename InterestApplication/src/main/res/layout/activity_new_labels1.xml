@@ -17,13 +17,16 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:textColor="@color/colorBlackTitle"
             android:text="选择标签"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:gravity="center"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/btnBack"
             app:layout_constraintLeft_toRightOf="@id/btnBack"
+            app:layout_constraintRight_toLeftOf="@id/completeLabelLL"
             app:layout_constraintTop_toTopOf="@id/btnBack"/>
 
 

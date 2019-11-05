@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_message_square.*
 import kotlinx.android.synthetic.main.dialog_square_del.*
 import kotlinx.android.synthetic.main.empty_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
  * 发现消息列表
@@ -53,9 +54,10 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
     }
 
     private fun initView() {
-        llTitle.onClick {
+        btnBack.onClick {
             onBackPressed()
         }
+        hotT1.text = "发现消息"
         mPresenter = MessageSquarePresenter()
         mPresenter.mView = this
         mPresenter.context = this

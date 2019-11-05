@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:background="@color/colorTransparent"
+              android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical"
+            android:layout_width="300dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_rectangle_gray_white_9dp"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/slideOutClose"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:src="@drawable/icon_close"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+        <ImageView
+                android:id="@+id/slideOutIcon"
+                android:layout_marginTop="6dp"
+                android:src="@drawable/icon_slide_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/slideOutClose"/>
+
+        <TextView
+                android:id="@+id/harassmentTitle"
+                android:layout_marginTop="43dp"
+                android:text="今日右滑次数已用尽"
+                android:textStyle="bold"
+                android:textColor="#131415"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/slideOutIcon"/>
+
+        <TextView
+                android:id="@+id/slideOutContent"
+                android:textSize="14sp"
+                android:layout_marginTop="9dp"
+                android:text="现在去完善资料每日可额外获得60次免费右滑奥"
+                android:textColor="#B6BABF"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:lineSpacingMultiplier="1.4"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/harassmentTitle"/>
+
+        <TextView
+                android:id="@+id/slideOutBtn"
+                android:text="去完善"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp"
+                android:background="@drawable/shape_rectangle_enable_btn_15dp"
+                android:layout_width="232dp"
+                android:layout_height="40dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="26dp"
+                app:layout_constraintTop_toBottomOf="@id/slideOutContent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

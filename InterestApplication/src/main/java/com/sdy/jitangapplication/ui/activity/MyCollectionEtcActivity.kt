@@ -45,6 +45,7 @@ import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_my_collection_etc.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -114,7 +115,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
         btnBack.onClick {
             finish()
         }
-        collectionTitle.text = when (type) {
+        hotT1.text = when (type) {
             1 -> {
                 "我的动态"
             }

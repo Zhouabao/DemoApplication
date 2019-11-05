@@ -72,14 +72,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     private val matchUserAdapter: MatchUserAdapter by lazy { MatchUserAdapter(mutableListOf()) }
 
 
-    //当前请求页
-    var page = 1
     //请求广场的参数 TODO要更新tagid
     private val matchParams by lazy {
         hashMapOf(
             "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
             "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-            "page" to page,
             "pagesize" to Constants.PAGESIZE,
             "_timestamp" to System.currentTimeMillis(),
             "tagid" to UserManager.getGlobalLabelId(),
@@ -467,8 +464,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
         params["tag_id"] = event.label.id
         matchUserAdapter.data.clear()
-        page = 1
-        matchParams["page"] = page
         hasMore = false
         matchParams["tagid"] = event.label.id
         //这个地方还要默认设置选中第一个标签来更新数据
@@ -486,8 +481,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         setViewState(LOADING)
 
         matchUserAdapter.data.clear()
-        page = 1
-        matchParams["page"] = page
         hasMore = false
 
         updateLocation()
@@ -700,8 +693,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
         //如果已经只剩5张了就请求数据(预加载).
         if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
-            page++
-            matchParams["page"] = page
             updateLocation()
             mPresenter.getMatchList(matchParams)
         } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {

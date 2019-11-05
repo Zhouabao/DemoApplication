@@ -11,36 +11,7 @@
         android:focusableInTouchMode="true"
         tools:context=".ui.activity.SquareCommentDetailActivity">
 
-    <RelativeLayout
-            android:id="@+id/rlTitle"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-                android:id="@+id/btnBack"
-                style="@style/BckBtnStyle"
-                />
-
-        <TextView
-                android:text="动态详情"
-                android:layout_toRightOf="@id/btnBack"
-                android:textColor="@color/colorBlackTitle"
-                android:textSize="20sp"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:gravity="center"
-                android:layout_centerVertical="true"
-                />
-
-        <View
-                android:layout_alignParentBottom="true"
-                android:background="@color/colorLightGray"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                />
-    </RelativeLayout>
+    <include layout="@layout/layout_actionbar"/>
 
     <com.kennyc.view.MultiStateView
             xmlns:android="http://schemas.android.com/apk/res/android"

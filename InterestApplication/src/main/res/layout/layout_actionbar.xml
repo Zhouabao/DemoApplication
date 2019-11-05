@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/llTitle"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:gravity="center_vertical">
+        android:background="@color/colorWhite"
+        android:layout_height="56dp">
 
     <ImageView
             android:id="@+id/btnBack"
@@ -15,13 +14,33 @@
     <TextView
             android:id="@+id/hotT1"
             android:text="黑名单"
+            android:layout_centerInParent="true"
             android:textColor="@color/colorBlackTitle"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:gravity="center_vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
             />
 
+    <TextView
+            android:id="@+id/rightBtn"
+            android:visibility="gone"
+            android:text="取消"
+            android:layout_centerVertical="true"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#FF9B9B9B"
+            android:layout_height="55dp"/>
 
-</LinearLayout>
+    <View
+            android:background="@color/colorDivider"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+</RelativeLayout>

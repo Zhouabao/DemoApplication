@@ -70,6 +70,7 @@ import kotlinx.android.synthetic.main.activity_square_comment_detail.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
 import kotlinx.android.synthetic.main.layout_square_list_bottom.*
 import kotlinx.android.synthetic.main.layout_square_list_top.*
@@ -270,6 +271,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         btnBack.onClick {
             onBackPressed()
         }
+        hotT1.text = "动态详情"
 
 
         squareZhuanfaBtn1.setOnClickListener(this)

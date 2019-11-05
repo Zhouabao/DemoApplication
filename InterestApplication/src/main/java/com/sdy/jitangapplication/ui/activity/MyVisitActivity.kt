@@ -18,9 +18,9 @@ import com.sdy.jitangapplication.ui.adapter.MyVisitAdater
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_visit.*
-import kotlinx.android.synthetic.main.activity_user_center.btnBack
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.item_visit_headview.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
  * 我的访客
@@ -55,6 +55,8 @@ class MyVisitActivity : BaseMvpActivity<MyVisitPresenter>(), MyVisitView, OnRefr
         btnBack.onClick {
             finish()
         }
+        hotT1.text = "看过我的"
+
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.myVisitedList(params)

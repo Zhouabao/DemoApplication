@@ -9,7 +9,7 @@
         android:background="@color/colorWhite"
         tools:context=".ui.activity.NewUserInfoSettingsActivity">
 
-    <LinearLayout
+    <RelativeLayout
             android:id="@+id/llTitle"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -20,34 +20,44 @@
         <ImageView
                 android:id="@+id/btnBack"
                 style="@style/BckBtnStyle"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:layout_alignParentLeft="true"
+                />
 
         <TextView
                 android:id="@+id/hotT1"
                 android:text="个人资料"
                 android:textColor="@color/colorBlackTitle"
-                android:textSize="20sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_height="match_parent"
                 />
+
         <Button
                 android:id="@+id/saveBtn"
                 android:textStyle="bold"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
-                android:layout_gravity="center"
-                android:background="@null"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
                 android:text="保存"
+                android:background="@drawable/selector_confirm_btn_15dp"
+                android:layout_marginRight="15dp"
+                android:textColor="@color/colorWhite"
+                android:layout_width="61dp"
                 android:enabled="false"
-                android:textColor="@color/selector_save_btn"
-                android:textSize="17sp"
+                android:textSize="14sp"
+                android:layout_height="26dp"
                 />
 
-    </LinearLayout>
+        <View
+                android:background="@color/colorDivider"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+    </RelativeLayout>
 
     <com.kennyc.view.MultiStateView
             android:id="@+id/stateview"
@@ -56,228 +66,798 @@
             app:msv_emptyView="@layout/empty_layout"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="content">
+            app:msv_viewState="loading">
 
-        <androidx.core.widget.NestedScrollView
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
-            <RelativeLayout
-                    android:layout_height="wrap_content"
+
+            <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="42dp"
                     >
 
                 <LinearLayout
-                        android:id="@+id/llGuide"
-                        android:visibility="visible"
-                        android:background="@drawable/shape_rectangle_enable_btn"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginLeft="15dp"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp">
-
-                    <TextView
-                            android:id="@+id/guideContent"
-                            android:layout_marginLeft="10dp"
-                            android:gravity="center_vertical"
-                            android:layout_gravity="center"
-                            android:text="上传真实头像获取更多配对机会"
-                            android:textColor="#ffffffff"
-                            android:textSize="14sp"
-                            android:layout_weight="1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                    <ImageView
-                            android:id="@+id/guideDelete"
-                            android:layout_gravity="center_vertical|right"
-                            android:src="@drawable/icon_delete"
-                            android:layout_width="50dp"
-                            android:scaleType="centerInside"
-                            android:layout_height="match_parent"/>
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/userPhotosRv"
-                        android:layout_below="@id/llGuide"
-                        android:nestedScrollingEnabled="false"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
                         android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingTop="20dp"
-                        android:clipToPadding="false"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/mLinearLayout"
-                        android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    <View
-                            android:id="@+id/divider"
-                            android:background="@color/colorDivider"
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/userPhotosRv"
+                            android:nestedScrollingEnabled="false"
+                            android:layout_marginLeft="15dp"
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="20dp"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="29dp"
                             />
 
-                    <TextView
-                            android:id="@+id/t1"
-                            android:text="昵称"
-                            android:textColor="#ff222222"
-                            android:textSize="16sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            app:layout_constraintBottom_toBottomOf="@id/userNickName"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/userNickName"/>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/mLinearLayout"
+                            android:layout_marginTop="25dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
 
-                    <TextView
-                            android:id="@+id/userNickName"
-                            android:drawablePadding="10dp"
-                            android:gravity="center"
-                            android:layout_marginTop="20dp"
-                            android:text="Rollinc"
-                            android:textColor="#FF9B9B9B"
-                            android:textSize="16sp"
-                            android:drawableRight="@drawable/icon_more_right"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="15dp"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/divider"/>
+                        <TextView
+                                android:id="@+id/divider"
+                                android:background="#FFF3F3F6"
+                                android:layout_width="match_parent"
+                                android:layout_height="46dp"
+                                android:text="基本信息"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:paddingLeft="15dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                />
 
 
-                    <TextView
-                            android:id="@+id/tsign"
-                            android:text="关于我"
-                            android:textColor="#ff222222"
-                            android:textSize="16sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="@id/userNickSign"
-                            app:layout_constraintLeft_toLeftOf="@id/t1"
-                            app:layout_constraintTop_toTopOf="@id/userNickSign"/>
+                        <TextView
+                                android:id="@+id/t1"
+                                android:text="昵称"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="90dp"
+                                android:gravity="center_vertical"
+                                android:layout_height="0dp"
+                                android:layout_marginLeft="15dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userNickName"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userNickName"/>
 
 
-                    <TextView
-                            android:id="@+id/userNickSign"
-                            android:drawablePadding="10dp"
-                            android:gravity="center_vertical|right"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginLeft="20dp"
-                            android:textColor="#FF9B9B9B"
-                            android:textSize="16sp"
-                            android:drawableRight="@drawable/icon_more_right"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintLeft_toRightOf="@id/tsign"
-                            app:layout_constraintRight_toRightOf="@id/userNickName"
-                            app:layout_constraintTop_toBottomOf="@id/userNickName"
-                            tools:text="随心所向"/>
+                        <TextView
+                                android:id="@+id/userNickName"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginRight="15dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/divider"
+                                tools:text="Rollinc"/>
+
+                        <View
+                                android:id="@+id/dash1"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layerType="software"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userNickName"/>
 
 
-                    <TextView
-                            android:text="性别"
-                            android:textColor="#ff222222"
-                            android:textSize="16sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="@id/userGender"
-                            app:layout_constraintLeft_toLeftOf="@id/t1"
-                            app:layout_constraintTop_toTopOf="@id/userGender"/>
+                        <TextView
+                                android:id="@+id/t2"
+                                android:text="性别"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="90dp"
+                                android:gravity="center_vertical"
+                                android:layout_height="0dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userGender"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userGender"/>
 
 
-                    <TextView
-                            android:id="@+id/userGender"
-                            android:drawablePadding="10dp"
-                            android:gravity="center"
-                            android:layout_marginTop="20dp"
-                            android:text="男"
-                            android:textColor="#FF9B9B9B"
-                            android:textSize="16sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintRight_toRightOf="@id/userNickName"
-                            app:layout_constraintTop_toBottomOf="@id/userNickSign"/>
+                        <TextView
+                                android:id="@+id/userGender"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userNickName"
+                                tools:text="男"/>
+
+                        <View
+                                android:id="@+id/dash2"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layerType="software"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userGender"/>
+
+                        <TextView
+                                android:text="生日"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userBirth"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userBirth"/>
 
 
-                    <TextView
-                            android:text="出生年月"
-                            android:textColor="#ff222222"
-                            android:textSize="16sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="@id/userBirth"
-                            app:layout_constraintLeft_toLeftOf="@id/t1"
-                            app:layout_constraintTop_toTopOf="@id/userBirth"/>
+                        <TextView
+                                android:id="@+id/userBirth"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/dash2"
+                                tools:text="1993/07/15"/>
+
+                        <View
+                                android:id="@+id/dash3"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userBirth"/>
+
+                        <TextView
+                                android:text="身高"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userHeight"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userHeight"/>
 
 
-                    <TextView
-                            android:id="@+id/userBirth"
-                            android:drawablePadding="10dp"
-                            android:gravity="center"
-                            android:layout_marginTop="20dp"
-                            android:text="1993/07/15"
-                            android:textColor="#FF9B9B9B"
-                            android:textSize="16sp"
-                            android:drawableRight="@drawable/icon_more_right"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="20dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintRight_toRightOf="@id/userNickName"
-                            app:layout_constraintTop_toBottomOf="@id/userGender"/>
+                        <TextView
+                                android:id="@+id/userHeight"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/dash3"
+                                tools:text="165"/>
+
+                        <include
+                                android:id="@+id/userScoreHeight"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userHeight"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userHeight"/>
+
+                        <View
+                                android:id="@+id/dash4"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userBirth"/>
 
 
-                    <TextView
-                            android:text="职业"
-                            android:textColor="#ff222222"
-                            android:textSize="16sp"
-                            android:visibility="gone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="@id/userJob"
-                            app:layout_constraintLeft_toLeftOf="@id/t1"
-                            app:layout_constraintTop_toTopOf="@id/userJob"/>
+                        <TextView
+                                android:id="@+id/tsign"
+                                android:text="关于我"
+                                android:textSize="16sp"
+                                android:background="#FFF3F3F6"
+                                android:layout_width="match_parent"
+                                android:layout_height="46dp"
+                                android:textColor="@color/colorBlack"
+                                android:textStyle="bold"
+                                android:paddingLeft="15dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/userHeight"
+                                />
+
+                        <include
+                                android:id="@+id/userScoreAboutMe"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/tsign"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/tsign"/>
+
+                        <TextView
+                                android:id="@+id/userNickSign"
+                                android:layout_marginTop="15dp"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:gravity="start"
+                                android:lineSpacingMultiplier="1.4"
+                                android:paddingTop="12dp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:paddingBottom="12dp"
+                                android:background="@drawable/shape_rectangle_gray_9dp"
+                                android:layout_height="wrap_content"
+                                android:minHeight="95dp"
+                                android:hint="展示你的多样性，让有趣的灵魂找到你"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/tsign"
+                                />
 
 
-                    <TextView
-                            android:id="@+id/userJob"
-                            android:visibility="gone"
-                            android:drawablePadding="10dp"
-                            android:gravity="center"
-                            android:layout_marginTop="20dp"
-                            android:text="插画师"
-                            android:textColor="#FF9B9B9B"
-                            android:textSize="16sp"
-                            android:drawableRight="@drawable/icon_more_right"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="20dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintRight_toRightOf="@id/userNickName"
-                            app:layout_constraintTop_toBottomOf="@id/userBirth"/>
+                        <TextView
+                                android:id="@+id/tmore"
+                                android:text="更多信息"
+                                android:textSize="16sp"
+                                android:layout_marginTop="15dp"
+                                android:background="#FFF3F3F6"
+                                android:layout_width="match_parent"
+                                android:layout_height="46dp"
+                                android:textColor="@color/colorBlack"
+                                android:textStyle="bold"
+                                android:paddingLeft="15dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/userNickSign"
+                                />
 
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                                android:text="感情状态"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userLoveStatus"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userLoveStatus"/>
 
 
+                        <TextView
+                                android:id="@+id/userLoveStatus"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:hint="请选择您的感情状态"
+                                android:textColorHint="#FFA5A5A5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/tmore"/>
+
+                        <include
+                                android:id="@+id/userScoreEmotion"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userLoveStatus"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userLoveStatus"/>
+
+                        <View
+                                android:id="@+id/dash6"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userLoveStatus"/>
+
+                        <TextView
+                                android:text="家乡"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userHomeTown"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userHomeTown"/>
+
+
+                        <TextView
+                                android:id="@+id/userHomeTown"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:hint="请选择您的家乡"
+                                android:textColorHint="#FFA5A5A5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userLoveStatus"/>
+
+                        <include
+                                android:id="@+id/userScoreHomeTown"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userHomeTown"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userHomeTown"/>
+
+                        <View
+                                android:id="@+id/dash7"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userHomeTown"/>
+
+                        <TextView
+                                android:text="现居地"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userLiveNow"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userLiveNow"/>
+
+
+                        <TextView
+                                android:id="@+id/userLiveNow"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:hint="请选择您的现居地"
+                                android:textColorHint="#FFA5A5A5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userHomeTown"/>
+
+                        <include
+                                android:id="@+id/userScoreLiveNow"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userLiveNow"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userLiveNow"/>
+
+                        <View
+                                android:id="@+id/dash8"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userLiveNow"/>
+
+
+                        <TextView
+                                android:text="职业"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userJob"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userJob"/>
+
+
+                        <TextView
+                                android:id="@+id/userJob"
+                                android:visibility="visible"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:hint="请选择您的职业"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userLiveNow"/>
+
+                        <include
+                                android:id="@+id/userScoreJob"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userJob"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userJob"/>
+
+                        <View
+                                android:id="@+id/dash9"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userJob"/>
+
+
+                        <TextView
+                                android:text="交友目的"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userFriendsAim"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userFriendsAim"/>
+
+
+                        <TextView
+                                android:id="@+id/userFriendsAim"
+                                android:visibility="visible"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:hint="请选择您的交友目的"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userJob"/>
+
+                        <include
+                                android:id="@+id/userScoreFriendsAim"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userFriendsAim"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userFriendsAim"/>
+
+                        <View
+                                android:id="@+id/dash10"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userFriendsAim"/>
+
+                        <TextView
+                                android:text="学校"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userSchool"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userSchool"/>
+
+
+                        <TextView
+                                android:id="@+id/userSchool"
+                                android:visibility="visible"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:hint="请选择您的学校"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userFriendsAim"/>
+
+                        <include
+                                android:id="@+id/userScoreSchool"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userSchool"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userSchool"/>
+
+                        <View
+                                android:id="@+id/dash11"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userSchool"/>
+
+
+                        <TextView
+                                android:text="喝酒"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userDrink"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userDrink"/>
+
+
+                        <TextView
+                                android:id="@+id/userDrink"
+                                android:visibility="visible"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:hint="请选择您的饮酒状态"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userSchool"/>
+
+                        <include
+                                android:id="@+id/userScoreDrink"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userDrink"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userDrink"/>
+
+                        <View
+                                android:id="@+id/dash12"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userDrink"/>
+
+
+                        <TextView
+                                android:text="抽烟"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userSmoke"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userSmoke"/>
+
+
+                        <TextView
+                                android:id="@+id/userSmoke"
+                                android:visibility="visible"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:hint="请选择您的抽烟状态"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userDrink"/>
+
+                        <include
+                                android:id="@+id/userScoreSmoke"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userSmoke"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userSmoke"/>
+
+                        <View
+                                android:id="@+id/dash13"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userSmoke"/>
+
+
+                        <TextView
+                                android:text="饮食"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userEat"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userEat"/>
+
+
+                        <TextView
+                                android:id="@+id/userEat"
+                                android:visibility="visible"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:hint="请选择您的饮食习惯"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userSmoke"/>
+
+                        <include
+                                android:id="@+id/userScoreEat"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userEat"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userEat"/>
+
+                        <View
+                                android:id="@+id/dash14"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="20dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userEat"/>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <RelativeLayout
+                    android:id="@+id/userFinishProgressRl"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/colorWhite"
+                    android:layout_width="match_parent"
+                    android:layout_height="26dp">
+
+                <ProgressBar
+                        android:id="@+id/userFinishProgress"
+                        style="@style/progressBarHorizontal11"
+                        android:progress="20"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="95dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"/>
+
+                <TextView
+                        android:id="@+id/userScoreTv"
+                        android:gravity="center_vertical|left"
+                        android:layout_centerVertical="true"
+                        android:layout_width="95dp"
+                        android:layout_height="match_parent"
+                        android:text="完成度20%"
+                        android:textColor="#ff000000"
+                        android:textSize="13sp"
+                        android:layout_marginLeft="15dp"
+                        />
+
+
+                <ImageView
+                        android:id="@+id/userScore20"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="95dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_twenty_click"
+                        android:layout_width="40dp"
+                        />
+
+
+                <ImageView
+                        android:id="@+id/userScore80"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="52dp"
+                        android:layout_centerVertical="true"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_eighty_unclick"
+                        android:layout_width="40dp"
+                        />
+
+
+                <ImageView
+                        android:id="@+id/userScoreVip"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/icon_vip_score"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"/>
             </RelativeLayout>
 
-        </androidx.core.widget.NestedScrollView>
+        </FrameLayout>
+
 
     </com.kennyc.view.MultiStateView>
 </LinearLayout>

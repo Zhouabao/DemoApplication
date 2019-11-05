@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
-import com.sdy.jitangapplication.model.LabelBean
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.NewJobBean
 
 /**
  *    author : ZFM
@@ -10,6 +10,6 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface MyJobView:BaseView {
-    fun onGetJobListResult(mutableList: MutableList<LabelBean>?)
+    fun onGetJobListResult(mutableList: MutableList<NewJobBean>?)
     fun onSavePersonal(b: Boolean)
 }

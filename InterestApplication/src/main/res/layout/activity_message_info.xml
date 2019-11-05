@@ -9,7 +9,7 @@
         android:orientation="vertical"
         tools:context=".nim.activity.MessageInfoActivity">
 
-    <LinearLayout
+    <RelativeLayout
             android:id="@+id/llTitle"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -20,33 +20,35 @@
         <ImageView
                 android:id="@+id/btnBack"
                 style="@style/BckBtnStyle"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:layout_alignParentLeft="true"/>
 
         <TextView
                 android:id="@+id/chatName"
                 android:textColor="#ff222222"
-                android:textSize="20sp"
-                android:gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_centerInParent="true"
                 tools:text="Javer"
                 />
 
         <TextView
                 android:id="@+id/chatDetailBtn"
+                android:layout_alignParentRight="true"
                 android:textColor="#ff222222"
                 android:textSize="14sp"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:text="TA的主页"
+                android:layout_centerVertical="true"
                 android:background="@drawable/shape_rectangle_black22_white_15dp"
                 android:layout_marginRight="15dp"
                 android:layout_width="88dp"
                 android:layout_height="32dp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <View
             android:background="@color/colorDivider"

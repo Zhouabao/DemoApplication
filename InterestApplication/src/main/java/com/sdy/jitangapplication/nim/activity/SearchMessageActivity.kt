@@ -9,11 +9,6 @@ import android.view.View
 import android.widget.AbsListView
 import android.widget.AdapterView
 import androidx.appcompat.widget.SearchView
-import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
-import com.sdy.baselibrary.widgets.swipeback.Utils
-import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
-import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
-import com.sdy.jitangapplication.R
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
@@ -25,7 +20,13 @@ import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
+import com.sdy.baselibrary.widgets.swipeback.Utils
+import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
+import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
+import com.sdy.jitangapplication.R
 import kotlinx.android.synthetic.main.activity_search_message.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 
 /**
