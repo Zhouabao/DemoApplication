@@ -257,7 +257,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                     reportParams["supplement_comment"] = reportReasonEt.text.toString()
                 }
 
-                if (reportPicAdapter.data.isNotEmpty()) {
+                if (reportPicAdapter.data.isNotEmpty() && reportPicAdapter.data.size > 1) {
                     for (data in reportPicAdapter.data) {
                         if (data != "") {
                             val imageName =
@@ -268,6 +268,8 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                             mPresenter.uploadProfile(data, imageName, photosNum)
                         }
                     }
+                } else {
+                    mPresenter.reportUser(reportParams,photosNameArray)
                 }
             }
         }

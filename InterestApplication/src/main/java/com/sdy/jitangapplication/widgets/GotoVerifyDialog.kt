@@ -193,7 +193,7 @@ class GotoVerifyDialog : Dialog {
                     //TODO 替换头像
                     humanVerify(2)
                     if (ActivityUtils.getTopActivity() != UserInfoSettingsActivity::class.java)
-                        context.startActivity<UserInfoSettingsActivity>("type" to this.type)
+                        context.startActivity<UserInfoSettingsActivity>()
                     if (this.cancelable)
                         dialog.cancel()
                 }
@@ -214,7 +214,7 @@ class GotoVerifyDialog : Dialog {
                 }
                 dialog.btDialogConfirm?.onClick {
                     if (ActivityUtils.getTopActivity() != UserInfoSettingsActivity::class.java)
-                        context.startActivity<UserInfoSettingsActivity>("type" to this.type)
+                        context.startActivity<UserInfoSettingsActivity>()
                     dialog.cancel()
                 }
             }

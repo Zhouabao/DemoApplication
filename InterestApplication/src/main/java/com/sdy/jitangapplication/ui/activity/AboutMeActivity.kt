@@ -73,8 +73,10 @@ class AboutMeActivity : BaseActivity() {
         }
 
         saveBtn.onClick {
+            intent.putExtra("content",aboutMeContent.text.toString())
             setResult(Activity.RESULT_OK,intent)
             finish()
+            KeyboardUtils.hideSoftInput(aboutMeContent)
         }
     }
 

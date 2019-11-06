@@ -45,6 +45,7 @@ import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.adapter.UserPhotoAdapter
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.ReminderScoreDialog
@@ -118,6 +119,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         saveBtn.setOnClickListener(this)
         userScore20.setOnClickListener(this)
         userScore80.setOnClickListener(this)
+        userScoreVip.setOnClickListener(this)
 
 
 
@@ -229,17 +231,23 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.avatar!!)
 
             userNickName.text = "${data.nickname}"
-            userNickSign.text = "${data.sign}"
             userGender.text = if (data.gender == 1) {
                 "男"
             } else {
                 "女"
             }
             userBirth.text = "${data.birth}/${data.constellation}"
+
             if (data.face_state) {
-                userFinishProgress.progress = 40
+                if (Build.VERSION.SDK_INT >= 24)
+                    userFinishProgress.setProgress(40, true)
+                else
+                    userFinishProgress.progress = 40
             } else {
-                userFinishProgress.progress = 20
+                if (Build.VERSION.SDK_INT >= 24)
+                    userFinishProgress.setProgress(20, true)
+                else
+                    userFinishProgress.progress = 20
             }
             userScoreTv.text = SpanUtils.with(userScoreTv)
                 .append("完成度")
@@ -251,6 +259,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 .setForegroundColor(resources.getColor(R.color.colorOrange))
                 .create()
 
+            if (!data.sign.isNullOrEmpty()) {
+                userNickSign.text = "${data.sign}"
+                userScoreAboutMe.isVisible = false
+                updateScoreStatus(userScoreAboutMe, 10)
+            }
 
             if (data.emotion_state > 0 && data.emotion_list.size > data.emotion_state) {
                 userLoveStatus.text = data.emotion_list[data.emotion_state - 1]
@@ -264,6 +277,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 updateScoreStatus(userScoreHeight, 2)
 
             }
+
             if (!data.hometown.isNullOrEmpty()) {
                 userHomeTown.text = data.hometown
                 userScoreHomeTown.isVisible = false
@@ -712,52 +726,31 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                100 -> {
-                    if (data != null) {
-                        val year = data.getStringExtra("year")
-                        val monthDay = data.getStringExtra("month").substring(0, 2).plus("-")
-                            .plus(data.getStringExtra("month").substring(2, 4))
-                        userBirth.text = year.plus("-").plus(monthDay)
-                        updateUserInfo(
-                            "birth",
-                            TimeUtils.date2Millis(
-                                SimpleDateFormat(
-                                    "yyyy-MM-dd",
-                                    Locale.getDefault()
-                                ).parse(userBirth.text.toString())
-                            ) / 1000L
-                        )
-                    }
-                }
-                102 -> {
+                102 -> { //昵称
                     if (data != null) {
                         if (data.getIntExtra("type", 0) == 1) {
                             userNickName.text = data.getStringExtra("content")
                             savePersonalParams["nickname"] = userNickName.text.toString()
-                        } else if (data.getIntExtra("type", 0) == 2) {
-                            userNickSign.text = data.getStringExtra("content")
-                            savePersonalParams["sign"] = userNickSign.text.toString()
+                            isChange = true
+                            checkSaveEnable()
                         }
                     }
                 }
-                103 -> {
-                    if (data?.getSerializableExtra("job") != null) {
-                        val label = data.getSerializableExtra("job") as LabelBean
-                        userJob.text = label.title
-                        updateUserInfo("job", label.id)
-                    }
-                }
-                104 -> {
+                104 -> {//学校
                     if (data?.getSerializableExtra("schoolBean") != null) {
                         userSchool.text = (data.getSerializableExtra("schoolBean") as SchoolBean).school_title
                         savePersonalParams["personal_school"] =
                             (data.getSerializableExtra("schoolBean") as SchoolBean).school_title
                         updateScoreStatus(userScoreSchool, 2)
+                        isChange = true
+                        checkSaveEnable()
                     }
                 }
-                105 -> {
+                105 -> {//关于我
                     userNickSign.text = data?.getStringExtra("content")
                     savePersonalParams["sign"] = data?.getStringExtra("content")
+                    isChange = true
+                    checkSaveEnable()
                 }
                 REPLACE_REQUEST,//替换头像
                 PictureConfig.CHOOSE_REQUEST//选中
@@ -787,6 +780,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 ReminderScoreDialog(this, 20).show()
 //                userScore20.setImageResource(R.drawable.icon_twenty_click)
             }
+            R.id.userScoreVip -> {
+                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
+            }
             R.id.userScore80 -> {
                 ReminderScoreDialog(this, 80).show()
 //                userScore80.setImageResource(R.drawable.icon_eighty_click)
@@ -807,7 +803,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
             R.id.userBirth -> { //生日
                 showCalender(userBirth)
-//                startActivityForResult<UserBirthActivity>(100)
             }
 
             R.id.userHeight -> {//身高
@@ -1080,7 +1075,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         }
 
 
-        userFinishProgress.progress = (userFinishProgress.progress + score)
+        if (Build.VERSION.SDK_INT >= 24)
+            userFinishProgress.setProgress((userFinishProgress.progress + score), true)
+        else
+            userFinishProgress.progress = (userFinishProgress.progress + score)
+
         userScoreTv.text = SpanUtils.with(userScoreTv)
             .append("完成度")
             .setFontSize(14, true)
@@ -1285,8 +1284,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         startDate.set(endDate.get(Calendar.YEAR) - 50, 1, 1)
         endDate.set(endDate.get(Calendar.YEAR) - 18, endDate.get(Calendar.MONTH), endDate.get(Calendar.DATE))
         val clOptions = TimePickerBuilder(this, OnTimeSelectListener { date, v ->
-//            getZodiac
-            userBirth.text = "${TimeUtils.date2String(date, SimpleDateFormat("yyyy-MM-dd"))}/${TimeUtils.getZodiac(date)}"
+            //            getZodiac
+            userBirth.text =
+                "${TimeUtils.date2String(date, SimpleDateFormat("yyyy-MM-dd"))}/${TimeUtils.getZodiac(date)}"
             savePersonalParams["birth"] = TimeUtils.date2Millis(date)
         })
             .setRangDate(startDate, endDate)
