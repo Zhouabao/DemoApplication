@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -56,9 +57,19 @@ class PhoneActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
         btnBack.setOnClickListener(this)
         btnLoginQuestion.setOnClickListener(this)
         btnVerifyCode.setOnClickListener(this)
+        phoneClean.setOnClickListener(this)
 
         etPhone.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(edit: Editable?) {
+                if (!etPhone.text.isNullOrEmpty()) {
+                    phoneBg.setBackgroundColor(resources.getColor(R.color.colorOrange))
+                    phoneClean.isVisible = true
+                } else {
+                    phoneBg.setBackgroundColor(resources.getColor(R.color.colorDividerC4))
+                    phoneClean.isVisible = false
+                }
+
+
                 btnVerifyCode.isEnabled = etPhone.text.toString().isNotEmpty() && etPhone.text.toString().length == 11
 
             }
@@ -78,6 +89,9 @@ class PhoneActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
                 finish()
             }
             R.id.btnLoginQuestion -> {
+            }
+            R.id.phoneClean -> {
+                etPhone.setText("")
             }
             R.id.btnVerifyCode -> {
                 if (RegexUtils.isMobileSimple(etPhone.text.toString())) {

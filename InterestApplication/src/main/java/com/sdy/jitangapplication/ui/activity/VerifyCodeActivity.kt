@@ -21,22 +21,23 @@ import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.presenter.VerifyCodePresenter
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
 import com.sdy.jitangapplication.receiver.SMSBroadcastReceiver
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
+import kotlinx.android.synthetic.main.activity_phone.*
 import kotlinx.android.synthetic.main.activity_verify_code.*
+import kotlinx.android.synthetic.main.activity_verify_code.btnBack
 import org.jetbrains.anko.startActivity
 
 
 /**
  * 填写验证码界面
  */
-class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeView, View.OnClickListener,
-    SMSBroadcastReceiver.OnReceivedSMSListener {
+class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickListener, VerifyCodeView {
 
     private lateinit var verifyCode: String
     private val phone by lazy { intent.getStringExtra("phone") }
-    //监听短信的广播
-//    private val mSMSBroadcastReceiver = SMSBroadcastReceiver(this)
 
+    private val loadingDialog by lazy { LoadingDialog(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,40 +46,29 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
     }
 
     private fun initView() {
-        // 注册广播
-//        val intentFilter = IntentFilter(SMSBroadcastReceiver.SMS_RECEIVED_ACTION)
-//        intentFilter.priority = Integer.MAX_VALUE
-//        registerReceiver(mSMSBroadcastReceiver, intentFilter)
 
         mPresenter = VerifyCodePresenter()
         mPresenter.mView = this
         mPresenter.context = this
         btnBack.onClick { finish() }
         btnVerifyCode.setOnClickListener(this)
+        changePhone.setOnClickListener(this)
         countVerifyCodeTime.setOnClickListener(this)
         //设置手机号
         onGetPhoneNum()
         //获取验证码
         mPresenter.getVerifyCode(phone)
 
-        clVerifyCode.listener = { verifyCode, complete ->
-            if (complete) {
-                this.verifyCode = verifyCode
-                onChangeVerifyButtonStatus(true)
-            } else {
-                onChangeVerifyButtonStatus(false)
-            }
+        inputVerifyCode.setOnCompleteListener {
+            loadingDialog.show()
+            mPresenter.checkVerifyCode(
+                intent.getStringExtra("wxcode") ?: "",
+                intent.getStringExtra("type") ?: "1",
+                phone,
+                it
+            )
         }
 
-    }
-
-    override fun onReceived(message: String) {
-        Log.d("SMSBroadcastReceiver", message)
-    }
-
-
-    override fun onChangeVerifyButtonStatus(enable: Boolean) {
-        btnVerifyCode.isEnabled = enable
     }
 
 
@@ -86,22 +76,27 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
         /** 倒计时60秒，一次1秒 */
         object : CountDownTimer(60 * 1000, 1000) {
             override fun onFinish() {
-                tvPhone.text = "+86 $phone"
-                countVerifyCodeTime.text =
-                    SpanUtils.with(countVerifyCodeTime).append("验证码已发送").append("  重新获取").setBold().create()
+                tvPhone.text = "$phone"
+                countVerifyCodeTime.text = SpanUtils.with(countVerifyCodeTime)
+                    .append("重新获取")
+                    .setBold().create()
                 countVerifyCodeTime.isEnabled = true
             }
 
             override fun onTick(p0: Long) {
                 countVerifyCodeTime.text =
-                    SpanUtils.with(countVerifyCodeTime).append("验证码已发送").append("  ${p0 / 1000}秒").setBold().create()
+                    SpanUtils.with(countVerifyCodeTime)
+                        .append("验证码已发送")
+                        .append("  ${p0 / 1000}秒")
+                        .setBold()
+                        .create()
             }
 
         }.start()
     }
 
     override fun onGetPhoneNum() {
-        tvPhone.text = "+86 $phone"
+        tvPhone.text = "$phone"
     }
 
 
@@ -118,11 +113,13 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
                         phone,
                         verifyCode
                     )
-                    onChangeVerifyButtonStatus(false)
                 }
             }
             R.id.countVerifyCodeTime -> {
                 mPresenter.getVerifyCode(phone)
+            }
+            R.id.changePhone -> {
+                onBackPressed()
             }
         }
     }
@@ -135,7 +132,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
     private var data: LoginBean? = null
 
     override fun onConfirmVerifyCode(data: LoginBean, isRight: Boolean) {
-        onChangeVerifyButtonStatus(true)
         if (isRight) {
             this.data = data
             mPresenter.loginIM(LoginInfo(data.accid, data.extra_data?.im_token))
@@ -145,7 +141,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), VerifyCodeVie
 
 
     override fun onGetVerifyCode(data: BaseResp<Any?>) {
-        tvPhone.text = "已发送至+86 $phone"
+        tvPhone.text = "验证码已发至 $phone"
         countVerifyCodeTime.isEnabled = false
         onCountTime()
     }

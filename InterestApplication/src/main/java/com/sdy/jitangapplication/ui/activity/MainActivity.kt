@@ -114,6 +114,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         if (!UserManager.getAlertProtocol())
             PrivacyDialog(this).show()
+
+//        RightSlideOutdDialog(this).show()
     }
 
 
