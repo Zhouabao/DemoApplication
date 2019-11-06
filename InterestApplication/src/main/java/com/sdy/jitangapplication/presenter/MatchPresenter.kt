@@ -28,9 +28,9 @@ class MatchPresenter : BasePresenter<MatchView>() {
     /**
      * 根据标签来获取新的用户数据
      */
-    fun getMatchList(params: HashMap<String, Any>) {
+    fun getMatchList(params: HashMap<String, Any>, ids: Array<Int?>? = null) {
         RetrofitFactory.instance.create(Api::class.java)
-            .getMatchList(params)
+            .getMatchList(params, ids)
             .excute(object : BaseSubscriber<BaseResp<MatchListBean?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()

@@ -60,6 +60,7 @@ import org.jetbrains.anko.support.v4.startActivity
  */
 class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
 
+
     override fun loadData() {
 
         initView()
@@ -77,7 +78,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         hashMapOf(
             "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
             "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-            "pagesize" to Constants.PAGESIZE,
             "_timestamp" to System.currentTimeMillis(),
             "tagid" to UserManager.getGlobalLabelId(),
             "lng" to UserManager.getlongtitude().toFloat(),
@@ -275,10 +275,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     /**
      * 匹配列表数据
      */
+    private var paramsLastFiveIds = arrayOfNulls<Int>(10)
+
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
             hasMore = true
-            hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == Constants.PAGESIZE
+           // hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
                 setViewState(EMPTY)
                 btnChat.isVisible = false
@@ -288,7 +290,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 btnChat.isVisible = true
                 tvLeftChatTime.isVisible = true
             }
+
             matchUserAdapter.addData(matchBeans!!.list ?: mutableListOf<MatchBean>())
+            paramsLastFiveIds = matchBeans.exclude
             //保存剩余招呼次数
             UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
             //保存倒计时时间
@@ -416,6 +420,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         private const val CONTENT = 1
         private const val ERROR = 2
         private const val EMPTY = 3
+        private const val PAGESIZE = 20
     }
 
 
@@ -693,8 +698,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
         //如果已经只剩5张了就请求数据(预加载).
         if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
-            updateLocation()
-            mPresenter.getMatchList(matchParams)
+            try {
+//                Thread.sleep(2000)
+                updateLocation()
+                mPresenter.getMatchList(matchParams,paramsLastFiveIds)
+            } catch (e: Exception) {
+            }
         } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
 //            matchStateview.viewState = MultiStateView.ViewState.EMPTY
             setViewState(EMPTY)

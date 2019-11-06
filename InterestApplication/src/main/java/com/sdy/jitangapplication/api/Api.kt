@@ -261,7 +261,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Index/index${Constants.END_BASE_URL}")
-    fun getMatchList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchListBean?>>
+    fun getMatchList(@FieldMap params: MutableMap<String, Any>, @Field("ll[]") idList: Array<Int?>?): Observable<BaseResp<MatchListBean?>>
 
 
     /**
@@ -320,7 +320,6 @@ interface Api {
     @FormUrlEncoded
     @POST("member_info/reportUserV2${Constants.END_BASE_URL}")
     fun reportUserV2(@FieldMap params: MutableMap<String, Any>, @Field("photo[]") photoList: Array<String?>): Observable<BaseResp<Any?>>
-
 
 
     /**
@@ -453,7 +452,11 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/addPhotoV2${Constants.END_BASE_URL}")
-    fun addPhotoV2(@FieldMap params: MutableMap<String, Any?>?,@Field("token") token: String, @Field("accid") accid: String, @Field("photos[]") photos: Array<Int?>?): Observable<BaseResp<Any?>>
+    fun addPhotoV2(
+        @FieldMap params: MutableMap<String, Any?>?, @Field("token") token: String, @Field("accid") accid: String, @Field(
+            "photos[]"
+        ) photos: Array<Int?>?
+    ): Observable<BaseResp<Any?>>
 
 
     /**
