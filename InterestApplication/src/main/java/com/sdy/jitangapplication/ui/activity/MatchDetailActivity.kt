@@ -11,7 +11,6 @@ import android.widget.RadioButton
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.size
-import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +19,6 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
-import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -28,6 +26,7 @@ import com.netease.nim.uikit.business.session.module.Container
 import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.friend.FriendService
 import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
@@ -68,7 +67,6 @@ import java.util.*
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
     View.OnClickListener, ModuleProxy {
-
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
@@ -121,16 +119,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     private fun initView() {
-        ScreenUtils.setFullScreen(this)
+
 
         mPresenter = MatchDetailPresenter()
         mPresenter.mView = this
         mPresenter.context = this
-
-        backBtn.onClick {
-            finish()
-        }
-
 
         //设置图片的宽度占满屏幕，宽高比9:16
         val layoutParams = detailPhotosVp.layoutParams
@@ -143,7 +136,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         moreBtn.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
+        cancelBlack.setOnClickListener(this)
         backBtn.setOnClickListener(this)
+        backBtn1.setOnClickListener(this)
 
 
         //用户的广场预览界面
@@ -366,10 +361,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     /**
      * 获取用户详情结果
      */
+    //1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
     override fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchBean?) {
         if (success) {
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             matchBean = matchUserDetailBean
+            updateBlockStatus()
+
             //本地对标签进行过滤筛选
             val labels = UserManager.getSpLabels()
             for (label in labels) {
@@ -389,6 +387,48 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
     }
 
+    /**
+     * 更新拉黑状态
+     */
+    //1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
+    private fun updateBlockStatus() {
+        when (matchBean!!.isblock) {
+            1 -> {
+                userContent.isVisible = true
+                llBlackContent.isVisible = false
+                ScreenUtils.setFullScreen(this)
+
+            }
+            2 -> {
+                llBlackContent.isVisible = true
+                userContent.isVisible = false
+                cancelBlack.isVisible = true
+                blackContent.text = "拉黑状态下双方主页互相不可见\n取消拉黑可恢复好友权益"
+                ScreenUtils.setNonFullScreen(this)
+
+            }
+            3 -> {
+                llBlackContent.isVisible = true
+                userContent.isVisible = false
+                cancelBlack.isVisible = false
+                blackContent.text = "对方已将你拉黑并限制访问其主页\n去看看其它感兴趣的人吧"
+                ScreenUtils.setNonFullScreen(this)
+            }
+            4 -> {
+                llBlackContent.isVisible = true
+                userContent.isVisible = false
+                cancelBlack.isVisible = true
+                blackContent.text = "拉黑状态下双方主页互相不可见\n取消拉黑可恢复好友权益"
+                ScreenUtils.setNonFullScreen(this)
+            }
+            else -> {
+                userContent.isVisible = true
+                llBlackContent.isVisible = false
+                ScreenUtils.setFullScreen(this)
+            }
+        }
+    }
+
     override fun onGetUserActionResult(success: Boolean, result: String?) {
         if (success) {
             if (result == "解除成功!") {
@@ -396,11 +436,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 //更新数据
 //                initData()
             } else if (result == "拉黑成功!") {
-                NIMClient.getService(MsgService::class.java)
-                    .deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
+                NIMClient.getService(FriendService::class.java).addToBlackList(matchBean!!.accid)
+                NIMClient.getService(MsgService::class.java).deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
                 NIMClient.getService(MsgService::class.java).clearServerHistory(matchBean!!.accid, SessionTypeEnum.P2P)
-                AppManager.instance.finishAllActivity()
-                startActivity<MainActivity>()
+                matchBean!!.isblock = 2
+                updateBlockStatus()
 //                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = UserManager.getGlobalLabelId())))
 
             }
@@ -451,6 +491,22 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
+    override fun onRemoveBlockResult(success: Boolean) {
+        if (success) {
+            NIMClient.getService(FriendService::class.java).removeFromBlackList(matchBean!!.accid)
+            //1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
+            if (matchBean!!.isblock == 4) {
+                matchBean!!.isblock = 3
+            } else if (matchBean!!.isblock == 2) {
+                matchBean!!.isblock = 1
+            }
+            EventBus.getDefault().post(UpdateBlackEvent())
+            updateBlockStatus()
+        }
+
+    }
+
+
     override fun onClick(view: View) {
         when (view.id) {
             R.id.moreBtn -> {//更多
@@ -485,8 +541,18 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     }
             }
 
+            R.id.backBtn1,
             R.id.backBtn -> {
                 finish()
+            }
+            R.id.cancelBlack -> { //取消拉黑
+                mPresenter.removeBlock(
+                    hashMapOf(
+                        "token" to UserManager.getToken(),
+                        "accid" to UserManager.getAccid(),
+                        "target_accid" to matchBean!!.accid
+                    )
+                )
             }
         }
 
@@ -512,7 +578,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
         //举报
         dialog.llJubao.onClick {
-            startActivityForResult<ReportReasonActivity>(100,"target_accid" to matchBean!!.accid)
+            startActivityForResult<ReportReasonActivity>(100, "target_accid" to matchBean!!.accid)
             dialog.dismiss()
         }
         //解除配对
@@ -584,19 +650,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
     }
 
-
-    private val springAnim: SpringAnimation by lazy {
-        SpringAnimation(
-            detailScrollView,
-            SpringAnimation.TRANSLATION_Y,
-            0.0f
-        )
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

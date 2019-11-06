@@ -51,9 +51,11 @@ data class MatchBean(
     var lightningcnt: Int?,
     var countdown: Int = 0,
     var isfriend: Int?,
-    var residue: Int = 0
+    var residue: Int = 0,
+    var isblock: Int = 1//1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
 
-) : Serializable
+
+    ) : Serializable
 
 
 /**

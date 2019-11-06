@@ -87,6 +87,30 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
 
     }
 
+    /**
+     * 解除拉黑
+     */
+    fun removeBlock(hashMap: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .removeBlock(hashMap)
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        mView.onRemoveBlockResult(true)
+                    } else {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onRemoveBlockResult(false)
+                    }
+                }
+            })
+    }
 
 
     /*

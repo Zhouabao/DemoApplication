@@ -19,6 +19,7 @@ class BlackListAdapter : BaseQuickAdapter<BlackBean, BaseViewHolder>(R.layout.it
 
         GlideUtil.loadAvatorImg(mContext, item.avatar ?: "", helper.itemView.friendIcon)
         helper.itemView.friendName.text = "${item.nickname}"
+        helper.addOnClickListener(R.id.friendIcon)
     }
 
 }

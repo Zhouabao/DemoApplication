@@ -3,16 +3,18 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.friend.FriendService
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.UpdateBlackEvent
 import com.sdy.jitangapplication.model.BlackBean
 import com.sdy.jitangapplication.presenter.BlackListPresenter
 import com.sdy.jitangapplication.presenter.view.BlackListView
@@ -23,6 +25,9 @@ import kotlinx.android.synthetic.main.activity_black_list.*
 import kotlinx.android.synthetic.main.dialog_resolve_black.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 黑名单
@@ -44,7 +49,7 @@ class BlackListActivity : BaseMvpActivity<BlackListPresenter>(), BlackListView, 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_black_list)
-
+        EventBus.getDefault().register(this)
         initView()
 
 
@@ -73,6 +78,13 @@ class BlackListActivity : BaseMvpActivity<BlackListPresenter>(), BlackListView, 
         adapter.setOnItemLongClickListener { _, view, position ->
             showBlackDialog(position)
             true
+        }
+        adapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.friendIcon -> {
+                    MatchDetailActivity.start(this, adapter.data[position].accid)
+                }
+            }
         }
 
     }
@@ -114,6 +126,7 @@ class BlackListActivity : BaseMvpActivity<BlackListPresenter>(), BlackListView, 
     override fun onRemoveBlockResult(success: Boolean, position: Int) {
         if (success) {
             CommonFunction.toast("解除拉黑成功！")
+            NIMClient.getService(FriendService::class.java).removeFromBlackList(adapter.data[position].accid)
             adapter.remove(position)
         }
     }
@@ -139,5 +152,15 @@ class BlackListActivity : BaseMvpActivity<BlackListPresenter>(), BlackListView, 
             stateview.errorMsg.text = text
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updateBlackListEvent(update: UpdateBlackEvent) {
+        refreshLayout.autoRefresh()
+    }
 
 }
