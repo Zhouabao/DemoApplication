@@ -73,7 +73,7 @@ class WXEntryActivity : WXCallbackActivity() {
                     } else if (t.code == 200) {
                         data = t.data
                         loginIM(LoginInfo(data?.accid, data?.extra_data?.im_token))
-                    }else if (t.code == 400) {
+                    } else if (t.code == 400) {
                         CommonFunction.toast(t.msg)
                     }
                     loading.dismiss()
@@ -136,6 +136,7 @@ class WXEntryActivity : WXCallbackActivity() {
                 || (data != null && data!!.userinfo != null
                         && (data!!.userinfo!!.nickname.isNullOrEmpty()
                         || data!!.userinfo!!.avatar.isNullOrEmpty()
+                        || data!!.userinfo!!.avatar!!.contains(Constants.DEFAULT_AVATAR)
                         || data!!.userinfo!!.gender == 0
                         || data!!.userinfo!!.birth.isNullOrEmpty()
                         || data!!.userinfo!!.birth.toLong() == 0L))

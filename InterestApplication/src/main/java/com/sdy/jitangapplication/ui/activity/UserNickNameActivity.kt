@@ -12,10 +12,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
 import com.sdy.jitangapplication.presenter.view.UserNickNameView
 import com.sdy.jitangapplication.utils.ScrollSoftKeyBoardUtils
-import kotlinx.android.synthetic.main.activity_phone.*
 import kotlinx.android.synthetic.main.activity_user_nick_name.*
-import kotlinx.android.synthetic.main.activity_user_nick_name.nickNameBg
-import kotlinx.android.synthetic.main.activity_user_nick_name.nickNameClean
 import org.jetbrains.anko.startActivity
 
 /**
@@ -66,7 +63,7 @@ class UserNickNameActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
         ScrollSoftKeyBoardUtils.addLayoutListener(rootView, btnNextStep)
 
 
-        etPhone.postDelayed({
+        nickNameEt.postDelayed({
             KeyboardUtils.showSoftInput(nickNameEt, 0)
         }, 200)
     }

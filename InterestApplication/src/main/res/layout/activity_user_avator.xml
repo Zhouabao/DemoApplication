@@ -8,13 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
-        android:paddingLeft="25dp"
         tools:context=".ui.activity.UserAvatorActivity">
 
 
     <ImageView
             android:id="@+id/btnBack"
             style="@style/BckBtnStyle"
+            android:layout_marginLeft="25dp"
             android:visibility="gone"
             />
 
@@ -34,6 +34,8 @@
 
     <TextView
             android:id="@+id/tv1"
+
+            android:layout_marginLeft="25dp"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,6 +48,7 @@
 
     <TextView
             android:id="@+id/userAvatorNotify"
+            android:layout_marginLeft="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -59,48 +62,68 @@
             android:id="@+id/userAvatorTake"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
-            android:layout_marginRight="25dp"
             android:background="@drawable/circle_gray_bg"
             android:scaleType="centerInside"
             android:src="@drawable/icon_camera_white"
             android:layout_width="164dp"
             android:layout_height="164dp"/>
 
-    <LinearLayout
-            android:background="@drawable/icon_arrow_avator_up"
-            android:layout_marginRight="49dp"
+
+    <RelativeLayout
+            android:id="@+id/avatorNotifyLl"
+            android:visibility="invisible"
             android:gravity="center"
+            android:orientation="horizontal"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="24dp"
             android:layout_height="wrap_content">
-        <ImageView
-                android:layout_marginRight="9dp"
-                android:layout_gravity="center"
-                android:src="@drawable/icon_logo"
-                android:layout_width="35dp"
-                android:layout_height="35dp"/>
 
-        <TextView
-                android:id="@+id/avatorNotify"
-                android:textColor="@color/colorOrange"
-                android:text="果然盛世美颜，就它吧"
-                android:gravity="center"
+        <LinearLayout
+                android:background="@drawable/icon_rectangle_with_shadow"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@drawable/icon_logo"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"/>
+
+            <TextView
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="9dp"
+                    android:id="@+id/avatorNotify"
+                    android:textColor="@color/colorOrange"
+                    android:text="果然盛世美颜，就它吧"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+        <ImageView
+                android:id="@+id/iv1"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
+                android:layout_marginTop="28dp"
+                android:src="@drawable/icon_triangle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
             android:id="@+id/btnNextStep"
             android:layout_width="match_parent"
-            android:layout_marginRight="25dp"
             android:layout_height="83dp"
-            android:layout_marginTop="112dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/selector_confirm_btn1"
             android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:text="下一步"
             android:textColor="#ffffffff"
             android:enabled="false"

@@ -119,6 +119,16 @@ interface Api {
 
 
 
+
+    /**
+     * 验证照片是否合规
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/checkAvatar${Constants.END_BASE_URL}")
+    fun checkAvatar(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+
     /**
      * 上传个人信息
      */

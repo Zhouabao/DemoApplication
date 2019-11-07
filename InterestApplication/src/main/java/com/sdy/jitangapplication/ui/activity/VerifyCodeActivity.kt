@@ -155,6 +155,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
             if (data != null && data!!.userinfo != null
                 && (data!!.userinfo!!.nickname.isNullOrEmpty() || data!!.userinfo!!.avatar.isNullOrEmpty()
+                        || data!!.userinfo!!.avatar!!.contains(Constants.DEFAULT_AVATAR)
                         || data!!.userinfo!!.gender == 0 || data!!.userinfo!!.birth.isNullOrEmpty() || data!!.userinfo!!.birth.toLong() == 0L)
             ) {//个人信息没有填写
                 startActivity<UserNickNameActivity>()

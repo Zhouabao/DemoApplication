@@ -7,4 +7,8 @@ interface UserNickNameView : BaseView {
     //上传用户信息结果
     fun onUploadUserInfoResult(uploadResult: Boolean, msg: String?)
 
+
+
+
+
 }

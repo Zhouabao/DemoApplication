@@ -45,6 +45,9 @@ class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
             })
     }
 
+
+
+
     public val loadingDialg by lazy { LoadingDialog(context) }
 
 

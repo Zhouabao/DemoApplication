@@ -120,9 +120,10 @@
     <TextView
             android:id="@+id/btnNextStep"
             android:layout_width="match_parent"
-            android:layout_marginRight="25dp"
             android:layout_height="83dp"
-            android:layout_marginTop="112dp"
+            android:layout_marginTop="79dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/selector_confirm_btn1"
             android:gravity="center"
             android:text="下一步"
