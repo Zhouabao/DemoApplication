@@ -9,6 +9,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
 import com.sdy.jitangapplication.presenter.view.UserNickNameView
+import com.sdy.jitangapplication.utils.ScrollSoftKeyBoardUtils
 import com.sdy.jitangapplication.widgets.VerificationCodeInput
 import kotlinx.android.synthetic.main.activity_user_birth.*
 import org.jetbrains.anko.startActivity
@@ -36,6 +37,9 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
         mPresenter.mView = this
         mPresenter.context = this
         btnBack.onClick { finish() }
+
+        ScrollSoftKeyBoardUtils.addLayoutListener(rootView, btnNextStep)
+
 
         userBirthYear.setOnCompleteListener(object : VerificationCodeInput.Listener {
             override fun onComplete(complete: Boolean, content: String?) {

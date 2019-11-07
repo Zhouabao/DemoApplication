@@ -24,9 +24,15 @@ import com.sdy.jitangapplication.R
 
 class VerificationCodeInput @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : ViewGroup(context, attrs, defStyleAttr), TextWatcher {
-    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+) : ViewGroup(context, attrs, defStyleAttr), TextWatcher, OnKeyListener {
 
+
+
+    private var lastEtisEmpty = true
+
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+        val lastETC = getChildAt(boxCount - 1) as EditText
+        lastEtisEmpty = lastETC.text.isEmpty()
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -40,6 +46,21 @@ class VerificationCodeInput @JvmOverloads constructor(
         checkAndCommit()
 
     }
+
+    override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_UP) {
+            if (v?.tag == (boxCount - 1)) {
+                if (lastEtisEmpty) {
+                    backFocus()
+                }
+                lastEtisEmpty = true
+            } else {
+                backFocus()
+            }
+        }
+       return false
+    }
+
 
     companion object {
         private val TYPE_NUMBER = "number"
@@ -159,8 +180,15 @@ class VerificationCodeInput @JvmOverloads constructor(
 
     private fun initViews() {
         val onKeyListener = OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_DEL) {
-                backFocus()
+            if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_UP) {
+                if (v?.tag == (boxCount - 1)) {
+                    if (lastEtisEmpty) {
+                        backFocus()
+                    }
+                    lastEtisEmpty = true
+                } else {
+                    backFocus()
+                }
             }
             false
         }
@@ -179,7 +207,8 @@ class VerificationCodeInput @JvmOverloads constructor(
                 editText.hint = child_hint
             }
 
-            editText.setOnKeyListener(onKeyListener)
+            editText.setOnKeyListener(this)
+            editText.tag = i
             setBg(editText, false)
             editText.setTextColor(Color.BLACK)
             editText.setTextSize(etTextSize)
@@ -210,13 +239,12 @@ class VerificationCodeInput @JvmOverloads constructor(
     }
 
     private fun backFocus() {
-        val count = childCount
-        var editText: EditText
-        for (i in count - 1 downTo 0) {
-            editText = getChildAt(i) as EditText
+        for (i in boxCount - 1 downTo 0) {
+            val editText = getChildAt(i) as EditText
             if (editText.text.length == 1) {
-                editText.requestFocus()
-                editText.setSelection(1)
+                editText.setText("")
+//                editText.requestFocus()
+//                editText.setSelection(1)
                 return
             }
         }
@@ -256,11 +284,9 @@ class VerificationCodeInput @JvmOverloads constructor(
             val content = editText.text.toString()
             if (content.isEmpty()) {
                 full = false
-                break
             } else {
                 stringBuilder.append(content)
             }
-
         }
         Log.d(TAG, "checkAndCommit:$stringBuilder")
         if (listener != null) {

@@ -11,6 +11,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.presenter.LoginPresenter
 import com.sdy.jitangapplication.presenter.view.LoginView
+import com.sdy.jitangapplication.utils.ScrollSoftKeyBoardUtils
 import kotlinx.android.synthetic.main.activity_phone.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -33,9 +34,6 @@ class PhoneActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        etPhone.postDelayed({
-            KeyboardUtils.showSoftInput(etPhone, 0)
-        }, 200)
 
     }
 
@@ -81,7 +79,14 @@ class PhoneActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
             }
 
         })
+
+
+        ScrollSoftKeyBoardUtils.addLayoutListener(rootview, btnVerifyCode)
+        etPhone.postDelayed({
+            KeyboardUtils.showSoftInput(etPhone, 0)
+        }, 200)
     }
+
 
     override fun onClick(view: View) {
         when (view.id) {

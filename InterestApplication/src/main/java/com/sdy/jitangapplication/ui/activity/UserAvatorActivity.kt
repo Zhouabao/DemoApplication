@@ -371,4 +371,8 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         }
     }
 
+    override fun onBackPressed() {
+
+    }
+
 }

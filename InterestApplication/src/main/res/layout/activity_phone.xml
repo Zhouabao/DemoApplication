@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
+            android:id="@+id/rootview"
             android:background="@color/colorWhite"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             tools:context=".ui.activity.PhoneActivity">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
         <ImageView
                 android:id="@+id/btnBack"
@@ -131,7 +129,7 @@
                 android:layout_width="0dp"
                 android:layout_height="83dp"
                 android:layout_marginTop="63dp"
-                android:background="@drawable/selector_confirm_btn"
+                android:background="@drawable/selector_confirm_btn1"
                 android:gravity="center"
                 android:text="获取验证码"
                 android:textColor="#ffffffff"
@@ -144,4 +142,3 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>

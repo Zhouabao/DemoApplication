@@ -5,11 +5,17 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.StringUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
 import com.sdy.jitangapplication.presenter.view.UserNickNameView
+import com.sdy.jitangapplication.utils.ScrollSoftKeyBoardUtils
+import kotlinx.android.synthetic.main.activity_phone.*
 import kotlinx.android.synthetic.main.activity_user_nick_name.*
+import kotlinx.android.synthetic.main.activity_user_nick_name.nickNameBg
+import kotlinx.android.synthetic.main.activity_user_nick_name.nickNameClean
 import org.jetbrains.anko.startActivity
 
 /**
@@ -36,7 +42,7 @@ class UserNickNameActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
 
         nickNameEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable) {
-                if (p0.isEmpty()) {
+                if (StringUtils.isTrimEmpty(p0.toString())) {
                     nickNameNotify.setTextColor(resources.getColor(R.color.colorBlack4C))
                     nickNameBg.setBackgroundColor(resources.getColor(R.color.colorDividerC4))
                     nickNameNotify.text = "现在为自己取一个有趣的名字吧"
@@ -45,7 +51,7 @@ class UserNickNameActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
                     nickNameBg.setBackgroundColor(resources.getColor(R.color.colorOrange))
                     nickNameClean.isVisible = true
                 }
-                btnNextStep.isEnabled = p0.isNotEmpty()
+                btnNextStep.isEnabled = !StringUtils.isTrimEmpty(p0.toString())
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -57,7 +63,12 @@ class UserNickNameActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
             }
 
         })
+        ScrollSoftKeyBoardUtils.addLayoutListener(rootView, btnNextStep)
 
+
+        etPhone.postDelayed({
+            KeyboardUtils.showSoftInput(nickNameEt, 0)
+        }, 200)
     }
 
 

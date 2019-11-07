@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.blankj.utilcode.util.StringUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
@@ -60,10 +61,10 @@ class NickNameActivity : BaseActivity() {
 
 
         changeEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                saveChangeBtn.isEnabled = !changeEt.text.isNullOrEmpty()
+            override fun afterTextChanged(p0: Editable) {
+                saveChangeBtn.isEnabled = !StringUtils.isTrimEmpty(p0.toString())
                 changeEtInputLength.text = SpanUtils.with(changeEtInputLength)
-                    .append(changeEt.length().toString())
+                    .append(changeEt.toString().trim().length.toString())
                     .setFontSize(14, true)
                     .setForegroundColor(resources.getColor(R.color.colorOrange))
                     .setBold()
