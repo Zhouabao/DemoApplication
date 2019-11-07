@@ -1,24 +1,29 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.app.Activity
 import android.os.Bundle
-import android.view.View
+import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.presenter.UserBirthPresenter
-import com.sdy.jitangapplication.presenter.view.UserBirthView
+import com.sdy.jitangapplication.presenter.UserNickNamePresenter
+import com.sdy.jitangapplication.presenter.view.UserNickNameView
+import com.sdy.jitangapplication.widgets.VerificationCodeInput
 import kotlinx.android.synthetic.main.activity_user_birth.*
+import org.jetbrains.anko.startActivity
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 /**
  * 填写用户生日界面（计算年龄和星座）
  */
-class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
+class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNameView {
+
     private var year: String? = null
-    private var monthAndDay: String? = null
+    private var month: String? = null
+    private var day: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_birth)
@@ -27,42 +32,60 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
     }
 
     private fun initView() {
-        mPresenter = UserBirthPresenter()
+        mPresenter = UserNickNamePresenter()
         mPresenter.mView = this
         mPresenter.context = this
         btnBack.onClick { finish() }
-        userBirthYear.listener = { year, complete ->
-            this.year = year
-            if (complete) {
+
+        userBirthYear.setOnCompleteListener(object : VerificationCodeInput.Listener {
+            override fun onComplete(complete: Boolean, content: String?) {
+                if (complete) {
+                    //年份输入完成后，让月日获取焦点
+                    userBirthMonth.postDelayed({ userBirthMonth.requestEditeFocus() }, 50L)
+                }
+                year = content
                 calculateAgeAndAstro()
-                //年份输入完成后，让月日获取焦点
-                userBirthMonth.postDelayed({ userBirthMonth.requestEditeFocus() }, 200L)
-
-            } else if (!complete && userAge.visibility == View.VISIBLE) {
-                confirmBtn.isEnabled = false
-                userAge.text = ""
-                userAge.visibility = View.GONE
-                userXingzuo.text = ""
-                userXingzuo.visibility = View.GONE
             }
-        }
+        })
 
-        userBirthMonth.listener = { monthAndDay, complete ->
-            this.monthAndDay = monthAndDay
-            if (complete) {
+        userBirthMonth.setOnCompleteListener(object : VerificationCodeInput.Listener {
+            override fun onComplete(complete: Boolean, content: String?) {
+                if (complete) {
+                    //月份输入完成后，让日期获取焦点
+                    userBirthDay.postDelayed({ userBirthDay.requestEditeFocus() }, 50L)
+                } else {
+                    if (content.isNullOrEmpty()) {
+                        userBirthYear.postDelayed({ userBirthYear.requestEditeFocus() }, 50L)
+                    }
+                }
+                month = content
                 calculateAgeAndAstro()
-            } else if (!complete && userAge.visibility == View.VISIBLE) {
-                confirmBtn.isEnabled = false
-                userAge.text = ""
-                userAge.visibility = View.GONE
-                userXingzuo.text = ""
-                userXingzuo.visibility = View.GONE
             }
-        }
 
-        confirmBtn.onClick {
-            setResult(Activity.RESULT_OK, intent.putExtra("year", "$year").putExtra("month", "$monthAndDay"))
-            finish()
+        })
+
+        userBirthDay.setOnCompleteListener(object : VerificationCodeInput.Listener {
+            override fun onComplete(complete: Boolean, content: String?) {
+                if (content.isNullOrEmpty()) {
+                    userBirthMonth.postDelayed({ userBirthMonth.requestEditeFocus() }, 50L)
+                }
+                day = content
+                calculateAgeAndAstro()
+            }
+
+        })
+
+        btnNextStep.onClick {
+            mPresenter.uploadUserInfo(
+                2, hashMapOf(
+                    "birth" to "${TimeUtils.date2Millis(
+                        SimpleDateFormat(
+                            "yyyyMMdd",
+                            Locale.getDefault()
+                        ).parse("${year!!}${month!!}${day!!}")
+                    ) / 1000L}"
+                )
+            )
         }
     }
 
@@ -71,34 +94,39 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
      */
     private fun calculateAgeAndAstro() {
         if (year == null || year!!.isEmpty()) {
+            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            btnNextStep.isEnabled = false
             return
         }
-        if (monthAndDay == null || monthAndDay!!.isEmpty() || monthAndDay!!.length != 4) {
+        if (month == null || month!!.isEmpty() || month!!.length != 2) {
+            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            btnNextStep.isEnabled = false
+            return
+        }
+
+        if (day == null || day!!.isEmpty() || day!!.length != 2) {
+            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            btnNextStep.isEnabled = false
             return
         }
 
         if (!judgeYear(year!!.toInt())) { //年份不正确
+            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            btnNextStep.isEnabled = false
             userBirthYear.clear()
-            userAge.text = ""
-            userAge.visibility = View.GONE
             return
         }
-        val month = monthAndDay!!.substring(0, 2).toInt()
-        val day = monthAndDay!!.substring(2, 4).toInt()
-        if (!judgeBirth(month, day)) { //月份不正确
-            userBirthMonth.clear()
-            userXingzuo.text = ""
-            userXingzuo.visibility = View.GONE
+
+        if (!judgeBirth(month!!.toInt(), day!!.toInt())) { //月份不正确
+            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            btnNextStep.isEnabled = false
             return
         }
 
         //年月日都正确的情况下 计算年龄
-        userAge.text = "${Calendar.getInstance().get(Calendar.YEAR) - year!!.toInt()}"
-        userAge.visibility = View.VISIBLE
-        userXingzuo.text = calculateAstro(month, day)
-        userXingzuo.visibility = View.VISIBLE
-        confirmBtn.isEnabled = true
-
+        btnNextStep.isEnabled = true
+        KeyboardUtils.hideSoftInput(birthRootView)
+        userCollesationNotify.text = calculateAstro(month!!.toInt(), day!!.toInt())
 
     }
 
@@ -123,17 +151,20 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
     private fun judgeBirth(month: Int, day: Int): Boolean {
         if (month > 12 || month <= 0) {
             CommonFunction.toast("请输入正确的月份！")
+            userBirthMonth.clear()
             return false
         }
         when (month) {
             1, 3, 5, 7, 8, 10, 12 ->
                 if (day > 31 || day == 0) {
                     CommonFunction.toast("请输入正确的日期！")
+                    userBirthDay.clear()
                     return false
                 }
             4, 6, 9, 11 -> {
                 if (day > 30 || day == 0) {
                     CommonFunction.toast("请输入正确的日期！")
+                    userBirthDay.clear()
                     return false
                 }
             }
@@ -141,10 +172,12 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
                 if (year!!.toInt() % 4 == 0 && year!!.toInt() % 100 != 0 || year!!.toInt() % 400 == 0) {
                     if (day > 29 || day == 0) {
                         CommonFunction.toast("请输入正确的日期！")
+                        userBirthDay.clear()
                         return false
                     }
                 } else if (day > 28 || day == 0) {
                     CommonFunction.toast("请输入正确的日期！")
+                    userBirthDay.clear()
                     return false
                 }
             }
@@ -166,6 +199,21 @@ class UserBirthActivity : BaseMvpActivity<UserBirthPresenter>(), UserBirthView {
             index -= 1
         }
         return astro[index]
+    }
+
+    override fun onBackPressed() {
+
+    }
+
+
+    override fun onUploadUserInfoResult(uploadResult: Boolean, msg: String?) {
+        mPresenter.loadingDialg.dismiss()
+        if (uploadResult) {
+            startActivity<UserGenderActivity>()
+            finish()
+        } else {
+            CommonFunction.toast("$msg")
+        }
     }
 
 }

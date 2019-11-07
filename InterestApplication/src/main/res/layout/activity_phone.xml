@@ -103,7 +103,7 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                    android:id="@+id/phoneClean"
+                    android:id="@+id/nickNameClean"
                     android:layout_marginRight="5dp"
                     android:src="@drawable/icon_close"
                     android:layout_width="wrap_content"
@@ -114,7 +114,7 @@
                     app:layout_constraintTop_toTopOf="@id/etPhone"/>
 
             <View
-                    android:id="@+id/phoneBg"
+                    android:id="@+id/nickNameBg"
                     android:layout_marginTop="9dp"
                     android:background="@color/colorDividerC4"
                     android:layout_width="0dp"

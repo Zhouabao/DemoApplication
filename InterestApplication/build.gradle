@@ -150,7 +150,7 @@ dependencies {
     //viewpager2
     implementation 'androidx.viewpager2:viewpager2:1.0.0-alpha01'
     //验证码
-    implementation 'com.github.liuguangli:VerificationCodeInput:1.6'
+//    implementation 'com.github.liuguangli:VerificationCodeInput:1.6'
     //anko
     implementation "org.jetbrains.anko:anko:$anko_version"
     //标签控件

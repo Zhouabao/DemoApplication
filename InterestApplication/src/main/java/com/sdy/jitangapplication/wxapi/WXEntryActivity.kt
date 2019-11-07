@@ -18,8 +18,8 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
-import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.LabelsActivity
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.PhoneActivity
 import com.sdy.jitangapplication.ui.activity.SetInfoActivity
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
@@ -73,6 +73,8 @@ class WXEntryActivity : WXCallbackActivity() {
                     } else if (t.code == 200) {
                         data = t.data
                         loginIM(LoginInfo(data?.accid, data?.extra_data?.im_token))
+                    }else if (t.code == 400) {
+                        CommonFunction.toast(t.msg)
                     }
                     loading.dismiss()
                 }

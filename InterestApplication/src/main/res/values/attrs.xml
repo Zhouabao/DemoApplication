@@ -11,10 +11,32 @@
         <attr name="vTextCount" format="integer"/>
         <attr name="vTextColor" format="color"/>
         <attr name="vBackgroundResource" format="reference"/>
+        <attr name="vHint" format="string"/>
         <attr name="vCursorDrawable" format="reference"/>
         <attr name="vBackgroundColor" format="color"/>
         <attr name="vAutoShowInputBoard" format="boolean"/>
     </declare-styleable>
+
+
+
+    <!--验证码框-->
+    <declare-styleable name="VerificationCodeInput">
+
+        <attr name="box" format="integer" />
+        <attr name="child_h_padding" format="dimension"/>
+        <attr name="child_v_padding" format="dimension"/>
+        <attr name="child_width" format="dimension"/>
+        <attr name="child_height" format="dimension"/>
+        <attr name="etTextSize" format="dimension"/>
+        <attr name="padding" format="dimension"/>
+        <attr name="child_hint" format="string"/>
+        <attr name="box_bg_focus" format="reference"/>
+        <attr name="box_bg_normal" format="reference"/>
+        <attr name="inputType" format="string"/>
+        <attr name="autoShowInputBoard" format="boolean"/>
+
+    </declare-styleable>
+
 
     <!--频谱-->
     <declare-styleable name="voisePlayingIconAttr">
@@ -102,11 +124,11 @@
 
 
     <declare-styleable name="EasySwipeMenuLayout">
-        <attr name="leftMenuView" format="reference" />
-        <attr name="rightMenuView" format="reference" />
-        <attr name="contentView" format="reference" />
-        <attr name="canRightSwipe" format="boolean" />
-        <attr name="canLeftSwipe" format="boolean" />
-        <attr name="fraction" format="float" />
+        <attr name="leftMenuView" format="reference"/>
+        <attr name="rightMenuView" format="reference"/>
+        <attr name="contentView" format="reference"/>
+        <attr name="canRightSwipe" format="boolean"/>
+        <attr name="canLeftSwipe" format="boolean"/>
+        <attr name="fraction" format="float"/>
     </declare-styleable>
 </resources>

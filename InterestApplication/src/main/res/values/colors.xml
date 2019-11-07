@@ -16,12 +16,15 @@
     <color name="colorBlack6f">#ff6f6f6f</color>
     <color name="colorBlack37">#FF373737</color>
     <color name="colorBlack99">#ff999999</color>
+    <color name="colorBlack4C">#FF4C4C4C</color>
     <color name="colorGray4df">#4dffffff</color>
     <color name="colorGray5500">#88000000</color>
     <color name="colorGray3300">#33000000</color>
     <color name="colorGrayDefault">#E8E8E8</color>
+    <color name="colorGrayC5">#FFBDBEC5</color>
     <color name="colorTransparent">#00000000</color>
     <color name="colorRed3E">#FF003E</color>
+    <color name="colorRed27">#FFFF2727</color>
     <color name="colorPink">#FF5A5A</color>
     <color name="colorDivider">#f1f1f1</color>
     <color name="colorDividerC4">#FFC1C3C4</color>

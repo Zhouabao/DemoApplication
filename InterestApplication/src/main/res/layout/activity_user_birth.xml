@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:ver="http://schemas.android.com/apk/res-auto"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
@@ -10,143 +12,123 @@
         android:animateLayoutChanges="true"
         tools:context=".ui.activity.UserBirthActivity">
 
+
     <ImageView
             android:id="@+id/btnBack"
             style="@style/BckBtnStyle"
-            android:src="@drawable/icon_return"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:visibility="gone"
+            />
 
     <TextView
-            android:id="@+id/t0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:text="输入生日"
-            android:textColor="@color/colorBlackTitle"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/btnBack"
+            android:id="@+id/help"
+            android:text="帮助"
+            android:textColor="#ffb2b2b2"
+            android:textSize="15sp"
+            android:gravity="right"
+            android:layout_marginRight="5dp"
+            android:padding="20dp"
+            android:layout_gravity="right"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/birthRootView"
-            app:layout_constraintTop_toBottomOf="@id/t0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/userAge"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical"
+
+    <TextView
+            android:id="@+id/tv1"
+            android:layout_marginLeft="25dp"
+            android:gravity="center"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="你的生日是哪天？"
+            android:textColor="#ff262626"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            />
+
+    <TextView
+            android:id="@+id/userCollesationNotify"
+            android:layout_marginLeft="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorBlack4C"
+            android:textSize="17sp"
+            android:layout_marginTop="9dp"
+            android:text="让我看看好看的人都是什么星座？"
+            />
+
+
+    <LinearLayout
+            android:id="@+id/birthRootView"
+            android:layout_marginTop="85dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
 
-        <TextView
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="@id/userBirthYear"
-                android:text="年份"
-                android:id="@+id/hotT1"
-                android:textColor="@color/colorBlackTitle"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        <com.sdy.jitangapplication.widgets.VerificationView
+        <com.sdy.jitangapplication.widgets.VerificationCodeInput
                 android:id="@+id/userBirthYear"
-                android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@id/hotT1"
-                android:layout_width="200dp"
-                app:vTextCount="4"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:vTextSize="16sp"
-                app:vAutoShowInputBoard="true"
-                app:vTextColor="@color/colorBlack26"
-                app:vIsTextBold="true"
-                app:vBackgroundResource="@drawable/verify_code_bg"
-                android:layout_height="46dp"/>
+                android:visibility="visible"
+                android:layout_width="145dp"
+                android:layout_marginLeft="20dp"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                app:box="4"
+                app:child_h_padding="5dp"
+                app:etTextSize="20sp"
+                app:child_hint="年"
+                app:child_v_padding="3dp"
+                app:autoShowInputBoard="true"
+                app:child_width="30dp"
+                app:inputType="number"/>
 
-
-        <TextView
-                android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@id/userBirthYear"
-                app:layout_constraintLeft_toLeftOf="@id/userBirthMonth"
-                android:text="月"
-                android:id="@+id/allT2"
-                android:textColor="@color/colorBlackTitle"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        <TextView
-                android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@id/userBirthYear"
-                app:layout_constraintLeft_toRightOf="@id/allT2"
-                android:text="日"
-                android:layout_marginLeft="90dp"
-                android:textColor="@color/colorBlackTitle"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        <com.sdy.jitangapplication.widgets.VerificationView
+        <com.sdy.jitangapplication.widgets.VerificationCodeInput
                 android:id="@+id/userBirthMonth"
-                android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@id/allT2"
-                android:layout_width="200dp"
-                app:vTextCount="4"
-                app:vIsTextBold="true"
-                app:vTextSize="16sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:vTextColor="@color/colorBlack26"
-                app:vBackgroundResource="@drawable/verify_code_bg"
-                android:layout_height="46dp"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:visibility="visible"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:layout_marginLeft="19dp"
+                app:box="2"
+                app:etTextSize="20sp"
+
+                app:child_h_padding="5dp"
+                app:child_hint="月"
+                app:child_v_padding="3dp"
+                app:child_width="30dp"
+                app:inputType="number"/>
+
+        <com.sdy.jitangapplication.widgets.VerificationCodeInput
+                android:id="@+id/userBirthDay"
+                android:visibility="visible"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:layout_marginLeft="19dp"
+                app:box="2"
+                app:child_h_padding="5dp"
+                app:child_hint="日"
+                app:etTextSize="20sp"
+                app:child_v_padding="3dp"
+                app:child_width="30dp"
+                app:inputType="number"/>
+    </LinearLayout>
 
 
     <TextView
-            app:layout_constraintTop_toTopOf="@id/birthRootView"
-            android:id="@+id/userAge"
-            app:layout_constraintLeft_toRightOf="@id/birthRootView"
-            android:layout_width="67dp"
-            android:visibility="gone"
-            tools:text="24"
-            android:textColor="#ffffffff"
-            android:textSize="16sp"
+            android:id="@+id/btnNextStep"
+            android:layout_width="match_parent"
+            android:layout_marginRight="25dp"
+            android:layout_height="83dp"
+            android:layout_marginTop="112dp"
+            android:background="@drawable/selector_confirm_btn"
             android:gravity="center"
-            app:layout_constraintRight_toRightOf="parent"
-            android:background="@drawable/orange_bg_rectangle"
-            android:layout_height="46dp"
-            android:layout_marginTop="40dp"/>
-
-    <TextView
-            android:visibility="gone"
-            android:id="@+id/userXingzuo"
-            app:layout_constraintLeft_toRightOf="@id/birthRootView"
-            android:layout_width="67dp"
-            tools:text="狮子座"
+            android:text="下一步"
             android:textColor="#ffffffff"
-            android:textSize="16sp"
-            android:gravity="center"
-            app:layout_constraintLeft_toLeftOf="@id/userAge"
-            android:background="@drawable/orange_bg_rectangle"
-            android:layout_height="46dp"
-            app:layout_constraintBottom_toBottomOf="@id/birthRootView"
+            android:enabled="false"
+            android:textSize="17sp"
+            android:textStyle="bold"
             />
 
-    <Button
-            android:id="@+id/confirmBtn"
-            android:text="确定"
-            android:textColor="@color/colorWhite"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="40dp"
-            android:enabled="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/selector_confirm_btn"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_width="300dp"
-            android:layout_height="50dp"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

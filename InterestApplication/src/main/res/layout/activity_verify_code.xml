@@ -17,6 +17,19 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+    <TextView
+            android:id="@+id/help"
+            android:text="帮助"
+            android:textColor="#ffb2b2b2"
+            android:textSize="15sp"
+            android:gravity="right"
+            android:layout_marginRight="5dp"
+            android:padding="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
 
     <TextView
             android:id="@+id/tv1"
@@ -52,26 +65,27 @@
             android:textColor="#FF519AFB"
             android:textSize="14sp"
             android:layout_marginLeft="3dp"
+            android:text="修改"
             app:layout_constraintBottom_toBottomOf="@id/tvPhone"
             app:layout_constraintLeft_toRightOf="@id/tvPhone"
-            app:layout_constraintTop_toTopOf="@id/tvPhone"
-            android:text="修改"/>
+            app:layout_constraintTop_toTopOf="@id/tvPhone"/>
 
     <!--此处安装一个验证控件-->
 
 
-
-    <com.dalimao.corelibrary.VerificationCodeInput
+    <com.sdy.jitangapplication.widgets.VerificationCodeInput
             android:id="@+id/inputVerifyCode"
             android:layout_marginTop="76dp"
             android:visibility="visible"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:focusable="true"
+            android:layout_marginLeft="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvPhone"
             ver:box="6"
-            ver:child_v_padding="3dp"
+            app:autoShowInputBoard="true"
             ver:inputType="number"/>
 
 

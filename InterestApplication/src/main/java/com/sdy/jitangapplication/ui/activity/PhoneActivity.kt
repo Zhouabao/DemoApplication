@@ -57,16 +57,16 @@ class PhoneActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
         btnBack.setOnClickListener(this)
         btnLoginQuestion.setOnClickListener(this)
         btnVerifyCode.setOnClickListener(this)
-        phoneClean.setOnClickListener(this)
+        nickNameClean.setOnClickListener(this)
 
         etPhone.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(edit: Editable?) {
                 if (!etPhone.text.isNullOrEmpty()) {
-                    phoneBg.setBackgroundColor(resources.getColor(R.color.colorOrange))
-                    phoneClean.isVisible = true
+                    nickNameBg.setBackgroundColor(resources.getColor(R.color.colorOrange))
+                    nickNameClean.isVisible = true
                 } else {
-                    phoneBg.setBackgroundColor(resources.getColor(R.color.colorDividerC4))
-                    phoneClean.isVisible = false
+                    nickNameBg.setBackgroundColor(resources.getColor(R.color.colorDividerC4))
+                    nickNameClean.isVisible = false
                 }
 
 
@@ -90,7 +90,7 @@ class PhoneActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
             }
             R.id.btnLoginQuestion -> {
             }
-            R.id.phoneClean -> {
+            R.id.nickNameClean -> {
                 etPhone.setText("")
             }
             R.id.btnVerifyCode -> {

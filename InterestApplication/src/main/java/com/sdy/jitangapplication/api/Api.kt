@@ -114,6 +114,15 @@ interface Api {
      * 上传个人信息
      */
     @FormUrlEncoded
+    @POST("member_info/setProfileV2${Constants.END_BASE_URL}")
+    fun setProfileV2(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+
+    /**
+     * 上传个人信息
+     */
+    @FormUrlEncoded
     @POST("member_info/SetProfile${Constants.END_BASE_URL}")
     fun setProfile(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 

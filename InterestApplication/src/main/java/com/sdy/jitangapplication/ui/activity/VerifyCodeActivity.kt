@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
@@ -20,12 +19,10 @@ import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.presenter.VerifyCodePresenter
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
-import com.sdy.jitangapplication.receiver.SMSBroadcastReceiver
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
-import kotlinx.android.synthetic.main.activity_phone.*
+import com.sdy.jitangapplication.widgets.VerificationCodeInput
 import kotlinx.android.synthetic.main.activity_verify_code.*
-import kotlinx.android.synthetic.main.activity_verify_code.btnBack
 import org.jetbrains.anko.startActivity
 
 
@@ -46,12 +43,10 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     }
 
     private fun initView() {
-
         mPresenter = VerifyCodePresenter()
         mPresenter.mView = this
         mPresenter.context = this
         btnBack.onClick { finish() }
-        btnVerifyCode.setOnClickListener(this)
         changePhone.setOnClickListener(this)
         countVerifyCodeTime.setOnClickListener(this)
         //设置手机号
@@ -59,15 +54,21 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         //获取验证码
         mPresenter.getVerifyCode(phone)
 
-        inputVerifyCode.setOnCompleteListener {
-            loadingDialog.show()
-            mPresenter.checkVerifyCode(
-                intent.getStringExtra("wxcode") ?: "",
-                intent.getStringExtra("type") ?: "1",
-                phone,
-                it
-            )
-        }
+        inputVerifyCode.isEnabled = true
+        inputVerifyCode.setOnCompleteListener(object : VerificationCodeInput.Listener {
+            override fun onComplete(complete: Boolean, content: String?) {
+                if (complete) {
+                    loadingDialog.show()
+                    mPresenter.checkVerifyCode(
+                        intent.getStringExtra("wxcode") ?: "",
+                        intent.getStringExtra("type") ?: "1",
+                        phone,
+                        content!!
+                    )
+                }
+            }
+
+        })
 
     }
 
@@ -79,7 +80,8 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
                 tvPhone.text = "$phone"
                 countVerifyCodeTime.text = SpanUtils.with(countVerifyCodeTime)
                     .append("重新获取")
-                    .setBold().create()
+                    .setBold()
+                    .create()
                 countVerifyCodeTime.isEnabled = true
             }
 
@@ -102,19 +104,6 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.btnVerifyCode -> {
-                if (verifyCode.length != 6) {
-                    CommonFunction.toast("请输入验证码！")
-                    return
-                } else {
-                    mPresenter.checkVerifyCode(
-                        intent.getStringExtra("wxcode") ?: "",
-                        intent.getStringExtra("type") ?: "1",
-                        phone,
-                        verifyCode
-                    )
-                }
-            }
             R.id.countVerifyCodeTime -> {
                 mPresenter.getVerifyCode(phone)
             }
@@ -135,7 +124,9 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         if (isRight) {
             this.data = data
             mPresenter.loginIM(LoginInfo(data.accid, data.extra_data?.im_token))
-
+        } else {
+            loadingDialog.dismiss()
+            inputVerifyCode.isEnabled = true
         }
     }
 
@@ -166,7 +157,8 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
                 && (data!!.userinfo!!.nickname.isNullOrEmpty() || data!!.userinfo!!.avatar.isNullOrEmpty()
                         || data!!.userinfo!!.gender == 0 || data!!.userinfo!!.birth.isNullOrEmpty() || data!!.userinfo!!.birth.toLong() == 0L)
             ) {//个人信息没有填写
-                startActivity<SetInfoActivity>()
+                startActivity<UserNickNameActivity>()
+                finish()
             } else {
                 UserManager.saveUserInfo(data!!)
                 if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
@@ -181,6 +173,8 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
             }
         } else {
             CommonFunction.toast("登录失败！请重试")
+            loadingDialog.dismiss()
+            inputVerifyCode.isEnabled = true
         }
     }
 
@@ -200,9 +194,5 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
     override fun onError(text: String) {
         CommonFunction.toast(text)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }
