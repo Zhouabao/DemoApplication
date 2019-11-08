@@ -94,6 +94,7 @@ class PhoneActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
                 finish()
             }
             R.id.btnLoginQuestion -> {
+                startActivity<LoginHelpActivity>()
             }
             R.id.nickNameClean -> {
                 etPhone.setText("")

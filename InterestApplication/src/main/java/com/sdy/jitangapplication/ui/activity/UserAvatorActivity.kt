@@ -67,6 +67,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
 
         userAvatorTake.setOnClickListener(this)
         btnNextStep.setOnClickListener(this)
+        help.setOnClickListener(this)
 
     }
 
@@ -437,6 +438,9 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         when (view.id) {
             R.id.userAvatorTake -> {
                 showAvatorDialog()
+            }
+            R.id.help -> {
+                startActivity<LoginHelpActivity>()
             }
             R.id.btnNextStep -> {
                 mPresenter.loadingDialg.show()

@@ -23,5 +23,5 @@ interface SettingsView : BaseView {
     fun onGetVersionResult(versionBean: VersionBean?)
 
 
-    fun onSettingsBeanResult(settingsBean: SettingsBean)
+    fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?)
 }

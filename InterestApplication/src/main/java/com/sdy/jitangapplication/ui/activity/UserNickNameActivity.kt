@@ -35,6 +35,7 @@ class UserNickNameActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
 
         btnNextStep.setOnClickListener(this)
         nickNameClean.setOnClickListener(this)
+        help.setOnClickListener(this)
 
 
         nickNameEt.addTextChangedListener(object : TextWatcher {
@@ -91,6 +92,9 @@ class UserNickNameActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
             }
             R.id.nickNameClean -> {
                 nickNameEt.setText("")
+            }
+            R.id.help -> {
+                startActivity<LoginHelpActivity>()
             }
         }
 

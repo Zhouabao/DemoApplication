@@ -48,6 +48,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         mPresenter.context = this
         btnBack.onClick { finish() }
         changePhone.setOnClickListener(this)
+        help.setOnClickListener(this)
         countVerifyCodeTime.setOnClickListener(this)
         //设置手机号
         onGetPhoneNum()
@@ -109,6 +110,9 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
             }
             R.id.changePhone -> {
                 onBackPressed()
+            }
+            R.id.help -> {
+                startActivity<LoginHelpActivity>()
             }
         }
     }

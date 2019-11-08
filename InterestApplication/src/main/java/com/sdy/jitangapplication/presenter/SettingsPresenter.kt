@@ -105,8 +105,15 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             .mySettings(token, accid)
             .excute(object : BaseSubscriber<BaseResp<SettingsBean?>>(mView) {
                 override fun onNext(t: BaseResp<SettingsBean?>) {
-                    if (t.code == 200 && t.data != null)
-                        mView.onSettingsBeanResult(t.data!!)
+                    mView.onSettingsBeanResult(t.code == 200, t.data)
+                    if (t.code != 200)
+                        CommonFunction.toast(t.msg)
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onSettingsBeanResult(false, null)
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+
                 }
             })
     }

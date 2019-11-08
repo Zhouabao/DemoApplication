@@ -32,6 +32,7 @@ class UserGenderActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         rlWoman.setOnClickListener(this)
         rlMan.setOnClickListener(this)
         btnNextStep.setOnClickListener(this)
+        help.setOnClickListener(this)
     }
 
 
@@ -47,6 +48,10 @@ class UserGenderActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     private var gender = -1
     override fun onClick(view: View) {
         when (view.id) {
+            R.id.help -> {
+                startActivity<LoginHelpActivity>()
+
+            }
             R.id.rlWoman -> {
                 womanIv.isVisible = true
                 womanTv.setTextColor(resources.getColor(R.color.colorBlack))

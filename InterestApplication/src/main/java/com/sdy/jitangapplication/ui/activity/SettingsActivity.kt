@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.View
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.common.AppManager
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.AuthService
@@ -21,6 +23,7 @@ import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 
@@ -62,6 +65,10 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         filterDistance.setOnClickListener(this)
         verifyHi.setOnClickListener(this)
         hotT1.text = "设置"
+        stateSettings.retryBtn.onClick {
+            stateSettings.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.mySettings(UserManager.getToken(), UserManager.getAccid())
+        }
 
     }
 
@@ -202,9 +209,15 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         }
     }
 
-    override fun onSettingsBeanResult(settingsBean: SettingsBean) {
-        switchDistance.isChecked = settingsBean.hide_distance
-        switchContacts.isChecked = settingsBean.hide_book
-        switchVerifyHi.isChecked = settingsBean.greet_status
+    override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
+        if (success) {
+            stateSettings.viewState = MultiStateView.VIEW_STATE_CONTENT
+            switchDistance.isChecked = settingsBean!!.hide_distance
+            switchContacts.isChecked = settingsBean!!.hide_book
+            switchVerifyHi.isChecked = settingsBean!!.greet_status
+            switchOpenHi.isChecked = settingsBean!!.greet_switch
+        } else {
+            stateSettings.viewState = MultiStateView.VIEW_STATE_ERROR
+        }
     }
 }

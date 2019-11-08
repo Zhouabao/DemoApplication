@@ -1,9 +1,9 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
+import android.view.View
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -20,7 +20,8 @@ import java.util.*
 /**
  * 填写用户生日界面（计算年龄和星座）
  */
-class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNameView {
+class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNameView, View.OnClickListener {
+
 
     private var year: String? = null
     private var month: String? = null
@@ -36,7 +37,9 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
         mPresenter = UserNickNamePresenter()
         mPresenter.mView = this
         mPresenter.context = this
-        btnBack.onClick { finish() }
+        btnBack.setOnClickListener(this)
+        help.setOnClickListener(this)
+        btnNextStep.setOnClickListener(this)
 
         ScrollSoftKeyBoardUtils.addLayoutListener(rootView, btnNextStep)
 
@@ -78,19 +81,6 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
             }
 
         })
-
-        btnNextStep.onClick {
-            mPresenter.uploadUserInfo(
-                2, hashMapOf(
-                    "birth" to "${TimeUtils.date2Millis(
-                        SimpleDateFormat(
-                            "yyyyMMdd",
-                            Locale.getDefault()
-                        ).parse("${year!!}${month!!}${day!!}")
-                    ) / 1000L}"
-                )
-            )
-        }
     }
 
     /**
@@ -220,4 +210,27 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
         }
     }
 
+
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.help -> {
+                startActivity<LoginHelpActivity>()
+            }
+            R.id.btnBack -> {
+                finish()
+            }
+            R.id.btnNextStep -> {
+                mPresenter.uploadUserInfo(
+                    2, hashMapOf(
+                        "birth" to "${TimeUtils.date2Millis(
+                            SimpleDateFormat(
+                                "yyyyMMdd",
+                                Locale.getDefault()
+                            ).parse("${year!!}${month!!}${day!!}")
+                        ) / 1000L}"
+                    )
+                )
+            }
+        }
+    }
 }
