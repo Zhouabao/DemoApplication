@@ -67,6 +67,7 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_square_comment_detail.*
+import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -837,19 +838,27 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             moreActionDialog.dismiss()
         }
         moreActionDialog.report.onClick {
-            //发起举报请求
-            val params = hashMapOf(
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "type" to if (squareBean!!.iscollected == 0) {
-                    1
-                } else {
-                    2
-                },
-                "square_id" to squareBean!!.id!!,
-                "_timestamp" to System.currentTimeMillis()
-            )
-            mPresenter.getSquareReport(params)
+            val dialog = DeleteDialog(this)
+            dialog.show()
+            dialog.tip.text = "确认举报该条动态？"
+            dialog.confirm.text = "举报"
+            dialog.cancel.onClick { dialog.dismiss() }
+            dialog.confirm.onClick {
+                dialog.dismiss()
+                //发起举报请求
+                val params = hashMapOf(
+                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                    "type" to if (squareBean!!.iscollected == 0) {
+                        1
+                    } else {
+                        2
+                    },
+                    "square_id" to squareBean!!.id!!,
+                    "_timestamp" to System.currentTimeMillis()
+                )
+                mPresenter.getSquareReport(params)
+            }
             moreActionDialog.dismiss()
         }
     }

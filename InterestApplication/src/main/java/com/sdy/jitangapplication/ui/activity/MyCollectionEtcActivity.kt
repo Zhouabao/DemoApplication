@@ -32,6 +32,7 @@ import com.sdy.jitangapplication.presenter.view.MyCollectionView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
+import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
@@ -43,6 +44,7 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_my_collection_etc.*
+import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -471,19 +473,29 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
             mPresenter.getSquareCollect(params, position)
         }
         moreActionDialog.report.onClick {
-            //发起举报请求
-            val params = hashMapOf(
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "type" to if (adapter.data[position].iscollected == 0) {
-                    1
-                } else {
-                    2
-                },
-                "square_id" to adapter.data[position].id!!,
-                "_timestamp" to System.currentTimeMillis()
-            )
-            mPresenter.getSquareReport(params, position)
+            val dialog = DeleteDialog(this)
+            dialog.show()
+            dialog.tip.text = "确认举报该条动态？"
+            dialog.confirm.text = "举报"
+            dialog.cancel.onClick { dialog.dismiss() }
+            dialog.confirm.onClick {
+                dialog.dismiss()
+                //发起举报请求
+                val params = hashMapOf(
+                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                    "type" to if (adapter.data[position].iscollected == 0) {
+                        1
+                    } else {
+                        2
+                    },
+                    "square_id" to adapter.data[position].id!!,
+                    "_timestamp" to System.currentTimeMillis()
+                )
+                mPresenter.getSquareReport(params, position)
+
+            }
+
         }
 
     }
