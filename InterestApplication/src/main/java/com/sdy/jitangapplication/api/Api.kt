@@ -26,6 +26,14 @@ interface Api {
     fun getQuestion(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<InvestigateBean?>>
 
 
+
+    /**
+     * 获取调查问卷
+     */
+    @POST("OpenApi/getHelpCenter${Constants.END_BASE_URL}")
+    fun getHelpCenter(): Observable<BaseResp<MutableList<LoginHelpBean>?>>
+
+
     /**
      * 回答调查问卷
      */

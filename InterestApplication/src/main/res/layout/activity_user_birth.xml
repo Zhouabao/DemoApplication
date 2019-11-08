@@ -21,6 +21,7 @@
             />
 
     <TextView
+            android:visibility="gone"
             android:id="@+id/help"
             android:text="帮助"
             android:textColor="#ffb2b2b2"

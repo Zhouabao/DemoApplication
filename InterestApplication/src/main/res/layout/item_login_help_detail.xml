@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:id="@+id/loginHelpTitle"
+          android:orientation="vertical"
+          tools:text="注册失败/登陆失败怎么办注册失败/登陆失败怎么办"
+          android:layout_gravity="center"
+          android:gravity="center_vertical"
+          android:textColor="@color/colorBlack22"
+          android:textSize="15sp"
+          android:ellipsize="end"
+          android:paddingLeft="15dp"
+          android:paddingRight="15dp"
+          android:maxLength="25"
+          android:alpha="0.7"
+          android:layout_width="match_parent"
+          android:layout_height="50dp">
+
+</TextView>

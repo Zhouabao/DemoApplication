@@ -171,8 +171,7 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialo
     //payment_type 支付类型 1支付宝 2微信支付 3余额支付
     private fun createOrder(payment_type: Int) {
         val params = hashMapOf<String, Any>()
-        params["token"] = UserManager.getToken()
-        params["accid"] = UserManager.getAccid()
+        params.putAll(UserManager.getBaseParams())
         for (payway in payways) {
             if (payway.payment_type == payment_type) {
                 params["pay_id"] = payway.id
@@ -288,14 +287,7 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialo
      */
     private fun initChargeWay() {
         RetrofitFactory.instance.create(Api::class.java)
-            .productLists(
-                hashMapOf(
-                    "token" to UserManager.getToken(),
-                    "accid" to UserManager.getAccid(),
-                    "_sign" to "",
-                    "_timestamp" to System.currentTimeMillis()
-                )
-            )
+            .productLists(UserManager.getBaseParams())
             .excute(object : BaseSubscriber<BaseResp<ChargeWayBeans?>>(null) {
                 override fun onNext(it: BaseResp<ChargeWayBeans?>) {
                     if (it.data != null) {

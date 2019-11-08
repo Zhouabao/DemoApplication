@@ -663,4 +663,13 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuide", isShow)
     }
 
+
+    fun getBaseParams(): HashMap<String, Any> {
+        return hashMapOf(
+            "token" to getToken(),
+            "accid" to getAccid(),
+            "timestamp" to System.currentTimeMillis(),
+            "_sign" to "sign"
+        )
+    }
 }

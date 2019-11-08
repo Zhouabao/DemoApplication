@@ -86,8 +86,11 @@
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.LoginHelpDetailActivity">
+        </activity>
+        <activity android:name=".ui.activity.LoginHelpActivity">
+        </activity>
         <activity android:name=".ui.activity.UserAvatorActivity">
-
         </activity>
         <activity android:name=".ui.activity.UserGenderActivity">
         </activity>
@@ -106,7 +109,6 @@
         <activity android:name=".ui.activity.ReportReasonActivity">
         </activity>
         <activity android:name=".ui.activity.NewUserInfoSettingsActivity">
-
         </activity>
         <activity
                 android:name=".ui.activity.LabelsActivity"
@@ -275,8 +277,6 @@
         <activity
                 android:name=".ui.activity.UserBirthActivity"
                 android:screenOrientation="portrait">
-
-
         </activity>
         <activity
                 android:name=".ui.activity.SetInfoActivity"
@@ -285,12 +285,10 @@
         <activity
                 android:name=".ui.activity.VerifyCodeActivity"
                 android:screenOrientation="portrait">
-
         </activity>
         <activity
                 android:name=".ui.activity.PhoneActivity"
-                android:screenOrientation="portrait"
-                >
+                android:screenOrientation="portrait">
         </activity> <!-- android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" -->
         <activity
                 android:name=".ui.activity.LoginActivity"

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="@color/colorWhite"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.LoginHelpActivity">
+
+    <include layout="@layout/layout_actionbar"/>
+
+    <com.kennyc.view.MultiStateView
+            android:id="@+id/stateLoginHelp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="loading">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvLoginHelp"
+                android:overScrollMode="never"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </com.kennyc.view.MultiStateView>
+
+
+</LinearLayout>

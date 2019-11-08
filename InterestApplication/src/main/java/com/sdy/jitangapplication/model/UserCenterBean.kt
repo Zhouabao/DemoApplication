@@ -193,5 +193,6 @@ data class ModelAboutBean(
 
 data class LoginHelpBean(
     val title: String = "",
+//    val content: String = ""
     val content:MutableList<String>
 ) : Serializable
