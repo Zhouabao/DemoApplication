@@ -12,7 +12,9 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.event.ReminderScoreEvent
 import kotlinx.android.synthetic.main.dialog_reminder_score.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -38,7 +40,7 @@ class ReminderScoreDialog(val context1: Context, var score: Int) : Dialog(contex
                 score20.isVisible = true
                 score80.isVisible = false
                 val params = reminderArrow.layoutParams as android.widget.LinearLayout.LayoutParams
-                params.leftMargin = (SizeUtils.dp2px(95F) + SizeUtils.dp2px(40f) / 2f - SizeUtils.dp2px(9F)).toInt()
+                params.leftMargin = (SizeUtils.dp2px(70F) + SizeUtils.dp2px(40f) / 2f - SizeUtils.dp2px(9F)).toInt()
                 reminderArrow.layoutParams = params
 
                 reminderContent.text = SpanUtils.with(reminderContent)
@@ -59,13 +61,13 @@ class ReminderScoreDialog(val context1: Context, var score: Int) : Dialog(contex
                 score80.isVisible = true
                 val layoutmanager80 = score80.layoutParams as RelativeLayout.LayoutParams
                 layoutmanager80.rightMargin =
-                    (SizeUtils.dp2px(15F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(113F)) * 0.2F).toInt()
-                score80.layoutParams = layoutmanager80
+                    (SizeUtils.dp2px(15F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(110F)) * 0.2F).toInt()
+                //score80.layoutParams = layoutmanager80
 
 
                 val params = reminderArrow.layoutParams as android.widget.LinearLayout.LayoutParams
                 params.leftMargin =
-                    (SizeUtils.dp2px(95F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(95F)
+                    (SizeUtils.dp2px(70F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F)
                             - SizeUtils.dp2px(15F)) * 0.8F - SizeUtils.dp2px(40f) / 2f - SizeUtils.dp2px(3f)).toInt()
                 reminderArrow.layoutParams = params
 
@@ -94,7 +96,7 @@ class ReminderScoreDialog(val context1: Context, var score: Int) : Dialog(contex
         }
 
         llRoot.onClick {
-            //            EventBus.getDefault().post(ReminderScoreEvent(score))
+            EventBus.getDefault().post(ReminderScoreEvent(score))
             dismiss()
         }
     }

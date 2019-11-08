@@ -594,7 +594,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                 mPresenter.getSquareReport(params, position)
 
             }
-
+            moreActionDialog.dismiss()
         }
 
 

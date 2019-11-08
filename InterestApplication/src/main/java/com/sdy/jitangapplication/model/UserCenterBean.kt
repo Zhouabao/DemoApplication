@@ -19,6 +19,7 @@ data class UserInfoBean(
     val free_show: Boolean = false,//  true（显示）  false(模糊)
     val vip_descr: MutableList<VipDescr>? = mutableListOf(),//会员权益描述
     val visitlist: MutableList<String>? = mutableListOf()//看过我的头像列表
+
 )
 
 //设置中心开关
@@ -108,13 +109,34 @@ data class UserInfoSettingBean(
     val personal_job: String? = "",
     val making_friends: Int = 0,
     val making_friends_list: MutableList<String> = mutableListOf(),
-    val school_name: String? = "",
+    val personal_school: String? = "",
     val personal_drink: Int = 0,
     val personal_drink_list: MutableList<String> = mutableListOf(),
     val personal_smoke: Int = 0,
     val personal_smoke_list: MutableList<String> = mutableListOf(),
     val personal_food: Int = 0,
-    val personal_food_list: MutableList<String> = mutableListOf()
+    val personal_food_list: MutableList<String> = mutableListOf(),
+    val score_rule: ScoreRule? = null
+
+)
+
+data class ScoreRule(
+    var about: Int = 0,
+    var base: Int = 0,
+    var emotion: Int = 0,
+    var height: Int = 0,
+    var hometown: Int = 0,
+    var making_friends: Int = 0,
+    var personal_drink: Int = 0,
+    var personal_food: Int = 0,
+    var personal_job: Int = 0,
+    var personal_school: Int = 0,
+    var personal_smoke: Int = 0,
+    var photo: Int = 0,
+    var present_address: Int = 0,
+    var total: Int = 0,
+    var base_total: Int = 0,
+    var percent_complete: Int = 0
 )
 
 
@@ -125,7 +147,8 @@ data class MyPhotoBean(
     var has_face: Int = 0,//1 没有 2 有
     var id: Int = 0,
     var type: Int,
-    var url: String = ""
+    var url: String = "",
+    var photoScore: Int = 0
 ) : MultiItemEntity {
     override fun getItemType(): Int {
         return type

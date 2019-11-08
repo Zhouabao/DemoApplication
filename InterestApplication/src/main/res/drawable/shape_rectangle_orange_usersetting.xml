@@ -4,9 +4,9 @@
     <gradient
             android:type="linear"
             android:useLevel="true"
-            android:startColor="#ffff9c35"
-            android:endColor="@color/colorOrange"
-            android:angle="135"/>
+            android:startColor="@color/colorOrange"
+            android:endColor="#ffff9c35"
+            android:angle="90"/>
     <corners android:radius="5dp"/>
     <item android:name="android:shadowColor">#ffffeac8</item>
     <item android:name="android:shadowDx">0</item>

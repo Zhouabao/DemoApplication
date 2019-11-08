@@ -41,7 +41,6 @@ import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.sdy.jitangapplication.widgets.GotoVerifyDialog
 import com.sdy.jitangapplication.widgets.OnRecyclerItemClickListener
 import kotlinx.android.synthetic.main.activity_user_center.btnBack
@@ -136,14 +135,14 @@ class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), U
 
 
         userPhotosRv.layoutManager = GridLayoutManager(this, 3, RecyclerView.VERTICAL, false)
-        userPhotosRv.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.BOTH_SET,
-                SizeUtils.dp2px(15F),
-                resources.getColor(R.color.colorWhite)
-            )
-        )
+//        userPhotosRv.addItemDecoration(
+//            DividerItemDecoration(
+//                this,
+//                DividerItemDecoration.BOTH_SET,
+//                SizeUtils.dp2px(15F),
+//                resources.getColor(R.color.colorWhite)
+//            )
+//        )
         userPhotosRv.adapter = adapter
         val itemDragAndSwpieCallBack = ItemDragAndSwipeCallback(adapter)
         val itemTouchHelper = ItemTouchHelper(itemDragAndSwpieCallBack)

@@ -8,21 +8,11 @@
               android:gravity="center"
               android:background="@drawable/shape_rectangle_gray_f3f3f6_5dp">
 
-    <TextView
-            android:id="@+id/addPhotoTip"
-            android:textColor="@color/colorWhite"
-            android:text="再传两张生活照吧"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textSize="12sp"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/icon_arrow_notify_down"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+
 
     <ImageView
             android:visibility="visible"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="50dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerInside"
             android:src="@drawable/icon_add_phot"

@@ -10,7 +10,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.widgets.drag.BaseMultiItemDragQuickAdapter
 import kotlinx.android.synthetic.main.item_user_info_img.view.*
-import kotlinx.android.synthetic.main.item_user_info_take.view.*
 import kotlinx.android.synthetic.main.layout_add_score.view.*
 
 /**
@@ -51,8 +50,8 @@ class UserPhotoAdapter(datas: MutableList<MyPhotoBean>) :
 //                GlideUtil.loadImg(mContext, domain.plus(item.url), holder.itemView.userImg)
             }
             MyPhotoBean.COVER -> {
-                holder.itemView.tvAddScoreSmile.text = "+5"
-                holder.itemView.addPhotoTip.isVisible = data.size == 2
+                holder.itemView.tvAddScoreSmile.text = "+${item.photoScore}"
+                holder.itemView.tvAddScoreSmile.isVisible = data.size < 10
             }
         }
 

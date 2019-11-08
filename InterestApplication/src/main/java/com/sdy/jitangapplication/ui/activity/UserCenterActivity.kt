@@ -102,6 +102,8 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         userSquareCount.text = "我的动态 ${userInfoBean?.squarelist?.count}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
+        userInfoSettingBtn.text = "完成度：${userInfoBean?.userinfo?.percent_complete}%"
+        userVerifyBtn.text = "+${userInfoBean?.userinfo?.identification}"
 
         // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
         checkVerify()
@@ -133,10 +135,10 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             userVerifyBtn.isVisible = true
             if (userInfoBean?.userinfo?.isfaced == 4) {
                 userVerifyTip.text = "审核不通过"
-                userVerifyBtn.text = "重新认证"
+//                userVerifyBtn.text = "重新认证"
             } else {
                 userVerifyTip.text = "未认证"
-                userVerifyBtn.text = "立即认证"
+//                userVerifyBtn.text = "立即认证"
             }
             userVerifyBtn.isEnabled = true
         }

@@ -28,7 +28,9 @@ data class Userinfo(
     val isvip: Int = -1,
     val todayvisit: Int = 0,
     val vip_express: String = "",
-    var isfaced: Int = -1//   0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
+    var isfaced: Int = -1,//   0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
+    var identification: Int = 0,// int（认证分数）
+    var percent_complete: Float = 0F// float（百分比例如 80.99）
 )
 
 data class TagBean(

@@ -544,9 +544,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     "_timestamp" to System.currentTimeMillis()
                 )
                 mPresenter.getSquareReport(params, position)
-
             }
-
+            moreActionDialog.dismiss()
 
 
         }

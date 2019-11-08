@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:orientation="horizontal"
+              android:background="@drawable/shape_rectangle_gray_f3f3f6_5dp"
               android:layout_height="wrap_content">
 
     <ImageView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/emptyImg"
-            android:src="@drawable/icon_empty_cover"
+            android:scaleType="center"
+            android:src="@drawable/icon_add_phot"
             android:layout_width="108dp"
             android:layout_height="108dp"/>
 </LinearLayout>

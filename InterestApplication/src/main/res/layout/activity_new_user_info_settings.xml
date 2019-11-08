@@ -66,7 +66,7 @@
             app:msv_emptyView="@layout/empty_layout"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            app:msv_viewState="content">
 
         <FrameLayout
                 android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                             android:layout_marginLeft="15dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="29dp"
+                            android:layout_marginTop="30dp"
                             />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -179,7 +179,6 @@
                                 android:gravity="center_vertical"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="15sp"
-                                android:drawableRight="@drawable/icon_more_right"
                                 android:layout_width="0dp"
                                 android:layout_height="50dp"
                                 app:layout_constraintLeft_toRightOf="@id/t1"
@@ -795,54 +794,47 @@
 
             </androidx.core.widget.NestedScrollView>
 
+
             <RelativeLayout
                     android:id="@+id/userFinishProgressRl"
                     android:layout_marginTop="16dp"
                     android:background="@color/colorWhite"
                     android:layout_width="match_parent"
-                    android:layout_height="26dp">
+                    android:layout_height="wrap_content">
 
                 <ProgressBar
                         android:id="@+id/userFinishProgress"
                         style="@style/progressBarHorizontal11"
-                        android:progress="20"
+                        android:progress="0"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="95dp"
+                        android:layout_marginLeft="70dp"
                         android:layout_marginRight="15dp"
                         android:layout_width="match_parent"
-                        android:layout_height="20dp"/>
+                        android:layout_height="12dp"/>
 
                 <TextView
                         android:id="@+id/userScoreTv"
-                        android:gravity="center_vertical|left"
+                        android:gravity="center_vertical"
                         android:layout_centerVertical="true"
-                        android:layout_width="95dp"
-                        android:layout_height="match_parent"
-                        android:text="完成度20%"
+                        android:layout_width="55dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_height="wrap_content"
+                        android:text="完成度"
+                        android:textStyle="bold"
                         android:textColor="#ff000000"
                         android:textSize="13sp"
-                        android:layout_marginLeft="15dp"
                         />
 
 
-                <ImageView
-                        android:id="@+id/userScore20"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="95dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icon_twenty_click"
-                        android:layout_width="40dp"
-                        />
-
-
-                <ImageView
+                <include
                         android:id="@+id/userScore80"
+                        layout="@layout/layout_add_score"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="52dp"
+                        android:layout_marginRight="90dp"
                         android:layout_centerVertical="true"
-                        android:layout_height="wrap_content"
+                        android:layout_height="22dp"
                         android:src="@drawable/icon_eighty_unclick"
-                        android:layout_width="40dp"
+                        android:layout_width="wrap_content"
                         />
 
 
@@ -854,8 +846,40 @@
                         android:src="@drawable/icon_vip_score"
                         android:layout_width="26dp"
                         android:layout_height="26dp"/>
+
+
+                <TextView
+                        android:id="@+id/userScore20"
+                        android:layout_marginLeft="70dp"
+                        android:layout_centerVertical="true"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="6dp"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:drawableLeft="@drawable/icon_information_finish"
+                        android:background="@drawable/shape_rectangle_orange_white_9dp"
+                        android:layout_width="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:text="20%"
+                        android:textColor="@color/colorOrange"
+                        android:layout_height="18dp">
+                </TextView>
+
             </RelativeLayout>
 
+            <TextView
+                    android:id="@+id/addPhotoTip"
+                    android:textColor="@color/colorWhite"
+                    android:text="再传两张生活照吧"
+                    android:gravity="center"
+                    android:visibility="invisible"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="12sp"
+                    android:layout_marginTop="78dp"
+                    android:background="@drawable/icon_arrow_notify_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
         </FrameLayout>
 
 

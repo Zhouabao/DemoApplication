@@ -57,6 +57,7 @@ import com.sdy.jitangapplication.widgets.OnRecyclerItemClickListener
 import kotlinx.android.synthetic.main.activity_new_user_info_settings.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_delete_photo.*
+import kotlinx.android.synthetic.main.dialog_reminder_score.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_add_score.view.*
 import org.greenrobot.eventbus.EventBus
@@ -91,6 +92,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         setContentView(R.layout.activity_new_user_info_settings)
         initView()
         updateScoreLayout()
+
         mPresenter.personalInfo(params)
         setSwipeBackEnable(false)
 //        adapter.addData(MyPhotoBean(type = MyPhotoBean.COVER))
@@ -103,7 +105,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
         btnBack.setOnClickListener(this)
         userNickName.setOnClickListener(this)
-        userGender.setOnClickListener(this)
+//        userGender.setOnClickListener(this)
         userBirth.setOnClickListener(this)
         userHeight.setOnClickListener(this)
         userNickSign.setOnClickListener(this)
@@ -117,25 +119,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         userSmoke.setOnClickListener(this)
         userEat.setOnClickListener(this)
         saveBtn.setOnClickListener(this)
-        userScore20.setOnClickListener(this)
+        //userScore20.setOnClickListener(this)
         userScore80.setOnClickListener(this)
         userScoreVip.setOnClickListener(this)
 
 
 
         userScoreAboutMe.tvAddScoreSmile.text = "+10"
-
-        userScoreTv.text = SpanUtils.with(userScoreTv)
-            .append("完成度")
-            .setFontSize(13, true)
-            .setBold()
-            .setForegroundColor(resources.getColor(R.color.colorBlack))
-            .append("120%")
-            .setFontSize(14, true)
-            .setBold()
-            .setForegroundColor(resources.getColor(R.color.colorOrange))
-            .create()
-
 
         mPresenter = UserInfoSettingsPresenter()
         mPresenter.mView = this
@@ -238,92 +228,96 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
             userBirth.text = "${data.birth}/${data.constellation}"
 
-            if (data.face_state) {
-                if (Build.VERSION.SDK_INT >= 24)
-                    userFinishProgress.setProgress(40, true)
-                else
-                    userFinishProgress.progress = 40
+            if (UserManager.isUserVip()) {
+                userScore80.isVisible = false
+                userScoreVip.isVisible = false
+                userScoreVip.setImageResource(R.drawable.icon_vip_score_highlight)
+                userScoreVip.isEnabled = false
             } else {
-                if (Build.VERSION.SDK_INT >= 24)
-                    userFinishProgress.setProgress(20, true)
-                else
-                    userFinishProgress.progress = 20
+                userScore80.isVisible = true
+                userScoreVip.isVisible = true
+                userScoreVip.setImageResource(R.drawable.icon_vip_score)
+                userScoreVip.isEnabled = true
             }
-            userScoreTv.text = SpanUtils.with(userScoreTv)
-                .append("完成度")
-                .setFontSize(14, true)
-                .setForegroundColor(resources.getColor(R.color.colorBlack))
-                .append("${userFinishProgress.progress}%")
-                .setFontSize(15, true)
-                .setBold()
-                .setForegroundColor(resources.getColor(R.color.colorOrange))
-                .create()
+
+
+
+            if (data.score_rule != null) {
+                userScore80.tvAddScoreSmile.text = "${data.score_rule.base_total + data.score_rule.base}"
+                userScore80.ivAddScoreSmile.setImageResource(R.drawable.icon_xiaolian_gray)
+                var scorePhoto = 0
+                if (!data.photos_wall.isNullOrEmpty()) {
+                    scorePhoto = (data.photos_wall.size - 1) * data.score_rule.photo
+                }
+                setScroeProgress(data.score_rule.base + scorePhoto)
+            }
+
 
             if (!data.sign.isNullOrEmpty()) {
                 userNickSign.text = "${data.sign}"
                 userScoreAboutMe.isVisible = false
-                updateScoreStatus(userScoreAboutMe, 10)
+                updateScoreStatus(userScoreAboutMe, data.score_rule?.about ?: 0)
             }
 
             if (data.emotion_state > 0 && data.emotion_list.size > data.emotion_state) {
                 userLoveStatus.text = data.emotion_list[data.emotion_state - 1]
                 userScoreEmotion.isVisible = false
-                updateScoreStatus(userScoreEmotion, 2)
+                updateScoreStatus(userScoreEmotion, data.score_rule?.emotion ?: 0)
 
             }
             if (data.height > 0) {
                 userHeight.text = "${data.height}"
                 userScoreHeight.isVisible = false
-                updateScoreStatus(userScoreHeight, 2)
+                updateScoreStatus(userScoreHeight, data.score_rule?.height ?: 0)
 
             }
 
             if (!data.hometown.isNullOrEmpty()) {
                 userHomeTown.text = data.hometown
                 userScoreHomeTown.isVisible = false
-                updateScoreStatus(userScoreHomeTown, 2)
+                updateScoreStatus(userScoreHomeTown, data.score_rule?.hometown ?: 0)
 
             }
             if (!data.present_address.isNullOrEmpty()) {
                 userLiveNow.text = data.present_address
                 userScoreLiveNow.isVisible = false
-                updateScoreStatus(userScoreLiveNow, 2)
+                updateScoreStatus(userScoreLiveNow, data.score_rule?.present_address ?: 0)
 
             }
             if (!data.personal_job.isNullOrEmpty()) {
                 userJob.text = data.personal_job
                 userScoreJob.isVisible = false
-                updateScoreStatus(userScoreJob, 2)
+                updateScoreStatus(userScoreJob, data.score_rule?.personal_job ?: 0)
 
             }
             if (data.making_friends > 0 && data.making_friends_list.size > data.making_friends - 1) {
                 userFriendsAim.text = data.making_friends_list[data.making_friends - 1]
                 userScoreFriendsAim.isVisible = false
-                updateScoreStatus(userScoreFriendsAim, 2)
+                updateScoreStatus(userScoreFriendsAim, data.score_rule?.making_friends ?: 0)
 
             }
 
-            if (!data.school_name.isNullOrEmpty()) {
-                userSchool.text = data.school_name
+            if (!data.personal_school.isNullOrEmpty()) {
+                userSchool.text = data.personal_school
                 userScoreSchool.isVisible = false
-                updateScoreStatus(userScoreSchool, 2)
+                updateScoreStatus(userScoreSchool, data.score_rule?.personal_school ?: 0)
 
             }
             if (data.personal_drink > 0 && data.personal_drink_list.size > data.personal_drink - 1) {
                 userDrink.text = data.personal_drink_list[data.personal_drink - 1]
                 userScoreDrink.isVisible = false
-                updateScoreStatus(userScoreDrink, 2)
+                updateScoreStatus(userScoreDrink, data.score_rule?.personal_drink ?: 0)
             }
             if (data.personal_smoke > 0 && data.personal_smoke_list.size > data.personal_smoke - 1) {
                 userSmoke.text = data.personal_smoke_list[data.personal_smoke - 1]
                 userScoreSmoke.isVisible = false
-                updateScoreStatus(userScoreSmoke, 2)
+                updateScoreStatus(userScoreSmoke, data.score_rule?.personal_smoke ?: 0)
             }
 
             if (data.personal_food > 0 && data.personal_food_list.size > data.personal_food - 1) {
                 userEat.text = data.personal_food_list[data.personal_food - 1]
                 userScoreEat.isVisible = false
-                updateScoreStatus(userScoreEat, 2)
+                updateScoreStatus(userScoreEat, data.score_rule?.personal_food ?: 0)
             }
 
 
@@ -344,7 +338,12 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             adapter.setNewData(data.photos_wall ?: mutableListOf())
             photos.addAll(data.photos_wall ?: mutableListOf())
             originalPhotos.addAll(data.photos_wall ?: mutableListOf())
-            adapter.addData(MyPhotoBean(type = MyPhotoBean.COVER))
+            adapter.addData(MyPhotoBean(type = MyPhotoBean.COVER, photoScore = data.score_rule?.photo ?: 0))
+            if (adapter.data.size == 2) {
+                mHandler.postDelayed({
+                    showUploadMorePhotos()
+                }, 1000)
+            }
             refreshLayout()
 
             mHandler.sendEmptyMessage(MSG_LOAD_DATA)
@@ -635,6 +634,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             photos.add(result)
             adapter.notifyDataSetChanged()
             refreshLayout()
+            updateScoreStatus(score = data!!.score_rule!!.photo)
         }
     }
 
@@ -741,7 +741,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                         userSchool.text = (data.getSerializableExtra("schoolBean") as SchoolBean).school_title
                         savePersonalParams["personal_school"] =
                             (data.getSerializableExtra("schoolBean") as SchoolBean).school_title
-                        updateScoreStatus(userScoreSchool, 2)
+                        updateScoreStatus(userScoreSchool, this.data!!.score_rule?.personal_school ?: 0)
                         isChange = true
                         checkSaveEnable()
                     }
@@ -749,6 +749,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 105 -> {//关于我
                     userNickSign.text = data?.getStringExtra("content")
                     savePersonalParams["sign"] = data?.getStringExtra("content")
+                    updateScoreStatus(userScoreAboutMe, this.data!!.score_rule?.about ?: 0)
                     isChange = true
                     checkSaveEnable()
                 }
@@ -761,7 +762,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                             uploadPicture(
                                 requestCode == REPLACE_REQUEST, PictureSelector.obtainMultipleResult(data)[0].path
                             )
-
                         }
                     }
                 }
@@ -784,7 +784,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
             }
             R.id.userScore80 -> {
-                ReminderScoreDialog(this, 80).show()
+                ReminderScoreDialog(this, data?.score_rule?.total ?: 0).show()
 //                userScore80.setImageResource(R.drawable.icon_eighty_click)
             }
             R.id.userNickName -> {//昵称
@@ -997,10 +997,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
     fun onResetScoreEvent(dialogEvent: ReminderScoreEvent) {
         when (dialogEvent.score) {
             20 -> {
-                userScore20.setImageResource(R.drawable.icon_twenty_unclick)
+//                userScore20.setImageResource(R.drawable.icon_twenty_unclick)
             }
             80 -> {
-                userScore80.setImageResource(R.drawable.icon_eighty_unclick)
+//                userScore80.setImageResource(R.drawable.icon_eighty_unclick)
             }
         }
     }
@@ -1011,91 +1011,114 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
      * 更新添加分数的状态
      * 资料新增后就要改变状态实现动画
      */
-    private fun updateScoreStatus(view: View, score: Int) {
-        //如果view处于可见状态，说明之前没有加过分数，那这时就实现动画效果
-        if (view.isVisible) {
-            val translateAnimationRight = TranslateAnimation(
-                TranslateAnimation.RELATIVE_TO_SELF,
-                0f,
-                TranslateAnimation.ABSOLUTE,
-                (view.width - view.ivAddScoreSmile.width - SizeUtils.dp2px(8f)).toFloat(),
-                TranslateAnimation.RELATIVE_TO_SELF,
-                0f,
-                TranslateAnimation.RELATIVE_TO_SELF,
-                0F
+    private fun updateScoreStatus(view: View? = null, score: Int) {
+        //会员的时候不显示添加分数
+        if (view != null) {
 
-            )
-            translateAnimationRight.duration = 500
-            translateAnimationRight.fillAfter = true
-            translateAnimationRight.interpolator = LinearInterpolator()
+            if (UserManager.isUserVip()) {
+                view.isVisible = false
+            }
+            view.tvAddScoreSmile.text = "+$score"
 
-            val translateAnimationTop = TranslateAnimation(
-                TranslateAnimation.RELATIVE_TO_SELF,
-                0f,
-                TranslateAnimation.RELATIVE_TO_SELF,
-                0F,
-                TranslateAnimation.RELATIVE_TO_SELF,
-                0f,
-                TranslateAnimation.RELATIVE_TO_PARENT,
-                -0.7F
+            //如果view处于可见状态，说明之前没有加过分数，那这时就实现动画效果
+            if (view.isVisible) {
+                val translateAnimationRight = TranslateAnimation(
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0f,
+                    TranslateAnimation.ABSOLUTE,
+                    (view.width - view.ivAddScoreSmile.width - SizeUtils.dp2px(8f)).toFloat(),
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0f,
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0F
 
-            )
-            translateAnimationTop.duration = 500
-            translateAnimationTop.fillAfter = true
-            translateAnimationTop.interpolator = DecelerateInterpolator()
-            val scaleAnimation = ScaleAnimation(1f, 0f, 1f, 0f)
-            scaleAnimation.duration = 500
-            scaleAnimation.fillAfter = true
-            val alphaAnimation = AlphaAnimation(0F, 1F)
-            alphaAnimation.duration = 500
-            alphaAnimation.fillAfter = true
-            val animationSet = AnimationSet(true)
-            animationSet.addAnimation(translateAnimationTop)
-            animationSet.addAnimation(scaleAnimation)
-            animationSet.addAnimation(alphaAnimation)
-            animationSet.fillAfter = true
+                )
+                translateAnimationRight.duration = 500
+                translateAnimationRight.fillAfter = true
+                translateAnimationRight.interpolator = LinearInterpolator()
 
-            translateAnimationRight.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationRepeat(p0: Animation?) {
+                val translateAnimationTop = TranslateAnimation(
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0f,
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0F,
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0f,
+                    TranslateAnimation.RELATIVE_TO_PARENT,
+                    -0.7F
 
-                }
+                )
+                translateAnimationTop.duration = 500
+                translateAnimationTop.fillAfter = true
+                translateAnimationTop.interpolator = DecelerateInterpolator()
+                val scaleAnimation = ScaleAnimation(1f, 0f, 1f, 0f)
+                scaleAnimation.duration = 500
+                scaleAnimation.fillAfter = true
+                val alphaAnimation = AlphaAnimation(0F, 1F)
+                alphaAnimation.duration = 500
+                alphaAnimation.fillAfter = true
+                val animationSet = AnimationSet(true)
+                animationSet.addAnimation(translateAnimationTop)
+                animationSet.addAnimation(scaleAnimation)
+                animationSet.addAnimation(alphaAnimation)
+                animationSet.fillAfter = true
 
-                override fun onAnimationEnd(p0: Animation?) {
-                    view.postDelayed({
-                        view.isVisible = false
-                    }, 200)
-                }
+                translateAnimationRight.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationRepeat(p0: Animation?) {
 
-                override fun onAnimationStart(p0: Animation?) {
-                    view.setBackgroundResource(R.drawable.shape_rectangle_orange_11dp)
-                    view.tvAddScoreSmile.startAnimation(animationSet)
-                }
-            })
-            view.ivAddScoreSmile.startAnimation(translateAnimationRight)
+                    }
+
+                    override fun onAnimationEnd(p0: Animation?) {
+                        view.postDelayed({
+                            view.isVisible = false
+                        }, 200)
+                    }
+
+                    override fun onAnimationStart(p0: Animation?) {
+                        view.setBackgroundResource(R.drawable.shape_rectangle_orange_11dp)
+                        view.tvAddScoreSmile.startAnimation(animationSet)
+                    }
+                })
+                view.ivAddScoreSmile.startAnimation(translateAnimationRight)
+            }
         }
 
+        setScroeProgress(score)
 
-        if (Build.VERSION.SDK_INT >= 24)
-            userFinishProgress.setProgress((userFinishProgress.progress + score), true)
-        else
-            userFinishProgress.progress = (userFinishProgress.progress + score)
 
-        userScoreTv.text = SpanUtils.with(userScoreTv)
-            .append("完成度")
-            .setFontSize(14, true)
-            .setForegroundColor(resources.getColor(R.color.colorBlack))
-            .append("${userFinishProgress.progress}%")
-            .setFontSize(15, true)
-            .setBold()
-            .setForegroundColor(resources.getColor(R.color.colorOrange))
-            .create()
+    }
 
-        if (userFinishProgress.progress >= 80) {
-            userScore80.setImageResource(R.drawable.icon_eighty_click)
+
+    private var totalGetScore = 0//用户资料目前总的得分
+    private fun setScroeProgress(score: Int) {
+        totalGetScore += score //汇总每次的得分
+        var progress =
+            (totalGetScore * 1.0F / (data!!.score_rule!!.base_total + data!!.score_rule!!.base) * 100).toInt()
+        userScore20.text = "${progress}%"
+
+        if (!UserManager.isUserVip()) {
+            progress = (progress * 0.8).toInt()
+        }
+
+        if (Build.VERSION.SDK_INT >= 24) {
+            userFinishProgress.setProgress(progress, true)
         } else {
-            userScore80.setImageResource(R.drawable.icon_eighty_unclick)
+            userFinishProgress.progress = progress
         }
+        val layoutmanager20 = userScore20.layoutParams as RelativeLayout.LayoutParams
+        layoutmanager20.leftMargin = if (UserManager.isUserVip() && userFinishProgress.progress == 100) {
+            ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F)
+        } else
+            SizeUtils.dp2px(70F) + (if (userFinishProgress.width == 0) {
+                ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15) - score20.width
+            } else {
+                userFinishProgress.width
+            } * userFinishProgress.progress * 1.0f / 100).toInt() - userScore20.width
+        userScore20.layoutParams = layoutmanager20
 
+        if (!UserManager.isUserVip())
+            userScore80.isVisible =
+                (ScreenUtils.getScreenWidth() - layoutmanager20.leftMargin - userScore20.width) >= (SizeUtils.dp2px(90F) + userScore80.width)
 
     }
 
@@ -1106,10 +1129,45 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
     private fun updateScoreLayout() {
         val layoutmanager80 = userScore80.layoutParams as RelativeLayout.LayoutParams
         layoutmanager80.rightMargin =
-            (SizeUtils.dp2px(15F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(113F)) * 0.2F).toInt()
-        userScore80.layoutParams = layoutmanager80
+            (SizeUtils.dp2px(15F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(110F)) * 0.2F).toInt()
+//        userScore80.layoutParams = layoutmanager80
 
 
+    }
+
+    private fun showUploadMorePhotos() {
+        //使用AnimationUtils类的静态方法loadAnimation()来加载XML中的动画XML文件
+        val animation = AnimationUtils.loadAnimation(this, R.anim.dialog_center_in)
+        val animationOut = AnimationUtils.loadAnimation(this, R.anim.dialog_center_exit)
+        animation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(p0: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                addPhotoTip.isVisible = true
+                Thread.sleep(1000L)
+                addPhotoTip.startAnimation(animationOut)
+            }
+
+            override fun onAnimationStart(p0: Animation?) {
+            }
+
+        })
+        animationOut.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(p0: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                addPhotoTip.isVisible = false
+            }
+
+            override fun onAnimationStart(p0: Animation?) {
+            }
+
+        })
+        addPhotoTip.startAnimation(animation)
     }
 
 
