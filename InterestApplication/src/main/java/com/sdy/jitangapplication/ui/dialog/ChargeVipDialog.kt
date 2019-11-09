@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -48,7 +49,8 @@ import kotlinx.android.synthetic.main.dialog_charge_vip.*
  *    desc   : 充值会员底部对话框
  *    version: 1.0
  */
-class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialog(context1, R.style.MyDialog) {
+class ChargeVipDialog(public var currentPos: Int, val context1: Context, public var purchaseType: Int = PURCHASE_VIP) :
+    Dialog(context1, R.style.MyDialog) {
     companion object {
         const val VIP_LOGO = 1//会员logo
         const val INFINITE_SLIDE = 0//无限滑动
@@ -56,7 +58,13 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialo
         const val LOOKED_ME = 3//看过我的
         const val LIKED_ME = 4//喜欢我的
         const val DOUBLE_HI = 5//双倍招呼
+
+        //购买类型
+        const val PURCHASE_VIP = 100//VIP购买
+        const val PURCHASE_GREET_COUNT = 200//招呼次数购买
+
     }
+
 
     private var payways: MutableList<PaywayBean> = mutableListOf()
     private val SDK_PAY_FLAG = 1
@@ -97,7 +105,7 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialo
     /**
      * 设置VIP的权益广告栏
      */
-    private val vipBannerAdapter by lazy { VipBannerAdapter() }
+    private val vipBannerAdapter by lazy { VipBannerAdapter(PURCHASE_VIP) }
 
     //权益栏
     private fun initVipPowerData(banners: MutableList<VipDescr>) {
@@ -162,6 +170,40 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialo
         //余额支付
         balancePayBtn.onClick {
             createOrder(3)
+        }
+
+        //购买类型判断
+        switchPurchase.onClick {
+            setPurchaseType()
+        }
+    }
+
+    /**
+     * 设置购买的方式
+     */
+    private fun setPurchaseType() {
+        if (purchaseType == PURCHASE_VIP) {
+            switchPurchase.text = "切换为会员购买"
+            purchaseType = PURCHASE_GREET_COUNT
+            vipBannerAdapter.type = purchaseType
+
+            bannerIndicator.isVisible = false
+            if (chargeWayBeans != null) {
+                setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf())
+                initVipPowerData(chargeWayBeans!!.greet_icon_list ?: mutableListOf())
+            }
+
+        } else {
+            switchPurchase.text = "切换为次数购买"
+            purchaseType = PURCHASE_VIP
+            vipBannerAdapter.type = purchaseType
+            bannerIndicator.isVisible = true
+            if (chargeWayBeans != null) {
+                setChargeWayData(chargeWayBeans!!.list ?: mutableListOf())
+                initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
+            }
+
+
         }
     }
 
@@ -282,6 +324,7 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialo
     }
 
 
+    private var chargeWayBeans: ChargeWayBeans? = null
     /**
      * 请求支付方式
      */
@@ -291,12 +334,9 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context) : Dialo
             .excute(object : BaseSubscriber<BaseResp<ChargeWayBeans?>>(null) {
                 override fun onNext(it: BaseResp<ChargeWayBeans?>) {
                     if (it.data != null) {
-                        if (!it.data!!.list.isNullOrEmpty()) {
-                            it.data!!.list?.get(0)?.check = true
-                        }
-                        setChargeWayData(it.data!!.list ?: mutableListOf())
-                        initVipPowerData(it.data!!.icon_list ?: mutableListOf())
-                        payways.addAll(it.data!!.paylist ?: mutableListOf())
+                        chargeWayBeans = it.data
+                        setPurchaseType()
+                        payways.addAll(chargeWayBeans!!.paylist ?: mutableListOf())
                         initPayWay()
                         loading.visibility = View.GONE
                         dialogView.visibility = View.VISIBLE
