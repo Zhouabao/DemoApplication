@@ -181,30 +181,51 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context, public 
     /**
      * 设置购买的方式
      */
-    private fun setPurchaseType() {
-        if (purchaseType == PURCHASE_VIP) {
-            switchPurchase.text = "切换为会员购买"
-            purchaseType = PURCHASE_GREET_COUNT
-            vipBannerAdapter.type = purchaseType
+    private fun setPurchaseType(switch: Boolean = true) {
+        if (switch) {
+            if (purchaseType == PURCHASE_VIP) {
+                switchPurchase.text = "切换为会员购买"
+                purchaseType = PURCHASE_GREET_COUNT
+                vipBannerAdapter.type = purchaseType
 
-            bannerIndicator.isVisible = false
-            if (chargeWayBeans != null) {
-                setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf())
-                initVipPowerData(chargeWayBeans!!.greet_icon_list ?: mutableListOf())
+                bannerIndicator.isVisible = false
+                if (chargeWayBeans != null) {
+                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf())
+                    initVipPowerData(chargeWayBeans!!.greet_icon_list ?: mutableListOf())
+                }
+            } else {
+                switchPurchase.text = "切换为次数购买"
+                purchaseType = PURCHASE_VIP
+                vipBannerAdapter.type = purchaseType
+                bannerIndicator.isVisible = true
+                if (chargeWayBeans != null) {
+                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf())
+                    initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
+                }
+
+
             }
-
         } else {
-            switchPurchase.text = "切换为次数购买"
-            purchaseType = PURCHASE_VIP
-            vipBannerAdapter.type = purchaseType
-            bannerIndicator.isVisible = true
-            if (chargeWayBeans != null) {
-                setChargeWayData(chargeWayBeans!!.list ?: mutableListOf())
-                initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
+            if (purchaseType == PURCHASE_VIP) {
+                switchPurchase.text = "切换为次数购买"
+                vipBannerAdapter.type = purchaseType
+                bannerIndicator.isVisible = true
+                if (chargeWayBeans != null) {
+                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf())
+                    initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
+                }
+            } else {
+                switchPurchase.text = "切换为会员购买"
+                vipBannerAdapter.type = purchaseType
+                bannerIndicator.isVisible = false
+                if (chargeWayBeans != null) {
+                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf())
+                    initVipPowerData(chargeWayBeans!!.greet_icon_list ?: mutableListOf())
+                }
             }
-
 
         }
+
     }
 
     //pay_id 	    是	支付方式id	展开
@@ -335,7 +356,10 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context, public 
                 override fun onNext(it: BaseResp<ChargeWayBeans?>) {
                     if (it.data != null) {
                         chargeWayBeans = it.data
-                        setPurchaseType()
+
+                        setPurchaseType(false)
+
+
                         payways.addAll(chargeWayBeans!!.paylist ?: mutableListOf())
                         initPayWay()
                         loading.visibility = View.GONE

@@ -1160,12 +1160,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                         UserManager.getGlobalLabelId()
                     )
                 } else {
-                    if (UserManager.isUserVip()) {
-                        //TODO 会员充值
-                        CountDownChatHiDialog(this).show()
-                    } else {
-                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, this).show()
-                    }
+                    ChargeVipDialog(
+                        ChargeVipDialog.DOUBLE_HI, this, if (UserManager.isUserVip()) {
+                            ChargeVipDialog.PURCHASE_GREET_COUNT
+                        } else {
+                            ChargeVipDialog.PURCHASE_VIP
+                        }
+                    ).show()
                 }
             }
         }

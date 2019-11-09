@@ -42,7 +42,6 @@ import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UriUtils
@@ -352,11 +351,15 @@ class MultiListSquareAdapter(
                                 if (greetBean.lightningcnt > 0) {
                                     greet(target_accid)
                                 } else {
-                                    if (UserManager.isUserVip()) {
-                                        CountDownChatHiDialog(mContext).show()
-                                    } else {
-                                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, mContext).show()
-                                    }
+                                    ChargeVipDialog(
+                                        ChargeVipDialog.DOUBLE_HI,
+                                        mContext,
+                                        if (UserManager.isUserVip()) {
+                                            ChargeVipDialog.PURCHASE_GREET_COUNT
+                                        } else {
+                                            ChargeVipDialog.PURCHASE_VIP
+                                        }
+                                    ).show()
                                 }
                             }
                         } else {

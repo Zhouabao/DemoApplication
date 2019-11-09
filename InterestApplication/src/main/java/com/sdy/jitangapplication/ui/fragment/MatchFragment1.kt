@@ -44,7 +44,6 @@ import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.GotoVerifyDialog
@@ -195,15 +194,17 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     }
 
 
-    private val countDownChatHiDialog by lazy { CountDownChatHiDialog(activity!!) }
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnChat -> {
                 if (UserManager.getLightingCount() <= 0) {
-                    if (UserManager.isUserVip() && !countDownChatHiDialog.isShowing)
-                        countDownChatHiDialog.show()
-                    else
-                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, activity!!).show()
+                    ChargeVipDialog(
+                        ChargeVipDialog.DOUBLE_HI, activity!!, if (UserManager.isUserVip()) {
+                            ChargeVipDialog.PURCHASE_GREET_COUNT
+                        } else {
+                            ChargeVipDialog.PURCHASE_VIP
+                        }
+                    ).show()
                 } else {
                     card_stack_view.swipe()
                     btnChat.isEnabled = false
@@ -247,12 +248,14 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     )
                 } else {
                     card_stack_view.rewind()
-                    if (UserManager.isUserVip()) {
-                        //TODO 会员充值
-                        CountDownChatHiDialog(activity!!).show()
-                    } else {
-                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, activity!!).show()
-                    }
+                    ChargeVipDialog(
+                        ChargeVipDialog.DOUBLE_HI, activity!!, if (UserManager.isUserVip()) {
+                            ChargeVipDialog.PURCHASE_GREET_COUNT
+                        } else {
+                            ChargeVipDialog.PURCHASE_VIP
+                        }
+                    ).show()
+
                     btnChat.isEnabled = true
                 }
             }
