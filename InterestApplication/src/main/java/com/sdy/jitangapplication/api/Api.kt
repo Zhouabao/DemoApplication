@@ -15,7 +15,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Index/msgList${Constants.END_BASE_URL}")
-    fun msgList(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<AllMsgCount?>>
+    fun msgList(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<AllMsgCount?>>
 
 
     /**
@@ -23,8 +23,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Survey/getQuestion${Constants.END_BASE_URL}")
-    fun getQuestion(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<InvestigateBean?>>
-
+    fun getQuestion(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<InvestigateBean?>>
 
 
     /**
@@ -39,12 +38,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Survey/answer${Constants.END_BASE_URL}")
-    fun answer(
-//        @FieldMap params: HashMap<String, Any>
-        @Field("token") token: String, @Field("accid") accid: String,
-        @Field("statistics_id") statistics_id: Int, @Field("answer_id") answer_id: Int,
-        @Field("answer") answer: String
-    ): Observable<BaseResp<Any?>>
+    fun answer(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -52,10 +46,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/startupRecord${Constants.END_BASE_URL}")
-    fun startupRecord(
-        @Field("token") token: String, @Field("accid") accid: String,
-        @Field("province_name") province_name: String?, @Field("city_name") city_name: String?
-    ): Observable<BaseResp<Any?>>
+    fun startupRecord(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -63,7 +54,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("OpenApi/getVersion${Constants.END_BASE_URL}")
-    fun getVersion(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<VersionBean?>>
+    fun getVersion(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<VersionBean?>>
 
 
     /**
@@ -72,7 +63,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("member_info/humanAduit/v1.json${Constants.END_BASE_URL}")
-    fun humanAduit(@Field("token") token: String, @Field("accid") accid: String, @Field("type") type: Int): Observable<BaseResp<Any?>>
+    fun humanAduit(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -126,15 +117,12 @@ interface Api {
     fun setProfileV2(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
-
-
     /**
      * 验证照片是否合规
      */
     @FormUrlEncoded
     @POST("MemberInfo/checkAvatar${Constants.END_BASE_URL}")
     fun checkAvatar(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
 
 
     /**
@@ -158,7 +146,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("tags/tagListv2${Constants.END_BASE_URL}")
-    fun tagListv2(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<MutableList<NewLabel>?>>
+    fun tagListv2(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<MutableList<NewLabel>?>>
 
 
     /**
@@ -166,7 +154,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("tags/addTag${Constants.END_BASE_URL}")
-    fun uploadTagLists(@FieldMap params: HashMap<String, String>, @Field("tags[]") idList: Array<Int?>): Observable<BaseResp<LoginBean?>>
+    fun uploadTagLists(@FieldMap params: HashMap<String, Any>, @Field("tags[]") idList: Array<Int?>): Observable<BaseResp<LoginBean?>>
 
 
     /************************广场列表*****************************/
@@ -176,7 +164,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("square/squareFriends${Constants.END_BASE_URL}")
-    fun getSquareFriends(@FieldMap params: HashMap<String, String>): Observable<BaseResp<FriendListBean?>>
+    fun getSquareFriends(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<FriendListBean?>>
 
 
     /**
@@ -216,7 +204,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("square/addShare${Constants.END_BASE_URL}")
-    fun addShare(@Field("token") token: String, @Field("accid") accid: String, @Field("square_id") square_id: Int): Observable<BaseResp<Any?>>
+    fun addShare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -296,7 +284,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Relationship/greetState${Constants.END_BASE_URL}")
-    fun greetState(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<GreetBean?>>
+    fun greetState(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetBean?>>
 
     /**
      * 匹配详情数据
@@ -327,11 +315,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("relationship/greet${Constants.END_BASE_URL}")
-    fun greet(
-        @Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String, @Field(
-            "tag_id"
-        ) tag_id: Int
-    ): Observable<BaseResp<StatusBean?>>
+    fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
 
 
     /**
@@ -449,7 +433,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("memberInfo/personalInfo${Constants.END_BASE_URL}")
-    fun personalInfo(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<UserInfoSettingBean?>>
+    fun personalInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoSettingBean?>>
 
 
     /**
@@ -471,7 +455,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("memberInfo/addPhotos${Constants.END_BASE_URL}")
-    fun addPhotos(@Field("token") token: String, @Field("accid") accid: String, @Field("photos[]") tagList: Array<String?>): Observable<BaseResp<Any?>>
+    fun addPhotos(@FieldMap params: MutableMap<String, Any>, @Field("photos[]") tagList: Array<String?>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -480,7 +464,7 @@ interface Api {
     @FormUrlEncoded
     @POST("MemberInfo/addPhotoV2${Constants.END_BASE_URL}")
     fun addPhotoV2(
-        @FieldMap params: MutableMap<String, Any?>?, @Field("token") token: String, @Field("accid") accid: String, @Field(
+        @FieldMap params: MutableMap<String, Any?>?, @Field(
             "photos[]"
         ) photos: Array<Int?>?
     ): Observable<BaseResp<Any?>>
@@ -491,7 +475,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/addPhotoWall${Constants.END_BASE_URL}")
-    fun addPhotoWall(@Field("token") token: String, @Field("accid") accid: String, @Field("photo") key: String): Observable<BaseResp<MyPhotoBean?>>
+    fun addPhotoWall(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyPhotoBean?>>
 
 
     /**
@@ -528,7 +512,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tidings/messageCensus${Constants.END_BASE_URL}")
-    fun messageCensus(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<MessageListBean1?>>
+    fun messageCensus(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MessageListBean1?>>
 
     /**
      * 广场消息列表
@@ -578,7 +562,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("relationship/getLists${Constants.END_BASE_URL}")
-    fun getContactLists(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<ContactDataBean?>>
+    fun getContactLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ContactDataBean?>>
 
 
     /**
@@ -595,14 +579,14 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Relationship/greetApprove${Constants.END_BASE_URL}")
-    fun greetApprove(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<Any?>>
+    fun greetApprove(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**
      * 发布动态验证是否被禁封
      */
     @FormUrlEncoded
     @POST("Square/checkBlock${Constants.END_BASE_URL}")
-    fun checkBlock(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<Any?>>
+    fun checkBlock(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -610,7 +594,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/mySettings${Constants.END_BASE_URL}")
-    fun mySettings(@Field("token") token: String, @Field("accid") accid: String): Observable<BaseResp<SettingsBean?>>
+    fun mySettings(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<SettingsBean?>>
 
 
     /**
@@ -618,7 +602,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("StrageBlock/blockedAddressBook${Constants.END_BASE_URL}")
-    fun blockedAddressBook(@Field("token") token: String, @Field("accid") accid: String, @Field("content[]") content: Array<String?>? = null): Observable<BaseResp<Any?>>
+    fun blockedAddressBook(@FieldMap params: HashMap<String, Any>, @Field("content[]") content: Array<String?>? = null): Observable<BaseResp<Any?>>
 
 
     /**
@@ -626,7 +610,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("StrageBlock/isHideDistance${Constants.END_BASE_URL}")
-    fun isHideDistance(@Field("token") token: String, @Field("accid") accid: String, @Field("state") content: Int): Observable<BaseResp<Any?>>
+    fun isHideDistance(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /*---------------------聊天界面请求--------------------------------*/
@@ -635,14 +619,14 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Relationship/addFriend${Constants.END_BASE_URL}")
-    fun addFriend(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
+    fun addFriend(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**
      * 添加星标好友
      */
     @FormUrlEncoded
     @POST("Relationship/addStarTarget${Constants.END_BASE_URL}")
-    fun addStarTarget(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
+    fun addStarTarget(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -650,7 +634,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Relationship/removeStarTarget${Constants.END_BASE_URL}")
-    fun removeStarTarget(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
+    fun removeStarTarget(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -658,7 +642,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Relationship/removeGreet${Constants.END_BASE_URL}")
-    fun removeGreet(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<Any?>>
+    fun removeGreet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -666,7 +650,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/getTargetInfo${Constants.END_BASE_URL}")
-    fun getTargetInfo(@FieldMap params: MutableMap<String, String>): Observable<BaseResp<NimBean?>>
+    fun getTargetInfo(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<NimBean?>>
 
 
     /**
@@ -674,9 +658,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tidings/checkGreetSendMsg${Constants.END_BASE_URL}")
-    fun checkGreetSendMsg(@Field("token") token: String, @Field("accid") accid: String, @Field("target_accid") target_accid: String): Observable<BaseResp<CheckGreetSendBean?>>
-
-
+    fun checkGreetSendMsg(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CheckGreetSendBean?>>
     /*--------------------------------会员充值---------------------------------*/
 
     /**

@@ -16,6 +16,7 @@ import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.SquareDetailView
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -28,6 +29,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 获取某一广场详情
      */
     fun getSquareInfo(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareInfo(params)
             .excute(object : BaseSubscriber<BaseResp<SquareBean?>>(mView) {
@@ -53,6 +56,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 获取评论列表
      */
     fun getCommentList(params: HashMap<String, Any>, refresh: Boolean) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .getCommentLists(params)
             .excute(object : BaseSubscriber<BaseResp<AllCommentBean?>>(mView) {
@@ -87,6 +91,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 1 点赞 2取消点赞
      */
     fun getSquareLike(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareLike(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -117,6 +123,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 1 收藏 2取消收藏
      */
     fun getSquareCollect(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareCollect(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -143,6 +150,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 广场举报
      */
     fun getSquareReport(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareReport(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -169,6 +177,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 添加评论
      */
     fun addComment(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .addComment(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -197,6 +206,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 1 点赞 2取消点赞
      */
     fun getCommentLike(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .commentLikes(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -224,6 +234,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 删除评论
      */
     fun deleteComment(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .destoryComment(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -252,6 +263,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 评论举报
      */
     fun commentReport(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .commentReport(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -278,6 +290,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 广场删除
      */
     fun removeMySquare(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .removeMySquare(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -309,8 +323,12 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
         if (!checkNetWork()) {
             return
         }
+
+        val params = UserManager.getBaseParams()
+        params["tag_id"]= tag_id
+        params["target_accid"]= target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(token, accid, target_accid, tag_id)
+            .greet(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -337,8 +355,11 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 判断当前能否打招呼
      */
     fun greetState(token: String, accid: String, target_accid: String) {
+
+        val params = UserManager.getBaseParams()
+        params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(token, accid, target_accid)
+            .greetState(params)
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {

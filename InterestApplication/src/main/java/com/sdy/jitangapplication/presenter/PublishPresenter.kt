@@ -36,6 +36,7 @@ class PublishPresenter : BasePresenter<PublishView>() {
             CommonFunction.toast("网络不可用")
             return
         }
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .squareAnnounce(params, checkIds, keyList)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {

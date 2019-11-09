@@ -12,6 +12,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.SquareListBean
 import com.sdy.jitangapplication.presenter.view.MyCollectionView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -22,6 +23,8 @@ import com.sdy.jitangapplication.ui.dialog.TickDialog
 class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
 
     fun getMySquare(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .aboutMeSquare(params)
             .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
@@ -48,6 +51,8 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
      * 1 点赞 2取消点赞
      */
     fun getSquareLike(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareLike(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -80,6 +85,7 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
      * 1 收藏 2取消收藏
      */
     fun getSquareCollect(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareCollect(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -109,6 +115,7 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
      * 广场举报
      */
     fun getSquareReport(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareReport(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -137,6 +144,8 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
      * 删除广场
      */
     fun removeMySquare(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .removeMySquare(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {

@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -12,6 +13,7 @@ import com.sdy.jitangapplication.model.Labels
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.presenter.view.LabelsView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 class LabelsPresenter : BasePresenter<LabelsView>() {
 
@@ -46,8 +48,9 @@ class LabelsPresenter : BasePresenter<LabelsView>() {
     /**
      * 上传用户标签
      */
-    fun uploadLabels(params: HashMap<String, String>, tags: Array<Int?>) {
-
+    fun uploadLabels(param: HashMap<String, String>, tags: Array<Int?>) {
+        val params = UserManager.getBaseParams()
+        params.putAll(param)
         RetrofitFactory.instance.create(Api::class.java)
             .uploadTagLists(params, tags)
             .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {

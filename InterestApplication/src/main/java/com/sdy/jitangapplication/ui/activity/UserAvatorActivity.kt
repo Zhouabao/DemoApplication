@@ -381,10 +381,8 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         if (!mPresenter.checkNetWork()) {
             return
         }
-        params["token"] = UserManager.getToken()
-        params["accid"] = UserManager.getAccid()
 
-
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .checkAvatar(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {

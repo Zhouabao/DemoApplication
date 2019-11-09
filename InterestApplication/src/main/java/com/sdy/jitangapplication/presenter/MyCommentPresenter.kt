@@ -1,16 +1,17 @@
 package com.sdy.jitangapplication.presenter
 
-import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.MyCommentList
-import com.sdy.jitangapplication.presenter.view.MyCommentView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.model.MyCommentList
+import com.sdy.jitangapplication.presenter.view.MyCommentView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -25,6 +26,7 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
      * 获取评论列表
      */
     fun myCommentList(params: HashMap<String, Any>, refresh: Boolean) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .myCommentList(params)
             .excute(object : BaseSubscriber<BaseResp<MyCommentList?>>(mView) {
@@ -57,6 +59,7 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
      * 删除评论
      */
     fun deleteComment(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .destoryComment(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {

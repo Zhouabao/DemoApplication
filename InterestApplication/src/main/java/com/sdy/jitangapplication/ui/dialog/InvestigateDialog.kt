@@ -194,11 +194,13 @@ class InvestigateDialog(private val contex1t: Context, private val investigateBe
             }
         }
         val params = hashMapOf<String, Any>(
-            "token" to UserManager.getToken(), "accid" to UserManager.getAccid(),
-            "statistics_id" to investigateBean.statistics_id, "answer_id" to answer_id, "answer" to answer
+            "statistics_id" to investigateBean.statistics_id,
+            "answer_id" to answer_id,
+            "answer" to answer
         )
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .answer(UserManager.getToken(), UserManager.getAccid(), investigateBean.statistics_id, answer_id, answer)
+            .answer(params)
 //            .answer(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {

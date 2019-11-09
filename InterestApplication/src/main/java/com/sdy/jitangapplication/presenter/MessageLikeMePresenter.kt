@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.EventBus
 class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
 
     fun likeLists(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .likeLists(params)
             .excute(object : BaseSubscriber<BaseResp<LikeMeListBean?>>(mView) {
@@ -53,6 +54,7 @@ class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
      * 标记喜欢我的为已读
      */
     fun markLikeRead(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .markLikeRead(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {

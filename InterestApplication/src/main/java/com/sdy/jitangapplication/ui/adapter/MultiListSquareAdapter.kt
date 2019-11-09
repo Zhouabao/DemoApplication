@@ -317,8 +317,11 @@ class MultiListSquareAdapter(
             CommonFunction.toast("请连接网络！")
             return
         }
+
+        val params = UserManager.getBaseParams()
+        params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(token, accid, target_accid)
+            .greetState(params)
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(null) {
                 override fun onStart() {
 
@@ -386,8 +389,12 @@ class MultiListSquareAdapter(
             CommonFunction.toast("请连接网络！")
             return
         }
+
+        val params = UserManager.getBaseParams()
+        params["tag_id"] = UserManager.getGlobalLabelId()
+        params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(token, accid, target_accid, UserManager.getGlobalLabelId())
+            .greet(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {

@@ -57,15 +57,11 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                     if (adapter.data[position].isfriend == 1) {
                         ChatActivity.start(mContext, adapter.data[position].accid ?: "")
                     } else {
+
+                        val params = UserManager.getBaseParams()
+                        params["target_accid"]= adapter.data[position].accid ?: ""
                         RetrofitFactory.instance.create(Api::class.java)
-                            .addLike(
-                                hashMapOf(
-                                    "accid" to UserManager.getAccid(),
-                                    "token" to UserManager.getToken(),
-                                    "target_accid" to (adapter.data[position].accid ?: "")
-//                                    , "tag_id" to (adapter.data[position].tag_title ?: "")
-                                )
-                            )
+                            .addLike(params)
                             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
                                 override fun onNext(t: BaseResp<StatusBean?>) {
                                     if (t.code == 200) {

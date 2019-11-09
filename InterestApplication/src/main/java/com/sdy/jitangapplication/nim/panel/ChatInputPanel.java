@@ -58,6 +58,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -967,8 +968,10 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
             CommonFunction.INSTANCE.toast("请打开网络");
             return;
         }
+        HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
+        params.put("target_accid", container.account);
         RetrofitFactory.Companion.getInstance().create(Api.class)
-                .checkGreetSendMsg(UserManager.INSTANCE.getToken(), UserManager.INSTANCE.getAccid(), container.account)
+                .checkGreetSendMsg(params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new rx.Observer<BaseResp<CheckGreetSendBean>>() {

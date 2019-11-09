@@ -11,6 +11,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.BlackBean
 import com.sdy.jitangapplication.presenter.view.BlackListView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  * author : ZFM
@@ -23,6 +24,7 @@ class BlackListPresenter : BasePresenter<BlackListView>() {
      * 获取黑名单list
      */
     fun myShieldingList(hashMap: HashMap<String, Any>) {
+        hashMap.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .myShieldingList(hashMap)
             .excute(object : BaseSubscriber<BaseResp<MutableList<BlackBean>?>>(mView) {
@@ -47,6 +49,7 @@ class BlackListPresenter : BasePresenter<BlackListView>() {
      * 解除拉黑
      */
     fun removeBlock(hashMap: HashMap<String, Any>,position: Int) {
+        hashMap.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .removeBlock(hashMap)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {

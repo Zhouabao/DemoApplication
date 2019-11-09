@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -172,14 +171,10 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 dialog.tip.text = "确定举报该用户?"
                 dialog.cancel.onClick { dialog.dismiss() }
                 dialog.confirm.onClick {
+                    val params = UserManager.getBaseParams()
+                    params["target_accid"] = (account ?: "")
                     RetrofitFactory.instance.create(Api::class.java)
-                        .reportUser(
-                            hashMapOf<String, Any>(
-                                "token" to UserManager.getToken(),
-                                "accid" to UserManager.getAccid(),
-                                "target_accid" to (account ?: "")
-                            )
-                        )
+                        .reportUser(params)
                         .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                             override fun onStart() {
                             }
@@ -361,8 +356,10 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
      * 移除星标
      */
     private fun removeStar() {
+        val params = UserManager.getBaseParams()
+        params["account"] = account ?: ""
         RetrofitFactory.instance.create(Api::class.java)
-            .removeStarTarget(UserManager.getToken(), UserManager.getAccid(), account ?: "")
+            .removeStarTarget(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -384,8 +381,10 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
      * 添加星标
      */
     private fun addStar() {
+        val params = UserManager.getBaseParams()
+        params["target_accid"] = account ?: ""
         RetrofitFactory.instance.create(Api::class.java)
-            .addStarTarget(UserManager.getToken(), UserManager.getAccid(), account ?: "")
+            .addStarTarget(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -410,8 +409,10 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
      * 删除招呼
      */
     private fun removeGreet() {
+        val params = UserManager.getBaseParams()
+        params["target_accid"] = account ?: ""
         RetrofitFactory.instance.create(Api::class.java)
-            .removeGreet(UserManager.getToken(), UserManager.getAccid(), account ?: "")
+            .removeGreet(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -441,14 +442,11 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
      * 删除好友
      */
     private fun deleteFriends() {
+        val params = UserManager.getBaseParams()
+        params["target_accid"] = (account ?: "")
+
         RetrofitFactory.instance.create(Api::class.java)
-            .dissolutionFriend(
-                hashMapOf<String, Any>(
-                    "token" to UserManager.getToken(),
-                    "accid" to UserManager.getAccid(),
-                    "target_accid" to (account ?: "")
-                )
-            )
+            .dissolutionFriend(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {

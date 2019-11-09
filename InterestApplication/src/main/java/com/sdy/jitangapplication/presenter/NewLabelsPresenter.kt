@@ -12,6 +12,7 @@ import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.presenter.view.NewLabelsView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 class NewLabelsPresenter : BasePresenter<NewLabelsView>() {
 
@@ -21,7 +22,7 @@ class NewLabelsPresenter : BasePresenter<NewLabelsView>() {
      */
     fun tagListv2(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .tagListv2(token, accid)
+            .tagListv2(UserManager.getBaseParams())
             .excute(object : BaseSubscriber<BaseResp<MutableList<NewLabel>?>>(mView) {
                 override fun onNext(t: BaseResp<MutableList<NewLabel>?>) {
                     super.onNext(t)
@@ -44,12 +45,12 @@ class NewLabelsPresenter : BasePresenter<NewLabelsView>() {
     }
 
 
-
     /**
      * 上传用户标签
      */
-    fun uploadLabels(params: HashMap<String, String>, tags: Array<Int?>) {
-
+    fun uploadLabels(param: HashMap<String, String>, tags: Array<Int?>) {
+        val params = UserManager.getBaseParams()
+        params.putAll(params)
         RetrofitFactory.instance.create(Api::class.java)
             .uploadTagLists(params, tags)
             .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {

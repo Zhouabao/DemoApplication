@@ -16,6 +16,7 @@ import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchView
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -29,6 +30,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
      * 根据标签来获取新的用户数据
      */
     fun getMatchList(params: HashMap<String, Any>, ids: Array<Int?>? = null) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .getMatchList(params, ids)
             .excute(object : BaseSubscriber<BaseResp<MatchListBean?>>(mView) {
@@ -63,7 +65,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
         if (!checkNetWork()) {
             return
         }
-
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .dontLike(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
@@ -92,6 +94,8 @@ class MatchPresenter : BasePresenter<MatchView>() {
         if (!checkNetWork()) {
             return
         }
+
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .addLike(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
@@ -120,8 +124,12 @@ class MatchPresenter : BasePresenter<MatchView>() {
         if (!checkNetWork()) {
             return
         }
+
+        val params = UserManager.getBaseParams()
+        params["tag_id"]= tag_id
+        params["target_accid"]= target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(token, accid, target_accid, tag_id)
+            .greet(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -149,8 +157,11 @@ class MatchPresenter : BasePresenter<MatchView>() {
      * 判断当前能否打招呼
      */
     fun greetState(token: String, accid: String, target_accid: String, matchBean: MatchBean) {
+
+        val params = UserManager.getBaseParams()
+        params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(token, accid, target_accid)
+            .greetState(params)
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {

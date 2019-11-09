@@ -1,9 +1,5 @@
 package com.sdy.jitangapplication.presenter
 
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.MessageListBean1
-import com.sdy.jitangapplication.presenter.view.MessageListView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -15,6 +11,11 @@ import com.netease.nimlib.sdk.RequestCallbackWrapper
 import com.netease.nimlib.sdk.ResponseCode
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.model.RecentContact
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.model.MessageListBean1
+import com.sdy.jitangapplication.presenter.view.MessageListView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -27,7 +28,9 @@ class MessageListPresenter : BasePresenter<MessageListView>() {
     /**
      * 获取消息中心的内容
      */
-    fun messageCensus(params: HashMap<String, String>) {
+    fun messageCensus(param: HashMap<String, String>) {
+        val params = UserManager.getBaseParams()
+        params.putAll(param)
         RetrofitFactory.instance.create(Api::class.java)
             .messageCensus(params)
             .excute(object : BaseSubscriber<BaseResp<MessageListBean1?>>(mView) {

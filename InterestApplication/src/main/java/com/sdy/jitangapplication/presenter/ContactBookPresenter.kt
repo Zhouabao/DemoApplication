@@ -11,6 +11,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.ContactDataBean
 import com.sdy.jitangapplication.presenter.view.ContactBookView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -23,7 +24,9 @@ class ContactBookPresenter : BasePresenter<ContactBookView>() {
     /**
      * 获取通讯录
      */
-    fun getContactLists(params: HashMap<String, String>) {
+    fun getContactLists(param: HashMap<String, String>) {
+        val params = UserManager.getBaseParams()
+        params.putAll(param)
         RetrofitFactory.instance.create(Api::class.java)
             .getContactLists(params)
             .excute(object : BaseSubscriber<BaseResp<ContactDataBean?>>(mView) {

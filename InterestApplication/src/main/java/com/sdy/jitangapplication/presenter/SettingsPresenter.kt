@@ -28,7 +28,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
      */
     fun blockedAddressBook(accid: String, token: String, content: Array<String?>? = null) {
         RetrofitFactory.instance.create(Api::class.java)
-            .blockedAddressBook(token, accid, content)
+            .blockedAddressBook(UserManager.getBaseParams(), content)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -54,8 +54,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
      * 屏蔽距离
      */
     fun isHideDistance(accid: String, token: String, state: Int) {
+        val params = UserManager.getBaseParams()
+        params["state"] = state
         RetrofitFactory.instance.create(Api::class.java)
-            .isHideDistance(token, accid, state)
+            .isHideDistance(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -77,7 +79,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     /**获取当前最新版本**/
     fun getVersion() {
         RetrofitFactory.instance.create(Api::class.java)
-            .getVersion(UserManager.getToken(), UserManager.getAccid())
+            .getVersion(UserManager.getBaseParams())
             .excute(object : BaseSubscriber<BaseResp<VersionBean?>>(mView) {
                 override fun onNext(t: BaseResp<VersionBean?>) {
                     if (t.code == 200) {
@@ -90,7 +92,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun greetApprove(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .greetApprove(token, accid)
+            .greetApprove(UserManager.getBaseParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     CommonFunction.toast(t.msg)
@@ -102,7 +104,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun mySettings(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .mySettings(token, accid)
+            .mySettings(UserManager.getBaseParams())
             .excute(object : BaseSubscriber<BaseResp<SettingsBean?>>(mView) {
                 override fun onNext(t: BaseResp<SettingsBean?>) {
                     mView.onSettingsBeanResult(t.code == 200, t.data)

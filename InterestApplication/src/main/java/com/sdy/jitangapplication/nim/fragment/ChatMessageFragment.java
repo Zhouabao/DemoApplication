@@ -124,8 +124,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         btnMakeFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
+                params.put("target_accid", sessionId);
                 RetrofitFactory.Companion.getInstance().create(Api.class)
-                        .addFriend(UserManager.INSTANCE.getToken(), UserManager.INSTANCE.getAccid(), sessionId)
+                        .addFriend(params)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new rx.Observer<BaseResp<Object>>() {
@@ -575,9 +577,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
      * @param target_accid
      */
     public void getTargetInfo(String target_accid) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("token", UserManager.INSTANCE.getToken());
-        params.put("accid", UserManager.INSTANCE.getAccid());
+        HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
         params.put("target_accid", target_accid);
         RetrofitFactory.Companion.getInstance()
                 .create(Api.class)

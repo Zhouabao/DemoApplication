@@ -74,15 +74,11 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
                 context.startActivity(intent)
-            } else
+            } else {
+                val params = UserManager.getBaseParams()
+                params["target_accid"] = contactId
                 RetrofitFactory.instance.create(Api::class.java)
-                    .getTargetInfo(
-                        hashMapOf(
-                            "accid" to UserManager.getAccid(),
-                            "token" to UserManager.getToken(),
-                            "target_accid" to contactId
-                        )
-                    )
+                    .getTargetInfo(params)
                     .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
                         override fun onNext(t: BaseResp<NimBean?>) {
                             super.onNext(t)
@@ -102,7 +98,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                             }
                         }
                     })
-
+            }
 
         }
     }

@@ -11,6 +11,7 @@ import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.presenter.view.MyJobView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -49,6 +50,7 @@ class MyJobPresenter : BasePresenter<MyJobView>() {
      * 保存个人信息
      */
     fun savePersonal(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .savePersonal(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {

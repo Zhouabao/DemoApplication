@@ -11,7 +11,6 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -162,8 +161,10 @@ class ShareToFriendsDialog constructor(
 
     /*-------------------------分享成功回调----------------------------*/
     private fun addShare() {
+        val params = UserManager.getBaseParams()
+        params["square_id"] = squareBean?.id ?: 0
         RetrofitFactory.instance.create(Api::class.java)
-            .addShare(UserManager.getToken(), UserManager.getAccid(), squareBean.id ?: 0)
+            .addShare(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200)

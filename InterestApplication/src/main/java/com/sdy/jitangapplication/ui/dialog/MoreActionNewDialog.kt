@@ -233,8 +233,10 @@ class MoreActionNewDialog(private var myContext: Context, var squareBean: Square
 
     /*-------------------------分享成功回调----------------------------*/
     private fun addShare() {
+        val params = UserManager.getBaseParams()
+        params["square_id"] = squareBean?.id ?: 0
         RetrofitFactory.instance.create(Api::class.java)
-            .addShare(UserManager.getToken(), UserManager.getAccid(), squareBean?.id ?: 0)
+            .addShare(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     CommonFunction.toast(t.msg)

@@ -11,6 +11,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.presenter.view.ReportResonView
 import com.sdy.jitangapplication.utils.QNUploadManager
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -24,6 +25,7 @@ class ReportReasonPresenter : BasePresenter<ReportResonView>() {
      * 举报用户
      */
     fun reportUser(params: HashMap<String, Any>, photoList: Array<String?>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .reportUserV2(params, photoList)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {

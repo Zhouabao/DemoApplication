@@ -11,6 +11,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.presenter.view.SetInfoView
 import com.sdy.jitangapplication.utils.QNUploadManager
+import com.sdy.jitangapplication.utils.UserManager
 
 class SetInfoPresenter : BasePresenter<SetInfoView>() {
 
@@ -46,6 +47,7 @@ class SetInfoPresenter : BasePresenter<SetInfoView>() {
             return
         }
 
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .setProfile(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {

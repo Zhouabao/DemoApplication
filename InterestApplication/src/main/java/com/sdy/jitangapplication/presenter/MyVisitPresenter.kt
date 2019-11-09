@@ -1,15 +1,16 @@
 package com.sdy.jitangapplication.presenter
 
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.VisitorBean
-import com.sdy.jitangapplication.presenter.view.MyVisitView
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.model.VisitorBean
+import com.sdy.jitangapplication.presenter.view.MyVisitView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -19,6 +20,8 @@ import com.kotlin.base.rx.BaseSubscriber
  */
 class MyVisitPresenter : BasePresenter<MyVisitView>() {
     fun myVisitedList(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .myVisitedList(params)
             .excute(object : BaseSubscriber<BaseResp<MutableList<VisitorBean>?>>(mView) {

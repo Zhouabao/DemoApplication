@@ -12,6 +12,7 @@ import com.sdy.jitangapplication.model.LikeMeOneDayBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MessageLikeMeOneDayView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -22,6 +23,7 @@ import com.sdy.jitangapplication.ui.dialog.TickDialog
 class MessageLikeMeOneDayPresenter : BasePresenter<MessageLikeMeOneDayView>() {
 
     fun likeListsCategory(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .likeListsCategory(params)
             .excute(object : BaseSubscriber<BaseResp<MutableList<LikeMeOneDayBean>?>>(mView) {
@@ -50,6 +52,7 @@ class MessageLikeMeOneDayPresenter : BasePresenter<MessageLikeMeOneDayView>() {
         if (!checkNetWork()) {
             return
         }
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .addLike(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {

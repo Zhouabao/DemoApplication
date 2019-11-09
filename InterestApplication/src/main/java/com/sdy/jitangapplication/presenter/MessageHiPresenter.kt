@@ -16,6 +16,7 @@ import com.sdy.jitangapplication.model.HiMessageBean
 import com.sdy.jitangapplication.model.OuttimeBean
 import com.sdy.jitangapplication.presenter.view.MessageHiView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -29,6 +30,7 @@ class MessageHiPresenter : BasePresenter<MessageHiView>() {
      * 获取打招呼列表
      */
     fun greatLists(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .greatLists(params)
             .excute(object : BaseSubscriber<BaseResp<MutableList<HiMessageBean>?>>(mView) {
@@ -53,6 +55,7 @@ class MessageHiPresenter : BasePresenter<MessageHiView>() {
      * 删除过期消息
      */
     fun delTimeoutGreet(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .delTimeoutGreet(params)
             .excute(object : BaseSubscriber<BaseResp<OuttimeBean?>>(mView) {

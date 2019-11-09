@@ -9,6 +9,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.AllMsgCount
 import com.sdy.jitangapplication.model.InvestigateBean
 import com.sdy.jitangapplication.presenter.view.MainView
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -24,7 +25,7 @@ class MainPresenter : BasePresenter<MainView>() {
      */
     fun msgList(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .msgList(token, accid)
+            .msgList(UserManager.getBaseParams())
             .excute(object : BaseSubscriber<BaseResp<AllMsgCount?>>(mView) {
                 override fun onNext(t: BaseResp<AllMsgCount?>) {
                     if (t.code == 200) {
@@ -45,8 +46,11 @@ class MainPresenter : BasePresenter<MainView>() {
      * 启动统计
      */
     fun startupRecord(token: String, accid: String, province_name: String?, city_name: String?) {
+        val params = UserManager.getBaseParams()
+        params["province_name"] = province_name ?: ""
+        params["city_name"] = city_name ?: ""
         RetrofitFactory.instance.create(Api::class.java)
-            .startupRecord(token, accid, province_name, city_name)
+            .startupRecord(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
 
@@ -66,7 +70,7 @@ class MainPresenter : BasePresenter<MainView>() {
      */
     fun getQuestion(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .getQuestion(token, accid)
+            .getQuestion(UserManager.getBaseParams())
             .excute(object : BaseSubscriber<BaseResp<InvestigateBean?>>(mView) {
                 override fun onNext(t: BaseResp<InvestigateBean?>) {
                     if (t.code == 200 && t.data != null) {

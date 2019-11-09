@@ -36,8 +36,10 @@ class SquarePresenter : BasePresenter<SquareView>() {
      * 获取广场列表中的好友列表
      */
     fun getFrinedsList(params: HashMap<String, String>) {
+       val params1  =  UserManager.getBaseParams()
+        params1.putAll(params)
         RetrofitFactory.instance.create(Api::class.java)
-            .getSquareFriends(params)
+            .getSquareFriends(params1)
             .excute(object : BaseSubscriber<BaseResp<FriendListBean?>>(mView) {
                 override fun onNext(t: BaseResp<FriendListBean?>) {
                     super.onNext(t)
@@ -55,6 +57,8 @@ class SquarePresenter : BasePresenter<SquareView>() {
      * 获取广场列表
      */
     fun getSquareList(params: HashMap<String, Any>, isRefresh: Boolean, firstIn: Boolean = false) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareList(params)
             .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
@@ -88,6 +92,8 @@ class SquarePresenter : BasePresenter<SquareView>() {
      * 1 点赞 2取消点赞
      */
     fun getSquareLike(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareLike(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -120,6 +126,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
      * 1 收藏 2取消收藏
      */
     fun getSquareCollect(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareCollect(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -150,6 +157,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
      * 广场举报
      */
     fun getSquareReport(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareReport(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -180,6 +188,8 @@ class SquarePresenter : BasePresenter<SquareView>() {
      * 获取广场列表
      */
     fun getSomeoneSquare(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .someoneSquare(params)
             .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
@@ -215,7 +225,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
      */
     fun checkBlock(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .checkBlock(token, accid)
+            .checkBlock(UserManager.getBaseParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     super.onStart()
@@ -249,6 +259,8 @@ class SquarePresenter : BasePresenter<SquareView>() {
      * 广场举报
      */
     fun removeMySquare(params: HashMap<String, Any>, position: Int) {
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .removeMySquare(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -280,6 +292,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
      * 广场发布
      */
     fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: Array<Int?>, keyList: Array<String?>?) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .squareAnnounce(params, checkIds, keyList)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {

@@ -17,6 +17,7 @@ import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -29,7 +30,9 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
     /**
      * 获取个人信息
      */
-    fun personalInfo(params: HashMap<String, String>) {
+    fun personalInfo(param: HashMap<String, String>) {
+        val params = UserManager.getBaseParams()
+        params.putAll(param)
         RetrofitFactory.instance.create(Api::class.java)
             .personalInfo(params)
             .excute(object : BaseSubscriber<BaseResp<UserInfoSettingBean?>>(mView) {
@@ -81,6 +84,7 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
      * 保存个人信息
      */
     fun savePersonal(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .savePersonal(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -103,7 +107,7 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
      */
     fun addPhotos(token: String, accid: String, photos: Array<String?>) {
         RetrofitFactory.instance.create(Api::class.java)
-            .addPhotos(token, accid, photos)
+            .addPhotos(UserManager.getBaseParams(), photos)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -124,8 +128,14 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
      * 保存相册
      */
     fun addPhotoV2(params: HashMap<String, Any?>?, token: String, accid: String, photos: Array<Int?>?, type: Int) {
+        val tempParams = hashMapOf<String, Any?>()
+        if (params != null)
+            params.putAll(UserManager.getBaseParams())
+        else {
+            tempParams.putAll(UserManager.getBaseParams())
+        }
         RetrofitFactory.instance.create(Api::class.java)
-            .addPhotoV2(params, token, accid, photos)
+            .addPhotoV2(params ?: tempParams, photos)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     CommonFunction.toast(t.msg)
@@ -147,8 +157,10 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
      * 保存头像
      */
     fun addPhotoWall(replaceAvator: Boolean, token: String, accid: String, key: String) {
+        val params = UserManager.getBaseParams()
+        params["photo"] = key
         RetrofitFactory.instance.create(Api::class.java)
-            .addPhotoWall(token, accid, key)
+            .addPhotoWall(params)
             .excute(object : BaseSubscriber<BaseResp<MyPhotoBean?>>(mView) {
                 override fun onNext(t: BaseResp<MyPhotoBean?>) {
                     if (t.code == 200 && t.data != null) {

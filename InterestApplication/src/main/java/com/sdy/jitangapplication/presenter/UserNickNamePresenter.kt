@@ -17,13 +17,13 @@ class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
         if (!checkNetWork()) {
             return
         }
-        params["token"] = UserManager.getToken()
-        params["accid"] = UserManager.getAccid()
+
         params["province_name"] = UserManager.getProvince()
         params["city_name"] = UserManager.getCity()
         params["lng"] = UserManager.getlongtitude().toFloat()
         params["lat"] = UserManager.getlatitude().toFloat()
         params["step"] = step
+        params.putAll(UserManager.getBaseParams())
 
         RetrofitFactory.instance.create(Api::class.java)
             .setProfileV2(params)

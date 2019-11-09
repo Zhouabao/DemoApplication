@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -29,6 +30,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
      * 获取详细的用户数据 包括用户的广场信息
      */
     fun getUserDetailInfo(params: HashMap<String, Any>) {
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .getMatchUserInfo(params)
             .excute(object : BaseSubscriber<BaseResp<MatchBean?>>(mView) {
@@ -60,6 +62,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
         if (!checkNetWork()) {
             return
         }
+        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .shieldingFriend(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -91,6 +94,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
      * 解除拉黑
      */
     fun removeBlock(hashMap: HashMap<String, Any>) {
+        hashMap.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
             .removeBlock(hashMap)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -120,6 +124,8 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
         if (!checkNetWork()) {
             return
         }
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .dissolutionFriend(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -154,6 +160,9 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
         if (!checkNetWork()) {
             return
         }
+
+        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
             .addLike(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
@@ -184,8 +193,12 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
         if (!checkNetWork()) {
             return
         }
+
+        val params = UserManager.getBaseParams()
+        params["tag_id"] = tag_id
+        params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(token, accid, target_accid, tag_id)
+            .greet(params)
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -211,8 +224,11 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
      * 判断当前能否打招呼
      */
     fun greetState(token: String, accid: String, target_accid: String) {
+
+        val params = UserManager.getBaseParams()
+        params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(token, accid, target_accid)
+            .greetState(params)
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {

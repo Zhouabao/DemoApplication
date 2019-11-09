@@ -229,8 +229,10 @@ class GotoVerifyDialog : Dialog {
          * 1 人工认证 2重传头像或则取消
          */
         fun humanVerify(type: Int) {
+            val params = UserManager.getBaseParams()
+            params["type"] = type
             RetrofitFactory.instance.create(Api::class.java)
-                .humanAduit(UserManager.getToken(), UserManager.getAccid(), type)
+                .humanAduit(params)
                 .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                     override fun onNext(t: BaseResp<Any?>) {
 
