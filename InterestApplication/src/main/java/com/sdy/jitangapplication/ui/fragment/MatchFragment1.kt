@@ -45,6 +45,7 @@ import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
+import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.GotoVerifyDialog
 import com.sdy.jitangapplication.widgets.cardstackview.*
@@ -279,8 +280,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
-            hasMore = true
-           // hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
+            hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
                 setViewState(EMPTY)
                 btnChat.isVisible = false
@@ -701,7 +701,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             try {
 //                Thread.sleep(2000)
                 updateLocation()
-                mPresenter.getMatchList(matchParams,paramsLastFiveIds)
+                mPresenter.getMatchList(matchParams, paramsLastFiveIds)
             } catch (e: Exception) {
             }
         } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
@@ -788,9 +788,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 //                        "accid" to matchUserAdapter.data[manager.topPosition - 1].accid
                     )
                 } else {//招呼成功跳转到招呼
-//                    ChatActivity.start(activity!!, matchUserAdapter.data[manager.topPosition - 1]?.accid ?: "")
-                    ChatActivity.start(activity!!, matchBean.accid ?: "")
-                    /*manager.topPosition*/
+                    SayHiDialog(
+                        matchBean.accid,
+                        matchBean.nickname ?: "",
+                        activity!!
+                    ).show()
                     //打招呼成功，就减少招呼次数
                     if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
                         UserManager.saveLightingCount(UserManager.getLightingCount() - 1)

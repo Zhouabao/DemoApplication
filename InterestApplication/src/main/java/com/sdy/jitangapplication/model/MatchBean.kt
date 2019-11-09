@@ -52,10 +52,9 @@ data class MatchBean(
     var countdown: Int = 0,
     var isfriend: Int?,
     var residue: Int = 0,
-    var isblock: Int = 1//1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
-
-
-    ) : Serializable
+    var isblock: Int = 1,//1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
+    var greet_switch: Boolean = true//true开启接收（可以打）  false关闭接收（不可以打）
+) : Serializable
 
 
 /**

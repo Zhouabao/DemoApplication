@@ -598,6 +598,14 @@ interface Api {
 
 
     /**
+     * 招呼的开关
+     */
+    @FormUrlEncoded
+    @POST("Relationship/greetSwitch${Constants.END_BASE_URL}")
+    fun greetSwitch(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
      * 屏蔽通讯录
      */
     @FormUrlEncoded
