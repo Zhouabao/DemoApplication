@@ -90,7 +90,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
 
-    fun greetApprove(token: String, accid: String) {
+    /**
+     * 开启招呼认证
+     */
+    fun greetApprove() {
         RetrofitFactory.instance.create(Api::class.java)
             .greetApprove(UserManager.getBaseParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
@@ -101,7 +104,24 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             })
     }
 
+    /**
+     * 开启招呼认证
+     */
+    fun greetSwitch() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .greetSwitch(UserManager.getBaseParams())
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    CommonFunction.toast(t.msg)
+                    mView.onGreetSwitchResult(t.code == 200)
+                }
+            })
+    }
 
+
+    /**
+     * 获取我的设置
+     */
     fun mySettings(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
             .mySettings(UserManager.getBaseParams())

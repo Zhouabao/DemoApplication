@@ -19,6 +19,8 @@ interface SettingsView : BaseView {
 
     fun onGreetApproveResult(success: Boolean)
 
+    fun onGreetSwitchResult(success: Boolean)
+
 
     fun onGetVersionResult(versionBean: VersionBean?)
 

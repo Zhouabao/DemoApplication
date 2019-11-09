@@ -64,6 +64,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         filterContacts.setOnClickListener(this)
         filterDistance.setOnClickListener(this)
         verifyHi.setOnClickListener(this)
+        openHi.setOnClickListener(this)
         hotT1.text = "设置"
         stateSettings.retryBtn.onClick {
             stateSettings.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -163,7 +164,11 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
             //开启招呼认证
             R.id.verifyHi -> {
-                mPresenter.greetApprove(UserManager.getToken(), UserManager.getAccid())
+                mPresenter.greetApprove()
+            }
+            //是否开启打招呼功能
+            R.id.openHi -> {
+                mPresenter.greetSwitch()
             }
         }
     }
@@ -208,6 +213,13 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             switchVerifyHi.isChecked = !switchVerifyHi.isChecked
         }
     }
+
+    override fun onGreetSwitchResult(success: Boolean) {
+        if (success) {
+            switchOpenHi.isChecked = !switchOpenHi.isChecked
+        }
+    }
+
 
     override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
         if (success) {
