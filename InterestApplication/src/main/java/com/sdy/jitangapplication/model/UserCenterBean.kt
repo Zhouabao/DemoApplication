@@ -48,7 +48,9 @@ data class CoverSquare(
 data class VipDescr(
     val rule: String? = "",
     val title: String? = "",
-    val url: String? = ""
+    val url: String? = "",
+    var countdown: Int = 0,
+    val title_pay:  String = ""
 )
 
 
@@ -194,5 +196,5 @@ data class ModelAboutBean(
 data class LoginHelpBean(
     val title: String = "",
 //    val content: String = ""
-    val content:MutableList<String>
+    val content: MutableList<String>
 ) : Serializable

@@ -203,7 +203,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         squareUserName1.text = "${squareBean!!.nickname}"
         squareUserVipIv1.isVisible = squareBean!!.isvip == 1
 
-        squareChatBtn1.isVisible = !(UserManager.getAccid() == squareBean!!.accid)
+        if (squareBean!!.isfriend)
+            squareChatBtn1.isVisible = true
+        else
+            squareChatBtn1.isVisible =
+                !(UserManager.getAccid() == squareBean!!.accid || !squareBean!!.greet_switch)
         squareChatBtn1.onClick {
             squareChatBtn1.isEnabled = false
             mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid ?: "")

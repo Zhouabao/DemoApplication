@@ -95,11 +95,15 @@ class MultiListSquareAdapter(
         drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
         holder.itemView.squareDianzanBtn1.setCompoundDrawables(drawable1, null, null, null)
 
-        if (UserManager.getAccid() == item.accid || !chat) {
-            holder.itemView.squareChatBtn1.visibility = View.INVISIBLE
-        } else {
+        //为自己，不能聊天（用户详情界面），未开启招呼，非好友   聊天按钮不可见
+        if (item.isfriend)
             holder.itemView.squareChatBtn1.visibility = View.VISIBLE
-        }
+        else
+            if (UserManager.getAccid() == item.accid || !item.greet_switch || !chat) {
+                holder.itemView.squareChatBtn1.visibility = View.INVISIBLE
+            } else {
+                holder.itemView.squareChatBtn1.visibility = View.VISIBLE
+            }
 
         holder.addOnClickListener(R.id.squareDianzanBtn1)
         //点击转发
@@ -115,7 +119,14 @@ class MultiListSquareAdapter(
                 resetAudioListener!!.resetAudioState()
             }
             clickPos = holder.layoutPosition - headerLayoutCount
-            greetState(UserManager.getToken(), UserManager.getAccid(), item.accid, holder.itemView.squareChatBtn1)
+
+            if (item.isfriend) {
+                ChatActivity.start(mContext as Activity, item.accid)
+                clickPos = -1
+            } else {
+                greetState(item.accid, holder.itemView.squareChatBtn1)
+            }
+
         }
 
         if (item.descr.isEmpty()) {
@@ -312,7 +323,7 @@ class MultiListSquareAdapter(
     /**
      * 判断当前能否打招呼
      */
-    fun greetState(token: String, accid: String, target_accid: String, btn: ImageView) {
+    private fun greetState(target_accid: String, btn: ImageView) {
         if (!NetworkUtils.isConnected()) {
             CommonFunction.toast("请连接网络！")
             return
@@ -339,7 +350,7 @@ class MultiListSquareAdapter(
                                 UserManager.saveLightingCount(greetBean.lightningcnt)
                                 UserManager.saveCountDownTime(greetBean.countdown)
                                 if (greetBean.lightningcnt > 0) {
-                                    greet(UserManager.getToken(), UserManager.getAccid(), (target_accid ?: ""))
+                                    greet(target_accid)
                                 } else {
                                     if (UserManager.isUserVip()) {
                                         CountDownChatHiDialog(mContext).show()
@@ -384,7 +395,7 @@ class MultiListSquareAdapter(
     /**
      * 打招呼
      */
-    fun greet(token: String, accid: String, target_accid: String) {
+    fun greet(target_accid: String) {
         if (!NetworkUtils.isConnected()) {
             CommonFunction.toast("请连接网络！")
             return
@@ -399,10 +410,10 @@ class MultiListSquareAdapter(
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
                         onGreetSResult(true)
-                    } else if (t.code == 403) {
+                    } else if (t.code == 403) {//登录异常
                         UserManager.startToLogin(mContext as Activity)
                     } else if (t.code == 401) {
-                        HarassmentDialog(mContext, HarassmentDialog.CHATHI).show()
+                        HarassmentDialog(mContext, HarassmentDialog.CHATHI).show() //开启招呼提示
                     } else {
                         CommonFunction.toast(t.msg)
                     }

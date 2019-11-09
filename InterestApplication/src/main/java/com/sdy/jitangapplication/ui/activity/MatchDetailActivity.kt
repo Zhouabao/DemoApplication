@@ -48,8 +48,8 @@ import com.sdy.jitangapplication.ui.adapter.MatchDetailLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchImgsPagerAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.CountDownChatHiDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
+import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
 import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
 import com.sdy.jitangapplication.utils.UserManager
@@ -190,7 +190,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             text = "${matchBean!!.sign}"
             isVisible = !(matchBean!!.sign.isNullOrBlank())
         }
-        updateLightCount(matchBean!!.lightningcnt ?: 0, matchBean!!.countdown)
         detailUserJob.visibility = if (matchBean!!.jobname.isNullOrEmpty()) {
             View.GONE
         } else {
@@ -203,32 +202,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
         detailUserVerify.isVisible = matchBean!!.isfaced == 1
 
-
-        //已感兴趣或者是好友不做操作
-        if (matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
-            detailUserLikeBtn.visibility = View.GONE
-            detailUserLikeBtn.isEnabled = false
-            detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
-        } else {
-            detailUserLikeBtn.visibility = View.VISIBLE
-            detailUserLikeBtn.isEnabled = true
-            detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_blue)
-        }
-
-
-        //喜欢过
-        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
-            detailUserChatBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_orange)
-            detailUserChatIv.setImageResource(R.drawable.icon_chat_white)
-            detailUserLeftChatCount.isVisible = false
-            detailUserChatTv.text = "聊天"
-        } else {//不是好友就显示打招呼
-            detailUserChatBtn.setBackgroundResource(R.drawable.gradient_match_detail_red_bg)
-            detailUserChatIv.setImageResource(R.drawable.icon_flash_white)
-            detailUserLeftChatCount.isVisible = true
-            detailUserChatTv.text = "打招呼"
-
-        }
+        //更新打招呼次数和状态
+        updateLightCount(matchBean!!.lightningcnt ?: 0, matchBean!!.countdown)
 
 //        用户动态封面图片
         if (matchBean!!.square == null || matchBean!!.square!!.size == 0) {
@@ -437,7 +412,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 //                initData()
             } else if (result == "拉黑成功!") {
                 NIMClient.getService(FriendService::class.java).addToBlackList(matchBean!!.accid)
-                NIMClient.getService(MsgService::class.java).deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
+                NIMClient.getService(MsgService::class.java)
+                    .deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
                 NIMClient.getService(MsgService::class.java).clearServerHistory(matchBean!!.accid, SessionTypeEnum.P2P)
                 matchBean!!.isblock = 2
                 updateBlockStatus()
@@ -457,9 +433,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 } else {
                     EventBus.getDefault().post(RefreshEvent(true))
                     if (statusBean.data?.status == 1) {  //喜欢成功
-                        detailUserLikeBtn.isEnabled = false
-                        detailUserLikeBtn.visibility = View.GONE
-                        detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
+                        matchBean!!.isliked = 1
+                        updateLightCount(-1, -1)
                     } else if (statusBean.data?.status == 2) {//匹配成功
                         //如果是来自喜欢我的界面， 就刷新
                         if (intent.getIntExtra("parPos", -1) != -1) {
@@ -469,10 +444,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                                 )
                             )
                         }
-
-
                         //喜欢过
                         matchBean!!.isfriend = 1
+                        updateLightCount(-1, -1)
+
                         if (matchBean!!.isfriend == 1) {//是好友就显示聊天
                             detailUserChatBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_orange)
                             detailUserChatIv.setImageResource(R.drawable.icon_chat_white)
@@ -519,18 +494,20 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             //1.首先判断是否有次数，
             // 若有 就打招呼
             // 若无 就弹充值
-            R.id.detailUserChatBtn -> {//打个招呼
+            R.id.detailUserChatBtn -> {
                 if (matchBean != null)
-                    if (matchBean!!.isfriend == 1) {
+                    if (matchBean!!.isfriend == 1 || matchBean!!.isgreeted) {//好友直接聊天或者招呼有效
                         ChatActivity.start(this, matchBean?.accid ?: "")
                     } else {
-                        if (UserManager.getLightingCount() == 0) {
-                            if (UserManager.isUserVip() && !countDownDialog.isShowing) {
-                                countDownDialog.show()
-//                                CountDownChatHiDialog(this).show()
-                            } else {
-                                ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, this).show()
-                            }
+                        if (UserManager.getLightingCount() == 0) {//没有打招呼次数就弹充值
+                            ChargeVipDialog(
+                                ChargeVipDialog.DOUBLE_HI, this,
+                                if (UserManager.isUserVip()) {
+                                    ChargeVipDialog.PURCHASE_GREET_COUNT
+                                } else {
+                                    ChargeVipDialog.PURCHASE_VIP
+                                }
+                            ).show()
                         } else {
                             mPresenter.greetState(
                                 UserManager.getToken(),
@@ -592,7 +569,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
     //次数用尽弹窗
-    private val countDownDialog by lazy { CountDownChatHiDialog(this) }
+//    private val countDownDialog by lazy { CountDownChatHiDialog(this) }
 
     /**
      *  点击聊天
@@ -616,11 +593,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                         UserManager.getGlobalLabelId()
                     )
                 } else {
-                    if (UserManager.isUserVip() && !countDownDialog.isShowing) {
-                        countDownDialog.show()
-                    } else {
-                        ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, this).show()
-                    }
+                    ChargeVipDialog(
+                        ChargeVipDialog.DOUBLE_HI, this, if (UserManager.isUserVip()) {
+                            ChargeVipDialog.PURCHASE_GREET_COUNT
+                        } else {
+                            ChargeVipDialog.PURCHASE_VIP
+                        }
+                    ).show()
                 }
             }
         } else {
@@ -632,21 +611,63 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      * 更新本地的招呼次数
      */
     private fun updateLightCount(lightningcnt: Int, countdown: Int) {
-        UserManager.saveLightingCount(lightningcnt)
+        if (lightningcnt != -1) {
+            UserManager.saveLightingCount(lightningcnt)
+            EventBus.getDefault().postSticky(UpdateHiCountEvent())
+        }
         if (countdown != -1)
             UserManager.saveCountDownTime(countdown)
 
-        EventBus.getDefault().postSticky(UpdateHiCountEvent())
         detailUserLeftChatCount.text = "${UserManager.getLightingCount()}"
+        //已感兴趣或者是好友不做操作
+        if (matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
+            detailUserLikeBtn.visibility = View.GONE
+            detailUserLikeBtn.isEnabled = false
+            detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
+        } else {
+            detailUserLikeBtn.visibility = View.VISIBLE
+            detailUserLikeBtn.isEnabled = true
+            detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_blue)
+        }
+
+        //判断是否为好友 是：显示聊天
+        //              否: 判断是否开启招呼,是否喜欢过
+        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
+            detailUserChatBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_orange)
+            detailUserChatIv.setImageResource(R.drawable.icon_chat_white)
+            detailUserLeftChatCount.isVisible = false
+            detailUserChatTv.text = "聊天"
+        } else {
+            detailUserLikeBtn.isVisible = matchBean!!.isliked != 1//喜欢过就不显示“感兴趣”
+            if (!matchBean!!.greet_switch) {//招呼未开启不显示打招呼
+                detailUserChatBtn.isVisible = false
+            } else {//招呼开启,   招呼有效 与 招呼无效
+                if (matchBean!!.isgreeted) {
+                    detailUserChatBtn.setBackgroundResource(R.drawable.gradient_match_detail_red_bg)
+                    detailUserChatIv.setImageResource(R.drawable.icon_flash_white)
+                    detailUserChatIv.isVisible = false
+                    detailUserLeftChatCount.isVisible = false
+                    detailUserChatTv.text = "继续聊天"
+                } else {
+                    detailUserChatBtn.setBackgroundResource(R.drawable.gradient_match_detail_red_bg)
+                    detailUserChatIv.setImageResource(R.drawable.icon_flash_white)
+                    detailUserLeftChatCount.isVisible = true
+                    detailUserChatTv.text = "打招呼"
+                }
+            }
+
+
+        }
     }
 
     /**
      * 打招呼结果（先请求服务器）
      */
-    override fun onGreetSResult(success: Boolean) {
+    override fun onGreetsResult(success: Boolean) {
         if (success) {
+            matchBean!!.isgreeted = true
             updateLightCount(UserManager.getLightingCount() - 1, -1)
-            sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
+            SayHiDialog(matchBean!!.accid, matchBean!!.nickname ?: "", this).show()
         }
     }
 

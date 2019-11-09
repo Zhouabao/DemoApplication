@@ -33,7 +33,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
+
             <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/btnChat"
                     android:visibility="visible"
                     android:layout_width="wrap_content"
                     android:layout_alignParentRight="true"
@@ -45,7 +47,6 @@
 
 
                 <ImageView
-                        android:id="@+id/btnChat"
                         android:src="@drawable/icon_flash"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
@@ -70,37 +71,37 @@
                         />
             </androidx.constraintlayout.widget.ConstraintLayout>
             <!--<FrameLayout-->
-                    <!--android:visibility="visible"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_marginRight="20dp"-->
-                    <!--android:layout_above="@id/actionCl"-->
-                    <!--android:layout_marginBottom="34dp"-->
-                    <!--android:clipChildren="false"-->
-                    <!--android:layout_height="wrap_content">-->
+            <!--android:visibility="visible"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_above="@id/actionCl"-->
+            <!--android:layout_marginBottom="34dp"-->
+            <!--android:clipChildren="false"-->
+            <!--android:layout_height="wrap_content">-->
 
-                <!--<ImageView-->
-                        <!--android:id="@+id/btnChat"-->
-                        <!--android:background="@drawable/shape_oval_white"-->
-                        <!--android:elevation="2dp"-->
-                        <!--android:scaleType="center"-->
-                        <!--android:src="@drawable/icon_flash_small"-->
-                        <!--android:layout_width="72dp"-->
-                        <!--android:layout_height="72dp"-->
-                        <!--/>-->
+            <!--<ImageView-->
+            <!--android:id="@+id/btnChat"-->
+            <!--android:background="@drawable/shape_oval_white"-->
+            <!--android:elevation="2dp"-->
+            <!--android:scaleType="center"-->
+            <!--android:src="@drawable/icon_flash_small"-->
+            <!--android:layout_width="72dp"-->
+            <!--android:layout_height="72dp"-->
+            <!--/>-->
 
-                <!--<TextView-->
-                        <!--android:id="@+id/tvLeftChatTime"-->
-                        <!--android:elevation="2dp"-->
-                        <!--android:textColor="@color/colorWhite"-->
-                        <!--android:background="@drawable/shape_oval_orange"-->
-                        <!--android:gravity="center"-->
-                        <!--android:textSize="26sp"-->
-                        <!--android:text="0"-->
-                        <!--android:textStyle="bold"-->
-                        <!--android:layout_width="72dp"-->
-                        <!--android:layout_height="72dp"-->
-                        <!--/>-->
+            <!--<TextView-->
+            <!--android:id="@+id/tvLeftChatTime"-->
+            <!--android:elevation="2dp"-->
+            <!--android:textColor="@color/colorWhite"-->
+            <!--android:background="@drawable/shape_oval_orange"-->
+            <!--android:gravity="center"-->
+            <!--android:textSize="26sp"-->
+            <!--android:text="0"-->
+            <!--android:textStyle="bold"-->
+            <!--android:layout_width="72dp"-->
+            <!--android:layout_height="72dp"-->
+            <!--/>-->
 
 
             <!--</FrameLayout>-->

@@ -53,7 +53,9 @@ data class MatchBean(
     var isfriend: Int?,
     var residue: Int = 0,
     var isblock: Int = 1,//1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
-    var greet_switch: Boolean = true//true开启接收（可以打）  false关闭接收（不可以打）
+    var greet_switch: Boolean = true,//true开启接收（可以打）  false关闭接收（不可以打）
+    var isgreeted: Boolean = true//招呼是否仍然有效
+
 ) : Serializable
 
 

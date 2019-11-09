@@ -202,7 +202,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
-                        mView.onGreetSResult(true)
+                        mView.onGreetsResult(true)
                     } else if (t.code == 401) {
                         HarassmentDialog(context, HarassmentDialog.CHATHI).show()
                     } else {

@@ -132,6 +132,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
         retryBtn.setOnClickListener(this)
         btnChat.setOnClickListener(this)
+        btnChat.setOnClickListener(this)
 
         initialize()
 
@@ -563,8 +564,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     override fun onCardDisappeared(view: View?, position: Int) {
         Log.d("CardStackView", "onCardDisappeared: ($position)")
-
     }
+
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
         Log.d("CardStackView", "onCardDragging: ($direction)")
@@ -718,6 +719,20 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     }
 
+
+    override fun onCardAppeared(view: View?, position: Int) {
+        Log.d("CardStackView", "onCardAppeared: ($position)")
+        btnChat.isVisible = matchUserAdapter.data[position].greet_switch
+
+    }
+
+    override fun onCardRewound() {
+        if (UserManager.slide_times > 0) {
+            UserManager.slide_times--
+        }
+
+    }
+
     private fun resetAnimation() {
         val params = animation_chathi.layoutParams
         params.width = 0
@@ -737,19 +752,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         animation_dislike.alpha = 0F
         animation_dislike.layoutParams = params2
     }
-
-    override fun onCardAppeared(view: View?, position: Int) {
-        Log.d("CardStackView", "onCardAppeared: ($position)")
-
-    }
-
-    override fun onCardRewound() {
-        if (UserManager.slide_times > 0) {
-            UserManager.slide_times--
-        }
-
-    }
-
 
     /*--------------------------消息代理------------------------*/
 

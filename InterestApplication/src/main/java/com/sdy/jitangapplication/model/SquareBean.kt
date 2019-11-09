@@ -56,7 +56,9 @@ data class SquareBean(
     var duration: Long = 0L,
     var clickTime: Int = 0,
     var originalLike: Int = 0,
-    var originalLikeCount: Int = 0
+    var originalLikeCount: Int = 0,
+    var isfriend: Boolean = true,
+    var greet_switch: Boolean = true//greet_switch   true开启接收（可以打）  false关闭接收（不可以打）
 
 ) :
     Serializable, MultiItemEntity {
