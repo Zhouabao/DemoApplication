@@ -4,6 +4,7 @@ import android.app.Activity
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.common.AppManager
+import com.netease.nim.uikit.common.util.string.MD5
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
@@ -40,11 +41,11 @@ object UserManager {
     //发布
     var publishParams: HashMap<String, Any> = hashMapOf()
     //发布的标签ids
-    var checkIds: Array<Int?> = arrayOfNulls(10)
+    var checkIds: MutableList<Int> = mutableListOf()
     //发布的对象
     var mediaBeans: MutableList<MediaParamBean> = mutableListOf()
     //发布的对象keylist
-    var keyList: Array<String?>? = arrayOfNulls<String>(10)
+    var keyList: MutableList<String> = mutableListOf()
 
 
     /**
@@ -144,8 +145,8 @@ object UserManager {
         publishState = 0
         publishParams.clear()
         mediaBeans.clear()
-        keyList = arrayOfNulls<String>(10)
-        checkIds = arrayOfNulls(10)
+        keyList = mutableListOf()
+        checkIds = mutableListOf()
         cancelUpload = false
     }
 
@@ -668,8 +669,34 @@ object UserManager {
         return hashMapOf(
             "token" to getToken(),
             "accid" to getAccid(),
-            "timestamp" to System.currentTimeMillis(),
-            "_sign" to "sign"
+            "_timestamp" to System.currentTimeMillis()
         )
+    }
+
+    fun getSignParams(params: HashMap<String, Any> = hashMapOf()): HashMap<String, Any> {
+        if (params["_signature"] != null)
+            params.remove("_signature")
+        params.putAll(getBaseParams())
+        var sign = "ppsns${AppUtils.getAppVersionName()}dcyfyf"
+        var params1 = params
+        for (param in params.toSortedMap()) {
+            sign = sign.plus("${param.key}=${param.value}&")
+        }
+        params1["_signature"] = MD5.getStringMD5(sign.substring(0, sign.length - 1))
+        return params1
+    }
+
+
+    fun getSignParams1(params: HashMap<String, Any?> = hashMapOf()): HashMap<String, Any?> {
+        if (params["_signature"] != null)
+            params.remove("_signature")
+        params.putAll(getBaseParams())
+        var sign = "ppsns${AppUtils.getAppVersionName()}dcyfyf"
+        var params1 = params
+        for (param in params.toSortedMap()) {
+            sign = sign.plus("${param.key}=${param.value}&")
+        }
+        params1["_signature"] = MD5.getStringMD5(sign.substring(0, sign.length - 1))
+        return params1
     }
 }

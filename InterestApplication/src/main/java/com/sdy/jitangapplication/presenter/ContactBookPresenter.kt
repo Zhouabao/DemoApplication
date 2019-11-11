@@ -28,7 +28,7 @@ class ContactBookPresenter : BasePresenter<ContactBookView>() {
         val params = UserManager.getBaseParams()
         params.putAll(param)
         RetrofitFactory.instance.create(Api::class.java)
-            .getContactLists(params)
+            .getContactLists(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<ContactDataBean?>>(mView) {
                 override fun onNext(t: BaseResp<ContactDataBean?>) {
                     if (t.code == 200) {

@@ -78,7 +78,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                 val params = UserManager.getBaseParams()
                 params["target_accid"] = contactId
                 RetrofitFactory.instance.create(Api::class.java)
-                    .getTargetInfo(params)
+                    .getTargetInfo(UserManager.getSignParams(params))
                     .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
                         override fun onNext(t: BaseResp<NimBean?>) {
                             super.onNext(t)

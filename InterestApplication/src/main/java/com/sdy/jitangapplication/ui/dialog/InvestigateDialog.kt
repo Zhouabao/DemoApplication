@@ -198,9 +198,9 @@ class InvestigateDialog(private val contex1t: Context, private val investigateBe
             "answer_id" to answer_id,
             "answer" to answer
         )
-        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
-            .answer(params)
+            .answer(UserManager.getSignParams(params))
 //            .answer(params)
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {

@@ -10,6 +10,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.presenter.view.LoginView
+import com.sdy.jitangapplication.utils.UserManager
 
 class LoginPresenter : BasePresenter<LoginView>() {
 
@@ -53,9 +54,13 @@ class LoginPresenter : BasePresenter<LoginView>() {
         if (!checkNetWork()) {
             return
         }
+        val params = hashMapOf<String, Any>(
+            "phone" to mobile,
+            "scene" to "register"
+        )
         RetrofitFactory.instance
             .create(Api::class.java)
-            .getVerifyCode(mobile, "register")
+            .getVerifyCode(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     Log.i("retrofit", t.toString())

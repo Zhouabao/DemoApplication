@@ -331,7 +331,7 @@ class MultiListSquareAdapter(
         val params = UserManager.getBaseParams()
         params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(params)
+            .greetState(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(null) {
                 override fun onStart() {
 
@@ -408,7 +408,7 @@ class MultiListSquareAdapter(
         params["tag_id"] = UserManager.getGlobalLabelId()
         params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(params)
+            .greet(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {

@@ -30,9 +30,8 @@ class MessageHiPresenter : BasePresenter<MessageHiView>() {
      * 获取打招呼列表
      */
     fun greatLists(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .greatLists(params)
+            .greatLists(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MutableList<HiMessageBean>?>>(mView) {
                 override fun onNext(t: BaseResp<MutableList<HiMessageBean>?>) {
                     when {
@@ -55,9 +54,9 @@ class MessageHiPresenter : BasePresenter<MessageHiView>() {
      * 删除过期消息
      */
     fun delTimeoutGreet(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
+
         RetrofitFactory.instance.create(Api::class.java)
-            .delTimeoutGreet(params)
+            .delTimeoutGreet(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<OuttimeBean?>>(mView) {
                 override fun onNext(t: BaseResp<OuttimeBean?>) {
                     if (t.code == 200)

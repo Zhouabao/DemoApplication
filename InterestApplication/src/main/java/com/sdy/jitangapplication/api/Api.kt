@@ -71,7 +71,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Open_Api/SendSms${Constants.END_BASE_URL}")
-    fun getVerifyCode(@Field("phone") phone: String, @Field("scene") scene: String): Observable<BaseResp<Any?>>
+    fun getVerifyCode(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -79,11 +79,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")
-    fun loginOrAlloc(
-        @Field("uni_account") phone: String = "", @Field("type") scene: String = "1",
-        @Field("password") password: String = "", @Field("code") code: String = "",
-        @Field("wxcode") wxcode: String = ""
-    ): Observable<BaseResp<LoginBean>>
+    fun loginOrAlloc(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LoginBean>>
 
 
     /**
@@ -91,7 +87,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Open_Api/LoginOrAlloc${Constants.END_BASE_URL}")
-    fun loginOWithWechat(@Field("type") scene: String = "1", @Field("wxcode") wxcode: String = ""): Observable<BaseResp<LoginBean?>>
+    fun loginOWithWechat(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LoginBean?>>
 
 
     /**
@@ -154,7 +150,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("tags/addTag${Constants.END_BASE_URL}")
-    fun uploadTagLists(@FieldMap params: HashMap<String, Any>, @Field("tags[]") idList: Array<Int?>): Observable<BaseResp<LoginBean?>>
+    fun uploadTagLists(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<LoginBean?>>
 
 
     /************************广场列表*****************************/
@@ -266,7 +262,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("square/announce${Constants.END_BASE_URL}")
-    fun squareAnnounce(@FieldMap params: MutableMap<String, Any>, @Field("tags[]") tagList: Array<Int?>, @Field("comment[]") keyList: Array<String?>?): Observable<BaseResp<Any?>>
+    fun squareAnnounce(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**********************匹配**************************/
@@ -276,7 +272,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Index/index${Constants.END_BASE_URL}")
-    fun getMatchList(@FieldMap params: MutableMap<String, Any>, @Field("ll[]") idList: Array<Int?>?): Observable<BaseResp<MatchListBean?>>
+    fun getMatchList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchListBean?>>
 
 
     /**
@@ -330,7 +326,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("member_info/reportUserV2${Constants.END_BASE_URL}")
-    fun reportUserV2(@FieldMap params: MutableMap<String, Any>, @Field("photo[]") photoList: Array<String?>): Observable<BaseResp<Any?>>
+    fun reportUserV2(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -463,11 +459,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/addPhotoV2${Constants.END_BASE_URL}")
-    fun addPhotoV2(
-        @FieldMap params: MutableMap<String, Any?>?, @Field(
-            "photos[]"
-        ) photos: Array<Int?>?
-    ): Observable<BaseResp<Any?>>
+    fun addPhotoV2(@FieldMap params: MutableMap<String, Any?>?): Observable<BaseResp<Any?>>
 
 
     /**
@@ -610,7 +602,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("StrageBlock/blockedAddressBook${Constants.END_BASE_URL}")
-    fun blockedAddressBook(@FieldMap params: HashMap<String, Any>, @Field("content[]") content: Array<String?>? = null): Observable<BaseResp<Any?>>
+    fun blockedAddressBook(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**

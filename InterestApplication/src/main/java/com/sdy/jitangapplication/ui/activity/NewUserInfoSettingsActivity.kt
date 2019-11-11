@@ -519,10 +519,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         }
         loading.show()
         if (hasChangePhotos) {
-            val photosId = arrayOfNulls<Int>(10)
+            val photosId= mutableListOf<Int?>()
             for (data in photos.withIndex()) {
                 if (data.value?.type == MyPhotoBean.PHOTO) {
-                    photosId[data.index] = data.value?.id
+                    photosId.add(data.value?.id)
                 }
             }
             mPresenter.addPhotoV2(savePersonalParams, UserManager.getToken(), UserManager.getAccid(), photosId, type)

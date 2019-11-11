@@ -1034,7 +1034,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 //todo 此处要存下所有的数据信息
                 UserManager.publishState = 1
                 for (i in 0 until checkTags.size) {
-                    UserManager.checkIds[i] = checkTags[i].id
+                    UserManager.checkIds.add(checkTags[i].id)
                 }
                 val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
                     0
@@ -1397,12 +1397,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     /**
      * 设置发布的参数
      */
-    private val keyList: Array<String?>? = arrayOfNulls<String>(10)
+    private val keyList: MutableList<String> = mutableListOf()
 
     private fun publish() {
-        val checkIds = arrayOfNulls<Int>(10)
+        val checkIds = mutableListOf<Int>()
         for (i in 0 until checkTags.size) {
-            checkIds[i] = checkTags[i].id
+            checkIds.add(checkTags[i].id)
         }
         val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
             0
@@ -1491,8 +1491,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     publish()
                 }
                 1 -> {
-                    keyList?.set(
-                        uploadCount,
+                    keyList.add(uploadCount,
                         Gson().toJson(
                             MediaParamBean(
                                 key,
@@ -1500,8 +1499,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                                 pickedPhotos[uploadCount].width,
                                 pickedPhotos[uploadCount].height
                             )
-                        )
-                    )
+                        ))
                     uploadCount++
                     if (uploadCount == pickedPhotos.size) {
                         publish()
@@ -1510,7 +1508,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     }
                 }
                 2 -> {
-                    keyList?.set(
+                    keyList.add(
                         uploadCount,
                         Gson().toJson(
                             MediaParamBean(
@@ -1524,7 +1522,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     publish()
                 }
                 3 -> {
-                    keyList?.set(uploadCount, Gson().toJson(MediaParamBean(key, totalSecond, 0, 0)))
+                    keyList.add(uploadCount, Gson().toJson(MediaParamBean(key, totalSecond, 0, 0)))
                     publish()
                 }
             }

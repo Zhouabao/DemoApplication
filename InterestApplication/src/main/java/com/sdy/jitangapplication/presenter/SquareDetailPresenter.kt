@@ -29,10 +29,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 获取某一广场详情
      */
     fun getSquareInfo(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
-
         RetrofitFactory.instance.create(Api::class.java)
-            .getSquareInfo(params)
+            .getSquareInfo(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<SquareBean?>>(mView) {
                 override fun onNext(t: BaseResp<SquareBean?>) {
                     if (t.code == 200) {
@@ -56,9 +54,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 获取评论列表
      */
     fun getCommentList(params: HashMap<String, Any>, refresh: Boolean) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .getCommentLists(params)
+            .getCommentLists(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<AllCommentBean?>>(mView) {
                 override fun onStart() {
                     super.onStart()
@@ -91,10 +88,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 1 点赞 2取消点赞
      */
     fun getSquareLike(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
-
         RetrofitFactory.instance.create(Api::class.java)
-            .getSquareLike(params)
+            .getSquareLike(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -123,9 +118,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 1 收藏 2取消收藏
      */
     fun getSquareCollect(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .getSquareCollect(params)
+            .getSquareCollect(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -150,9 +144,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 广场举报
      */
     fun getSquareReport(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .getSquareReport(params)
+            .getSquareReport(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -177,9 +170,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 添加评论
      */
     fun addComment(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .addComment(params)
+            .addComment(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -206,9 +198,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 1 点赞 2取消点赞
      */
     fun getCommentLike(params: HashMap<String, Any>, position: Int) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .commentLikes(params)
+            .commentLikes(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -234,9 +225,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 删除评论
      */
     fun deleteComment(params: HashMap<String, Any>, position: Int) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .destoryComment(params)
+            .destoryComment(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -263,9 +253,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 评论举报
      */
     fun commentReport(params: HashMap<String, Any>, position: Int) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .commentReport(params)
+            .commentReport(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -290,10 +279,8 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 广场删除
      */
     fun removeMySquare(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
-
         RetrofitFactory.instance.create(Api::class.java)
-            .removeMySquare(params)
+            .removeMySquare(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -328,7 +315,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
         params["tag_id"]= tag_id
         params["target_accid"]= target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(params)
+            .greet(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -359,7 +346,7 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
         val params = UserManager.getBaseParams()
         params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(params)
+            .greetState(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {

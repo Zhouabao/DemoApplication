@@ -27,10 +27,8 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
         if (!checkNetWork()) {
             mView.onError("")
         }
-        params.putAll(UserManager.getBaseParams())
-
         RetrofitFactory.instance.create(Api::class.java)
-            .myInfo(params)
+            .myInfo(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<UserInfoBean?>>(mView) {
                 override fun onNext(t: BaseResp<UserInfoBean?>) {
                         mView.onGetMyInfoResult(t.data)
@@ -50,7 +48,7 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
      */
     fun checkBlock(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .checkBlock(UserManager.getBaseParams())
+            .checkBlock(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     super.onStart()

@@ -23,10 +23,9 @@ import com.sdy.jitangapplication.utils.UserManager
 class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
 
     fun getMySquare(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
 
         RetrofitFactory.instance.create(Api::class.java)
-            .aboutMeSquare(params)
+            .aboutMeSquare(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
                 override fun onNext(t: BaseResp<SquareListBean?>) {
                     if (t.code == 200) {
@@ -51,10 +50,8 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
      * 1 点赞 2取消点赞
      */
     fun getSquareLike(params: HashMap<String, Any>, position: Int) {
-        params.putAll(UserManager.getBaseParams())
-
         RetrofitFactory.instance.create(Api::class.java)
-            .getSquareLike(params)
+            .getSquareLike(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -85,9 +82,8 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
      * 1 收藏 2取消收藏
      */
     fun getSquareCollect(params: HashMap<String, Any>, position: Int) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .getSquareCollect(params)
+            .getSquareCollect(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -115,9 +111,8 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
      * 广场举报
      */
     fun getSquareReport(params: HashMap<String, Any>, position: Int) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .getSquareReport(params)
+            .getSquareReport(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
@@ -144,10 +139,8 @@ class MyCollectionPresenter : BasePresenter<MyCollectionView>() {
      * 删除广场
      */
     fun removeMySquare(params: HashMap<String, Any>, position: Int) {
-        params.putAll(UserManager.getBaseParams())
-
         RetrofitFactory.instance.create(Api::class.java)
-            .removeMySquare(params)
+            .removeMySquare(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)

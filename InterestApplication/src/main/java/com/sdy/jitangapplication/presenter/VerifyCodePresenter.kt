@@ -13,6 +13,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
+import com.sdy.jitangapplication.utils.UserManager
 
 class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
 
@@ -24,8 +25,16 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
         if (!checkNetWork()) {
             return
         }
+
+        val params = hashMapOf<String, Any>(
+            "uni_account" to phone,
+            "type" to type,
+            "password" to "",
+            "code" to verifyCode,
+            "wxcode" to wxcode
+        )
         RetrofitFactory.instance.create(Api::class.java)
-            .loginOrAlloc(phone, scene = type, code = verifyCode, wxcode = wxcode)
+            .loginOrAlloc(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<LoginBean>>(mView) {
                 override fun onNext(t: BaseResp<LoginBean>) {
                     super.onNext(t)
@@ -51,9 +60,14 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
         if (!checkNetWork()) {
             return
         }
+
+        val params = hashMapOf<String, Any>(
+            "phone" to mobile,
+            "scene" to "register"
+        )
         RetrofitFactory.instance
             .create(Api::class.java)
-            .getVerifyCode(mobile, "register")
+            .getVerifyCode(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)

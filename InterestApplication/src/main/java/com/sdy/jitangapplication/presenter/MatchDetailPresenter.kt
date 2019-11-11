@@ -30,9 +30,8 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
      * 获取详细的用户数据 包括用户的广场信息
      */
     fun getUserDetailInfo(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .getMatchUserInfo(params)
+            .getMatchUserInfo(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MatchBean?>>(mView) {
                 override fun onStart() {
                 }
@@ -62,9 +61,8 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
         if (!checkNetWork()) {
             return
         }
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .shieldingFriend(params)
+            .shieldingFriend(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                 }
@@ -93,10 +91,9 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
     /**
      * 解除拉黑
      */
-    fun removeBlock(hashMap: HashMap<String, Any>) {
-        hashMap.putAll(UserManager.getBaseParams())
+    fun removeBlock(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
-            .removeBlock(hashMap)
+            .removeBlock(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -124,10 +121,9 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
         if (!checkNetWork()) {
             return
         }
-        params.putAll(UserManager.getBaseParams())
 
         RetrofitFactory.instance.create(Api::class.java)
-            .dissolutionFriend(params)
+            .dissolutionFriend(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                 }
@@ -161,10 +157,9 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
             return
         }
 
-        params.putAll(UserManager.getBaseParams())
 
         RetrofitFactory.instance.create(Api::class.java)
-            .addLike(params)
+            .addLike(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -194,11 +189,11 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
             return
         }
 
-        val params = UserManager.getBaseParams()
+        val params = hashMapOf<String, Any>()
         params["tag_id"] = tag_id
         params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(params)
+            .greet(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -225,10 +220,10 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
      */
     fun greetState(token: String, accid: String, target_accid: String) {
 
-        val params = UserManager.getBaseParams()
+        val params = hashMapOf<String, Any>()
         params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(params)
+            .greetState(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {

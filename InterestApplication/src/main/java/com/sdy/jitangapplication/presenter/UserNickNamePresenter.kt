@@ -23,10 +23,9 @@ class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
         params["lng"] = UserManager.getlongtitude().toFloat()
         params["lat"] = UserManager.getlatitude().toFloat()
         params["step"] = step
-        params.putAll(UserManager.getBaseParams())
 
         RetrofitFactory.instance.create(Api::class.java)
-            .setProfileV2(params)
+            .setProfileV2(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)

@@ -207,9 +207,8 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
      * 保存个人信息
      */
     private fun savePersonal(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .savePersonal(params)
+            .savePersonal(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     loadingDialog.dismiss()

@@ -174,7 +174,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                     val params = UserManager.getBaseParams()
                     params["target_accid"] = (account ?: "")
                     RetrofitFactory.instance.create(Api::class.java)
-                        .reportUser(params)
+                        .reportUser(UserManager.getSignParams(params))
                         .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                             override fun onStart() {
                             }
@@ -359,7 +359,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         val params = UserManager.getBaseParams()
         params["account"] = account ?: ""
         RetrofitFactory.instance.create(Api::class.java)
-            .removeStarTarget(params)
+            .removeStarTarget(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -384,7 +384,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         val params = UserManager.getBaseParams()
         params["target_accid"] = account ?: ""
         RetrofitFactory.instance.create(Api::class.java)
-            .addStarTarget(params)
+            .addStarTarget(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -412,7 +412,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         val params = UserManager.getBaseParams()
         params["target_accid"] = account ?: ""
         RetrofitFactory.instance.create(Api::class.java)
-            .removeGreet(params)
+            .removeGreet(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -446,7 +446,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         params["target_accid"] = (account ?: "")
 
         RetrofitFactory.instance.create(Api::class.java)
-            .dissolutionFriend(params)
+            .dissolutionFriend(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {

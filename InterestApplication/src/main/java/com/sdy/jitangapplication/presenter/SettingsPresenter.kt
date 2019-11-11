@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -26,9 +27,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     /**
      * 屏蔽通讯录
      */
-    fun blockedAddressBook(accid: String, token: String, content: Array<String?>? = null) {
+    fun blockedAddressBook(accid: String, token: String, content: MutableList<String?>? = null) {
+        val params = hashMapOf<String,Any>("content" to Gson().toJson(content))
         RetrofitFactory.instance.create(Api::class.java)
-            .blockedAddressBook(UserManager.getBaseParams(), content)
+            .blockedAddressBook( UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -57,7 +59,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         val params = UserManager.getBaseParams()
         params["state"] = state
         RetrofitFactory.instance.create(Api::class.java)
-            .isHideDistance(params)
+            .isHideDistance(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -79,7 +81,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     /**获取当前最新版本**/
     fun getVersion() {
         RetrofitFactory.instance.create(Api::class.java)
-            .getVersion(UserManager.getBaseParams())
+            .getVersion(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<VersionBean?>>(mView) {
                 override fun onNext(t: BaseResp<VersionBean?>) {
                     if (t.code == 200) {
@@ -95,7 +97,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
      */
     fun greetApprove() {
         RetrofitFactory.instance.create(Api::class.java)
-            .greetApprove(UserManager.getBaseParams())
+            .greetApprove(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     CommonFunction.toast(t.msg)
@@ -109,7 +111,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
      */
     fun greetSwitch() {
         RetrofitFactory.instance.create(Api::class.java)
-            .greetSwitch(UserManager.getBaseParams())
+            .greetSwitch(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     CommonFunction.toast(t.msg)
@@ -124,7 +126,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
      */
     fun mySettings(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .mySettings(UserManager.getBaseParams())
+            .mySettings(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<SettingsBean?>>(mView) {
                 override fun onNext(t: BaseResp<SettingsBean?>) {
                     mView.onSettingsBeanResult(t.code == 200, t.data)

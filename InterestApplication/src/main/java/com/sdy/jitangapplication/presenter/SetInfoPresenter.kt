@@ -46,10 +46,8 @@ class SetInfoPresenter : BasePresenter<SetInfoView>() {
         if (!checkNetWork()) {
             return
         }
-
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .setProfile(params)
+            .setProfile(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)

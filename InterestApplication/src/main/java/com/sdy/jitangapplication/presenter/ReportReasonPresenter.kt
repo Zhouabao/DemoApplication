@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter
 
 import com.blankj.utilcode.util.SPUtils
+import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -24,10 +25,10 @@ class ReportReasonPresenter : BasePresenter<ReportResonView>() {
     /**
      * 举报用户
      */
-    fun reportUser(params: HashMap<String, Any>, photoList: Array<String?>) {
-        params.putAll(UserManager.getBaseParams())
+    fun reportUser(params: HashMap<String, Any>, photoList: MutableList<String>) {
+        params["photo"] = Gson().toJson(photoList)
         RetrofitFactory.instance.create(Api::class.java)
-            .reportUserV2(params, photoList)
+            .reportUserV2(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     mView.onGetUserActionResult(t.code == 200, t.msg)

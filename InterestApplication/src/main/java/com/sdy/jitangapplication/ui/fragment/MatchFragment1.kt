@@ -235,14 +235,14 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     override fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean) {
         if (greetBean != null && greetBean.lightningcnt != -1) {
             if (greetBean.isfriend || greetBean.isgreet) {
-                ChatActivity.start(activity!!, matchBean?.accid ?: "")
+                ChatActivity.start(activity!!, matchBean.accid ?: "")
                 btnChat.isEnabled = true
             } else {
                 if (greetBean.lightningcnt > 0) {
                     mPresenter.greet(
                         UserManager.getToken(),
                         UserManager.getAccid(),
-                        (matchBean.accid ?: ""),
+                        matchBean.accid,
                         UserManager.getGlobalLabelId(),
                         matchBean
                     )
@@ -280,7 +280,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     /**
      * 匹配列表数据
      */
-    private var paramsLastFiveIds = arrayOfNulls<Int>(10)
+    private var paramsLastFiveIds = mutableListOf<Int>()
 
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
@@ -296,7 +296,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             }
 
             matchUserAdapter.addData(matchBeans!!.list ?: mutableListOf<MatchBean>())
-            paramsLastFiveIds = matchBeans.exclude
+            paramsLastFiveIds = matchBeans.exclude?: mutableListOf()
             //保存剩余招呼次数
             UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
             //保存倒计时时间
@@ -702,14 +702,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
         //如果已经只剩5张了就请求数据(预加载).
         if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
-            try {
-//                Thread.sleep(2000)
-                updateLocation()
-                mPresenter.getMatchList(matchParams, paramsLastFiveIds)
-            } catch (e: Exception) {
-            }
+            updateLocation()
+            mPresenter.getMatchList(matchParams, paramsLastFiveIds)
         } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
-//            matchStateview.viewState = MultiStateView.ViewState.EMPTY
             setViewState(EMPTY)
             btnChat.isVisible = false
             tvLeftChatTime.isVisible = false

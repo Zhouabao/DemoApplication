@@ -272,7 +272,7 @@ class LabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, Vie
                 params["accid"] = SPUtils.getInstance(Constants.SPNAME).getString("accid")
                 params["token"] = SPUtils.getInstance(Constants.SPNAME).getString("token")
                 params["_timestamp"] = "${System.currentTimeMillis()}"
-                val checkIds = arrayOfNulls<Int>(Constants.LABEL_MAX_COUNT)
+                val checkIds = mutableListOf<Int>()
                 for (checkLabel in chooseLabelsAdapter.data) {
                     if (checkLabel.id == -1) {
                         chooseLabelsAdapter.data.remove(checkLabel)
@@ -280,7 +280,8 @@ class LabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, Vie
                     }
                 }
                 for (index in 0 until chooseLabelsAdapter.data.size) {
-                    checkIds[index] = chooseLabelsAdapter.data[index].id
+//                    checkIds[index] = chooseLabelsAdapter.data[index].id
+                    checkIds.add(chooseLabelsAdapter.data[index].id)
                 }
                 mPresenter.uploadLabels(params, checkIds)
             }

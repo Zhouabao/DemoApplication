@@ -25,9 +25,8 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
      * 获取广场消息列表
      */
     fun squareLists(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .squareLists(params)
+            .squareLists(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MutableList<SquareMsgBean>?>>(mView) {
                 override fun onNext(t: BaseResp<MutableList<SquareMsgBean>?>) {
                     if (t.code == 200)
@@ -50,9 +49,8 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
      * 标记广场消息已读
      */
     fun markSquareRead(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .markSquareRead(params)
+            .markSquareRead(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -71,9 +69,8 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
      * 删除广场消息
      */
     fun delSquareMsg(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .delSquareMsg(params)
+            .delSquareMsg(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200)

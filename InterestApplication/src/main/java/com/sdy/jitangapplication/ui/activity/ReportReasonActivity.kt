@@ -226,8 +226,8 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
 
     override fun uploadImgResult(success: Boolean, imageName: String, uploadedNum: Int) {
         if (success) {
-            photosNameArray[uploadedNum - 1] = imageName
-            if (uploadedNum == (reportPicAdapter.data.size - if (reportPicAdapter.data.contains("")) {
+            photosNameArray.add(imageName)
+            if ((uploadedNum + 1) == (reportPicAdapter.data.size - if (reportPicAdapter.data.contains("")) {
                     1
                 } else {
                     0
@@ -235,6 +235,15 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
             ) {
                 loading.dismiss()
                 mPresenter.reportUser(reportParams, photosNameArray)
+            } else {
+                photosNum++
+                if (reportPicAdapter.data[photosNum] != "") {
+                    val imageName =
+                        "${Constants.FILE_NAME_INDEX}${Constants.REPORTUSER}${UserManager.getAccid()}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                            16
+                        )}"
+                    mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum)
+                }
             }
         }
 
@@ -248,7 +257,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
     }
 
     private var photosNum = 0
-    private var photosNameArray = arrayOfNulls<String>(3)
+    private var photosNameArray = mutableListOf<String>()
     override fun onClick(view: View) {
         when (view.id) {
             R.id.reportConfirm -> {
@@ -258,18 +267,15 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                 }
 
                 if (reportPicAdapter.data.isNotEmpty() && reportPicAdapter.data.size > 1) {
-                    for (data in reportPicAdapter.data) {
-                        if (data != "") {
-                            val imageName =
-                                "${Constants.FILE_NAME_INDEX}${Constants.REPORTUSER}${UserManager.getAccid()}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                                    16
-                                )}"
-                            photosNum++
-                            mPresenter.uploadProfile(data, imageName, photosNum)
-                        }
+                    if (reportPicAdapter.data[photosNum] != "") {
+                        val imageName =
+                            "${Constants.FILE_NAME_INDEX}${Constants.REPORTUSER}${UserManager.getAccid()}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                                16
+                            )}"
+                        mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum)
                     }
                 } else {
-                    mPresenter.reportUser(reportParams,photosNameArray)
+                    mPresenter.reportUser(reportParams, photosNameArray)
                 }
             }
         }

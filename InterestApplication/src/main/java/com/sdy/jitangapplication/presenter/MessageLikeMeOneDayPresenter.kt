@@ -23,9 +23,8 @@ import com.sdy.jitangapplication.utils.UserManager
 class MessageLikeMeOneDayPresenter : BasePresenter<MessageLikeMeOneDayView>() {
 
     fun likeListsCategory(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .likeListsCategory(params)
+            .likeListsCategory(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MutableList<LikeMeOneDayBean>?>>(mView) {
                 override fun onNext(t: BaseResp<MutableList<LikeMeOneDayBean>?>) {
                     if (t.code == 200) {
@@ -54,7 +53,7 @@ class MessageLikeMeOneDayPresenter : BasePresenter<MessageLikeMeOneDayView>() {
         }
         params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .addLike(params)
+            .addLike(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {

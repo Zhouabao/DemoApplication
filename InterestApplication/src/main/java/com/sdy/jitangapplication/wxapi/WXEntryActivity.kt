@@ -59,8 +59,9 @@ class WXEntryActivity : WXCallbackActivity() {
      * 微信登录
      */
     private fun loginWithWechat(code: String) {
+        val params = hashMapOf<String, Any>("type" to "3", "wxcode" to code)
         RetrofitFactory.instance.create(Api::class.java)
-            .loginOWithWechat(scene = "3", wxcode = code)
+            .loginOWithWechat(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<LoginBean?>>(null) {
                 override fun onStart() {
                     loading.show()

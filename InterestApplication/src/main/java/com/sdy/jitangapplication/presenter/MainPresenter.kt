@@ -25,7 +25,7 @@ class MainPresenter : BasePresenter<MainView>() {
      */
     fun msgList(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .msgList(UserManager.getBaseParams())
+            .msgList(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<AllMsgCount?>>(mView) {
                 override fun onNext(t: BaseResp<AllMsgCount?>) {
                     if (t.code == 200) {
@@ -50,7 +50,7 @@ class MainPresenter : BasePresenter<MainView>() {
         params["province_name"] = province_name ?: ""
         params["city_name"] = city_name ?: ""
         RetrofitFactory.instance.create(Api::class.java)
-            .startupRecord(params)
+            .startupRecord(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
 
@@ -70,7 +70,7 @@ class MainPresenter : BasePresenter<MainView>() {
      */
     fun getQuestion(token: String, accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .getQuestion(UserManager.getBaseParams())
+            .getQuestion(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<InvestigateBean?>>(mView) {
                 override fun onNext(t: BaseResp<InvestigateBean?>) {
                     if (t.code == 200 && t.data != null) {

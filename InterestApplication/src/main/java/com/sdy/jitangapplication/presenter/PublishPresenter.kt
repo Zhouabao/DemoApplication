@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.presenter
 
 import android.util.Log
 import com.blankj.utilcode.util.SPUtils
+import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -31,14 +32,16 @@ class PublishPresenter : BasePresenter<PublishView>() {
     /**
      * 广场发布
      */
-    fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: Array<Int?>, keyList: Array<String?>?) {
+    fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: MutableList<Int>, keyList: MutableList<String>?) {
         if (!checkNetWork()) {
             CommonFunction.toast("网络不可用")
             return
         }
-        params.putAll(UserManager.getBaseParams())
+        //, @Field("tags[]") tagList: Array<Int?>, @Field("comment[]") keyList: Array<String?>?
+        params["tags"] = Gson().toJson(checkIds)
+        params["comment"] = Gson().toJson(keyList)
         RetrofitFactory.instance.create(Api::class.java)
-            .squareAnnounce(params, checkIds, keyList)
+            .squareAnnounce(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     super.onStart()

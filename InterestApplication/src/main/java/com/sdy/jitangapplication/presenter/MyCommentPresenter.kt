@@ -26,9 +26,8 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
      * 获取评论列表
      */
     fun myCommentList(params: HashMap<String, Any>, refresh: Boolean) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .myCommentList(params)
+            .myCommentList(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MyCommentList?>>(mView) {
                 override fun onStart() {
                     super.onStart()
@@ -59,9 +58,8 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
      * 删除评论
      */
     fun deleteComment(params: HashMap<String, Any>, position: Int) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .destoryComment(params)
+            .destoryComment(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)

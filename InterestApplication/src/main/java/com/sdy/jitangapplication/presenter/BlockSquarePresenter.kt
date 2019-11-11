@@ -21,10 +21,8 @@ import com.sdy.jitangapplication.utils.UserManager
 class BlockSquarePresenter : BasePresenter<BlockSquareView>() {
 
     fun squarePhotosList(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
-
         RetrofitFactory.instance.create(Api::class.java)
-            .squarePhotosList(params)
+            .squarePhotosList(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<BlockListBean?>>(mView) {
 
                 override fun onNext(t: BaseResp<BlockListBean?>) {

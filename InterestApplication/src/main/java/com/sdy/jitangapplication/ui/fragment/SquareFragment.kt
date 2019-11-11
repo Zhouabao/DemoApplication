@@ -1126,7 +1126,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 }
                 1 -> {
                     UserManager.mediaBeans[uploadCount].url = key ?: ""
-                    UserManager.keyList?.set(uploadCount, Gson().toJson(UserManager.mediaBeans[uploadCount]))
+                    UserManager.keyList.add(Gson().toJson(UserManager.mediaBeans[uploadCount]))
                     uploadCount++
                     if (uploadCount == UserManager.mediaBeans.size) {
                         publish()
@@ -1136,12 +1136,12 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 }
                 2 -> {
                     UserManager.mediaBeans[uploadCount].url = key ?: ""
-                    UserManager.keyList?.set(uploadCount, Gson().toJson(UserManager.mediaBeans[0]))
+                    UserManager.keyList.add(Gson().toJson(UserManager.mediaBeans[0]))
                     publish()
                 }
                 3 -> {
                     UserManager.mediaBeans[uploadCount].url = key ?: ""
-                    UserManager.keyList?.set(uploadCount, Gson().toJson(UserManager.mediaBeans[0]))
+                    UserManager.keyList.add(Gson().toJson(UserManager.mediaBeans[0]))
                     publish()
                 }
             }

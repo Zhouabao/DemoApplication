@@ -232,7 +232,7 @@ class GotoVerifyDialog : Dialog {
             val params = UserManager.getBaseParams()
             params["type"] = type
             RetrofitFactory.instance.create(Api::class.java)
-                .humanAduit(params)
+                .humanAduit(UserManager.getSignParams(params))
                 .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                     override fun onNext(t: BaseResp<Any?>) {
 

@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -29,10 +30,10 @@ class MatchPresenter : BasePresenter<MatchView>() {
     /**
      * 根据标签来获取新的用户数据
      */
-    fun getMatchList(params: HashMap<String, Any>, ids: Array<Int?>? = null) {
-        params.putAll(UserManager.getBaseParams())
+    fun getMatchList(params: HashMap<String, Any>, exclude: MutableList<Int>? = null) {
+        params["exclude"] = Gson().toJson(exclude)
         RetrofitFactory.instance.create(Api::class.java)
-            .getMatchList(params, ids)
+            .getMatchList(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MatchListBean?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()
@@ -65,9 +66,8 @@ class MatchPresenter : BasePresenter<MatchView>() {
         if (!checkNetWork()) {
             return
         }
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .dontLike(params)
+            .dontLike(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -94,10 +94,8 @@ class MatchPresenter : BasePresenter<MatchView>() {
         if (!checkNetWork()) {
             return
         }
-
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .addLike(params)
+            .addLike(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -126,10 +124,10 @@ class MatchPresenter : BasePresenter<MatchView>() {
         }
 
         val params = UserManager.getBaseParams()
-        params["tag_id"]= tag_id
-        params["target_accid"]= target_accid
+        params["tag_id"] = tag_id
+        params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greet(params)
+            .greet(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
                 override fun onNext(t: BaseResp<StatusBean?>) {
                     if (t.code == 200) {
@@ -157,11 +155,10 @@ class MatchPresenter : BasePresenter<MatchView>() {
      * 判断当前能否打招呼
      */
     fun greetState(token: String, accid: String, target_accid: String, matchBean: MatchBean) {
-
         val params = UserManager.getBaseParams()
         params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(params)
+            .greetState(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {

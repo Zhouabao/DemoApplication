@@ -58,10 +58,10 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                         ChatActivity.start(mContext, adapter.data[position].accid ?: "")
                     } else {
 
-                        val params = UserManager.getBaseParams()
+                        val params = hashMapOf<String,Any>()
                         params["target_accid"]= adapter.data[position].accid ?: ""
                         RetrofitFactory.instance.create(Api::class.java)
-                            .addLike(params)
+                            .addLike(UserManager.getSignParams(params))
                             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
                                 override fun onNext(t: BaseResp<StatusBean?>) {
                                     if (t.code == 200) {

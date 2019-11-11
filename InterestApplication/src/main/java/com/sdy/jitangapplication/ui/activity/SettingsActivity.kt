@@ -177,9 +177,9 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
     private fun obtainContacts() {
         //权限申请成功
         val contacts = UriUtils.getPhoneContacts(this)
-        val content = arrayOfNulls<String>(contacts.size)
+        val content = mutableListOf<String?>()
         for (contact in contacts.withIndex()) {
-            content[contact.index] = contact.value.phone
+            content.add(contact.value.phone)
             Log.d("contacts", "${contact.value.name}：${contact.value.phone}")
         }
         mPresenter.blockedAddressBook(UserManager.getAccid(), UserManager.getToken(), content)

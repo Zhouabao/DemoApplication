@@ -971,7 +971,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
         params.put("target_accid", container.account);
         RetrofitFactory.Companion.getInstance().create(Api.class)
-                .checkGreetSendMsg(params)
+                .checkGreetSendMsg(UserManager.INSTANCE.getSignParams(params))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new rx.Observer<BaseResp<CheckGreetSendBean>>() {

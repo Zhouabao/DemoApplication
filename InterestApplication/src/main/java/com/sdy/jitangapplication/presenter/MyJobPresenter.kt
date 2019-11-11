@@ -7,7 +7,6 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.presenter.view.MyJobView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -50,9 +49,8 @@ class MyJobPresenter : BasePresenter<MyJobView>() {
      * 保存个人信息
      */
     fun savePersonal(params: HashMap<String, Any>) {
-        params.putAll(UserManager.getBaseParams())
         RetrofitFactory.instance.create(Api::class.java)
-            .savePersonal(params)
+            .savePersonal(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {

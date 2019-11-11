@@ -23,10 +23,9 @@ class BlackListPresenter : BasePresenter<BlackListView>() {
     /**
      * 获取黑名单list
      */
-    fun myShieldingList(hashMap: HashMap<String, Any>) {
-        hashMap.putAll(UserManager.getBaseParams())
+    fun myShieldingList(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
-            .myShieldingList(hashMap)
+            .myShieldingList(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MutableList<BlackBean>?>>(mView) {
                 override fun onNext(t: BaseResp<MutableList<BlackBean>?>) {
                     if (t.code == 200) {
@@ -48,10 +47,9 @@ class BlackListPresenter : BasePresenter<BlackListView>() {
     /**
      * 解除拉黑
      */
-    fun removeBlock(hashMap: HashMap<String, Any>,position: Int) {
-        hashMap.putAll(UserManager.getBaseParams())
+    fun removeBlock(params: HashMap<String, Any>, position: Int) {
         RetrofitFactory.instance.create(Api::class.java)
-            .removeBlock(hashMap)
+            .removeBlock(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {

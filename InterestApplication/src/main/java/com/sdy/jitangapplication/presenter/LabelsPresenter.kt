@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter
 
 
+import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -50,9 +51,10 @@ class LabelsPresenter : BasePresenter<LabelsView>() {
      */
     fun uploadLabels(param: HashMap<String, String>, tags: Array<Int?>) {
         val params = UserManager.getBaseParams()
+        params["tags"] = Gson().toJson(tags)
         params.putAll(param)
         RetrofitFactory.instance.create(Api::class.java)
-            .uploadTagLists(params, tags)
+            .uploadTagLists(params)
             .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {
                 override fun onNext(t: BaseResp<LoginBean?>) {
                     super.onNext(t)

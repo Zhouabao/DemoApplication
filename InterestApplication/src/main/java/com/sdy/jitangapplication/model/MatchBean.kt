@@ -9,7 +9,7 @@ import java.io.Serializable
  *    version: 1.0
  */
 data class MatchListBean(
-    var exclude: Array<Int?>,
+    var exclude: MutableList<Int>?,
     var list: MutableList<MatchBean>?,
     var lightningcnt: Int?,
     var isvip: Int = 0,    //是否会员 true是 false不是

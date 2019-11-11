@@ -32,7 +32,7 @@ class MessageListPresenter : BasePresenter<MessageListView>() {
         val params = UserManager.getBaseParams()
         params.putAll(param)
         RetrofitFactory.instance.create(Api::class.java)
-            .messageCensus(params)
+            .messageCensus(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MessageListBean1?>>(mView) {
                 override fun onNext(t: BaseResp<MessageListBean1?>) {
                     if (t.code == 200) {

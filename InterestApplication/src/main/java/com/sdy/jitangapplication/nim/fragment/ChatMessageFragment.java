@@ -127,7 +127,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
                 params.put("target_accid", sessionId);
                 RetrofitFactory.Companion.getInstance().create(Api.class)
-                        .addFriend(params)
+                        .addFriend(UserManager.INSTANCE.getSignParams(params))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new rx.Observer<BaseResp<Object>>() {
@@ -581,7 +581,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         params.put("target_accid", target_accid);
         RetrofitFactory.Companion.getInstance()
                 .create(Api.class)
-                .getTargetInfo(params)
+                .getTargetInfo(UserManager.INSTANCE.getSignParams(params))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new rx.Observer<BaseResp<NimBean>>() {

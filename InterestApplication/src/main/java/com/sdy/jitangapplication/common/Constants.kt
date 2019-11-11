@@ -6,7 +6,7 @@ object Constants {
     const val READ_TIME = 500L
     const val SPNAME = "mySp"
     //    ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
-    const val FILE_NAME_INDEX = "ppns/"
+    const val FILE_NAME_INDEX = "ppsns/"
     //上传文件的类型
     const val AVATOR = "avator/" //头像
     const val PUBLISH = "publish/" //发布
