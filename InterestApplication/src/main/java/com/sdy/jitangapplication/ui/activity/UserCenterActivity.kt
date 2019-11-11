@@ -103,7 +103,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
         userInfoSettingBtn.text = "完成度：${userInfoBean?.userinfo?.percent_complete}%"
-        userVerifyBtn.text = "+${userInfoBean?.userinfo?.identification}"
+        userVerifyScore.text = "+${userInfoBean?.userinfo?.identification}"
 
         // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
         checkVerify()
@@ -116,31 +116,33 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     }
 
 
-    //是否认证 1认证 2未认证
+    //是否认证 0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     private fun checkVerify() {
-        if (userInfoBean?.userinfo?.isfaced == 1) {
+        if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
             userVerify.setImageResource(R.drawable.icon_verify)
-            userVerifyTip.visibility = View.GONE
-            userVerifyBtn.isVisible = true
-            userVerifyBtn.text = "已认证"
-            userVerifyBtn.isEnabled = false
+            userVerifyTipBtn.text = "已认证"
+            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorOrange))
+            userVerifyTipBtn.isEnabled = false
+            userVerifyScore.isVisible = false
         } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) {
             userVerify.setImageResource(R.drawable.icon_verify_gray)
-            userVerifyTip.visibility = View.VISIBLE
-            userVerifyBtn.isVisible = false
-            userVerifyTip.text = "认证审核中"
+            userVerifyTipBtn.text = "认证审核中"
+            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayText))
+            userVerifyTipBtn.isEnabled = false
+            userVerifyScore.isVisible = false
         } else {
             userVerify.setImageResource(R.drawable.icon_verify_gray)
-            userVerifyTip.visibility = View.VISIBLE
-            userVerifyBtn.isVisible = true
-            if (userInfoBean?.userinfo?.isfaced == 4) {
-                userVerifyTip.text = "审核不通过"
-//                userVerifyBtn.text = "重新认证"
-            } else {
-                userVerifyTip.text = "未认证"
-//                userVerifyBtn.text = "立即认证"
+            userVerifyTipBtn.isVisible = true
+            userVerifyTipBtn.isEnabled = true
+            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorOrange))
+
+            if (userInfoBean?.userinfo?.isfaced == 4) {//审核不通过
+                userVerifyTipBtn.text = "重新认证"
+                userVerifyScore.isVisible = true
+            } else {//未认证
+                userVerifyTipBtn.text = "立即认证"
+                userVerifyScore.isVisible = true
             }
-            userVerifyBtn.isEnabled = true
         }
     }
 
@@ -252,7 +254,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         userVisit.setOnClickListener(this)
         userDianzan.setOnClickListener(this)
         userComment.setOnClickListener(this)
-        userVerifyBtn.setOnClickListener(this)
+        userVerifyTipBtn.setOnClickListener(this)
         feedBack.setOnClickListener(this)
 
 
@@ -409,7 +411,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             R.id.userRecommend -> {
             }
             //认证中心
-            R.id.userVerifyBtn -> {
+            R.id.userVerifyTipBtn -> {
                 startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
             }
             //意见反馈

@@ -114,11 +114,11 @@
                         app:layout_constraintTop_toBottomOf="@id/userName"/>
 
                 <TextView
-                        android:id="@+id/userVerifyTip"
+                        android:id="@+id/userVerifyTipBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="未认证"
-                        android:textColor="#ff9b9b9b"
+                        android:textColor="@color/colorGrayText"
                         android:textSize="12sp"
                         android:layout_marginLeft="5dp"
                         app:layout_constraintBottom_toBottomOf="@id/userVerify"
@@ -127,10 +127,10 @@
                         />
 
                 <TextView
-                        android:id="@+id/userVerifyBtn"
+                        android:id="@+id/userVerifyScore"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="+10"
+                        tools:text="+10"
                         android:gravity="center"
                         android:drawableLeft="@drawable/icon_xiaolian"
                         android:paddingLeft="4dp"
@@ -142,7 +142,7 @@
                         android:textStyle="bold"
                         android:layout_marginLeft="5dp"
                         app:layout_constraintBottom_toBottomOf="@id/userVerify"
-                        app:layout_constraintLeft_toRightOf="@id/userVerifyTip"
+                        app:layout_constraintLeft_toRightOf="@id/userVerifyTipBtn"
                         app:layout_constraintTop_toTopOf="@id/userVerify"
                         />
 
