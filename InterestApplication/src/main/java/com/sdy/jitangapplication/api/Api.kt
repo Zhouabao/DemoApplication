@@ -444,7 +444,7 @@ interface Api {
      * 获取学校列表
      */
     @POST("OpenApi/getSchoolList${Constants.END_BASE_URL}")
-    fun getSchoolList(): Observable<BaseResp<MutableList<SchoolBean?>?>>
+    fun getSchoolList(): Observable<BaseResp<MutableList<String>?>>
 
     /**
      * 修改个人信息
@@ -474,7 +474,7 @@ interface Api {
      * 获取职业列表
      */
     @POST("OpenApi/getOccupationList${Constants.END_BASE_URL}")
-    fun getOccupationList(): Observable<BaseResp<MutableList<NewJobBean>?>>
+    fun getOccupationList(): Observable<BaseResp<MutableList<String>?>>
 
     /**
      * 获取模板签名

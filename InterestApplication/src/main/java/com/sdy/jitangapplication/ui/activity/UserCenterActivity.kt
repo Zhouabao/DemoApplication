@@ -124,7 +124,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorOrange))
             userVerifyTipBtn.isEnabled = false
             userVerifyScore.isVisible = false
-        } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) {
+        } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) { //审核中
             userVerify.setImageResource(R.drawable.icon_verify_gray)
             userVerifyTipBtn.text = "认证审核中"
             userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayText))

@@ -7,7 +7,6 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.presenter.view.MyJobView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -25,8 +24,8 @@ class MyJobPresenter : BasePresenter<MyJobView>() {
     fun getOccupationList() {
         RetrofitFactory.instance.create(Api::class.java)
             .getOccupationList()
-            .excute(object : BaseSubscriber<BaseResp<MutableList<NewJobBean>?>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<NewJobBean>?>) {
+            .excute(object : BaseSubscriber<BaseResp<MutableList<String>?>>(mView) {
+                override fun onNext(t: BaseResp<MutableList<String>?>) {
                     if (t.code == 200) {
                         mView.onGetJobListResult(t.data ?: mutableListOf())
                     } else {

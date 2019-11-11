@@ -13,7 +13,6 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.SchoolBean
 import com.sdy.jitangapplication.presenter.ChooseSchoolPresenter
 import com.sdy.jitangapplication.presenter.view.ChooseSchoolView
 import com.sdy.jitangapplication.ui.adapter.SchoolAdapter
@@ -26,14 +25,25 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
  */
 class ChooseSchoolActivity : BaseMvpActivity<ChooseSchoolPresenter>(), ChooseSchoolView {
 
+    companion object {
+        public const val CHOOSE_SCHOOL = 1
+        public const val CHOOSE_JOB = 2
+    }
+
     private val adapter by lazy { SchoolAdapter() }
-    private var schools: MutableList<SchoolBean?> = mutableListOf()
+    private var schools: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_school)
         initView()
-        mPresenter.getSchoolList()
+
+
+        if (intent.getIntExtra("type", CHOOSE_SCHOOL) == CHOOSE_SCHOOL) {
+            mPresenter.getSchoolList()
+        } else {
+            mPresenter.getOccupationList()
+        }
     }
 
     private fun initView() {
@@ -41,8 +51,14 @@ class ChooseSchoolActivity : BaseMvpActivity<ChooseSchoolPresenter>(), ChooseSch
         mPresenter.mView = this
         mPresenter.context = this
 
+        if (intent.getIntExtra("type", CHOOSE_SCHOOL) == CHOOSE_SCHOOL) {
+            hotT1.text = "添加学校"
+            searchSchool.queryHint = "学校名称"
+        } else {
+            hotT1.text = "添加职业"
+            searchSchool.queryHint = "职业名称"
+        }
         btnBack.isVisible = false
-        hotT1.text = "添加学校"
         rightBtn.isVisible = true
         rightBtn.text = "取消"
         rightBtn.onClick {
@@ -70,7 +86,7 @@ class ChooseSchoolActivity : BaseMvpActivity<ChooseSchoolPresenter>(), ChooseSch
                 if (!query.isNullOrBlank()) {
                     adapter.data.clear()
                     for (school in schools) {
-                        if (school?.school_title!!.contains(query)) {
+                        if (school.contains(query)) {
                             adapter.data.add(school)
                         }
                     }
@@ -102,14 +118,24 @@ class ChooseSchoolActivity : BaseMvpActivity<ChooseSchoolPresenter>(), ChooseSch
     }
 
 
-    override fun onGetSchoolListResult(success: Boolean, schoolList: MutableList<SchoolBean?>?) {
+    override fun onGetSchoolListResult(success: Boolean, schoolList: MutableList<String>?) {
         if (success)
             stateSchool.viewState = MultiStateView.VIEW_STATE_CONTENT
         else
             stateSchool.viewState = MultiStateView.VIEW_STATE_ERROR
         adapter.addData(schoolList ?: mutableListOf())
-        schools.addAll(schoolList ?: mutableListOf<SchoolBean>())
+        schools.addAll(schoolList ?: mutableListOf<String>())
     }
+
+    override fun onGetJobListResult(jobList: MutableList<String>?) {
+        if (jobList != null)
+            stateSchool.viewState = MultiStateView.VIEW_STATE_CONTENT
+        else
+            stateSchool.viewState = MultiStateView.VIEW_STATE_ERROR
+        adapter.addData(jobList ?: mutableListOf())
+        schools.addAll(jobList ?: mutableListOf<String>())
+    }
+
 
     override fun onBackPressed() {
         rootView.animate()                           //contentRoot退出activity的根视图

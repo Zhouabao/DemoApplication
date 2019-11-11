@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.MyPhotoBean
-import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.model.UserInfoSettingBean
 
 /**
@@ -15,7 +14,7 @@ interface UserInfoSettingsView : BaseView {
 
     fun onPersonalInfoResult(data: UserInfoSettingBean?)
 
-    fun onGetJobListResult(mutableList: MutableList<NewJobBean>?)
+
 
     /**
      * type  1 个人信息 2 头像

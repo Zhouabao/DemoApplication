@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.adapter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.SchoolBean
 import kotlinx.android.synthetic.main.item_layout_school.view.*
 
 /**
@@ -12,9 +11,9 @@ import kotlinx.android.synthetic.main.item_layout_school.view.*
  *    desc   :
  *    version: 1.0
  */
-class SchoolAdapter : BaseQuickAdapter<SchoolBean, BaseViewHolder>(R.layout.item_layout_school) {
+class SchoolAdapter : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_layout_school) {
 
-    override fun convert(helper: BaseViewHolder, item: SchoolBean) {
-        helper.itemView.schoolName.text = item.school_title
+    override fun convert(helper: BaseViewHolder, item: String) {
+        helper.itemView.schoolName.text = item
     }
 }

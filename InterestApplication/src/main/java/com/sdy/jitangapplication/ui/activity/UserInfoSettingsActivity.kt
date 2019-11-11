@@ -32,7 +32,6 @@ import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.MyPhotoBean
-import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
@@ -62,9 +61,6 @@ import java.util.*
  */
 class UserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), UserInfoSettingsView,
     OnItemDragListener, View.OnClickListener {
-    override fun onGetJobListResult(mutableList: MutableList<NewJobBean>?) {
-
-    }
 
 
     companion object {

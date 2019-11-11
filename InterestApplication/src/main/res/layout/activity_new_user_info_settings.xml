@@ -858,10 +858,10 @@
                         android:gravity="center"
                         android:drawableLeft="@drawable/icon_information_finish"
                         android:background="@drawable/shape_rectangle_orange_white_9dp"
-                        android:layout_width="wrap_content"
-                        android:textSize="14sp"
+                        android:layout_width="60dp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
-                        android:text="20%"
+                        android:text="110%"
                         android:textColor="@color/colorOrange"
                         android:layout_height="18dp">
                 </TextView>

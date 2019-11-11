@@ -41,7 +41,10 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.ReminderScoreEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
-import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.model.MyPhotoBean
+import com.sdy.jitangapplication.model.NewJobBean
+import com.sdy.jitangapplication.model.ProvinceBean
+import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.adapter.UserPhotoAdapter
@@ -57,7 +60,6 @@ import com.sdy.jitangapplication.widgets.OnRecyclerItemClickListener
 import kotlinx.android.synthetic.main.activity_new_user_info_settings.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_delete_photo.*
-import kotlinx.android.synthetic.main.dialog_reminder_score.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_add_score.view.*
 import org.greenrobot.eventbus.EventBus
@@ -342,7 +344,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             if (adapter.data.size == 2) {
                 mHandler.postDelayed({
                     showUploadMorePhotos()
-                }, 1000)
+                }, 200)
             }
             refreshLayout()
 
@@ -519,7 +521,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         }
         loading.show()
         if (hasChangePhotos) {
-            val photosId= mutableListOf<Int?>()
+            val photosId = mutableListOf<Int?>()
             for (data in photos.withIndex()) {
                 if (data.value?.type == MyPhotoBean.PHOTO) {
                     photosId.add(data.value?.id)
@@ -640,16 +642,12 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
 
     override fun onPersonalInfoResult(data: UserInfoSettingBean?) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-        setData(data)
-    }
+        if (data != null) {
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+            setData(data)
+        } else {
+            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
 
-
-    override fun onGetJobListResult(mutableList: MutableList<NewJobBean>?) {
-        loading.dismiss()
-        if (!mutableList.isNullOrEmpty()) {
-            newJobs = mutableList
-            showJobPicker()
         }
     }
 
@@ -737,11 +735,21 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     }
                 }
                 104 -> {//学校
-                    if (data?.getSerializableExtra("schoolBean") != null) {
-                        userSchool.text = (data.getSerializableExtra("schoolBean") as SchoolBean).school_title
-                        savePersonalParams["personal_school"] =
-                            (data.getSerializableExtra("schoolBean") as SchoolBean).school_title
-                        updateScoreStatus(userScoreSchool, this.data!!.score_rule?.personal_school ?: 0)
+                    if (data?.getStringExtra("schoolBean") != null) {
+
+                        if (data.getIntExtra(
+                                "type",
+                                ChooseSchoolActivity.CHOOSE_SCHOOL
+                            ) == ChooseSchoolActivity.CHOOSE_SCHOOL
+                        ) {
+                            userSchool.text = data.getStringExtra("schoolBean")
+                            savePersonalParams["personal_school"] = data.getStringExtra("schoolBean")
+                            updateScoreStatus(userScoreSchool, this.data!!.score_rule?.personal_school ?: 0)
+                        } else {
+                            userJob.text = data.getStringExtra("schoolBean")
+                            savePersonalParams["personal_job"] = data.getStringExtra("schoolBean")
+                            updateScoreStatus(userScoreJob, this.data!!.score_rule?.personal_job ?: 0)
+                        }
                         isChange = true
                         checkSaveEnable()
                     }
@@ -859,13 +867,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
 
             R.id.userJob -> {//职业
-                if (newJobs.isNullOrEmpty()) {
-                    loading.show()
-                    mPresenter.getOccupationList()
-                } else {
-                    showJobPicker()
-                }
-
+                startActivityForResult<ChooseSchoolActivity>(104,"type" to ChooseSchoolActivity.CHOOSE_JOB)
                 // startActivityForResult<MyJobActivity>(103, "job" to userJob.text.toString())
             }
 
@@ -880,7 +882,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 )
             }
             R.id.userSchool -> {//学校
-                startActivityForResult<ChooseSchoolActivity>(104)
+                startActivityForResult<ChooseSchoolActivity>(104,"type" to ChooseSchoolActivity.CHOOSE_SCHOOL)
             }
             R.id.userDrink -> {//饮酒
                 showConditionPicker(
@@ -1105,20 +1107,21 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         } else {
             userFinishProgress.progress = progress
         }
+
         val layoutmanager20 = userScore20.layoutParams as RelativeLayout.LayoutParams
         layoutmanager20.leftMargin = if (UserManager.isUserVip() && userFinishProgress.progress == 100) {
             ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F)
-        } else
-            SizeUtils.dp2px(70F) + (if (userFinishProgress.width == 0) {
-                ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15) - score20.width
-            } else {
-                userFinishProgress.width
-            } * userFinishProgress.progress * 1.0f / 100).toInt() - userScore20.width
+        } else  //左边距+进度条宽度-自身宽度
+            SizeUtils.dp2px(70F) +
+                    ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15))
+                            * userFinishProgress.progress * 1.0f / 100).toInt() - SizeUtils.dp2px(60F)
         userScore20.layoutParams = layoutmanager20
 
         if (!UserManager.isUserVip())
             userScore80.isVisible =
-                (ScreenUtils.getScreenWidth() - layoutmanager20.leftMargin - userScore20.width) >= (SizeUtils.dp2px(90F) + userScore80.width)
+                (ScreenUtils.getScreenWidth() - layoutmanager20.leftMargin) >= (SizeUtils.dp2px(
+                    90F
+                ) + userScore80.width)
 
     }
 

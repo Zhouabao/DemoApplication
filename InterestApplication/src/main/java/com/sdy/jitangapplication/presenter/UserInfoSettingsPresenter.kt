@@ -54,33 +54,6 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
             })
     }
 
-
-    /**
-     * 获取职业列表
-     */
-    fun getOccupationList() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .getOccupationList()
-            .excute(object : BaseSubscriber<BaseResp<MutableList<NewJobBean>?>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<NewJobBean>?>) {
-                    if (t.code == 200) {
-                        mView.onGetJobListResult(t.data ?: mutableListOf())
-                    } else {
-                        mView.onError("")
-                    }
-
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onError("")
-                }
-            })
-    }
-
-
     /**
      * 保存个人信息
      */

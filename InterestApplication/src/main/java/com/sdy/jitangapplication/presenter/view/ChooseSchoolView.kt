@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
-import com.sdy.jitangapplication.model.SchoolBean
 
 /**
  *    author : ZFM
@@ -10,5 +9,8 @@ import com.sdy.jitangapplication.model.SchoolBean
  *    version: 1.0
  */
 interface ChooseSchoolView : BaseView {
-    fun onGetSchoolListResult(success: Boolean, schoolList: MutableList<SchoolBean?>?)
+    fun onGetSchoolListResult(success: Boolean, schoolList: MutableList<String>?)
+
+
+    fun onGetJobListResult(mutableList: MutableList<String>?)
 }

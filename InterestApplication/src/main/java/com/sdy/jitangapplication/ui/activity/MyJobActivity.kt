@@ -10,7 +10,6 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelBean
-import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.presenter.MyJobPresenter
 import com.sdy.jitangapplication.presenter.view.MyJobView
 import com.sdy.jitangapplication.ui.adapter.LabelAdapter
@@ -91,12 +90,12 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
         }
     }
 
-    override fun onGetJobListResult(mutableList: MutableList<NewJobBean>?) {
+    override fun onGetJobListResult(mutableList: MutableList<String>?) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
 
         for (job in mutableList?: mutableListOf()) {
-            if (job.title == checkedJob) {
-                job.checked = true
+            if (job == checkedJob) {
+//                job.checked = true
                 break
             }
         }
