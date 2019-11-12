@@ -27,7 +27,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     /**
      * 屏蔽通讯录
      */
-    fun blockedAddressBook(accid: String, token: String, content: MutableList<String?>? = null) {
+    fun blockedAddressBook(accid: String, token: String, content: MutableList<String?> = mutableListOf()) {
         val params = hashMapOf<String,Any>("content" to Gson().toJson(content))
         RetrofitFactory.instance.create(Api::class.java)
             .blockedAddressBook( UserManager.getSignParams(params))

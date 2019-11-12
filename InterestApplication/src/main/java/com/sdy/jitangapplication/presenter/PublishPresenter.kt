@@ -32,7 +32,7 @@ class PublishPresenter : BasePresenter<PublishView>() {
     /**
      * 广场发布
      */
-    fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: MutableList<Int>, keyList: MutableList<String>?) {
+    fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: MutableList<Int>, keyList: MutableList<String> = mutableListOf()) {
         if (!checkNetWork()) {
             CommonFunction.toast("网络不可用")
             return

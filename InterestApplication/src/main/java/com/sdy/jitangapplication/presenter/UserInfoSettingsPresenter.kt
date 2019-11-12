@@ -13,7 +13,6 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.MyPhotoBean
-import com.sdy.jitangapplication.model.NewJobBean
 import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -100,7 +99,7 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
     /**
      * 保存相册
      */
-    fun addPhotoV2(params: HashMap<String, Any?> = hashMapOf(), token: String, accid: String, photos: MutableList<Int?>?, type: Int) {
+    fun addPhotoV2(params: HashMap<String, Any?> = hashMapOf(), token: String, accid: String, photos: MutableList<Int?>, type: Int) {
 
         params["photos"] = Gson().toJson(photos)
         RetrofitFactory.instance.create(Api::class.java)
