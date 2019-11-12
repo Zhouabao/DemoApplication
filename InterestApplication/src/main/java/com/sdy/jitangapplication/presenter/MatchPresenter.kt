@@ -30,7 +30,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
     /**
      * 根据标签来获取新的用户数据
      */
-    fun getMatchList(params: HashMap<String, Any>, exclude: MutableList<Int>? = null) {
+    fun getMatchList(params: HashMap<String, Any>, exclude: MutableList<Int>? = mutableListOf()) {
         params["exclude"] = Gson().toJson(exclude)
         RetrofitFactory.instance.create(Api::class.java)
             .getMatchList(UserManager.getSignParams(params))

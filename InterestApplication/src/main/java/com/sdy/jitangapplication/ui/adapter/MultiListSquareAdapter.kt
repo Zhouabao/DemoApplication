@@ -43,6 +43,7 @@ import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
+import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -460,7 +461,7 @@ class MultiListSquareAdapter(
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                ChatActivity.start(mContext as Activity, mData[clickPos].accid ?: "")
+                SayHiDialog(mData[clickPos].accid, mData[clickPos].nickname ?: "", mContext).show()
                 //发送通知修改招呼次数
                 UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
                 EventBus.getDefault().postSticky(UpdateHiCountEvent())

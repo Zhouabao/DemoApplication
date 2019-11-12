@@ -197,18 +197,24 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnChat -> {
-                if (UserManager.getLightingCount() <= 0) {
-                    ChargeVipDialog(
-                        ChargeVipDialog.DOUBLE_HI, activity!!, if (UserManager.isUserVip()) {
-                            ChargeVipDialog.PURCHASE_GREET_COUNT
-                        } else {
-                            ChargeVipDialog.PURCHASE_VIP
-                        }
-                    ).show()
-                } else {
-                    card_stack_view.swipe()
-                    btnChat.isEnabled = false
-                }
+                SayHiDialog(
+                    matchUserAdapter.data[manager.topPosition].accid,
+                    matchUserAdapter.data[manager.topPosition].nickname ?: "",
+                    activity!!
+                ).show()
+
+//                if (UserManager.getLightingCount() <= 0) {
+//                    ChargeVipDialog(
+//                        ChargeVipDialog.DOUBLE_HI, activity!!, if (UserManager.isUserVip()) {
+//                            ChargeVipDialog.PURCHASE_GREET_COUNT
+//                        } else {
+//                            ChargeVipDialog.PURCHASE_VIP
+//                        }
+//                    ).show()
+//                } else {
+//                    card_stack_view.swipe()
+//                    btnChat.isEnabled = false
+//                }
             }
             R.id.retryBtn -> {
                 setViewState(LOADING)
@@ -289,14 +295,20 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 setViewState(EMPTY)
                 btnChat.isVisible = false
                 tvLeftChatTime.isVisible = false
+                llLeftSlideTime.isVisible = false
             } else {
                 setViewState(CONTENT)
                 btnChat.isVisible = true
                 tvLeftChatTime.isVisible = true
+                llLeftSlideTime.isVisible = matchBeans.isvip != 1
             }
 
-            matchUserAdapter.addData(matchBeans!!.list ?: mutableListOf<MatchBean>())
-            paramsLastFiveIds = matchBeans.exclude?: mutableListOf()
+            matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
+            paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
+            //保存剩余滑动次数
+            UserManager.saveSlideCount(matchBeans.like_times)
+            //保存提示剩余滑动次数
+            UserManager.saveHighlightCount(matchBeans.highlight_times)
             //保存剩余招呼次数
             UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
             //保存倒计时时间
@@ -322,6 +334,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 }
             }
 
+            updateLeftCountStatus()
 
             tvLeftChatTime.text = "${UserManager.getLightingCount()}"
 
@@ -336,6 +349,25 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
         if (fragmentManager?.let { FragmentUtils.getTopShow(it) } == this)
             EventBus.getDefault().postSticky(EnableLabelEvent(true))
+    }
+
+    /**
+     * 更新剩余滑动次数的状态
+     */
+    private fun updateLeftCountStatus() {
+        if (UserManager.getSlideCount() <= UserManager.getHighlightCount()) {
+            llLeftSlideTime.alpha = 1F
+            llLeftSlideTime.setBackgroundResource(R.drawable.rectangle_white_3dp)
+            tvLeftSlideTime.setTextColor(resources.getColor(R.color.colorOrange))
+            ivLeftSlideTime.setImageResource(R.drawable.icon_smile_orange)
+        } else {
+            llLeftSlideTime.alpha = 0.3F
+            llLeftSlideTime.setBackgroundResource(R.drawable.rectangle_black_3dp)
+            tvLeftSlideTime.setTextColor(resources.getColor(R.color.colorWhite))
+            ivLeftSlideTime.setImageResource(R.drawable.icon_smile_transparent)
+        }
+        tvLeftSlideTime.text = "${UserManager.getSlideCount()}"
+
     }
 
     /**
@@ -524,7 +556,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         //最大可见数量
         manager.setVisibleCount(3)
         //两个卡片之间的间隔
-        manager.setTranslationInterval(13.0f)
+        manager.setTranslationInterval(15.0f)
         //最大的缩放间隔
         manager.setScaleInterval(0.95f)
         //卡片滑出飞阈值
@@ -689,8 +721,23 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
-            params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-            mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
+            //保存剩余滑动次数
+            if (UserManager.isUserVip()) {
+                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
+            } else {
+                if (UserManager.getSlideCount() > 0) {
+                    UserManager.saveSlideCount(UserManager.getSlideCount().minus(1))
+                    params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+                    mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
+                } else {
+                    card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
+                    card_stack_view.isEnabled = false
+                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+                }
+                updateLeftCountStatus()
+
+            }
         } else if (direction == Direction.Top) {//上滑打招呼
             mPresenter.greetState(
                 UserManager.getToken(),
@@ -720,7 +767,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     override fun onCardAppeared(view: View?, position: Int) {
         Log.d("CardStackView", "onCardAppeared: ($position)")
-        btnChat.isVisible = matchUserAdapter.data[position].greet_switch
+        btnChat.isEnabled = matchUserAdapter.data[position].greet_switch
+        tvLeftChatTime.isVisible = matchUserAdapter.data[position].greet_switch
+        ivChatTime.isVisible = matchUserAdapter.data[position].greet_switch
 
     }
 

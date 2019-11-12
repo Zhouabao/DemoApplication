@@ -667,7 +667,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (success) {
             matchBean!!.isgreeted = true
             updateLightCount(UserManager.getLightingCount() - 1, -1)
-            SayHiDialog(matchBean!!.accid, matchBean!!.nickname ?: "", this).show()
+            sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
         }
     }
 
@@ -702,9 +702,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
                 if (msg.attachment is ChatHiAttachment) {
-                    if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI)
-                        ChatActivity.start(this@MatchDetailActivity, matchBean?.accid ?: "")
-                    else {
+                    if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
+                        SayHiDialog(matchBean!!.accid, matchBean!!.nickname ?: "", this@MatchDetailActivity).show()
+                    }else {
                         startActivity<MatchSucceedActivity>(
                             "avator" to matchBean!!.avatar,
                             "nickname" to matchBean!!.nickname,
@@ -712,6 +712,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                         )
                     }
                 }
+
             }
 
             override fun onFailed(code: Int) {

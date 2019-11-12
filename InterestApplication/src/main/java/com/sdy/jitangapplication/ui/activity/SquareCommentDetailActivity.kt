@@ -1195,7 +1195,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                ChatActivity.start(this@SquareCommentDetailActivity, squareBean?.accid ?: "")
+                SayHiDialog(squareBean?.accid?:"",squareBean?.nickname?:"",this@SquareCommentDetailActivity).show()
                 //发送通知修改招呼次数
                 UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
                 EventBus.getDefault().postSticky(UpdateHiCountEvent())

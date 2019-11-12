@@ -9,7 +9,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/contentLayout"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.fragment.MatchFragment1">
@@ -41,16 +41,16 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20dp"
                     android:layout_above="@id/actionCl"
-                    android:layout_marginBottom="65dp"
+                    android:layout_marginBottom="34dp"
                     android:clipChildren="false"
                     android:layout_height="wrap_content">
 
 
                 <ImageView
+                        android:id="@+id/ivChatTime"
                         android:src="@drawable/icon_flash"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="@id/tvLeftChatTime"
                         />
@@ -69,24 +69,41 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         />
+
+
+                <LinearLayout
+                        android:id="@+id/llLeftSlideTime"
+                        android:layout_marginTop="87dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ivChatTime"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:background="@drawable/rectangle_white_3dp"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="6dp"
+                        android:layout_height="wrap_content">
+                    <ImageView
+                            android:id="@+id/ivLeftSlideTime"
+                            android:src="@drawable/icon_smile_orange"
+                            android:layout_width="12dp"
+                            android:layout_gravity="center"
+                            android:layout_height="12dp"/>
+                    <TextView
+                            android:id="@+id/tvLeftSlideTime"
+                            android:text="23"
+                            android:textColor="@color/colorOrange"
+                            android:layout_width="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_height="wrap_content"
+                           />
+                </LinearLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                    android:id="@+id/leftSlideTime"
-                    android:layout_marginRight="34dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_above="@id/actionCl"
-                    android:drawableLeft="@drawable/icon_smile_orange"
-                    android:text="23"
-                    android:layout_marginBottom="30dp"
-                    android:textColor="@color/colorOrange"
-                    android:background="@drawable/rectangle_white_5dp"
-                    android:layout_width="wrap_content"
-                    android:drawablePadding="4dp"
-                    android:paddingLeft="6dp"
-                    android:paddingRight="6dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="24dp"/>
+
             <!--<FrameLayout-->
             <!--android:visibility="visible"-->
             <!--android:layout_width="wrap_content"-->

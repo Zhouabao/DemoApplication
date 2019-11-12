@@ -3,69 +3,132 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_gravity="center"
-        android:background="@drawable/shape_rectangle_gray_white_9dp"
-        android:layout_height="350dp">
+        android:id="@+id/rootView"
+        android:background="@color/colorTransparent"
+        android:layout_height="match_parent">
 
-    <TextView
-            android:id="@+id/sayHitargetName"
-            android:layout_marginTop="10dp"
-            android:text="Anna Smith"
-            android:textColor="#ff000000"
-            android:textSize="20sp"
-            android:layout_marginLeft="10dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/letterBottomCl"
             android:layout_width="wrap_content"
-            android:gravity="center"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/sayHiClose"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageView
-            android:id="@+id/sayHiClose"
-            android:layout_marginTop="12dp"
-            android:layout_marginRight="12dp"
-            android:src="@drawable/icon_close"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-
-    <EditText
-            android:id="@+id/sayHiContent"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:textColor="@color/colorBlack"
-            android:textSize="16sp"
-            android:padding="10dp"
-            android:gravity="left"
-            android:lineSpacingMultiplier="1.4"
-            android:textColorHint="#FFC1C2C8"
-            android:hint="恭喜你勇敢迈出了第一步，快想想说点什么让TA也对你感兴趣"
-            android:background="@drawable/shape_rectangle_gray_9dp"
-            android:layout_marginBottom="17dp"
-            app:layout_constraintBottom_toTopOf="@id/sayHiBtn"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sayHitargetName"/>
-
-    <TextView
-            android:id="@+id/sayHiBtn"
-            android:gravity="center"
-            android:text="打招呼"
-            android:textColor="#ffffffff"
-            android:textSize="16sp"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:textStyle="bold"
-            android:background="@drawable/shape_rectangle_orange_say_hi"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+                android:id="@+id/letterBottom"
+                android:src="@drawable/icon_letter_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="280dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+                android:id="@+id/letterCloseRight"
+                android:src="@drawable/icon_letter_close_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/letterBottom"
+                app:layout_constraintLeft_toRightOf="@id/letterBottom"
+                app:layout_constraintTop_toTopOf="@id/letterBottom"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contentHi"
+            android:visibility="visible"
+            android:background="@drawable/shape_rectangle_gray_white_9dp"
+            android:layout_width="300dp"
+            android:layout_height="350dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+                android:id="@+id/sayHitargetName"
+                android:layout_marginTop="10dp"
+                android:text="Anna Smith"
+                android:textColor="#ff000000"
+                android:textSize="20sp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/sayHiClose"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+                android:id="@+id/sayHiClose"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:src="@drawable/icon_close"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <EditText
+                android:id="@+id/sayHiContent"
+                android:layout_marginTop="17dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:gravity="left"
+                android:lineSpacingMultiplier="1.4"
+                android:textColorHint="#FFC1C2C8"
+                android:hint="恭喜你勇敢迈出了第一步，快想想说点什么让TA也对你感兴趣"
+                android:background="@drawable/shape_rectangle_gray_9dp"
+                android:layout_marginBottom="17dp"
+                app:layout_constraintBottom_toTopOf="@id/sayHiBtn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sayHitargetName"/>
+
+        <Button
+                android:id="@+id/sayHiBtn"
+                android:gravity="center"
+                android:text="打招呼"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:textStyle="bold"
+                android:enabled="false"
+                android:background="@drawable/selector_confirm_say_hi_btn"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+            android:id="@+id/letterTop"
+            android:src="@drawable/icon_letter_top"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/letterBottomCl"
+            app:layout_constraintLeft_toLeftOf="@id/letterBottomCl"
+            app:layout_constraintTop_toTopOf="@id/letterBottomCl"/>
+
+    <ImageView
+            android:visibility="gone"
+            android:id="@+id/letterCloseLeft"
+            app:layout_constraintRight_toRightOf="@id/letterTop"
+            app:layout_constraintBottom_toBottomOf="@id/letterTop"
+            app:layout_constraintTop_toTopOf="@id/letterTop"
+            android:src="@drawable/icon_letter_close_left"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

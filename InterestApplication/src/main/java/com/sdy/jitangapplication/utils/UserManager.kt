@@ -527,6 +527,8 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
         SPUtils.getInstance(Constants.SPNAME).remove("countdowntime")
         SPUtils.getInstance(Constants.SPNAME).remove("lightingCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("leftSlideCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("highlight_times")
         SPUtils.getInstance(Constants.SPNAME).remove("slideCount")
         SPUtils.getInstance(Constants.SPNAME).remove("hiCount")
         SPUtils.getInstance(Constants.SPNAME).remove("likeCount")
@@ -588,17 +590,33 @@ object UserManager {
 
 
     /**
+     * 保存提示剩余滑动次数
+     */
+    fun saveHighlightCount(highlight_times: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("highlight_times", highlight_times)
+    }
+
+    /**
+     * 获取提示剩余滑动次数
+     */
+    fun getHighlightCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("highlight_times", 0)
+    }
+
+
+
+    /**
      * 保存剩余滑动次数
      */
     fun saveSlideCount(slideTimes: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("slideCount", slideTimes)
+        SPUtils.getInstance(Constants.SPNAME).put("leftSlideCount", slideTimes)
     }
 
     /**
      * 获取剩余滑动次数
      */
     fun getSlideCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("slideCount", 0)
+        return SPUtils.getInstance(Constants.SPNAME).getInt("leftSlideCount", 0)
     }
 
 

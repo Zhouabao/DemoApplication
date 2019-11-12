@@ -12,7 +12,6 @@
     </style>
 
 
-
     <!--微信支付 -->
     <style name="wx_theme" parent="AppTheme">
         <!--<style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">-->
@@ -104,6 +103,11 @@
     <style name="MyDialogCenterAnimation">
         <item name="android:windowEnterAnimation">@anim/dialog_center_in</item>
         <item name="android:windowExitAnimation">@anim/dialog_center_exit</item>
+    </style>
+
+    <style name="MyDialogLeftBottomAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_left_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_left_bottom_exit</item>
     </style>
 
     <!--横向的progressBar-->
