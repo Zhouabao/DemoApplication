@@ -233,52 +233,7 @@
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/userBirth"/>
 
-                        <TextView
-                                android:text="身高"
-                                android:alpha="0.5"
-                                android:textColor="@color/colorBlack"
-                                android:textSize="16sp"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:gravity="center_vertical"
-                                app:layout_constraintBottom_toBottomOf="@id/userHeight"
-                                app:layout_constraintLeft_toLeftOf="@id/t1"
-                                app:layout_constraintRight_toRightOf="@id/t1"
-                                app:layout_constraintTop_toTopOf="@id/userHeight"/>
 
-
-                        <TextView
-                                android:id="@+id/userHeight"
-                                android:drawablePadding="10dp"
-                                android:gravity="center_vertical"
-                                android:textColor="@color/colorBlack"
-                                android:textSize="15sp"
-                                android:drawableRight="@drawable/icon_more_right"
-                                android:layout_width="0dp"
-                                android:layout_height="50dp"
-                                app:layout_constraintLeft_toRightOf="@id/t1"
-                                app:layout_constraintRight_toRightOf="@id/userNickName"
-                                app:layout_constraintTop_toBottomOf="@id/dash3"
-                                tools:text="165"/>
-
-                        <include
-                                android:id="@+id/userScoreHeight"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userHeight"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userHeight"/>
-
-                        <View
-                                android:id="@+id/dash4"
-                                android:background="@color/colorDivider"
-                                android:layout_width="0dp"
-                                android:layout_height="1dp"
-                                app:layout_constraintLeft_toLeftOf="@id/t1"
-                                app:layout_constraintRight_toRightOf="@id/userNickName"
-                                app:layout_constraintTop_toBottomOf="@id/userBirth"/>
 
 
                         <TextView
@@ -294,7 +249,7 @@
                                 android:gravity="center_vertical"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/userHeight"
+                                app:layout_constraintTop_toBottomOf="@id/userBirth"
                                 />
 
                         <include
@@ -348,6 +303,53 @@
 
 
                         <TextView
+                                android:text="身高"
+                                android:alpha="0.5"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="16sp"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:gravity="center_vertical"
+                                app:layout_constraintBottom_toBottomOf="@id/userHeight"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/t1"
+                                app:layout_constraintTop_toTopOf="@id/userHeight"/>
+
+
+                        <TextView
+                                android:id="@+id/userHeight"
+                                android:drawablePadding="10dp"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="15sp"
+                                android:drawableRight="@drawable/icon_more_right"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintLeft_toRightOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/tmore"
+                                tools:text="165"/>
+
+                        <include
+                                android:id="@+id/userScoreHeight"
+                                layout="@layout/layout_add_score"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="40dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userHeight"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userHeight"/>
+
+                        <View
+                                android:id="@+id/dash4"
+                                android:background="@color/colorDivider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                app:layout_constraintLeft_toLeftOf="@id/t1"
+                                app:layout_constraintRight_toRightOf="@id/userNickName"
+                                app:layout_constraintTop_toBottomOf="@id/userHeight"/>
+
+                        <TextView
                                 android:text="感情状态"
                                 android:alpha="0.5"
                                 android:textColor="@color/colorBlack"
@@ -374,7 +376,7 @@
                                 android:layout_height="50dp"
                                 app:layout_constraintLeft_toRightOf="@id/t1"
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
-                                app:layout_constraintTop_toBottomOf="@id/tmore"/>
+                                app:layout_constraintTop_toBottomOf="@id/dash4"/>
 
                         <include
                                 android:id="@+id/userScoreEmotion"

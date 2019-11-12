@@ -251,7 +251,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 if (!data.photos_wall.isNullOrEmpty()) {
                     scorePhoto = (data.photos_wall.size - 1) * data.score_rule.photo
                 }
-                setScroeProgress(data.score_rule.base + scorePhoto)
+                setScroeProgress(scorePhoto)
             }
 
 
@@ -529,7 +529,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
             mPresenter.addPhotoV2(savePersonalParams, UserManager.getToken(), UserManager.getAccid(), photosId, type)
         } else {
-            mPresenter.addPhotoV2(savePersonalParams, UserManager.getToken(), UserManager.getAccid(), null, type)
+            mPresenter.addPhotoV2(
+                savePersonalParams,
+                UserManager.getToken(),
+                UserManager.getAccid(),
+                mutableListOf(),
+                type
+            )
         }
     }
 
@@ -744,11 +750,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                         ) {
                             userSchool.text = data.getStringExtra("schoolBean")
                             savePersonalParams["personal_school"] = data.getStringExtra("schoolBean")
-                            updateScoreStatus(userScoreSchool, this.data!!.score_rule?.personal_school ?: 0)
+                            if (userScoreSchool.isVisible)
+                                updateScoreStatus(userScoreSchool, this.data!!.score_rule?.personal_school ?: 0)
                         } else {
                             userJob.text = data.getStringExtra("schoolBean")
                             savePersonalParams["personal_job"] = data.getStringExtra("schoolBean")
-                            updateScoreStatus(userScoreJob, this.data!!.score_rule?.personal_job ?: 0)
+                            if (userScoreJob.isVisible)
+                                updateScoreStatus(userScoreJob, this.data!!.score_rule?.personal_job ?: 0)
                         }
                         isChange = true
                         checkSaveEnable()
@@ -757,7 +765,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 105 -> {//关于我
                     userNickSign.text = data?.getStringExtra("content")
                     savePersonalParams["sign"] = data?.getStringExtra("content")
-                    updateScoreStatus(userScoreAboutMe, this.data!!.score_rule?.about ?: 0)
+
+                    if (userScoreAboutMe.isVisible)
+                        updateScoreStatus(userScoreAboutMe, this.data!!.score_rule?.about ?: 0)
                     isChange = true
                     checkSaveEnable()
                 }
@@ -867,7 +877,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
 
             R.id.userJob -> {//职业
-                startActivityForResult<ChooseSchoolActivity>(104,"type" to ChooseSchoolActivity.CHOOSE_JOB)
+                startActivityForResult<ChooseSchoolActivity>(104, "type" to ChooseSchoolActivity.CHOOSE_JOB)
                 // startActivityForResult<MyJobActivity>(103, "job" to userJob.text.toString())
             }
 
@@ -882,7 +892,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 )
             }
             R.id.userSchool -> {//学校
-                startActivityForResult<ChooseSchoolActivity>(104,"type" to ChooseSchoolActivity.CHOOSE_SCHOOL)
+                startActivityForResult<ChooseSchoolActivity>(104, "type" to ChooseSchoolActivity.CHOOSE_SCHOOL)
             }
             R.id.userDrink -> {//饮酒
                 showConditionPicker(
@@ -1095,7 +1105,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
     private fun setScroeProgress(score: Int) {
         totalGetScore += score //汇总每次的得分
         var progress =
-            (totalGetScore * 1.0F / (data!!.score_rule!!.base_total + data!!.score_rule!!.base) * 100).toInt()
+            (totalGetScore * 1.0F / (data!!.score_rule!!.base_total) * 100).toInt()
         userScore20.text = "${progress}%"
 
         if (!UserManager.isUserVip()) {
@@ -1349,6 +1359,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             userBirth.text =
                 "${TimeUtils.date2String(date, SimpleDateFormat("yyyy-MM-dd"))}/${TimeUtils.getZodiac(date)}"
             savePersonalParams["birth"] = TimeUtils.date2Millis(date)
+            isChange = true
+            checkSaveEnable()
         })
             .setRangDate(startDate, endDate)
             .setDate(endDate)
