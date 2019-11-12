@@ -17,7 +17,8 @@ data class MatchListBean(
     var countdown: Int = 0,
     var motion: Int = -1, //		1，强制替换 2，引导替换 3，引导添加相册 其他不管
     var perfect_times: Int = 0,    //滑动x次数跳【完善相册】
-    var replace_times: Int = 0 //滑动x次数跳【替换头像】
+    var replace_times: Int = 0, //滑动x次数跳【替换头像】
+    var like_times: Int = 0 //剩余滑动次数
 
 )
 
