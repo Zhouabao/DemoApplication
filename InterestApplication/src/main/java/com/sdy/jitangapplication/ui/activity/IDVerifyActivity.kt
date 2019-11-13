@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.app.Dialog
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
@@ -36,6 +37,7 @@ import com.sdy.jitangapplication.model.MatchFaceBean
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.zhy.http.okhttp.OkHttpUtils
 import com.zhy.http.okhttp.callback.Callback
 import okhttp3.Call
@@ -99,7 +101,20 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         FaceSDKManager.getInstance().initialize(this, Constants.licenseID, Constants.licenseFileName)
 
 
-        CommonFunction.toast("审核将与用户头像做比对，请确认头像为本人")
+        CommonAlertDialog.Builder(this)
+            .setIconVisible(false)
+            .setCancelIconIsVisibility(false)
+            .setTitle("认证提醒")
+            .setContent("审核将与用户头像做比对，请确认头像为本人")
+            .setConfirmText("确定")
+            .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+                override fun onClick(dialog: Dialog) {
+                    dialog.dismiss()
+                }
+            })
+            .create()
+            .show()
+
         //获取accesstoken
 //        getAccessToken()
         //获取图片的base64

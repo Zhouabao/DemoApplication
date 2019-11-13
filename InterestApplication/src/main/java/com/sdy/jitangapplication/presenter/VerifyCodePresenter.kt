@@ -43,13 +43,15 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                     if (t.code == 200) {
                         mView.onConfirmVerifyCode(t.data, true)
                     } else {
-                        mView.onError(t.msg)
+                        CommonFunction.toast(t.msg)
                         mView.onConfirmVerifyCode(t.data, false)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(CommonFunction.getErrorMsg(context))
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    mView.onConfirmVerifyCode(null, false)
+
                 }
             })
     }
@@ -72,16 +74,11 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
             .getVerifyCode(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
-                    super.onNext(t)
-                    Log.i("retrofit", t.toString())
-                    if (t.code == 200)
-                        mView.onGetVerifyCode(t)
-                    else
-                        mView.onError(t.msg)
+                    mView.onGetVerifyCode(t)
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onError(CommonFunction.getErrorMsg(context))
+                    mView.onGetVerifyCode(null)
                 }
             })
 

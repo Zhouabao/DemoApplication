@@ -118,10 +118,10 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
      */
     private var data: LoginBean? = null
 
-    override fun onConfirmVerifyCode(data: LoginBean, isRight: Boolean) {
+    override fun onConfirmVerifyCode(data: LoginBean?, isRight: Boolean) {
         if (isRight) {
             this.data = data
-            mPresenter.loginIM(LoginInfo(data.accid, data.extra_data?.im_token))
+            mPresenter.loginIM(LoginInfo(data!!.accid, data!!.extra_data?.im_token))
         } else {
             loadingDialog.dismiss()
             inputVerifyCode.isEnabled = true
@@ -129,10 +129,14 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     }
 
 
-    override fun onGetVerifyCode(data: BaseResp<Any?>) {
-        tvPhone.text = "验证码已发至 $phone"
-        countVerifyCodeTime.isEnabled = false
-        onCountTime()
+    override fun onGetVerifyCode(data: BaseResp<Any?>?) {
+        if (data != null && data.code == 200) {
+            tvPhone.text = "验证码已发至 $phone"
+            countVerifyCodeTime.isEnabled = false
+            onCountTime()
+        } else {
+            countVerifyCodeTime.isEnabled = true
+        }
     }
 
 
@@ -141,7 +145,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
      */
     override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
         if (success) {
-            UserManager.startToPersonalInfoActivity(this,nothing,data)
+            UserManager.startToPersonalInfoActivity(this, nothing, data)
         } else {
             CommonFunction.toast("登录失败！请重试")
             loadingDialog.dismiss()

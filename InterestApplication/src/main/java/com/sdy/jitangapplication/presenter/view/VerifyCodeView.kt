@@ -8,11 +8,11 @@ import com.sdy.jitangapplication.model.LoginBean
 interface VerifyCodeView : BaseView {
 
     //对比验证码是否正确,存储登录数据
-    fun onConfirmVerifyCode(data: LoginBean,success:Boolean)
+    fun onConfirmVerifyCode(data: LoginBean?, success: Boolean)
 
 
     //获取验证码结果
-    fun onGetVerifyCode(data: BaseResp<Any?>)
+    fun onGetVerifyCode(data: BaseResp<Any?>?)
 
 
     //倒计时

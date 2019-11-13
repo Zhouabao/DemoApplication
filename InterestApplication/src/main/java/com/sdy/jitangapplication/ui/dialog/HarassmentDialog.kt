@@ -41,6 +41,7 @@ class HarassmentDialog(val context1: Context, var from: Int) : Dialog(context1, 
                 harassmentBtn.text = "前往认证"
                 harassmentBtn.onClick {
                     context1.startActivity<IDVerifyActivity>()
+                    dismiss()
                 }
 
             }
@@ -51,6 +52,7 @@ class HarassmentDialog(val context1: Context, var from: Int) : Dialog(context1, 
                 harassmentBtn.text = "立即开启"
                 harassmentBtn.onClick {
                     context1.startActivity<SettingsActivity>()
+                    dismiss()
                 }
             }
         }
