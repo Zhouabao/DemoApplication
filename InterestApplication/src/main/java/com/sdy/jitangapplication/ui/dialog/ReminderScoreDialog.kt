@@ -34,66 +34,67 @@ class ReminderScoreDialog(val context1: Context, var score: Int) : Dialog(contex
 
     private fun initView() {
 
-        when (score) {
-            20 -> {
+//        when (score) {
+//            20 -> {
+//
+//                score20.isVisible = true
+//                score80.isVisible = false
+//                val params = reminderArrow.layoutParams as android.widget.LinearLayout.LayoutParams
+//                params.leftMargin = (SizeUtils.dp2px(70F) + SizeUtils.dp2px(40f) / 2f - SizeUtils.dp2px(9F)).toInt()
+//                reminderArrow.layoutParams = params
+//
+//                reminderContent.text = SpanUtils.with(reminderContent)
+//                    .append("每天")
+//                    .setFontSize(13, true)
+//                    .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
+//                    .append("20")
+//                    .setBold()
+//                    .setFontSize(14, true)
+//                    .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
+//                    .append("次免费右滑奥\n快去使用开始交友吧")
+//                    .setFontSize(13, true)
+//                    .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
+//                    .create()
+//            }
+//            80 -> {
+        score20.isVisible = false
+        score80.isVisible = true
+        score80.text = "$score"
+        val layoutmanager80 = score80.layoutParams as RelativeLayout.LayoutParams
+        layoutmanager80.rightMargin =
+            (SizeUtils.dp2px(15F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(110F)) * 0.2F).toInt()
+        //score80.layoutParams = layoutmanager80
 
-                score20.isVisible = true
-                score80.isVisible = false
-                val params = reminderArrow.layoutParams as android.widget.LinearLayout.LayoutParams
-                params.leftMargin = (SizeUtils.dp2px(70F) + SizeUtils.dp2px(40f) / 2f - SizeUtils.dp2px(9F)).toInt()
-                reminderArrow.layoutParams = params
 
-                reminderContent.text = SpanUtils.with(reminderContent)
-                    .append("每天")
-                    .setFontSize(13, true)
-                    .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
-                    .append("20")
-                    .setBold()
-                    .setFontSize(14, true)
-                    .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
-                    .append("次免费右滑奥\n快去使用开始交友吧")
-                    .setFontSize(13, true)
-                    .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
-                    .create()
-            }
-            80 -> {
-                score20.isVisible = false
-                score80.isVisible = true
-                val layoutmanager80 = score80.layoutParams as RelativeLayout.LayoutParams
-                layoutmanager80.rightMargin =
-                    (SizeUtils.dp2px(15F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(110F)) * 0.2F).toInt()
-                //score80.layoutParams = layoutmanager80
+        val params = reminderArrow.layoutParams as android.widget.LinearLayout.LayoutParams
+        params.leftMargin =
+            (SizeUtils.dp2px(70F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F)
+                    - SizeUtils.dp2px(15F)) * 0.8F - SizeUtils.dp2px(40f) / 2f - SizeUtils.dp2px(3f)).toInt()
+        reminderArrow.layoutParams = params
 
-
-                val params = reminderArrow.layoutParams as android.widget.LinearLayout.LayoutParams
-                params.leftMargin =
-                    (SizeUtils.dp2px(70F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F)
-                            - SizeUtils.dp2px(15F)) * 0.8F - SizeUtils.dp2px(40f) / 2f - SizeUtils.dp2px(3f)).toInt()
-                reminderArrow.layoutParams = params
-
-                val params1 = reminderContent.layoutParams as android.widget.LinearLayout.LayoutParams
-                params1.gravity = Gravity.RIGHT
-                params1.rightMargin = SizeUtils.dp2px(15F)
+        val params1 = reminderContent.layoutParams as android.widget.LinearLayout.LayoutParams
+        params1.gravity = Gravity.RIGHT
+        params1.rightMargin = SizeUtils.dp2px(15F)
 //                params1.leftMargin = (SizeUtils.dp2px(95F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(95F) - SizeUtils.dp2px(15F)) * 0.8F - SizeUtils.dp2px(40f) / 2f - SizeUtils.dp2px(103F)).toInt() //左边距+0.8的进度条-笑脸一半
-                reminderContent.layoutParams = params1
+        reminderContent.layoutParams = params1
 
-                reminderContent.text = SpanUtils.with(reminderContent)
-                    .append("个人资料完善至100%\n")
-                    .setFontSize(13, true)
-                    .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
-                    .append("免费右滑次数将增至每天")
-                    .setFontSize(13, true)
-                    .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
-                    .append("80")
-                    .setFontSize(14, true)
-                    .setBold()
-                    .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
-                    .append("次奥")
-                    .setFontSize(13, true)
-                    .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
-                    .create()
-            }
-        }
+        reminderContent.text = SpanUtils.with(reminderContent)
+            .append("个人资料完善至100%\n")
+            .setFontSize(13, true)
+            .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
+            .append("免费右滑次数将增至每天")
+            .setFontSize(13, true)
+            .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
+            .append("$score")
+            .setFontSize(14, true)
+            .setBold()
+            .setForegroundColor(context1.resources.getColor(R.color.colorOrange))
+            .append("次奥")
+            .setFontSize(13, true)
+            .setForegroundColor(context1.resources.getColor(R.color.colorBlack))
+            .create()
+//            }
+//        }
 
         llRoot.onClick {
             EventBus.getDefault().post(ReminderScoreEvent(score))

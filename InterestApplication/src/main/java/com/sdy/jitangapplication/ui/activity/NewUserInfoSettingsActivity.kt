@@ -105,6 +105,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
     private fun initView() {
         EventBus.getDefault().register(this)
 
+        mPresenter = UserInfoSettingsPresenter()
+        mPresenter.mView = this
+        mPresenter.context = this
+
         btnBack.setOnClickListener(this)
         userNickName.setOnClickListener(this)
 //        userGender.setOnClickListener(this)
@@ -126,13 +130,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         userScoreVip.setOnClickListener(this)
 
 
-
-        userScoreAboutMe.tvAddScoreSmile.text = "+10"
-
-        mPresenter = UserInfoSettingsPresenter()
-        mPresenter.mView = this
-        mPresenter.context = this
-
+        userScore80.setBackgroundResource(R.drawable.shape_rectangle_gray_white_11dp)
+        userScore80.tvAddScoreSmile.setTextColor(Color.parseColor("#FFD1D1DB"))
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.personalInfo(params)
@@ -435,6 +434,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 photos.removeAt(position)
                 adapter.notifyDataSetChanged()
                 refreshLayout()
+                setScroeProgress(-data!!.score_rule!!.photo)
                 dialog.dismiss()
             } else {
                 CommonFunction.toast(getString(R.string.real_avator_tip))
@@ -802,7 +802,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
             }
             R.id.userScore80 -> {
-                ReminderScoreDialog(this, data?.score_rule?.total ?: 0).show()
+                ReminderScoreDialog(this, ((data?.score_rule?.base_total ?: 0) + (data?.score_rule?.base ?: 0))).show()
 //                userScore80.setImageResource(R.drawable.icon_eighty_click)
             }
             R.id.userNickName -> {//昵称
@@ -1103,6 +1103,12 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
     private var totalGetScore = 0//用户资料目前总的得分
     private fun setScroeProgress(score: Int) {
+        val params = userFinishProgress.layoutParams as RelativeLayout.LayoutParams
+        params.leftMargin = SizeUtils.dp2px(70F)
+        params.rightMargin = SizeUtils.dp2px(15F)
+        userFinishProgress.layoutParams = params
+
+
         totalGetScore += score //汇总每次的得分
         var progress =
             (totalGetScore * 1.0F / (data!!.score_rule!!.base_total) * 100).toInt()
@@ -1124,14 +1130,15 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         } else  //左边距+进度条宽度-自身宽度
             SizeUtils.dp2px(70F) +
                     ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15))
-                            * userFinishProgress.progress * 1.0f / 100).toInt() - SizeUtils.dp2px(60F)
+                            * userFinishProgress.progress * 1.0f / 100).toInt() - if (progress > 0) {
+                SizeUtils.dp2px(60F)
+            } else {
+                0
+            }
         userScore20.layoutParams = layoutmanager20
 
         if (!UserManager.isUserVip())
-            userScore80.isVisible =
-                (ScreenUtils.getScreenWidth() - layoutmanager20.leftMargin) >= (SizeUtils.dp2px(
-                    90F
-                ) + userScore80.width)
+            userScore80.isVisible = (progress != 80)
 
     }
 
@@ -1159,7 +1166,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
             override fun onAnimationEnd(p0: Animation?) {
                 addPhotoTip.isVisible = true
-                Thread.sleep(1000L)
+                Thread.sleep(200L)
                 addPhotoTip.startAnimation(animationOut)
             }
 
