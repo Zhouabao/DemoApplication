@@ -6,7 +6,7 @@
         android:id="@+id/rootview"
         android:layout_width="match_parent"
         android:background="@color/colorWhite"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         tools:context=".ui.activity.PhoneActivity">
 
     <ImageView
