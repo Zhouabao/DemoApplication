@@ -427,6 +427,8 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         if (uploadResult) {
             startActivity<LabelsActivity>()
             finish()
+        } else {
+            btnNextStep.isEnabled = true
         }
     }
 
