@@ -200,7 +200,8 @@ dependencies {
     implementation files('libs\\com.coloros.mcssdk.jar')
     implementation files('libs\\pushsdk_v2.3.4.jar')
     implementation 'com.meizu.flyme.internet:push-internal:3.6.3@aar'
-
+    //数美黑产防范
+    implementation files('libs\\smantifraud.aar')
 
     //人脸认证
     implementation project(path: ':faceplatform-ui')

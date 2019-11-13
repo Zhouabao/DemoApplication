@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.blankj.utilcode.util.*
 import com.google.gson.Gson
+import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
 import com.leon.channel.helper.ChannelReaderUtil
 import com.netease.nim.uikit.R
@@ -195,8 +196,8 @@ class MyApplication : BaseApplication() {
     @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
-
-
+        //数美黑产
+        initSM()
         //初始化Umeng
         initUmeng()
         //崩溃日志
@@ -209,7 +210,6 @@ class MyApplication : BaseApplication() {
         initUIKit()
         //bugly初始化
         Bugly.init(this, Constants.BUGLY_APP_ID, false)
-
     }
 
     private fun initUmeng() {
@@ -318,4 +318,22 @@ class MyApplication : BaseApplication() {
     }
 
 
+
+
+    private fun initSM(){
+        //指定主进程才能执行
+        if (NIMUtil.isMainProcess(this)) {
+            val option = SmAntiFraud.SmOption()
+            option.organization = Constants.SM_ORGANIZATION
+//            option.channel = ChannelReaderUtil.getChannel(this) ?: ""
+            option.channel ="debug"
+            option.publicKey = Constants.SM_PUBLICKEY
+            option.ainfoKey = Constants.SM_AINFOKEY
+            Log.d("smOption","${option.organization},${option.channel}")
+            SmAntiFraud.create(this,option)
+            //注意！！获取deviceid，这个接口在需要使用deviceid时地方调用
+            val deviceId = SmAntiFraud.getDeviceId()
+            Log.d("smOption","${deviceId}")
+        }
+    }
 }

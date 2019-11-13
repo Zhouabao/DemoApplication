@@ -285,6 +285,7 @@ class SayHiDialog(
                         if (greetBean != null && greetBean.lightningcnt != -1) {
                             if (greetBean.isfriend || greetBean.isgreet) {
                                 ChatActivity.start(context1 as Activity, target_accid ?: "")
+                                dismiss()
                             } else {
                                 UserManager.saveLightingCount(greetBean.lightningcnt)
                                 UserManager.saveCountDownTime(greetBean.countdown)
