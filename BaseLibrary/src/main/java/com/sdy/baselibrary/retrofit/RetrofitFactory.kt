@@ -35,6 +35,7 @@ class RetrofitFactory private constructor() {
                 .addHeader("Content_Type", "application/json")
                 .addHeader("charset", "UTF-8")
                 .addHeader("os", "android")
+                .addHeader("mac", DeviceUtils.getAndroidID())
                 .addHeader("chnl",DeviceUtils.getManufacturer()+","+DeviceUtils.getModel())
                 .addHeader("app-vrn",AppUtils.getAppVersionName())
                 .build()
