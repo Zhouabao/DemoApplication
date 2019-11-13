@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpFragment
@@ -38,7 +40,6 @@ import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CommonItemDecoration
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -100,11 +101,14 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         EventBus.getDefault().register(this)
 
         val linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-
-        val itemdecoration =
-            CommonItemDecoration(activity!!, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL)
-        itemdecoration.setDrawable(activity!!.resources.getDrawable(R.drawable.recycler_divider))
-        listSquareRv.addItemDecoration(itemdecoration)
+        listSquareRv.addItemDecoration(
+            com.sdy.jitangapplication.widgets.DividerItemDecoration(
+                activity!!,
+                com.sdy.jitangapplication.widgets.DividerItemDecoration.HORIZONTAL_LIST,
+                SizeUtils.dp2px(8F),
+                Color.parseColor("#FFF1F2F6")
+            )
+        )
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
         adapter.bindToRecyclerView(listSquareRv)

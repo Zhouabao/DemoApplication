@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
+import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.AppManager
 import com.netease.nim.uikit.common.util.string.MD5
 import com.netease.nimlib.sdk.NIMClient
@@ -689,7 +690,8 @@ object UserManager {
         return hashMapOf(
             "token" to getToken(),
             "accid" to getAccid(),
-            "_timestamp" to System.currentTimeMillis()
+            "_timestamp" to System.currentTimeMillis(),
+            "device_id" to SmAntiFraud.getDeviceId()
         )
     }
 

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -80,15 +81,19 @@ class SayHiDialog(
     }
 
     private fun initView() {
+        letterCloseRight.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         sayHitargetName.text = userName
         sayHiClose.onClick {
+            KeyboardUtils.hideSoftInput(sayHiContent)
             dismiss()
         }
         sayHiBtn.onClick {
             sayHiContent.clearFocus()
             KeyboardUtils.hideSoftInput(sayHiContent)
+//            startAnimation()
             greetState()
         }
+
 
         sayHiContent.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable) {
@@ -155,7 +160,7 @@ class SayHiDialog(
         //翻转动画
         val mOpenFlipAnimation = Rotate3dAnimation(
             0f,
-            180f,
+            -180f,
             //                0f,
             letterCloseRight.width.toFloat() / 2,
             //                ScreenUtils.getAppScreenWidth() / 2F - (SizeUtils.dp2px(300F) / 2F * 0.8F),
@@ -166,6 +171,7 @@ class SayHiDialog(
         )
         mOpenFlipAnimation.duration = 200
         mOpenFlipAnimation.fillAfter = true
+        mOpenFlipAnimation.fillBefore = false
         mOpenFlipAnimation.repeatCount = 0
         mOpenFlipAnimation.interpolator = LinearInterpolator()
 
@@ -198,11 +204,11 @@ class SayHiDialog(
             }
 
             override fun onAnimationEnd(p0: Animation?) {
-//                letterCloseRight.isVisible = false
-//                letterCloseLeft.isVisible = true
-//                rootView.postDelayed({
-//                    rootView.startAnimation(translateAniContentOut)
-//                }, 500)
+                rootView.postDelayed({
+                    letterCloseRight.isVisible = false
+                    letterCloseLeft.isVisible = true
+                    rootView.startAnimation(translateAniContentOut)
+                }, 100)
                 letterCloseRight.startAnimation(mOpenFlipAnimation)
 
             }
@@ -301,14 +307,14 @@ class SayHiDialog(
                                             ChargeVipDialog.PURCHASE_VIP
                                         }
                                     ).show()
-                                    EventBus.getDefault().post(GreetEvent(context1,true))
+                                    EventBus.getDefault().post(GreetEvent(context1, true))
                                 }
                             }
                         } else {
                             CommonFunction.toast(t.msg)
                         }
                     } else {
-                        EventBus.getDefault().post(GreetEvent(context1,true))
+                        EventBus.getDefault().post(GreetEvent(context1, true))
                         CommonFunction.toast(t.msg)
                     }
                 }
@@ -357,10 +363,10 @@ class SayHiDialog(
                     } else if (t.code == 403) {//登录异常
                         UserManager.startToLogin(context1 as Activity)
                     } else if (t.code == 401) {
-                        EventBus.getDefault().post(GreetEvent(context1,true))
+                        EventBus.getDefault().post(GreetEvent(context1, true))
                         HarassmentDialog(context1, HarassmentDialog.CHATHI).show() //开启招呼提示
                     } else {
-                        EventBus.getDefault().post(GreetEvent(context1,true))
+                        EventBus.getDefault().post(GreetEvent(context1, true))
                         CommonFunction.toast(t.msg)
                     }
                 }
@@ -406,7 +412,7 @@ class SayHiDialog(
                 //发送通知修改招呼次数
                 UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
                 EventBus.getDefault().postSticky(UpdateHiCountEvent())
-                EventBus.getDefault().post(GreetEvent(context1,true))
+                EventBus.getDefault().post(GreetEvent(context1, true))
             }
 
             override fun onFailed(code: Int) {

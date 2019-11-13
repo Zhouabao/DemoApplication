@@ -5,6 +5,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -14,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.*
@@ -57,7 +57,6 @@ import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
-import com.sdy.jitangapplication.widgets.CommonItemDecoration
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -182,10 +181,14 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             mPresenter.getFrinedsList(friendsParams)
         }
 
-
-        val itemdecoration = CommonItemDecoration(activity!!, DividerItemDecoration.VERTICAL)
-        itemdecoration.setDrawable(activity!!.resources.getDrawable(R.drawable.recycler_divider))
-        squareDynamicRv.addItemDecoration(itemdecoration)
+        squareDynamicRv.addItemDecoration(
+            com.sdy.jitangapplication.widgets.DividerItemDecoration(
+                activity!!,
+                com.sdy.jitangapplication.widgets.DividerItemDecoration.HORIZONTAL_LIST,
+                SizeUtils.dp2px(8F),
+                Color.parseColor("#FFF1F2F6")
+            )
+        )
 
         adapter.setHeaderAndEmpty(true)
         squareDynamicRv.layoutManager = layoutManager

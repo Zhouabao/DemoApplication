@@ -74,5 +74,6 @@ public class Rotate3dAnimation extends Animation {
 
         matrix.preTranslate(-centerX, -centerY);
         matrix.postTranslate(centerX, centerY);
+//        matrix.setPolyToPoly()
     }
 }

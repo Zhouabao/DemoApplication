@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -138,14 +139,21 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
             mPresenter.getMySquare(params)
         }
 
-        val itemdecoration = CommonItemDecoration(this, DividerItemDecoration.VERTICAL)
-        itemdecoration.setDrawable(this.resources.getDrawable(R.drawable.recycler_divider))
-        collectionRv.addItemDecoration(itemdecoration)
+        collectionRv.addItemDecoration(
+            com.sdy.jitangapplication.widgets.DividerItemDecoration(
+                this,
+                com.sdy.jitangapplication.widgets.DividerItemDecoration.HORIZONTAL_LIST,
+                SizeUtils.dp2px(8F),
+                Color.parseColor("#FFF1F2F6")
+            )
+        )
+
+
 
         collectionRv.layoutManager = layoutManager
         collectionRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, collectionRv)
-        adapter.setHeaderAndEmpty(false)
+        adapter.setHeaderAndEmpty(true)
         adapter.bindToRecyclerView(collectionRv)
         //取消动画，主要是闪烁
 //        (collectionRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
