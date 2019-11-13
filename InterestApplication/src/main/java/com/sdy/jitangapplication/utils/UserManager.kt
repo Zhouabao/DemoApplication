@@ -1,10 +1,12 @@
 package com.sdy.jitangapplication.utils
 
 import android.app.Activity
+import android.content.Context
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.common.AppManager
 import com.netease.nim.uikit.common.util.string.MD5
+import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
@@ -12,7 +14,8 @@ import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.MediaParamBean
 import com.sdy.jitangapplication.nim.DemoCache
-import com.sdy.jitangapplication.ui.activity.LoginActivity
+import com.sdy.jitangapplication.nim.sp.UserPreferences
+import com.sdy.jitangapplication.ui.activity.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import java.util.*
@@ -604,7 +607,6 @@ object UserManager {
     }
 
 
-
     /**
      * 保存剩余滑动次数
      */
@@ -716,5 +718,57 @@ object UserManager {
         }
         params1["_signature"] = MD5.getStringMD5(sign.substring(0, sign.length - 1))
         return params1
+    }
+
+
+    fun startToPersonalInfoActivity(context: Context, nothing: LoginInfo?, data: LoginBean?) {
+        SPUtils.getInstance(Constants.SPNAME).put("imToken", nothing?.token)
+        SPUtils.getInstance(Constants.SPNAME).put("imAccid", nothing?.account)
+
+        SPUtils.getInstance(Constants.SPNAME).put("qntoken", data?.qntk)
+        SPUtils.getInstance(Constants.SPNAME).put("token", data?.token)
+        SPUtils.getInstance(Constants.SPNAME).put("accid", data?.accid)
+        DemoCache.setAccount(nothing?.account)
+        //初始化消息提醒配置
+        initNotificationConfig()
+
+        if (data == null || data.userinfo == null || data.userinfo.nickname.isNullOrEmpty()) {
+            context.startActivity<UserNickNameActivity>()
+            return
+        } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {
+            context.startActivity<UserAvatorActivity>()
+            return
+        } else if (data.userinfo.gender == 0) {
+            context.startActivity<UserGenderActivity>()
+            return
+        } else if (data.userinfo.birth.isEmpty() || data.userinfo.birth.toLong() == 0L) {
+            context.startActivity<UserBirthActivity>()
+            return
+        } else {
+            saveUserInfo(data)
+            if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
+                    Constants.SPNAME
+                ).getStringSet("checkedLabels").isEmpty()
+            ) {//标签没有选择
+                context.startActivity<LabelsActivity>()
+            } else {//跳到主页
+                AppManager.instance.finishAllActivity()
+                context.startActivity<MainActivity>()
+            }
+        }
+    }
+
+    private fun initNotificationConfig() {
+        // 初始化消息提醒
+        NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
+        // 加载状态栏配置
+        var statusBarNotificationConfig = UserPreferences.getStatusConfig()
+        if (statusBarNotificationConfig == null) {
+            statusBarNotificationConfig = DemoCache.getNotificationConfig()
+            UserPreferences.setStatusConfig(statusBarNotificationConfig)
+        }
+        //更新配置
+        NIMClient.updateStatusBarNotificationConfig(statusBarNotificationConfig)
+
     }
 }

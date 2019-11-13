@@ -2,26 +2,18 @@ package com.sdy.jitangapplication.wxapi
 
 import android.os.Bundle
 import android.util.Log
-import com.blankj.utilcode.util.SPUtils
-import com.kotlin.base.common.AppManager
+import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
-import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LoginBean
-import com.sdy.jitangapplication.nim.DemoCache
-import com.sdy.jitangapplication.nim.sp.UserPreferences
-import com.sdy.jitangapplication.ui.activity.LabelsActivity
-import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.PhoneActivity
-import com.sdy.jitangapplication.ui.activity.SetInfoActivity
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.mm.opensdk.constants.ConstantsAPI.COMMAND_SENDAUTH
@@ -59,7 +51,7 @@ class WXEntryActivity : WXCallbackActivity() {
      * 微信登录
      */
     private fun loginWithWechat(code: String) {
-        val params = hashMapOf<String, Any>("type" to "3", "wxcode" to code)
+        val params = hashMapOf<String, Any>("type" to "3", "wxcode" to code, "device_id" to SmAntiFraud.getDeviceId())
         RetrofitFactory.instance.create(Api::class.java)
             .loginOWithWechat(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<LoginBean?>>(null) {
@@ -121,57 +113,11 @@ class WXEntryActivity : WXCallbackActivity() {
      */
     fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
         if (success) {
-            SPUtils.getInstance(Constants.SPNAME).put("imToken", nothing?.token)
-            SPUtils.getInstance(Constants.SPNAME).put("imAccid", nothing?.account)
-
-            SPUtils.getInstance(Constants.SPNAME).put("qntoken", data?.qntk)
-            SPUtils.getInstance(Constants.SPNAME).put("token", data?.token)
-            SPUtils.getInstance(Constants.SPNAME).put("accid", data?.accid)
-            DemoCache.setAccount(nothing?.account)
-            //初始化消息提醒配置
-            initNotificationConfig()
-
-
-            if (data == null
-                || (data != null && data!!.userinfo == null)
-                || (data != null && data!!.userinfo != null
-                        && (data!!.userinfo!!.nickname.isNullOrEmpty()
-                        || data!!.userinfo!!.avatar.isNullOrEmpty()
-                        || data!!.userinfo!!.avatar!!.contains(Constants.DEFAULT_AVATAR)
-                        || data!!.userinfo!!.gender == 0
-                        || data!!.userinfo!!.birth.isNullOrEmpty()
-                        || data!!.userinfo!!.birth.toLong() == 0L))
-            ) {//个人信息没有填写
-                startActivity<SetInfoActivity>()
-            } else {
-                UserManager.saveUserInfo(data!!)
-                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
-                        Constants.SPNAME
-                    ).getStringSet("checkedLabels").isEmpty()
-                ) {//标签没有选择
-                    startActivity<LabelsActivity>()
-                } else {//跳到主页
-                    AppManager.instance.finishAllActivity()
-                    startActivity<MainActivity>()
-                }
-            }
+            UserManager.startToPersonalInfoActivity(this, nothing, data)
         } else {
             CommonFunction.toast("登录失败！请重试")
         }
     }
 
-    private fun initNotificationConfig() {
-        // 初始化消息提醒
-        NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
-        // 加载状态栏配置
-        var statusBarNotificationConfig = UserPreferences.getStatusConfig()
-        if (statusBarNotificationConfig == null) {
-            statusBarNotificationConfig = DemoCache.getNotificationConfig()
-            UserPreferences.setStatusConfig(statusBarNotificationConfig)
-        }
-        //更新配置
-        NIMClient.updateStatusBarNotificationConfig(statusBarNotificationConfig)
-
-    }
 
 }

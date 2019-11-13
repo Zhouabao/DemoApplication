@@ -3,20 +3,14 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LoginBean
-import com.sdy.jitangapplication.nim.DemoCache
-import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.presenter.VerifyCodePresenter
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
@@ -147,54 +141,12 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
      */
     override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
         if (success) {
-            SPUtils.getInstance(Constants.SPNAME).put("imToken", nothing?.token)
-            SPUtils.getInstance(Constants.SPNAME).put("imAccid", nothing?.account)
-
-            SPUtils.getInstance(Constants.SPNAME).put("qntoken", data?.qntk)
-            SPUtils.getInstance(Constants.SPNAME).put("token", data?.token)
-            SPUtils.getInstance(Constants.SPNAME).put("accid", data?.accid)
-            DemoCache.setAccount(nothing?.account)
-            //初始化消息提醒配置
-            initNotificationConfig()
-
-            if (data != null && data!!.userinfo != null
-                && (data!!.userinfo!!.nickname.isNullOrEmpty() || data!!.userinfo!!.avatar.isNullOrEmpty()
-                        || data!!.userinfo!!.avatar!!.contains(Constants.DEFAULT_AVATAR)
-                        || data!!.userinfo!!.gender == 0 || data!!.userinfo!!.birth.isNullOrEmpty() || data!!.userinfo!!.birth.toLong() == 0L)
-            ) {//个人信息没有填写
-                startActivity<UserNickNameActivity>()
-                finish()
-            } else {
-                UserManager.saveUserInfo(data!!)
-                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
-                        Constants.SPNAME
-                    ).getStringSet("checkedLabels").isEmpty()
-                ) {//标签没有选择
-                    startActivity<LabelsActivity>()
-                } else {//跳到主页
-                    AppManager.instance.finishAllActivity()
-                    startActivity<MainActivity>()
-                }
-            }
+            UserManager.startToPersonalInfoActivity(this,nothing,data)
         } else {
             CommonFunction.toast("登录失败！请重试")
             loadingDialog.dismiss()
             inputVerifyCode.isEnabled = true
         }
-    }
-
-    private fun initNotificationConfig() {
-        // 初始化消息提醒
-        NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
-        // 加载状态栏配置
-        var statusBarNotificationConfig = UserPreferences.getStatusConfig()
-        if (statusBarNotificationConfig == null) {
-            statusBarNotificationConfig = DemoCache.getNotificationConfig()
-            UserPreferences.setStatusConfig(statusBarNotificationConfig)
-        }
-        //更新配置
-        NIMClient.updateStatusBarNotificationConfig(statusBarNotificationConfig)
-
     }
 
     override fun onError(text: String) {

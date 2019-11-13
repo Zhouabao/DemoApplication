@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter
 
 import android.util.Log
+import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -31,7 +32,8 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
             "type" to type,
             "password" to "",
             "code" to verifyCode,
-            "wxcode" to wxcode
+            "wxcode" to wxcode,
+            "device_id" to SmAntiFraud.getDeviceId()
         )
         RetrofitFactory.instance.create(Api::class.java)
             .loginOrAlloc(UserManager.getSignParams(params))
