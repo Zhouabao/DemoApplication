@@ -659,6 +659,13 @@ interface Api {
     @FormUrlEncoded
     @POST("Tidings/checkGreetSendMsg${Constants.END_BASE_URL}")
     fun checkGreetSendMsg(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<CheckGreetSendBean?>>
+
+    /**
+     * 发消息请求服务器
+     */
+    @FormUrlEncoded
+    @POST("Tidings/sendMsgRequest${Constants.END_BASE_URL}")
+    fun sendMsgRequest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
     /*--------------------------------会员充值---------------------------------*/
 
     /**

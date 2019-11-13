@@ -29,6 +29,7 @@ import com.netease.nim.uikit.common.fragment.TFragment;
 import com.netease.nim.uikit.impl.NimUIKitImpl;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -343,10 +344,27 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     @Override
     public boolean sendMessage(IMMessage message) {
+        Log.d("sendMessage", ".....");
         if (isAllowSendMessage(message)) {
             appendPushConfig(message);
             // send message to server and save to db
-            NIMClient.getService(MsgService.class).sendMessage(message, false);
+            IMMessage finalMessage = message;
+            NIMClient.getService(MsgService.class).sendMessage(message, false).setCallback(new RequestCallback<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    sendMsgRequest(finalMessage.getContent(),sessionId);
+                }
+
+                @Override
+                public void onFailed(int i) {
+
+                }
+
+                @Override
+                public void onException(Throwable throwable) {
+
+                }
+            });
             messageListPanel.onMsgSend(message);
             //var type: Int = 0,//类型1，新消息 2，倒计时 3，普通样式 4 过期
             if (!sessionId.equals(Constants.ASSISTANT_ACCID) && nimBean != null && !nimBean.getIsfriend()) {
@@ -724,6 +742,33 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     }
                 });
 
+    }
+
+
+    private void sendMsgRequest(String content, String target_accid) {
+        HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
+        params.put("target_accid", target_accid);
+        params.put("content", content);
+        RetrofitFactory.Companion.getInstance().create(Api.class)
+                .sendMsgRequest(UserManager.INSTANCE.getSignParams(params))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new rx.Observer<BaseResp<Object>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(BaseResp<Object> nimBeanBaseResp) {
+
+                    }
+                });
     }
 
 
