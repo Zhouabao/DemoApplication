@@ -21,8 +21,4 @@ interface MatchView : BaseView {
 
     fun onGetLikeResult(success: Boolean, data: BaseResp<StatusBean?>, matchBean: MatchBean)
 
-    fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean)
-
-
-    fun onGreetSResult(greetBean: Boolean, code: Int, matchBean: MatchBean)
 }

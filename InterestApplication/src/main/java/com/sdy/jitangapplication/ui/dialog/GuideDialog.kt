@@ -111,11 +111,19 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             useCl.isVisible = false
         }
         guideDislike.onClick {
+            //关闭上滑
+//            guideCl.isVisible = false
+//            guideLike.isVisible = false
+//            guideDislike.isVisible = false
+//            guideChathi.isVisible = true
+//            useCl.isVisible = false
+
+
             guideCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            guideChathi.isVisible = true
-            useCl.isVisible = false
+            guideChathi.isVisible = false
+            useCl.isVisible = true
         }
 
         guideChathi.onClick {

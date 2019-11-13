@@ -6,6 +6,11 @@ import android.view.Gravity
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
+import com.sdy.jitangapplication.ui.dialog.SayHiDialog
+import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
@@ -27,7 +32,45 @@ object CommonFunction {
     fun toast(msg: String) {
         ToastUtils.setBgColor(Color.parseColor("#80000000"))
         ToastUtils.setMsgColor(Color.WHITE)
-        ToastUtils.setGravity(Gravity.CENTER,0,0)
+        ToastUtils.setGravity(Gravity.CENTER, 0, 0)
         ToastUtils.showShort(msg)
+    }
+
+
+    /**
+     * 打招呼通用逻辑
+     */
+    fun commonGreet(
+        context: Context,
+        isfriend: Boolean,
+        greet_switch: Boolean,//接收招呼开关   true  接收招呼      false   不接受招呼
+        greet_state: Boolean,// 认证招呼开关   true  开启认证      flase   不开启认证
+        targetAccid: String,
+        targetNickName: String,
+        isgreeted: Boolean = false//招呼是否有效
+    ) {
+        if (isfriend || isgreeted) {
+            ChatActivity.start(context, targetAccid)
+        } else {
+            if (UserManager.getLightingCount() > 0) {
+                if (!greet_switch) {
+                    toast("对方已关闭招呼功能")
+                } else {
+                    if (greet_state && UserManager.isUserVerify() != 1) {
+                        HarassmentDialog(context, HarassmentDialog.CHATHI).show()
+                    } else {
+                        SayHiDialog(targetAccid, targetNickName, context).show()
+                    }
+                }
+            } else {
+                if (!UserManager.isUserVip()) {
+                    ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, context, ChargeVipDialog.PURCHASE_VIP).show()
+                } else {
+                    ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, context, ChargeVipDialog.PURCHASE_GREET_COUNT).show()
+                }
+            }
+
+
+        }
     }
 }

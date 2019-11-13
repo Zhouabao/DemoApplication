@@ -22,15 +22,6 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.msg.MessageBuilder
-import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
-import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -41,13 +32,9 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshCommentEvent
 import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
-import com.sdy.jitangapplication.event.UpdateHiCountEvent
 import com.sdy.jitangapplication.model.AllCommentBean
 import com.sdy.jitangapplication.model.CommentBean
-import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.SquareBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
 import com.sdy.jitangapplication.player.UpdateVoiceTimeThread
@@ -57,7 +44,10 @@ import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.adapter.ListSquareImgsAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListCommentAdapter
 import com.sdy.jitangapplication.ui.adapter.SquareTagAdapter
-import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.ui.dialog.CommentActionDialog
+import com.sdy.jitangapplication.ui.dialog.DeleteDialog
+import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
+import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
@@ -84,7 +74,7 @@ import org.jetbrains.anko.startActivity
  * 广场详情页 包含内容详情以及点赞评论信息
  */
 class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView, View.OnClickListener,
-    OnRefreshListener, OnLoadMoreListener, ModuleProxy {
+    OnRefreshListener, OnLoadMoreListener {
     private val TAG = SquareCommentDetailActivity::class.java.simpleName
 
     //评论数据
@@ -209,8 +199,15 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             squareChatBtn1.isVisible =
                 !(UserManager.getAccid() == squareBean!!.accid || !squareBean!!.greet_switch)
         squareChatBtn1.onClick {
-            squareChatBtn1.isEnabled = false
-            mPresenter.greetState(UserManager.getToken(), UserManager.getAccid(), squareBean?.accid ?: "")
+            CommonFunction.commonGreet(
+                this,
+                squareBean?.isfriend ?: false,
+                squareBean?.greet_switch ?: false,
+                squareBean?.greet_state ?: false,
+                squareBean?.accid ?: "",
+                squareBean?.nickname ?: "",
+                squareBean?.isgreeted ?: false
+            )
         }
         squareUserIv1.onClick {
             if ((squareBean?.accid ?: "") != UserManager.getAccid())
@@ -1114,117 +1111,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         return super.dispatchTouchEvent(ev)
     }
-/*--------------------------消息代理------------------------*/
-
-    /** todo
-     *  点击聊天
-     *  1. 好友 直接聊天 已经匹配过了 ×
-     *
-     *  2. 不是好友 判断是否打过招呼
-     *
-     *     2.1 打过招呼 且没有过期  直接直接聊天
-     *
-     *     2.2 未打过招呼 判断招呼剩余次数
-     *
-     *         2.2.1 有次数 直接打招呼
-     *
-     *         2.2.2 无次数 其他操作--如:请求充值会员
-     */
-
-    override fun onGreetSResult(b: Boolean) {
-        if (b) {
-            sendChatHiMessage()
-        }
-    }
 
 
-//todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
-//1.首先判断是否有次数，
-// 若有 就打招呼
-// 若无 就弹充值
-    /**
-     * 判断当前能否打招呼
-     */
-    override fun onGreetStateResult(greetBean: GreetBean?) {
-        if (greetBean != null && greetBean.lightningcnt != -1) {
-            if (greetBean.isfriend || greetBean.isgreet) {
-                ChatActivity.start(this, squareBean?.accid ?: "")
-            } else {
-                UserManager.saveLightingCount(greetBean.lightningcnt)
-                UserManager.saveCountDownTime(greetBean.countdown)
-                if (greetBean.lightningcnt > 0) {
-                    mPresenter.greet(
-                        UserManager.getToken(),
-                        UserManager.getAccid(),
-                        (squareBean?.accid ?: ""),
-                        UserManager.getGlobalLabelId()
-                    )
-                } else {
-                    ChargeVipDialog(
-                        ChargeVipDialog.DOUBLE_HI, this, if (UserManager.isUserVip()) {
-                            ChargeVipDialog.PURCHASE_GREET_COUNT
-                        } else {
-                            ChargeVipDialog.PURCHASE_VIP
-                        }
-                    ).show()
-                }
-            }
-        }
-        squareChatBtn1.isEnabled = true
-
-    }
-
-
-    private fun sendChatHiMessage() {
-        val container = Container(this, squareBean?.accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(
-            UserManager.getGlobalLabelName(),
-            ChatHiAttachment.CHATHI_HI
-        )
-        val message = MessageBuilder.createCustomMessage(
-            squareBean?.accid,
-            SessionTypeEnum.P2P,
-            "",
-            chatHiAttachment,
-            CustomMessageConfig()
-        )
-        container.proxy.sendMessage(message)
-    }
-
-    override fun sendMessage(msg: IMMessage): Boolean {
-        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
-            RequestCallback<Void?> {
-            override fun onSuccess(param: Void?) {
-                SayHiDialog(squareBean?.accid?:"",squareBean?.nickname?:"",this@SquareCommentDetailActivity).show()
-                //发送通知修改招呼次数
-                UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
-                EventBus.getDefault().postSticky(UpdateHiCountEvent())
-            }
-
-            override fun onFailed(code: Int) {
-
-            }
-
-            override fun onException(exception: Throwable) {
-            }
-        })
-        return true
-    }
-
-    override fun onInputPanelExpand() {
-
-    }
-
-    override fun shouldCollapseInputPanel() {
-
-    }
-
-    override fun isLongClickEnabled(): Boolean {
-        return false
-    }
-
-    override fun onItemFooterClick(message: IMMessage?) {
-
-    }
 
 }

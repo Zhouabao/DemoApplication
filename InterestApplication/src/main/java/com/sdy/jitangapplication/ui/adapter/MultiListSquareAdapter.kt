@@ -1,50 +1,24 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.app.Activity
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.kotlin.base.data.net.RetrofitFactory
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.rx.BaseException
-import com.kotlin.base.rx.BaseSubscriber
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.msg.MessageBuilder
-import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
-import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.UpdateHiCountEvent
-import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.SquareBean
-import com.sdy.jitangapplication.model.StatusBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
-import com.sdy.jitangapplication.ui.dialog.SayHiDialog
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
@@ -56,7 +30,6 @@ import kotlinx.android.synthetic.main.item_list_square_video.view.*
 import kotlinx.android.synthetic.main.layout_square_list_bottom.view.*
 import kotlinx.android.synthetic.main.layout_square_list_top.view.*
 import kotlinx.android.synthetic.main.switch_video.view.*
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 
@@ -74,7 +47,7 @@ class MultiListSquareAdapter(
     var playPosition: Int = 0,
     var resetAudioListener: ResetAudioListener? = null
 ) :
-    BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data), ModuleProxy {
+    BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data){
     companion object {
         val TAG = "RecyclerView2List"
     }
@@ -87,7 +60,6 @@ class MultiListSquareAdapter(
         addItemType(SquareBean.AUDIO, R.layout.item_list_square_audio)
     }
 
-    private var clickPos = -1
 
     override fun convert(holder: BaseViewHolder, item: SquareBean) {
         val drawable1 =
@@ -118,14 +90,8 @@ class MultiListSquareAdapter(
             if (resetAudioListener != null) {
                 resetAudioListener!!.resetAudioState()
             }
-            clickPos = holder.layoutPosition - headerLayoutCount
+            CommonFunction.commonGreet(mContext,item.isfriend,item.greet_switch,item.greet_state,item.accid,item.nickname?:"",item.isgreeted)
 
-            if (item.isfriend) {
-                ChatActivity.start(mContext as Activity, item.accid)
-                clickPos = -1
-            } else {
-                greetState(item.accid, holder.itemView.squareChatBtn1)
-            }
 
         }
 
@@ -314,186 +280,6 @@ class MultiListSquareAdapter(
 
     }
 
-
-    /*----------------------------打招呼请求逻辑--------------------------------*/
-//todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
-    //1.首先判断是否有次数，
-    // 若有 就打招呼
-    // 若无 就弹充值
-    /**
-     * 判断当前能否打招呼
-     */
-    private fun greetState(target_accid: String, btn: ImageView) {
-        if (!NetworkUtils.isConnected()) {
-            CommonFunction.toast("请连接网络！")
-            return
-        }
-
-        val params = UserManager.getBaseParams()
-        params["target_accid"] = target_accid
-        RetrofitFactory.instance.create(Api::class.java)
-            .greetState(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(null) {
-                override fun onStart() {
-
-                    btn.isEnabled = false
-                }
-
-                override fun onNext(t: BaseResp<GreetBean?>) {
-                    if (t.code == 200) {
-                        val greetBean = t.data
-                        if (greetBean != null && greetBean.lightningcnt != -1) {
-                            if (greetBean.isfriend || greetBean.isgreet) {
-                                ChatActivity.start(mContext as Activity, target_accid ?: "")
-                                clickPos = -1
-                            } else {
-                                UserManager.saveLightingCount(greetBean.lightningcnt)
-                                UserManager.saveCountDownTime(greetBean.countdown)
-                                if (greetBean.lightningcnt > 0) {
-                                    greet(target_accid)
-                                } else {
-                                    ChargeVipDialog(
-                                        ChargeVipDialog.DOUBLE_HI,
-                                        mContext,
-                                        if (UserManager.isUserVip()) {
-                                            ChargeVipDialog.PURCHASE_GREET_COUNT
-                                        } else {
-                                            ChargeVipDialog.PURCHASE_VIP
-                                        }
-                                    ).show()
-                                }
-                            }
-                        } else {
-                            CommonFunction.toast(t.msg)
-                        }
-                    } else {
-                        CommonFunction.toast(t.msg)
-                    }
-                    btn.isEnabled = true
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(mContext).show()
-                    }
-                    btn.isEnabled = true
-                }
-            })
-    }
-
-    /** todo
-     *  点击聊天
-     *  1. 好友 直接聊天 已经匹配过了 ×
-     *
-     *  2. 不是好友 判断是否打过招呼
-     *
-     *     2.1 打过招呼 且没有过期  直接直接聊天
-     *
-     *     2.2 未打过招呼 判断招呼剩余次数
-     *
-     *         2.2.1 有次数 直接打招呼
-     *
-     *         2.2.2 无次数 其他操作--如:请求充值会员
-     */
-
-    /**
-     * 打招呼
-     */
-    fun greet(target_accid: String) {
-        if (!NetworkUtils.isConnected()) {
-            CommonFunction.toast("请连接网络！")
-            return
-        }
-
-        val params = UserManager.getBaseParams()
-        params["tag_id"] = UserManager.getGlobalLabelId()
-        params["target_accid"] = target_accid
-        RetrofitFactory.instance.create(Api::class.java)
-            .greet(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
-                override fun onNext(t: BaseResp<StatusBean?>) {
-                    if (t.code == 200) {
-                        onGreetSResult(true)
-                    } else if (t.code == 403) {//登录异常
-                        UserManager.startToLogin(mContext as Activity)
-                    } else if (t.code == 401) {
-                        HarassmentDialog(mContext, HarassmentDialog.CHATHI).show() //开启招呼提示
-                    } else {
-                        CommonFunction.toast(t.msg)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    CommonFunction.toast(mContext.getString(R.string.service_error))
-                }
-            })
-    }
-
-    /**
-     * 打招呼结果（先请求服务器）
-     */
-    fun onGreetSResult(greetBean: Boolean) {
-        if (greetBean) {
-            sendChatHiMessage(mData[clickPos])
-        }
-    }
-
-    /*--------------------------消息代理------------------------*/
-
-    private fun sendChatHiMessage(squareBean: SquareBean) {
-        Log.d("OkHttp", "${squareBean.accid}====================")
-        val container = Container(mContext as Activity, squareBean?.accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(
-            UserManager.getGlobalLabelName(),
-            ChatHiAttachment.CHATHI_HI
-        )
-        val message = MessageBuilder.createCustomMessage(
-            squareBean.accid,
-            SessionTypeEnum.P2P,
-            "",
-            chatHiAttachment,
-            CustomMessageConfig()
-        )
-        container.proxy.sendMessage(message)
-    }
-
-    override fun sendMessage(msg: IMMessage): Boolean {
-        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
-            RequestCallback<Void?> {
-            override fun onSuccess(param: Void?) {
-                SayHiDialog(mData[clickPos].accid, mData[clickPos].nickname ?: "", mContext).show()
-                //发送通知修改招呼次数
-                UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
-                EventBus.getDefault().postSticky(UpdateHiCountEvent())
-                clickPos = -1
-            }
-
-            override fun onFailed(code: Int) {
-
-            }
-
-            override fun onException(exception: Throwable) {
-
-            }
-        })
-        return true
-    }
-
-    override fun onInputPanelExpand() {
-
-    }
-
-    override fun shouldCollapseInputPanel() {
-
-    }
-
-    override fun isLongClickEnabled(): Boolean {
-        return false
-    }
-
-    override fun onItemFooterClick(message: IMMessage?) {
-
-    }
 
 
     interface ResetAudioListener {

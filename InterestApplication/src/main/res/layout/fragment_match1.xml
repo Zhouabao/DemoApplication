@@ -26,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp"/>
 
-            <com.sdy.jitangapplication.widgets.cardstackview.CardStackView
+            <com.yuyakaido.android.cardstackview.CardStackView
                     android:id="@+id/card_stack_view"
                     android:clipToPadding="false"
                     android:layout_above="@id/actionCl"

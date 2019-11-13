@@ -16,7 +16,6 @@ import com.kotlin.base.ui.fragment.BaseMvpFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateLabelEvent
-import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.StatusBean
@@ -43,12 +42,6 @@ import org.jetbrains.anko.support.v4.toast
  */
 class MatchFragment : BaseMvpFragment<MatchPresenter>(), MatchView, View.OnClickListener,
     RenRenCallback.OnSwipeListener {
-
-    override fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean) {
-    }
-
-    override fun onGreetSResult(greetBean: Boolean, code: Int, matchBean: MatchBean) {
-    }
 
 
     //用户适配器

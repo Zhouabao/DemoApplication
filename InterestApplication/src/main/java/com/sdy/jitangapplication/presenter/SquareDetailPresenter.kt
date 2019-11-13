@@ -10,11 +10,8 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.AllCommentBean
-import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.SquareBean
-import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.SquareDetailView
-import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
@@ -302,66 +299,4 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
             })
     }
 
-
-    /**
-     * 打招呼
-     */
-    fun greet(token: String, accid: String, target_accid: String, tag_id: Int) {
-        if (!checkNetWork()) {
-            return
-        }
-
-        val params = UserManager.getBaseParams()
-        params["tag_id"]= tag_id
-        params["target_accid"]= target_accid
-        RetrofitFactory.instance.create(Api::class.java)
-            .greet(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
-                override fun onNext(t: BaseResp<StatusBean?>) {
-                    if (t.code == 200) {
-                        mView.onGreetSResult(true)
-                    } else if (t.code == 401) {
-                        HarassmentDialog(context, HarassmentDialog.CHATHI).show()
-                    } else {
-                        CommonFunction.toast(t.msg)
-                        mView.onGreetSResult(false)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onError(context.getString(R.string.service_error))
-                }
-            })
-    }
-
-
-    /**
-     * 判断当前能否打招呼
-     */
-    fun greetState(token: String, accid: String, target_accid: String) {
-
-        val params = UserManager.getBaseParams()
-        params["target_accid"] = target_accid
-        RetrofitFactory.instance.create(Api::class.java)
-            .greetState(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(mView) {
-                override fun onNext(t: BaseResp<GreetBean?>) {
-                    if (t.code == 200) {
-                        mView.onGreetStateResult(t.data)
-                    } else {
-                        mView.onGreetStateResult(t.data)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onGreetStateResult(null)
-                }
-            })
-    }
 }

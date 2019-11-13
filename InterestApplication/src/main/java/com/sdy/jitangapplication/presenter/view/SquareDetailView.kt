@@ -1,10 +1,9 @@
 package com.sdy.jitangapplication.presenter.view
 
-import com.sdy.jitangapplication.model.AllCommentBean
-import com.sdy.jitangapplication.model.GreetBean
-import com.sdy.jitangapplication.model.SquareBean
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.AllCommentBean
+import com.sdy.jitangapplication.model.SquareBean
 
 /**
  *    author : ZFM
@@ -34,7 +33,5 @@ interface SquareDetailView : BaseView {
 
     fun onGetSquareInfoResults(data: SquareBean?)
 
-    fun onGreetSResult(b: Boolean)
 
-    fun onGreetStateResult(data: GreetBean?)
 }

@@ -496,26 +496,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             // 若无 就弹充值
             R.id.detailUserChatBtn -> {
                 if (matchBean != null)
-                    if (matchBean!!.isfriend == 1 || matchBean!!.isgreeted) {//好友直接聊天或者招呼有效
-                        ChatActivity.start(this, matchBean?.accid ?: "")
-                    } else {
-                        if (UserManager.getLightingCount() == 0) {//没有打招呼次数就弹充值
-                            ChargeVipDialog(
-                                ChargeVipDialog.DOUBLE_HI, this,
-                                if (UserManager.isUserVip()) {
-                                    ChargeVipDialog.PURCHASE_GREET_COUNT
-                                } else {
-                                    ChargeVipDialog.PURCHASE_VIP
-                                }
-                            ).show()
-                        } else {
-                            mPresenter.greetState(
-                                UserManager.getToken(),
-                                UserManager.getAccid(),
-                                matchBean?.accid ?: ""
-                            )
-                        }
-                    }
+                    CommonFunction.commonGreet(
+                        this,
+                        matchBean!!.isfriend == 1,
+                        matchBean!!.greet_switch,
+                        matchBean!!.greet_state,
+                        matchBean!!.accid,
+                        matchBean!!.nickname?:"",
+                        matchBean!!.isgreeted
+                    )
             }
 
             R.id.backBtn1,
@@ -568,44 +557,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
     }
 
-    //次数用尽弹窗
-//    private val countDownDialog by lazy { CountDownChatHiDialog(this) }
-
-    /**
-     *  点击聊天
-     *
-     *  判断是否是好友，如果是好友，直接聊天，
-     *                 若不是好友，判断剩余次数
-     *                                有次数 直接打招呼
-     *                                无次数 其他操作--如:请求充值会员
-     */
-    override fun onGreetStateResult(data: GreetBean?) {
-        if (data != null && data.lightningcnt != -1) {
-            updateLightCount(data.lightningcnt, data.countdown)
-            if (data.isfriend || data.isgreet) {
-                ChatActivity.start(this, matchBean?.accid ?: "")
-            } else {
-                if (data.lightningcnt > 0) {
-                    mPresenter.greet(
-                        UserManager.getToken(),
-                        UserManager.getAccid(),
-                        (matchBean?.accid ?: ""),
-                        UserManager.getGlobalLabelId()
-                    )
-                } else {
-                    ChargeVipDialog(
-                        ChargeVipDialog.DOUBLE_HI, this, if (UserManager.isUserVip()) {
-                            ChargeVipDialog.PURCHASE_GREET_COUNT
-                        } else {
-                            ChargeVipDialog.PURCHASE_VIP
-                        }
-                    ).show()
-                }
-            }
-        } else {
-            CommonFunction.toast("请求失败，请重试")
-        }
-    }
 
     /**
      * 更新本地的招呼次数
@@ -660,16 +611,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
     }
 
-    /**
-     * 打招呼结果（先请求服务器）
-     */
-    override fun onGreetsResult(success: Boolean) {
-        if (success) {
-            matchBean!!.isgreeted = true
-            updateLightCount(UserManager.getLightingCount() - 1, -1)
-            sendChatHiMessage(ChatHiAttachment.CHATHI_HI)
-        }
-    }
+
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -704,7 +646,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 if (msg.attachment is ChatHiAttachment) {
                     if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
                         SayHiDialog(matchBean!!.accid, matchBean!!.nickname ?: "", this@MatchDetailActivity).show()
-                    }else {
+                    } else {
                         startActivity<MatchSucceedActivity>(
                             "avator" to matchBean!!.avatar,
                             "nickname" to matchBean!!.nickname,

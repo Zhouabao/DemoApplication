@@ -32,14 +32,13 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.StatusBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
@@ -47,7 +46,7 @@ import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.GotoVerifyDialog
-import com.sdy.jitangapplication.widgets.cardstackview.*
+import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_match1.*
 import org.greenrobot.eventbus.EventBus
@@ -131,7 +130,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
         retryBtn.setOnClickListener(this)
         btnChat.setOnClickListener(this)
-        btnChat.setOnClickListener(this)
 
         initialize()
 
@@ -197,11 +195,13 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     override fun onClick(view: View) {
         when (view.id) {
             R.id.btnChat -> {
-                SayHiDialog(
+                CommonFunction.commonGreet(
+                    activity!!, matchUserAdapter.data[manager.topPosition].isfriend == 1,
+                    matchUserAdapter.data[manager.topPosition].greet_switch,
+                    matchUserAdapter.data[manager.topPosition].greet_state,
                     matchUserAdapter.data[manager.topPosition].accid,
-                    matchUserAdapter.data[manager.topPosition].nickname ?: "",
-                    activity!!
-                ).show()
+                    matchUserAdapter.data[manager.topPosition].nickname ?: ""
+                )
 
 //                if (UserManager.getLightingCount() <= 0) {
 //                    ChargeVipDialog(
@@ -229,59 +229,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         EventBus.getDefault().unregister(this)
     }
 
-
-    /**
-     *  点击聊天
-     *    未打过招呼 判断招呼剩余次数
-     *
-     *         2.2.1 有次数 直接打招呼
-     *
-     *         2.2.2 无次数 其他操作--如:请求充值会员
-     */
-    override fun onGreetStateResult(greetBean: GreetBean?, matchBean: MatchBean) {
-        if (greetBean != null && greetBean.lightningcnt != -1) {
-            if (greetBean.isfriend || greetBean.isgreet) {
-                ChatActivity.start(activity!!, matchBean.accid ?: "")
-                btnChat.isEnabled = true
-            } else {
-                if (greetBean.lightningcnt > 0) {
-                    mPresenter.greet(
-                        UserManager.getToken(),
-                        UserManager.getAccid(),
-                        matchBean.accid,
-                        UserManager.getGlobalLabelId(),
-                        matchBean
-                    )
-                } else {
-                    card_stack_view.rewind()
-                    ChargeVipDialog(
-                        ChargeVipDialog.DOUBLE_HI, activity!!, if (UserManager.isUserVip()) {
-                            ChargeVipDialog.PURCHASE_GREET_COUNT
-                        } else {
-                            ChargeVipDialog.PURCHASE_VIP
-                        }
-                    ).show()
-
-                    btnChat.isEnabled = true
-                }
-            }
-        } else {
-            card_stack_view.rewind()
-            btnChat.isEnabled = true
-        }
-    }
-
-    /**
-     * 打招呼结果（先请求服务器）
-     */
-    override fun onGreetSResult(greetBean: Boolean, code: Int, matchBean: MatchBean) {
-        btnChat.isEnabled = true
-        if (greetBean) {
-            sendChatHiMessage(ChatHiAttachment.CHATHI_HI, matchBean)
-        } else {
-            card_stack_view.rewind()
-        }
-    }
 
     /**
      * 匹配列表数据
@@ -548,6 +495,15 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         tvLeftChatTime.text = "${UserManager.getLightingCount()}"
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateCardEvent(event: GreetEvent) {
+        if (event.context is MainActivity)
+            if (event.success) {
+                card_stack_view.swipe()
+            } else {
+               // card_stack_view.rewind()
+            }
+    }
     /*---------------------卡片参数和方法------------------------------*/
 
     private fun initialize() {
@@ -564,9 +520,10 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         //横向纵向的旋转角度
         manager.setMaxDegree(5F)
         //滑动的方向
-        manager.setDirections(mutableListOf(Direction.Left, Direction.Right, Direction.Top))
+//        manager.setDirections(mutableListOf(Direction.Left, Direction.Right, Direction.Top))
+        manager.setDirections(Direction.HORIZONTAL)
         manager.setCanScrollHorizontal(true)
-        manager.setCanScrollVertical(true)
+        manager.setCanScrollVertical(false)
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
 
@@ -662,39 +619,39 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 animation_like.layoutParams = params
             }
             //上滑时加载动画
-            Direction.Top -> {
-                //重置左边、上边的距离
-                val paramsDisLike = animation_dislike.layoutParams as RelativeLayout.LayoutParams
-                paramsDisLike.width = 0
-                paramsDisLike.height = 0
-                animation_dislike.layoutParams = paramsDisLike
-                animation_dislike.alpha = 0F
-
-                val paramsLike = animation_like.layoutParams as RelativeLayout.LayoutParams
-                paramsLike.width = 0
-                paramsLike.height = 0
-                animation_like.layoutParams = paramsLike
-                animation_like.alpha = 0F
-
-
-
-
-                animation_chathi.alpha = ratio
-                val params = animation_chathi.layoutParams as RelativeLayout.LayoutParams
-//                params.width = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
-//                params.height = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
-                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.topMargin =
-                    ((ScreenUtils.getScreenHeight() / 2F * ratio) - SizeUtils.dp2px(126F) - params.height / 2F).toInt()
-                Log.d(
-                    "CardStackView",
-                    "topMargin= ${params.topMargin}, getScreenHeight = ${ScreenUtils.getScreenHeight()}"
-                )
-
-                animation_chathi.layoutParams = params
-
-            }
+//            Direction.Top -> {
+//                //重置左边、上边的距离
+//                val paramsDisLike = animation_dislike.layoutParams as RelativeLayout.LayoutParams
+//                paramsDisLike.width = 0
+//                paramsDisLike.height = 0
+//                animation_dislike.layoutParams = paramsDisLike
+//                animation_dislike.alpha = 0F
+//
+//                val paramsLike = animation_like.layoutParams as RelativeLayout.LayoutParams
+//                paramsLike.width = 0
+//                paramsLike.height = 0
+//                animation_like.layoutParams = paramsLike
+//                animation_like.alpha = 0F
+//
+//
+//
+//
+//                animation_chathi.alpha = ratio
+//                val params = animation_chathi.layoutParams as RelativeLayout.LayoutParams
+////                params.width = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
+////                params.height = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
+//                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+//                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+//                params.topMargin =
+//                    ((ScreenUtils.getScreenHeight() / 2F * ratio) - SizeUtils.dp2px(126F) - params.height / 2F).toInt()
+//                Log.d(
+//                    "CardStackView",
+//                    "topMargin= ${params.topMargin}, getScreenHeight = ${ScreenUtils.getScreenHeight()}"
+//                )
+//
+//                animation_chathi.layoutParams = params
+//
+//            }
 
         }
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
@@ -738,14 +695,19 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 updateLeftCountStatus()
 
             }
-        } else if (direction == Direction.Top) {//上滑打招呼
-            mPresenter.greetState(
-                UserManager.getToken(),
-                UserManager.getAccid(),
-                (matchUserAdapter.data[manager.topPosition - 1].accid ?: ""),
-                matchUserAdapter.data[manager.topPosition - 1]
-            )
         }
+//        } else if (direction == Direction.Top) {//上滑打招呼
+//            val bean = matchUserAdapter.data[manager.topPosition - 1]
+//            CommonFunction.commonGreet(
+//                activity!!,
+//                bean.isfriend == 1,
+//                bean.greet_switch,
+//                bean.greet_state,
+//                bean.accid,
+//                bean.nickname ?: "",
+//                bean.isgreeted
+//            )
+//        }
 
         //如果已经只剩5张了就请求数据(预加载).
         if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {
@@ -768,8 +730,13 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     override fun onCardAppeared(view: View?, position: Int) {
         Log.d("CardStackView", "onCardAppeared: ($position)")
         btnChat.isEnabled = matchUserAdapter.data[position].greet_switch
-        tvLeftChatTime.isVisible = matchUserAdapter.data[position].greet_switch
-        ivChatTime.isVisible = matchUserAdapter.data[position].greet_switch
+        if (matchUserAdapter.data[position].greet_switch) {
+            tvLeftChatTime.visibility = View.VISIBLE
+            ivChatTime.visibility = View.VISIBLE
+        } else {
+            tvLeftChatTime.visibility = View.INVISIBLE
+            ivChatTime.visibility = View.INVISIBLE
+        }
 
     }
 
