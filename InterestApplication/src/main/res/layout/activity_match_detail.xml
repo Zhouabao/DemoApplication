@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.MatchDetailActivity">
+
+    <com.kennyc.view.MultiStateView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/stateview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:msv_animateViewChanges="false"
+            app:msv_emptyView="@layout/empty_layout"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="loading"
+            tools:context=".ui.activity.MatchDetailActivity">
+
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/userContent"
+                android:layout_width="match_parent"
+                android:fitsSystemWindows="true"
+                android:visibility="gone"
+                android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/userAppbar"
+                    android:layout_width="match_parent"
+                    android:background="@color/colorWhite"
+                    android:layout_height="wrap_content">
+
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                        android:id="@+id/userCollapsingTitle"
+                        android:layout_width="match_parent"
+                        android:fitsSystemWindows="true"
+                        android:layout_height="match_parent"
+                        android:minHeight="56dp"
+                        app:collapsedTitleGravity="left"
+                        app:collapsedTitleTextAppearance="@style/matchdetailTitleCollpseStyle"
+                        app:contentScrim="@color/colorTransparent"
+                        app:expandedTitleGravity="center"
+                        app:expandedTitleMarginEnd="64dp"
+                        app:expandedTitleMarginStart="48dp"
+                        app:expandedTitleTextAppearance="@style/matchdetailTitleExpandStyle"
+                        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                    <FrameLayout
+                            android:id="@+id/cl1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        <!--照片系列布局-->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/clPhotos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+
+                            <com.sdy.jitangapplication.widgets.NoScrollViewPager
+                                    android:id="@+id/detailPhotosVp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+
+                            <TextView
+                                    android:id="@+id/btnLast"
+                                    android:layout_width="100dp"
+                                    android:layout_height="0dp"
+                                    app:layout_constraintBottom_toBottomOf="@id/detailPhotosVp"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="@id/detailPhotosVp"/>
+
+                            <TextView
+                                    android:id="@+id/btnNext"
+                                    android:layout_width="100dp"
+                                    android:layout_height="0dp"
+                                    app:layout_constraintBottom_toBottomOf="@id/detailPhotosVp"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="@id/detailPhotosVp"/>
+
+
+                            <LinearLayout
+                                    android:id="@+id/detailPhotosIndicator"
+                                    android:orientation="horizontal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintBottom_toBottomOf="@id/backBtn"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="@id/backBtn"
+                                    />
+
+
+                            <ImageView
+                                    android:id="@+id/backBtn"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginLeft="14dp"
+                                    android:layout_marginTop="15dp"
+                                    android:scaleType="center"
+                                    android:src="@drawable/white_back_icon"
+                                    android:visibility="visible"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/detailThumbRv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="20dp"
+                                    android:padding="3dp"
+                                    android:layout_marginLeft="15dp"
+                                    android:orientation="horizontal"
+                                    android:background="@drawable/shape_rectangle_transparent"
+                                    app:layout_constraintBottom_toBottomOf="@id/detailPhotosVp"
+                                    app:layout_constraintStart_toStartOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/clUserInfo"
+                                android:background="@drawable/shape_retangele_top_16_white"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/clPhotos">
+
+                            <View
+                                    android:id="@+id/clUserInfoTop"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@drawable/rectangle_gray_3dp"
+                                    android:layout_width="45dp"
+                                    android:layout_height="5dp"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+
+                            <TextView
+                                    android:id="@+id/detailUserName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/colorBlackTitle"
+                                    android:textSize="25sp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginLeft="15dp"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/clUserInfoTop"
+                                    tools:text="用户名最大长度是十字"
+                                    />
+
+                            <ImageView
+                                    android:id="@+id/detailUserVip"
+                                    android:src="@drawable/icon_vip"
+                                    android:layout_width="24dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_height="24dp"
+                                    android:visibility="gone"
+                                    app:layout_constraintBottom_toBottomOf="@id/detailUserName"
+                                    app:layout_constraintLeft_toRightOf="@id/detailUserName"
+                                    app:layout_constraintTop_toTopOf="@id/detailUserName"/>
+
+                            <ImageView
+                                    android:id="@+id/detailUserVerify"
+                                    android:src="@drawable/icon_verify"
+                                    android:layout_width="25dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_height="25dp"
+                                    android:visibility="gone"
+                                    app:layout_constraintBottom_toBottomOf="@id/detailUserVip"
+                                    app:layout_constraintLeft_toRightOf="@id/detailUserVip"
+                                    app:layout_constraintTop_toTopOf="@id/detailUserVip"/>
+
+                            <ImageView
+                                    android:id="@+id/moreBtn"
+                                    android:background="@drawable/shape_oval_gray_4def"
+                                    android:src="@drawable/icon_more_white"
+                                    android:layout_width="26dp"
+                                    android:scaleType="centerInside"
+                                    android:elevation="1dp"
+                                    android:layout_height="26dp"
+                                    android:layout_marginRight="15dp"
+                                    app:layout_constraintBottom_toBottomOf="@id/detailUserName"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="@id/detailUserName"/>
+
+                            <TextView
+                                    android:id="@+id/detailUserInfo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/colorGrayText"
+                                    android:textSize="13sp"
+                                    app:layout_constraintStart_toStartOf="@id/detailUserName"
+                                    app:layout_constraintTop_toBottomOf="@id/detailUserName"
+                                    tools:text="24 . 女 . 天秤座 . 100km"/>
+
+                            <TextView
+                                    android:id="@+id/detailUserJob"
+                                    android:visibility="gone"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="17dp"
+                                    android:drawableLeft="@drawable/icon_job_gray"
+                                    android:textColor="@color/colorGrayText"
+                                    android:textSize="14sp"
+                                    android:layout_marginTop="10dp"
+                                    android:drawablePadding="6dp"
+                                    app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                                    app:layout_constraintTop_toBottomOf="@id/detailUserInfo"
+                                    tools:text="资深工程师"/>
+
+                            <com.ctetin.expandabletextviewlibrary.ExpandableTextView
+                                    android:id="@+id/detailUserSign"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_width="0dp"
+                                    android:layout_marginRight="15dp"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/colorBlack"
+                                    android:lineSpacingMultiplier="1.4"
+                                    android:textSize="16sp"
+                                    app:ep_contract_color="@color/colorGrayText"
+                                    app:ep_contract_text="收起"
+                                    app:ep_expand_color="@color/colorGrayText"
+                                    app:ep_expand_text="...展开"
+                                    app:ep_max_line="4"
+                                    app:ep_need_always_showright="true"
+                                    app:ep_need_animation="true"
+                                    app:ep_need_contract="true"
+                                    app:ep_need_expand="true"
+                                    android:paddingBottom="25dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="@id/detailUserName"
+                                    app:layout_constraintTop_toBottomOf="@id/detailUserJob"
+                                    tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。"
+                                    />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </FrameLayout>
+
+                    <LinearLayout
+                            android:fitsSystemWindows="true"
+                            android:id="@+id/detailActionbar"
+                            android:orientation="horizontal"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_height="56dp"
+                            android:background="@color/colorWhite"
+                            app:layout_collapseMode="pin">
+
+                        <ImageView
+                                android:id="@+id/btnBack2"
+                                android:src="@drawable/icon_return"
+                                android:layout_width="wrap_content"
+                                android:paddingLeft="15dp"
+                                android:layout_marginRight="15dp"
+                                android:layout_height="match_parent"/>
+
+                        <TextView
+                                android:id="@+id/titleUsername"
+                                android:text="用户名"
+                                android:textStyle="bold"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="17sp"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"/>
+
+                        <ImageView
+                                android:id="@+id/moreBtn1"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:src="@drawable/icon_more_black"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"/>
+                    </LinearLayout>
+
+
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+                <net.lucode.hackware.magicindicator.MagicIndicator
+                        android:id="@+id/tabUserDettail"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="34dp"
+                        />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+
+            <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/vpUserDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            </androidx.viewpager.widget.ViewPager>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center"
+                    android:background="@drawable/icon_detail_bg1"
+                    android:layout_alignParentBottom="true"
+                    android:layout_height="135dp"
+                    app:layout_anchor="@id/vpUserDetail"
+                    app:layout_anchorGravity="bottom">
+
+                <RelativeLayout
+                        android:id="@+id/detailUserLikeBtn"
+                        android:background="@drawable/shape_rectangle_solid_blue"
+                        android:layout_width="50dp"
+                        android:visibility="gone"
+                        android:layout_marginRight="20dp"
+                        android:layout_height="50dp">
+
+                    <ImageView
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/icon_like_white"
+                            android:layout_width="24dp"
+                            android:layout_height="21dp"/>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:id="@+id/detailUserChatBtn"
+                        android:background="@drawable/gradient_match_detail_red_bg"
+                        android:orientation="horizontal"
+                        android:layout_width="168dp"
+                        android:layout_height="50dp">
+
+                    <ImageView
+                            android:id="@+id/detailUserChatIv"
+                            android:layout_marginLeft="17dp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/icon_flash_white"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"/>
+
+                    <TextView
+                            android:id="@+id/detailUserChatTv"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/colorWhite"
+                            android:text="打个招呼"
+                            android:gravity="center"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <TextView
+                            android:id="@+id/detailUserLeftChatCount"
+                            android:layout_marginRight="17dp"
+                            android:layout_alignParentRight="true"
+                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:textColor="@color/colorOrange"
+                            android:background="@drawable/shape_oval_white"
+                            android:gravity="center"
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:minWidth="21dp"
+                            android:minHeight="21dp"
+                            android:layout_height="wrap_content"
+                            tools:text="31"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    </com.kennyc.view.MultiStateView>
+
+    <LinearLayout
+            android:id="@+id/llBlackContent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageView
+                android:id="@+id/backBtn1"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:scaleType="center"
+                android:src="@drawable/icon_return"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+                android:layout_marginTop="140dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_sad_blacklist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/blackContent"
+                android:layout_marginLeft="33dp"
+                android:layout_marginRight="33dp"
+                android:layout_marginTop="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:lineSpacingMultiplier="1.2"
+                android:gravity="center"
+                android:text="你已将对方拉黑，拉黑状态下，双方均不可查看对方主页，取消拉黑可恢复好友权益"
+                android:textColor="#ff999999"
+                android:textSize="16sp"
+                />
+
+        <Button
+                android:id="@+id/cancelBlack"
+                android:text="取消拉黑"
+                android:layout_marginTop="80dp"
+                android:layout_marginLeft="72dp"
+                android:layout_marginRight="72dp"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@drawable/shape_rectangle_orange_25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+</FrameLayout>

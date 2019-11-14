@@ -254,9 +254,10 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         )
     }
     private var targetAccid = ""
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     fun onListDataEvent(event: ListDataEvent) {
         targetAccid = event.targetAccid
+        params["target_accid"] = targetAccid
         if (event.refresh) {
             adapter.data.clear()
             listRefresh.setNoMoreData(false)
@@ -321,6 +322,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                 listRefresh.finishLoadMore(true)
             }
         } else {
+            listRefresh.finishLoadMore(false)
 //            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
 //            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
 //            adapter.data.clear()

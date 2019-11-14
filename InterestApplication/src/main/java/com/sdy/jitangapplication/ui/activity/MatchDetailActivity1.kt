@@ -3,13 +3,9 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -22,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.google.android.material.appbar.AppBarLayout
+import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -47,27 +43,19 @@ import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.adapter.DetailThumbAdapter
-import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
+import com.sdy.jitangapplication.ui.adapter.MatchDetailLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchImgsPagerAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
-import com.sdy.jitangapplication.ui.fragment.MatchDetailInfomationFragment
-import com.sdy.jitangapplication.ui.fragment.MatchDetailSquareFragment
+import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
+import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import com.umeng.socialize.UMShareAPI
-import kotlinx.android.synthetic.main.activity_match_detail.*
+import kotlinx.android.synthetic.main.activity_match_detail1.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import net.lucode.hackware.magicindicator.ViewPagerHelper
-import net.lucode.hackware.magicindicator.buildins.UIUtil
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
@@ -76,7 +64,7 @@ import java.util.*
 /**
  * 匹配详情页
  */
-class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
+class MatchDetailActivity1 : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
     View.OnClickListener, ModuleProxy {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
@@ -86,6 +74,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     var photos: MutableList<String> = mutableListOf()
     private val photosAdapter by lazy { MatchImgsPagerAdapter(this, photos) }
 
+    private val labelsAdapter by lazy { MatchDetailLabelAdapter(this) }
 
     private val params by lazy {
         hashMapOf(
@@ -110,7 +99,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     companion object {
         @JvmStatic
         fun start(context: Context, fromAccount: String, parPos: Int = -1, childPos: Int = -1) {
-            context.startActivity<MatchDetailActivity>(
+            context.startActivity<MatchDetailActivity1>(
                 "target_accid" to fromAccount,
                 "parPos" to parPos,
                 "childPos" to childPos
@@ -120,7 +109,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_match_detail)
+        setContentView(R.layout.activity_match_detail1)
 
         initView()
 
@@ -147,100 +136,59 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         clUserInfo.layoutParams = paramsClUserInfo
 
 
+
         moreBtn.setOnClickListener(this)
-        moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)
         backBtn.setOnClickListener(this)
         backBtn1.setOnClickListener(this)
-        btnBack2.setOnClickListener(this)
+
+
         //用户的广场预览界面
         detailThumbRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        //用户标签
+        val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
+        manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.CENTER
+        detailLabelRv.layoutManager = manager
 
+        initFragment()
 
-        userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
-            if (Math.abs(verticalOffset) >= (userAppbar.totalScrollRange - SizeUtils.dp2px(60F))) {
-                ScreenUtils.setNonFullScreen(this)
-                detailActionbar.isVisible = true
-            } else {
-                ScreenUtils.setFullScreen(this)
-                detailActionbar.isVisible = false
+        detailSquareSwitchRg.setOnCheckedChangeListener { radioGroup, checkedId ->
+            if (checkedId == R.id.rbList) {
+                changeFragment(1)
+                if (!loadList) {
+                    EventBus.getDefault().post(ListDataEvent(targetAccid, true))
+                }
+                loadList = true
+                currIndex = 1
+            } else if (checkedId == R.id.rbBlock) {
+                changeFragment(0)
+                if (!loadBlock) {
+                    EventBus.getDefault().post(BlockDataEvent(targetAccid, true))
+                }
+                loadBlock = true
+                currIndex = 0
             }
-        })
+        }
 
         //重试
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getUserDetailInfo(params)
-            EventBus.getDefault().post(UpdateSquareEvent())
-
-        }
-    }
-
-
-    //fragment栈管理
-    private val mStack = Stack<Fragment>()
-    private val titles = arrayOf("重叠兴趣 0", "个人信息")
-
-    private fun initIndicator() {
-        tabUserDettail.setBackgroundColor(Color.WHITE)
-        val commonNavigator = CommonNavigator(this)
-        commonNavigator.adapter = object : CommonNavigatorAdapter() {
-            override fun getCount(): Int {
-                return mStack.size
-            }
-
-            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
-                val simplePagerTitleView = ScaleTransitionPagerTitleView(context)
-                simplePagerTitleView.text = titles[index]
-                simplePagerTitleView.minScale = 0.85F
-                simplePagerTitleView.textSize = 20F
-                simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.normalColor = resources.getColor(R.color.colorBlack53)
-                simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlack)
-                simplePagerTitleView.onClick {
-                    vpUserDetail.currentItem = index
-                }
-                return simplePagerTitleView
-            }
-
-            override fun getIndicator(context: Context): IPagerIndicator {
-                val indicator = LinePagerIndicator(context)
-                indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
-                indicator.lineWidth = UIUtil.dip2px(context, 32.0).toFloat()
-                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
-                indicator.startInterpolator = AccelerateInterpolator()
-                indicator.endInterpolator = DecelerateInterpolator(1.0f)
-                indicator.setColors(resources.getColor(R.color.colorOrange))
-                return indicator
+            if (currIndex == 0) {
+                EventBus.getDefault().post(BlockDataEvent(targetAccid, true))
+            } else {
+                EventBus.getDefault().post(ListDataEvent(targetAccid, true))
             }
         }
-        tabUserDettail.navigator = commonNavigator
-        ViewPagerHelper.bind(tabUserDettail, vpUserDetail)
     }
-
-    /*
-      初始化Fragment栈管理
-   */
-    private fun initFragment() {
-        mStack.add(MatchDetailSquareFragment(matchBean!!, targetAccid))
-        mStack.add(MatchDetailInfomationFragment(matchBean!!))
-        vpUserDetail.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
-        initIndicator()
-        vpUserDetail.currentItem = 0
-    }
-
 
     private fun initData() {
-        initFragment()
-//        EventBus.getDefault().post(UpdateSquareEvent())
-
         detailUserName.text = matchBean!!.nickname
-        titleUsername.text = matchBean!!.nickname
         detailUserInfo.text =
-            "${matchBean!!.age} . ${if (matchBean!!.gender == 1) "男" else "女"} . ${matchBean!!.constellation} . ${matchBean!!.distance}"
+            "${matchBean!!.age} / ${if (matchBean!!.gender == 1) "男" else "女"} / ${matchBean!!.constellation} / ${matchBean!!.distance}"
         detailUserJob.text = "${matchBean!!.jobname}"
         detailUserSign.apply {
             text = "${matchBean!!.sign}"
@@ -278,6 +226,17 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         photosAdapter.notifyDataSetChanged()
         setViewpagerAndIndicator()
 
+        //用户标签
+        detailLabelRv.adapter = labelsAdapter
+        val tags = UserManager.getSpLabels()
+        for (tag in matchBean!!.tags?: mutableListOf()){
+            for (tag1 in tags) {
+                if (tag.id == tag1.id) {
+                    tag.sameLabel = true
+                }
+            }
+        }
+        labelsAdapter.setData(matchBean!!.tags ?: mutableListOf())
 
     }
 
@@ -354,6 +313,40 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     }
 
+    //fragment栈管理
+    private val mStack = Stack<Fragment>()
+    //九宫格
+    private val blockFragment by lazy { BlockSquareFragment() }
+    //列表
+    private val listFragment by lazy { ListSquareFragment() }
+    //标识 来确认是否已经加载过数据
+    private var loadBlock = false
+    private var loadList = false
+    private var currIndex = 1
+
+    /**
+     * 初始化fragments
+     */
+    private fun initFragment() {
+        val manager = supportFragmentManager.beginTransaction()
+        manager.add(R.id.detail_content_fragment, blockFragment) //九宫格照片模式
+        manager.add(R.id.detail_content_fragment, listFragment) //列表
+        manager.commit()
+        mStack.add(blockFragment)
+        mStack.add(listFragment)
+    }
+
+    /**
+     * 点击切换fragment
+     */
+    private fun changeFragment(position: Int) {
+        val transaction = supportFragmentManager.beginTransaction()
+        for (fragment in mStack) {
+            transaction.hide(fragment)
+        }
+        transaction.show(mStack[position])
+        transaction.commit()
+    }
 
     /**
      * 获取用户详情结果
@@ -367,18 +360,17 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
             //本地对标签进行过滤筛选
             val labels = UserManager.getSpLabels()
-            var same = 0
             for (label in labels) {
                 for (tag in matchBean!!.tags ?: mutableListOf()) {
                     if (label.id == tag.id && tag.id != Constants.RECOMMEND_TAG_ID) {
                         tag.sameLabel = true
-                        same++
                     }
                 }
             }
-            titles[0] = "重叠兴趣 $same"
             initData()
 
+            //请求成功了请求列表广场
+            detailSquareSwitchRg.check(R.id.rbList)
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
             stateview.errorMsg.text = CommonFunction.getErrorMsg(this)
@@ -507,8 +499,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.moreBtn,
-            R.id.moreBtn1 -> {//更多
+            R.id.moreBtn -> {//更多
                 showMoreActionDialog()
             }
             R.id.detailUserLikeBtn -> {//感兴趣
@@ -531,7 +522,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     )
             }
 
-            R.id.backBtn1, R.id.btnBack2,
+            R.id.backBtn1,
             R.id.backBtn -> {
                 finish()
             }
@@ -667,7 +658,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             override fun onSuccess(param: Void?) {
                 if (msg.attachment is ChatHiAttachment) {
                     if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
-                        SayHiDialog(matchBean!!.accid, matchBean!!.nickname ?: "", this@MatchDetailActivity).show()
+                        SayHiDialog(matchBean!!.accid, matchBean!!.nickname ?: "", this@MatchDetailActivity1).show()
                     } else {
                         startActivity<MatchSucceedActivity>(
                             "avator" to matchBean!!.avatar,

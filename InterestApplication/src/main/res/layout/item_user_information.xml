@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:background="@color/colorWhite"
+        android:layout_height="wrap_content">
+
+    <ImageView
+            android:id="@+id/infoIv"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/icon_detail_birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/infoTitle"
+            android:gravity="center"
+            android:layout_marginLeft="15dp"
+            android:text="生日"
+            android:textColor="@color/colorBlack87"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/infoIv"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/infoContent"
+            android:layout_marginRight="15dp"
+            android:gravity="center"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/infoTitle"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:maxLines="1"
+            tools:text="1999-07-15/天秤座"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

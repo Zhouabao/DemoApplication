@@ -119,9 +119,10 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
         )
     }
     private var targetAccid = ""
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     fun onBlockDataEvent(event: BlockDataEvent) {
         targetAccid = event.targetAccid
+        params["target_accid"]=  targetAccid
         if (event.refresh) {
             blockAdapter.data.clear()
             refreshBlock.setNoMoreData(false)

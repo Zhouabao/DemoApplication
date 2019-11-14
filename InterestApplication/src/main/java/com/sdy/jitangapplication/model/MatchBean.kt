@@ -57,7 +57,8 @@ data class MatchBean(
     var isblock: Int = 1,//1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
     var greet_switch: Boolean = true,//接收招呼开关   true  接收招呼      false   不接受招呼
     var greet_state: Boolean = true,// 认证招呼开关   true  开启认证      flase   不开启认证
-    var isgreeted: Boolean = true//招呼是否仍然有效
+    var isgreeted: Boolean = true,//招呼是否仍然有效
+    val base_info: BaseInfo
 
 ) : Serializable
 
@@ -113,4 +114,11 @@ data class GreetBean(
     val lightningcnt: Int = -1,//剩余招呼次数
     var countdown: Int = 0
 
+)
+
+
+data class DetailUserInfoBean(
+    var icon: Int,
+    var title: String,
+    var content: String
 )
