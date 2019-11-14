@@ -100,7 +100,7 @@
 
         <Button
                 android:id="@+id/completeBtn"
-                android:text="请选择"
+                android:text="提交"
                 android:textStyle="bold"
                 android:layout_marginTop="15dp"
                 android:gravity="center"

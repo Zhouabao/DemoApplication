@@ -8,7 +8,7 @@
 
     <EditText
             android:id="@+id/editInvestigate"
-            android:hint="其他"
+            android:hint="填写了解渠道"
             android:background="@null"
             android:textColor="#ff000000"
             android:textSize="15sp"
