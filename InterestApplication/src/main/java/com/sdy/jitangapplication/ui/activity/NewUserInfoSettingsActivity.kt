@@ -1109,7 +1109,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         userFinishProgress.layoutParams = params
 
 
-        totalGetScore += score //汇总每次的得分
+//        totalGetScore += score //汇总每次的得分
+        totalGetScore = 69//汇总每次的得分
         var progress =
             (totalGetScore * 1.0F / (data!!.score_rule!!.base_total) * 100).toInt()
         userScore20.text = "${progress}%"
@@ -1130,8 +1131,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         } else  //左边距+进度条宽度-自身宽度
             SizeUtils.dp2px(70F) +
                     ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15))
-                            * userFinishProgress.progress * 1.0f / 100).toInt() - if (progress > 0) {
-                SizeUtils.dp2px(60F)
+                            * userFinishProgress.progress * 1.0f / 100).toInt() - if (progress >= 80 * 0.8F) {
+                SizeUtils.dp2px(60F * 0.9F)
             } else {
                 0
             }
