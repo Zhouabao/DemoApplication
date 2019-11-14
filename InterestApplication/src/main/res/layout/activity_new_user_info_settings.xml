@@ -739,7 +739,7 @@
 
 
                         <TextView
-                                android:text="饮食"
+                                android:text="作息"
                                 android:alpha="0.5"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="16sp"
@@ -757,7 +757,7 @@
                                 android:visibility="visible"
                                 android:drawablePadding="10dp"
                                 android:gravity="center_vertical"
-                                android:hint="请选择您的饮食习惯"
+                                android:hint="请选择您的作息习惯"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="15sp"
                                 android:drawableRight="@drawable/icon_more_right"

@@ -315,10 +315,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 updateScoreStatus(userScoreSmoke, data.score_rule?.personal_smoke ?: 0)
             }
 
-            if (data.personal_food > 0 && data.personal_food_list.size > data.personal_food - 1) {
-                userEat.text = data.personal_food_list[data.personal_food - 1]
+            if (data.personal_schedule > 0 && data.personal_schedule_list.size > data.personal_schedule - 1) {
+                userEat.text = data.personal_schedule_list[data.personal_schedule - 1]
                 userScoreEat.isVisible = false
-                updateScoreStatus(userScoreEat, data.score_rule?.personal_food ?: 0)
+                updateScoreStatus(userScoreEat, data.score_rule?.personal_schedule ?: 0)
             }
 
 
@@ -673,6 +673,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             if (loading.isShowing)
                 loading.dismiss()
             if (result) {
+                //发送通知更新匹配列表
+                EventBus.getDefault().postSticky(RefreshEvent(true))
                 isChange = false
                 checkSaveEnable()
                 EventBus.getDefault().postSticky(UserCenterEvent(true))
@@ -859,8 +861,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     "请选择您的家乡",
                     "hometown",
                     provinceItems,
-                    cityItems,
-                    areaItems
+                    cityItems
                 )
             }
             R.id.userLiveNow -> {//现居地
@@ -871,8 +872,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     "请选择您的现居地",
                     "present_address",
                     provinceItems,
-                    cityItems,
-                    areaItems
+                    cityItems
                 )
             }
 
@@ -920,8 +920,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     userScoreEat,
                     2,
                     "请选择您的饮食习惯",
-                    "personal_food",
-                    data?.personal_food_list ?: mutableListOf()
+                    "personal_schedule",
+                    data?.personal_schedule_list ?: mutableListOf()
                 )
             }
             R.id.saveBtn -> {
@@ -1301,7 +1301,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 making_friends	[int]	是	交友目的 0 未填写 1交朋友 2找对象 3接触感兴趣的
                 personal_drink	[int]	是	喝酒状况 0 未填写 1偶尔 2 经常 3不喝
                 personal_smoke	[int]	是	抽烟状况 0未填写 1偶尔 2 经常 3不喝
-                personal_food	[int]	是	饮食喜好 0 未填写 1素食主义者*/
+                personal_schedule	[int]	是	饮食喜好 0 未填写 1素食主义者*/
                 if (optionsItems2.isNullOrEmpty()) {
                     if (param == "height") {
                         savePersonalParams[param] = optionsItems1[options1] as Int

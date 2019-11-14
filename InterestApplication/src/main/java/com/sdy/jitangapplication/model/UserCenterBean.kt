@@ -111,17 +111,33 @@ data class UserInfoSettingBean(
     val present_address: String? = "",
     val personal_job: String? = "",
     val making_friends: Int = 0,
-    val making_friends_list: MutableList<String> = mutableListOf(),
     val personal_school: String? = "",
     val personal_drink: Int = 0,
-    val personal_drink_list: MutableList<String> = mutableListOf(),
     val personal_smoke: Int = 0,
+    val personal_schedule: Int = 0,
+    val making_friends_list: MutableList<String> = mutableListOf(),
+    val personal_drink_list: MutableList<String> = mutableListOf(),
     val personal_smoke_list: MutableList<String> = mutableListOf(),
-    val personal_food: Int = 0,
-    val personal_food_list: MutableList<String> = mutableListOf(),
+    val personal_schedule_list: MutableList<String> = mutableListOf(),
     val score_rule: ScoreRule? = null
 
 )
+
+
+data class BaseInfo(
+    val height: Int = 0,
+    val emotion_list: MutableList<String> = mutableListOf(),
+    val emotion_state: String? = "",
+    val hometown: String? = "",
+    val present_address: String? = "",
+    val personal_job: String? = "",
+    val making_friends: String? = "",
+    val personal_school: String? = "",
+    val personal_drink: String? = "",
+    val personal_smoke: String? = "",
+    val personal_schedule: String? = ""
+)
+
 
 data class ScoreRule(
     var about: Int = 0,
@@ -131,7 +147,7 @@ data class ScoreRule(
     var hometown: Int = 0,
     var making_friends: Int = 0,
     var personal_drink: Int = 0,
-    var personal_food: Int = 0,
+    var personal_schedule: Int = 0,
     var personal_job: Int = 0,
     var personal_school: Int = 0,
     var personal_smoke: Int = 0,
