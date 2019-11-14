@@ -13,6 +13,7 @@ import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
@@ -34,6 +35,7 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_login_help_reason.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.jetbrains.anko.startActivity
 
 /**
  * 问题反馈填写界面
@@ -214,7 +216,8 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
     override fun onGetUserActionResult(b: Boolean, msg: String?) {
         CommonFunction.toast("$msg")
         if (b) {
-            finish()
+            AppManager.instance.finishAllActivity()
+            startActivity<LoginActivity>()
         }
     }
 
@@ -241,7 +244,9 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
                 photosNum++
                 if (reportPicAdapter.data[photosNum] != "") {
                     val imageName =
-                        "${Constants.FILE_NAME_INDEX}${Constants.REPORTUSER}${UserManager.getAccid()}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(16)}"
+                        "${Constants.FILE_NAME_INDEX}${Constants.REPORTUSER}${UserManager.getAccid()}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                            16
+                        )}"
                     mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum)
                 }
             }
