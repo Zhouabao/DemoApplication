@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.alipay.sdk.app.PayTask
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -32,6 +33,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.adapter.VipBannerAdapter
@@ -42,6 +44,7 @@ import com.sdy.jitangapplication.wxapi.PayResult
 import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.dialog_charge_vip.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -409,7 +412,10 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context, public 
             .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
-                    MainActivity.start(context1, Intent())
+                    dismiss()
+                    if (ActivityUtils.getTopActivity() != MainActivity::class.java)
+                        MainActivity.start(context1, Intent())
+                    EventBus.getDefault().postSticky(RefreshEvent(true))
                 }
 
             })

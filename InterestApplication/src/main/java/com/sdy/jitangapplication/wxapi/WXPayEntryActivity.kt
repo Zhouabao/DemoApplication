@@ -4,14 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import org.greenrobot.eventbus.EventBus
 
 class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
     private val wxApi by lazy { WXAPIFactory.createWXAPI(this, Constants.WECHAT_APP_ID) }
@@ -66,8 +69,11 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
                 p0.cancel()
                 finish()
                 overridePendingTransition(0, 0)
-                if (code == 0)
-                    MainActivity.start(this, Intent())
+                if (code == 0) {
+                    if (ActivityUtils.getTopActivity() != MainActivity::class.java)
+                        MainActivity.start(this, Intent())
+                    EventBus.getDefault().postSticky(RefreshEvent(true))
+                }
             }
             .show()
     }
