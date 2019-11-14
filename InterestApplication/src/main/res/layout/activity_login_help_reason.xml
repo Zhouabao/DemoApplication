@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.ReportReasonActivity">
+
+    <include layout="@layout/layout_actionbar"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTitle">
+
+        <TextView
+                android:id="@+id/reportUserName"
+                android:text="问题描述"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack22"
+                android:textSize="16sp"
+                android:layout_height="36dp"
+                android:layout_width="match_parent"
+                android:paddingLeft="15dp"
+                android:gravity="center_vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/reportReasonCl"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/shape_rectangle_gray_9dp"
+                android:layout_height="177dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reportUserName">
+
+            <EditText
+                    android:id="@+id/helpContent"
+                    android:background="@null"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:hint="请详细描述您目前遇到的问题，如登录不上的提示等，客服老师会竭尽全力为您解决问题。"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15sp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:maxLength="500"
+                    android:gravity="top"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/helpContentLength"
+                    />
+
+            <TextView
+                    android:id="@+id/helpContentLength"
+                    android:layout_width="wrap_content"
+                    android:text="0/500"
+                    android:textSize="10sp"
+                    android:textColor="@color/colorGrayText"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+                android:id="@+id/t1"
+                android:text="手机号"
+                android:textColor="@color/colorBlack22"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:textStyle="bold"
+                android:layout_height="36dp"
+                android:paddingLeft="15dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center_vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reportReasonCl"/>
+
+        <EditText
+                android:id="@+id/helpPhone"
+                android:layout_width="0dp"
+                android:layout_height="59dp"
+                android:hint="填写您的手机号以便我们及时与您联系"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:gravity="center_vertical"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:inputType="number"
+                android:background="@drawable/shape_rectangle_gray_9dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/t1"/>
+
+        <TextView
+                android:id="@+id/t2"
+                android:layout_marginLeft="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="问题截图（选填）"
+                android:textColor="@color/colorBlack22"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/helpPhone"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/helpPicRv"
+                android:layout_marginLeft="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/t2"/>
+
+
+        <Button
+                android:id="@+id/helpConfirm"
+                android:layout_marginTop="56dp"
+                android:layout_width="344dp"
+                android:layout_height="46dp"
+                android:text="提交反馈"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:enabled="false"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/selector_confirm_btn"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

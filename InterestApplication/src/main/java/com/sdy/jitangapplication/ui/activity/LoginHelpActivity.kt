@@ -38,6 +38,9 @@ class LoginHelpActivity : BaseMvpActivity<LoginHelpPresenter>(), LoginHelpView {
             finish()
         }
         hotT1.text = "帮助"
+        btnLoginHelp.onClick {
+            startActivity<LoginHelpReasonActivity>()
+        }
 
         mPresenter = LoginHelpPresenter()
         mPresenter.mView = this

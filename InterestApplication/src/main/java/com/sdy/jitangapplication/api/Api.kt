@@ -318,8 +318,15 @@ interface Api {
      * 举报用户
      */
     @FormUrlEncoded
-    @POST("member_info/reportUser${Constants.END_BASE_URL}")
+    @POST("member_info/feedback${Constants.END_BASE_URL}")
     fun reportUser(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * 登录反馈
+     */
+    @FormUrlEncoded
+    @POST("OpenApi/addFeedback${Constants.END_BASE_URL}")
+    fun addFeedback(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**
      * 举报用户新版

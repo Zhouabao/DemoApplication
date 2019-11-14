@@ -19,12 +19,35 @@
             app:msv_loadingView="@layout/loading_layout"
             app:msv_viewState="loading">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvLoginHelp"
-                android:overScrollMode="never"
-                android:layout_marginLeft="15dp"
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvLoginHelp"
+                    android:overScrollMode="never"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="70dp"
+                    android:layout_height="match_parent"/>
+
+            <Button
+                    android:id="@+id/btnLoginHelp"
+                    android:gravity="center"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:text="问题反馈"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:background="@drawable/selector_confirm_btn"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="50dp"/>
+        </FrameLayout>
+
+
     </com.kennyc.view.MultiStateView>
 
 

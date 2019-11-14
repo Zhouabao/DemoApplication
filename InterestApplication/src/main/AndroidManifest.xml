@@ -102,6 +102,8 @@
         </activity>
         <activity android:name=".ui.activity.ModelAboutMeActivity">
         </activity>
+        <activity android:name=".ui.activity.LoginHelpReasonActivity"
+                android:windowSoftInputMode="adjustPan"/>
         <activity
                 android:name=".ui.activity.AboutMeActivity"
                 android:windowSoftInputMode="adjustResize">
