@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
@@ -130,10 +129,6 @@ class MatchDetailActivity1 : BaseMvpActivity<MatchDetailPresenter>(), MatchDetai
         layoutParams.height = (16 / 9.0F * layoutParams.width).toInt()
         detailPhotosVp.layoutParams = layoutParams
 
-        //设置个人信息距离顶部的距离
-        val paramsClUserInfo = clUserInfo.layoutParams as FrameLayout.LayoutParams
-        paramsClUserInfo.topMargin = layoutParams.height - SizeUtils.dp2px(24f)
-        clUserInfo.layoutParams = paramsClUserInfo
 
 
 

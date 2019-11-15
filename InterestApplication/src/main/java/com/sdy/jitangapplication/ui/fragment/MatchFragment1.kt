@@ -330,9 +330,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
                     EventBus.getDefault().post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
                 }
-                if (data.data!!.residue == 10) {
-                    CommonFunction.toast("剩余10次滑动机会")
-                }
+
                 if (data.data!!.residue == 0) {
                     card_stack_view.rewind()
                     ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
@@ -501,7 +499,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             if (event.success) {
                 card_stack_view.swipe()
             } else {
-               // card_stack_view.rewind()
+                // card_stack_view.rewind()
             }
     }
     /*---------------------卡片参数和方法------------------------------*/
@@ -696,18 +694,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
             }
         }
-//        } else if (direction == Direction.Top) {//上滑打招呼
-//            val bean = matchUserAdapter.data[manager.topPosition - 1]
-//            CommonFunction.commonGreet(
-//                activity!!,
-//                bean.isfriend == 1,
-//                bean.greet_switch,
-//                bean.greet_state,
-//                bean.accid,
-//                bean.nickname ?: "",
-//                bean.isgreeted
-//            )
-//        }
+
 
         //如果已经只剩5张了就请求数据(预加载).
         if (hasMore && manager.topPosition == matchUserAdapter.itemCount - 5) {

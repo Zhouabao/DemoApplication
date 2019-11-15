@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
 import androidx.core.view.isVisible
+import androidx.core.view.marginTop
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -160,13 +161,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
-            if (Math.abs(verticalOffset) >= (userAppbar.totalScrollRange - SizeUtils.dp2px(60F))) {
-                ScreenUtils.setNonFullScreen(this)
-                detailActionbar.isVisible = true
+            if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
+                if (ScreenUtils.isFullScreen(this))
+                    ScreenUtils.setNonFullScreen(this)
             } else {
-                ScreenUtils.setFullScreen(this)
-                detailActionbar.isVisible = false
+                if (!ScreenUtils.isFullScreen(this))
+                    ScreenUtils.setFullScreen(this)
             }
+            //            detailActionbar.isVisible = Math.abs(verticalOffset) >= (userAppbar.totalScrollRange - SizeUtils.dp2px(60F))
+            detailActionbar.isVisible = Math.abs(verticalOffset) >= clUserInfo.marginTop
         })
 
         //重试
@@ -303,11 +306,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         if (photos.size > 1) {
             for (i in 0 until photos.size) {
-//                val width = ((ScreenUtils.getScreenWidth()
-//                        - SizeUtils.dp2px(15F) * 2
-//                        - (SizeUtils.dp2px(6F) * (photos.size - 1))) * 1F / photos.size).toInt()
+                val width = ((ScreenUtils.getScreenWidth()
+                        - SizeUtils.dp2px(15F) * 2
+                        - (SizeUtils.dp2px(6F) * (photos.size - 1))) * 1F / photos.size).toInt()
                 val height = SizeUtils.dp2px(6F)
-                val width = SizeUtils.dp2px(6F)
 
                 val indicator = RadioButton(this)
                 indicator.buttonDrawable = null
@@ -317,15 +319,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(
                     if (i == 0) {
-                        0
-//                        SizeUtils.dp2px(15F)
+                        SizeUtils.dp2px(15F)
                     } else {
                         0
                     }, 0, if (i == photos.size - 1) {
-//                        SizeUtils.dp2px(15F)
-                        0
+                        SizeUtils.dp2px(15F)
                     } else {
-                        SizeUtils.dp2px(5f)
+                        SizeUtils.dp2px(6f)
                     }, 0
                 )
                 indicator.layoutParams = layoutParams

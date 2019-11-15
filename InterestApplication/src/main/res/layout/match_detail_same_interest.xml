@@ -50,6 +50,7 @@
                         android:background="@color/colorDivider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:visibility="invisible"
                         android:layout_marginTop="19dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
@@ -57,7 +58,7 @@
 
                 <TextView
                         android:id="@+id/allT2"
-                        android:text="发现"
+                        android:text="动态"
                         android:textStyle="bold"
                         android:textColor="@color/colorBlackTitle"
                         android:textSize="16sp"

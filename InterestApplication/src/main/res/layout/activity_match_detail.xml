@@ -19,7 +19,7 @@
             app:msv_emptyView="@layout/empty_layout"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading"
+            app:msv_viewState="content"
             tools:context=".ui.activity.MatchDetailActivity">
 
 
@@ -53,6 +53,7 @@
 
                     <FrameLayout
                             android:id="@+id/cl1"
+                            android:fitsSystemWindows="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                         <!--照片系列布局-->
@@ -60,6 +61,7 @@
                                 android:id="@+id/clPhotos"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:fitsSystemWindows="true"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintRight_toRightOf="parent"
                                 app:layout_constraintTop_toTopOf="parent">
@@ -70,6 +72,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal"
+                                    android:fitsSystemWindows="true"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintRight_toRightOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"/>
@@ -90,16 +93,15 @@
                                     app:layout_constraintRight_toRightOf="parent"
                                     app:layout_constraintTop_toTopOf="@id/detailPhotosVp"/>
 
-
                             <LinearLayout
                                     android:id="@+id/detailPhotosIndicator"
+                                    android:layout_marginTop="5dp"
                                     android:orientation="horizontal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    app:layout_constraintBottom_toBottomOf="@id/backBtn"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toTopOf="@id/backBtn"
+                                    app:layout_constraintTop_toTopOf="parent"
                                     />
 
 
@@ -114,6 +116,7 @@
                                     android:visibility="visible"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"/>
+
 
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -230,6 +233,7 @@
                                     android:textColor="@color/colorBlack"
                                     android:lineSpacingMultiplier="1.4"
                                     android:textSize="16sp"
+                                    android:paddingBottom="25dp"
                                     app:ep_contract_color="@color/colorGrayText"
                                     app:ep_contract_text="收起"
                                     app:ep_expand_color="@color/colorGrayText"
@@ -239,7 +243,6 @@
                                     app:ep_need_animation="true"
                                     app:ep_need_contract="true"
                                     app:ep_need_expand="true"
-                                    android:paddingBottom="25dp"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="@id/detailUserName"
                                     app:layout_constraintTop_toBottomOf="@id/detailUserJob"
@@ -248,9 +251,9 @@
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </FrameLayout>
 
-                    <LinearLayout
-                            android:fitsSystemWindows="true"
+                    <RelativeLayout
                             android:id="@+id/detailActionbar"
+                            android:fitsSystemWindows="true"
                             android:orientation="horizontal"
                             android:visibility="gone"
                             android:layout_width="match_parent"
@@ -264,7 +267,8 @@
                                 android:src="@drawable/icon_return"
                                 android:layout_width="wrap_content"
                                 android:paddingLeft="15dp"
-                                android:layout_marginRight="15dp"
+                                android:layout_alignParentLeft="true"
+                                android:paddingRight="15dp"
                                 android:layout_height="match_parent"/>
 
                         <TextView
@@ -274,7 +278,7 @@
                                 android:textColor="@color/colorBlack"
                                 android:textSize="17sp"
                                 android:layout_weight="1"
-                                android:layout_gravity="center"
+                                android:layout_centerInParent="true"
                                 android:gravity="center"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"/>
@@ -283,10 +287,12 @@
                                 android:id="@+id/moreBtn1"
                                 android:paddingLeft="15dp"
                                 android:paddingRight="15dp"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentRight="true"
                                 android:src="@drawable/icon_more_black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"/>
-                    </LinearLayout>
+                    </RelativeLayout>
 
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
