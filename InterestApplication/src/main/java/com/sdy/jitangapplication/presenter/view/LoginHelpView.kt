@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
-import com.sdy.jitangapplication.model.LoginHelpBean
+import com.sdy.jitangapplication.model.HelpBean
 
 /**
  *    author : ZFM
@@ -11,5 +11,5 @@ import com.sdy.jitangapplication.model.LoginHelpBean
  */
 interface LoginHelpView : BaseView {
 
-    fun getHelpCenterResult(success: Boolean, data: MutableList<LoginHelpBean>?)
+    fun getHelpCenterResult(success: Boolean, data: HelpBean?)
 }

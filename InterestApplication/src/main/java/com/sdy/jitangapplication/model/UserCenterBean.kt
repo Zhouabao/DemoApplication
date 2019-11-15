@@ -214,3 +214,9 @@ data class LoginHelpBean(
 //    val content: String = ""
     val content: MutableList<String>
 ) : Serializable
+
+data class HelpBean(
+    val qntk: String = "",
+//    val content: String = ""
+    val list: MutableList<LoginHelpBean>
+) : Serializable

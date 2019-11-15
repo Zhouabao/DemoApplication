@@ -12,6 +12,7 @@ object Constants {
     const val PUBLISH = "publish/" //发布
     const val USERCENTER = "usecenter/"//个人中心
     const val REPORTUSER = "report/"//舉報用户
+    const val FEEDBACK = "feedback/"//问题反馈
     const val DEFAULT_AVATAR = "/meta/default_avatar.jpg"//默认图
 
 

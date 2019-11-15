@@ -1,7 +1,5 @@
 package com.sdy.jitangapplication.presenter
 
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.SPUtils
 import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -10,9 +8,7 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.presenter.view.LoginHelpResonView
-import com.sdy.jitangapplication.ui.activity.LoginActivity
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
 
@@ -50,13 +46,13 @@ class LoginHelpResonPresenter : BasePresenter<LoginHelpResonView>() {
      * 上传照片
      * imageName 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
      */
-    fun uploadProfile(filePath: String, imageName: String, index: Int) {
+    fun uploadProfile(filePath: String, imageName: String, index: Int, qntoken: String) {
         if (!checkNetWork()) {
             return
         }
 
         QNUploadManager.getInstance().put(
-            filePath, imageName, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
+            filePath, imageName, qntoken,
             { key, info, response ->
                 if (info != null) {
                     mView.uploadImgResult(info.isOK, key, index)

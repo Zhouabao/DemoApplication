@@ -8,6 +8,7 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.HelpBean
 import com.sdy.jitangapplication.model.LoginHelpBean
 import com.sdy.jitangapplication.presenter.LoginHelpPresenter
 import com.sdy.jitangapplication.presenter.view.LoginHelpView
@@ -25,6 +26,7 @@ class LoginHelpActivity : BaseMvpActivity<LoginHelpPresenter>(), LoginHelpView {
 
 
     private val adapter by lazy { LoginHelpAdapter() }
+    private var qntoken = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +41,7 @@ class LoginHelpActivity : BaseMvpActivity<LoginHelpPresenter>(), LoginHelpView {
         }
         hotT1.text = "帮助"
         btnLoginHelp.onClick {
-            startActivity<LoginHelpReasonActivity>()
+            startActivity<LoginHelpReasonActivity>("qntoken" to qntoken)
         }
 
         mPresenter = LoginHelpPresenter()
@@ -67,10 +69,11 @@ class LoginHelpActivity : BaseMvpActivity<LoginHelpPresenter>(), LoginHelpView {
     }
 
 
-    override fun getHelpCenterResult(success: Boolean, data: MutableList<LoginHelpBean>?) {
+    override fun getHelpCenterResult(success: Boolean, data: HelpBean?) {
         if (success) {
             stateLoginHelp.viewState = MultiStateView.VIEW_STATE_CONTENT
-            adapter.setNewData(data ?: mutableListOf<LoginHelpBean>())
+            adapter.setNewData(data?.list ?: mutableListOf<LoginHelpBean>())
+            qntoken = data?.qntk ?: ""
         } else {
             stateLoginHelp.viewState = MultiStateView.VIEW_STATE_ERROR
         }

@@ -30,7 +30,7 @@ interface Api {
      * 获取调查问卷
      */
     @POST("OpenApi/getHelpCenter${Constants.END_BASE_URL}")
-    fun getHelpCenter(): Observable<BaseResp<MutableList<LoginHelpBean>?>>
+    fun getHelpCenter(): Observable<BaseResp<HelpBean?>>
 
 
     /**

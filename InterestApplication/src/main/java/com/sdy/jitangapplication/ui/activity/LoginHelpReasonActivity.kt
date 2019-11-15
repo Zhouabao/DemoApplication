@@ -31,7 +31,6 @@ import com.sdy.jitangapplication.ui.adapter.ReportPicAdapter
 import com.sdy.jitangapplication.ui.adapter.ReportResonAdapter
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UriUtils
-import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_login_help_reason.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -45,6 +44,7 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
 
     private val reportResonAdapter by lazy { ReportResonAdapter() }
     private val reportParams: HashMap<String, Any> = hashMapOf()
+    private val qnToken by lazy { intent.getStringExtra("qntoken") }
 
     //举报图片
     private val reportPicAdapter by lazy { ReportPicAdapter() }
@@ -244,10 +244,10 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
                 photosNum++
                 if (reportPicAdapter.data[photosNum] != "") {
                     val imageName =
-                        "${Constants.FILE_NAME_INDEX}${Constants.REPORTUSER}${UserManager.getAccid()}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                        "${Constants.FILE_NAME_INDEX}${Constants.FEEDBACK}${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                             16
                         )}"
-                    mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum)
+                    mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum, qnToken)
                 }
             }
         }
@@ -265,8 +265,6 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
     override fun onClick(view: View) {
         when (view.id) {
             R.id.helpConfirm -> {
-
-//                ActivityUtils.finishToActivity(LoginActivity::class.java, false)
                 loading.show()
                 if (!helpContent.text.isNullOrEmpty()) {
                     reportParams["supplement_comment"] = helpContent.text.toString()
@@ -275,10 +273,10 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
                 if (reportPicAdapter.data.isNotEmpty() && reportPicAdapter.data.size > 1) {
                     if (reportPicAdapter.data[photosNum] != "") {
                         val imageName =
-                            "${Constants.FILE_NAME_INDEX}${Constants.REPORTUSER}${UserManager.getAccid()}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                            "${Constants.FILE_NAME_INDEX}${Constants.FEEDBACK}${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                 16
                             )}"
-                        mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum)
+                        mPresenter.uploadProfile(reportPicAdapter.data[photosNum], imageName, photosNum, qnToken)
                     }
                 } else {
                     mPresenter.feedback(helpContent.text.toString(), helpPhone.text.toString(), photosNameArray)

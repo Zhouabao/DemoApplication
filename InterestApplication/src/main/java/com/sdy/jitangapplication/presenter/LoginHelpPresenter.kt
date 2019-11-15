@@ -7,7 +7,7 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.LoginHelpBean
+import com.sdy.jitangapplication.model.HelpBean
 import com.sdy.jitangapplication.presenter.view.LoginHelpView
 
 /**
@@ -20,8 +20,8 @@ class LoginHelpPresenter : BasePresenter<LoginHelpView>() {
     fun getHelpCenter() {
         RetrofitFactory.instance.create(Api::class.java)
             .getHelpCenter()
-            .excute(object : BaseSubscriber<BaseResp<MutableList<LoginHelpBean>?>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<LoginHelpBean>?>) {
+            .excute(object : BaseSubscriber<BaseResp<HelpBean?>>(mView) {
+                override fun onNext(t: BaseResp<HelpBean?>) {
                     mView.getHelpCenterResult(t.code == 200, t.data)
                     if (t.code != 200) {
                         CommonFunction.toast(t.msg)
