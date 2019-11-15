@@ -11,7 +11,6 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
-import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
@@ -38,8 +37,8 @@ import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.MessageHiActivity
+import com.sdy.jitangapplication.ui.activity.ReportReasonActivity
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_info.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
@@ -109,7 +108,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
 
         //投诉举报
         friendReport.onClick {
-            showDeleteDialog(2)
+            startActivity<ReportReasonActivity>("target_accid" to account,"nickname" to UserInfoHelper.getUserName(account))
         }
 
         //查找聊天记录
@@ -165,34 +164,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         .clearServerHistory(account ?: "", SessionTypeEnum.P2P, true)
                     MessageListPanelHelper.getInstance().notifyClearMessages(account ?: "")
                     dialog.dismiss()
-                }
-            }
-            2 -> {
-                dialog.tip.text = "确定举报该用户?"
-                dialog.cancel.onClick { dialog.dismiss() }
-                dialog.confirm.onClick {
-                    val params = UserManager.getBaseParams()
-                    params["target_accid"] = (account ?: "")
-                    RetrofitFactory.instance.create(Api::class.java)
-                        .reportUser(UserManager.getSignParams(params))
-                        .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
-                            override fun onStart() {
-                            }
-
-                            override fun onNext(t: BaseResp<Any?>) {
-                                CommonFunction.toast(t.msg)
-                                dialog.dismiss()
-
-                            }
-
-                            override fun onError(e: Throwable?) {
-                                if (e is BaseException) {
-                                    TickDialog(this@MessageInfoActivity).show()
-                                } else {
-                                    CommonFunction.toast(CommonFunction.getErrorMsg(this@MessageInfoActivity))
-                                }
-                            }
-                        })
                 }
             }
             3 -> {//todo 此处差一个删除好友的接口

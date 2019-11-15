@@ -73,6 +73,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
             finish()
         }
         hotT1.text = "举报理由"
+        reportUserName.text = "请选择对「${intent.getStringExtra("nickname")}」的举报理由 "
         reportConfirm.setOnClickListener(this)
 
 

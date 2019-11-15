@@ -53,6 +53,7 @@ import com.sdy.jitangapplication.ui.adapter.MatchImgsPagerAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
+import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.ui.fragment.MatchDetailInfomationFragment
 import com.sdy.jitangapplication.ui.fragment.MatchDetailSquareFragment
@@ -161,13 +162,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
-            if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
-                if (ScreenUtils.isFullScreen(this))
-                    ScreenUtils.setNonFullScreen(this)
-            } else {
-                if (!ScreenUtils.isFullScreen(this))
-                    ScreenUtils.setFullScreen(this)
-            }
+//            if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
+//                if (ScreenUtils.isFullScreen(this))
+//                    ScreenUtils.setNonFullScreen(this)
+//            } else {
+//                if (!ScreenUtils.isFullScreen(this))
+//                    ScreenUtils.setFullScreen(this)
+//            }
             //            detailActionbar.isVisible = Math.abs(verticalOffset) >= (userAppbar.totalScrollRange - SizeUtils.dp2px(60F))
             detailActionbar.isVisible = Math.abs(verticalOffset) >= clUserInfo.marginTop
         })
@@ -484,6 +485,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     }
                 }
             } else if (statusBean.code == 201) {
+                if (matchBean!!.my_percent_complete <= matchBean!!.normal_percent_complete)
+                    RightSlideOutdDialog(this).show()
+                else
                 ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
             }
     }
@@ -568,7 +572,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
         //举报
         dialog.llJubao.onClick {
-            startActivityForResult<ReportReasonActivity>(100, "target_accid" to matchBean!!.accid)
+            startActivityForResult<ReportReasonActivity>(100, "target_accid" to matchBean!!.accid,"nickname" to matchBean!!.nickname)
             dialog.dismiss()
         }
         //解除配对
