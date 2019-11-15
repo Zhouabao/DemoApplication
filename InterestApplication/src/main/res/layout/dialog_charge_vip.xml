@@ -24,7 +24,7 @@
                 android:background="@drawable/gradient_vip_charge_bg"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="290dp"
+                android:layout_height="270dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -44,30 +44,9 @@
                     android:layout_height="20dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/bannerVip"/>
-
-            <TextView
-                    android:id="@+id/switchPurchase"
-                    android:text="切换为次数购买"
-                    android:textSize="14sp"
-                    android:paddingLeft="13dp"
-                    android:paddingRight="13dp"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:drawablePadding="4dp"
                     android:layout_marginBottom="15dp"
-                    android:layout_gravity="center"
-                    android:textColor="@color/colorOrange"
-                    android:background="@drawable/shape_rectangle_gray_white_15dp"
-                    android:drawableLeft="@drawable/icon_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/bannerIndicator"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    />
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -235,5 +214,5 @@
             android:layout_gravity="bottom"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="570dp"/>
+            android:layout_height="550dp"/>
 </FrameLayout>

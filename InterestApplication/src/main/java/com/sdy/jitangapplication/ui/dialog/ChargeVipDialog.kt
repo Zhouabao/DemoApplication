@@ -52,7 +52,10 @@ import org.greenrobot.eventbus.EventBus
  *    desc   : 充值会员底部对话框
  *    version: 1.0
  */
-class ChargeVipDialog(public var currentPos: Int, val context1: Context, public var purchaseType: Int = PURCHASE_VIP) :
+class ChargeVipDialog(
+    public var currentPos: Int, val context1: Context,
+    public var purchaseType: Int = PURCHASE_VIP
+) :
     Dialog(context1, R.style.MyDialog) {
     companion object {
         const val VIP_LOGO = 1//会员logo
@@ -180,10 +183,6 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context, public 
             createOrder(3)
         }
 
-        //购买类型判断
-        switchPurchase.onClick {
-            setPurchaseType()
-        }
     }
 
     /**
@@ -192,7 +191,6 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context, public 
     private fun setPurchaseType(switch: Boolean = true) {
         if (switch) {
             if (purchaseType == PURCHASE_VIP) {
-                switchPurchase.text = "切换为会员购买"
                 purchaseType = PURCHASE_GREET_COUNT
                 vipBannerAdapter.type = purchaseType
 
@@ -202,7 +200,6 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context, public 
                     initVipPowerData(chargeWayBeans!!.greet_icon_list ?: mutableListOf())
                 }
             } else {
-                switchPurchase.text = "切换为次数购买"
                 purchaseType = PURCHASE_VIP
                 vipBannerAdapter.type = purchaseType
                 bannerIndicator.isVisible = true
@@ -215,7 +212,6 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context, public 
             }
         } else {
             if (purchaseType == PURCHASE_VIP) {
-                switchPurchase.text = "切换为次数购买"
                 vipBannerAdapter.type = purchaseType
                 bannerIndicator.isVisible = true
                 if (chargeWayBeans != null) {
@@ -223,7 +219,6 @@ class ChargeVipDialog(public var currentPos: Int, val context1: Context, public 
                     initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
                 }
             } else {
-                switchPurchase.text = "切换为会员购买"
                 vipBannerAdapter.type = purchaseType
                 bannerIndicator.isVisible = false
                 if (chargeWayBeans != null) {

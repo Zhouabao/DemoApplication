@@ -63,14 +63,8 @@ object CommonFunction {
                     }
                 }
             } else {
-                if (!UserManager.isUserVip()) {
-                    ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, context, ChargeVipDialog.PURCHASE_VIP).show()
-                } else {
-                    ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, context, ChargeVipDialog.PURCHASE_GREET_COUNT).show()
-                }
+                ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, context, ChargeVipDialog.PURCHASE_GREET_COUNT).show()
             }
-
-
         }
     }
 }

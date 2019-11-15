@@ -209,7 +209,7 @@ class SayHiDialog(
                     letterCloseLeft.isVisible = true
                     rootView.startAnimation(translateAniContentOut)
                 }, 100)
-                letterCloseRight.startAnimation(mOpenFlipAnimation)
+//                letterCloseRight.startAnimation(mOpenFlipAnimation)
 
             }
 
