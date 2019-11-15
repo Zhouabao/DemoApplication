@@ -65,7 +65,6 @@ import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.model.LabelBean;
 import com.sdy.jitangapplication.model.Tag;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.adapter.ChatHiLabelAdapter;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.DividerItemDecoration;
@@ -1350,12 +1349,7 @@ public class ChatMessageListPanelEx {
         chatHiAvator = headView.findViewById(com.sdy.jitangapplication.R.id.targetAvator);
         chatHiTags = headView.findViewById(com.sdy.jitangapplication.R.id.targetLabels);
         targetCl = headView.findViewById(com.sdy.jitangapplication.R.id.targetCl);
-        chatHiAvator.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MatchDetailActivity.start(container.activity, container.account, -1, -1);
-            }
-        });
+//        chatHiAvator.setOnClickListener(view -> MatchDetailActivity.start(container.activity, container.account, -1, -1));
 
         FlexboxLayoutManager manager = new FlexboxLayoutManager(container.activity, FlexDirection.ROW, FlexWrap.WRAP);
         manager.setAlignItems(AlignItems.STRETCH);

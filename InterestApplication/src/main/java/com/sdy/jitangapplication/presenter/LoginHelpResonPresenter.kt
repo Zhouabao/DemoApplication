@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.util.Log
 import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -54,6 +55,7 @@ class LoginHelpResonPresenter : BasePresenter<LoginHelpResonView>() {
         QNUploadManager.getInstance().put(
             filePath, imageName, qntoken,
             { key, info, response ->
+                Log.d("response", response.toString())
                 if (info != null) {
                     mView.uploadImgResult(info.isOK, key, index)
                 }

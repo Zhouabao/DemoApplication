@@ -31,7 +31,7 @@ class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
                 override fun onNext(t: BaseResp<LikeMeListBean?>) {
                     if (t.code == 200) {
                         SPUtils.getInstance(Constants.SPNAME).put("isvip", t.data?.isvip ?: 0)
-                        mView.onLikeListsResult(t.data?.free_show ?: false, t.data?.list ?: mutableListOf())
+                        mView.onLikeListsResult(t.data!!)
                     } else if (t.code == 403) {
                         TickDialog(context).show()
                     } else {

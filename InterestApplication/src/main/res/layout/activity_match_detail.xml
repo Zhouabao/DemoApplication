@@ -19,7 +19,7 @@
             app:msv_emptyView="@layout/empty_layout"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="content"
+            app:msv_viewState="loading"
             tools:context=".ui.activity.MatchDetailActivity">
 
 
@@ -39,7 +39,6 @@
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                         android:id="@+id/userCollapsingTitle"
                         android:layout_width="match_parent"
-                        android:fitsSystemWindows="true"
                         android:layout_height="match_parent"
                         android:minHeight="56dp"
                         app:collapsedTitleGravity="left"
@@ -53,7 +52,6 @@
 
                     <FrameLayout
                             android:id="@+id/cl1"
-                            android:fitsSystemWindows="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                         <!--照片系列布局-->
@@ -61,18 +59,16 @@
                                 android:id="@+id/clPhotos"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:fitsSystemWindows="true"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintRight_toRightOf="parent"
                                 app:layout_constraintTop_toTopOf="parent">
 
 
-                            <com.sdy.jitangapplication.widgets.NoScrollViewPager
+                            <com.sdy.jitangapplication.widgets.CommonNoScrollViewPager
                                     android:id="@+id/detailPhotosVp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal"
-                                    android:fitsSystemWindows="true"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintRight_toRightOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"/>
@@ -253,7 +249,6 @@
 
                     <RelativeLayout
                             android:id="@+id/detailActionbar"
-                            android:fitsSystemWindows="true"
                             android:orientation="horizontal"
                             android:visibility="gone"
                             android:layout_width="match_parent"
@@ -311,13 +306,11 @@
             </com.google.android.material.appbar.AppBarLayout>
 
 
-            <androidx.viewpager.widget.ViewPager
+            <com.sdy.jitangapplication.widgets.CommonNoScrollViewPager
                     android:id="@+id/vpUserDetail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            </androidx.viewpager.widget.ViewPager>
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
             <LinearLayout
                     android:layout_width="match_parent"

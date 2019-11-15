@@ -19,10 +19,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.ListDataEvent
-import com.sdy.jitangapplication.event.NotifyEvent
-import com.sdy.jitangapplication.event.RefreshCommentEvent
-import com.sdy.jitangapplication.event.RefreshSquareEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.FriendBean
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.SquareListBean
@@ -254,7 +251,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         )
     }
     private var targetAccid = ""
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onListDataEvent(event: ListDataEvent) {
         targetAccid = event.targetAccid
         params["target_accid"] = targetAccid
@@ -320,6 +317,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                 }
                 adapter.addData(data!!.list!!)
                 listRefresh.finishLoadMore(true)
+
             }
         } else {
             listRefresh.finishLoadMore(false)
@@ -328,6 +326,8 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 //            adapter.data.clear()
 //            page = 1
         }
+        EventBus.getDefault().post(UserDetailViewStateEvent(result))
+
     }
 
     override fun onGetSquareLikeResult(position: Int, result: Boolean) {
@@ -442,85 +442,6 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         val transpondDialog = TranspondDialog(activity!!, squareBean)
         transpondDialog.show()
     }
-
-
-//    lateinit var moreActionDialog: MoreActionDialog
-//    /**
-//     * 展示更多操作对话框
-//     */
-//    private fun showMoreDialog(position: Int) {
-//        moreActionDialog = MoreActionDialog(activity!!, "square")
-//        moreActionDialog.show()
-//
-//        if (adapter.data[position]?.iscollected == 0) {
-//            moreActionDialog.collect.text = "收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
-//        } else {
-//            moreActionDialog.collect.text = "取消收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
-//        }
-//        if (adapter.data[position].accid == UserManager.getAccid()) {
-//            moreActionDialog.llDelete.visibility = View.VISIBLE
-//        } else {
-//            moreActionDialog.llDelete.visibility = View.GONE
-//        }
-//
-//        if (adapter.data[position].accid == UserManager.getAccid()) {
-//            moreActionDialog.llDelete.visibility = View.VISIBLE
-//            moreActionDialog.llJubao.visibility = View.GONE
-//            moreActionDialog.llCollect.visibility = View.GONE
-//        } else {
-//            moreActionDialog.llDelete.visibility = View.GONE
-//            moreActionDialog.llJubao.visibility = View.VISIBLE
-//            moreActionDialog.llCollect.visibility = View.VISIBLE
-//        }
-//        moreActionDialog.llDelete.onClick {
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "square_id" to adapter.data[position].id!!
-//            )
-//            mPresenter.removeMySquare(params, position)
-//            moreActionDialog.dismiss()
-//        }
-//
-//
-//        moreActionDialog.llCollect.onClick {
-//
-//            //发起收藏请求
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "type" to if (adapter.data[position].iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to adapter.data[position].id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareCollect(params, position)
-//        }
-//        moreActionDialog.llJubao.onClick {
-//            //发起举报请求
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "type" to if (adapter.data[position].iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to adapter.data[position].id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareReport(params, position)
-//        }
-//        moreActionDialog.cancel.onClick {
-//            moreActionDialog.dismiss()
-//        }
-//
-//    }
 
 
     lateinit var moreActionDialog: MoreActionNewDialog

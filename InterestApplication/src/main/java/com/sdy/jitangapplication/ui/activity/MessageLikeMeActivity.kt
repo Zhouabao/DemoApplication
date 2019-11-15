@@ -17,7 +17,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateLikemeEvent
 import com.sdy.jitangapplication.event.UpdateLikemeOnePosEvent
-import com.sdy.jitangapplication.model.LikeMeBean
+import com.sdy.jitangapplication.model.LikeMeListBean
 import com.sdy.jitangapplication.presenter.MessageLikeMePresenter
 import com.sdy.jitangapplication.presenter.view.MessageLikeMeView
 import com.sdy.jitangapplication.ui.adapter.LikeMeAdapter
@@ -101,7 +101,11 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
                             "date" to "${adapter.data[position].date}",
                             "count" to adapter.data[position].count,
                             "hasread" to adapter.data[position].hasread,
-                            "freeShow" to adapter.freeShow
+                            "freeShow" to adapter.freeShow,
+                            "my_percent_complete" to adapter.my_percent_complete,
+                            "normal_percent_complete" to adapter.normal_percent_complete,
+                            "myCount" to adapter.myCount,
+                            "maxCount" to adapter.maxCount
                         )
                 }
             }
@@ -123,11 +127,12 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         mPresenter.likeLists(params)
     }
 
-
-    override fun onLikeListsResult(freeShow: Boolean, data: MutableList<LikeMeBean>) {
+    override fun onLikeListsResult(data: LikeMeListBean) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-        adapter.freeShow = freeShow
-        adapter.addData(data)
+        adapter.freeShow = data.free_show
+        adapter.my_percent_complete = data.my_percent_complete
+        adapter.normal_percent_complete = data.normal_percent_complete
+        adapter.addData(data.list ?: mutableListOf())
         lockToSee.isVisible = !adapter.freeShow && adapter.data.size > 0
         if (adapter.data.size < Constants.PAGESIZE * page) {
             refreshLayout.finishLoadMoreWithNoMoreData()

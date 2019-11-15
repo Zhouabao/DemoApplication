@@ -123,7 +123,6 @@ class MatchDetailSquareFragment(val matchBean: MatchBean, val targetAccid: Strin
             EventBus.getDefault().postSticky(BlockDataEvent(targetAccid, true))
         } else {
             //请求成功了请求列表广场
-
             EventBus.getDefault().postSticky(ListDataEvent(targetAccid, true))
         }
     }

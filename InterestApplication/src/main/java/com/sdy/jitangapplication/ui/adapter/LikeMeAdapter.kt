@@ -27,6 +27,7 @@ import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_like_me.view.*
@@ -40,6 +41,10 @@ import org.jetbrains.anko.startActivity
  */
 class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item_like_me) {
     public var freeShow = false
+    public var my_percent_complete: Int = 0
+    public var normal_percent_complete: Int = 0
+    public var myCount: Int = 0
+    public var maxCount: Int = 0
     override fun convert(holder: BaseViewHolder, item: LikeMeBean) {
         holder.addOnClickListener(R.id.likeMeCount)
         val itemView = holder.itemView
@@ -58,8 +63,8 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                         ChatActivity.start(mContext, adapter.data[position].accid ?: "")
                     } else {
 
-                        val params = hashMapOf<String,Any>()
-                        params["target_accid"]= adapter.data[position].accid ?: ""
+                        val params = hashMapOf<String, Any>()
+                        params["target_accid"] = adapter.data[position].accid ?: ""
                         RetrofitFactory.instance.create(Api::class.java)
                             .addLike(UserManager.getSignParams(params))
                             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
@@ -101,7 +106,10 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                                             }
                                         }
                                     } else if (t.code == 201) {
-                                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, mContext).show()
+                                        if (my_percent_complete <= normal_percent_complete)
+                                            RightSlideOutdDialog(mContext, myCount, maxCount).show()
+                                        else
+                                            ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, mContext).show()
                                     } else {
                                         CommonFunction.toast(t.msg)
                                     }

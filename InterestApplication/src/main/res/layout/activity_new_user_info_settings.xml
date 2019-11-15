@@ -325,10 +325,11 @@
                                 android:drawableRight="@drawable/icon_more_right"
                                 android:layout_width="0dp"
                                 android:layout_height="50dp"
+                                android:hint="请选择您的身高"
                                 app:layout_constraintLeft_toRightOf="@id/t1"
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/tmore"
-                                tools:text="165"/>
+                                />
 
                         <include
                                 android:id="@+id/userScoreHeight"
@@ -863,7 +864,7 @@
                         android:layout_width="60dp"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:text="110%"
+                        android:text="0%"
                         android:textColor="@color/colorOrange"
                         android:layout_height="18dp">
                 </TextView>

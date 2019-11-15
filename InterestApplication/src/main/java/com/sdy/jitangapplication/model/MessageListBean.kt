@@ -86,7 +86,11 @@ data class SquareMsg(
 data class LikeMeListBean(
     val isvip: Int? = 0,
     val free_show: Boolean = false,//true（显示）  false(模糊)
-    val list: MutableList<LikeMeBean>? = mutableListOf()
+    val list: MutableList<LikeMeBean>? = mutableListOf(),
+    val my_percent_complete: Int,//（我的资料完整度）
+    val normal_percent_complete: Int,//（标准完整度）
+    val my_like_times: Int,//（我的次数）
+    val total_like_times: Int//  total_like_times（最高次数）
 )
 
 /**

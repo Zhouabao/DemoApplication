@@ -19,8 +19,11 @@ data class MatchListBean(
     var perfect_times: Int = 0,    //滑动x次数跳【完善相册】
     var replace_times: Int = 0, //滑动x次数跳【替换头像】
     var like_times: Int = 0, //剩余滑动次数
-    var highlight_times: Int = 0 //提示剩余次数的节点
-
+    var highlight_times: Int = 0,//提示剩余次数的节点
+    val my_percent_complete: Int,//（我的资料完整度）
+    val normal_percent_complete: Int,//（标准完整度）
+    val my_like_times: Int,//（我的次数）
+    val total_like_times: Int//  total_like_times（最高次数）
 )
 
 /**
@@ -58,7 +61,12 @@ data class MatchBean(
     var greet_switch: Boolean = true,//接收招呼开关   true  接收招呼      false   不接受招呼
     var greet_state: Boolean = true,// 认证招呼开关   true  开启认证      flase   不开启认证
     var isgreeted: Boolean = true,//招呼是否仍然有效
-    val base_info: BaseInfo
+    val base_info: BaseInfo,
+    val my_percent_complete: Int,//（我的资料完整度）
+    val normal_percent_complete: Int,//（标准完整度）
+    val my_like_times: Int,//（我的次数）
+    val total_like_times: Int//  total_like_times（最高次数）
+
 
 ) : Serializable
 

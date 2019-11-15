@@ -71,6 +71,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import java.util.*
@@ -130,8 +132,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-    private fun initView() {
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
 
+    private fun initView() {
+        EventBus.getDefault().register(this)
 
         mPresenter = MatchDetailPresenter()
         mPresenter.mView = this
@@ -148,7 +155,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         paramsClUserInfo.topMargin = layoutParams.height - SizeUtils.dp2px(24f)
         clUserInfo.layoutParams = paramsClUserInfo
 
-
+        vpUserDetail.setScrollable(true)
+        detailPhotosVp.setScrollable(false)
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
@@ -162,7 +170,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
-//            if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
+            //            if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
 //                if (ScreenUtils.isFullScreen(this))
 //                    ScreenUtils.setNonFullScreen(this)
 //            } else {
@@ -362,7 +370,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     //1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
     override fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchBean?) {
         if (success) {
-            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+//            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             matchBean = matchUserDetailBean
             updateBlockStatus()
 
@@ -486,9 +494,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 }
             } else if (statusBean.code == 201) {
                 if (matchBean!!.my_percent_complete <= matchBean!!.normal_percent_complete)
-                    RightSlideOutdDialog(this).show()
+                    RightSlideOutdDialog(this, matchBean!!.my_like_times, matchBean!!.total_like_times).show()
                 else
-                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
+                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
             }
     }
 
@@ -572,7 +580,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
         //举报
         dialog.llJubao.onClick {
-            startActivityForResult<ReportReasonActivity>(100, "target_accid" to matchBean!!.accid,"nickname" to matchBean!!.nickname)
+            startActivityForResult<ReportReasonActivity>(
+                100,
+                "target_accid" to matchBean!!.accid,
+                "nickname" to matchBean!!.nickname
+            )
             dialog.dismiss()
         }
         //解除配对
@@ -647,6 +659,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
                 EventBus.getDefault().post(NotifyEvent(data!!.getIntExtra("position", -1)))
             }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUserDetailViewStateEvent(event: UserDetailViewStateEvent) {
+        if (stateview.viewState != MultiStateView.VIEW_STATE_CONTENT) {
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+        }
     }
 
 

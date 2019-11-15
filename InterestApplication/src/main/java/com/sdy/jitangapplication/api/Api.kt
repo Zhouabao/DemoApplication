@@ -314,12 +314,6 @@ interface Api {
     fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
 
 
-    /**
-     * 举报用户
-     */
-    @FormUrlEncoded
-    @POST("member_info/feedback${Constants.END_BASE_URL}")
-    fun reportUser(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**
      * 登录反馈

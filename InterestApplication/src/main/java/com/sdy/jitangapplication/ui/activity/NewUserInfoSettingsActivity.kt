@@ -848,7 +848,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     userLoveStatus,
                     userScoreEmotion,
                     2,
-                    "请选择您的情感状态",
+                    "请选择您的感情状态",
                     "emotion_state",
                     data?.emotion_list ?: mutableListOf()
                 )
@@ -919,7 +919,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     userEat,
                     userScoreEat,
                     2,
-                    "请选择您的饮食习惯",
+                    "请选择您的作息习惯",
                     "personal_schedule",
                     data?.personal_schedule_list ?: mutableListOf()
                 )
@@ -989,7 +989,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             dialog.confirm.text = "保存"
             dialog.cancel.onClick {
                 setResult(Activity.RESULT_OK)
-                super.onBackPressed()
+                finish()
             }
             dialog.confirm.onClick {
                 updatePhotos(1)
@@ -999,7 +999,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
         } else {
             setResult(Activity.RESULT_OK)
-            super.onBackPressed()
+            finish()
         }
 
 
@@ -1109,8 +1109,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         userFinishProgress.layoutParams = params
 
 
-//        totalGetScore += score //汇总每次的得分
-        totalGetScore = 69//汇总每次的得分
+        totalGetScore += score //汇总每次的得分
         var progress =
             (totalGetScore * 1.0F / (data!!.score_rule!!.base_total) * 100).toInt()
         userScore20.text = "${progress}%"

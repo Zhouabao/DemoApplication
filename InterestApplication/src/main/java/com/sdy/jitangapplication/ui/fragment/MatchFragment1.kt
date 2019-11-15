@@ -43,6 +43,7 @@ import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.GotoVerifyDialog
@@ -70,6 +71,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     //用户适配器
     private val matchUserAdapter: MatchUserAdapter by lazy { MatchUserAdapter(mutableListOf()) }
+    //我的资料完整度
+    private var my_percent_complete: Int = 0//（我的资料完整度）
+    //标准完整度
+    private var normal_percent_complete: Int = 0//（标准完整度）
+    private var myCount: Int = 0//当前滑动次数
+    private var maxCount: Int = 0//最大滑动次数
 
 
     //请求广场的参数 TODO要更新tagid
@@ -266,6 +273,10 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             UserManager.saveUserVerify(matchBeans.isfaced)
             //保存引导次数
             UserManager.motion = matchBeans.motion
+            my_percent_complete = matchBeans.my_percent_complete
+            normal_percent_complete = matchBeans.normal_percent_complete
+            myCount = matchBeans.my_like_times
+            maxCount = matchBeans.total_like_times
             when (matchBeans.motion) {
                 GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
                     EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
@@ -367,7 +378,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 }
                 if (data.data!!.residue == 0) {
                     card_stack_view.rewind()
-                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+                    if (!UserManager.isUserVip()) {
+                        if (my_percent_complete <= normal_percent_complete)
+                            RightSlideOutdDialog(activity!!, myCount, maxCount).show()
+                        else
+                            ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+                    }
                     return
                 }
                 if (data.data!!.status == 2) {//status :1.喜欢成功  2.匹配成功
@@ -688,7 +704,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 } else {
                     card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
                     card_stack_view.isEnabled = false
-                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+
+                    if (my_percent_complete <= normal_percent_complete)
+                        RightSlideOutdDialog(activity!!, myCount, maxCount).show()
+                    else
+                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
                 }
                 updateLeftCountStatus()
 

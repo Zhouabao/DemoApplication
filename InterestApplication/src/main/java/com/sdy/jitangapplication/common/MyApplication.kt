@@ -325,8 +325,8 @@ class MyApplication : BaseApplication() {
         if (NIMUtil.isMainProcess(this)) {
             val option = SmAntiFraud.SmOption()
             option.organization = Constants.SM_ORGANIZATION
-//            option.channel = ChannelReaderUtil.getChannel(this) ?: ""
-            option.channel ="debug"
+            option.channel = ChannelReaderUtil.getChannel(this) ?: ""
+//            option.channel ="debug"
             option.publicKey = Constants.SM_PUBLICKEY
             option.ainfoKey = Constants.SM_AINFOKEY
             Log.d("smOption","${option.organization},${option.channel}")

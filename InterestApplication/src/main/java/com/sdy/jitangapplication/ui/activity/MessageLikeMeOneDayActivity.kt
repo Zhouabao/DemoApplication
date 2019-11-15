@@ -34,6 +34,7 @@ import com.sdy.jitangapplication.presenter.view.MessageLikeMeOneDayView
 import com.sdy.jitangapplication.ui.adapter.LikeMeOneDayGirdAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -71,6 +72,10 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         mPresenter.likeListsCategory(params)
     }
 
+    public val my_percent_complete: Int by lazy { intent.getIntExtra("my_percent_complete", 0) }
+    public val normal_percent_complete: Int by lazy { intent.getIntExtra("normal_percent_complete", 0) }
+    public val myCount: Int by lazy { intent.getIntExtra("myCount", 0) }
+    public val maxCount: Int by lazy { intent.getIntExtra("maxCount", 0) }
     private val adapter by lazy { LikeMeOneDayGirdAdapter(intent.getBooleanExtra("freeShow", false)) }
     private fun initView() {
         btnBack.onClick {
@@ -167,7 +172,10 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
                 sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
             }
         } else if (statusBean.code == 201) {
-            ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
+            if (my_percent_complete <= normal_percent_complete)
+                RightSlideOutdDialog(this,myCount,maxCount).show()
+            else
+                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
         }
     }
 
