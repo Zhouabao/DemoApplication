@@ -237,7 +237,11 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                 PictureConfig.CHOOSE_REQUEST -> {
                     if (data != null) {
                         startAnimation(false)
-                        var path = PictureSelector.obtainMultipleResult(data)[0].path
+                        var path =if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            PictureSelector.obtainMultipleResult(data)[0].androidQToPath
+                        } else {
+                            PictureSelector.obtainMultipleResult(data)[0].path
+                        }
                         UriUtils.getLubanBuilder(this)
                             .load(path)
                             .setCompressListener(object : OnCompressListener {

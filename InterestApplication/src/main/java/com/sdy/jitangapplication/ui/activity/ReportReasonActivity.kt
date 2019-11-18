@@ -16,6 +16,7 @@ import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureConfig.CHOOSE_REQUEST
 import com.luck.picture.lib.config.PictureMimeType
+import com.luck.picture.lib.tools.SdkVersionUtils
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -199,7 +200,10 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
             if (data != null) {
                 if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {
                     for (tdata in PictureSelector.obtainMultipleResult(data)) {
-                        reportPicAdapter.addData(0, tdata.path)
+                        if (SdkVersionUtils.checkedAndroid_Q())
+                            reportPicAdapter.addData(0, tdata.androidQToPath)
+                        else
+                            reportPicAdapter.addData(0, tdata.path)
                     }
                     if (reportPicAdapter.data.size == 4) {
                         reportPicAdapter.remove(reportPicAdapter.data.size - 1)
