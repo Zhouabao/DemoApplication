@@ -257,69 +257,78 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             if (!data.sign.isNullOrEmpty()) {
                 userNickSign.text = "${data.sign}"
                 userScoreAboutMe.isVisible = false
-                updateScoreStatus(userScoreAboutMe, data.score_rule?.about ?: 0)
             }
+            updateScoreStatus(userScoreAboutMe, data.score_rule?.about ?: 0, !data.sign.isNullOrEmpty())
 
             if (data.emotion_state > 0 && data.emotion_list.size > data.emotion_state) {
                 userLoveStatus.text = data.emotion_list[data.emotion_state - 1]
                 userScoreEmotion.isVisible = false
-                updateScoreStatus(userScoreEmotion, data.score_rule?.emotion ?: 0)
-
             }
+            updateScoreStatus(userScoreEmotion, data.score_rule?.emotion ?: 0, data.emotion_state > 0)
             if (data.height > 0) {
                 userHeight.text = "${data.height}"
                 userScoreHeight.isVisible = false
-                updateScoreStatus(userScoreHeight, data.score_rule?.height ?: 0)
-
             }
+            updateScoreStatus(userScoreHeight, data.score_rule?.height ?: 0, data.height > 0)
 
             if (!data.hometown.isNullOrEmpty()) {
                 userHomeTown.text = data.hometown
                 userScoreHomeTown.isVisible = false
-                updateScoreStatus(userScoreHomeTown, data.score_rule?.hometown ?: 0)
-
             }
+            updateScoreStatus(userScoreHomeTown, data.score_rule?.hometown ?: 0, !data.hometown.isNullOrEmpty())
             if (!data.present_address.isNullOrEmpty()) {
                 userLiveNow.text = data.present_address
                 userScoreLiveNow.isVisible = false
-                updateScoreStatus(userScoreLiveNow, data.score_rule?.present_address ?: 0)
-
             }
+            updateScoreStatus(
+                userScoreLiveNow,
+                data.score_rule?.present_address ?: 0,
+                !data.present_address.isNullOrEmpty()
+            )
+
+
             if (!data.personal_job.isNullOrEmpty()) {
                 userJob.text = data.personal_job
                 userScoreJob.isVisible = false
-                updateScoreStatus(userScoreJob, data.score_rule?.personal_job ?: 0)
-
             }
+            updateScoreStatus(userScoreJob, data.score_rule?.personal_job ?: 0, !data.personal_job.isNullOrEmpty())
+
             if (data.making_friends > 0 && data.making_friends_list.size > data.making_friends - 1) {
                 userFriendsAim.text = data.making_friends_list[data.making_friends - 1]
                 userScoreFriendsAim.isVisible = false
-                updateScoreStatus(userScoreFriendsAim, data.score_rule?.making_friends ?: 0)
-
             }
+            updateScoreStatus(userScoreFriendsAim, data.score_rule?.making_friends ?: 0, data.making_friends > 0)
 
             if (!data.personal_school.isNullOrEmpty()) {
                 userSchool.text = data.personal_school
                 userScoreSchool.isVisible = false
-                updateScoreStatus(userScoreSchool, data.score_rule?.personal_school ?: 0)
-
             }
+            updateScoreStatus(
+                userScoreSchool,
+                data.score_rule?.personal_school ?: 0,
+                !data.personal_school.isNullOrEmpty()
+            )
+
+
             if (data.personal_drink > 0 && data.personal_drink_list.size > data.personal_drink - 1) {
                 userDrink.text = data.personal_drink_list[data.personal_drink - 1]
                 userScoreDrink.isVisible = false
-                updateScoreStatus(userScoreDrink, data.score_rule?.personal_drink ?: 0)
             }
+            updateScoreStatus(userScoreDrink, data.score_rule?.personal_drink ?: 0, data.personal_drink > 0)
+
+
+
             if (data.personal_smoke > 0 && data.personal_smoke_list.size > data.personal_smoke - 1) {
                 userSmoke.text = data.personal_smoke_list[data.personal_smoke - 1]
                 userScoreSmoke.isVisible = false
-                updateScoreStatus(userScoreSmoke, data.score_rule?.personal_smoke ?: 0)
             }
+            updateScoreStatus(userScoreSmoke, data.score_rule?.personal_smoke ?: 0, data.personal_smoke > 0)
 
             if (data.personal_schedule > 0 && data.personal_schedule_list.size > data.personal_schedule - 1) {
                 userEat.text = data.personal_schedule_list[data.personal_schedule - 1]
                 userScoreEat.isVisible = false
-                updateScoreStatus(userScoreEat, data.score_rule?.personal_schedule ?: 0)
             }
+            updateScoreStatus(userScoreEat, data.score_rule?.personal_schedule ?: 0, data.personal_schedule > 0)
 
 
             for (photoWallBean in (data.photos_wall ?: mutableListOf()).withIndex()) {
@@ -1027,7 +1036,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
      * 更新添加分数的状态
      * 资料新增后就要改变状态实现动画
      */
-    private fun updateScoreStatus(view: View? = null, score: Int) {
+    private fun updateScoreStatus(view: View? = null, score: Int, update: Boolean? = false) {
         //会员的时候不显示添加分数
         if (view != null) {
 
@@ -1037,7 +1046,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             view.tvAddScoreSmile.text = "+$score"
 
             //如果view处于可见状态，说明之前没有加过分数，那这时就实现动画效果
-            if (view.isVisible) {
+            if (view.isVisible && update == true) {
                 val translateAnimationRight = TranslateAnimation(
                     TranslateAnimation.RELATIVE_TO_SELF,
                     0f,
@@ -1334,7 +1343,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 checkSaveEnable()
 
                 if (scoreView != null && scoreView.isVisible)
-                    updateScoreStatus(scoreView, score)
+                    updateScoreStatus(scoreView, score, update = true)
             })
             .setSubmitText("确定")
             .setTitleText(title)
