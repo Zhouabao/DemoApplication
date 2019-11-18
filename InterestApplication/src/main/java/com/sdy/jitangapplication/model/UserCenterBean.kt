@@ -27,7 +27,9 @@ data class SettingsBean(
     val hide_distance: Boolean = false,//（true开启隐藏  false  关闭隐藏）
     val hide_book: Boolean = false,//（ true 屏蔽通讯录     false  关闭隐藏通讯录）
     val greet_switch: Boolean = false,//true 开启招呼 false关闭招呼
-    val greet_status: Boolean = false//true 开启招呼认证 false关闭招呼认证
+    val greet_status: Boolean = false,//true 开启招呼认证 false关闭招呼认证
+    val notify_square_like_state: Boolean = true,//true 开启招呼认证 false关闭招呼认证
+    val notify_square_comment_state: Boolean = true//true 开启招呼认证 false关闭招呼认证
 )
 
 //个人中心展示封面
