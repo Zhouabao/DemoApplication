@@ -47,22 +47,56 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
             (!PermissionUtils.isGranted(PermissionConstants.LOCATION) ||
-                    !PermissionUtils.isGranted(PermissionConstants.PHONE))
+                    !PermissionUtils.isGranted(PermissionConstants.PHONE) ||
+                    !PermissionUtils.isGranted(PermissionConstants.STORAGE)
+                    )
         ) {
             //定位权限
-            PermissionUtils.permission(PermissionConstants.LOCATION)
+            PermissionUtils.permission(PermissionConstants.STORAGE) //内存卡
                 .callback(object : PermissionUtils.SimpleCallback {
                     override fun onGranted() {
-                        if (PermissionUtils.isGranted(PermissionConstants.PHONE)) {
-                            AMapManager.initLocation(this@SplashActivity)
-                            start2login()
+                        if (PermissionUtils.isGranted(PermissionConstants.PHONE)) {//手機狀態
+                            if (PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位
+                                AMapManager.initLocation(this@SplashActivity)
+                                start2login()
+                            } else {
+                                //请求phone_state权限
+                                PermissionUtils.permission(PermissionConstants.LOCATION)
+                                    .callback(object : PermissionUtils.SimpleCallback {
+                                        override fun onGranted() {
+                                            AMapManager.initLocation(this@SplashActivity)
+                                            start2login()
+                                        }
+
+                                        override fun onDenied() {
+                                            AMapManager.initLocation(this@SplashActivity)
+                                            start2login()
+                                        }
+                                    }).request()
+                            }
                         } else {
                             //请求phone_state权限
                             PermissionUtils.permission(PermissionConstants.PHONE)
-                                .callback(object :PermissionUtils.SimpleCallback{
+                                .callback(object : PermissionUtils.SimpleCallback {
                                     override fun onGranted() {
-                                        AMapManager.initLocation(this@SplashActivity)
-                                        start2login()
+                                        if (PermissionUtils.isGranted(PermissionConstants.LOCATION)) {
+                                            AMapManager.initLocation(this@SplashActivity)
+                                            start2login()
+                                        } else {
+                                            //请求phone_state权限
+                                            PermissionUtils.permission(PermissionConstants.LOCATION)
+                                                .callback(object : PermissionUtils.SimpleCallback {
+                                                    override fun onGranted() {
+                                                        AMapManager.initLocation(this@SplashActivity)
+                                                        start2login()
+                                                    }
+
+                                                    override fun onDenied() {
+                                                        AMapManager.initLocation(this@SplashActivity)
+                                                        start2login()
+                                                    }
+                                                }).request()
+                                        }
                                     }
 
                                     override fun onDenied() {
@@ -75,7 +109,56 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
                     }
 
                     override fun onDenied() {
-                        start2login()
+                        if (PermissionUtils.isGranted(PermissionConstants.PHONE)) {//手機狀態
+                            if (PermissionUtils.isGranted(PermissionConstants.LOCATION)) {//定位
+                                AMapManager.initLocation(this@SplashActivity)
+                                start2login()
+                            } else {
+                                //请求phone_state权限
+                                PermissionUtils.permission(PermissionConstants.LOCATION)
+                                    .callback(object : PermissionUtils.SimpleCallback {
+                                        override fun onGranted() {
+                                            AMapManager.initLocation(this@SplashActivity)
+                                            start2login()
+                                        }
+
+                                        override fun onDenied() {
+                                            AMapManager.initLocation(this@SplashActivity)
+                                            start2login()
+                                        }
+                                    }).request()
+                            }
+                        } else {
+                            //请求phone_state权限
+                            PermissionUtils.permission(PermissionConstants.PHONE)
+                                .callback(object : PermissionUtils.SimpleCallback {
+                                    override fun onGranted() {
+                                        if (PermissionUtils.isGranted(PermissionConstants.LOCATION)) {
+                                            AMapManager.initLocation(this@SplashActivity)
+                                            start2login()
+                                        } else {
+                                            //请求phone_state权限
+                                            PermissionUtils.permission(PermissionConstants.LOCATION)
+                                                .callback(object : PermissionUtils.SimpleCallback {
+                                                    override fun onGranted() {
+                                                        AMapManager.initLocation(this@SplashActivity)
+                                                        start2login()
+                                                    }
+
+                                                    override fun onDenied() {
+                                                        AMapManager.initLocation(this@SplashActivity)
+                                                        start2login()
+                                                    }
+                                                }).request()
+                                        }
+                                    }
+
+                                    override fun onDenied() {
+                                        AMapManager.initLocation(this@SplashActivity)
+                                        start2login()
+                                    }
+                                }).request()
+                        }
                     }
                 })
                 .request()

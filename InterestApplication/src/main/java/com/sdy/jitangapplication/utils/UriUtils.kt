@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.utils
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -147,7 +148,8 @@ object UriUtils {
                     val id = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media._ID))
                     val path = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DATA)) ?: ""
                     val size = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.SIZE)) / 1024L
-                    val displayName = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)) ?: ""
+                    val displayName =
+                        mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)) ?: ""
                     val width = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.WIDTH))
                     val height = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media.HEIGHT))
                     //用于展示相册初始化界面
@@ -337,12 +339,34 @@ object UriUtils {
             .setTargetDir(getCacheDir(context))
     }
 
-    /**
+    /**s
      * 设置缓存文件夹地址
      */
     fun getCacheDir(context: Context): String {
         return NimSDKOptionConfig.getAppCacheDir(context).plus(Constants.CACHE_DIR)
+    }
 
+
+    fun getImageContentUri(context: Context, path: String): Uri? {
+        val cursor = context.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Images.Media._ID), MediaStore.Images.Media.DATA + "=? ",
+            arrayOf(path), null
+        )
+        if (cursor != null && cursor.moveToFirst()) {
+            val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
+            val baseUri = Uri.parse("content://media/external/images/media")
+            return Uri.withAppendedPath(baseUri, "" + id)
+        } else {
+            // 如果图片不在手机的共享图片数据库，就先把它插入。
+            if (File(path).exists()) {
+                val values = ContentValues()
+                values.put(MediaStore.Images.Media.DATA, path);
+                return context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            } else {
+                return null;
+            }
+        }
     }
 
 

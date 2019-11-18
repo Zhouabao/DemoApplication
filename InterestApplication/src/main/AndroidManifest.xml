@@ -84,6 +84,7 @@
             android:usesCleartextTraffic="true"
             android:networkSecurityConfig="@xml/network_security_config"
             android:resizeableActivity="false"
+            android:requestLegacyExternalStorage="true"
             android:roundIcon="@drawable/icon_logo"
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
@@ -102,7 +103,8 @@
         </activity>
         <activity android:name=".ui.activity.ModelAboutMeActivity">
         </activity>
-        <activity android:name=".ui.activity.LoginHelpReasonActivity"
+        <activity
+                android:name=".ui.activity.LoginHelpReasonActivity"
                 android:windowSoftInputMode="adjustPan"/>
         <activity
                 android:name=".ui.activity.AboutMeActivity"
