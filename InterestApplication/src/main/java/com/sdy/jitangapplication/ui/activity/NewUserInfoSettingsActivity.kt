@@ -657,7 +657,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             photos.add(result)
             adapter.notifyDataSetChanged()
             refreshLayout()
-            updateScoreStatus(score = data!!.score_rule!!.photo)
+            updateScoreStatus(score = data!!.score_rule!!.photo, update = true)
         }
     }
 
@@ -768,12 +768,12 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                             userSchool.text = data.getStringExtra("schoolBean")
                             savePersonalParams["personal_school"] = data.getStringExtra("schoolBean")
                             if (userScoreSchool.isVisible)
-                                updateScoreStatus(userScoreSchool, this.data!!.score_rule?.personal_school ?: 0)
+                                updateScoreStatus(userScoreSchool, this.data!!.score_rule?.personal_school ?: 0,update = true)
                         } else {
                             userJob.text = data.getStringExtra("schoolBean")
                             savePersonalParams["personal_job"] = data.getStringExtra("schoolBean")
                             if (userScoreJob.isVisible)
-                                updateScoreStatus(userScoreJob, this.data!!.score_rule?.personal_job ?: 0)
+                                updateScoreStatus(userScoreJob, this.data!!.score_rule?.personal_job ?: 0,update = true)
                         }
                         isChange = true
                         checkSaveEnable()
@@ -784,7 +784,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     savePersonalParams["sign"] = data?.getStringExtra("content")
 
                     if (userScoreAboutMe.isVisible)
-                        updateScoreStatus(userScoreAboutMe, this.data!!.score_rule?.about ?: 0)
+                        updateScoreStatus(userScoreAboutMe, this.data!!.score_rule?.about ?: 0,update = true)
                     isChange = true
                     checkSaveEnable()
                 }
@@ -1114,7 +1114,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
         }
 
-        setScroeProgress(score)
+        if (update == true)
+            setScroeProgress(score)
 
 
     }
