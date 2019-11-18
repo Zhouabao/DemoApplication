@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/colorBlack4C"
+            android:textColor="@color/colorOrange"
             android:textSize="17sp"
             android:layout_marginTop="9dp"
             android:text="性别选定了就不能更改了奥"

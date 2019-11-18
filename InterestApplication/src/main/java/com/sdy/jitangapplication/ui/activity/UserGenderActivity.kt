@@ -3,14 +3,11 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
 import com.sdy.jitangapplication.presenter.view.UserNickNameView
-import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import kotlinx.android.synthetic.main.activity_user_gender.*
-import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import org.jetbrains.anko.startActivity
 
 /**
@@ -71,15 +68,8 @@ class UserGenderActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
 
             }
             R.id.btnNextStep -> {
-                val dialog = DeleteDialog(this)
-                dialog.show()
-                dialog.tip.text = "性别选定了就不能更改了奥"
-                dialog.cancel.onClick { dialog.dismiss() }
-                dialog.confirm.onClick {
-                    dialog.dismiss()
-                    mPresenter.loadingDialg.show()
-                    mPresenter.uploadUserInfo(3, hashMapOf("gender" to gender))
-                }
+                mPresenter.loadingDialg.show()
+                mPresenter.uploadUserInfo(3, hashMapOf("gender" to gender))
 
             }
         }
