@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.nim.session;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import com.luck.picture.lib.tools.SdkVersionUtils;
 import com.sdy.jitangapplication.R;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -65,10 +66,16 @@ public class ChatPickImageAction extends ChatBaseAction {
                 List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < selectList.size(); i++) {
                     LocalMedia media = selectList.get(i);
-                    if (media.getPictureType().startsWith(PictureConfig.IMAGE)) {//发送图片
-                        sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
-                    } else if (media.getPictureType().startsWith(PictureConfig.VIDEO)) {//发送视频
-                        sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getPath()));
+                    if (media.getMimeType().startsWith(PictureConfig.IMAGE)) {//发送图片
+                        if (SdkVersionUtils.checkedAndroid_Q())
+                            sendImageAfterSelfImagePicker(new File(media.getAndroidQToPath()));
+                        else
+                            sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
+                    } else if (media.getMimeType().startsWith(PictureConfig.VIDEO)) {//发送视频
+                        if (SdkVersionUtils.checkedAndroid_Q())
+                            sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getAndroidQToPath()));
+                        else
+                            sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getPath()));
                     }
                 }
             }
