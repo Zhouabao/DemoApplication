@@ -30,6 +30,7 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
@@ -68,6 +69,7 @@ class SayHiDialog(
         initView()
     }
 
+    private val loadingDialog by lazy { LoadingDialog(context1) }
 
     private fun initWindow() {
         val window = this.window
@@ -282,7 +284,7 @@ class SayHiDialog(
             .greetState(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(null) {
                 override fun onStart() {
-
+                    loadingDialog.show()
                 }
 
                 override fun onNext(t: BaseResp<GreetBean?>) {
@@ -314,12 +316,14 @@ class SayHiDialog(
                             CommonFunction.toast(t.msg)
                         }
                     } else {
+                        loadingDialog.dismiss()
                         EventBus.getDefault().post(GreetEvent(context1, true))
                         CommonFunction.toast(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
+                    loadingDialog.dismiss()
                     if (e is BaseException) {
                         TickDialog(context1).show()
                     }
@@ -348,6 +352,7 @@ class SayHiDialog(
     fun greet() {
         if (!NetworkUtils.isConnected()) {
             CommonFunction.toast("请连接网络！")
+            loadingDialog.dismiss()
             return
         }
 
@@ -361,17 +366,21 @@ class SayHiDialog(
                     if (t.code == 200) {
                         onGreetSResult(true)
                     } else if (t.code == 403) {//登录异常
+                        loadingDialog.dismiss()
                         UserManager.startToLogin(context1 as Activity)
                     } else if (t.code == 401) {
+                        loadingDialog.dismiss()
                         EventBus.getDefault().post(GreetEvent(context1, true))
                         HarassmentDialog(context1, HarassmentDialog.CHATHI).show() //开启招呼提示
                     } else {
+                        loadingDialog.dismiss()
                         EventBus.getDefault().post(GreetEvent(context1, true))
                         CommonFunction.toast(t.msg)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
+                    loadingDialog.dismiss()
                     CommonFunction.toast(context1.getString(R.string.service_error))
                 }
             })
@@ -404,15 +413,31 @@ class SayHiDialog(
         container.proxy.sendMessage(message)
     }
 
+
+    private fun sendTextMessage() {
+        val container = Container(context1 as Activity, target_accid, SessionTypeEnum.P2P, this, true)
+        val message = MessageBuilder.createTextMessage(
+            target_accid,
+            SessionTypeEnum.P2P,
+            sayHiContent.text.trim().toString()
+        )
+        container.proxy.sendMessage(message)
+    }
+
     override fun sendMessage(msg: IMMessage): Boolean {
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                startAnimation()
-                //发送通知修改招呼次数
-                UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
-                EventBus.getDefault().postSticky(UpdateHiCountEvent())
-                EventBus.getDefault().post(GreetEvent(context1, true))
+                if (msg.msgType == MsgTypeEnum.text) {
+                    loadingDialog.dismiss()
+                    startAnimation()
+                    //发送通知修改招呼次数
+                    UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
+                    EventBus.getDefault().postSticky(UpdateHiCountEvent())
+                    EventBus.getDefault().post(GreetEvent(context1, true))
+                } else {
+                    sendTextMessage()
+                }
             }
 
             override fun onFailed(code: Int) {
