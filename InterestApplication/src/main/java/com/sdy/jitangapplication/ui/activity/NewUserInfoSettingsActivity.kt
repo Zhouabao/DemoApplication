@@ -384,6 +384,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         }
 
 
+        //不能删除头像
+        dialog.lldelete.isVisible = position != 0
+
+
+
         dialog.makeAvator.onClick {
             if (position != 0) {
                 if (adapter.data[position].has_face != 2) {
@@ -407,19 +412,20 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     PermissionUtils.permission(PermissionConstants.CAMERA)
                         .callback(object : PermissionUtils.SimpleCallback {
                             override fun onGranted() {
-                                if (!PermissionUtils.isGranted(PermissionConstants.STORAGE))
-                                    PermissionUtils.permission(PermissionConstants.STORAGE)
-                                        .callback(object : PermissionUtils.SimpleCallback {
-                                            override fun onGranted() {
-                                                onTakePhoto(1, true)
-                                            }
+                                if (!PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
+                                }
+                                PermissionUtils.permission(PermissionConstants.STORAGE)
+                                    .callback(object : PermissionUtils.SimpleCallback {
+                                        override fun onGranted() {
+                                            onTakePhoto(1, true)
+                                        }
 
-                                            override fun onDenied() {
-                                                CommonFunction.toast("文件存储权限被拒,请允许权限后再上传照片.")
-                                            }
+                                        override fun onDenied() {
+                                            CommonFunction.toast("文件存储权限被拒,请允许权限后再上传照片.")
+                                        }
 
-                                        })
-                                        .request()
+                                    })
+                                    .request()
                             }
 
                             override fun onDenied() {
