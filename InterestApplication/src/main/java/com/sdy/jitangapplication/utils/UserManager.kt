@@ -734,17 +734,18 @@ object UserManager {
         //初始化消息提醒配置
         initNotificationConfig()
 
+        //昵称 生日 性别 头像
         if (data == null || data.userinfo == null || data.userinfo.nickname.isNullOrEmpty()) {
             context.startActivity<UserNickNameActivity>()
-            return
-        } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {
-            context.startActivity<UserAvatorActivity>()
             return
         } else if (data.userinfo.gender == 0) {
             context.startActivity<UserGenderActivity>()
             return
-        } else if (data.userinfo.birth.isEmpty() || data.userinfo.birth.toLong() == 0L) {
+        } else if (data.userinfo.birth.isEmpty() || data.userinfo.birth.toInt() == 0) {
             context.startActivity<UserBirthActivity>()
+            return
+        } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {
+            context.startActivity<UserAvatorActivity>()
             return
         } else {
             saveUserInfo(data)
