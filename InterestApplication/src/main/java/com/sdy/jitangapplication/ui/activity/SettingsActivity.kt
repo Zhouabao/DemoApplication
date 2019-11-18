@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
+import com.blankj.utilcode.util.SPUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
@@ -14,6 +15,7 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.AuthService
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.SettingsBean
 import com.sdy.jitangapplication.model.VersionBean
 import com.sdy.jitangapplication.presenter.SettingsPresenter
@@ -81,7 +83,11 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
             }
             //消息提醒
             R.id.msgNotificate -> {
-                startActivity<NotificationActivity>()
+                // notify_square_like_state  notify_square_comment_state
+                startActivity<NotificationActivity>(
+                    "notify_square_like_state" to settingsBean?.notify_square_like_state,
+                    "notify_square_comment_state" to settingsBean?.notify_square_comment_state
+                )
             }
 
             //进入帮助
@@ -220,9 +226,15 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         }
     }
 
+    private var settingsBean: SettingsBean? = null
 
     override fun onSettingsBeanResult(success: Boolean, settingsBean: SettingsBean?) {
         if (success) {
+            this.settingsBean = settingsBean
+            SPUtils.getInstance(Constants.SPNAME).put("switchDianzan", settingsBean?.notify_square_like_state?:true)
+            SPUtils.getInstance(Constants.SPNAME).put("switchComment", settingsBean?.notify_square_comment_state?:true)
+
+
             stateSettings.viewState = MultiStateView.VIEW_STATE_CONTENT
             switchDistance.isChecked = settingsBean!!.hide_distance
             switchContacts.isChecked = settingsBean!!.hide_book

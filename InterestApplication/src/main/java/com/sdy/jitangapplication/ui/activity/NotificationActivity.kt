@@ -1,21 +1,23 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
+import android.view.View
 import android.widget.CompoundButton
-import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseActivity
+import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.nim.DemoCache
+import com.sdy.jitangapplication.presenter.NotificationPresenter
+import com.sdy.jitangapplication.presenter.view.NotificationView
 import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
  * 通知提醒
  */
-class NotificationActivity : BaseActivity(), CompoundButton.OnCheckedChangeListener {
+class NotificationActivity : BaseMvpActivity<NotificationPresenter>(), NotificationView,
+    CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,20 +26,27 @@ class NotificationActivity : BaseActivity(), CompoundButton.OnCheckedChangeListe
     }
 
     private fun initView() {
+        mPresenter = NotificationPresenter()
+        mPresenter.context = this
+        mPresenter.mView = this
+
         btnBack.onClick {
             finish()
         }
         hotT1.text = "消息提醒"
 
-        switchDianzan.setOnCheckedChangeListener(this)
-        switchComment.setOnCheckedChangeListener(this)
+        tvSwitchComment.setOnClickListener(this)
+        tvSwitchDianzan.setOnClickListener(this)
+        //switchDianzan.setOnCheckedChangeListener(this)
+        //switchComment.setOnCheckedChangeListener(this)
         switchReply.setOnCheckedChangeListener(this)
         switchMusic.setOnCheckedChangeListener(this)
         switchVibrator.setOnCheckedChangeListener(this)
 
+        //// notify_square_like_state  notify_square_comment_state
 
-        switchDianzan.isChecked = SPUtils.getInstance(Constants.SPNAME).getBoolean("switchDianzan", true)
-        switchComment.isChecked = SPUtils.getInstance(Constants.SPNAME).getBoolean("switchComment", true)
+        switchDianzan.isChecked = intent.getBooleanExtra("notify_square_like_state", true)
+        switchComment.isChecked = intent.getBooleanExtra("notify_square_comment_state", true)
         switchMusic.isChecked = DemoCache.getNotificationConfig().ring
         switchVibrator.isChecked = DemoCache.getNotificationConfig().vibrate
     }
@@ -45,14 +54,8 @@ class NotificationActivity : BaseActivity(), CompoundButton.OnCheckedChangeListe
 
     override fun onCheckedChanged(button: CompoundButton, check: Boolean) {
         when (button.id) {
-            //点赞提醒
-            R.id.switchDianzan -> {
-                SPUtils.getInstance(Constants.SPNAME).put("switchDianzan", check)
-            }
-            //评论提醒
-            R.id.switchComment -> {
-                SPUtils.getInstance(Constants.SPNAME).put("switchComment", check)
-            }
+
+
             //回复提醒
             R.id.switchReply -> {
                 NIMClient.toggleNotification(check)
@@ -73,4 +76,30 @@ class NotificationActivity : BaseActivity(), CompoundButton.OnCheckedChangeListe
         }
     }
 
+
+    override fun onClick(view: View) {
+        when (view) {
+            tvSwitchDianzan -> {    //点赞提醒
+                mPresenter.squareNotifySwitch(1)
+            }
+            tvSwitchComment -> {     //评论提醒
+                mPresenter.squareNotifySwitch(2)
+            }
+        }
+    }
+
+
+    //用户广场点赞/评论接收推送开关 参数 type（int）型    1点赞    2评论
+    override fun onGreetApproveResult(type: Int, success: Boolean) {
+
+        when (type) {
+            1 -> {
+                switchDianzan.isChecked = !switchDianzan.isChecked
+            }
+            2 -> {
+                switchComment.isChecked = !switchComment.isChecked
+
+            }
+        }
+    }
 }
