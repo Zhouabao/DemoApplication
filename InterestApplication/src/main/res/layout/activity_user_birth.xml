@@ -57,7 +57,7 @@
             android:textColor="@color/colorBlack4C"
             android:textSize="17sp"
             android:layout_marginTop="9dp"
-            android:text="让我看看好看的人都是什么星座？"
+            android:text="让我看看你是什么星座？"
             />
 
 
@@ -67,7 +67,6 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
 
         <com.sdy.jitangapplication.widgets.VerificationCodeInput
                 android:id="@+id/userBirthYear"

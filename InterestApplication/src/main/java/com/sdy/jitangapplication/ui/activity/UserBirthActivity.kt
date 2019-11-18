@@ -88,31 +88,31 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
      */
     private fun calculateAgeAndAstro() {
         if (year == null || year!!.isEmpty()) {
-            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            userCollesationNotify.text = "让我看看你是什么星座？"
             btnNextStep.isEnabled = false
             return
         }
         if (month == null || month!!.isEmpty() || month!!.length != 2) {
-            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            userCollesationNotify.text = "让我看看你是什么星座？"
             btnNextStep.isEnabled = false
             return
         }
 
         if (day == null || day!!.isEmpty() || day!!.length != 2) {
-            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            userCollesationNotify.text = "让我看看你是什么星座？"
             btnNextStep.isEnabled = false
             return
         }
 
         if (!judgeYear(year!!.toInt())) { //年份不正确
-            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            userCollesationNotify.text = "让我看看你是什么星座？"
             btnNextStep.isEnabled = false
             userBirthYear.clear()
             return
         }
 
         if (!judgeBirth(month!!.toInt(), day!!.toInt())) { //月份不正确
-            userCollesationNotify.text = "让我看看好看的人都是什么星座？"
+            userCollesationNotify.text = "让我看看你是什么星座？"
             btnNextStep.isEnabled = false
             return
         }
