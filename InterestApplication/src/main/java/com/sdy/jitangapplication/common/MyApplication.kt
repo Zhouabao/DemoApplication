@@ -29,11 +29,7 @@ import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
-import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivity
-import com.sdy.jitangapplication.event.GetNewMsgEvent
-import com.sdy.jitangapplication.event.ReVerifyEvent
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
@@ -46,7 +42,6 @@ import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
-import com.sdy.jitangapplication.ui.activity.MessageHiActivity
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
@@ -97,17 +92,15 @@ class MyApplication : BaseApplication() {
                         initNotificationManager(customerMsgBean.msg)
                     }
                     2 -> {//对方删除自己,本地删除会话列表
-                        NIMClient.getService(MsgService::class.java)
-                            .deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
                         // 删除与某个聊天对象的全部消息记录
-                        NIMClient.getService(MsgService::class.java)
-                            .clearChattingHistory(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java).clearChattingHistory(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
+                        EventBus.getDefault().post(UpdateContactBookEvent())
+
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(ChatActivity::class.java)
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(MessageHiActivity::class.java)
                         EventBus.getDefault().postSticky(UpdateHiEvent())
 
                     }
@@ -142,10 +135,12 @@ class MyApplication : BaseApplication() {
 
 
     private fun initNotificationManager(msg: String) {
-        val manager = getSystemService(SwipeBackActivity.NOTIFICATION_SERVICE) as NotificationManager
+        val msgs = msg.split("\\n")
+
+        var manager: NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         //8.0 以后需要加上channelId 才能正常显示
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "default"
+            val channelId = "subscribe"
             val channelName = "默认通知"
             manager.createNotificationChannel(
                 NotificationChannel(
@@ -155,40 +150,36 @@ class MyApplication : BaseApplication() {
                 )
             )
         }
-
-
         //为了版本兼容  选择V7包下的NotificationCompat进行构造
-        val builder = NotificationCompat.Builder(this, "default")
-        //Ticker是状态栏显示的提示
-//        builder.setTicker("通知")
-        //第一行内容  通常作为通知栏标题
-//        builder.setContentTitle("积糖")
-        //第二行内容 通常是通知正文
-        builder.setContentText(msg)
-        //第三行内容 通常是内容摘要什么的 在低版本机器上不一定显示
-//        builder.setSubText("这里显示的是通知第三行内容！")
-        //ContentInfo 在通知的右侧 时间的下面 用来展示一些其他信息
-        //builder.setContentInfo("2");
-        //number设计用来显示同种通知的数量和ContentInfo的位置一样，如果设置了ContentInfo则number会被隐藏
-//        builder.setNumber(2)
-        //可以点击通知栏的删除按钮删除
-        builder.setAutoCancel(true)
-        //系统状态栏显示的小图标
-        builder.setSmallIcon(com.sdy.jitangapplication.R.drawable.icon_logo)
-        //下拉显示的大图标
-        builder.setLargeIcon(
-            BitmapFactory.decodeResource(
-                resources,
-                com.sdy.jitangapplication.R.drawable.icon_logo
-            )
-        )
         val intent = Intent(this, MainActivity::class.java)
-        val pIntent = PendingIntent.getActivity(this, 1, intent, 0)
-        //点击跳转的intent
-        builder.setContentIntent(pIntent)
-        //通知默认的声音 震动 呼吸灯
-        builder.setDefaults(NotificationCompat.DEFAULT_ALL)
-        val notification = builder.build()
+        val pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val notification = NotificationCompat.Builder(this, "subscribe")
+            .setContentText(
+                if (msgs.size > 1) {
+                    msgs[1]
+                } else {
+                    msg
+                }
+            )
+            .setContentTitle(
+                if (msgs.size > 1) {
+                    msgs[0]
+                } else {
+                    ""
+                }
+            )
+            .setAutoCancel(true)
+            .setWhen(System.currentTimeMillis())
+            .setSmallIcon(com.sdy.jitangapplication.R.drawable.icon_logo)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    resources,
+                    com.sdy.jitangapplication.R.drawable.icon_logo
+                )
+            )
+            .setContentIntent(pendingIntent)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .build()
         manager.notify(1, notification)
 
     }
@@ -319,22 +310,20 @@ class MyApplication : BaseApplication() {
     }
 
 
-
-
-    private fun initSM(){
+    private fun initSM() {
         try {//指定主进程才能执行
             if (NIMUtil.isMainProcess(this)) {
                 val option = SmAntiFraud.SmOption()
                 option.organization = Constants.SM_ORGANIZATION
                 option.channel = ChannelReaderUtil.getChannel(this) ?: ""
-    //            option.channel ="debug"
+                //            option.channel ="debug"
                 option.publicKey = Constants.SM_PUBLICKEY
                 option.ainfoKey = Constants.SM_AINFOKEY
-                Log.d("smOption","${option.organization},${option.channel}")
-                SmAntiFraud.create(this,option)
+                Log.d("smOption", "${option.organization},${option.channel}")
+                SmAntiFraud.create(this, option)
             }
         } catch (e: Exception) {
-            Log.d("SmAntiFraud",e.message?:"")
+            Log.d("SmAntiFraud", e.message ?: "")
         }
     }
 }

@@ -429,8 +429,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(ChatActivity::class.java)
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(MessageHiActivity::class.java)
                         EventBus.getDefault().post(UpdateHiEvent())
 
                     } else {

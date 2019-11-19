@@ -21,6 +21,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.android.material.appbar.AppBarLayout
@@ -44,6 +46,8 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
@@ -439,9 +443,20 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     override fun onGetUserActionResult(success: Boolean, result: String?) {
         if (success) {
             if (result == "解除成功!") {
-//                matchBean!!.isfriend = 0
-                //更新数据
-//                initData()
+                NIMClient.getService(MsgService::class.java)
+                    .deleteRecentContact2(matchBean!!.accid ?: "", SessionTypeEnum.P2P)
+                // 删除与某个聊天对象的全部消息记录
+                NIMClient.getService(MsgService::class.java)
+                    .clearChattingHistory(matchBean!!.accid ?: "", SessionTypeEnum.P2P)
+
+                EventBus.getDefault().post(UpdateContactBookEvent())
+                if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
+                    ActivityUtils.finishActivity(MessageInfoActivity::class.java)
+                if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
+                    ActivityUtils.finishActivity(ChatActivity::class.java)
+                EventBus.getDefault().postSticky(UpdateHiEvent())
+
+                matchBean!!.isfriend = 0
             } else if (result == "拉黑成功!") {
                 NIMClient.getService(FriendService::class.java).addToBlackList(matchBean!!.accid)
                 NIMClient.getService(MsgService::class.java)
