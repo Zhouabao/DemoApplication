@@ -94,7 +94,7 @@ class VerificationCodeInput @JvmOverloads constructor(
         child_hint = array.getString(R.styleable.VerificationCodeInput_child_hint) ?: ""
         boxWidth = array.getDimension(R.styleable.VerificationCodeInput_child_width, boxWidth.toFloat()).toInt()
         boxHeight = array.getDimension(R.styleable.VerificationCodeInput_child_height, boxHeight.toFloat()).toInt()
-        etTextSize = array.getDimension(R.styleable.VerificationCodeInput_child_height, etTextSize)
+//        etTextSize = array.getDimension(R.styleable.VerificationCodeInput_etTextSize, etTextSize)
         etAutoShow = array.getBoolean(R.styleable.VerificationCodeInput_autoShowInputBoard, false)
         array.recycle()
         initViews()
@@ -179,21 +179,6 @@ class VerificationCodeInput @JvmOverloads constructor(
 
 
     private fun initViews() {
-        val onKeyListener = OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_UP) {
-                if (v?.tag == (boxCount - 1)) {
-                    if (lastEtisEmpty) {
-                        backFocus()
-                    }
-                    lastEtisEmpty = true
-                } else {
-                    backFocus()
-                }
-            }
-            false
-        }
-
-
         for (i in 0 until boxCount) {
             val editText = EditText(context)
             val layoutParams = LinearLayout.LayoutParams(boxWidth, boxHeight)
