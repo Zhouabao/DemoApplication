@@ -27,7 +27,7 @@
         <attr name="child_v_padding" format="dimension"/>
         <attr name="child_width" format="dimension"/>
         <attr name="child_height" format="dimension"/>
-        <attr name="etTextSize" format="dimension"/>
+        <attr name="etTextSize" format="integer"/>
         <attr name="padding" format="dimension"/>
         <attr name="child_hint" format="string"/>
         <attr name="box_bg_focus" format="reference"/>

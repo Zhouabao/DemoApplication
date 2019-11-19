@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.widgets
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.InputFilter
@@ -10,6 +11,7 @@ import android.text.TextWatcher
 import android.text.method.PasswordTransformationMethod
 import android.util.AttributeSet
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -25,7 +27,6 @@ import com.sdy.jitangapplication.R
 class VerificationCodeInput @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr), TextWatcher, OnKeyListener {
-
 
 
     private var lastEtisEmpty = true
@@ -58,7 +59,7 @@ class VerificationCodeInput @JvmOverloads constructor(
                 backFocus()
             }
         }
-       return false
+        return false
     }
 
 
@@ -80,7 +81,7 @@ class VerificationCodeInput @JvmOverloads constructor(
     private var inputType = TYPE_NUMBER
     private var boxBgFocus: Drawable? = null
     private var boxBgNormal: Drawable? = null
-    private var etTextSize: Float = 16F
+    private var etTextSize: Int = 29
     private var listener: Listener? = null
 
     init {
@@ -94,7 +95,7 @@ class VerificationCodeInput @JvmOverloads constructor(
         child_hint = array.getString(R.styleable.VerificationCodeInput_child_hint) ?: ""
         boxWidth = array.getDimension(R.styleable.VerificationCodeInput_child_width, boxWidth.toFloat()).toInt()
         boxHeight = array.getDimension(R.styleable.VerificationCodeInput_child_height, boxHeight.toFloat()).toInt()
-//        etTextSize = array.getDimension(R.styleable.VerificationCodeInput_etTextSize, etTextSize)
+        etTextSize = array.getInteger(R.styleable.VerificationCodeInput_etTextSize, etTextSize)
         etAutoShow = array.getBoolean(R.styleable.VerificationCodeInput_autoShowInputBoard, false)
         array.recycle()
         initViews()
@@ -181,7 +182,7 @@ class VerificationCodeInput @JvmOverloads constructor(
     private fun initViews() {
         for (i in 0 until boxCount) {
             val editText = EditText(context)
-            val layoutParams = LinearLayout.LayoutParams(boxWidth, boxHeight)
+            val layoutParams = LinearLayout.LayoutParams(boxWidth, LinearLayout.LayoutParams.WRAP_CONTENT)
             layoutParams.bottomMargin = childVPadding
             layoutParams.topMargin = childVPadding
             layoutParams.leftMargin = childHPadding
@@ -196,10 +197,11 @@ class VerificationCodeInput @JvmOverloads constructor(
             editText.tag = i
             setBg(editText, false)
             editText.setTextColor(Color.BLACK)
-            editText.setTextSize(etTextSize)
+            editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, etTextSize.toFloat())
             editText.paint.isFakeBoldText = true
             editText.layoutParams = layoutParams
             editText.gravity = Gravity.CENTER
+            editText.typeface = Typeface.createFromAsset(context.assets, "DIN_Alternate_Bold.ttf")
             editText.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(1))
 
             if (TYPE_NUMBER == inputType) {

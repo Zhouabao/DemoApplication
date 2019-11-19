@@ -62,7 +62,7 @@
             android:id="@+id/changePhone"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:gravity="center"
+            android:gravity="bottom"
             android:textColor="#FF519AFB"
             android:textSize="14sp"
             android:layout_marginLeft="3dp"
@@ -83,11 +83,12 @@
             android:focusable="true"
             android:layout_marginLeft="5dp"
             app:autoShowInputBoard="true"
+            app:box="6"
+            app:etTextSize="29"
+            app:inputType="number"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvPhone"
-            ver:box="6"
-            ver:inputType="number"/>
+            app:layout_constraintTop_toBottomOf="@id/tvPhone"/>
 
 
     <TextView
