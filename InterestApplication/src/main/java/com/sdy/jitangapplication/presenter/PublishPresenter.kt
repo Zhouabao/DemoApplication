@@ -32,7 +32,12 @@ class PublishPresenter : BasePresenter<PublishView>() {
     /**
      * 广场发布
      */
-    fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: MutableList<Int>, keyList: MutableList<String> = mutableListOf()) {
+    fun publishContent(
+        type: Int,
+        params: HashMap<String, Any>,
+        checkIds: MutableList<Int>,
+        keyList: MutableList<String> = mutableListOf()
+    ) {
         if (!checkNetWork()) {
             CommonFunction.toast("网络不可用")
             return
@@ -81,18 +86,24 @@ class PublishPresenter : BasePresenter<PublishView>() {
     fun uploadFile(totalCount: Int, currentCount: Int, filePath: String, imagePath: String, type: Int) {
         val file = File(filePath)
         if (!file.exists()) {
-            Log.d("OkHttp", "文件不存在")
+            mView.onSquareAnnounceResult(1, false)
             return
         }
         if (!checkNetWork()) {
             CommonFunction.toast("网络不可用")
+            mView.onSquareAnnounceResult(1, false)
             return
         }
+        Log.d("OkHttp", filePath)
+        Log.d("OkHttp", "${file.absolutePath},${file.length() / 1024f / 1024F}")
+
         QNUploadManager.getInstance().put(
-            file,
+            filePath,
             imagePath,
             SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
             { key, info, response ->
+                Log.d("OkHttp", response.toString())
+                Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null) {
                     if (!info.isOK) {
 //                        mView.onQnUploadResult(false, type, key)

@@ -1,12 +1,10 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
-import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -1029,22 +1027,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             params.topMargin = SizeUtils.dp2px(10F)
             adapter.headerLayout.friendTv.layoutParams = params
         } else if (UserManager.publishState == 0) {
-            if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    if (event.context is UserCenterActivity) {
-                        event.context.startActivity<PublishActivity>("from" to 2)
-                    } else {
-                        event.context.startActivity<PublishActivity>()
-                    }
-                } else {
-                    if (event.context is UserCenterActivity) {
-                        event.context.startActivity<PublishActivity>("from" to 2)
-                    } else {
-                        event.context.startActivity<PublishActivity>()
-                    }
-                }
-
-
+            if (event.context is UserCenterActivity) {
+                event.context.startActivity<PublishActivity>("from" to 2)
+            } else {
+                event.context.startActivity<PublishActivity>()
+            }
         }
     }
 
