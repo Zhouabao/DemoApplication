@@ -328,7 +328,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
      */
     private fun removeStar() {
         val params = UserManager.getBaseParams()
-        params["account"] = account ?: ""
+        params["target_accid"] = account ?: ""
         RetrofitFactory.instance.create(Api::class.java)
             .removeStarTarget(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
