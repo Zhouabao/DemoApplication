@@ -47,7 +47,7 @@ class MultiListSquareAdapter(
     var playPosition: Int = 0,
     var resetAudioListener: ResetAudioListener? = null
 ) :
-    BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data){
+    BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
     companion object {
         val TAG = "RecyclerView2List"
     }
@@ -90,8 +90,16 @@ class MultiListSquareAdapter(
             if (resetAudioListener != null) {
                 resetAudioListener!!.resetAudioState()
             }
-            CommonFunction.commonGreet(mContext,item.isfriend,item.greet_switch,item.greet_state,item.accid,item.nickname?:"",item.isgreeted)
-
+            CommonFunction.commonGreet(
+                mContext,
+                item.isfriend,
+                item.greet_switch,
+                item.greet_state,
+                item.accid,
+                item.nickname ?: "",
+                item.isgreeted,
+                holder.itemView.squareChatBtn1
+            )
 
         }
 
@@ -279,7 +287,6 @@ class MultiListSquareAdapter(
         }
 
     }
-
 
 
     interface ResetAudioListener {

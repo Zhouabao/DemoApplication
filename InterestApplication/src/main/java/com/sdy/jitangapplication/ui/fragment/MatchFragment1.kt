@@ -207,7 +207,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     matchUserAdapter.data[manager.topPosition].greet_switch,
                     matchUserAdapter.data[manager.topPosition].greet_state,
                     matchUserAdapter.data[manager.topPosition].accid,
-                    matchUserAdapter.data[manager.topPosition].nickname ?: ""
+                    matchUserAdapter.data[manager.topPosition].nickname ?: "",
+                    view = btnChat
                 )
 
 //                if (UserManager.getLightingCount() <= 0) {

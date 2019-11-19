@@ -206,7 +206,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 squareBean?.greet_state ?: false,
                 squareBean?.accid ?: "",
                 squareBean?.nickname ?: "",
-                squareBean?.isgreeted ?: false
+                squareBean?.isgreeted ?: false,
+                squareChatBtn1
             )
         }
         squareUserIv1.onClick {
@@ -1111,7 +1112,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         return super.dispatchTouchEvent(ev)
     }
-
 
 
 }

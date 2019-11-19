@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.common
 import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
+import android.view.View
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.sdy.jitangapplication.R
@@ -47,8 +48,10 @@ object CommonFunction {
         greet_state: Boolean,// 认证招呼开关   true  开启认证      flase   不开启认证
         targetAccid: String,
         targetNickName: String,
-        isgreeted: Boolean = false//招呼是否有效
+        isgreeted: Boolean = false,//招呼是否有效
+        view: View
     ) {
+        view.isEnabled = false
         if (isfriend || isgreeted) {
             ChatActivity.start(context, targetAccid)
         } else {
@@ -66,5 +69,6 @@ object CommonFunction {
                 ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, context, ChargeVipDialog.PURCHASE_GREET_COUNT).show()
             }
         }
+        view.postDelayed({ view.isEnabled = true }, 500L)
     }
 }

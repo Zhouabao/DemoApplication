@@ -513,7 +513,7 @@ class MatchDetailActivity1 : BaseMvpActivity<MatchDetailPresenter>(), MatchDetai
                         matchBean!!.greet_state,
                         matchBean!!.accid,
                         matchBean!!.nickname ?: "",
-                        matchBean!!.isgreeted
+                        matchBean!!.isgreeted,detailUserChatBtn
                     )
             }
 
