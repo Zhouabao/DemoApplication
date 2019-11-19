@@ -3,8 +3,11 @@ package com.sdy.jitangapplication.ui.activity
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,6 +53,19 @@ class ChooseSchoolActivity : BaseMvpActivity<ChooseSchoolPresenter>(), ChooseSch
         mPresenter = ChooseSchoolPresenter()
         mPresenter.mView = this
         mPresenter.context = this
+
+
+        //获取到TextView的ID
+        val id = searchSchool.context.resources.getIdentifier("android:id/search_src_text", null, null)
+        //获取到TextView的控件
+        val textView = searchSchool.findViewById(id) as TextView
+        //设置字体大小为14sp
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)//14sp
+        //设置字体颜色
+        textView.setTextColor(resources.getColor(R.color.colorBlack))
+        //设置提示文字颜色
+        textView.setHintTextColor(Color.parseColor("#FFBEBEC8"))
+
 
         if (intent.getIntExtra("type", CHOOSE_SCHOOL) == CHOOSE_SCHOOL) {
             hotT1.text = "添加学校"
