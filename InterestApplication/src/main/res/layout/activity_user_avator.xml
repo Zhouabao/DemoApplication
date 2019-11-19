@@ -87,6 +87,7 @@
                 android:layout_height="wrap_content">
 
             <ImageView
+                    android:id="@+id/avatorNotifyIv"
                     android:layout_marginLeft="5dp"
                     android:layout_gravity="left|center_vertical"
                     android:src="@drawable/icon_logo"

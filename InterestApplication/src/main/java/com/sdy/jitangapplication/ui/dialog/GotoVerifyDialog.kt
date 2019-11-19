@@ -20,7 +20,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.ui.activity.UserInfoSettingsActivity
+import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.utils.UserManager
 import org.jetbrains.anko.startActivity
 
@@ -192,8 +192,8 @@ class GotoVerifyDialog : Dialog {
                 dialog.verifyChange?.onClick {
                     //TODO 替换头像
                     humanVerify(2)
-                    if (ActivityUtils.getTopActivity() != UserInfoSettingsActivity::class.java)
-                        context.startActivity<UserInfoSettingsActivity>()
+                    if (ActivityUtils.getTopActivity() != NewUserInfoSettingsActivity::class.java)
+                        context.startActivity<NewUserInfoSettingsActivity>()
                     if (this.cancelable)
                         dialog.cancel()
                 }
@@ -213,8 +213,8 @@ class GotoVerifyDialog : Dialog {
                         dialog.cancel()
                 }
                 dialog.btDialogConfirm?.onClick {
-                    if (ActivityUtils.getTopActivity() != UserInfoSettingsActivity::class.java)
-                        context.startActivity<UserInfoSettingsActivity>()
+                    if (ActivityUtils.getTopActivity() != NewUserInfoSettingsActivity::class.java)
+                        context.startActivity<NewUserInfoSettingsActivity>()
                     dialog.cancel()
                 }
             }

@@ -50,7 +50,7 @@ class AboutMeActivity : BaseActivity() {
         aboutMeContent.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 saveBtn.isEnabled = !aboutMeContent.text.isNullOrEmpty()
-                aboutMeContent.setSelection(aboutMeContent.length())
+                //aboutMeContent.setSelection(aboutMeContent.length())
                 aboutMeInputLength.text = SpanUtils.with(aboutMeInputLength)
                     .append(aboutMeContent.length().toString())
                     .setFontSize(14, true)
@@ -70,6 +70,7 @@ class AboutMeActivity : BaseActivity() {
 
         if (!intent.getStringExtra("content").isNullOrEmpty()) {
             aboutMeContent.setText(intent.getStringExtra("content"))
+            aboutMeContent.setSelection(aboutMeContent.length())
         }
 
         saveBtn.onClick {
@@ -84,6 +85,7 @@ class AboutMeActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && data != null) {
             aboutMeContent.setText(data.getStringExtra("content"))
+            aboutMeContent.setSelection(aboutMeContent.length())
             intent = data
         }
     }

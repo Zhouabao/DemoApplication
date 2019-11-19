@@ -302,9 +302,13 @@ object UserManager {
      */
     fun isUserInfoMade(): Boolean {
         try {
+            if (!SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty()) {
+                SPUtils.getInstance(Constants.SPNAME)
+                    .put("birth", SPUtils.getInstance(Constants.SPNAME).getString("birth", "0").toInt())
+            }
             if (SPUtils.getInstance(Constants.SPNAME).getLong("birth") != -1L) {
                 SPUtils.getInstance(Constants.SPNAME)
-                    .put("birth", "${SPUtils.getInstance(Constants.SPNAME).getLong("birth", 0L)}")
+                    .put("birth", SPUtils.getInstance(Constants.SPNAME).getLong("birth", 0L).toInt())
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -315,10 +319,9 @@ object UserManager {
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").contains(Constants.DEFAULT_AVATAR) ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
-//                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0)
-                SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty() ||
-                SPUtils.getInstance(Constants.SPNAME).getString("birth").toLong() == 0L
-                )
+                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0)
+//                SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty() ||
+//                SPUtils.getInstance(Constants.SPNAME).getString("birth").toLong() == 0L )
     }
 
 
@@ -738,11 +741,11 @@ object UserManager {
         if (data == null || data.userinfo == null || data.userinfo.nickname.isNullOrEmpty()) {
             context.startActivity<UserNickNameActivity>()
             return
+        } else if (data.userinfo.birth == 0) {
+            context.startActivity<UserBirthActivity>()
+            return
         } else if (data.userinfo.gender == 0) {
             context.startActivity<UserGenderActivity>()
-            return
-        } else if (data.userinfo.birth.isEmpty() || data.userinfo.birth.toInt() == 0) {
-            context.startActivity<UserBirthActivity>()
             return
         } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {
             context.startActivity<UserAvatorActivity>()
