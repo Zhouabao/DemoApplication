@@ -38,6 +38,25 @@
     </declare-styleable>
 
 
+    <!--验证码框-->
+    <declare-styleable name="BirthCodeInput">
+
+        <attr name="birth_box" format="integer" />
+        <attr name="birth_child_h_padding" format="dimension"/>
+        <attr name="birth_child_v_padding" format="dimension"/>
+        <attr name="birth_child_width" format="dimension"/>
+        <attr name="birth_child_height" format="dimension"/>
+        <attr name="birth_etTextSize" format="integer"/>
+        <attr name="birth_padding" format="dimension"/>
+        <attr name="birth_child_hint" format="string"/>
+        <attr name="birth_box_bg_focus" format="reference"/>
+        <attr name="birth_box_bg_normal" format="reference"/>
+        <attr name="birth_inputType" format="string"/>
+        <attr name="birth_autoShowInputBoard" format="boolean"/>
+
+    </declare-styleable>
+
+
     <!--频谱-->
     <declare-styleable name="voisePlayingIconAttr">
         <attr name="pointer_color" format="color"/>
