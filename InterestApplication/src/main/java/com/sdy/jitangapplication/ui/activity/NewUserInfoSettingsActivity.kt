@@ -254,32 +254,39 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
 
 
-            if (!data.sign.isNullOrEmpty()) {
+            if (!data.sign.isNullOrEmpty() && data.sign.trim().isNotEmpty()) {
                 userNickSign.text = "${data.sign}"
                 userScoreAboutMe.isVisible = false
-            }
+            } else
+                userScoreAboutMe.isVisible = true
+
             updateScoreStatus(userScoreAboutMe, data.score_rule?.about ?: 0, !data.sign.isNullOrEmpty())
 
-            if (data.emotion_state > 0 && data.emotion_list.size > data.emotion_state) {
+            if (data.emotion_state > 0 && data.emotion_list.size > data.emotion_state - 1) {
                 userLoveStatus.text = data.emotion_list[data.emotion_state - 1]
                 userScoreEmotion.isVisible = false
-            }
+            } else
+                userScoreEmotion.isVisible = true
             updateScoreStatus(userScoreEmotion, data.score_rule?.emotion ?: 0, data.emotion_state > 0)
             if (data.height > 0) {
                 userHeight.text = "${data.height}"
                 userScoreHeight.isVisible = false
-            }
+            } else
+                userScoreHeight.isVisible = true
+
             updateScoreStatus(userScoreHeight, data.score_rule?.height ?: 0, data.height > 0)
 
             if (!data.hometown.isNullOrEmpty()) {
                 userHomeTown.text = data.hometown
                 userScoreHomeTown.isVisible = false
-            }
+            } else
+                userScoreHomeTown.isVisible = true
             updateScoreStatus(userScoreHomeTown, data.score_rule?.hometown ?: 0, !data.hometown.isNullOrEmpty())
             if (!data.present_address.isNullOrEmpty()) {
                 userLiveNow.text = data.present_address
                 userScoreLiveNow.isVisible = false
-            }
+            } else
+                userScoreLiveNow.isVisible = true
             updateScoreStatus(
                 userScoreLiveNow,
                 data.score_rule?.present_address ?: 0,
@@ -290,19 +297,23 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             if (!data.personal_job.isNullOrEmpty()) {
                 userJob.text = data.personal_job
                 userScoreJob.isVisible = false
-            }
+            } else
+                userScoreJob.isVisible = true
             updateScoreStatus(userScoreJob, data.score_rule?.personal_job ?: 0, !data.personal_job.isNullOrEmpty())
 
             if (data.making_friends > 0 && data.making_friends_list.size > data.making_friends - 1) {
                 userFriendsAim.text = data.making_friends_list[data.making_friends - 1]
                 userScoreFriendsAim.isVisible = false
-            }
+            } else
+                userScoreFriendsAim.isVisible = true
             updateScoreStatus(userScoreFriendsAim, data.score_rule?.making_friends ?: 0, data.making_friends > 0)
 
             if (!data.personal_school.isNullOrEmpty()) {
                 userSchool.text = data.personal_school
                 userScoreSchool.isVisible = false
-            }
+            } else
+                userScoreSchool.isVisible = true
+
             updateScoreStatus(
                 userScoreSchool,
                 data.score_rule?.personal_school ?: 0,
@@ -313,7 +324,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             if (data.personal_drink > 0 && data.personal_drink_list.size > data.personal_drink - 1) {
                 userDrink.text = data.personal_drink_list[data.personal_drink - 1]
                 userScoreDrink.isVisible = false
-            }
+            } else
+                userScoreDrink.isVisible = true
+
             updateScoreStatus(userScoreDrink, data.score_rule?.personal_drink ?: 0, data.personal_drink > 0)
 
 
@@ -321,13 +334,15 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             if (data.personal_smoke > 0 && data.personal_smoke_list.size > data.personal_smoke - 1) {
                 userSmoke.text = data.personal_smoke_list[data.personal_smoke - 1]
                 userScoreSmoke.isVisible = false
-            }
+            } else
+                userScoreSmoke.isVisible = true
             updateScoreStatus(userScoreSmoke, data.score_rule?.personal_smoke ?: 0, data.personal_smoke > 0)
 
             if (data.personal_schedule > 0 && data.personal_schedule_list.size > data.personal_schedule - 1) {
                 userEat.text = data.personal_schedule_list[data.personal_schedule - 1]
                 userScoreEat.isVisible = false
-            }
+            } else
+                userScoreEat.isVisible = true
             updateScoreStatus(userScoreEat, data.score_rule?.personal_schedule ?: 0, data.personal_schedule > 0)
 
 
@@ -349,6 +364,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             photos.addAll(data.photos_wall ?: mutableListOf())
             originalPhotos.addAll(data.photos_wall ?: mutableListOf())
             adapter.addData(MyPhotoBean(type = MyPhotoBean.COVER, photoScore = data.score_rule?.photo ?: 0))
+
             refreshLayout()
 
             mHandler.sendEmptyMessage(MSG_LOAD_DATA)
@@ -763,12 +779,20 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                             userSchool.text = data.getStringExtra("schoolBean")
                             savePersonalParams["personal_school"] = data.getStringExtra("schoolBean")
                             if (userScoreSchool.isVisible)
-                                updateScoreStatus(userScoreSchool, this.data!!.score_rule?.personal_school ?: 0,update = true)
+                                updateScoreStatus(
+                                    userScoreSchool,
+                                    this.data!!.score_rule?.personal_school ?: 0,
+                                    update = true
+                                )
                         } else {
                             userJob.text = data.getStringExtra("schoolBean")
                             savePersonalParams["personal_job"] = data.getStringExtra("schoolBean")
                             if (userScoreJob.isVisible)
-                                updateScoreStatus(userScoreJob, this.data!!.score_rule?.personal_job ?: 0,update = true)
+                                updateScoreStatus(
+                                    userScoreJob,
+                                    this.data!!.score_rule?.personal_job ?: 0,
+                                    update = true
+                                )
                         }
                         isChange = true
                         checkSaveEnable()
@@ -779,7 +803,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     savePersonalParams["sign"] = data?.getStringExtra("content")
 
                     if (userScoreAboutMe.isVisible)
-                        updateScoreStatus(userScoreAboutMe, this.data!!.score_rule?.about ?: 0,update = true)
+                        updateScoreStatus(userScoreAboutMe, this.data!!.score_rule?.about ?: 0, update = true)
                     isChange = true
                     checkSaveEnable()
                 }
@@ -1040,12 +1064,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
     private fun updateScoreStatus(view: View? = null, score: Int, update: Boolean? = false) {
         //会员的时候不显示添加分数
         if (view != null) {
-
-            if (UserManager.isUserVip()) {
-                view.isVisible = false
-            }
             view.tvAddScoreSmile.text = "+$score"
-
             //如果view处于可见状态，说明之前没有加过分数，那这时就实现动画效果
             if (view.isVisible && update == true) {
                 val translateAnimationRight = TranslateAnimation(
@@ -1141,7 +1160,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
         val layoutmanager20 = userScore20.layoutParams as RelativeLayout.LayoutParams
         layoutmanager20.leftMargin = if (UserManager.isUserVip() && userFinishProgress.progress == 100) {
-            ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F)
+            ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) - SizeUtils.dp2px(50F)
         } else  //左边距+进度条宽度-自身宽度
             SizeUtils.dp2px(70F) +
                     ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15))

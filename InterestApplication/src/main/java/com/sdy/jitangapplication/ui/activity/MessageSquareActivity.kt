@@ -47,8 +47,6 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_square)
         initView()
-        //进入页面就标记已读
-        mPresenter.markSquareRead(params)
         //获取广场列表
         mPresenter.squareLists(params)
     }
@@ -156,6 +154,9 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
      */
     override fun onSquareListsResult(data: MutableList<SquareMsgBean>?) {
         if (data != null) {
+            //进入页面就标记已读
+            mPresenter.markSquareRead(params)
+
             if (data.isNullOrEmpty()) {
                 refreshLayout.finishLoadMoreWithNoMoreData()
             } else {
