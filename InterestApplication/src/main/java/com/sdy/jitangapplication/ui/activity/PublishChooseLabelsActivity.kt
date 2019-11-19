@@ -63,8 +63,8 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
         labelRecyclerview.itemAnimator = ScaleInLeftAnimator()
         adapter.setOnItemClickListener { _, view, position ->
             val tempData = adapter.data[position]
-            if (!tempData.checked && checkedLabels.size==3) {
-                CommonFunction.toast("最多只能选择3个标签")
+            if (!tempData.checked && checkedLabels.size == MAX_TAG_COUNT) {
+                CommonFunction.toast("最多只能选择${MAX_TAG_COUNT}个标签")
                 return@setOnItemClickListener
             }
 
@@ -156,9 +156,9 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
                 checkedLabels.remove(label)
             }
         }
-        if (checkedLabels.size == 0 || checkedLabels.size > 3) {
-            if (checkedLabels.size>3){
-                CommonFunction.toast("最多只能选择3个标签")
+        if (checkedLabels.size == 0 || checkedLabels.size > MAX_TAG_COUNT) {
+            if (checkedLabels.size > MAX_TAG_COUNT) {
+                CommonFunction.toast("最多只能选择${MAX_TAG_COUNT}个标签")
             }
 //            shape_rectangle_unable_btn_15dp
             completeLabelLL.setBackgroundResource(R.drawable.shape_rectangle_unable_btn_15dp)
@@ -175,6 +175,8 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
 
     companion object {
         const val REQUEST_ADDTAG = 16
+        private const val MAX_TAG_COUNT = 1
+
     }
 
     override fun onClick(view: View) {
