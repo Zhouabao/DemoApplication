@@ -293,6 +293,7 @@ class SayHiDialog(
                         if (greetBean != null && greetBean.lightningcnt != -1) {
                             if (greetBean.isfriend || greetBean.isgreet) {
                                 ChatActivity.start(context1 as Activity, target_accid ?: "")
+                                loadingDialog.dismiss()
                                 dismiss()
                             } else {
                                 UserManager.saveLightingCount(greetBean.lightningcnt)
@@ -300,6 +301,7 @@ class SayHiDialog(
                                 if (greetBean.lightningcnt > 0) {
                                     greet()
                                 } else {
+                                    loadingDialog.dismiss()
                                     ChargeVipDialog(
                                         ChargeVipDialog.DOUBLE_HI,
                                         context1,
@@ -313,6 +315,7 @@ class SayHiDialog(
                                 }
                             }
                         } else {
+                            loadingDialog.dismiss()
                             CommonFunction.toast(t.msg)
                         }
                     } else {
@@ -441,6 +444,7 @@ class SayHiDialog(
             }
 
             override fun onFailed(code: Int) {
+                loadingDialog.dismiss()
 
             }
 
