@@ -294,7 +294,8 @@ class SayHiDialog(
 //                                ChatActivity.start(context1 as Activity, target_accid ?: "")
                                 loadingDialog.dismiss()
                                 startAnimation()
-
+                                //发送通知修改招呼次数
+                                EventBus.getDefault().post(GreetEvent(context1, true))
                             } else {
                                 UserManager.saveLightingCount(greetBean.lightningcnt)
                                 UserManager.saveCountDownTime(greetBean.countdown)

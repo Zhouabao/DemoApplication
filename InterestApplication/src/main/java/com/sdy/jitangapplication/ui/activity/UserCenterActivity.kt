@@ -15,10 +15,7 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.google.android.flexbox.AlignItems
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.*
 import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -269,6 +266,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         //用户标签
         val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.FLEX_START
         userTagRv.layoutManager = manager
         userTagRv.adapter = tagAdapter
 

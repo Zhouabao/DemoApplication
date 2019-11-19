@@ -145,10 +145,15 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                 } else {
                     onTakePhoto()
                 }
-            } else {
-                reportPicAdapter.remove(position)
-                if (!reportPicAdapter.data.contains("")) {
-                    reportPicAdapter.addData(reportPicAdapter.data.size, "")
+            }
+        }
+        reportPicAdapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.reportPicDelete -> {
+                    reportPicAdapter.remove(position)
+                    if (!reportPicAdapter.data.contains("")) {
+                        reportPicAdapter.addData(reportPicAdapter.data.size, "")
+                    }
                 }
             }
         }

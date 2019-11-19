@@ -784,6 +784,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
                                 android:layout_marginBottom="20dp"
+                                android:visibility="gone"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintLeft_toLeftOf="@id/t1"
                                 app:layout_constraintRight_toRightOf="@id/userNickName"

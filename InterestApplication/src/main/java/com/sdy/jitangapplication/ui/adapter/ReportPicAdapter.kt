@@ -21,6 +21,7 @@ class ReportPicAdapter : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_
             helper.itemView.reportPicDelete.isVisible = false
             helper.itemView.reportPic.setImageResource(R.drawable.icon_add_report_pic)
         } else {
+            helper.addOnClickListener(R.id.reportPicDelete)
             helper.itemView.reportPicDelete.isVisible = true
             GlideUtil.loadRoundImgCenterCrop(mContext, item, helper.itemView.reportPic, SizeUtils.dp2px(10F))
         }
