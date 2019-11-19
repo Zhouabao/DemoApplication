@@ -590,6 +590,15 @@ interface Api {
     fun mySettings(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<SettingsBean?>>
 
 
+
+    /**
+     * 广场点赞评论提醒开关
+     */
+    @FormUrlEncoded
+    @POST("Relationship/squareNotifySwitch${Constants.END_BASE_URL}")
+    fun squareNotifySwitch(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<Any?>>
+
+
     /**
      * 招呼的开关
      */
