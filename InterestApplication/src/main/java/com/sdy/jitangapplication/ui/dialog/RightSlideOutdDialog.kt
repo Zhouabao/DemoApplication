@@ -37,6 +37,9 @@ class RightSlideOutdDialog(val myContext: Context, var myCount: Int = 0, var max
         slideOutClose.onClick {
             dismiss()
         }
+        gotoPurchase.onClick {
+            ChargeVipDialog(0, myContext, ChargeVipDialog.PURCHASE_VIP).show()
+        }
 
 
         slideOutMin.typeface = Typeface.createFromAsset(myContext.assets, "DIN_Alternate_Bold.ttf")

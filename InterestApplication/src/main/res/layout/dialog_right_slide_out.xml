@@ -110,11 +110,28 @@
                 android:background="@drawable/shape_rectangle_enable_btn_15dp"
                 android:layout_width="232dp"
                 android:layout_height="40dp"
-                android:layout_marginBottom="25dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/slideOutContent"/>
+
+
+        <TextView
+                android:id="@+id/gotoPurchase"
+                android:text="直接购买"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="@color/colorOrange"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginBottom="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/slideOutBtn"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

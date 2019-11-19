@@ -96,7 +96,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         initView()
         //启动时间统计
-        mPresenter.startupRecord(UserManager.getToken(), UserManager.getAccid(),UserManager.getProvince(),UserManager.getCity())
+        mPresenter.startupRecord(
+            UserManager.getToken(),
+            UserManager.getAccid(),
+            UserManager.getProvince(),
+            UserManager.getCity()
+        )
 
         //获取调查问卷数据
         if (UserManager.getCurrentSurveyVersion().isEmpty() || UserManager.getCurrentSurveyVersion() != AppUtils.getAppVersionName())
