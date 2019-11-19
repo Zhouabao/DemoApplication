@@ -421,16 +421,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
-                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(account, SessionTypeEnum.P2P)
-                        NIMClient.getService(MsgService::class.java).clearServerHistory(account, SessionTypeEnum.P2P)
-                        EventBus.getDefault().post(UpdateContactBookEvent())
-
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(MessageInfoActivity::class.java)
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(ChatActivity::class.java)
-                        EventBus.getDefault().post(UpdateHiEvent())
-
+                        CommonFunction.dissolveRelationship(account?:"")
                     } else {
                         CommonFunction.toast(t.msg)
                     }

@@ -10,7 +10,9 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.CrashUtils
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ThreadUtils
 import com.google.gson.Gson
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
@@ -21,21 +23,20 @@ import com.netease.nim.uikit.api.UIKitOptions
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.mixpush.NIMPushClient
-import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomNotification
 import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
-import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.event.GetNewMsgEvent
+import com.sdy.jitangapplication.event.ReVerifyEvent
+import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
 import com.sdy.jitangapplication.nim.NimSDKOptionConfig
-import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
 import com.sdy.jitangapplication.nim.mixpush.DemoMixPushMessageHandler
 import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
 import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
@@ -92,17 +93,7 @@ class MyApplication : BaseApplication() {
                         initNotificationManager(customerMsgBean.msg)
                     }
                     2 -> {//对方删除自己,本地删除会话列表
-                        NIMClient.getService(MsgService::class.java).deleteRecentContact2(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
-                        // 删除与某个聊天对象的全部消息记录
-                        NIMClient.getService(MsgService::class.java).clearChattingHistory(customerMsgBean.accid ?: "", SessionTypeEnum.P2P)
-                        EventBus.getDefault().post(UpdateContactBookEvent())
-
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(MessageInfoActivity::class.java)
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(ChatActivity::class.java)
-                        EventBus.getDefault().postSticky(UpdateHiEvent())
-
+                        CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "")
                     }
                     3 -> {
                         //新的招呼刷新界面

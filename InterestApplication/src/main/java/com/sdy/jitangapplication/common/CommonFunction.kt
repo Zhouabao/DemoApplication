@@ -4,10 +4,15 @@ import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
@@ -70,5 +75,20 @@ object CommonFunction {
             }
         }
         view.postDelayed({ view.isEnabled = true }, 500L)
+    }
+
+
+    fun dissolveRelationship(target_accid: String) {
+        NIMClient.getService(MsgService::class.java).deleteRecentContact2(target_accid, SessionTypeEnum.P2P)
+        // 删除与某个聊天对象的全部消息记录
+        NIMClient.getService(MsgService::class.java).clearChattingHistory(target_accid, SessionTypeEnum.P2P)
+        ActivityUtils.finishAllActivities()
+        ActivityUtils.startActivity(MainActivity::class.java)
+//        EventBus.getDefault().post(UpdateContactBookEvent())
+//        EventBus.getDefault().post(UpdateHiEvent())
+//        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
+//            ActivityUtils.finishActivity(MessageInfoActivity::class.java)
+//        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
+//            ActivityUtils.finishActivity(ChatActivity::class.java)
     }
 }
