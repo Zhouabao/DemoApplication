@@ -322,7 +322,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         moreActionDialog.report.onClick {
             val dialog = DeleteDialog(this)
             dialog.show()
-            dialog.tip.text = "确认举报该条动态？"
+            dialog.tip.text = getString(R.string.report_square)
             dialog.confirm.text = "举报"
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {

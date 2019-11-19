@@ -529,7 +529,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         moreActionDialog.report.onClick {
             val dialog = DeleteDialog(activity!!)
             dialog.show()
-            dialog.tip.text = "确认举报该条动态？"
+            dialog.tip.text = getString(R.string.report_square)
             dialog.confirm.text = "举报"
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
@@ -975,7 +975,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
 
     private var from = 1
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRePublishEvent(event: RePublishEvent) {
         if (event.context is UserCenterActivity) {
             from = 2

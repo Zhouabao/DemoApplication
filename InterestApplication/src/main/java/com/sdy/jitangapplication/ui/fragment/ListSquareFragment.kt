@@ -320,7 +320,8 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
             }
         } else {
-            listRefresh.finishLoadMore(false)
+            if (listRefresh != null)
+                listRefresh.finishLoadMore(false)
 //            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
 //            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
 //            adapter.data.clear()
@@ -501,7 +502,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         moreActionDialog.report.onClick {
             val dialog = DeleteDialog(activity!!)
             dialog.show()
-            dialog.tip.text = "确认举报该条动态？"
+            dialog.tip.text = getString(R.string.report_square)
             dialog.confirm.text = "举报"
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
