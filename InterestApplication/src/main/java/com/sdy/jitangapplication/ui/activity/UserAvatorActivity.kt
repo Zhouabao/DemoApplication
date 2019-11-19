@@ -399,7 +399,8 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                 }
 
                 override fun onError(e: Throwable?) {
-                    onCheckAvatorResult(false, CommonFunction.getErrorMsg(this@UserAvatorActivity))
+//                    onCheckAvatorResult(false, CommonFunction.getErrorMsg(this@UserAvatorActivity))
+                    onCheckAvatorResult(false, "网络异常，请重新选择上传")
                 }
             })
     }
