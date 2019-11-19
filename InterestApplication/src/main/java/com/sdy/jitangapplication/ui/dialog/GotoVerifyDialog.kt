@@ -1,4 +1,4 @@
-package com.sdy.jitangapplication.widgets
+package com.sdy.jitangapplication.ui.dialog
 
 import android.app.Dialog
 import android.content.Context

@@ -42,12 +42,12 @@ import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.ui.dialog.GotoVerifyDialog
 import com.sdy.jitangapplication.ui.fragment.MatchFragment1
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
 import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.GotoVerifyDialog
 import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.umeng.socialize.UMShareAPI

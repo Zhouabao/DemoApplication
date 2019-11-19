@@ -43,10 +43,10 @@ import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.dialog.GotoVerifyDialog
 import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.GotoVerifyDialog
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_match1.*
@@ -678,11 +678,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         if (UserManager.slide_times != -1) {
             UserManager.slide_times++
             if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //完善相册
-//            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == 5) { //完善相册
                 EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
                 UserManager.slide_times = 0
             } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times && !UserManager.getAlertChangeAvator()) {//引导替换
-//            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == 5) {//引导替换
                 EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
                 UserManager.slide_times = 0
             }

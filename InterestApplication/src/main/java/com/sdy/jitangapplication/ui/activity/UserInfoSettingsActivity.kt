@@ -37,10 +37,10 @@ import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.adapter.UserPhotoAdapter
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
+import com.sdy.jitangapplication.ui.dialog.GotoVerifyDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.GotoVerifyDialog
 import com.sdy.jitangapplication.widgets.OnRecyclerItemClickListener
 import kotlinx.android.synthetic.main.activity_user_center.btnBack
 import kotlinx.android.synthetic.main.activity_user_info_settings.*
