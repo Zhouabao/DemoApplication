@@ -41,7 +41,6 @@ import com.sdy.jitangapplication.event.GreetEvent
 import com.sdy.jitangapplication.event.UpdateHiCountEvent
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.StatusBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.Rotate3dAnimation
@@ -292,9 +291,10 @@ class SayHiDialog(
                         val greetBean = t.data
                         if (greetBean != null && greetBean.lightningcnt != -1) {
                             if (greetBean.isfriend || greetBean.isgreet) {
-                                ChatActivity.start(context1 as Activity, target_accid ?: "")
+//                                ChatActivity.start(context1 as Activity, target_accid ?: "")
                                 loadingDialog.dismiss()
-                                dismiss()
+                                startAnimation()
+
                             } else {
                                 UserManager.saveLightingCount(greetBean.lightningcnt)
                                 UserManager.saveCountDownTime(greetBean.countdown)
