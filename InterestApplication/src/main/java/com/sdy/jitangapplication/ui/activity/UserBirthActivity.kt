@@ -9,8 +9,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
 import com.sdy.jitangapplication.presenter.view.UserNickNameView
-import com.sdy.jitangapplication.utils.ScrollSoftKeyBoardUtils
-import com.sdy.jitangapplication.widgets.VerificationCodeInput
+import com.sdy.jitangapplication.widgets.BirthCodeInput
 import kotlinx.android.synthetic.main.activity_user_birth.*
 import org.jetbrains.anko.startActivity
 import java.text.SimpleDateFormat
@@ -41,46 +40,25 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
         help.setOnClickListener(this)
         btnNextStep.setOnClickListener(this)
 
-        ScrollSoftKeyBoardUtils.addLayoutListener(rootView, btnNextStep)
 
 
-        userBirthYear.setOnCompleteListener(object : VerificationCodeInput.Listener {
-            override fun onComplete(complete: Boolean, content: String?) {
+        userBirthInput.setOnCompleteListener(object : BirthCodeInput.Listener {
+            override fun onComplete(complete: Boolean, content: String?, index: Int) {
                 if (complete) {
-                    //年份输入完成后，让月日获取焦点
-                    userBirthMonth.postDelayed({ userBirthMonth.requestEditeFocus() }, 50L)
-                }
-                year = content
-                calculateAgeAndAstro()
-            }
-        })
-
-        userBirthMonth.setOnCompleteListener(object : VerificationCodeInput.Listener {
-            override fun onComplete(complete: Boolean, content: String?) {
-                if (complete) {
-                    //月份输入完成后，让日期获取焦点
-                    userBirthDay.postDelayed({ userBirthDay.requestEditeFocus() }, 50L)
+                    year = content!!.substring(0, 4)
+                    month = content!!.substring(4, 6)
+                    day = content!!.substring(6, content.length)
+                    calculateAgeAndAstro()
                 } else {
-                    if (content.isNullOrEmpty()) {
-                        userBirthYear.postDelayed({ userBirthYear.requestEditeFocus() }, 50L)
-                    }
+                    userCollesationNotify.text = "让我看看你是什么星座？"
+                    userCollesationNotify.setTextColor(resources.getColor(R.color.colorBlack4C))
+                    btnNextStep.isEnabled = false
                 }
-                month = content
-                calculateAgeAndAstro()
             }
-
         })
 
-        userBirthDay.setOnCompleteListener(object : VerificationCodeInput.Listener {
-            override fun onComplete(complete: Boolean, content: String?) {
-                if (content.isNullOrEmpty()) {
-                    userBirthMonth.postDelayed({ userBirthMonth.requestEditeFocus() }, 50L)
-                }
-                day = content
-                calculateAgeAndAstro()
-            }
 
-        })
+
     }
 
     /**
@@ -105,21 +83,18 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
         }
 
         if (!judgeYear(year!!.toInt())) { //年份不正确
-            userCollesationNotify.text = "让我看看你是什么星座？"
             btnNextStep.isEnabled = false
-            userBirthYear.clear()
             return
         }
 
         if (!judgeBirth(month!!.toInt(), day!!.toInt())) { //月份不正确
-            userCollesationNotify.text = "让我看看你是什么星座？"
             btnNextStep.isEnabled = false
             return
         }
 
         //年月日都正确的情况下 计算年龄
         btnNextStep.isEnabled = true
-        KeyboardUtils.hideSoftInput(birthRootView)
+        KeyboardUtils.hideSoftInput(userBirthInput)
         userCollesationNotify.text = calculateAstro(month!!.toInt(), day!!.toInt())
 
     }
@@ -130,10 +105,12 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
      */
     private fun judgeYear(year: Int): Boolean {
         if (Calendar.getInstance().get(Calendar.YEAR) - year < 18) {
-            CommonFunction.toast("年龄必须大于等于18岁哦")
+            userCollesationNotify.text = "年龄必须大于等于18岁"
+            userCollesationNotify.setTextColor(resources.getColor(R.color.colorOrange))
             return false
         } else if (Calendar.getInstance().get(Calendar.YEAR) - year > 50) {
-            CommonFunction.toast("年龄必须在50岁以内哦")
+            userCollesationNotify.text = "年龄必须在50岁以内"
+            userCollesationNotify.setTextColor(resources.getColor(R.color.colorOrange))
             return false
         }
         return true
@@ -144,34 +121,34 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
      */
     private fun judgeBirth(month: Int, day: Int): Boolean {
         if (month > 12 || month <= 0) {
-            CommonFunction.toast("请输入正确的月份！")
-            userBirthMonth.clear()
+            userCollesationNotify.text = "请输入正确的月份"
+            userCollesationNotify.setTextColor(resources.getColor(R.color.colorOrange))
             return false
         }
         when (month) {
             1, 3, 5, 7, 8, 10, 12 ->
                 if (day > 31 || day == 0) {
-                    CommonFunction.toast("请输入正确的日期！")
-                    userBirthDay.clear()
+                    userCollesationNotify.text = "请输入正确的日期"
+                    userCollesationNotify.setTextColor(resources.getColor(R.color.colorOrange))
                     return false
                 }
             4, 6, 9, 11 -> {
                 if (day > 30 || day == 0) {
-                    CommonFunction.toast("请输入正确的日期！")
-                    userBirthDay.clear()
+                    userCollesationNotify.text = "请输入正确的日期"
+                    userCollesationNotify.setTextColor(resources.getColor(R.color.colorOrange))
                     return false
                 }
             }
             2 -> {
                 if (year!!.toInt() % 4 == 0 && year!!.toInt() % 100 != 0 || year!!.toInt() % 400 == 0) {
                     if (day > 29 || day == 0) {
-                        CommonFunction.toast("请输入正确的日期！")
-                        userBirthDay.clear()
+                        userCollesationNotify.text = "请输入正确的日期"
+                        userCollesationNotify.setTextColor(resources.getColor(R.color.colorOrange))
                         return false
                     }
                 } else if (day > 28 || day == 0) {
-                    CommonFunction.toast("请输入正确的日期！")
-                    userBirthDay.clear()
+                    userCollesationNotify.text = "请输入正确的日期"
+                    userCollesationNotify.setTextColor(resources.getColor(R.color.colorOrange))
                     return false
                 }
             }

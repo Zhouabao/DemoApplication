@@ -4,11 +4,11 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:ver="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rootView"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
-        android:id="@+id/rootView"
         android:orientation="vertical"
         android:animateLayoutChanges="true"
         tools:context=".ui.activity.UserBirthActivity">
@@ -21,8 +21,8 @@
             />
 
     <TextView
-            android:visibility="gone"
             android:id="@+id/help"
+            android:visibility="gone"
             android:text="帮助"
             android:textColor="#ffb2b2b2"
             android:textSize="15sp"
@@ -61,60 +61,21 @@
             />
 
 
-    <LinearLayout
-            android:id="@+id/birthRootView"
+    <com.sdy.jitangapplication.widgets.BirthCodeInput
+            android:id="@+id/userBirthInput"
             android:layout_marginTop="85dp"
-            android:orientation="horizontal"
+            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <com.sdy.jitangapplication.widgets.VerificationCodeInput
-                android:id="@+id/userBirthYear"
-                android:visibility="visible"
-                android:layout_width="145dp"
-                android:layout_marginLeft="20dp"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                app:box="4"
-                app:child_h_padding="5dp"
-                app:etTextSize="20sp"
-                app:child_hint="年"
-                app:child_v_padding="3dp"
-                app:autoShowInputBoard="true"
-                app:child_width="30dp"
-                app:inputType="number"/>
-
-        <com.sdy.jitangapplication.widgets.VerificationCodeInput
-                android:id="@+id/userBirthMonth"
-                android:visibility="visible"
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:layout_marginLeft="19dp"
-                app:box="2"
-                app:etTextSize="20sp"
-
-                app:child_h_padding="5dp"
-                app:child_hint="月"
-                app:child_v_padding="3dp"
-                app:child_width="30dp"
-                app:inputType="number"/>
-
-        <com.sdy.jitangapplication.widgets.VerificationCodeInput
-                android:id="@+id/userBirthDay"
-                android:visibility="visible"
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:layout_marginLeft="19dp"
-                app:box="2"
-                app:child_h_padding="5dp"
-                app:child_hint="日"
-                app:etTextSize="20sp"
-                app:child_v_padding="3dp"
-                app:child_width="30dp"
-                app:inputType="number"/>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            app:birth_autoShowInputBoard="true"
+            app:birth_box="8"
+            app:birth_child_h_padding="5dp"
+            app:birth_child_v_padding="3dp"
+            app:birth_etTextSize="16"
+            app:birth_inputType="number"/>
 
 
     <TextView
