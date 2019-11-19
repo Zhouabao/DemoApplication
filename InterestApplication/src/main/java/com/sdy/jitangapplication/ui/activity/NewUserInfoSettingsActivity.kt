@@ -349,11 +349,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             photos.addAll(data.photos_wall ?: mutableListOf())
             originalPhotos.addAll(data.photos_wall ?: mutableListOf())
             adapter.addData(MyPhotoBean(type = MyPhotoBean.COVER, photoScore = data.score_rule?.photo ?: 0))
-            if (adapter.data.size == 2) {
-                mHandler.postDelayed({
-                    showUploadMorePhotos()
-                }, 200)
-            }
             refreshLayout()
 
             mHandler.sendEmptyMessage(MSG_LOAD_DATA)
