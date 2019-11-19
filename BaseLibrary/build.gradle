@@ -81,7 +81,7 @@ dependencies {
     //Alert View
     api "com.bigkoo:alertview:$alert_view_version"
     //七牛
-    api 'com.qiniu:qiniu-android-sdk:7.3.15'
+    api 'com.qiniu:qiniu-android-sdk:7.4.2'
 
     //Banner
     api 'com.bigkoo:convenientbanner:2.1.5'
@@ -97,7 +97,9 @@ dependencies {
     //FlowLayout
     //api 'com.zhy:flowlayout-lib:1.0.3'
     //图片选择器
-    api 'com.github.labmem005.PictureSelector:picture_library:v2.3.0'
+//    api 'com.github.labmem005.PictureSelector:picture_library:v2.2.9'
+
+    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.9'
 
     //事件总线eventbus
     api 'org.greenrobot:eventbus:3.1.1'
