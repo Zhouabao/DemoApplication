@@ -21,7 +21,7 @@ data class Userinfo(
     val nickname: String? = "",
     val avatar: String? = "",
     val gender: Int = 0,
-    val birth: String = "",
+    val birth: Int = 0,
     val accid: String = "",
     val allvisit: Int = 0,
     val face_audit_state: Int? = 0,
