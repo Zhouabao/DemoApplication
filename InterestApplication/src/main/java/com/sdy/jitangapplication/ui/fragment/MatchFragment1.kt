@@ -374,9 +374,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
                     EventBus.getDefault().post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
                 }
-                if (data.data!!.residue == 10) {
-                    CommonFunction.toast("剩余10次滑动机会")
-                }
                 if (data.data!!.residue == 0) {
                     card_stack_view.rewind()
                     if (!UserManager.isUserVip()) {
