@@ -65,6 +65,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
 
                         val params = hashMapOf<String, Any>()
                         params["target_accid"] = adapter.data[position].accid ?: ""
+                        params["tag_id"] = UserManager.getGlobalLabelId()
                         RetrofitFactory.instance.create(Api::class.java)
                             .addLike(UserManager.getSignParams(params))
                             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {

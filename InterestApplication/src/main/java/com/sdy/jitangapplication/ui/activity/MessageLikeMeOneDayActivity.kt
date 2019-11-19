@@ -119,8 +119,8 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
                             position, hashMapOf(
                                 "accid" to UserManager.getAccid(),
                                 "token" to UserManager.getToken(),
-                                "target_accid" to (adapter.data[position].accid ?: "")
-//                                "tag_id" to (adapter.data[position].tag_title ?: "")
+                                "target_accid" to (adapter.data[position].accid ?: ""),
+                                "tag_id" to UserManager.getGlobalLabelId()
                             )
                         )
                     }
@@ -173,7 +173,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
             }
         } else if (statusBean.code == 201) {
             if (my_percent_complete <= normal_percent_complete)
-                RightSlideOutdDialog(this,myCount,maxCount).show()
+                RightSlideOutdDialog(this, myCount, maxCount).show()
             else
                 ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
         }
