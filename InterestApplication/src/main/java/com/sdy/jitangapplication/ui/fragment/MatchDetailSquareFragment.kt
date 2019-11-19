@@ -51,7 +51,7 @@ class MatchDetailSquareFragment(val matchBean: MatchBean, val targetAccid: Strin
         //用户标签
         val manager = FlexboxLayoutManager(activity!!, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH
-        manager.justifyContent = JustifyContent.CENTER
+        manager.justifyContent = JustifyContent.FLEX_START
         detailLabelRv.layoutManager = manager
 
         initFragment()

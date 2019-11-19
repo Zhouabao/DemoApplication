@@ -37,7 +37,7 @@
 
         <TextView
                 android:id="@+id/score80"
-                android:drawableLeft="@drawable/icon_xiaolian"
+                android:drawableLeft="@drawable/icon_xiaolian_orange"
                 android:background="@drawable/shape_rectangle_orange_11dp"
                 android:layout_marginRight="90dp"
                 android:layout_alignParentRight="true"
