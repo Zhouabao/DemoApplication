@@ -82,7 +82,7 @@
                 android:gravity="top"
                 android:maxLength="300"
                 android:lineSpacingMultiplier="1.2"
-                android:hint="「写下你关于改装车下的介绍或趣事吧」\n·爆改了一台捷达王？\n·藏私房钱改过车？\n·零百破过4？"
+                android:hint="为了找到那个人，先真诚的介绍自己吧\n你是什么性格？\n日常的生活习惯？\n你的兴趣爱好..."
                 android:textColorHint="#ffc1c2c8"
                 android:textColor="@color/colorBlack"
                 android:textSize="15sp"
