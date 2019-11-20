@@ -1376,6 +1376,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             .setSubmitColor(resources.getColor(R.color.colorBlueSky1))
             .build<T>()
 
+        //身高默认选中，男170 女160
+        if (param == "height")
+            if (data?.gender == 1) //男
+                pvOptions.setSelectOptions(170 - 60)
+            else if (data?.gender == 2)//女
+                pvOptions.setSelectOptions(160 - 60)
+
         if (optionsItems2.isNullOrEmpty()) {
             pvOptions.setPicker(optionsItems1)
         } else if (optionsItems3.isNullOrEmpty()) {
