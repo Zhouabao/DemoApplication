@@ -327,7 +327,7 @@
                         android:layout_height="50dp"
                         android:paddingRight="15dp"
                         android:gravity="center_vertical"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/aboutUs"

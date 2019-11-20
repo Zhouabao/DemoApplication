@@ -67,6 +67,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         filterDistance.setOnClickListener(this)
         verifyHi.setOnClickListener(this)
         openHi.setOnClickListener(this)
+        aboutAccount.setOnClickListener(this)
         hotT1.text = "设置"
         stateSettings.retryBtn.onClick {
             stateSettings.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -92,6 +93,10 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
 
             //进入帮助
             R.id.helpCenter -> {
+            }
+            //账号相关
+            R.id.aboutAccount -> {
+                startActivity<AccountAboutActivity>()
             }
             //关于
             R.id.aboutUs -> {

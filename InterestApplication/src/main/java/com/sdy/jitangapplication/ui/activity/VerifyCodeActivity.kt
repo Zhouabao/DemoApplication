@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -22,6 +23,8 @@ import org.jetbrains.anko.startActivity
 
 /**
  * 填写验证码界面
+ *
+ * //todo 新增账号注销界面，待完善注销逻辑
  */
 class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickListener, VerifyCodeView {
 
@@ -29,6 +32,12 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
     private val phone by lazy { intent.getStringExtra("phone") }
 
     private val loadingDialog by lazy { LoadingDialog(this) }
+
+    companion object {
+        const val TYPE_LOGIN_PHONE = 1 //手机登录
+        const val TYPE_LOGIN_WECHAT = 3//微信登录
+        const val TYPE_LOGIN_OFF = 2//注销
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +49,19 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         mPresenter = VerifyCodePresenter()
         mPresenter.mView = this
         mPresenter.context = this
+
+        when (intent.getStringExtra("type")) {
+            "$TYPE_LOGIN_PHONE", "$TYPE_LOGIN_WECHAT" -> {
+                tv1.text = "验证码"
+                help.isVisible = false
+
+            }
+
+            "${TYPE_LOGIN_OFF}" -> {
+                tv1.text = "注销账号"
+                help.isVisible = true
+            }
+        }
         btnBack.onClick { finish() }
         changePhone.setOnClickListener(this)
         help.setOnClickListener(this)

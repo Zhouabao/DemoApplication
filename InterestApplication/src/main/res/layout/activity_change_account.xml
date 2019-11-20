@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.ChangeAccountActivity">
+
+    <include layout="@layout/layout_actionbar"/>
+
+    <TextView
+            android:id="@+id/t1"
+            android:text="+86"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            android:drawablePadding="4dp"
+            android:paddingRight="4dp"
+            android:drawableRight="@drawable/icon_popup_down"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="50dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTitle"/>
+
+    <EditText
+            android:id="@+id/newPhoneEt"
+            android:hint="请填写新手机号"
+            android:textColorHint="#ffd1d2d5"
+            android:textSize="16sp"
+            android:inputType="number"
+            android:maxLength="11"
+            android:layout_marginRight="15dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:background="@null"
+            android:layout_marginLeft="23dp"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintBottom_toBottomOf="@id/t1"
+            app:layout_constraintLeft_toRightOf="@id/t1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/t1"/>
+
+    <View
+            android:background="@color/colorDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/t1"/>
+
+    <TextView
+            android:id="@+id/t2"
+            android:layout_marginTop="1dp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="验证码"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/t1"
+            app:layout_constraintTop_toBottomOf="@id/t1"
+            />
+
+
+    <EditText
+            android:id="@+id/newVerifyCodeEt"
+            android:hint="请输入验证码"
+            android:textColorHint="#ffd1d2d5"
+            android:textSize="16sp"
+            android:inputType="number"
+            android:maxLength="6"
+            android:layout_marginRight="15dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:background="@null"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintBottom_toBottomOf="@id/t2"
+            app:layout_constraintLeft_toLeftOf="@id/newPhoneEt"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/t2"/>
+
+    <Button
+            android:id="@+id/verifycodeBtn"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/selector_verify"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:text="获取验证码"
+            android:textSize="13sp"
+            android:enabled="false"
+            android:textColor="@color/verify_btn_color_selector"
+            app:layout_constraintBottom_toBottomOf="@id/t2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/t2"/>
+
+
+    <TextView
+            android:id="@+id/confirmChangeBtn"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:text="确认变更"
+            android:background="@drawable/selector_confirm_btn"
+            android:layout_marginTop="117dp"
+            android:gravity="center"
+            android:enabled="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/t1"
+            app:layout_constraintRight_toRightOf="@id/newPhoneEt"
+            app:layout_constraintTop_toBottomOf="@id/t2"
+            />
+
+    <TextView
+            android:id="@+id/loginOff"
+            android:layout_marginBottom="34dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="如需注销当前帐号，请直接选择“注销账号”
+账号一经注销，您的账号将不会再被任何人看到，
+并且聊天记录会被清空，请谨慎操作。"
+            android:gravity="center"
+            android:textColor="#ffbec2c2"
+            android:textSize="13sp"
+            android:lineSpacingMultiplier="1.2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/t1"
+            app:layout_constraintRight_toRightOf="@id/newPhoneEt"
+            />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
