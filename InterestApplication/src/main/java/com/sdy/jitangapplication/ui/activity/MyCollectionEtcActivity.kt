@@ -203,7 +203,7 @@ class MyCollectionEtcActivity : BaseMvpActivity<MyCollectionPresenter>(), MyColl
                     )
                 }
                 R.id.squareDianzanBtn1 -> {
-                    clickZan(position)
+                    //clickZan(position)
                 }
                 R.id.squareZhuanfaBtn1 -> {
                     showTranspondDialog(squareBean)
