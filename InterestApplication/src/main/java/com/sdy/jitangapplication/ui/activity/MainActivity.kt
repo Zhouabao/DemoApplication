@@ -260,14 +260,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
         )
 
-        if (UserManager.isUserVip()) {
-            filterUserDialog.btnGoVip.visibility = View.GONE
-            filterUserDialog.switchSameCity.visibility = View.VISIBLE
-            filterUserDialog.switchSameCity.isChecked = sp.getInt("local_only", 1) == 2
-        } else {
-            filterUserDialog.btnGoVip.visibility = View.VISIBLE
-            filterUserDialog.switchSameCity.visibility = View.GONE
-        }
+        filterUserDialog.switchOnLine.isVisible = UserManager.isUserVip()
+        filterUserDialog.switchOnLine.isChecked = sp.getInt("online", 1) == 2
+        filterUserDialog.btnGoVip1.isVisible = !UserManager.isUserVip()
+        filterUserDialog.switchSameCity.isVisible = UserManager.isUserVip()
+        filterUserDialog.switchSameCity.isChecked = sp.getInt("local_only", 1) == 2
+        filterUserDialog.btnGoVip.isVisible = !UserManager.isUserVip()
 
         if (UserManager.isUserVerify() == 1) {
             filterUserDialog.btnVerify.visibility = View.GONE
@@ -285,6 +283,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
 
         filterUserDialog.btnGoVip.onClick {
+            ChargeVipDialog(ChargeVipDialog.FILTER, this).show()
+        }
+        filterUserDialog.btnGoVip1.onClick {
             ChargeVipDialog(ChargeVipDialog.FILTER, this).show()
         }
         filterUserDialog.btnVerify.onClick {
@@ -334,6 +335,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     sp.put("audit_only", 1)
                 }
 
+            //todo 添加在线用户筛选
+            if (filterUserDialog.switchOnLine.isChecked) {
+                sp.put("online", 2)
+            } else {
+                sp.put("online", 1)
+            }
             EventBus.getDefault().post(RefreshEvent(true))
             filterUserDialog.dismiss()
         }

@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
         tools:context=".ui.activity.MatchDetailActivity">
 
     <com.kennyc.view.MultiStateView
@@ -393,6 +394,7 @@
             android:id="@+id/llBlackContent"
             android:orientation="vertical"
             android:visibility="gone"
+            android:fitsSystemWindows="true"
             android:background="@color/colorWhite"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

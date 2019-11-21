@@ -170,13 +170,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
-            //            if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
-//                if (ScreenUtils.isFullScreen(this))
-//                    ScreenUtils.setNonFullScreen(this)
-//            } else {
-//                if (!ScreenUtils.isFullScreen(this))
-//                    ScreenUtils.setFullScreen(this)
-//            }
+            if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
+                if (ScreenUtils.isFullScreen(this))
+                    ScreenUtils.setNonFullScreen(this)
+            } else {
+                if (!ScreenUtils.isFullScreen(this))
+                    ScreenUtils.setFullScreen(this)
+            }
             //            detailActionbar.isVisible = Math.abs(verticalOffset) >= (userAppbar.totalScrollRange - SizeUtils.dp2px(60F))
             detailActionbar.isVisible = Math.abs(verticalOffset) >= clUserInfo.marginTop
         })
