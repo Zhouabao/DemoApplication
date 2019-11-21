@@ -74,6 +74,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="real_avator_tip">请确保头像为真人,留下最好的第一印象</string>
     <string name="report_square">确认举报该条动态？</string>
+    <string name="dissolve_wechat">是否确定解除微信绑定？</string>
 
 
     <!--拍摄照片时的滤镜    -->
