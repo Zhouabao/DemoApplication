@@ -8,6 +8,7 @@
         android:background="@color/colorWhite"
         android:orientation="vertical"
         android:focusable="true"
+        android:fitsSystemWindows="true"
         android:focusableInTouchMode="true"
         tools:context=".ui.activity.SquareCommentDetailActivity">
 

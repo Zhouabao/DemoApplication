@@ -9,6 +9,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:msv_errorView="@layout/error_layout"
+        android:fitsSystemWindows="true"
         app:msv_loadingView="@layout/loading_layout"
         app:msv_viewState="loading">
 
