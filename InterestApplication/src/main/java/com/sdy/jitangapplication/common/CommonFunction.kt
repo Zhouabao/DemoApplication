@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.common
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
@@ -7,6 +8,8 @@ import android.view.View
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.luck.picture.lib.PictureSelector
+import com.luck.picture.lib.config.PictureConfig
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
@@ -16,6 +19,7 @@ import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
+import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -111,4 +115,38 @@ object CommonFunction {
         wxapi.sendReq(req)
 //        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, umAuthListener)
     }
+
+
+    /**
+     * 拍照或者选取照片
+     */
+    fun onTakePhoto(context: Context, maxCount: Int, requestCode: Int, chooseMode: Int = 1) {
+        PictureSelector.create(context as Activity)
+            .openGallery(chooseMode)
+            .maxSelectNum(maxCount)
+            .minSelectNum(0)
+            .imageSpanCount(4)
+            .selectionMode(
+                if (maxCount > 1) {
+                    PictureConfig.MULTIPLE
+                } else {
+                    PictureConfig.SINGLE
+                }
+            )
+            .previewImage(true)
+            .previewVideo(true)
+            .isCamera(true)
+            .enableCrop(false)
+            .compressSavePath(UriUtils.getCacheDir(context))
+            .compress(false)
+            .minimumCompressSize(100)
+            .scaleEnabled(true)
+            .showCropFrame(true)
+            .rotateEnabled(false)
+            .withAspectRatio(9, 16)
+            .compressSavePath(UriUtils.getCacheDir(context))
+            .openClickSound(false)
+            .forResult(requestCode)
+    }
+
 }

@@ -175,7 +175,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                                         PermissionUtils.permission(PermissionConstants.STORAGE)
                                             .callback(object : PermissionUtils.SimpleCallback {
                                                 override fun onGranted() {
-                                                    onTakePhoto(1)
+                                                    CommonFunction.onTakePhoto(
+                                                        this@NewUserInfoSettingsActivity,
+                                                        1,
+                                                        PictureConfig.CHOOSE_REQUEST,
+                                                        PictureMimeType.ofImage()
+                                                    )
+
                                                 }
 
                                                 override fun onDenied() {
@@ -192,7 +198,12 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                             })
                             .request()
                     } else {
-                        onTakePhoto(1)
+                        CommonFunction.onTakePhoto(
+                            this@NewUserInfoSettingsActivity,
+                            1,
+                            PictureConfig.CHOOSE_REQUEST,
+                            PictureMimeType.ofImage()
+                        )
                     }
 
                 } else {
@@ -428,7 +439,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                                 PermissionUtils.permission(PermissionConstants.STORAGE)
                                     .callback(object : PermissionUtils.SimpleCallback {
                                         override fun onGranted() {
-                                            onTakePhoto(1, true)
+                                            CommonFunction.onTakePhoto(
+                                                this@NewUserInfoSettingsActivity,
+                                                1,
+                                                REPLACE_REQUEST,
+                                                PictureMimeType.ofImage()
+                                            )
+
                                         }
 
                                         override fun onDenied() {
@@ -445,7 +462,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                         })
                         .request()
                 } else {
-                    onTakePhoto(1, true)
+                    CommonFunction.onTakePhoto(this, 1, REPLACE_REQUEST, PictureMimeType.ofImage())
                 }
                 dialog.dismiss()
             }
@@ -607,36 +624,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         mPresenter.savePersonal(params)
     }
 
-
-    /**
-     * 拍照或者选取照片
-     */
-    private fun onTakePhoto(count: Int, replaceAvator: Boolean = false) {
-        PictureSelector.create(this)
-            .openGallery(PictureMimeType.ofImage())
-            .maxSelectNum(count)
-            .minSelectNum(0)
-            .imageSpanCount(4)
-            .selectionMode(PictureConfig.SINGLE)
-            .previewImage(true)
-            .isCamera(true)
-            .enableCrop(false)
-            .compressSavePath(UriUtils.getCacheDir(this))
-            .compress(false)
-            .scaleEnabled(true)
-            .showCropFrame(true)
-            .rotateEnabled(false)
-            .withAspectRatio(9, 16)
-            .compressSavePath(UriUtils.getCacheDir(this))
-            .openClickSound(false)
-            .forResult(
-                if (replaceAvator) {
-                    REPLACE_REQUEST
-                } else {
-                    PictureConfig.CHOOSE_REQUEST
-                }
-            )
-    }
 
     private val loading by lazy { LoadingDialog(this) }
     override fun uploadImgResult(b: Boolean, key: String, replaceAvator: Boolean) {

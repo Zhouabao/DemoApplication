@@ -54,6 +54,11 @@ import java.util.*
  */
 class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNameView, View.OnClickListener {
 
+    companion object {
+        const val REQUEST_CODE_TAKE_PHOTO = 1
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_avator)
@@ -69,31 +74,6 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         btnNextStep.setOnClickListener(this)
         help.setOnClickListener(this)
 
-    }
-
-
-    /**
-     * 拍照或者选取照片
-     */
-    private fun choosePhoto() {
-        PictureSelector.create(this)
-            .openGallery(PictureMimeType.ofImage())
-            .maxSelectNum(1)
-            .minSelectNum(0)
-            .imageSpanCount(4)
-            .selectionMode(PictureConfig.SINGLE)
-            .previewImage(true)
-            .isCamera(true)
-            .enableCrop(false)//是否裁剪
-            .isDragFrame(true)
-            .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false
-            .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or fa
-            .scaleEnabled(true)
-            .rotateEnabled(false)
-            .withAspectRatio(1, 1)
-            .compress(false)//是否压缩
-            .openClickSound(false)
-            .forResult(PictureConfig.CHOOSE_REQUEST)
     }
 
     private val uploadAvatorDialog by lazy { UploadAvatorDialog(this) }
@@ -122,7 +102,12 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                                 PermissionUtils.permission(PermissionConstants.STORAGE)
                                     .callback(object : PermissionUtils.SimpleCallback {
                                         override fun onGranted() {
-                                            choosePhoto()
+                                            CommonFunction.onTakePhoto(
+                                                this@UserAvatorActivity,
+                                                1,
+                                                PictureConfig.CHOOSE_REQUEST,
+                                                PictureMimeType.ofImage()
+                                            )
                                             uploadAvatorDialog.cancel()
                                         }
 
@@ -142,7 +127,12 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                     })
                     .request()
             } else {
-                choosePhoto()
+                CommonFunction.onTakePhoto(
+                    this@UserAvatorActivity,
+                    1,
+                    PictureConfig.CHOOSE_REQUEST,
+                    PictureMimeType.ofImage()
+                )
                 uploadAvatorDialog.cancel()
             }
         }
@@ -205,7 +195,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(it)) //设置拍照后图片保存的位置
             }
             intent.resolveActivity(packageManager)?.let {
-                startActivityForResult(intent, SetInfoActivity.REQUEST_CODE_TAKE_PHOTO) //调起系统相机
+                startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO) //调起系统相机
             }
         }
     }
@@ -237,7 +227,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                 PictureConfig.CHOOSE_REQUEST -> {
                     if (data != null) {
                         startAnimation(false)
-                        var path =if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        var path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             PictureSelector.obtainMultipleResult(data)[0].androidQToPath
                         } else {
                             PictureSelector.obtainMultipleResult(data)[0].path
@@ -282,7 +272,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                     }
                 }
 
-                SetInfoActivity.REQUEST_CODE_TAKE_PHOTO -> {
+                REQUEST_CODE_TAKE_PHOTO -> {
                     if (imageFile != null) {
                         startAnimation(false)
                         var path = imageFile!!.absolutePath

@@ -15,6 +15,7 @@ import com.netease.nimlib.sdk.chatroom.ChatRoomMessageBuilder;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.common.CommonFunction;
 
 import java.io.File;
 import java.util.List;
@@ -42,20 +43,8 @@ public class ChatPickImageAction extends ChatBaseAction {
     private void onTakePhoto() {
         int requestCode = makeRequestCode(RequestCode.PICK_IMAGE);
 
-        PictureSelector.create(getActivity())
-                .openGallery(PictureMimeType.ofVideo() & PictureMimeType.ofImage())
-                .maxSelectNum(9)
-                .minSelectNum(0)
-                .imageSpanCount(4)
-                .selectionMode(PictureConfig.MULTIPLE)
-                .previewImage(true)
-                .previewVideo(true)
-                .isCamera(true)
-                .enableCrop(false)
-                .withAspectRatio(9, 16)
-                .compress(true)
-                .openClickSound(false)
-                .forResult(requestCode);
+        CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode, PictureMimeType.ofVideo() & PictureMimeType.ofImage());
+
     }
 
 
