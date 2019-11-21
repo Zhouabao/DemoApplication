@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.nim.activity
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.View
 import android.widget.AbsListView
 import android.widget.AdapterView
 import androidx.appcompat.widget.SearchView
+import com.blankj.utilcode.util.BarUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper
@@ -61,8 +63,8 @@ class SearchMessageActivity : UI(),SwipeBackActivityBase {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_message)
 
-
-
+        BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+        BarUtils.setStatusBarLightMode(this, true)
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()

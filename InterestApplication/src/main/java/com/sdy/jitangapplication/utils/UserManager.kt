@@ -556,6 +556,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_high")
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_low")
         SPUtils.getInstance(Constants.SPNAME).remove("local_only")
+        SPUtils.getInstance(Constants.SPNAME).remove("online")
         SPUtils.getInstance(Constants.SPNAME).remove("city_code")
         SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
 

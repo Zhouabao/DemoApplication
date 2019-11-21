@@ -4,7 +4,6 @@ import android.app.Activity
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.location.AMapLocation
@@ -22,8 +21,8 @@ import com.amap.api.services.poisearch.PoiResult
 import com.amap.api.services.poisearch.PoiSearch
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.ui.adapter.LocationAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
@@ -32,7 +31,7 @@ import kotlinx.android.synthetic.main.activity_location.*
 /**
  * 选择定位页面
  */
-class LocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener, View.OnClickListener {
+class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
             R.id.locationBtn -> {

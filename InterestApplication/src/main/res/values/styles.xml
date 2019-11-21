@@ -100,6 +100,11 @@
         <item name="android:windowExitAnimation">@anim/dialog_bottom_exit</item>
     </style>
 
+    <style name="MyDialogTopAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_top_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_top_exit</item>
+    </style>
+
     <style name="MyDialogCenterAnimation">
         <item name="android:windowEnterAnimation">@anim/dialog_center_in</item>
         <item name="android:windowExitAnimation">@anim/dialog_center_exit</item>

@@ -2,9 +2,11 @@ package com.sdy.jitangapplication.nim.activity
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.google.gson.Gson
 import com.kotlin.base.common.AppManager
@@ -184,7 +186,8 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+        BarUtils.setStatusBarLightMode(this, true)
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()

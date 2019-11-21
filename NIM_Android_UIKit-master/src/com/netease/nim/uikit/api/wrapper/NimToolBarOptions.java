@@ -11,13 +11,13 @@ public class NimToolBarOptions extends ToolBarOptions {
     public NimToolBarOptions() {
         logoId = 0;
 //        logoId = R.drawable.nim_actionbar_nest_dark_logo;
-        navigateId = R.drawable.nim_actionbar_dark_back_icon;
+        navigateId = R.drawable.icon_return;
         isNeedNavigate = true;
     }
 
     public NimToolBarOptions(int logoId) {
         this.logoId = logoId;
-        navigateId = R.drawable.nim_actionbar_dark_back_icon;
+        navigateId = R.drawable.icon_return;
         isNeedNavigate = true;
     }
 }

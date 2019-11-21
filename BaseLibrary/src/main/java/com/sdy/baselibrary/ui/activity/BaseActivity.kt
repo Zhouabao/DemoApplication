@@ -1,11 +1,13 @@
 package com.kotlin.base.ui.activity
 
 import android.annotation.TargetApi
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
+import com.blankj.utilcode.util.BarUtils
 import com.kotlin.base.common.AppManager
 import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivity
@@ -29,6 +31,8 @@ open class BaseActivity : SwipeBackActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+        BarUtils.setStatusBarLightMode(this, true)
         AppManager.instance.addActivity(this)
         initSwipeBackFinish()
     }
@@ -57,11 +61,11 @@ open class BaseActivity : SwipeBackActivity() {
         }
         //val manager = SystemBarTintManager(this)
         //激活状态栏设置
-      //  manager.isStatusBarTintEnabled = true
+        //  manager.isStatusBarTintEnabled = true
         //激活导航栏设置
-       // manager.setNavigationBarTintEnabled(true)
+        // manager.setNavigationBarTintEnabled(true)
         //设置一个状态栏颜色
-       // manager.setStatusBarTintColor(Color.WHITE)
+        // manager.setStatusBarTintColor(Color.WHITE)
     }
 
     @TargetApi(19)

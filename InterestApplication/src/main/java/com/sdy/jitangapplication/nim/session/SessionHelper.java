@@ -44,7 +44,6 @@ import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatHi;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderShareSquare;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderTip;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
-import com.sdy.jitangapplication.ui.activity.UserCenterActivity;
 import com.sdy.jitangapplication.utils.UserManager;
 
 import java.util.ArrayList;
@@ -285,7 +284,7 @@ public class SessionHelper {
             public void onAvatarClicked(Context context, IMMessage message) {
                 // 一般用于打开用户资料页面
                 if (message.getFromAccount().equals(UserManager.INSTANCE.loginInfo().getAccount())) {
-                    context.startActivity(new Intent(context, UserCenterActivity.class));
+                    //context.startActivity(new Intent(context, UserCenterActivity.class));
                 } else if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID))
                     MatchDetailActivity.start(context, message.getFromAccount(), -1, -1);
 

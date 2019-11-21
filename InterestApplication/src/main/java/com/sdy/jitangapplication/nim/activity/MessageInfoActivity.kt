@@ -1,10 +1,12 @@
 package com.sdy.jitangapplication.nim.activity
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.BarUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -80,7 +82,8 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         setContentView(R.layout.activity_message_info)
         EventBus.getDefault().register(this)
 
-
+        BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+        BarUtils.setStatusBarLightMode(this, true)
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
