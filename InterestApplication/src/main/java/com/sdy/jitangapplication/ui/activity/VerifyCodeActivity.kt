@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.presenter.VerifyCodePresenter
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.ui.dialog.LoginOffSuccessDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.VerificationCodeInput
 import kotlinx.android.synthetic.main.activity_verify_code.*
@@ -24,7 +25,7 @@ import org.jetbrains.anko.startActivity
 /**
  * 填写验证码界面
  *
- * //todo 新增账号注销界面，待完善注销逻辑
+ * //todo 新增账号注销界面，待完善注销逻辑:填写验证码之后给一个提示  然后跳转到登录/注册的首页
  */
 class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickListener, VerifyCodeView {
 
@@ -142,8 +143,13 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
     override fun onConfirmVerifyCode(data: LoginBean?, isRight: Boolean) {
         if (isRight) {
-            this.data = data
-            mPresenter.loginIM(LoginInfo(data!!.accid, data!!.extra_data?.im_token))
+            //注销成功
+            if (intent.getStringExtra("type") == "$TYPE_LOGIN_OFF") {
+                LoginOffSuccessDialog(this).show()
+            } else {//登录成功
+                this.data = data
+                mPresenter.loginIM(LoginInfo(data!!.accid, data!!.extra_data?.im_token))
+            }
         } else {
             loadingDialog.dismiss()
             inputVerifyCode.isEnabled = true

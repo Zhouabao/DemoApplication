@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.google.android.flexbox.*
 import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -74,6 +75,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_center)
+        BarUtils.setStatusBarColor(this, resources.getColor(R.color.colorTransparent))
         EventBus.getDefault().register(this)
         initView()
         mPresenter.getMemberInfo(params)
@@ -119,22 +121,22 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     //是否认证 0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     private fun checkVerify() {
         if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
-            userVerify.setImageResource(R.drawable.icon_verify)
+            userVerify.setImageResource(R.drawable.icon_verify_not_white)
             userVerifyTipBtn.text = "已认证"
-            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorOrange))
+            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorWhite))
             userVerifyTipBtn.isEnabled = false
             userVerifyScore.isVisible = false
         } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) { //审核中
-            userVerify.setImageResource(R.drawable.icon_verify_gray)
+            userVerify.setImageResource(R.drawable.icon_verify_not_me)
             userVerifyTipBtn.text = "认证审核中"
-            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayText))
+            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayTextBF))
             userVerifyTipBtn.isEnabled = false
             userVerifyScore.isVisible = false
         } else {
-            userVerify.setImageResource(R.drawable.icon_verify_gray)
+            userVerify.setImageResource(R.drawable.icon_verify_not_me)
             userVerifyTipBtn.isVisible = true
             userVerifyTipBtn.isEnabled = true
-            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorOrange))
+            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayTextBF))
 
             if (userInfoBean?.userinfo?.isfaced == 4) {//审核不通过
                 userVerifyTipBtn.text = "重新认证"
@@ -246,14 +248,12 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         userAvator.setOnClickListener(this)
         isVipProblem.setOnClickListener(this)
         isVipPowerBtn.setOnClickListener(this)
+        userFoot.setOnClickListener(this)
         userTagsBtn.setOnClickListener(this)
         userSquareCount.setOnClickListener(this)
-        userCollection.setOnClickListener(this)
         userQuestions.setOnClickListener(this)
         userRecommend.setOnClickListener(this)
         userVisit.setOnClickListener(this)
-        userDianzan.setOnClickListener(this)
-        userComment.setOnClickListener(this)
         userVerifyTipBtn.setOnClickListener(this)
         feedBack.setOnClickListener(this)
 
@@ -264,9 +264,15 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         }
 
         //用户标签
-        val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
-        manager.alignItems = AlignItems.STRETCH
-        manager.justifyContent = JustifyContent.FLEX_START
+        val manager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        userTagRv.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL_LIST,
+                SizeUtils.dp2px(10F),
+                resources.getColor(R.color.colorWhite)
+            )
+        )
         userTagRv.layoutManager = manager
         userTagRv.adapter = tagAdapter
 
@@ -283,10 +289,21 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         )
         userSquaresRv.adapter = coverAdapter
         val headView = LayoutInflater.from(this).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
+        val params =headView.layoutParams as RecyclerView.LayoutParams
+        params.width = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.height = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        headView.layoutParams = params
+
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
         coverAdapter.headerLayout.onClick {
             mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
             coverAdapter.headerLayout.isEnabled = false
+        }
+
+        coverAdapter.setOnItemClickListener { _, view, position ->
+            if (position == coverAdapter.data.size - 1) {
+                startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to 1)
+            }
         }
 
         //我的访客封面
@@ -315,46 +332,6 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
                 startActivity<PublishActivity>("from" to 2)
             } else
                 EventBus.getDefault().post(RePublishEvent(true, this))
-//            if (UserManager.publishState == 1) {//正在发布中
-//                CommonFunction.toast("还有动态正在发布哦~请稍候")
-//                return
-//            } else if (UserManager.publishState == -2) {//发布失败
-//                CommonAlertDialog.Builder(this)
-//                    .setTitle("发布提示")
-//                    .setContent("您有一条内容未成功发布，是否重新发布？")
-//                    .setConfirmText("重新上传")
-//                    .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-//                        override fun onClick(dialog: Dialog) {
-//                            dialog.cancel()
-//                            retryPublish()
-//                        }
-//                    })
-//                    .setCancelText("发布新内容")
-//                    .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
-//                        override fun onClick(dialog: Dialog) {
-//                            dialog.cancel()
-//                            UserManager.clearPublishParams()
-//                            if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-//                                startActivity<PublishActivity>("from" to 2)
-//                        }
-//                    })
-//                    .create()
-//                    .show()
-//            } else if (UserManager.publishState == -1) { //400
-//                SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
-//                UserManager.clearPublishParams()
-//                if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-//                    startActivity<PublishActivity>("from" to 2)
-//
-//            } else if (UserManager.publishState == 0) {
-//                if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//                        startActivity<PublishActivity>("from" to 2)
-//                    } else {
-//                        startActivity<PublishActivity>("from" to 2)
-//                    }
-//            }
-
         }
         coverAdapter.headerLayout.isEnabled = true
     }
@@ -427,18 +404,18 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             R.id.userSquareCount -> {
                 startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to 1)
             }
-            //我的收藏
-            R.id.userCollection -> {
-                startActivity<MyCollectionEtcActivity>("type" to 3)
+//            //我的足迹
+            R.id.userFoot -> {
+                startActivity<MyFootPrintActivity>()
             }
-            //我的点赞
-            R.id.userDianzan -> {
-                startActivity<MyCollectionEtcActivity>("type" to 2)
-            }
-            //我的评论
-            R.id.userComment -> {
-                startActivity<MyCommentActivity>()
-            }
+//            //我的点赞
+//            R.id.userDianzan -> {
+//                startActivity<MyCollectionEtcActivity>("type" to 2)
+//            }
+//            //我的评论
+//            R.id.userComment -> {
+//                startActivity<MyCommentActivity>()
+//            }
             //我的来访
             R.id.userVisit -> {
                 startActivity<MyVisitActivity>(

@@ -38,6 +38,7 @@
             android:layout_height="55dp"/>
 
     <View
+            android:id="@+id/divider"
             android:background="@color/colorDivider"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"

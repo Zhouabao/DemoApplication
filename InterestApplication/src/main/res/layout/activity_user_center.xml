@@ -5,7 +5,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
+        android:background="@drawable/gradient_orange"
+        android:fitsSystemWindows="true"
         tools:context=".ui.activity.UserCenterActivity">
 
     <RelativeLayout
@@ -21,7 +22,7 @@
         <TextView
                 android:id="@+id/hotT1"
                 android:text="我的"
-                android:textColor="@color/colorBlackTitle"
+                android:textColor="@color/colorWhite"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -35,13 +36,16 @@
         <ImageView
                 android:id="@+id/btnBack"
                 style="@style/BckBtnStyle"
+                android:visibility="gone"
+                android:src="@drawable/icon_back_white"
+                android:layout_centerVertical="true"
                 />
 
         <ImageView
                 android:id="@+id/settingBtn"
                 android:paddingRight="15dp"
                 android:paddingLeft="15dp"
-                android:src="@drawable/icon_settings_black"
+                android:src="@drawable/icon_setting"
                 android:layout_width="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -49,7 +53,7 @@
 
         <View
                 android:layout_alignParentBottom="true"
-                android:background="@color/colorDivider"
+                android:background="@color/colorTransparent"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"/>
 
@@ -58,420 +62,433 @@
     <com.kennyc.view.MultiStateView
             android:id="@+id/multiStateView"
             android:layout_marginTop="56dp"
+            android:background="@color/colorWhite"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            app:msv_viewState="content">
 
-        <ScrollView
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_orange"
+                app:srlDragRate="0.75"
+                app:srlEnableLoadMore="false"
+                app:srlEnablePureScrollMode="true">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.core.widget.NestedScrollView
+                    android:scrollbars="none"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/userAvator"
-                        android:layout_marginLeft="15dp"
-                        android:layout_width="65dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_height="65dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
-
-                <TextView
-                        android:id="@+id/userName"
-                        android:layout_marginLeft="10dp"
-                        android:textColor="@color/colorBlackTitle"
-                        android:textSize="18sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toRightOf="@id/userAvator"
-                        app:layout_constraintTop_toTopOf="@id/userAvator"
-                        tools:text="Username"/>
-
-                <ImageView
-                        android:id="@+id/userVip"
-                        android:layout_marginLeft="5dp"
-                        android:src="@drawable/icon_vip"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userName"
-                        app:layout_constraintLeft_toRightOf="@id/userName"
-                        app:layout_constraintTop_toTopOf="@id/userAvator"/>
-
-                <ImageView
-                        android:id="@+id/userVerify"
-                        android:src="@drawable/icon_verify_gray"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginTop="5dp"
-                        app:layout_constraintLeft_toLeftOf="@id/userName"
-                        app:layout_constraintLeft_toRightOf="@id/userVip"
-                        app:layout_constraintTop_toBottomOf="@id/userName"/>
-
-                <TextView
-                        android:id="@+id/userVerifyTipBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="未认证"
-                        android:textColor="@color/colorGrayText"
-                        android:textSize="12sp"
-                        android:layout_marginLeft="5dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userVerify"
-                        app:layout_constraintLeft_toRightOf="@id/userVerify"
-                        app:layout_constraintTop_toTopOf="@id/userVerify"
-                        />
-
-                <TextView
-                        android:id="@+id/userVerifyScore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="+10"
-                        android:gravity="center"
-                        android:drawableLeft="@drawable/icon_xiaolian_orange"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:drawablePadding="2dp"
-                        android:textColor="@color/colorWhite"
-                        android:background="@drawable/shape_rectangle_orange_3dp"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="5dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userVerify"
-                        app:layout_constraintLeft_toRightOf="@id/userVerifyTipBtn"
-                        app:layout_constraintTop_toTopOf="@id/userVerify"
-                        />
-
-
-                <TextView
-                        android:id="@+id/userInfoSettingBtn"
-                        android:paddingRight="10dp"
-                        android:gravity="center"
-                        android:drawablePadding="4dp"
-                        android:textSize="12sp"
-                        android:drawableLeft="@drawable/icon_edit_white"
-                        android:textColor="@color/colorWhite"
-                        android:paddingLeft="10dp"
-                        android:background="@drawable/shape_rectangle_user_finish"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/userAvator"
-                        tools:text="完成度：80%"/>
-
-
-                <LinearLayout
-                        android:id="@+id/vipLl"
-                        android:layout_marginTop="18dp"
-                        android:background="@drawable/shape_rectangle_orange_usersetting"
-                        android:layout_width="0dp"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                        app:layout_constraintTop_toBottomOf="@id/userAvator">
-
-                    <ImageView
-                            android:id="@+id/isVipIcon"
-                            android:layout_marginLeft="15dp"
-                            android:src="@drawable/icon_vip"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:background="@color/colorWhite"
+                        android:layout_height="match_parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/isVipCl"
-                            android:visibility="gone"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/userInfoCl"
+                            android:layout_width="match_parent"
+                            android:background="@drawable/gradient_orange"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_weight="1"
-                            app:layout_constraintLeft_toRightOf="@id/isVipIcon"
-                            app:layout_constraintTop_toTopOf="@id/isVipIcon">
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                                android:id="@+id/isVipType"
-                                android:text="超级会员"
-                                android:textColor="@color/colorWhite"
-                                android:textSize="14sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                        <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/userAvator"
+                                android:src="@drawable/icon_default_avator"
+                                android:layout_marginLeft="15dp"
+                                android:layout_width="65dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_height="65dp"
+                                app:civ_border_color="@color/colorWhite"
+                                app:civ_border_width="2dp"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 />
 
                         <TextView
-                                android:id="@+id/isVipTimeout"
-                                android:text="到期时间 2020-01-01"
-                                android:textColor="#ffffccac"
-                                android:textSize="12sp"
-                                android:layout_marginTop="4dp"
+                                android:id="@+id/userName"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="21sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                app:layout_constraintLeft_toLeftOf="@id/isVipType"
-                                app:layout_constraintTop_toBottomOf="@id/isVipType"/>
+                                app:layout_constraintLeft_toRightOf="@id/userAvator"
+                                app:layout_constraintTop_toTopOf="@id/userAvator"
+                                tools:text="Username"/>
+
+                        <ImageView
+                                android:id="@+id/userVip"
+                                android:layout_marginLeft="5dp"
+                                android:src="@drawable/icon_vip"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userName"
+                                app:layout_constraintLeft_toRightOf="@id/userName"
+                                app:layout_constraintTop_toTopOf="@id/userAvator"/>
+
+                        <ImageView
+                                android:id="@+id/userVerify"
+                                android:src="@drawable/icon_verify_not_me"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_marginTop="5dp"
+                                app:layout_constraintLeft_toLeftOf="@id/userName"
+                                app:layout_constraintLeft_toRightOf="@id/userVip"
+                                app:layout_constraintTop_toBottomOf="@id/userName"/>
 
                         <TextView
-                                android:id="@+id/isVipProblem"
+                                android:id="@+id/userVerifyTipBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="未认证"
+                                android:textColor="@color/colorGrayTextBF"
+                                android:textSize="12sp"
                                 android:layout_marginLeft="5dp"
-                                android:text="\?"
-                                android:background="@drawable/shape_oval_light_orange"
-                                android:layout_width="16dp"
-                                android:layout_height="0dp"
-                                android:textSize="10sp"
-                                android:gravity="center"
-                                android:visibility="gone"
-                                android:textColor="@color/colorOrange"
-                                app:layout_constraintBottom_toBottomOf="@id/isVipTimeout"
-                                app:layout_constraintLeft_toRightOf="@id/isVipTimeout"
-                                app:layout_constraintTop_toTopOf="@id/isVipTimeout"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                app:layout_constraintBottom_toBottomOf="@id/userVerify"
+                                app:layout_constraintLeft_toRightOf="@id/userVerify"
+                                app:layout_constraintTop_toTopOf="@id/userVerify"
+                                />
 
-                    <LinearLayout
-                            android:id="@+id/notVipPowerLl"
-                            android:layout_width="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_marginLeft="15dp"
-                            android:layout_height="match_parent">
+                        <TextView
+                                android:id="@+id/userVerifyScore"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:drawableLeft="@drawable/icon_smile_orange"
+                                android:paddingLeft="4dp"
+                                android:paddingRight="4dp"
+                                android:drawablePadding="2dp"
+                                android:textColor="@color/colorOrange"
+                                android:background="@drawable/rectangle_white_3dp"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:layout_marginLeft="5dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userVerify"
+                                app:layout_constraintLeft_toRightOf="@id/userVerifyTipBtn"
+                                app:layout_constraintTop_toTopOf="@id/userVerify"
+                                tools:text="+10"
+                                />
+
+
+                        <TextView
+                                android:id="@+id/userInfoSettingBtn"
+                                android:paddingRight="10dp"
+                                android:gravity="center"
+                                android:drawablePadding="4dp"
+                                android:textSize="12sp"
+                                android:drawableLeft="@drawable/icon_edit_white"
+                                android:textColor="@color/colorWhite"
+                                android:paddingLeft="10dp"
+                                android:background="@drawable/shape_rectangle_user_finish"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                app:layout_constraintBottom_toBottomOf="@id/userAvator"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/userAvator"
+                                tools:text="完成度：80%"/>
+
 
                         <LinearLayout
-                                android:id="@+id/notVipPowerIndicator"
-                                android:gravity="left|center_vertical"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginTop="10dp"
+                                android:id="@+id/vipLl"
+                                android:layout_marginTop="18dp"
+                                android:background="@drawable/shape_rectangle_orange_usersetting"
+                                android:layout_width="0dp"
+                                android:layout_height="70dp"
                                 android:orientation="horizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"></LinearLayout>
+                                android:gravity="center_vertical"
+                                android:layout_marginRight="15dp"
+                                app:layout_constraintLeft_toLeftOf="@id/userAvator"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/userAvator">
 
-                        <androidx.viewpager.widget.ViewPager
-                                android:id="@+id/notVipPowerVp"
-                                android:layout_marginTop="5dp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                />
-                    </LinearLayout>
+                            <ImageView
+                                    android:id="@+id/isVipIcon"
+                                    android:layout_marginLeft="15dp"
+                                    android:src="@drawable/icon_vip"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    />
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/isVipCl"
+                                    android:visibility="gone"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_weight="1"
+                                    app:layout_constraintLeft_toRightOf="@id/isVipIcon"
+                                    app:layout_constraintTop_toTopOf="@id/isVipIcon">
+
+                                <TextView
+                                        android:id="@+id/isVipType"
+                                        android:text="超级会员"
+                                        android:textColor="@color/colorWhite"
+                                        android:textSize="14sp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        />
+
+                                <TextView
+                                        android:id="@+id/isVipTimeout"
+                                        android:text="到期时间 2020-01-01"
+                                        android:textColor="#ffffccac"
+                                        android:textSize="12sp"
+                                        android:layout_marginTop="4dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        app:layout_constraintLeft_toLeftOf="@id/isVipType"
+                                        app:layout_constraintTop_toBottomOf="@id/isVipType"/>
+
+                                <TextView
+                                        android:id="@+id/isVipProblem"
+                                        android:layout_marginLeft="5dp"
+                                        android:text="\?"
+                                        android:background="@drawable/shape_oval_light_orange"
+                                        android:layout_width="16dp"
+                                        android:layout_height="0dp"
+                                        android:textSize="10sp"
+                                        android:gravity="center"
+                                        android:visibility="gone"
+                                        android:textColor="@color/colorOrange"
+                                        app:layout_constraintBottom_toBottomOf="@id/isVipTimeout"
+                                        app:layout_constraintLeft_toRightOf="@id/isVipTimeout"
+                                        app:layout_constraintTop_toTopOf="@id/isVipTimeout"/>
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <LinearLayout
+                                    android:id="@+id/notVipPowerLl"
+                                    android:layout_width="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_height="match_parent">
+
+                                <androidx.viewpager.widget.ViewPager
+                                        android:id="@+id/notVipPowerVp"
+                                        android:layout_weight="1"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="0dp"/>
+
+                                <LinearLayout
+                                        android:layout_marginTop="5dp"
+                                        android:id="@+id/notVipPowerIndicator"
+                                        android:layout_marginBottom="10dp"
+                                        android:gravity="center"
+                                        android:layout_gravity="center"
+                                        android:orientation="horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="5dp"/>
+
+                            </LinearLayout>
+
+                            <TextView
+                                    android:id="@+id/isVipPowerBtn"
+                                    android:background="@drawable/gradient_is_vip_quanyi_bg"
+                                    android:gravity="center"
+                                    android:textColor="@color/colorWhite"
+                                    android:text="会员权益"
+                                    android:layout_width="70dp"
+                                    android:layout_height="26dp"
+                                    android:textSize="12sp"
+                                    android:visibility="gone"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginRight="15dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
-                            android:id="@+id/isVipPowerBtn"
-                            android:background="@drawable/gradient_is_vip_quanyi_bg"
-                            android:gravity="center"
-                            android:textColor="@color/colorWhite"
-                            android:text="会员权益"
-                            android:layout_width="70dp"
-                            android:layout_height="26dp"
-                            android:textSize="12sp"
-                            android:visibility="gone"
-                            android:layout_marginLeft="5dp"
+                            android:id="@+id/userTagsBtn"
+                            android:text="我的标签"
+                            android:textColor="#ff19191a"
+                            android:textSize="16sp"
+                            android:drawablePadding="12dp"
+                            android:drawableLeft="@drawable/icon_my_label"
+                            android:gravity="center_vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="25dp"
+                            android:textStyle="bold"
+                            android:drawableRight="@drawable/icon_more_right"
                             android:layout_marginRight="15dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginLeft="15dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
-                </LinearLayout>
-
-                <TextView
-                        android:id="@+id/userTagsBtn"
-                        android:text="我的标签"
-                        android:textColor="@color/colorBlackTitle"
-                        android:textSize="16sp"
-                        android:gravity="center_vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:drawableRight="@drawable/icon_more_right"
-                        android:layout_marginRight="15dp"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/vipLl"
-                        />
+                            app:layout_constraintTop_toBottomOf="@id/userInfoCl"
+                            />
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/userTagRv"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="@id/userInfoSettingBtn"
-                        app:layout_constraintTop_toBottomOf="@id/userTagsBtn"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/userTagRv"
+                            android:layout_width="0dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                            app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toBottomOf="@id/userTagsBtn"/>
 
-                <TextView
-                        android:id="@+id/userSquareCount"
-                        android:text="我的动态 35"
-                        android:textColor="#ff000000"
-                        android:textSize="16sp"
-                        android:layout_width="0dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/icon_more_right"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                        app:layout_constraintTop_toBottomOf="@id/userTagRv"/>
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/userSquaresRv"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                        app:layout_constraintTop_toBottomOf="@id/userSquareCount"/>
-
-                <TextView
-                        android:id="@+id/userDianzan"
-                        android:text="我的点赞"
-                        android:textColor="#ff222222"
-                        android:textSize="16sp"
-                        android:layout_width="0dp"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:drawableRight="@drawable/icon_more_right"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                        app:layout_constraintTop_toBottomOf="@id/userSquaresRv"/>
-
-                <TextView
-                        android:id="@+id/userComment"
-                        android:text="我的评论"
-                        android:textColor="#ff222222"
-                        android:textSize="16sp"
-                        android:layout_width="0dp"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:drawableRight="@drawable/icon_more_right"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                        app:layout_constraintTop_toBottomOf="@id/userDianzan"/>
-
-                <TextView
-                        android:id="@+id/userCollection"
-                        android:text="我的收藏"
-                        android:textColor="#ff222222"
-                        android:textSize="16sp"
-                        android:layout_width="0dp"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:drawableRight="@drawable/icon_more_right"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                        app:layout_constraintTop_toBottomOf="@id/userComment"/>
+                    <TextView
+                            android:id="@+id/userSquareCount"
+                            android:textColor="#ff19191a"
+                            android:textSize="16sp"
+                            android:drawablePadding="12dp"
+                            android:drawableLeft="@drawable/icon_my_square"
+                            android:gravity="center_vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:textStyle="bold"
+                            android:text="我的动态 35"
+                            android:drawableRight="@drawable/icon_more_right"
+                            app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                            app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toBottomOf="@id/userTagRv"/>
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/userVisitRv"
-                        android:layout_marginRight="33dp"
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="24dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userVisit"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/userVisit">
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/userSquaresRv"
+                            android:layout_width="0dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                            app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toBottomOf="@id/userSquareCount"/>
 
-                </androidx.recyclerview.widget.RecyclerView>
-
-                <TextView
-                        android:id="@+id/userVisit"
-                        android:text="看过我的"
-                        android:textColor="#ff222222"
-                        android:textSize="16sp"
-                        android:layout_width="0dp"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:drawableRight="@drawable/icon_more_right"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="20dp"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                        app:layout_constraintTop_toBottomOf="@id/userCollection"/>
-
-
-                <Button
-                        android:id="@+id/feedBack"
-                        android:layout_width="0dp"
-                        android:background="@drawable/fankui"
-                        android:layout_marginTop="20dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                        app:layout_constraintTop_toBottomOf="@id/userVisit"
-                        />
-
-                <TextView
-                        android:id="@+id/t1"
-                        android:visibility="gone"
-                        android:text="我的问题"
-                        android:textColor="#ff222222"
-                        android:textSize="16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintTop_toBottomOf="@id/userCollection"/>
-
-                <TextView
-                        android:id="@+id/userQuestions"
-                        android:visibility="gone"
-                        android:text="设置问题让沟通更简单"
-                        android:textColor="#ffff6318"
-                        android:textSize="14sp"
-                        android:layout_width="wrap_content"
-                        android:gravity="center_vertical"
-                        android:drawablePadding="10dp"
-                        android:drawableRight="@drawable/icon_more_right"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="@id/t1"
-                        app:layout_constraintRight_toRightOf="@id/userInfoSettingBtn"
-                        app:layout_constraintTop_toTopOf="@id/t1"
-                        />
+                    <TextView
+                            android:id="@+id/userFoot"
+                            android:textColor="#ff19191a"
+                            android:textSize="16sp"
+                            android:drawablePadding="12dp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="25dp"
+                            android:drawableLeft="@drawable/icon_my_foot"
+                            android:text="我的足迹"
+                            android:layout_width="0dp"
+                            android:gravity="center_vertical"
+                            android:drawableRight="@drawable/icon_more_right"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                            app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toBottomOf="@id/userSquaresRv"/>
 
 
-                <TextView
-                        android:id="@+id/t2"
-                        android:visibility="gone"
-                        android:text="推荐给朋友"
-                        android:textColor="#ff222222"
-                        android:textSize="16sp"
-                        android:layout_width="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintTop_toBottomOf="@id/t1"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/userVisitRv"
+                            android:layout_marginRight="33dp"
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="24dp"
+                            app:layout_constraintBottom_toBottomOf="@id/userVisit"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/userVisit">
 
-                <TextView
-                        android:id="@+id/userRecommend"
-                        android:visibility="gone"
-                        android:text="限时送会员"
-                        android:textColor="#ffff6318"
-                        android:textSize="14sp"
-                        android:layout_width="wrap_content"
-                        android:gravity="center_vertical"
-                        android:drawablePadding="10dp"
-                        android:drawableRight="@drawable/icon_more_right"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="@id/t2"
-                        app:layout_constraintRight_toRightOf="@id/userInfoSettingBtn"
-                        app:layout_constraintTop_toTopOf="@id/t2"
-                        />
+                    </androidx.recyclerview.widget.RecyclerView>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+                    <TextView
+                            android:id="@+id/userVisit"
+                            android:textColor="#ff19191a"
+                            android:textSize="16sp"
+                            android:drawablePadding="12dp"
+                            android:textStyle="bold"
+                            android:drawableLeft="@drawable/icon_my_visit"
+                            android:layout_width="0dp"
+                            android:gravity="center_vertical"
+                            android:text="看过我的"
+                            android:layout_marginTop="25dp"
+                            android:drawableRight="@drawable/icon_more_right"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                            app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toBottomOf="@id/userFoot"
+                            />
+
+
+                    <Button
+                            android:id="@+id/feedBack"
+                            android:layout_marginTop="25dp"
+                            android:layout_width="0dp"
+                            android:background="@drawable/fankui"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                            app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toBottomOf="@id/userVisit"
+                            />
+
+                    <TextView
+                            android:id="@+id/t1"
+                            android:visibility="gone"
+                            android:text="我的问题"
+                            android:textColor="#ff222222"
+                            android:textSize="16sp"
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="center_vertical"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toBottomOf="@id/feedBack"/>
+
+                    <TextView
+                            android:id="@+id/userQuestions"
+                            android:visibility="gone"
+                            android:text="设置问题让沟通更简单"
+                            android:textColor="#ffff6318"
+                            android:textSize="14sp"
+                            android:layout_width="wrap_content"
+                            android:gravity="center_vertical"
+                            android:drawablePadding="10dp"
+                            android:drawableRight="@drawable/icon_more_right"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="@id/t1"
+                            app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toTopOf="@id/t1"
+                            />
+
+
+                    <TextView
+                            android:id="@+id/t2"
+                            android:visibility="gone"
+                            android:text="推荐给朋友"
+                            android:textColor="#ff222222"
+                            android:textSize="16sp"
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="center_vertical"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toBottomOf="@id/t1"/>
+
+                    <TextView
+                            android:id="@+id/userRecommend"
+                            android:visibility="gone"
+                            android:text="限时送会员"
+                            android:textColor="#ffff6318"
+                            android:textSize="14sp"
+                            android:layout_width="wrap_content"
+                            android:gravity="center_vertical"
+                            android:drawablePadding="10dp"
+                            android:drawableRight="@drawable/icon_more_right"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="@id/t2"
+                            app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                            app:layout_constraintTop_toTopOf="@id/t2"
+                            />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     </com.kennyc.view.MultiStateView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

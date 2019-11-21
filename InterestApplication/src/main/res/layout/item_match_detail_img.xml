@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ivUser"
-        android:background="@drawable/default_image"
+        android:background="@drawable/default_image_5dp"
         android:layout_gravity="center"
         android:transitionName="imageview"
         android:layout_width="wrap_content"

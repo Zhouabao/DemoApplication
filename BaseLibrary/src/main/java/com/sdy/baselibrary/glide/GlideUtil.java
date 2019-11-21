@@ -160,9 +160,9 @@ public class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .priority(Priority.NORMAL)
-                .placeholder(R.drawable.default_image)
+                .placeholder(R.drawable.default_image_5dp)
                 .override(width, height)
-                .error(R.drawable.default_image)
+                .error(R.drawable.default_image_5dp)
                 .thumbnail(0.5F)
                 .transform(multiTransformation)
                 .into(tartgetImg);

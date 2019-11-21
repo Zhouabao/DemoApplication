@@ -89,6 +89,8 @@
             android:theme="@style/MyAppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.MyFootPrintActivity">
+        </activity>
         <activity android:name=".ui.activity.LoginOffActivity">
         </activity>
         <activity android:name=".ui.activity.ChangeAccountActivity">
@@ -222,10 +224,6 @@
         </activity>
         <activity
                 android:name=".ui.activity.UserInfoSettingsActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
-                android:name=".ui.activity.MyCommentActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity

@@ -1,15 +1,18 @@
-package com.sdy.jitangapplication.ui.activity
+package com.sdy.jitangapplication.ui.fragment
 
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -19,19 +22,18 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.MyCommentList
 import com.sdy.jitangapplication.presenter.MyCommentPresenter
 import com.sdy.jitangapplication.presenter.view.MyCommentView
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MyCommentAdapter
 import com.sdy.jitangapplication.ui.dialog.CommentActionDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_comment.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.layout_actionbar.*
-import org.jetbrains.anko.toast
 
 /**
  * 我的评论
  */
-class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, OnRefreshListener, OnLoadMoreListener {
+class MyCommentFragment : BaseMvpLazyLoadFragment<MyCommentPresenter>(), MyCommentView, OnRefreshListener, OnLoadMoreListener {
 
     private val adapter: MyCommentAdapter by lazy { MyCommentAdapter() }
 
@@ -43,23 +45,20 @@ class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, 
         "pagesize" to Constants.PAGESIZE
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_comment)
-        initView()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.activity_my_comment, container, false)
+    }
 
+    override fun loadData() {
+        initView()
         mPresenter.myCommentList(params, true)
     }
 
-    private fun initView() {
-        btnBack.onClick {
-            finish()
-        }
-        hotT1.text = "我评论过的"
 
+    private fun initView() {
         mPresenter = MyCommentPresenter()
         mPresenter.mView = this
-        mPresenter.context = this
+        mPresenter.context = activity!!
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
         refreshLayout.setEnableLoadMoreWhenContentNotFull(false)
@@ -70,7 +69,7 @@ class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, 
             mPresenter.myCommentList(params, false)
         }
 
-        commentRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        commentRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         commentRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, commentRv)
 
@@ -80,7 +79,10 @@ class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, 
         }
         //点击跳转到广场详情
         adapter.setOnItemClickListener { _, view, position ->
-            SquareCommentDetailActivity.start(this, squareId = adapter.data[position].square_id ?: 0)
+            SquareCommentDetailActivity.start(
+                activity!!,
+                squareId = adapter.data[position].square_id ?: 0
+            )
         }
     }
 
@@ -88,7 +90,7 @@ class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, 
     private fun showCommentDialog(position: Int) {
         if (commentActionDialog == null) {
             //判断该条评论是不是自己发的
-            commentActionDialog = CommentActionDialog(this, "self")
+            commentActionDialog = CommentActionDialog(activity!!, "self")
         }
         commentActionDialog!!.show()
         commentActionDialog!!.copyComment.onClick {
@@ -115,12 +117,12 @@ class MyCommentActivity : BaseMvpActivity<MyCommentPresenter>(), MyCommentView, 
 
     private fun copyText(position: Int) {
         //获取剪贴板管理器
-        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val cm = activity!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         //创建普通字符串clipData
         val clipData = ClipData.newPlainText("label", "${adapter.data[position].content}")
         //将clipdata内容放到系统剪贴板里
         cm.setPrimaryClip(clipData)
-        toast("已复制内容到剪贴板")
+        CommonFunction.toast("已复制内容到剪贴板")
     }
 
 

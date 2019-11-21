@@ -17,6 +17,8 @@ import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.tencent.mm.opensdk.modelmsg.SendAuth
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 /**
  *    author : ZFM
@@ -90,5 +92,23 @@ object CommonFunction {
 //            ActivityUtils.finishActivity(MessageInfoActivity::class.java)
 //        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
 //            ActivityUtils.finishActivity(ChatActivity::class.java)
+    }
+
+
+    /**
+     * 微信登录
+     */
+    fun wechatLogin(context: Context) {
+        val wxapi = WXAPIFactory.createWXAPI(context, null)
+        wxapi.registerApp(Constants.WECHAT_APP_ID)
+        if (!wxapi.isWXAppInstalled) {
+            CommonFunction.toast("你没有安装微信")
+            return
+        }
+        val req = SendAuth.Req()
+        req.scope = "snsapi_userinfo"
+        req.state = "wechat_sdk_demo_test"
+        wxapi.sendReq(req)
+//        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, umAuthListener)
     }
 }

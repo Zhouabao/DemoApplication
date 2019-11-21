@@ -8,7 +8,7 @@
     <ImageView
             android:id="@+id/userImg"
             android:scaleType="centerCrop"
-            android:background="@drawable/default_image"
+            android:background="@drawable/default_image_5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />

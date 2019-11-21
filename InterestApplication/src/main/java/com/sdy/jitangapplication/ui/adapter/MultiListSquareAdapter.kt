@@ -90,14 +90,6 @@ class MultiListSquareAdapter(
                 holder.itemView.squareChatBtn1.visibility = View.VISIBLE
             }
 
-//        holder.addOnClickListener(R.id.squareDianzanBtn1)
-        //点击转发
-        //holder.addOnClickListener(R.id.squareZhuanfaBtn1)
-        holder.addOnClickListener(R.id.squareCommentBtn1)
-        //holder.addOnClickListener(R.id.squareMoreBtn1)
-        //holder.addOnClickListener(R.id.squareChatBtn1)
-
-
         if (item.descr.isEmpty()) {
             holder.itemView.squareContent1.visibility = View.GONE
         } else {

@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.wxapi
 
 import android.os.Bundle
 import android.util.Log
-import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
@@ -51,7 +50,7 @@ class WXEntryActivity : WXCallbackActivity() {
      * 微信登录
      */
     private fun loginWithWechat(code: String) {
-        val params = hashMapOf<String, Any>("type" to "3", "wxcode" to code, "device_id" to SmAntiFraud.getDeviceId())
+        val params = hashMapOf<String, Any>("type" to "3", "wxcode" to code)
         RetrofitFactory.instance.create(Api::class.java)
             .loginOWithWechat(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<LoginBean?>>(null) {
@@ -60,10 +59,10 @@ class WXEntryActivity : WXCallbackActivity() {
                 }
 
                 override fun onNext(t: com.kotlin.base.data.protocol.BaseResp<LoginBean?>) {
-                    if (t.code == 202) {
+                    if (t.code == 202) { //首次微信登录
                         startActivity<PhoneActivity>("wxcode" to code, "type" to "3")
                         finish()
-                    } else if (t.code == 200) {
+                    } else if (t.code == 200) {//已经微信登录过
                         data = t.data
                         loginIM(LoginInfo(data?.accid, data?.extra_data?.im_token))
                     } else if (t.code == 400) {

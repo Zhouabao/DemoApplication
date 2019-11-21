@@ -11,8 +11,14 @@
 
     <include layout="@layout/layout_actionbar"/>
 
+
+    <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
     <com.kennyc.view.MultiStateView
             android:id="@+id/stateview"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:msv_errorView="@layout/error_layout"
