@@ -42,7 +42,6 @@ import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.OnRecyclerItemClickListener
-import kotlinx.android.synthetic.main.activity_user_center.btnBack
 import kotlinx.android.synthetic.main.activity_user_info_settings.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_delete_photo.*

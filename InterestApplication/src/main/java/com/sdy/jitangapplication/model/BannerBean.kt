@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.model
 
 import com.chad.library.adapter.base.entity.MultiItemEntity
+import com.flyco.tablayout.listener.CustomTabEntity
 
 /**
  *    author : ZFM
@@ -47,3 +48,18 @@ data class InvestigateBean(
  * 举报对象
  */
 data class ReportBean(var reason: String, var checked: Boolean)
+
+data class TabEntity(val title: String, val iconSelect: Int, val iconUnselect: Int) : CustomTabEntity {
+    override fun getTabUnselectedIcon(): Int {
+        return iconUnselect
+
+    }
+
+    override fun getTabSelectedIcon(): Int {
+        return iconSelect
+    }
+
+    override fun getTabTitle(): String {
+        return title
+    }
+}

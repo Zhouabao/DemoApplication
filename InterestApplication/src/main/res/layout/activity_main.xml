@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/mainRoot"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:fitsSystemWindows="true"
@@ -10,147 +11,86 @@
               tools:context=".ui.activity.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tabHeaderCl"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="44dp"
             android:layout_gravity="center"
+            android:background="@color/colorTransparent"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
-        <net.lucode.hackware.magicindicator.MagicIndicator
-                android:id="@+id/tabMain"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-
-
-
-        <ImageView
-                android:id="@+id/filterBtn"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/icon_filter"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/ivUserFace"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-
-        <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivUserFace"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginRight="14dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-        <View
-                android:id="@+id/ivNewMsg"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:background="@drawable/shape_oval_orange"
-                android:visibility="gone"
-                android:layout_marginLeft="168dp"
-                android:layout_marginTop="12dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-
-        <LinearLayout
-                android:id="@+id/llMsgCount"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/icon_notification_left"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp"
-                android:paddingRight="10dp"
-                android:layout_marginLeft="172dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                    android:id="@+id/msgHi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:drawableLeft="@drawable/icon_flash_white"
-                    android:drawablePadding="5dp"
-                    android:gravity="center_vertical"
-                    android:text="3"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"/>
-
-
-            <TextView
-                    android:id="@+id/msgLike"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:drawableLeft="@drawable/icon_like_white"
-                    android:drawablePadding="5dp"
-                    android:text="3"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"/>
-
-
-            <TextView
-                    android:id="@+id/msgSquare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:drawableLeft="@drawable/icon_time_white"
-                    android:drawablePadding="5dp"
-                    android:text="3"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"/>
-
-
-            <TextView
-                    android:id="@+id/msgChat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"
-                    android:drawableLeft="@drawable/icon_msg_white"
-                    android:drawablePadding="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="3"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"/>
-
-
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/headRvLabels"
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"/>
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginRight="105dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.sdy.jitangapplication.widgets.NoScrollViewPager
-                android:id="@+id/vpMain"
-                android:layout_marginTop="40dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <LinearLayout
+                android:id="@+id/filterLl"
+                android:background="@drawable/icon_gradient_white"
+                android:layout_width="135dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </com.sdy.jitangapplication.widgets.NoScrollViewPager>
-    </FrameLayout>
+            <ImageView
+                    android:id="@+id/labelAddBtn"
+                    android:scaleType="center"
+                    android:src="@drawable/icon_add_label"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="51dp"
+                    android:padding="5dp"
+                    android:layout_height="match_parent"/>
+
+            <ImageView
+                    android:id="@+id/filterBtn"
+                    android:layout_marginRight="1dp"
+                    android:scaleType="center"
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right|center_vertical"
+                    android:src="@drawable/icon_filter"/>
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.sdy.jitangapplication.widgets.NoScrollViewPager
+            android:id="@+id/vpMain"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+
+    </com.sdy.jitangapplication.widgets.NoScrollViewPager>
+
+    <com.flyco.tablayout.CommonTabLayout
+            android:id="@+id/tabBottomMain"
+            android:paddingTop="6dp"
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            app:tl_iconGravity="TOP"
+            app:tl_iconHeight="24dp"
+            app:tl_iconMargin="5dp"
+            app:tl_iconWidth="24dp"
+            app:tl_indicator_bounce_enable="false"
+            app:tl_indicator_color="#2C97DE"
+            app:tl_indicator_height="0dp"
+            app:tl_textBold="BOTH"
+            app:tl_textSelectColor="@color/colorOrange"
+            app:tl_textUnselectColor="@color/colorGrayCCC"
+            app:tl_textsize="11sp"
+            app:tl_underline_color="@color/colorDivider"
+            app:tl_underline_gravity="TOP"
+            app:tl_underline_height="1dp"/>
 
 </LinearLayout>

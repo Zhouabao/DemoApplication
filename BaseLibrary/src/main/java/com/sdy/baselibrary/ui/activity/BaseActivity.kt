@@ -31,8 +31,17 @@ open class BaseActivity : SwipeBackActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
-        BarUtils.setStatusBarLightMode(this, true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+            BarUtils.setStatusBarLightMode(this, true)
+        } else {
+//            //取消设置透明状态栏,使 ContentView 内容不再覆盖状态栏
+//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            //设置状态栏颜色
+//            window.statusBarColor = Color.BLACK
+        }
         AppManager.instance.addActivity(this)
         initSwipeBackFinish()
     }

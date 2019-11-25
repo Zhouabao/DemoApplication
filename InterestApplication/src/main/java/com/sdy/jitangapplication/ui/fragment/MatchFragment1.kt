@@ -136,7 +136,10 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         mPresenter.context = activity!!
 
         retryBtn.setOnClickListener(this)
-        btnChat.setOnClickListener(this)
+        greetBtn.setOnClickListener(this)
+        dislikeBtn.setOnClickListener(this)
+        likeBtn.setOnClickListener(this)
+        likeBtn.setOnClickListener(this)
 
         initialize()
 
@@ -201,28 +204,33 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.btnChat -> {
+            R.id.greetBtn -> {
                 CommonFunction.commonGreet(
                     activity!!, matchUserAdapter.data[manager.topPosition].isfriend == 1,
                     matchUserAdapter.data[manager.topPosition].greet_switch,
                     matchUserAdapter.data[manager.topPosition].greet_state,
                     matchUserAdapter.data[manager.topPosition].accid,
                     matchUserAdapter.data[manager.topPosition].nickname ?: "",
-                    view = btnChat
+                    view = greetBtn
                 )
-
-//                if (UserManager.getLightingCount() <= 0) {
-//                    ChargeVipDialog(
-//                        ChargeVipDialog.DOUBLE_HI, activity!!, if (UserManager.isUserVip()) {
-//                            ChargeVipDialog.PURCHASE_GREET_COUNT
-//                        } else {
-//                            ChargeVipDialog.PURCHASE_VIP
-//                        }
-//                    ).show()
-//                } else {
-//                    card_stack_view.swipe()
-//                    btnChat.isEnabled = false
-//                }
+            }
+            R.id.likeBtn -> {
+                val setting = SwipeAnimationSetting.Builder()
+                    .setDirection(Direction.Right)
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator(AccelerateInterpolator())
+                    .build()
+                manager.setSwipeAnimationSetting(setting)
+                card_stack_view.swipe()
+            }
+            R.id.dislikeBtn -> {
+                val setting = SwipeAnimationSetting.Builder()
+                    .setDirection(Direction.Left)
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator(AccelerateInterpolator())
+                    .build()
+                manager.setSwipeAnimationSetting(setting)
+                card_stack_view.swipe()
             }
             R.id.retryBtn -> {
                 setViewState(LOADING)
@@ -248,12 +256,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
                 setViewState(EMPTY)
-                btnChat.isVisible = false
+                btnChatCl.isVisible = false
                 tvLeftChatTime.isVisible = false
                 llLeftSlideTime.isVisible = false
             } else {
                 setViewState(CONTENT)
-                btnChat.isVisible = true
+                btnChatCl.isVisible = true
                 tvLeftChatTime.isVisible = true
                 llLeftSlideTime.isVisible = matchBeans.isvip != 1
             }
@@ -524,13 +532,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         //最大可见数量
         manager.setVisibleCount(3)
         //两个卡片之间的间隔
-        manager.setTranslationInterval(15.0f)
-        //最大的缩放间隔
-        manager.setScaleInterval(0.95f)
+        manager.setTranslationInterval(0f)
         //卡片滑出飞阈值
         manager.setSwipeThreshold(0.3f)
         //横向纵向的旋转角度
-        manager.setMaxDegree(5F)
+//        manager.setMaxDegree(5F)
         //滑动的方向
 //        manager.setDirections(mutableListOf(Direction.Left, Direction.Right, Direction.Top))
         manager.setDirections(Direction.HORIZONTAL)
@@ -538,14 +544,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         manager.setCanScrollVertical(false)
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
-
-        //向上的动画设置
-        val swipeTopSetting = SwipeAnimationSetting.Builder()
-            .setDirection(Direction.Top)
-            .setDuration(Duration.Fast.duration)
-            .setInterpolator(AccelerateInterpolator())
-            .build()
-        manager.setSwipeAnimationSetting(swipeTopSetting)
 
         //撤回的动画设置
         val setting = RewindAnimationSetting.Builder()
@@ -718,7 +716,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             mPresenter.getMatchList(matchParams, paramsLastFiveIds)
         } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
             setViewState(EMPTY)
-            btnChat.isVisible = false
+            btnChatCl.isVisible = false
             tvLeftChatTime.isVisible = false
         }
     }
@@ -732,13 +730,13 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     override fun onCardAppeared(view: View?, position: Int) {
         Log.d("CardStackView", "onCardAppeared: ($position)")
-        btnChat.isEnabled = matchUserAdapter.data[position].greet_switch
+        btnChatCl.isEnabled = matchUserAdapter.data[position].greet_switch
         if (matchUserAdapter.data[position].greet_switch) {
             tvLeftChatTime.visibility = View.VISIBLE
-            ivChatTime.visibility = View.VISIBLE
+            greetBtn.visibility = View.VISIBLE
         } else {
             tvLeftChatTime.visibility = View.INVISIBLE
-            ivChatTime.visibility = View.INVISIBLE
+            greetBtn.visibility = View.INVISIBLE
         }
 
     }

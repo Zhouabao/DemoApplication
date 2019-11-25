@@ -10,6 +10,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.wxapi.WXEntryActivity
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
@@ -53,7 +54,7 @@ class LoginActivity : BaseActivity() {
 
         //微信登录
         wechatLoginBtn.onClick {
-            CommonFunction.wechatLogin(this)
+            CommonFunction.wechatLogin(this, WXEntryActivity.WECHAT_LOGIN)
         }
 
         //隐私协议

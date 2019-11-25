@@ -40,49 +40,63 @@
             android:layout_marginBottom="150dp"
             android:layout_height="match_parent"/>
 
-    <LinearLayout
-            android:id="@+id/vpIndicator"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+
+    <TextView
+            android:id="@+id/matchBothInterset"
+            android:gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:textSize="13sp"
+            android:drawablePadding="5dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/icon_bg_gray_15dp"
+            android:drawableLeft="@drawable/icon_cuohe_tag"
+            android:padding="3dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"/>
+            android:text="她也喜欢【蹦迪】"/>
 
-    <ImageView
-            android:id="@+id/matchDislike"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/shape_oval_white"
-            android:layout_width="60dp"
-            android:scaleType="center"
-            android:alpha="0"
-            android:layout_gravity="top|right"
-            android:src="@drawable/icon_dislike"
-            android:layout_height="60dp"
-            app:layout_constraintRight_toRightOf="parent"
-            />
-
-    <ImageView
-            android:id="@+id/matchLike"
-            android:layout_gravity="top|left"
-            android:alpha="0"
-            android:background="@drawable/shape_oval_white"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:scaleType="center"
-            android:src="@drawable/icon_like"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-
-            />
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/v1"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_width="match_parent"
-            android:paddingBottom="15dp"
-            android:background="@drawable/icon_match_fragment_content_bg"
+            android:paddingBottom="26dp"
+            android:paddingRight="71dp"
+            android:background="@drawable/gradient_match_user_bg"
             android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/matchAim"
+                android:text="找人一起玩"
+                android:textColor="@color/colorWhite"
+                android:padding="3dp"
+                android:gravity="center"
+                android:layout_marginLeft="15dp"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/icon_match_aim"
+                android:background="@drawable/shape_rectangle_blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toTopOf="@id/matchUserName"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <TextView
+                android:id="@+id/matchUserName"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/matchAim"
+                tools:text="Username"/>
 
         <ImageView
                 android:id="@+id/ivVip"
@@ -112,132 +126,143 @@
 
 
         <TextView
-                android:id="@+id/matchUserName"
-                android:textColor="@color/colorWhite"
-                android:textSize="24sp"
-                android:layout_marginLeft="15dp"
+                android:id="@+id/matchUserAge"
                 android:gravity="center"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:drawablePadding="3dp"
+                android:textColor="#FFCBC7C5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Username"/>
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/icon_match_age"
+                app:layout_constraintLeft_toLeftOf="@id/matchUserName"
+                app:layout_constraintTop_toBottomOf="@id/matchUserName"
+                tools:text="23"/>
 
+        <TextView
+                android:id="@+id/matchUserConstellation"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColor="#FFCBC7C5"
+                android:drawableLeft="@drawable/icon_collapstation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="3dp"
+                app:layout_constraintLeft_toRightOf="@id/matchUserAge"
+                app:layout_constraintTop_toTopOf="@id/matchUserAge"
+                tools:text="金牛座"/>
+
+        <TextView
+                android:id="@+id/matchUserDistance"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColor="#FFCBC7C5"
+                android:drawablePadding="3dp"
+                android:drawableLeft="@drawable/icon_map_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/matchUserConstellation"
+                app:layout_constraintTop_toTopOf="@id/matchUserAge"
+                tools:text="10KM"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/matchUserInfoCl"
+                android:id="@+id/matchUserLocalTagCl"
                 android:visibility="gone"
                 android:layout_width="0dp"
+                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="@id/matchUserName"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/matchUserName">
+                app:layout_constraintTop_toBottomOf="@id/matchUserAge">
+
 
             <TextView
-                    android:id="@+id/matchUserAge"
-                    android:elevation="2dp"
-                    android:gravity="center"
-                    android:textSize="14sp"
-                    android:textColor="@color/colorWhite"
+                    android:id="@+id/matchUserLocalTagContent"
+                    android:gravity="center_vertical"
                     android:layout_width="wrap_content"
+                    android:textSize="14sp"
+                    android:background="@drawable/icon_bg_gary_match"
+                    android:textColor="@color/colorWhite"
+                    android:maxLines="3"
+                    android:ellipsize="end"
                     android:layout_height="wrap_content"
+                    android:lineSpacingMultiplier="1.2"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="23 / 女 / 半导体"/>
-
-            <TextView
-                    android:id="@+id/matchUserJob"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:textSize="14sp"
-                    android:layout_marginTop="5dp"
-                    android:drawableLeft="@drawable/icon_job"
-                    android:textColor="@color/colorWhite"
-                    android:drawablePadding="6dp"
-                    android:singleLine="true"
-                    android:ellipsize="end"
-                    android:layout_marginRight="15dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/matchUserAge"
-                    tools:text="半导体研发工程师"
+                    tools:text="手游端游主机都玩，但时间紧主手游目前常驻fgo偶尔明日方舟剑乱舞，PC只玩steam上的，是个以撒狂个以，是个以撒狂个以是个以撒狂个以是个以撒狂个以"
                     />
 
 
-            <TextView
-                    android:id="@+id/matchUserLabelsLikeCount"
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/matchUserLocalTagCharacter"
+                    android:orientation="horizontal"
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:textSize="14sp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginTop="5dp"
-                    android:drawableLeft="@drawable/icon_label_small"
-                    android:textColor="@color/colorWhite"
-                    android:drawablePadding="6dp"
+                    android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/matchUserJob"
-                    tools:text="12个人"
+                    app:layout_constraintTop_toBottomOf="@id/matchUserLocalTagContent"
                     />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <LinearLayout
                 android:id="@+id/matchUserDynamicLl"
-                android:layout_width="0dp"
+                android:background="@drawable/icon_bg_gary_match"
+                android:layout_width="wrap_content"
                 android:visibility="gone"
                 android:orientation="vertical"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="@id/matchUserName"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/matchUserName">
+                app:layout_constraintTop_toBottomOf="@id/matchUserAge">
 
-            <TextView
-                    android:id="@+id/matchUserDynamicThumbTitle"
-                    android:elevation="2dp"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:text="在该板块下发布内容"
-                    android:drawableLeft="@drawable/icon_dynamic_small"
-                    android:drawablePadding="6dp"
-                    android:textSize="14sp"
-                    android:textColor="@color/colorWhite"
-                    android:layout_height="wrap_content"
-                    />
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/matchUserDynamicThumbRv"
                     android:layout_width="wrap_content"
-                    android:layout_height="46dp"
-                    android:layout_marginTop="5dp"
-                    android:padding="3dp"
+                    android:layout_height="57dp"
                     android:orientation="horizontal"
                     android:background="@drawable/shape_rectangle_transparent"
                     />
         </LinearLayout>
 
-        <TextView
-                android:id="@+id/matchUserIntroduce"
-                android:visibility="gone"
+
+        <LinearLayout
+                android:id="@+id/matchUserIntroduceCl"
+                android:visibility="visible"
                 android:layout_width="0dp"
-                android:textColor="@color/colorWhite"
-                android:textSize="14sp"
-                android:layout_marginRight="90dp"
-                android:lineSpacingMultiplier="1.25"
+                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="3"
                 app:layout_constraintLeft_toLeftOf="@id/matchUserName"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/matchUserName"
-                tools:text="AntV 是蚂蚁金服全新代数据可视化解决方案，致力于提供一套…单方便、专业可靠、无限可能的数据可视化最佳实践。"/>
+                app:layout_constraintTop_toBottomOf="@id/matchUserAge">
 
+            <TextView
+                    android:id="@+id/matchUserIntroduce"
+                    android:background="@drawable/icon_bg_gary_match"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp"
+                    android:lineSpacingMultiplier="1.25"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    tools:text="AntV 是蚂蚁金服全新代数据可视化解决方案，致力于提供一套…单方便、专业可靠、无限可能的数据可视化最佳实践。"/>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
+    <LinearLayout
+            android:id="@+id/vpIndicator"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"/>
 </androidx.cardview.widget.CardView>

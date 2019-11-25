@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.nim.activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -62,9 +63,10 @@ class SearchMessageActivity : UI(),SwipeBackActivityBase {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_message)
-
-        BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
-        BarUtils.setStatusBarLightMode(this, true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+            BarUtils.setStatusBarLightMode(this, true)
+        }
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()

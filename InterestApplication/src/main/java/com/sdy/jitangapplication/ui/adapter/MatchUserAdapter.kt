@@ -9,7 +9,6 @@ import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -50,26 +49,34 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 }
                 when (position) {
                     0 -> {  //0显示广场
-                        holder.itemView.matchUserDynamicLl.isVisible = !item.square.isNullOrEmpty()
-                        holder.itemView.matchUserIntroduce.visibility = View.GONE
-                        holder.itemView.matchUserInfoCl.isVisible = item.square.isNullOrEmpty()
+                        holder.itemView.matchUserLocalTagCl.isVisible = true
+                        holder.itemView.matchUserDynamicLl.isVisible = false
+                        holder.itemView.matchUserIntroduceCl.isVisible = false
                     }
-                    1 -> {//如果广场动态有，就显示个人信息
-                        //如果广场动态没有,就判断有没有签名,    如果有签名显示签名 ,如果没有就显示个人信息
+                    1 -> {//如果广场动态有，就显示广场
+                        //如果广场动态没有,就判断有没有签名, 如果有签名显示签名 ,如果没有就显示个人信息
                         // 如果有个人信息显示个人信息
-                        holder.itemView.matchUserDynamicLl.visibility = View.GONE
                         if (item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
-                            holder.itemView.matchUserInfoCl.isVisible = item.sign.isNullOrBlank()
+                            holder.itemView.matchUserDynamicLl.isVisible = false
+                            holder.itemView.matchUserIntroduceCl.isVisible = !item.sign.isNullOrBlank()
+                            holder.itemView.matchUserLocalTagCl.isVisible = item.sign.isNullOrBlank()
                         } else {
-                            holder.itemView.matchUserIntroduce.isVisible = false
-                            holder.itemView.matchUserInfoCl.isVisible = true
+                            holder.itemView.matchUserDynamicLl.isVisible = true
+                            holder.itemView.matchUserIntroduceCl.isVisible = false
+                            holder.itemView.matchUserLocalTagCl.isVisible = false
                         }
                     }
                     else -> {
-                        holder.itemView.matchUserDynamicLl.isVisible = false
-                        holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
-                        holder.itemView.matchUserInfoCl.isVisible = item.sign.isNullOrBlank()
+                        if (item.sign.isNullOrBlank()) {
+                            holder.itemView.matchUserIntroduceCl.isVisible = false
+                            holder.itemView.matchUserLocalTagCl.isVisible = item.square.isNullOrEmpty()
+                            holder.itemView.matchUserDynamicLl.isVisible = !item.square.isNullOrEmpty()
+                        } else {
+                            holder.itemView.matchUserIntroduceCl.isVisible = true
+                            holder.itemView.matchUserDynamicLl.isVisible = false
+                            holder.itemView.matchUserLocalTagCl.isVisible = false
+                        }
+
                     }
                 }
             }
@@ -80,10 +87,11 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         if ((item.photos ?: mutableListOf<MatchBean>()).size > 1) {
             val size = (item.photos ?: mutableListOf<MatchBean>()).size
             for (i in 0 until size) {
-                val width = ((ScreenUtils.getScreenWidth()
-                        - SizeUtils.dp2px(15F) * 4
-                        - (SizeUtils.dp2px(6F) * (size - 1))) * 1F / size).toInt()
-                val height = SizeUtils.dp2px(5F)
+//                val width = ((ScreenUtils.getScreenWidth()
+//                        - SizeUtils.dp2px(15F) * 4
+//                        - (SizeUtils.dp2px(6F) * (size - 1))) * 1F / size).toInt()
+                val width = SizeUtils.dp2px(6F)
+                val height = SizeUtils.dp2px(6F)
                 val indicator = RadioButton(mContext)
                 indicator.buttonDrawable = null
                 indicator.background = mContext.resources.getDrawable(R.drawable.selector_round_indicator)
@@ -111,8 +119,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         /*设置封面图片recyclerview*/
         if (item.square.isNullOrEmpty()) {
             holder.itemView.matchUserDynamicLl.visibility = View.GONE
-            holder.itemView.matchUserIntroduce.visibility = View.GONE
-            holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
+            holder.itemView.matchUserIntroduceCl.visibility = View.GONE
+            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
         } else {
             holder.itemView.matchUserDynamicLl.visibility = View.VISIBLE
             holder.itemView.matchUserDynamicThumbRv.layoutManager =
@@ -120,8 +128,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             val adapter = DetailThumbAdapter(mContext)
             adapter.setData(item.square ?: mutableListOf())
             holder.itemView.matchUserDynamicThumbRv.adapter = adapter
-            holder.itemView.matchUserIntroduce.visibility = View.GONE
-            holder.itemView.matchUserInfoCl.visibility = View.GONE
+            holder.itemView.matchUserIntroduceCl.visibility = View.GONE
+            holder.itemView.matchUserLocalTagCl.visibility = View.GONE
         }
 
         //点击切换上一张图片
@@ -129,25 +137,6 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         //点击切换下一张图片
         holder.addOnClickListener(R.id.nextImgBtn)
 
-        //点击切换上一张图片
-//        holder.itemView.lastImgBtn.onClick {
-//            if (holder.itemView.vpPhotos.currentItem > 0) {
-//                val index = holder.itemView.vpPhotos.currentItem
-//                holder.itemView.vpPhotos.setCurrentItem(index - 1, true)
-//            } else {
-//                EventBus.getDefault().post(ShakeEvent(true))
-//            }
-//        }
-
-        //点击切换下一张图片
-//        holder.itemView.nextImgBtn.onClick {
-//            if (holder.itemView.vpPhotos.currentItem < (item.photos ?: mutableListOf<MatchBean>()).size - 1) {
-//                val index = holder.itemView.vpPhotos.currentItem
-//                holder.itemView.vpPhotos.setCurrentItem(index + 1, true)
-//            } else {
-//                EventBus.getDefault().post(ShakeEvent(false))
-//            }
-//        }
 
         holder.itemView.ivVip.visibility = if (item.isvip == 1) {
             View.VISIBLE
@@ -164,27 +153,38 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
 
         holder.itemView.matchUserIntroduce.text = item.sign ?: ""
 
+//        holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""  //标签下的描述
+        holder.itemView.matchUserLocalTagCharacter.layoutManager =
+            LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
+        val adapter1 = MatchDetailLabelAdapter(mContext)
+        adapter1.setData(item.tags ?: mutableListOf())
+        holder.itemView.matchUserLocalTagCharacter.adapter = adapter1
 
-
-        holder.itemView.matchUserLabelsLikeCount.visibility = if (item.tagcount == null || item.tagcount == 0) {
-            View.GONE
-        } else {
-            holder.itemView.matchUserLabelsLikeCount.text = "${item.tagcount}个标签重合"
-            View.VISIBLE
-        }
-        holder.itemView.matchUserJob.visibility = if (item.job.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            holder.itemView.matchUserJob.text = item.job ?: ""
-            View.VISIBLE
-        }
+//        holder.itemView.matchUserLabelsLikeCount.visibility = if (item.tagcount == null || item.tagcount == 0) {
+//            View.GONE
+//        } else {
+//            holder.itemView.matchUserLabelsLikeCount.text = "${item.tagcount}个标签重合"
+//            View.VISIBLE
+//        }
+//        holder.itemView.matchUserJob.visibility = if (item.job.isNullOrEmpty()) {
+//            View.GONE
+//        } else {
+//            holder.itemView.matchUserJob.text = item.job ?: ""
+//            View.VISIBLE
+//        }
         holder.itemView.matchUserName.text = item.nickname ?: ""
-        holder.itemView.matchUserAge.text = "${item.age}\t" + "/\t${if (item.gender == 1) {
-            "男"
-        } else {
-            "女"
-        }}\t" + "/\t${item.constellation ?: ""}\t" + "/\t${item.distance ?: ""}"
+        holder.itemView.matchUserAge.text = "${item.age}"
+        val left = mContext.resources.getDrawable(
+            if (item.gender == 1) {
+                R.drawable.icon_gender_man_gray
+            } else {
+                R.drawable.icon_gender_woman_gray
+            }
+        )
+        holder.itemView.matchUserAge.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
 
+        holder.itemView.matchUserConstellation.text = "${item.constellation}"
+        holder.itemView.matchUserDistance.text = "${item.distance}"
     }
 
 }

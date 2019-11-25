@@ -49,6 +49,7 @@ import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
+import com.sdy.jitangapplication.ui.activity.ContactBookActivity
 import com.sdy.jitangapplication.ui.activity.MessageHiActivity
 import com.sdy.jitangapplication.ui.activity.MessageLikeMeActivity
 import com.sdy.jitangapplication.ui.activity.MessageSquareActivity
@@ -109,6 +110,11 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             //获取最近消息
             mPresenter.messageCensus(params)
         }
+
+        contactBookBtn.onClick {
+            startActivity<ContactBookActivity>()
+        }
+
 
         messageListRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         messageListRv.adapter = adapter
@@ -655,17 +661,17 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         when (state) {
             BaseActivity.LOADING -> {
                 loadingLayout.isVisible = true
-                messageListRv.isVisible = false
+                messageContentLl.isVisible = false
                 errorLayout.isVisible = false
             }
             BaseActivity.CONTENT -> {
-                messageListRv.isVisible = true
+                messageContentLl.isVisible = true
                 loadingLayout.isVisible = false
                 errorLayout.isVisible = false
             }
             BaseActivity.ERROR -> {
                 errorLayout.isVisible = true
-                messageListRv.isVisible = false
+                messageContentLl.isVisible = false
                 loadingLayout.isVisible = false
             }
         }

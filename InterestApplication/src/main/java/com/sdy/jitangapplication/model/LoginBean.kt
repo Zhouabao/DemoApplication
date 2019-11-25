@@ -47,3 +47,23 @@ data class UserBean(
 
 data class VersionBean(val version: String)
 
+/**
+ * 账户信息
+ */
+data class AccountBean(
+    var phone: String = "",
+    var wechat: String = ""
+)
+data class WechatNameBean(
+    var nickname: String = ""
+)
+
+
+/**
+ * 注销原因
+ */
+data class loginOffCauseBean(
+    var descr: String = "",
+    var list: MutableList<String> = mutableListOf()
+)
+

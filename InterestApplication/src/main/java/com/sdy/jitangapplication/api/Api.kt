@@ -314,7 +314,6 @@ interface Api {
     fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
 
 
-
     /**
      * 登录反馈
      */
@@ -590,7 +589,6 @@ interface Api {
     fun mySettings(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<SettingsBean?>>
 
 
-
     /**
      * 广场点赞评论提醒开关
      */
@@ -693,5 +691,60 @@ interface Api {
     @POST("pay_order/createOrder${Constants.END_BASE_URL}")
     fun createOrder(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PayBean>>
 
+
+    /*--------------------------------账号相关---------------------------------*/
+
+    /**
+     * 获取账号相关信息
+     */
+    @FormUrlEncoded
+    @POST("Account/getAccountInfo${Constants.END_BASE_URL}")
+    fun getAccountInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AccountBean>>
+
+
+    /**
+     * 更改手机号
+     */
+    @FormUrlEncoded
+    @POST("Account/changeAccount${Constants.END_BASE_URL}")
+    fun changeAccount(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
+
+    /**
+     * 微信解绑
+     */
+    @FormUrlEncoded
+    @POST("Account/unbundWeChat${Constants.END_BASE_URL}")
+    fun unbundWeChat(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
+
+    /**
+     * 微信绑定
+     */
+    @FormUrlEncoded
+    @POST("Account/bundWeChat${Constants.END_BASE_URL}")
+    fun bundWeChat(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<WechatNameBean>>
+
+
+    /**
+     * 发送短信验证码(新)
+     */
+    @FormUrlEncoded
+    @POST("OpenApi/SendSms${Constants.END_BASE_URL}")
+    fun sendSms(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
+    /**
+     * 注销原因(新)
+     */
+    @FormUrlEncoded
+    @POST("Account/getCauseList${Constants.END_BASE_URL}")
+    fun getCauseList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<loginOffCauseBean>>
+
+    /**
+     * 注销账号
+     */
+    @FormUrlEncoded
+    @POST("Account/cancelAccount${Constants.END_BASE_URL}")
+    fun cancelAccount(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
 
 }

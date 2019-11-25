@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.nim.activity
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import com.blankj.utilcode.util.ActivityUtils
@@ -81,9 +82,10 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_info)
         EventBus.getDefault().register(this)
-
-        BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
-        BarUtils.setStatusBarLightMode(this, true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+            BarUtils.setStatusBarLightMode(this, true)
+        }
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
@@ -111,7 +113,10 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
 
         //投诉举报
         friendReport.onClick {
-            startActivity<ReportReasonActivity>("target_accid" to account,"nickname" to UserInfoHelper.getUserName(account))
+            startActivity<ReportReasonActivity>(
+                "target_accid" to account,
+                "nickname" to UserInfoHelper.getUserName(account)
+            )
         }
 
         //查找聊天记录
@@ -424,7 +429,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
-                        CommonFunction.dissolveRelationship(account?:"")
+                        CommonFunction.dissolveRelationship(account ?: "")
                     } else {
                         CommonFunction.toast(t.msg)
                     }

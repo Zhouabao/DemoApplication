@@ -1,7 +1,8 @@
-package com.sdy.jitangapplication.ui.activity
+package com.sdy.jitangapplication.ui.fragment
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
@@ -32,25 +33,37 @@ import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.UserCenterPresenter
 import com.sdy.jitangapplication.presenter.view.UserCenterView
+import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.UserCenterCoverAdapter
 import com.sdy.jitangapplication.ui.adapter.UserLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.BounceScrollView
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_user_center.*
 import kotlinx.android.synthetic.main.item_not_vip_viewpager.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.support.v4.startActivityForResult
 
 /**
- * 个人中心
+ * 我的用户中心
  */
-class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterView, View.OnClickListener {
+class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserCenterView, View.OnClickListener {
+
+    private val params by lazy {
+        hashMapOf(
+            "accid" to UserManager.getAccid(),
+            "token" to UserManager.getToken(),
+            "_sign" to "",
+            "_timestamp" to System.currentTimeMillis()
+        )
+    }
 
 
     companion object {
@@ -68,23 +81,29 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     //我的访客adapter
     private val visitsAdapter by lazy { VisitUserAvatorAdater() }
 
-
     private var userInfoBean: UserInfoBean? = null
     private lateinit var vipDialog: ChargeVipDialog
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_user_center)
-        BarUtils.setStatusBarColor(this, resources.getColor(R.color.colorTransparent))
+    override fun loadData() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            BarUtils.setStatusBarColor(activity!!, resources.getColor(R.color.colorTransparent))
+
         EventBus.getDefault().register(this)
         initView()
         mPresenter.getMemberInfo(params)
+    }
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        activity!!.mainRoot.setBackgroundResource(R.color.colorWhite)
+        return inflater.inflate(R.layout.fragment_user_center, container, false)
     }
 
     override fun onResume() {
         super.onResume()
 
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -99,7 +118,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
         visitsAdapter.freeShow = userInfoBean?.free_show ?: false
         visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
-        GlideUtil.loadAvatorImg(this, userInfoBean?.userinfo?.avatar ?: "", userAvator)
+        GlideUtil.loadAvatorImg(activity!!, userInfoBean?.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean?.userinfo?.nickname ?: ""
         userSquareCount.text = "我的动态 ${userInfoBean?.squarelist?.count}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
@@ -173,7 +192,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             if ((userInfoBean?.vip_descr ?: mutableListOf<MatchBean>()).size > 1) {
                 val size = (userInfoBean?.vip_descr ?: mutableListOf<MatchBean>()).size
                 for (i in 0 until size) {
-                    val indicator = RadioButton(this)
+                    val indicator = RadioButton(activity!!)
                     indicator.width = SizeUtils.dp2px(5F)
                     indicator.height = SizeUtils.dp2px(5F)
                     indicator.buttonDrawable = null
@@ -240,8 +259,9 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     private fun initView() {
         mPresenter = UserCenterPresenter()
         mPresenter.mView = this
-        mPresenter.context = this
+        mPresenter.context = activity!!
 
+        refreshLayout.bounceType = BounceScrollView.ENABLED_TOP
         settingBtn.setOnClickListener(this)
         userInfoSettingBtn.setOnClickListener(this)
         userAvator.setOnClickListener(this)
@@ -259,14 +279,15 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
 
         multiStateView.retryBtn.onClick {
             multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
+            activity!!.mainRoot.setBackgroundResource(R.color.colorWhite)
             mPresenter.getMemberInfo(params)
         }
 
         //用户标签
-        val manager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        val manager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
         userTagRv.addItemDecoration(
             DividerItemDecoration(
-                this,
+                activity!!,
                 DividerItemDecoration.VERTICAL_LIST,
                 SizeUtils.dp2px(10F),
                 resources.getColor(R.color.colorWhite)
@@ -276,21 +297,23 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         userTagRv.adapter = tagAdapter
 
         //用户动态照片
-        val squareManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        val squareManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
         userSquaresRv.layoutManager = squareManager
         userSquaresRv.addItemDecoration(
             DividerItemDecoration(
-                this,
+                activity!!,
                 DividerItemDecoration.VERTICAL_LIST,
                 SizeUtils.dp2px(10F),
                 resources.getColor(R.color.colorWhite)
             )
         )
         userSquaresRv.adapter = coverAdapter
-        val headView = LayoutInflater.from(this).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
-        val params =headView.layoutParams as RecyclerView.LayoutParams
-        params.width = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
-        params.height = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        val headView = LayoutInflater.from(activity!!).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
+        val params = headView.layoutParams as RecyclerView.LayoutParams
+        params.width =
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.height =
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
         headView.layoutParams = params
 
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
@@ -306,17 +329,18 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         }
 
         //我的访客封面
-        val visitLayoutmanager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        val visitLayoutmanager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
         visitLayoutmanager.stackFromEnd = true
         userVisitRv.layoutManager = visitLayoutmanager
         userVisitRv.adapter = visitsAdapter
 
 
         //初始化vipDialog
-        vipDialog = ChargeVipDialog(ChargeVipDialog.VIP_LOGO, this)
+        vipDialog = ChargeVipDialog(ChargeVipDialog.VIP_LOGO, activity!!)
     }
 
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {
+        activity!!.mainRoot.setBackgroundResource(R.drawable.gradient_orange)
         multiStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (userinfo != null) {
             userInfoBean = userinfo
@@ -330,7 +354,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             if (UserManager.publishState == 0) {
                 startActivity<PublishActivity>("from" to 2)
             } else
-                EventBus.getDefault().post(RePublishEvent(true, this))
+                EventBus.getDefault().post(RePublishEvent(true, activity!!))
         }
         coverAdapter.headerLayout.isEnabled = true
     }
@@ -342,15 +366,6 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
         } else {
             getString(R.string.retry_net_error)
         }
-    }
-
-    private val params by lazy {
-        hashMapOf(
-            "accid" to UserManager.getAccid(),
-            "token" to UserManager.getToken(),
-            "_sign" to "",
-            "_timestamp" to System.currentTimeMillis()
-        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -434,15 +449,10 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
             //意见反馈
             R.id.feedBack -> {
-                ChatActivity.start(this, Constants.ASSISTANT_ACCID)
+                ChatActivity.start(activity!!, Constants.ASSISTANT_ACCID)
             }
         }
     }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
 
     //发布成功后回来刷新界面数据
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -588,5 +598,6 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             }
         }
     }
+
 
 }

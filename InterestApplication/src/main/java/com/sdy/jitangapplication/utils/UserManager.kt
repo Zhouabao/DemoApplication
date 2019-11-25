@@ -34,6 +34,8 @@ object UserManager {
     var perfect_times = 0 //滑动x次数跳【完善相册】
     var replace_times = 0 //滑动x次数跳【替换头像】
 
+    var firstToMine = true
+
 
     //手动取消上传
     var cancelUpload = false

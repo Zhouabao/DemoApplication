@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.event
 
 import android.content.Context
 import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.WechatNameBean
 
 /**
  *    author : ZFM
@@ -59,7 +60,10 @@ class RePublishEvent(var republish: Boolean, val context: Context)
 class UserCenterEvent(var refresh: Boolean)
 
 
-
 //更新用户详情状态视图
 class UserDetailViewStateEvent(var success: Boolean)
+
+
+//更新账号信息
+class UpdateAccountEvent(val account: WechatNameBean)
 
