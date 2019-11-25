@@ -145,7 +145,7 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
 
     override fun onChangeAccountResult(result: Boolean) {
         if (result) {
-            setResult(Activity.RESULT_OK, intent.putExtra("phone", newPhoneEt.text))
+            setResult(Activity.RESULT_OK, intent.putExtra("phone", newPhoneEt.text.toString()))
             finish()
         }
 

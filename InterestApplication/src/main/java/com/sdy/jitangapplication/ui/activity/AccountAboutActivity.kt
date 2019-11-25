@@ -174,8 +174,8 @@ class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAb
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 100) {
-                phone = intent.getStringExtra("phone") ?: ""
-                telNumber.text = phone
+                phone = data?.getStringExtra("phone") ?: ""
+                telNumber.text = phone.replaceRange(3, 7, "****")
             }
         }
     }
