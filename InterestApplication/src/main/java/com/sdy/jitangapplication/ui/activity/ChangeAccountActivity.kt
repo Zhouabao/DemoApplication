@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -8,8 +9,10 @@ import android.view.View
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.loginOffCauseBean
 import com.sdy.jitangapplication.presenter.ChangeAccountPresenter
 import com.sdy.jitangapplication.presenter.view.ChangeAccountView
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.LoginOffDialog
 import kotlinx.android.synthetic.main.activity_change_account.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -25,6 +28,7 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
         setContentView(R.layout.activity_change_account)
         initView()
     }
+
 
     private fun initView() {
         mPresenter = ChangeAccountPresenter()
@@ -47,24 +51,15 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
         newPhoneEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(editable: Editable) {
                 checkConfirmBtnEnable()
+
                 if (editable.isNotEmpty() && editable.length == 11) {
                     countTimer.onFinish()
                     verifycodeBtn.isEnabled = true
                     verifycodeBtn.text = "获取验证码"
+                } else {
+                    verifycodeBtn.isEnabled = false
+                    verifycodeBtn.text = "获取验证码"
                 }
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-        })
-
-        newVerifyCodeEt.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(editable: Editable) {
-                checkConfirmBtnEnable()
 
             }
 
@@ -75,6 +70,21 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
             }
 
         })
+
+        newVerifyCodeEt.addTextChangedListener(
+            object : TextWatcher {
+                override fun afterTextChanged(editable: Editable) {
+                    checkConfirmBtnEnable()
+
+                }
+
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+            })
 
     }
 
@@ -102,15 +112,20 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
             }
             //获取验证码
             verifycodeBtn -> {
-                countTimer.start()
+                mPresenter.sendSms(hashMapOf<String, Any>("phone" to newPhoneEt.text.toString(), "scene" to "register"))
             }
             //确认变更
             confirmChangeBtn -> {
-
+                mPresenter.changeAccount(
+                    hashMapOf<String, Any>(
+                        "uni_account" to newPhoneEt.text.toString(),
+                        "code" to newVerifyCodeEt.text.toString()
+                    )
+                )
             }
             //注销账号
             loginOff -> {
-                LoginOffDialog(this).show()
+                mPresenter.getCauseList()
             }
 
 
@@ -126,4 +141,36 @@ class ChangeAccountActivity : BaseMvpActivity<ChangeAccountPresenter>(), ChangeA
             newPhoneEt.text.isNotEmpty() && newPhoneEt.text.length == 11 &&
                     newVerifyCodeEt.text.isNotEmpty() && newVerifyCodeEt.text.length == 6
     }
+
+
+    override fun onChangeAccountResult(result: Boolean) {
+        if (result) {
+            setResult(Activity.RESULT_OK, intent.putExtra("phone", newPhoneEt.text))
+            finish()
+        }
+
+    }
+
+
+    override fun onSendSmsResult(result: Boolean) {
+        countTimer.start()
+    }
+
+    override fun onCauseListResult(result: loginOffCauseBean) {
+        LoginOffDialog(this, intent.getStringExtra("phone"), result).show()
+    }
+
+
+    private val loadingDialog by lazy { LoadingDialog(this) }
+    override fun showLoading() {
+        if (!loadingDialog.isShowing)
+            loadingDialog.show()
+    }
+
+    override fun hideLoading() {
+        if (loadingDialog.isShowing)
+            loadingDialog.dismiss()
+    }
+
+
 }

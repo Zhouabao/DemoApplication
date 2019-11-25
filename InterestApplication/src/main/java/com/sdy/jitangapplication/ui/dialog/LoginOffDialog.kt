@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.ReportBean
+import com.sdy.jitangapplication.model.loginOffCauseBean
 import com.sdy.jitangapplication.ui.activity.VerifyCodeActivity
 import com.sdy.jitangapplication.ui.adapter.ReportResonAdapter
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
@@ -23,21 +24,25 @@ import org.jetbrains.anko.startActivity
  *    desc   :账号注销dialog
  *    version: 1.0
  */
-class LoginOffDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
+class LoginOffDialog(val context1: Context, val phone: String, val loginOffCauseBean: loginOffCauseBean) :
+    Dialog(context1, R.style.MyDialog) {
+    private var checkReason = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_login_off)
         initWindow()
         initView()
+        setData()
     }
 
     private val adapter by lazy { ReportResonAdapter() }
     private fun initView() {
-
         confirmLoginoffBtn.onClick {
             context1.startActivity<VerifyCodeActivity>(
                 "type" to "${VerifyCodeActivity.TYPE_LOGIN_OFF}",
-                "phone" to "13990811869"
+                "descr" to checkReason,
+                "phone" to phone
             )
             dismiss()
         }
@@ -56,34 +61,24 @@ class LoginOffDialog(val context1: Context) : Dialog(context1, R.style.MyDialog)
             when (view.id) {
                 R.id.reportReason -> {
                     for (data in adapter.data.withIndex()) {
+                        if (data.index == position)
+                            checkReason = data.value.reason
                         data.value.checked = data.index == position
                     }
                     adapter.notifyDataSetChanged()
                     checkConfirmEnable()
                 }
             }
-
         }
-
-
-        setData()
-
-
     }
 
     private fun setData() {
-        loginOffWarning.text = "您的账号已提交注销申请，将于X年X月X日注销成功。注销成功前，您可随时登录恢复账号正常使用，15天不登录则将自动注销账号及清空全部数据\n\n" +
-                "您即将离开积糖，我们非常不舍，同时想知道您离开的原因，我们会努力提升自己，期待您再次使用"
-        adapter.addData(ReportBean("产品不是想要的感觉", true))
-        adapter.addData(ReportBean("在平台找不到想找的人", false))
-        adapter.addData(ReportBean("产品不知道怎么玩或体验感差", false))
-        adapter.addData(ReportBean("受到垃圾用户骚扰太多", false))
-        adapter.addData(ReportBean("已在平台脱单或交到朋友", false))
-        adapter.addData(ReportBean("其他", false))
-        adapter.addData(ReportBean("其他", false))
-        adapter.addData(ReportBean("其他", false))
-        adapter.addData(ReportBean("其他", false))
-        adapter.addData(ReportBean("其他", false))
+        loginOffWarning.text = loginOffCauseBean.descr
+        for (cause in loginOffCauseBean.list.withIndex()) {
+            if (cause.index == 0)
+                checkReason = cause.value
+            adapter.addData(ReportBean(cause.value, cause.index == 0))
+        }
         checkConfirmEnable()
     }
 

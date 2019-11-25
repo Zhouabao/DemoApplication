@@ -13,6 +13,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
 class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
@@ -55,6 +56,40 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
     }
 
 
+    //accid
+    //[string]	是
+    //token
+    //[string]	是
+    //uni_account
+    //[string]	是	手机号
+    //code
+    //[string]	是	短信验证码
+    //descr
+    fun cancelAccount(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .cancelAccount(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
+                override fun onNext(t: BaseResp<Any>) {
+                    mView.onConfirmVerifyCode(null,t.code == 200)
+                    if (t.code == 403) {
+                        TickDialog(context).show()
+                    } else if (t.code != 200) {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onStart() {
+
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.onConfirmVerifyCode(null,false)
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                }
+            })
+    }
+
+
     /**
      * 重新获取验证码
      */
@@ -69,9 +104,9 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
         )
         RetrofitFactory.instance
             .create(Api::class.java)
-            .getVerifyCode(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
+            .sendSms(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
+                override fun onNext(t: BaseResp<Any>) {
                     mView.onGetVerifyCode(t)
                 }
 

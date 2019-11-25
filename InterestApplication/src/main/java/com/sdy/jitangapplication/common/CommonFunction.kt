@@ -102,7 +102,7 @@ object CommonFunction {
     /**
      * 微信登录
      */
-    fun wechatLogin(context: Context) {
+    fun wechatLogin(context: Context, state: String) {
         val wxapi = WXAPIFactory.createWXAPI(context, null)
         wxapi.registerApp(Constants.WECHAT_APP_ID)
         if (!wxapi.isWXAppInstalled) {
@@ -111,7 +111,7 @@ object CommonFunction {
         }
         val req = SendAuth.Req()
         req.scope = "snsapi_userinfo"
-        req.state = "wechat_sdk_demo_test"
+        req.state = state
         wxapi.sendReq(req)
 //        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, umAuthListener)
     }

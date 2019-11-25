@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.loginOffCauseBean
 
 /**
  *    author : ZFM
@@ -10,5 +11,10 @@ import com.kotlin.base.presenter.view.BaseView
  */
 interface ChangeAccountView : BaseView {
 
+    fun onChangeAccountResult(result: Boolean)
+
+    fun onSendSmsResult(result: Boolean)
+
+    fun onCauseListResult(result: loginOffCauseBean)
 
 }

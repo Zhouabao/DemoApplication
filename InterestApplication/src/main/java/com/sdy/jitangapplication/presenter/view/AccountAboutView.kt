@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.AccountBean
 
 /**
  *    author : ZFM
@@ -10,5 +11,8 @@ import com.kotlin.base.presenter.view.BaseView
  */
 interface AccountAboutView : BaseView {
 
+    fun getAccountResult(accountBean: AccountBean)
 
+
+    fun unbundWeChatResult(result: Boolean)
 }

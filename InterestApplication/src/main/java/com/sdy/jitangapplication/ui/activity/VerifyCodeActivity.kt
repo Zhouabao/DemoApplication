@@ -77,12 +77,21 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
             override fun onComplete(complete: Boolean, content: String?) {
                 if (complete) {
                     loadingDialog.show()
-                    mPresenter.checkVerifyCode(
-                        intent.getStringExtra("wxcode") ?: "",
-                        intent.getStringExtra("type") ?: "1",
-                        phone,
-                        content!!
-                    )
+                    if (intent.getStringExtra("type") == "$TYPE_LOGIN_OFF") {
+                        mPresenter.cancelAccount(
+                            hashMapOf<String, Any>(
+                                "uni_account" to intent.getStringExtra("phone"),
+                                "code" to content!!,
+                                "descr" to intent.getStringExtra("descr")
+                            )
+                        )
+                    } else
+                        mPresenter.checkVerifyCode(
+                            intent.getStringExtra("wxcode") ?: "",
+                            intent.getStringExtra("type") ?: "1",
+                            phone,
+                            content!!
+                        )
                 }
             }
 
@@ -145,6 +154,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         if (isRight) {
             //注销成功
             if (intent.getStringExtra("type") == "$TYPE_LOGIN_OFF") {
+                loadingDialog.dismiss()
                 LoginOffSuccessDialog(this).show()
             } else {//登录成功
                 this.data = data
@@ -180,6 +190,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
             inputVerifyCode.isEnabled = true
         }
     }
+
 
     override fun onError(text: String) {
         CommonFunction.toast(text)
