@@ -179,4 +179,32 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
     }
 
 
+
+
+    /**
+     * 不喜欢
+     */
+    fun dislikeUser(params: HashMap<String, Any>) {
+        if (!checkNetWork()) {
+            return
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .dontLike(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
+                    if (t.code == 200) {
+                        mView.onGetLikeResult(true, t,false)
+                    } else {
+                        mView.onGetLikeResult(false, t,false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
 }

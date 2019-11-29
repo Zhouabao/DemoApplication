@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.scwang.smartrefresh.layout.SmartRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/refreshLabel"
+        android:layout_width="match_parent"
+        android:background="@color/colorWhite"
+        android:layout_height="match_parent"
+        app:srlEnableLoadMore="true"
+        app:srlEnableRefresh="false">
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLabel"
+            android:layout_width="match_parent"
+            android:overScrollMode="never"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+

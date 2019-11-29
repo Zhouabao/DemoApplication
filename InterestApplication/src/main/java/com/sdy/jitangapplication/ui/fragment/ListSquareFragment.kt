@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.fragment
 
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.sdy.jitangapplication.R
@@ -52,8 +51,18 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 列表形式的广场列表
  */
-class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoadMoreListener,
-    MultiListSquareAdapter.ResetAudioListener {
+class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView,
+    OnLoadMoreListener, MultiListSquareAdapter.ResetAudioListener{
+    private var page = 1
+    private val params by lazy {
+        hashMapOf(
+            "token" to UserManager.getToken(),
+            "accid" to UserManager.getAccid(),
+            "page" to page,
+            "target_accid" to targetAccid
+        )
+    }
+
     override fun onCheckBlockResult(result: Boolean) {
 
     }
@@ -86,7 +95,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
+
     }
 
 
@@ -171,7 +180,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
                     )
                 }
                 R.id.squareDianzanBtn1 -> {
-                  //  clickZan(position)
+                    //  clickZan(position)
                 }
                 R.id.squareZhuanfaBtn1 -> {
                     showTranspondDialog(adapter.data[position])
@@ -204,84 +213,11 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         }
     }
 
-
-    /**
-     * 点赞按钮
-     */
-    private fun clickZan(position: Int) {
-        val squareBean = adapter.data[position]
-        if (adapter.data[position].isliked == 1) {
-            adapter.data[position].isliked = 0
-            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.minus(1)
-        } else {
-            adapter.data[position].isliked = 1
-            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
-        }
-//        adapter.notifyItemChanged(position + adapter.headerLayoutCount)
-        adapter.notifyDataSetChanged()
-        Handler().postDelayed({
-            if (squareBean.originalLike == squareBean.isliked) {
-                return@postDelayed
-            }
-            val params = hashMapOf(
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "type" to if (squareBean.isliked == 0) {
-                    2
-                } else {
-                    1
-                },
-                "square_id" to squareBean.id!!,
-                "_timestamp" to System.currentTimeMillis()
-            )
-            mPresenter.getSquareLike(params, position)
-        }, 2000L)
-
+    override fun loadData() {
+        initView()
+        mPresenter.getSomeoneSquare(params)
     }
 
-
-    private var page = 1
-    //todo 此处刷新通过发送bus来进行
-    private val params by lazy {
-        hashMapOf(
-            "token" to UserManager.getToken(),
-            "accid" to UserManager.getAccid(),
-            "page" to page,
-            "target_accid" to targetAccid
-        )
-    }
-    private var targetAccid = ""
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onListDataEvent(event: ListDataEvent) {
-        targetAccid = event.targetAccid
-        params["target_accid"] = targetAccid
-        if (event.refresh) {
-            adapter.data.clear()
-            listRefresh.setNoMoreData(false)
-            page = 1
-            params["page"] = page
-            mPresenter.getSomeoneSquare(params)
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onRefreshSquareEvent(event: RefreshSquareEvent) {
-        if (event.from != TAG) {
-            adapter.data.clear()
-            listRefresh.setNoMoreData(false)
-            page = 1
-            params["page"] = page
-            mPresenter.getSomeoneSquare(params)
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onRefreshCommentEvent(event: RefreshCommentEvent) {
-        if (event.position != -1) {
-            adapter.data[event.position].comment_cnt = event.commentNum
-            adapter.refreshNotifyItemChanged(event.position)
-        }
-    }
 
     override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
 
@@ -296,6 +232,7 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {
         if (result) {
+
 //            if ((data == null || data.list.isNullOrEmpty()) && adapter.data.isNullOrEmpty()) {
 //                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
 //            } else {
@@ -558,6 +495,38 @@ class ListSquareFragment : BaseMvpFragment<SquarePresenter>(), SquareView, OnLoa
         EventBus.getDefault().unregister(this)
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onListDataEvent(event: ListDataEvent) {
+        targetAccid = event.targetAccid
+        params["target_accid"] = targetAccid
+        if (event.refresh) {
+            adapter.data.clear()
+            listRefresh.setNoMoreData(false)
+            page = 1
+            params["page"] = page
+            mPresenter.getSomeoneSquare(params)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshSquareEvent(event: RefreshSquareEvent) {
+        if (event.from != TAG) {
+            adapter.data.clear()
+            listRefresh.setNoMoreData(false)
+            page = 1
+            params["page"] = page
+            mPresenter.getSomeoneSquare(params)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshCommentEvent(event: RefreshCommentEvent) {
+        if (event.position != -1) {
+            adapter.data[event.position].comment_cnt = event.commentNum
+            adapter.refreshNotifyItemChanged(event.position)
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNotifyEvent(event: NotifyEvent) {

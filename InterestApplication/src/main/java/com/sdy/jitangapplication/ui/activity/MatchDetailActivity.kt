@@ -3,13 +3,9 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -19,6 +15,7 @@ import androidx.core.view.marginTop
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ScreenUtils
@@ -40,36 +37,29 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.model.DetailUserInfoBean
+import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
-import com.sdy.jitangapplication.ui.adapter.DetailThumbAdapter
-import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.adapter.MatchImgsPagerAdapter
+import com.sdy.jitangapplication.ui.adapter.*
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
-import com.sdy.jitangapplication.ui.fragment.MatchDetailInfomationFragment
-import com.sdy.jitangapplication.ui.fragment.MatchDetailSquareFragment
+import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
+import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
+import com.sdy.jitangapplication.ui.fragment.MatchDetailLabelFragment
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
+import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import net.lucode.hackware.magicindicator.ViewPagerHelper
-import net.lucode.hackware.magicindicator.buildins.UIUtil
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -145,14 +135,16 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         mPresenter.context = this
 
         //设置图片的宽度占满屏幕，宽高比9:16
-        val layoutParams = detailPhotosVp.layoutParams
+        val layoutParams = clPhotos.layoutParams
         layoutParams.width = ScreenUtils.getScreenWidth()
-        layoutParams.height = (16 / 9.0F * layoutParams.width).toInt()
-        detailPhotosVp.layoutParams = layoutParams
+//        layoutParams.height = (16 / 9.0F * layoutParams.width).toInt()
+        layoutParams.height = ScreenUtils.getScreenHeight() - SizeUtils.dp2px(197F)
+        clPhotos.layoutParams = layoutParams
 
         //设置个人信息距离顶部的距离
         val paramsClUserInfo = clUserInfo.layoutParams as FrameLayout.LayoutParams
-        paramsClUserInfo.topMargin = layoutParams.height - SizeUtils.dp2px(24f)
+        paramsClUserInfo.topMargin = ScreenUtils.getScreenHeight() - SizeUtils.dp2px(197F) - SizeUtils.dp2px(26F)
+        paramsClUserInfo.height = FrameLayout.LayoutParams.WRAP_CONTENT
         clUserInfo.layoutParams = paramsClUserInfo
 
         vpUserDetail.setScrollable(true)
@@ -167,7 +159,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         btnBack2.setOnClickListener(this)
         //用户的广场预览界面
         detailThumbRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-
+        //用户详细信息列表
+        detailUserInformationRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
 
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
             if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
@@ -188,81 +181,198 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             EventBus.getDefault().post(UpdateSquareEvent())
 
         }
+
+        detailSquareSwitchRg.setOnCheckedChangeListener { radioGroup, checkedId ->
+            if (checkedId == R.id.rbList) {
+                vpUserDetail.currentItem = 1
+                lastIndicator = 1
+            } else if (checkedId == R.id.rbBlock) {
+                vpUserDetail.currentItem = 2
+                lastIndicator = 2
+            }
+        }
+        detailSquareSwitchRg.check(R.id.rbList)
     }
 
+
+    /**
+     * 切换tab
+     */
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    private val titles = arrayOf("重叠兴趣 0", "个人信息")
+    private val titles = mutableListOf(
+        LabelBean(title = "TA的兴趣", checked = true),
+        LabelBean(title = "TA的兴趣", checked = false)
+    )
 
-    private fun initIndicator() {
-        tabUserDettail.setBackgroundColor(Color.WHITE)
-        val commonNavigator = CommonNavigator(this)
-        commonNavigator.adapter = object : CommonNavigatorAdapter() {
-            override fun getCount(): Int {
-                return mStack.size
+    //标签适配器
+    private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(this) }
+    private val labelManager = CenterLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+    private var lastIndicator = 1//默认选中列表
+    private fun iniTabRv() {
+        tabUserDettail.layoutManager = labelManager
+        LinearSnapHelper().attachToRecyclerView(tabUserDettail)
+        tabUserDettail.adapter = labelAdapter
+        labelAdapter.setNewData(titles)
+        labelAdapter.setOnItemClickListener { _, view, position ->
+            for (index in 0 until labelAdapter.data.size) {
+                labelAdapter.data[index].checked = index == position
             }
-
-            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
-                val simplePagerTitleView = ScaleTransitionPagerTitleView(context)
-                simplePagerTitleView.text = titles[index]
-                simplePagerTitleView.minScale = 0.85F
-                simplePagerTitleView.textSize = 20F
-                simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                simplePagerTitleView.normalColor = resources.getColor(R.color.colorBlack53)
-                simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlack)
-                simplePagerTitleView.onClick {
-                    vpUserDetail.currentItem = index
+            labelAdapter.notifyDataSetChanged()
+            if (labelAdapter.data[position].checked) {
+                detailSquareSwitchRg.isVisible = position == 1
+                if (position == 1) {
+                    if (lastIndicator == 2) {
+                        vpUserDetail.currentItem = 2
+                    } else if (lastIndicator == 1) {
+                        vpUserDetail.currentItem = 1
+                    }
+                } else {
+                    vpUserDetail.currentItem = 0
                 }
-                return simplePagerTitleView
-            }
 
-            override fun getIndicator(context: Context): IPagerIndicator {
-                val indicator = LinePagerIndicator(context)
-                indicator.mode = LinePagerIndicator.MODE_EXACTLY
-                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
-                indicator.lineWidth = UIUtil.dip2px(context, 32.0).toFloat()
-                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
-                indicator.startInterpolator = AccelerateInterpolator()
-                indicator.endInterpolator = DecelerateInterpolator(1.0f)
-                indicator.setColors(resources.getColor(R.color.colorOrange))
-                return indicator
             }
         }
-        tabUserDettail.navigator = commonNavigator
-        ViewPagerHelper.bind(tabUserDettail, vpUserDetail)
     }
+
 
     /*
       初始化Fragment栈管理
    */
     private fun initFragment() {
-        mStack.add(MatchDetailSquareFragment(matchBean!!, targetAccid))
-        mStack.add(MatchDetailInfomationFragment(matchBean!!))
-        vpUserDetail.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
-        initIndicator()
+        iniTabRv()
+        mStack.add(MatchDetailLabelFragment(targetAccid))
+        mStack.add(ListSquareFragment(targetAccid))
+        mStack.add(BlockSquareFragment(targetAccid))
+        vpUserDetail.offscreenPageLimit = 3
+        vpUserDetail.adapter = MainPagerAdapter(supportFragmentManager, mStack)
         vpUserDetail.currentItem = 0
     }
 
 
+    /**
+     * 初始化个人信息数据
+     */
+    private val detailUserInformationAdapter by lazy { MatchDetailInfoAdapter() }
+
+    private fun initUserInfomationData() {
+        if (matchBean!!.base_info.height != 0)
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_height,
+                    "身高",
+                    "${matchBean!!.base_info.height}"
+                )
+            )
+        if (!matchBean!!.base_info.emotion_state.isNullOrEmpty())
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_emotion,
+                    "感情状态",
+                    "${matchBean!!.base_info.emotion_state}"
+                )
+            )
+        if (!matchBean!!.base_info.hometown.isNullOrEmpty())
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_hometown,
+                    "家乡",
+                    "${matchBean!!.base_info.hometown}"
+                )
+            )
+        if (!matchBean!!.base_info.present_address.isNullOrEmpty())
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_living,
+                    "现居地",
+                    "${matchBean!!.base_info.present_address}"
+                )
+            )
+        if (!matchBean!!.base_info.personal_job.isNullOrEmpty())
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_job,
+                    "职业",
+                    "${matchBean!!.base_info.personal_job}"
+                )
+            )
+        if (!matchBean!!.base_info.making_friends.isNullOrEmpty())
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_ami,
+                    "交友目的",
+                    "${matchBean!!.base_info.making_friends}"
+                )
+            )
+        if (!matchBean!!.base_info.personal_school.isNullOrEmpty())
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_school,
+                    "学校",
+                    "${matchBean!!.base_info.personal_school}"
+                )
+            )
+        if (!matchBean!!.base_info.personal_drink.isNullOrEmpty())
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_drink,
+                    "喝酒",
+                    "${matchBean!!.base_info.personal_drink}"
+                )
+            )
+        if (!matchBean!!.base_info.personal_smoke.isNullOrEmpty())
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_smoke,
+                    "抽烟",
+                    "${matchBean!!.base_info.personal_smoke}"
+                )
+            )
+        if (!matchBean!!.base_info.personal_schedule.isNullOrEmpty())
+            detailUserInformationAdapter.addData(
+                DetailUserInfoBean(
+                    R.drawable.icon_detail_schedule,
+                    "作息时间",
+                    "${matchBean!!.base_info.personal_schedule}"
+                )
+            )
+    }
+
     private fun initData() {
-        initFragment()
+        titles[0].title = "${if (matchBean!!.gender == 1) {
+            "他"
+        } else {
+            "她"
+        }}的兴趣"
+        titles[1].title = "${if (matchBean!!.gender == 1) {
+            "他"
+        } else {
+            "她"
+        }}的动态 . 10"
+        initFragment()//初始化vp
+        initUserInfomationData()//初始化个人信息数据
+        detailUserInformationRv.adapter = detailUserInformationAdapter
 //        EventBus.getDefault().post(UpdateSquareEvent())
 
         detailUserName.text = matchBean!!.nickname
         titleUsername.text = matchBean!!.nickname
-        detailUserInfo.text =
-            "${matchBean!!.age} . ${if (matchBean!!.gender == 1) "男" else "女"} . ${matchBean!!.constellation} . ${matchBean!!.distance}"
-        detailUserJob.text = "${matchBean!!.jobname}"
+        val left = resources.getDrawable(
+            if (matchBean!!.gender == 1) {
+                R.drawable.icon_gender_man_gray
+            } else {
+                R.drawable.icon_gender_woman_gray
+            }
+        )
+        detailUserInfoAge.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
+        detailUserInfoAge.text = "${matchBean!!.age}"
+        detailUserConstellation.text = "${matchBean!!.constellation}"
+        detailUserDistance.text = "${matchBean!!.distance}"
         detailUserSign.apply {
-            text = "${matchBean!!.sign}"
+            setContent("${matchBean!!.sign}")
             isVisible = !(matchBean!!.sign.isNullOrBlank())
         }
-        detailUserJob.visibility = if (matchBean!!.jobname.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+
         detailUserVip.visibility = if (matchBean!!.isvip == 1) {
             View.VISIBLE
         } else {
@@ -315,9 +425,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         if (photos.size > 1) {
             for (i in 0 until photos.size) {
-                val width = ((ScreenUtils.getScreenWidth()
-                        - SizeUtils.dp2px(15F) * 2
-                        - (SizeUtils.dp2px(6F) * (photos.size - 1))) * 1F / photos.size).toInt()
+//                val width = ((ScreenUtils.getScreenWidth()
+//                        - SizeUtils.dp2px(15F) * 2
+//                        - (SizeUtils.dp2px(6F) * (photos.size - 1))) * 1F / photos.size).toInt()
+                val width = SizeUtils.dp2px(6F)
                 val height = SizeUtils.dp2px(6F)
 
                 val indicator = RadioButton(this)
@@ -373,21 +484,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 //            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             matchBean = matchUserDetailBean
             updateBlockStatus()
-
-            //本地对标签进行过滤筛选
-            val labels = UserManager.getSpLabels()
-            var same = 0
-            for (label in labels) {
-                for (tag in matchBean!!.tags ?: mutableListOf()) {
-                    if (label.id == tag.id && tag.id != Constants.RECOMMEND_TAG_ID) {
-                        tag.sameLabel = true
-                        same++
-                    }
-                }
-            }
-            titles[0] = "重叠兴趣 $same"
             initData()
-
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
             stateview.errorMsg.text = CommonFunction.getErrorMsg(this)
@@ -457,47 +554,50 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-    override fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?) {
-        if (statusBean != null)
-            if (statusBean.code == 200) {
-                if (statusBean.data?.residue == 0) {
-                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
-                } else {
-                    EventBus.getDefault().post(RefreshEvent(true))
-                    if (statusBean.data?.status == 1) {  //喜欢成功
-                        matchBean!!.isliked = 1
-                        updateLightCount(-1, -1)
-                    } else if (statusBean.data?.status == 2) {//匹配成功
-                        //如果是来自喜欢我的界面， 就刷新
-                        if (intent.getIntExtra("parPos", -1) != -1) {
-                            EventBus.getDefault().post(
-                                UpdateLikemeOnePosEvent(
-                                    intent.getIntExtra("parPos", -1), intent.getIntExtra("childPos", -1)
-                                )
-                            )
-                        }
-                        //喜欢过
-                        matchBean!!.isfriend = 1
-                        updateLightCount(-1, -1)
+    override fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?, islike: Boolean) {
 
-                        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
-                            detailUserChatBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_orange)
-                            detailUserChatIv.setImageResource(R.drawable.icon_chat_white)
-                            detailUserLeftChatCount.isVisible = false
-                            detailUserChatTv.text = "聊天"
-                            detailUserLikeBtn.visibility = View.GONE
-                            detailUserLikeBtn.isEnabled = false
-                            detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
+        if (islike) {
+            if (statusBean != null)
+                if (statusBean.code == 200) {
+                    if (statusBean.data?.residue == 0) {
+                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
+                    } else {
+                        EventBus.getDefault().post(RefreshEvent(true))
+                        if (statusBean.data?.status == 1) {  //喜欢成功
+                            matchBean!!.isliked = 1
+                            updateLightCount(-1, -1)
+                        } else if (statusBean.data?.status == 2) {//匹配成功
+                            //如果是来自喜欢我的界面， 就刷新
+                            if (intent.getIntExtra("parPos", -1) != -1) {
+                                EventBus.getDefault().post(
+                                    UpdateLikemeOnePosEvent(
+                                        intent.getIntExtra("parPos", -1), intent.getIntExtra("childPos", -1)
+                                    )
+                                )
+                            }
+                            //喜欢过
+                            matchBean!!.isfriend = 1
+                            updateLightCount(-1, -1)
+                            sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                         }
-                        sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
+                    }
+                } else if (statusBean.code == 201) {
+                    if (matchBean!!.my_percent_complete <= matchBean!!.normal_percent_complete)
+                        RightSlideOutdDialog(this, matchBean!!.my_like_times, matchBean!!.total_like_times).show()
+                    else
+                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
+                }
+        } else {
+            if (statusBean != null)
+                if (statusBean.code == 200) {
+                    if (statusBean.data != null) {
+                        EventBus.getDefault().post(RefreshEvent(true))
+                        finish()
+                    } else {
+                        CommonFunction.toast(statusBean.msg)
                     }
                 }
-            } else if (statusBean.code == 201) {
-                if (matchBean!!.my_percent_complete <= matchBean!!.normal_percent_complete)
-                    RightSlideOutdDialog(this, matchBean!!.my_like_times, matchBean!!.total_like_times).show()
-                else
-                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
-            }
+        }
     }
 
 
@@ -610,41 +710,38 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (countdown != -1)
             UserManager.saveCountDownTime(countdown)
 
-        detailUserLeftChatCount.text = "${UserManager.getLightingCount()}"
         //已感兴趣或者是好友不做操作
         if (matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
-            detailUserLikeBtn.visibility = View.GONE
-            detailUserLikeBtn.isEnabled = false
-            detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_gray)
+            detailUserDislikeBtn.isVisible = false
+            detailUserLikeBtn.isVisible = false
+            detailUserGreetBtn.isVisible = true
         } else {
-            detailUserLikeBtn.visibility = View.VISIBLE
-            detailUserLikeBtn.isEnabled = true
-            detailUserLikeBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_blue)
+            detailUserDislikeBtn.isVisible = true
+            detailUserGreetBtn.isVisible = true
+            detailUserLikeBtn.isVisible = true
         }
 
         //判断是否为好友 是：显示聊天
         //              否: 判断是否开启招呼,是否喜欢过
         if (matchBean!!.isfriend == 1) {//是好友就显示聊天
-            detailUserChatBtn.setBackgroundResource(R.drawable.shape_rectangle_solid_orange)
-            detailUserChatIv.setImageResource(R.drawable.icon_chat_white)
-            detailUserLeftChatCount.isVisible = false
-            detailUserChatTv.text = "聊天"
+            detailUserChatBtn.text = "聊天"
+            detailUserChatBtn.isVisible = true
+            detailUserGreetBtn.isVisible = false
         } else {
+            detailUserChatBtn.visibility = View.INVISIBLE
+            detailUserGreetBtn.isVisible = true
             detailUserLikeBtn.isVisible = matchBean!!.isliked != 1//喜欢过就不显示“感兴趣”
             if (!matchBean!!.greet_switch) {//招呼未开启不显示打招呼
-                detailUserChatBtn.isVisible = false
+                detailUserChatBtn.visibility = View.INVISIBLE
+                detailUserGreetBtn.isVisible = false
             } else {//招呼开启,   招呼有效 与 招呼无效
                 if (matchBean!!.isgreeted) {
-                    detailUserChatBtn.setBackgroundResource(R.drawable.gradient_match_detail_red_bg)
-                    detailUserChatIv.setImageResource(R.drawable.icon_flash_white)
-                    detailUserChatIv.isVisible = false
-                    detailUserLeftChatCount.isVisible = false
-                    detailUserChatTv.text = "继续聊天"
+                    detailUserGreetBtn.isVisible = false
+                    detailUserChatBtn.isVisible = true
+                    detailUserChatBtn.text = "继续聊天"
                 } else {
-                    detailUserChatBtn.setBackgroundResource(R.drawable.gradient_match_detail_red_bg)
-                    detailUserChatIv.setImageResource(R.drawable.icon_flash_white)
-                    detailUserLeftChatCount.isVisible = true
-                    detailUserChatTv.text = "打招呼"
+                    detailUserGreetBtn.isVisible = true
+                    detailUserChatBtn.visibility = View.INVISIBLE
                 }
             }
 

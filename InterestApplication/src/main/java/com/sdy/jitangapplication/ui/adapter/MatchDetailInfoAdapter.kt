@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
@@ -18,5 +20,13 @@ class MatchDetailInfoAdapter : BaseQuickAdapter<DetailUserInfoBean, BaseViewHold
         helper.itemView.infoIv.setImageResource(item.icon)
         helper.itemView.infoTitle.text = item.title
         helper.itemView.infoContent.text = item.content
+        val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
+        if (helper.layoutPosition == 0) {
+            params.topMargin = SizeUtils.dp2px(9F)
+        }
+        if (helper.layoutPosition == data.size - 1) {
+            params.bottomMargin = SizeUtils.dp2px(9F)
+        }
+//        helper.itemView.infoContent.setContent(item.content)
     }
 }

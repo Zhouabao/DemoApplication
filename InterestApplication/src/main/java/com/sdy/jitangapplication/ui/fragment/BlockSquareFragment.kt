@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
-import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.sdy.jitangapplication.R
@@ -27,8 +27,18 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 九宫格的广场内容
  */
-class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquareView, OnLoadMoreListener {
+class BlockSquareFragment(var targetAccid: String) : BaseMvpLazyLoadFragment<BlockSquarePresenter>(), BlockSquareView,
+    OnLoadMoreListener {
     private var page = 1
+    private val blockAdapter by lazy { BlockAdapter() }
+    private val params by lazy {
+        hashMapOf(
+            "token" to UserManager.getToken(),
+            "accid" to UserManager.getAccid(),
+            "page" to page,
+            "target_accid" to targetAccid
+        )
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -37,10 +47,8 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
     }
 
-    private val blockAdapter by lazy { BlockAdapter() }
 
     private fun initView() {
         mPresenter = BlockSquarePresenter()
@@ -71,6 +79,12 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
 //            mPresenter.squarePhotosList(params)
 //        }
 
+    }
+
+    override fun loadData() {
+        initView()
+
+        mPresenter.squarePhotosList(params)
     }
 
 
@@ -109,20 +123,10 @@ class BlockSquareFragment : BaseMvpFragment<BlockSquarePresenter>(), BlockSquare
         EventBus.getDefault().unregister(this)
     }
 
-    //todo 此处刷新通过发送bus来进行
-    private val params by lazy {
-        hashMapOf(
-            "token" to UserManager.getToken(),
-            "accid" to UserManager.getAccid(),
-            "page" to page,
-            "target_accid" to targetAccid
-        )
-    }
-    private var targetAccid = ""
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onBlockDataEvent(event: BlockDataEvent) {
         targetAccid = event.targetAccid
-        params["target_accid"]=  targetAccid
+        params["target_accid"] = targetAccid
         if (event.refresh) {
             blockAdapter.data.clear()
             refreshBlock.setNoMoreData(false)
