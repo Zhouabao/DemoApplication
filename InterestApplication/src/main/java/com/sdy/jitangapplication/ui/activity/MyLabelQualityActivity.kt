@@ -17,13 +17,16 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
+import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.presenter.MyLabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.MyLabelQualityView
 import com.sdy.jitangapplication.ui.adapter.LabelQualityAdapter
 import com.sdy.jitangapplication.ui.dialog.CorrectDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_label_quality.*
 import kotlinx.android.synthetic.main.correct_dialog_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -158,8 +161,13 @@ class MyLabelQualityActivity : BaseMvpActivity<MyLabelQualityPresenter>(), MyLab
     }
 
 
-    override fun addTagResult(result: Boolean) {
+    override fun addTagResult(result: Boolean, data: LoginBean?) {
         if (result) {
+            if (data != null) {
+                UserManager.saveUserInfo(data)
+                EventBus.getDefault().post(UpdateAvatorEvent(true))
+            }
+
             if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))
                 ActivityUtils.finishActivity(AddLabelActivity::class.java)
             EventBus.getDefault().post(UpdateMyLabelEvent())

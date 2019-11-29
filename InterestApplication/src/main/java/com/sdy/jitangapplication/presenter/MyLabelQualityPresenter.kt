@@ -9,6 +9,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelQualityBean
+import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.presenter.view.MyLabelQualityView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -60,20 +61,20 @@ class MyLabelQualityPresenter : BasePresenter<MyLabelQualityView>() {
     fun addClassifyTag(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .addClassifyTag(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()
                 }
 
-                override fun onNext(t: BaseResp<Any>) {
+                override fun onNext(t: BaseResp<LoginBean?>) {
                     mView.hideLoading()
                     if (t.code == 200) {
-                        mView.addTagResult(true)
+                        mView.addTagResult(true, t.data)
                     } else if (t.code == 403) {
                         TickDialog(context).show()
                     } else {
                         CommonFunction.toast(t.msg)
-                        mView.addTagResult(false)
+                        mView.addTagResult(false, null)
                     }
 
                 }
@@ -82,7 +83,7 @@ class MyLabelQualityPresenter : BasePresenter<MyLabelQualityView>() {
                 override fun onError(e: Throwable?) {
                     mView.hideLoading()
                     CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                    mView.addTagResult(false)
+                    mView.addTagResult(false, null)
                 }
             })
     }
