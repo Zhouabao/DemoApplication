@@ -11,9 +11,9 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.*
@@ -33,8 +33,6 @@ object UserManager {
     var slide_times = 0
     var perfect_times = 0 //滑动x次数跳【完善相册】
     var replace_times = 0 //滑动x次数跳【替换头像】
-
-    var firstToMine = true
 
 
     //手动取消上传
@@ -271,25 +269,22 @@ object UserManager {
      */
     fun saveUserInfo(data: LoginBean) {
         val savaLabels = mutableSetOf<String>()
-        for (label in data!!.taglist ?: mutableListOf()) {
-            if (label != null)
-                savaLabels.add(
-                    SharedPreferenceUtil.Object2String(
-                        LabelBean(
-                            title = label.title ?: "",
-                            id = label.id ?: -1
-                        )
+        for (label in data!!.extra_data?.mytags ?: mutableListOf()) {
+            savaLabels.add(
+                SharedPreferenceUtil.Object2String(
+                    NewLabel(
+                        title = label.title ?: "",
+                        id = label.id ?: -1
                     )
                 )
+            )
         }
-        SPUtils.getInstance(Constants.SPNAME).put("checkedLabels", savaLabels)
+        SPUtils.getInstance(Constants.SPNAME).put("newCheckedLabels", savaLabels)
         if (data.userinfo != null) {
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo.nickname)
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
             SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
-
-
             if (data.userinfo.isvip != -1) {
                 saveUserVip(data.userinfo.isvip)
             }
@@ -473,11 +468,11 @@ object UserManager {
     /**
      * 获取本地存放的标签
      */
-    fun getSpLabels(): MutableList<LabelBean> {
-        val tempLabels = mutableListOf<LabelBean>()
-        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
-            (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels")).forEach {
-                tempLabels.add(SharedPreferenceUtil.String2Object(it) as LabelBean)
+    fun getSpLabels(): MutableList<NewLabel> {
+        val tempLabels = mutableListOf<NewLabel>()
+        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels").isNotEmpty()) {
+            (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels")).forEach {
+                tempLabels.add(SharedPreferenceUtil.String2Object(it) as NewLabel)
             }
         }
         tempLabels.sortWith(Comparator { p0, p1 -> p0.id.compareTo(p1.id) })
@@ -543,6 +538,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("likeCount")
         SPUtils.getInstance(Constants.SPNAME).remove("squareCount")
         SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("newCheckedLabels")
 
 
         //位置信息
@@ -755,9 +751,9 @@ object UserManager {
             return
         } else {
             saveUserInfo(data)
-            if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
+            if (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels") == null || SPUtils.getInstance(
                     Constants.SPNAME
-                ).getStringSet("checkedLabels").isEmpty()
+                ).getStringSet("newCheckedLabels").isEmpty()
             ) {//标签没有选择
                 context.startActivity<LabelsActivity>()
             } else {//跳到主页

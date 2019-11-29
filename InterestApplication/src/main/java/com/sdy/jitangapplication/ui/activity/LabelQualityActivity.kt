@@ -12,6 +12,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelQualityBean
+import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.presenter.LabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.LabelQualityView
@@ -112,7 +113,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     }
 
 
-    override fun addTagResult(result: Boolean) {
+    override fun addTagResult(result: Boolean, data: LoginBean?) {
 
     }
 

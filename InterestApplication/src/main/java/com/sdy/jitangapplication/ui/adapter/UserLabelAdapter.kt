@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.NewLabel
 import kotlinx.android.synthetic.main.item_label_all.view.*
 
 
@@ -17,8 +17,8 @@ import kotlinx.android.synthetic.main.item_label_all.view.*
  *    desc   : 个人中心标签适配器
  *    version: 1.0
  */
-class UserLabelAdapter : BaseQuickAdapter<LabelBean, BaseViewHolder>(R.layout.item_label_all) {
-    override fun convert(helper: BaseViewHolder, item: LabelBean) {
+class UserLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all) {
+    override fun convert(helper: BaseViewHolder, item: NewLabel) {
         val params = helper.itemView.labelCover.layoutParams as ConstraintLayout.LayoutParams
         params.width = SizeUtils.dp2px(119f)
         params.height = SizeUtils.dp2px(70f)

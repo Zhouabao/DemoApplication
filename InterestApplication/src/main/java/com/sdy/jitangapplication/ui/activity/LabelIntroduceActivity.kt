@@ -16,12 +16,15 @@ import com.blankj.utilcode.util.SpanUtils
 import com.google.gson.Gson
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
+import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.presenter.LabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.LabelQualityView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_label_introduce.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
@@ -123,23 +126,23 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
             btnBack -> {
                 finish()
             }
-            labelPurposeBtn -> {
+            labelPurposeBtn -> {//标签意向
                 if (data == null) {
                     mPresenter.getTagTraitInfo(hashMapOf("tag_id" to intent.getIntExtra("tag_id", 0), "type" to 3))
                 } else {
                     showConditionPicker(data ?: mutableListOf())
                 }
             }
-            introduceNextBtn -> {
+            introduceNextBtn -> { //保存标签
                 params["describle"] = labelIntroduceContent.text.trim()
                 mPresenter.addClassifyTag(params)
             }
-            rightBtn1 -> {
+            rightBtn1 -> {//返回按钮(对于编辑已有的标签而言)
                 intent.putExtra("describle", labelIntroduceContent.text.trim().toString())
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             }
-            labelIntroduceModel -> {
+            labelIntroduceModel -> {//标签介绍模板
                 startActivityForResult<ModelAboutMeActivity>(
                     100,
                     "tag_id" to intent.getIntExtra("tag_id", 0),
@@ -169,8 +172,14 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
         showConditionPicker(data ?: mutableListOf())
     }
 
-    override fun addTagResult(result: Boolean) {
+    override fun addTagResult(result: Boolean, data: LoginBean?) {
         if (result) {
+            if (data != null) {
+                UserManager.saveUserInfo(data)
+                if (from != AddLabelActivity.FROM_REGISTER)
+                    EventBus.getDefault().post(UpdateAvatorEvent(true))
+            }
+
             if (from == AddLabelActivity.FROM_REGISTER) {
                 if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance()))
                     ActivityUtils.finishActivity(LabelQualityActivity::class.java)

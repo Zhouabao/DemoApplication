@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.event
 
 import android.content.Context
-import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.WechatNameBean
 
 /**
@@ -11,7 +11,7 @@ import com.sdy.jitangapplication.model.WechatNameBean
  *    version: 1.0
  */
 //更新标签去请求
-class UpdateLabelEvent(var label: LabelBean)
+class UpdateLabelEvent(var label: NewLabel)
 
 //更新播放器
 class NotifyEvent(var position: Int)

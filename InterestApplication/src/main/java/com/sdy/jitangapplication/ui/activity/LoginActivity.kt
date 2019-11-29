@@ -1,14 +1,12 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
-import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.wxapi.WXEntryActivity
 import com.umeng.socialize.UMShareAPI
@@ -33,7 +31,7 @@ class LoginActivity : BaseActivity() {
         //判断是否有登录
         if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
             if (UserManager.isUserInfoMade()) {//是否填写过用户信息
-                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isEmpty()) {//是否选择过标签
+                if (UserManager.getSpLabels().isEmpty()) {//是否选择过标签
                     UserManager.clearLoginData()
 //                    startActivity<LabelsActivity>()
                 } else {

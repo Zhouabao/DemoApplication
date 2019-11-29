@@ -9,22 +9,8 @@ import java.io.Serializable
  *    desc   :
  *    version: 1.0
  */
-//旧的标签对象
-data class LabelBean(
-    var title: String = "",
-    var descr: String = "",
-    var icon: String = "",
-    var id: Int = -1,
-    var level: Int = 0,
-    var parent_id: Int = 0,
-    var path: String = "",
-    var son: MutableList<LabelBean>? = null,
-    var video_path: String = "",
-    var checked: Boolean = false
-) : Serializable
-
 data class Labels(
-    var data: MutableList<LabelBean>,
+    var data: MutableList<NewLabel>,
     var version: Int
 )
 
@@ -47,7 +33,7 @@ data class NewLabel(
 
 data class AddLabelBean(
     var list: MutableList<NewLabel> = mutableListOf(),
-    var menu: MutableList<LabelBean> = mutableListOf()
+    var menu: MutableList<NewLabel> = mutableListOf()
 )
 
 

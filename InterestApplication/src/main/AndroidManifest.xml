@@ -235,10 +235,6 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.UserInfoSettingsActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
                 android:name=".ui.activity.MyVisitActivity"
                 android:screenOrientation="portrait">
         </activity>

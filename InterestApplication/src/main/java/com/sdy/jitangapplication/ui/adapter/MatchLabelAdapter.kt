@@ -7,7 +7,7 @@ import androidx.core.view.isVisible
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.NewLabel
 import kotlinx.android.synthetic.main.item_label_match.view.*
 
 /**
@@ -17,8 +17,8 @@ import kotlinx.android.synthetic.main.item_label_match.view.*
  *    version: 1.0
  */
 class MatchLabelAdapter(var context: Context, var enable: Boolean = true) :
-    BaseQuickAdapter<LabelBean, BaseViewHolder>(R.layout.item_label_match) {
-    override fun convert(holder: BaseViewHolder, item: LabelBean) {
+    BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_match) {
+    override fun convert(holder: BaseViewHolder, item: NewLabel) {
         holder.itemView.labelTv.text = item.title
         if (item.checked) {
             holder.itemView.labelTv.setTextColor(Color.parseColor("#FF191919"))

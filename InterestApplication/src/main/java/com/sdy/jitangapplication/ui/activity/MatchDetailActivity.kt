@@ -39,7 +39,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
-import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
@@ -202,8 +202,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     private val titles = mutableListOf(
-        LabelBean(title = "TA的兴趣", checked = true),
-        LabelBean(title = "TA的兴趣", checked = false)
+        NewLabel(title = "TA的兴趣", checked = true),
+        NewLabel(title = "TA的兴趣", checked = false)
     )
 
     //标签适配器
@@ -546,7 +546,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 NIMClient.getService(MsgService::class.java).clearServerHistory(matchBean!!.accid, SessionTypeEnum.P2P)
                 matchBean!!.isblock = 2
                 updateBlockStatus()
-//                EventBus.getDefault().post(UpdateLabelEvent(LabelBean(id = UserManager.getGlobalLabelId())))
+//                EventBus.getDefault().post(UpdateLabelEvent(NewLabel(id = UserManager.getGlobalLabelId())))
 
             }
             CommonFunction.toast("$result")

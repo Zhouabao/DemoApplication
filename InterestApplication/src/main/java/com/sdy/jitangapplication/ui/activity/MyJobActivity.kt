@@ -9,7 +9,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.presenter.MyJobPresenter
 import com.sdy.jitangapplication.presenter.view.MyJobView
 import com.sdy.jitangapplication.ui.adapter.LabelAdapter
@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.error_layout.view.*
  */
 class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClickListener {
 
-    private var checkJob: LabelBean? = null
+    private var checkJob: NewLabel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_job)

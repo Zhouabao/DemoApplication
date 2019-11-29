@@ -10,7 +10,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.presenter.LabelsPresenter
 import com.sdy.jitangapplication.ui.adapter.LabelAdapter
 import com.sdy.jitangapplication.utils.UserManager
@@ -26,16 +26,16 @@ import java.io.Serializable
 class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnClickListener {
     private lateinit var adapter: LabelAdapter
     //拿一个集合来存储当前选中的标签
-    private val checkedLabels: MutableList<LabelBean> = mutableListOf()
+    private val checkedLabels: MutableList<NewLabel> = mutableListOf()
     //拿一个集合来存储之前选中的标签
-    private var saveLabels: MutableList<LabelBean> = mutableListOf()
+    private var saveLabels: MutableList<NewLabel> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_publish_choose_labels)
         initView()
-        saveLabels = intent.getSerializableExtra("checkedLabels") as MutableList<LabelBean>
+        saveLabels = intent.getSerializableExtra("checkedLabels") as MutableList<NewLabel>
 
         //初次进入获取标签
         onGetLabelsResult(UserManager.getSpLabels())
@@ -86,7 +86,7 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
      * 获取标签数据
      * 第一次进入页面进行标签默认选中状态整理
      */
-    private fun onGetLabelsResult(labels: MutableList<LabelBean>) {
+    private fun onGetLabelsResult(labels: MutableList<NewLabel>) {
         var index = 0
         while (labels.iterator().hasNext()) {
             if (index >= labels.size) {
@@ -118,7 +118,7 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
     /**
      * 添加父级标签的子标签
      */
-    private fun onGetSubLabelsResult(labels: List<LabelBean>?, parentPos: Int) {
+    private fun onGetSubLabelsResult(labels: List<NewLabel>?, parentPos: Int) {
         if (labels != null && labels.size > 0) {
             for (i in 0 until labels.size) {
                 adapter.addData(parentPos + (i + 1), labels[i])
@@ -131,7 +131,7 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
      * 移除子级标签
      *
      */
-    private fun onRemoveSubLablesResult(label: LabelBean, parentPos: Int) {
+    private fun onRemoveSubLablesResult(label: NewLabel, parentPos: Int) {
         for (tempLabel in label.son ?: mutableListOf()) {
             tempLabel.checked = false
             adapter.data.remove(tempLabel)
@@ -145,7 +145,7 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
     /**
      * 此处判断标签最少选择1个
      */
-    private fun updateCheckedLabels(label: LabelBean) {
+    private fun updateCheckedLabels(label: NewLabel) {
         if (label.checked) {
             if (!checkedLabels.contains(label)) {
                 checkedLabels.add(label)

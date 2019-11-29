@@ -46,9 +46,9 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.AnnounceEvent
 import com.sdy.jitangapplication.event.UpdateLabelEvent
 import com.sdy.jitangapplication.event.UploadEvent
-import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.MediaBean
 import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.player.MediaPlayerHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper.*
@@ -313,7 +313,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     /***************设置选中的标签******************/
     private val publishLabelAdapter by lazy { PublishLabelAdapter() }
-    private var checkTags = mutableListOf<LabelBean>()
+    private var checkTags = mutableListOf<NewLabel>()
     private fun initTags() {
         tagLayoutRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         tagLayoutRv.addItemDecoration(
@@ -328,7 +328,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
         //获取广场首页选中的标签id
         val checkedId = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
-        val myTags: MutableList<LabelBean> = UserManager.getSpLabels()
+        val myTags: MutableList<NewLabel> = UserManager.getSpLabels()
         for (tag in myTags) {
             if (checkedId == tag.id && checkedId != Constants.RECOMMEND_TAG_ID) {
                 publishLabelAdapter.addData(tag)
@@ -336,7 +336,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             }
         }
 
-        publishLabelAdapter.addData(0, LabelBean("添加标签"))
+        publishLabelAdapter.addData(0, NewLabel("添加标签"))
         publishLabelAdapter.setOnItemClickListener { adapter, view, position ->
             if (position == 0) {
                 startActivityForResult<PublishChooseLabelsActivity>(
@@ -1374,10 +1374,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             //标签返回
             else if (requestCode == REQUEST_CODE_LABEL) {
                 checkTags.clear()
-                checkTags = data!!.getSerializableExtra("checkedLabels") as MutableList<LabelBean>
+                checkTags = data!!.getSerializableExtra("checkedLabels") as MutableList<NewLabel>
                 publishLabelAdapter.data.clear()
-                publishLabelAdapter.addData(0, LabelBean("添加标签"))
-                publishLabelAdapter.addData(data!!.getSerializableExtra("checkedLabels") as MutableList<LabelBean>)
+                publishLabelAdapter.addData(0, NewLabel("添加标签"))
+                publishLabelAdapter.addData(data!!.getSerializableExtra("checkedLabels") as MutableList<NewLabel>)
                 checkCompleteBtnEnable()
             }
             //地图返回
@@ -1544,7 +1544,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
             } else {
                 EventBus.getDefault()
-                    .post(UpdateLabelEvent(LabelBean(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
+                    .post(UpdateLabelEvent(NewLabel(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
             }
             if (!this.isFinishing)
                 finish()

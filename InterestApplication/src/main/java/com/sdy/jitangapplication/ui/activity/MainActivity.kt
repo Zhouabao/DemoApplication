@@ -33,7 +33,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
 import com.sdy.jitangapplication.model.InvestigateBean
-import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.TabEntity
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.MainPresenter
@@ -373,7 +373,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     //标签适配器
     private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(this) }
     //标签数据源
-    var labelList: MutableList<LabelBean> = mutableListOf()
+    var labelList: MutableList<NewLabel> = mutableListOf()
 
     companion object {
         const val REQUEST_LABEL_CODE = 2000

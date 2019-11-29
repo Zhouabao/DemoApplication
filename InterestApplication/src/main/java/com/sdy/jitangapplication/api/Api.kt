@@ -768,7 +768,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tags/addClassifyTag${Constants.END_BASE_URL}")
-    fun addClassifyTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+    fun addClassifyTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LoginBean?>>
 
     /**
      * 获取我的标签

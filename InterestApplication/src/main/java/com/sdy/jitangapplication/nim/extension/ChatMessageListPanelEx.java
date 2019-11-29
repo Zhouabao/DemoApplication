@@ -62,7 +62,7 @@ import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.event.NimHeadEvent;
-import com.sdy.jitangapplication.model.LabelBean;
+import com.sdy.jitangapplication.model.NewLabel;
 import com.sdy.jitangapplication.model.Tag;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
@@ -1369,7 +1369,7 @@ public class ChatMessageListPanelEx {
         GlideUtil.loadAvatorImg(container.activity, avator, chatHiAvator);
         //用户标签
 //        MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(container.activity);
-        ArrayList<LabelBean> mytags = (ArrayList<LabelBean>) UserManager.INSTANCE.getSpLabels();
+        ArrayList<NewLabel> mytags = (ArrayList<NewLabel>) UserManager.INSTANCE.getSpLabels();
 
         if (tags != null && tags.size() > 0) {
             if (mytags.size() > 0)

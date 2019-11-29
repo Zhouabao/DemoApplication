@@ -1,24 +1,14 @@
 package com.sdy.jitangapplication.presenter.view
 
-import com.sdy.jitangapplication.model.LabelBean
-import com.sdy.jitangapplication.model.LoginBean
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.NewLabel
 
 interface LabelsView : BaseView {
 
-    fun onGetLabelsResult(labels: MutableList<LabelBean>)
+    fun onGetLabelsResult(labels: MutableList<NewLabel>)
 
 
-    /**
-     * 获取子级标签，并记录其父级标签的位置
-     */
-    fun onGetSubLabelsResult(labels: List<LabelBean>?, parentPosition: Int)
-
-
-    /**
-     * 清除子级标签
-     */
-    fun onRemoveSubLablesResult(labels: LabelBean, parentLevel: Int)
 
 
     /**

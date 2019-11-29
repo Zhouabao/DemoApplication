@@ -73,7 +73,7 @@ class LabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, Vie
         chooseLabelsAdapter.addData(NewLabel(title = "推荐", checked = true))
         data[0].checked = true//默认选中“全部”
         newLabels.addAll(data)
-        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
+        if (UserManager.getSpLabels().isNotEmpty()) {
             for (label in UserManager.getSpLabels()) {
                 for (label1 in newLabels) {
                     for (label2 in label1.son) {

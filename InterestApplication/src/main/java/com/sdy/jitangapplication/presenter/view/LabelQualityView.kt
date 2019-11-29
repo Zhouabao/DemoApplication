@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.LabelQualityBean
+import com.sdy.jitangapplication.model.LoginBean
 
 /**
  *    author : ZFM
@@ -12,5 +13,5 @@ import com.sdy.jitangapplication.model.LabelQualityBean
 interface LabelQualityView : BaseView {
     fun getTagTraitInfoResult(result: Boolean, data: MutableList<LabelQualityBean>?)
 
-    fun addTagResult(result: Boolean)
+    fun addTagResult(result: Boolean, loginBean: LoginBean?)
 }

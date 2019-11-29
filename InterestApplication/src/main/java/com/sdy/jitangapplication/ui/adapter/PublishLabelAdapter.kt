@@ -6,7 +6,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.LabelBean
+import com.sdy.jitangapplication.model.NewLabel
 import kotlinx.android.synthetic.main.item_label_publish_index.view.*
 
 /**
@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.item_label_publish_index.view.*
  *    desc   : 发布页面标签的adapter  标签点击进行删除
  *    version: 1.0
  */
-class PublishLabelAdapter : BaseQuickAdapter<LabelBean, BaseViewHolder>(R.layout.item_label_publish_index) {
-    override fun convert(holder: BaseViewHolder, item: LabelBean) {
+class PublishLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_publish_index) {
+    override fun convert(holder: BaseViewHolder, item: NewLabel) {
         if (holder.layoutPosition == 0) {
             holder.itemView.publishLabelIcon.visibility = View.GONE
             holder.itemView.publishLabelTv.text = "添加标签"

@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content"
+        app:msv_viewState="loading"
         tools:context=".ui.activity.LabelQualityActivity">
 
     <FrameLayout
@@ -73,7 +73,6 @@
                 android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
                 android:layout_marginTop="235dp"
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent">
 
             <androidx.core.widget.NestedScrollView
@@ -96,7 +95,7 @@
                             android:layout_marginTop="30dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="请选择标签特质"
+                            android:text="请选择兴趣特质"
                             android:textStyle="bold"
                             android:textColor="#ff191919"
                             android:textSize="17sp"
