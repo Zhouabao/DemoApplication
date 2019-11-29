@@ -3,9 +3,11 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,7 +54,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.startActivity
 import java.util.*
 
 //在支持路由的页面上添加注解（必选）
@@ -143,6 +145,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
     private fun initView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val param = customStatusBar.layoutParams as LinearLayout.LayoutParams
+            param.height = BarUtils.getStatusBarHeight()
+        } else {
+            customStatusBar.isVisible = false
+        }
+
         EventBus.getDefault().register(this)
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
 
@@ -197,6 +206,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         vpMain.offscreenPageLimit = 4
         vpMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
+
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -206,19 +216,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             override fun onPageSelected(position: Int) {
                 tabBottomMain.currentTab = position
                 tabHeaderCl.isVisible = (position == 0 || position == 1)
-                if (position == 3) {
-                    if (!UserManager.firstToMine) {
-                        mainRoot.setBackgroundResource(R.drawable.gradient_orange)
-                    } else
-                        UserManager.firstToMine = false
-                } else {
-                    mainRoot.setBackgroundResource(R.color.colorWhite)
+                if (position != 3) {
+                    customStatusBar.setBackgroundResource(R.color.colorTransparent)
                 }
-
             }
-
         })
     }
+
 
     override fun onClick(view: View) {
         when (view.id) {
@@ -226,10 +230,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 FilterUserDialog(this).show()
             }
             R.id.labelAddBtn -> { //标签添加
-                startActivityForResult<LabelsActivity>(
-                    REQUEST_LABEL_CODE,
-                    "from" to "mainactivity"
-                )
+                startActivity<MyLabelActivity>()
+//                startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_EDIT)
+//                startActivityForResult<LabelsActivity>(REQUEST_LABEL_CODE, "from" to "mainactivity")
             }
         }
     }
@@ -516,6 +519,14 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
         if (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0) {
             showMsgDot()
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onChangeStatusEvent(event: ChangeStatusColorEvent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            customStatusBar.setBackgroundResource(R.drawable.gradient_orange)
         }
     }
 

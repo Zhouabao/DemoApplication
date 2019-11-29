@@ -30,21 +30,6 @@ data class Labels(
 
 
 //-----------------新的标签-----------------
-//data class NewLabel(
-//    val title: String,
-//    val id: Int,
-//    val parentId: Int,
-//    var checked: Boolean = false
-//)
-
-data class NewLabelBean(
-    val parent: String,
-    val parentId: Int,
-    var newLabels: MutableList<NewLabel> = mutableListOf(),
-    var checked: Boolean = false
-)
-
-
 data class NewLabel(
     var icon: String = "",
     var id: Int = -1,
@@ -52,12 +37,69 @@ data class NewLabel(
     var parent_id: Int = -1,
     var son: MutableList<NewLabel> = mutableListOf(),
     var title: String = "",
-    var checked: Boolean = false
+    var checked: Boolean = false,
+    var removed: Boolean = false,
+    var intro_descr: String = "",
+    var publish_descr: String = "",
+    var used_cnt: Int = 0
+) : Serializable
 
+
+data class AddLabelBean(
+    var list: MutableList<NewLabel> = mutableListOf(),
+    var menu: MutableList<LabelBean> = mutableListOf()
 )
 
 
-//旧的标签对象
+/**
+ * 标签特质
+ */
+data class LabelQualityBean(
+    var content: String = "",
+    var id: Int = 0,
+    var title: String = "",
+    var checked: Boolean = false,
+    var unable: Boolean = false
+) : Serializable, IPickerViewData {
+    override fun getPickerViewText(): String {
+        return content
+    }
+}
+
+
+data class MyLabelsBean(
+    var is_using: MutableList<MyLabelBean> = mutableListOf(),
+    var is_removed: MutableList<MyLabelBean> = mutableListOf()
+)
+
+/**
+ * 我的标签
+ */
+
+data class MyLabelBean(
+    var describle: String = "",
+    var icon: String = "",
+    var id: Int = 0,
+    var tag_id: Int = 0,
+    var intention: MutableList<LabelQualityBean> = mutableListOf(),
+    var label_quality: MutableList<LabelQualityBean> = mutableListOf(),
+    var title: String = "",
+    var editMode: Boolean = false,//是否处于编辑模式
+    var same_label: Boolean = false,//是否是相同标签
+    var same_quality_count: Int = 0//相同特质数量
+) : Serializable
+
+
+/**
+ * 他人的标签
+ */
+data class OtherLabelsBean(
+    var my: MutableList<MyLabelBean> = mutableListOf(),
+    var other: MutableList<MyLabelBean> = mutableListOf()
+)
+
+
+//职业
 data class NewJobBean(
     var title: String = "",
     var descr: String = "",

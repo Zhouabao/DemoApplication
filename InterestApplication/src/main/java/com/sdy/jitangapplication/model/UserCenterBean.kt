@@ -206,6 +206,7 @@ data class City(
 
 //范本关于我
 data class ModelAboutBean(
+    val id: Int = 0,
     val title: String = "",
     val content: String = ""
 ) : Serializable

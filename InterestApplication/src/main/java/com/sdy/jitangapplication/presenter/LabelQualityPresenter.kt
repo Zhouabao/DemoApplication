@@ -8,41 +8,17 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelQualityBean
-import com.sdy.jitangapplication.presenter.view.ModelAboutMeView
+import com.sdy.jitangapplication.presenter.view.LabelQualityView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
 /**
  *    author : ZFM
- *    date   : 2019/11/117:28
+ *    date   : 2019/11/2611:59
  *    desc   :
  *    version: 1.0
  */
-class ModelAboutMePresenter : BasePresenter<ModelAboutMeView>() {
-    /**
-     * 获取关于我的模板示例
-     */
-    fun getSignTemplate(page: Int) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .getSignTemplate(page)
-            .excute(object : BaseSubscriber<BaseResp<MutableList<LabelQualityBean>?>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<LabelQualityBean>?>) {
-                    if (t.code == 200) {
-                        mView.getSignTemplateResult(t.code, t.data)
-                    } else {
-                        CommonFunction.toast(t.msg)
-                        mView.getSignTemplateResult(t.code, null)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                    mView.getSignTemplateResult(-1, null)
-                }
-
-            })
-    }
-
+class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
 
 
     /**
@@ -72,6 +48,40 @@ class ModelAboutMePresenter : BasePresenter<ModelAboutMeView>() {
                     mView.hideLoading()
                     mView.getTagTraitInfoResult(false, null)
                     CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                }
+            })
+    }
+
+
+    /**
+     * 添加标签
+     */
+    fun addClassifyTag(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .addClassifyTag(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
+                override fun onStart() {
+                    mView.showLoading()
+                }
+
+                override fun onNext(t: BaseResp<Any>) {
+                    mView.hideLoading()
+                    if (t.code == 200) {
+                        mView.addTagResult(true)
+                    } else if (t.code == 403) {
+                        TickDialog(context).show()
+                    } else {
+                        CommonFunction.toast(t.msg)
+                        mView.addTagResult(false)
+                    }
+
+                }
+
+
+                override fun onError(e: Throwable?) {
+                    mView.hideLoading()
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    mView.addTagResult(false)
                 }
             })
     }

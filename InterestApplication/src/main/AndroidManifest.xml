@@ -89,6 +89,18 @@
             android:theme="@style/MyAppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.MyLabelQualityActivity">
+        </activity>
+        <activity android:name=".ui.activity.MyLabelActivity">
+        </activity>
+        <activity android:name=".ui.activity.AddLabelSuccessActivity">
+        </activity>
+        <activity android:name=".ui.activity.LabelIntroduceActivity">
+        </activity>
+        <activity android:name=".ui.activity.LabelQualityActivity">
+        </activity>
+        <activity android:name=".ui.activity.AddLabelActivity">
+        </activity>
         <activity android:name=".ui.activity.MyFootPrintActivity">
         </activity>
         <activity android:name=".ui.activity.LoginOffActivity">

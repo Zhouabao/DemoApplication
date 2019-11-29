@@ -10,7 +10,11 @@ import androidx.fragment.app.FragmentPagerAdapter
  *    desc   :
  *    version: 1.0
  */
-class MainPagerAdapter(fragmentManager: FragmentManager, private val fragments: List<Fragment>,private val titles:Array<String>) :
+class MainPagerAdapter(
+    fragmentManager: FragmentManager,
+    private val fragments: List<Fragment>,
+    private var titles: Array<String>? = null
+) :
     FragmentPagerAdapter(fragmentManager) {
     override fun getItem(position: Int): Fragment {
         return fragments[position]
@@ -21,6 +25,8 @@ class MainPagerAdapter(fragmentManager: FragmentManager, private val fragments: 
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return titles[position]
+        if (!titles.isNullOrEmpty() && titles!!.size > position)
+            return titles!![position]
+        else return null
     }
 }

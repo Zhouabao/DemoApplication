@@ -17,3 +17,5 @@ class UpdateChooseAllLabelEvent(var label: NewLabel)
 
 
 class ChooseLabelCountEvent(var count: Int)
+
+class UpdateMyLabelEvent()

@@ -8,7 +8,6 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.NewLabel
 import kotlinx.android.synthetic.main.item_label_all.view.*
-import kotlinx.android.synthetic.main.item_label_tab.view.labelName
 
 /**
  *    author : ZFM

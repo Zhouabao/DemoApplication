@@ -5,10 +5,15 @@
               android:id="@+id/mainRoot"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:fitsSystemWindows="true"
-              android:background="@color/colorWhite"
+              android:background="@color/colorTransparent"
               android:orientation="vertical"
               tools:context=".ui.activity.MainActivity">
+
+    <View
+            android:id="@+id/customStatusBar"
+            android:background="@color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/tabHeaderCl"
@@ -18,6 +23,7 @@
             android:background="@color/colorTransparent"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/headRvLabels"
                 android:orientation="horizontal"

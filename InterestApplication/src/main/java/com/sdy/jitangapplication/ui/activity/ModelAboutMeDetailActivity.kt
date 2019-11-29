@@ -5,12 +5,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.ModelAboutBean
+import com.sdy.jitangapplication.model.LabelQualityBean
 import kotlinx.android.synthetic.main.activity_model_about_me_detail.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
 class ModelAboutMeDetailActivity : AppCompatActivity() {
-private val modelBean by lazy { intent.getSerializableExtra("content") as ModelAboutBean }
+private val modelBean by lazy { intent.getSerializableExtra("content") as LabelQualityBean }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_model_about_me_detail)

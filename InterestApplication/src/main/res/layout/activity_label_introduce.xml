@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.activity.LabelIntroduceActivity">
+
+    <include layout="@layout/layout_actionbar"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/labelPurposeCl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llTitle">
+
+        <TextView
+                android:text="标签下意愿"
+                android:textColor="#ff191919"
+                android:textSize="16sp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/labelPurposeBtn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/labelPurposeBtn"/>
+
+        <TextView
+                android:id="@+id/labelPurposeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="54dp"
+                android:hint="请选择您的意愿"
+                android:textColor="#ff9b9b9b"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/icon_more_right"
+                android:layout_marginRight="15dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llTitle"/>
+
+        <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:background="@color/colorDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/labelPurposeBtn"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="21dp"
+            android:layout_width="match_parent"
+            android:background="@drawable/shape_rectangle_gray_9dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:minHeight="255dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelPurposeCl">
+
+        <EditText
+                android:id="@+id/labelIntroduceContent"
+                android:background="@null"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:maxLength="200"
+                android:lineSpacingMultiplier="1.2"
+                android:hint="此处高能预警！！！看过来\n你的愿望是什么？\n也介绍下自己能为他人实现的愿望吧？\n在这里写下你关于「许愿福利社」的等等等等\n研究表明，介绍写的越详细越能无限提升被翻牌几率\n就现在，开始吧"
+                android:textColorHint="#FFC1C2C8"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintBottom_toTopOf="@id/labelIntroduceModel"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+
+        <TextView
+                android:id="@+id/labelIntroduceModel"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/icon_edit_model_gray"
+                android:drawablePadding="4dp"
+                android:text="范本示例"
+                android:textColor="#FF909198"
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+                android:id="@+id/labelIntroduceInputLength"
+                android:text="0/200"
+                android:textColor="#ffb5b7ba"
+                android:textSize="11sp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/labelIntroduceModel"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/labelIntroduceModel"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+            android:id="@+id/introduceNextBtn"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="0dp"
+            android:text="下一步"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:enabled="false"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/selector_confirm_btn1"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

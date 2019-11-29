@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.ui.fragment
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -39,7 +37,6 @@ import com.sdy.jitangapplication.ui.adapter.UserLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.BounceScrollView
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -85,9 +82,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     private lateinit var vipDialog: ChargeVipDialog
 
     override fun loadData() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            BarUtils.setStatusBarColor(activity!!, resources.getColor(R.color.colorTransparent))
-
         EventBus.getDefault().register(this)
         initView()
         mPresenter.getMemberInfo(params)
@@ -97,11 +91,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         activity!!.mainRoot.setBackgroundResource(R.color.colorWhite)
         return inflater.inflate(R.layout.fragment_user_center, container, false)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 
 
@@ -261,7 +250,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         mPresenter.mView = this
         mPresenter.context = activity!!
 
-        refreshLayout.bounceType = BounceScrollView.ENABLED_TOP
         settingBtn.setOnClickListener(this)
         userInfoSettingBtn.setOnClickListener(this)
         userAvator.setOnClickListener(this)
@@ -340,8 +328,9 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {
-        activity!!.mainRoot.setBackgroundResource(R.drawable.gradient_orange)
+//        activity!!.mainRoot.setBackgroundResource(R.drawable.gradient_orange)
         multiStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
+        EventBus.getDefault().post(ChangeStatusColorEvent())
         if (userinfo != null) {
             userInfoBean = userinfo
             initData()

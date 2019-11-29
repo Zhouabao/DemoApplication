@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kennyc.view.MultiStateView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stateLabelQuality"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="content"
+        tools:context=".ui.activity.LabelQualityActivity">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            tools:context=".ui.activity.LabelQualityActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="260dp">
+
+            <ImageView
+                    android:id="@+id/labelImg"
+                    android:src="@drawable/icon_gender_woman"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <View
+                    android:alpha="0.5"
+                    android:background="@color/colorBlack"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            <TextView
+                    android:id="@+id/labelName"
+                    android:layout_marginTop="87dp"
+                    android:layout_width="wrap_content"
+                    android:text="“ 许愿福利社 ”"
+                    android:textColor="#ffffffff"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                    android:id="@+id/labelReselectBtn"
+                    android:text="重新选择"
+                    android:padding="7dp"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:drawablePadding="4dp"
+                    android:drawableLeft="@drawable/icon_reselect"
+                    android:background="@drawable/icon_bg_gray_15dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/labelName"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
+                android:layout_marginTop="235dp"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent">
+
+            <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toTopOf="@id/nextBtn"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:id="@+id/t1"
+                            android:layout_marginTop="30dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="请选择标签特质"
+                            android:textStyle="bold"
+                            android:textColor="#ff191919"
+                            android:textSize="17sp"
+                            />
+
+
+                    <TextView
+                            android:id="@+id/t2"
+                            android:layout_marginTop="20dp"
+                            android:layout_width="wrap_content"
+                            android:layout_marginBottom="48dp"
+                            android:layout_height="wrap_content"
+                            android:text="请选择或创建兴趣特质"
+                            android:textColor="#FFE5E5E5"
+                            android:textSize="17sp"
+                            android:visibility="gone"
+                            />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/labelQualityChoosedRv"
+                            android:overScrollMode="never"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <EditText
+                                android:id="@+id/labelQualityAddEt"
+                                android:gravity="center_vertical"
+                                android:paddingRight="15dp"
+                                android:paddingLeft="15dp"
+                                android:background="@drawable/shape_rectangle_gray_white_25dp"
+                                android:hint="创建贴合你的兴趣特质"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:textSize="15sp"
+                                android:textColor="@color/colorBlack"
+                                android:layout_marginRight="10dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toLeftOf="@id/labelQualityAddBtn"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                                android:id="@+id/labelQualityAddBtn"
+                                android:layout_width="88dp"
+                                android:layout_height="40dp"
+                                android:text="添加"
+                                android:textColor="#ffffffff"
+                                android:textSize="15sp"
+                                android:gravity="center"
+                                android:background="@drawable/shape_rectangle_ccc_25dp"
+                                app:layout_constraintBottom_toBottomOf="@id/labelQualityAddEt"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="@id/labelQualityAddEt"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <TextView
+                            android:id="@+id/t3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="一键添加"
+                            android:layout_marginTop="30dp"
+                            android:textColor="#ff525556"
+                            android:textSize="15sp"
+                            />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/labelQualityRv"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:overScrollMode="never"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="@id/t1"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/t3"/>
+
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+
+            <TextView
+                    android:id="@+id/nextBtn"
+                    android:text="下一步"
+                    android:textColor="#ffffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@drawable/selector_confirm_btn_25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</com.kennyc.view.MultiStateView>

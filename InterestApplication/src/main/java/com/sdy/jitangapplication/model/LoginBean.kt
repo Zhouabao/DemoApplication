@@ -11,10 +11,15 @@ data class LoginBean(
     val register: Boolean?,
     val info_check: Boolean?,
     val qn_prefix: List<String>?,
-    val extra_data: IMBean?
+    val extra_data: ExtraBean?
 )
 
-data class IMBean(val im_token: String = "", val code: Int = 0, val msg: String = "")
+data class ExtraBean(
+    val im_token: String = "",
+    val code: Int = 0,
+    val msg: String = "",
+    val mytags:MutableList<TagBean>
+)
 
 
 data class Userinfo(
@@ -54,6 +59,7 @@ data class AccountBean(
     var phone: String = "",
     var wechat: String = ""
 )
+
 data class WechatNameBean(
     var nickname: String = ""
 )

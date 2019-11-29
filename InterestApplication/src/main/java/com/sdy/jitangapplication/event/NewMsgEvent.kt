@@ -24,3 +24,7 @@ class EnableLabelEvent(val enable: Boolean)
 
 //展示调研弹窗的event
 class ShowSurveyDialogEvent(val slideCount: Int)
+
+
+//修改主页的状态栏颜色
+class ChangeStatusColorEvent

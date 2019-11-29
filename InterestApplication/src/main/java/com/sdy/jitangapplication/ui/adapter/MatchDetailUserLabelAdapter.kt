@@ -23,7 +23,7 @@ class MatchDetailUserLabelAdapter :
         helper.itemView.labelIntroduce.text = item.describle
         GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon, SizeUtils.dp2px(12F))
         helper.itemView.labelSameCount.isVisible = item.same_quality_count > 0
-        helper.itemView.labelSameCount.text = "你们有${item.same_quality_count}个重合兴趣属性"
+        helper.itemView.labelSameCount.text = "你们有${item.same_quality_count}个重合兴趣特质"
         if (item.same_label) {
             val left = mContext.resources.getDrawable(R.drawable.icon_cuohe_tag)
             helper.itemView.labelName.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)

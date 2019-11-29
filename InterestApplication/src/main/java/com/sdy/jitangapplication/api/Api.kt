@@ -481,7 +481,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("OpenApi/getSignTemplate${Constants.END_BASE_URL}")
-    fun getSignTemplate(@Field("page") page: Int): Observable<BaseResp<MutableList<ModelAboutBean>?>>
+    fun getSignTemplate(@Field("page") page: Int): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
     /****************************消息************************************/
     /**
@@ -746,5 +746,50 @@ interface Api {
     @FormUrlEncoded
     @POST("Account/cancelAccount${Constants.END_BASE_URL}")
     fun cancelAccount(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
+
+    /**
+     * 标签接口
+     */
+    @FormUrlEncoded
+    @POST("Tags/tagClassifyList${Constants.END_BASE_URL}")
+    fun tagClassifyList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddLabelBean>>
+
+
+    /**
+     * 获取标签的  1介绍模板 2.标签特质 3.标签意向
+     */
+    @FormUrlEncoded
+    @POST("Tags/getTagTraitInfo${Constants.END_BASE_URL}")
+    fun getTagTraitInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+
+    /**
+     * 添加标签
+     */
+    @FormUrlEncoded
+    @POST("Tags/addClassifyTag${Constants.END_BASE_URL}")
+    fun addClassifyTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
+    /**
+     * 获取我的标签
+     */
+    @FormUrlEncoded
+    @POST("Tags/getMyTagsList${Constants.END_BASE_URL}")
+    fun getMyTagsList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyLabelsBean?>>
+
+    /**
+     * 删除我的标签
+     */
+    @FormUrlEncoded
+    @POST("Tags/delMyTags${Constants.END_BASE_URL}")
+    fun delMyTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+
+
+    /**
+     * 获取他人的标签
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/getOtherTags${Constants.END_BASE_URL}")
+    fun getOtherTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<OtherLabelsBean?>>
 
 }
