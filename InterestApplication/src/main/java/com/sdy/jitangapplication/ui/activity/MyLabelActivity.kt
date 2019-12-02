@@ -77,7 +77,6 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
                 }
                 R.id.labelEdit -> {
                     //TODO标签编辑
-                    intent.putExtra("size", adapter.data.size)
                     intent.putExtra("aimData", adapter.data[position])
                     intent.putExtra("from", AddLabelActivity.FROM_EDIT)
                     intent.setClass(this, MyLabelQualityActivity::class.java)

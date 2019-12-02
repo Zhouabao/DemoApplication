@@ -12,7 +12,7 @@
         app:msv_viewState="loading">
 
 
-    <com.sdy.jitangapplication.widgets.BounceScrollView
+    <androidx.core.widget.NestedScrollView
             android:id="@+id/refreshLayout"
             android:scrollbars="none"
             android:layout_width="match_parent"
@@ -434,7 +434,7 @@
                     />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.sdy.jitangapplication.widgets.BounceScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </com.kennyc.view.MultiStateView>

@@ -1,19 +1,23 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
+import androidx.core.view.isVisible
 import com.google.android.flexbox.*
 import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelQualityBean
-import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.NewLabel
+import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.LabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.LabelQualityView
 import com.sdy.jitangapplication.ui.adapter.LabelQualityAdapter
@@ -21,6 +25,7 @@ import com.sdy.jitangapplication.ui.dialog.CorrectDialog
 import kotlinx.android.synthetic.main.activity_label_quality.*
 import kotlinx.android.synthetic.main.correct_dialog_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
  * 标签特质
@@ -31,7 +36,8 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         const val MAX_QUALITY = 5
     }
 
-    private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel }
+    private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel? }
+    private val myLabelBean by lazy { intent.getSerializableExtra("aimData") as MyLabelBean? }
     //所有特质适配器
     private val adapter by lazy { LabelQualityAdapter(false) }
     //已经选择的特质适配器
@@ -39,11 +45,21 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     //用户自拟标签特质
     private val customQuality = mutableListOf<String>()
 
+    private val from by lazy { intent.getIntExtra("from", AddLabelActivity.FROM_ADD_NEW) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_label_quality)
         initView()
-        mPresenter.getTagTraitInfo(hashMapOf("tag_id" to labelBean.id, "type" to 2))
+        mPresenter.getTagTraitInfo(
+            hashMapOf(
+                "tag_id" to if (from == AddLabelActivity.FROM_EDIT) {
+                    myLabelBean!!.tag_id
+                } else {
+                    labelBean!!.id
+                }, "type" to MyLabelQualityActivity.TYPE_QUALITY
+            )
+        )
 
     }
 
@@ -52,17 +68,32 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         mPresenter.context = this
         mPresenter.mView = this
 
+        btnBack.setOnClickListener(this)
+        rightBtn1.setOnClickListener(this)
+        hotT1.visibility = View.INVISIBLE
+        rightBtn1.isVisible = true
+        rightBtn1.text = if (from == AddLabelActivity.FROM_ADD_NEW || from == AddLabelActivity.FROM_REGISTER) {
+            "保存并继续"
+        } else {
+            "保存"
+        }
+        rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_25dp)
+        rightBtn1.isEnabled = false
+
         stateLabelQuality.retryBtn.onClick {
             stateLabelQuality.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.getTagTraitInfo(hashMapOf("tag_id" to labelBean.id, "type" to 2))
+            mPresenter.getTagTraitInfo(
+                hashMapOf(
+                    "tag_id" to if (from == AddLabelActivity.FROM_EDIT) {
+                        myLabelBean!!.tag_id
+                    } else {
+                        labelBean!!.id
+                    }, "type" to MyLabelQualityActivity.TYPE_QUALITY
+                )
+            )
         }
 
-
-        nextBtn.setOnClickListener(this)
-        labelReselectBtn.setOnClickListener(this)
         labelQualityAddBtn.setOnClickListener(this)
-        labelName.text = "“${labelBean.title}”"
-        GlideUtil.loadImg(this, labelBean.icon, labelImg)
         val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH
         manager.justifyContent = JustifyContent.FLEX_START
@@ -84,6 +115,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                 }
             }
             choosedQualityAdapter.remove(position)
+            checkConfirmEnable()
         }
 
 
@@ -98,28 +130,69 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     tempData.checked = false
                     adapter.notifyItemChanged(position)
                     choosedQualityAdapter.addData(tempData)
+                    checkConfirmEnable()
                 }
 
         }
+
+
+        labelQualityAddEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                labelQualityAddBtn.isEnabled = !labelQualityAddEt.text.trim().isEmpty()
+            }
+        })
     }
 
     override fun getTagTraitInfoResult(result: Boolean, data: MutableList<LabelQualityBean>?) {
         if (result) {
             stateLabelQuality.viewState = MultiStateView.VIEW_STATE_CONTENT
             adapter.addData(data ?: mutableListOf<LabelQualityBean>())
+
+            if (myLabelBean != null) {
+                choosedQualityAdapter.addData(myLabelBean!!.label_quality)
+            }
+
+            for (data in choosedQualityAdapter.data) {
+                for (data1 in adapter.data) {
+                    if (data.id == data1.id) {
+                        data1.unable = true
+                        data1.checked = false
+                    }
+                }
+            }
+            adapter.notifyDataSetChanged()
+            checkConfirmEnable()
         } else {
             stateLabelQuality.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }
 
 
-    override fun addTagResult(result: Boolean, data: LoginBean?) {
+    /**
+     * 检查保存按钮是否可用
+     */
+    private fun checkConfirmEnable() {
+        t2.isVisible = choosedQualityAdapter.data.size <= 0
+        labelQualityChoosedRv.isVisible = choosedQualityAdapter.data.size > 0
+        rightBtn1.isEnabled = choosedQualityAdapter.data.size in 3..5
+    }
+
+
+    override fun addTagResult(result: Boolean, data: MutableList<TagBean>?) {
 
     }
 
 
     private val warningDialog by lazy { CorrectDialog(this) }
-    fun showWarningDialog(type: Int) {
+    private fun showWarningDialog(type: Int) {
         warningDialog.show()
         warningDialog.correctLogo.setImageResource(R.drawable.icon_notice)
         if (type == MIN_QUALITY)
@@ -132,24 +205,40 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
 
     override fun onClick(view: View) {
         when (view) {
-            nextBtn -> {
+            rightBtn1 -> {
                 if (choosedQualityAdapter.data.size < MIN_QUALITY) {
                     showWarningDialog(MIN_QUALITY)
                     return
                 }
-                val tagIds = mutableListOf<Any>()
-                for (label in choosedQualityAdapter.data) {
-                    tagIds.add(label.id)
-                }
-                tagIds.addAll(customQuality)
 
-                intent.putExtra("tag_id", labelBean.id)
-                intent.putExtra("label_quality", Gson().toJson(tagIds))
-                intent.putExtra("data", labelBean)
-                intent.setClass(this, LabelIntroduceActivity::class.java)
-                startActivity(intent)
+                if (from == AddLabelActivity.FROM_ADD_NEW || from == AddLabelActivity.FROM_REGISTER) {
+                    val tagIds = mutableListOf<Any>()
+                    for (label in choosedQualityAdapter.data) {
+                        tagIds.add(label.id)
+                    }
+                    tagIds.addAll(customQuality)
+
+                    intent.putExtra(
+                        "tag_id", if (labelBean == null) {
+                            myLabelBean!!.tag_id
+                        } else {
+                            labelBean!!.id
+                        }
+                    )
+                    intent.putExtra("label_quality", Gson().toJson(tagIds))
+                    intent.putExtra("data", labelBean)
+                    intent.setClass(this, LabelIntroduceActivity::class.java)
+                    startActivity(intent)
+
+                } else {
+                    myLabelBean!!.label_quality = choosedQualityAdapter.data
+                    intent.putExtra("aimData", myLabelBean)
+                    setResult(Activity.RESULT_OK,intent)
+                    finish()
+                }
+
             }
-            labelReselectBtn -> {
+            btnBack -> {
                 finish()
             }
             labelQualityAddBtn -> {
@@ -164,6 +253,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                 if (labelQualityAddEt.text.trim().isNotEmpty() && !TextUtils.isDigitsOnly(labelQualityAddEt.text.trim())) {
                     customQuality.add(labelQualityAddEt.text.trim().toString())
                     choosedQualityAdapter.addData(LabelQualityBean(content = labelQualityAddEt.text.trim().toString()))
+                    checkConfirmEnable()
                     labelQualityAddEt.setText("")
                 }
             }

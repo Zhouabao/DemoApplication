@@ -101,9 +101,9 @@ class MyFootPrintActivity : BaseActivity() {
       初始化Fragment栈管理
    */
     private fun initFragment() {
-        mStack.add(MySquareFragment(2))   //我的点赞
+        mStack.add(MySquareFragment(MySquareFragment.TYPE_LIKE))   //我的点赞
         mStack.add(MyCommentFragment())   //我的评论
-        mStack.add(MySquareFragment(3))//我的收藏
+        mStack.add(MySquareFragment(MySquareFragment.TYPE_COLLECT))//我的收藏
         vpMyFootPrint.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
         vpMyFootPrint.offscreenPageLimit = 3
         initIndicator()
@@ -115,7 +115,6 @@ class MyFootPrintActivity : BaseActivity() {
         setResult(Activity.RESULT_OK, intent)
         super.finish()
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

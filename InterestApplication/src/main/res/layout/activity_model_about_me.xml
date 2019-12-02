@@ -33,11 +33,30 @@
                 app:srlEnableLoadMoreWhenContentNotFull="false"
                 app:srlEnableRefresh="true">
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/modelMeRv"
-                    android:overScrollMode="never"
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:orientation="vertical"
+                    android:layout_height="match_parent">
+
+                <TextView
+                        android:id="@+id/t1"
+                        android:layout_marginTop="15dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="范本示例"
+                        android:textStyle="bold"
+                        android:textColor="#ff191919"
+                        android:layout_marginLeft="15dp"
+                        android:textSize="24sp"
+                        android:layout_marginBottom="30dp"
+                        />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/modelMeRv"
+                        android:overScrollMode="never"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 

@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.event
 import android.content.Context
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.WechatNameBean
+import com.sdy.jitangapplication.ui.fragment.MySquareFragment.Companion.TYPE_SQUARE
 
 /**
  *    author : ZFM
@@ -14,7 +15,7 @@ import com.sdy.jitangapplication.model.WechatNameBean
 class UpdateLabelEvent(var label: NewLabel)
 
 //更新播放器
-class NotifyEvent(var position: Int)
+class NotifyEvent(var position: Int, var type: Int = TYPE_SQUARE)
 
 //刷新事件
 class RefreshEvent(val refresh: Boolean)

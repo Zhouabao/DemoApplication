@@ -6,7 +6,6 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,7 +35,6 @@ import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.FriendBean
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.SquareListBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
 import com.sdy.jitangapplication.presenter.SquarePresenter
@@ -49,8 +47,6 @@ import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
 import com.sdy.jitangapplication.ui.activity.UserCenterActivity
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.adapter.SquareFriendsAdapter
-import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
@@ -60,10 +56,9 @@ import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_ERROR
-import kotlinx.android.synthetic.main.delete_dialog_layout.*
-import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_square.*
+import kotlinx.android.synthetic.main.headerview_guide_publish.view.*
 import kotlinx.android.synthetic.main.headerview_label.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -83,7 +78,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         initView()
 
     }
-
 
     override fun resetAudioState() {
         if (mediaPlayer != null) {
@@ -132,9 +126,14 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         return inflater.inflate(R.layout.fragment_square, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
+    //创建引导布局
+    private fun initGuideSquareView(): View {
+        val guideHeadView = LayoutInflater.from(activity!!).inflate(R.layout.headerview_guide_publish, squareDynamicRv, false)
+        guideHeadView.guidePublish.onClick {
+            mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
+        }
+        return guideHeadView
     }
 
 
@@ -161,8 +160,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     private var currPlayIndex = -1
 
     private fun initView() {
-//        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_4_3)
-        //注册eventbus
         EventBus.getDefault().register(this)
         mPresenter = SquarePresenter()
         mPresenter.mView = this
@@ -192,15 +189,15 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         squareDynamicRv.layoutManager = layoutManager
         squareDynamicRv.adapter = adapter
         adapter.bindToRecyclerView(squareDynamicRv)
+        adapter.addHeaderView(initGuideSquareView())
         adapter.addHeaderView(initFriendsView())
         adapter.setEmptyView(R.layout.empty_layout, squareDynamicRv)
         //取消动画，主要是闪烁
 //        (squareDynamicRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         squareDynamicRv.itemAnimator?.changeDuration = 0
-
         //限定范围为屏幕一半的上下偏移180
-        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
-        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
+        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(150F)
+        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(150F)
         scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
         squareDynamicRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
@@ -235,27 +232,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         adapter.setOnItemChildClickListener { _, view, position ->
             val squareBean = adapter.data[position]
             when (view.id) {
-                R.id.squareChatBtn1 -> {
-                    resetAudio()
-                    ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
-                }
-                R.id.squareCommentBtn1 -> {
-                    resetAudio()
-                    SquareCommentDetailActivity.start(
-                        activity!!,
-                        adapter.data[position],
-                        enterPosition = "comment",
-                        position = position
-                    )
-                }
-                R.id.squareDianzanBtn1 -> {
-                   // clickZan(position)
-                }
                 R.id.squareZhuanfaBtn1 -> {
                     showTranspondDialog(adapter.data[position])
-                }
-                R.id.squareMoreBtn1 -> {
-                    showMoreDialog(position)
                 }
                 //播放音频
                 R.id.audioPlayBtn -> {
@@ -290,40 +268,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
         mPresenter.getSquareList(listParams, true, true)
         mPresenter.getFrinedsList(friendsParams)
-
-    }
-
-
-    /**
-     * 点赞按钮
-     */
-    private fun clickZan(position: Int) {
-        if (adapter.data[position].isliked == 1) {
-            adapter.data[position].isliked = 0
-            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.minus(1)
-        } else {
-            adapter.data[position].isliked = 1
-            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
-        }
-        adapter.refreshNotifyItemChanged(position)
-//        adapter.notifyDataSetChanged()
-        Handler().postDelayed({
-            if (adapter.data[position].originalLike == adapter.data[position].isliked) {
-                return@postDelayed
-            }
-            val params = hashMapOf(
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "type" to if (adapter.data[position].isliked == 0) {
-                    2
-                } else {
-                    1
-                },
-                "square_id" to adapter.data[position].id!!,
-                "_timestamp" to System.currentTimeMillis()
-            )
-            mPresenter.getSquareLike(params, position)
-        }, 2000L)
 
     }
 
@@ -395,167 +339,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     }
 
 
-//    lateinit var moreActionDialog: MoreActionDialog
-//    /**
-//     * 展示更多操作对话框
-//     */
-//    private fun showMoreDialog(position: Int) {
-//        moreActionDialog = MoreActionDialog(activity!!, "square")
-//        moreActionDialog.show()
-//
-//        if (adapter.data[position]?.iscollected == 0) {
-//            moreActionDialog.collect.text = "收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
-//        } else {
-//            moreActionDialog.collect.text = "取消收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
-//        }
-//
-//
-//        if (adapter.data[position].accid == UserManager.getAccid()) {
-//            moreActionDialog.llDelete.visibility = View.VISIBLE
-//            moreActionDialog.llJubao.visibility = View.GONE
-//            moreActionDialog.llCollect.visibility = View.GONE
-//        } else {
-//            moreActionDialog.llDelete.visibility = View.GONE
-//            moreActionDialog.llJubao.visibility = View.VISIBLE
-//            moreActionDialog.llCollect.visibility = View.VISIBLE
-//        }
-//        moreActionDialog.llDelete.onClick {
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "square_id" to adapter.data[position].id!!
-//            )
-//            mPresenter.removeMySquare(params, position)
-//            moreActionDialog.dismiss()
-//
-//        }
-//
-//
-//        moreActionDialog.llCollect.onClick {
-//
-//            //发起收藏请求
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "type" to if (adapter.data[position].iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to adapter.data[position].id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareCollect(params, position)
-//        }
-//        moreActionDialog.llJubao.onClick {
-//            //发起举报请求
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "type" to if (adapter.data[position].iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to adapter.data[position].id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareReport(params, position)
-//        }
-//        moreActionDialog.cancel.onClick {
-//            moreActionDialog.dismiss()
-//        }
-//
-//    }
-
-    lateinit var moreActionDialog: MoreActionNewDialog
-    /**
-     * 展示更多操作对话框
-     */
-    private fun showMoreDialog(position: Int) {
-        moreActionDialog = MoreActionNewDialog(activity!!, adapter.data[position])
-        moreActionDialog.show()
-
-        if (adapter.data[position]?.iscollected == 0) {
-            moreActionDialog.collect.text = "收藏"
-            val top = resources.getDrawable(R.drawable.icon_collect1)
-            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
-        } else {
-            moreActionDialog.collect.text = "取消收藏"
-            val top = resources.getDrawable(R.drawable.icon_collected1)
-            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
-        }
-        if (adapter.data[position].accid == UserManager.getAccid()) {
-            moreActionDialog.delete.visibility = View.VISIBLE
-            moreActionDialog.report.visibility = View.GONE
-            moreActionDialog.collect.visibility = View.GONE
-        } else {
-            moreActionDialog.delete.visibility = View.GONE
-            moreActionDialog.report.visibility = View.VISIBLE
-            moreActionDialog.collect.visibility = View.VISIBLE
-        }
-        moreActionDialog.delete.onClick {
-            val params = hashMapOf(
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "square_id" to adapter.data[position].id!!
-            )
-            mPresenter.removeMySquare(params, position)
-            moreActionDialog.dismiss()
-
-        }
-
-
-        moreActionDialog.collect.onClick {
-
-            //发起收藏请求
-            val params = hashMapOf(
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "type" to if (adapter.data[position].iscollected == 0) {
-                    1
-                } else {
-                    2
-                },
-                "square_id" to adapter.data[position].id!!,
-                "_timestamp" to System.currentTimeMillis()
-            )
-            mPresenter.getSquareCollect(params, position)
-        }
-        moreActionDialog.report.onClick {
-            val dialog = DeleteDialog(activity!!)
-            dialog.show()
-            dialog.tip.text = getString(R.string.report_square)
-            dialog.confirm.text = "举报"
-            dialog.cancel.onClick { dialog.dismiss() }
-            dialog.confirm.onClick {
-                dialog.dismiss()
-                //发起举报请求
-                val params = hashMapOf(
-                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                    "type" to if (adapter.data[position].iscollected == 0) {
-                        1
-                    } else {
-                        2
-                    },
-                    "square_id" to adapter.data[position].id!!,
-                    "_timestamp" to System.currentTimeMillis()
-                )
-                mPresenter.getSquareReport(params, position)
-            }
-            moreActionDialog.dismiss()
-
-
-        }
-//        moreActionDialog.cancel.onClick {
-//            moreActionDialog.dismiss()
-//        }
-
-    }
-
     override fun onRemoveMySquareResult(result: Boolean, position: Int) {
         if (result) {
             if (adapter.data[position].type == SquareBean.AUDIO) {
@@ -601,9 +384,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
         resetAudio()
 
-//        friendsAdapter.data.clear()
-//        friendsAdapter.notifyDataSetChanged()
-
         refreshLayout.setNoMoreData(false)
         mPresenter.getSquareList(listParams, true)
         mPresenter.getFrinedsList(friendsParams)
@@ -622,18 +402,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
 
     override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
-//        if (friends.size == 0) {
-//            if (adapter.headerLayout != null)
-//                adapter.removeAllHeaderView()
-//        } else {
-//            if (adapter.headerLayout == null) {
-//                adapter.addHeaderView(initFriendsView(friends))
-//            } else {
-//                friendsAdapter.setNewData(friends)
-//            }
-//        }
-
-
         if (friends.size == 0) {
 //            adapter.headerLayout.setVisible(false)
             adapter.headerLayout.friendTv.visibility = View.GONE
@@ -721,17 +489,12 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 adapter.refreshNotifyItemChanged(position)
             }
         }
-        if (moreActionDialog != null && moreActionDialog.isShowing) {
-            moreActionDialog.dismiss()
-        }
     }
 
     override fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int) {
         if (baseResp != null)
             CommonFunction.toast(baseResp.msg)
-        if (moreActionDialog != null && moreActionDialog.isShowing) {
-            moreActionDialog.dismiss()
-        }
+
     }
 
     override fun onClick(view: View) {

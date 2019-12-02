@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kennyc.view.MultiStateView
@@ -44,9 +45,13 @@ class ModelAboutMeActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAbou
 
         when (from) {
             FROM_ME -> {
+                t1.isVisible = false
+                hotT1.isVisible = true
                 mPresenter.getSignTemplate(page)
             }
             FROM_LABEL -> {
+                t1.isVisible = true
+                hotT1.isVisible = false
                 mPresenter.getTagTraitInfo(
                     hashMapOf<String, Any>(
                         "tag_id" to intent.getIntExtra("tag_id", 0),
@@ -93,7 +98,11 @@ class ModelAboutMeActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAbou
         modelMeRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         modelMeRv.adapter = modelMeAdapter
         modelMeAdapter.setOnItemClickListener { _, view, position ->
-            startActivityForResult<ModelAboutMeDetailActivity>(100, "content" to modelMeAdapter.data[position])
+            startActivityForResult<ModelAboutMeDetailActivity>(
+                100,
+                "content" to modelMeAdapter.data[position],
+                "from" to from
+            )
         }
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -8,40 +8,129 @@
         android:background="@color/colorWhite"
         tools:context=".ui.activity.AddLabelSuccessActivity">
 
-    <ImageView
-            android:id="@+id/addSuccessIv"
-            android:layout_marginTop="178dp"
-            android:src="@drawable/icon_add_label_success"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contentCl"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent">
 
-    <TextView
-            android:id="@+id/successLabelName"
-            android:layout_marginTop="50dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="恭喜「兴趣」已创建完成"
-            android:textColor="#ff000000"
-            android:textSize="18sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addSuccessIv"/>
 
-    <TextView
-            android:id="@+id/startJitangBtn"
-            android:text="开启积糖之旅"
-            android:textColor="#ffffffff"
-            android:gravity="center"
-            android:textSize="17sp"
-            android:background="@drawable/selector_confirm_btn1"
+        <ImageView
+                android:id="@+id/addSuccessIv"
+                android:layout_marginTop="178dp"
+                android:src="@drawable/icon_add_label_success"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/successLabelName"
+                android:layout_marginTop="109dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="兴趣"
+                android:textColor="#ff191919"
+                android:textSize="26sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/addSuccessIv"/>
+
+        <TextView
+                android:id="@+id/t1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="已创建成功"
+                android:textColor="#ff191919"
+                android:textSize="22sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/successLabelName"
+                />
+
+        <TextView
+                android:id="@+id/successLabelGuide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快秀一下你的健身成果"
+                android:textColor="#ff191919"
+                android:textSize="20sp"
+                android:layout_marginTop="63dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/t1"
+                />
+
+        <TextView
+                android:id="@+id/changeLabel"
+                android:layout_marginTop="18dp"
+                android:text="换一个"
+                android:drawablePadding="4dp"
+                android:textSize="12sp"
+                android:background="@drawable/shape_rectangle_gray_white_9dp"
+                android:drawableLeft="@drawable/icon_reselect_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFCBCDD3"
+                android:gravity="center"
+                android:padding="6dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/successLabelGuide"/>
+
+        <ImageView
+                android:id="@+id/publishImage"
+                android:background="@drawable/icon_add_photo_label"
+                android:layout_width="232dp"
+                android:scaleType="center"
+                android:layout_marginTop="30dp"
+                android:layout_height="232dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/changeLabel"/>
+
+        <TextView
+                android:id="@+id/publish"
+                android:text="完成"
+                android:textColor="#ffffffff"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:background="@drawable/selector_confirm_btn1"
+                android:layout_width="wrap_content"
+                android:enabled="true"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toTopOf="@id/startJitangBtn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+
+        <TextView
+                android:id="@+id/startJitangBtn"
+                android:text="稍后再说"
+                android:textColor="#ffcbcdd3"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:enabled="true"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieView"
             android:layout_width="wrap_content"
-            android:layout_marginTop="100dp"
-            android:enabled="true"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/successLabelName"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="data_add_label_success.json"
+            app:lottie_imageAssetsFolder="images/"
+            app:lottie_loop="false"/>
+</FrameLayout>

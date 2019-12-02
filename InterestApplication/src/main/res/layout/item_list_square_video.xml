@@ -2,8 +2,8 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
         android:id="@+id/llVideo"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:background="@color/colorWhite"
         android:layout_height="wrap_content">
@@ -14,8 +14,11 @@
     <RelativeLayout
             android:id="@+id/squareUserVideoll"
             android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_width="match_parent"
             android:layout_height="252dp"
+            android:background="@drawable/shape_rectangle_gray_white_15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             >

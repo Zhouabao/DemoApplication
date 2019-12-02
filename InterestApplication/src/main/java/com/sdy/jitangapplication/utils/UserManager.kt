@@ -14,6 +14,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.MediaParamBean
 import com.sdy.jitangapplication.model.NewLabel
+import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.*
@@ -268,18 +269,7 @@ object UserManager {
      * 登录成功保存用户信息
      */
     fun saveUserInfo(data: LoginBean) {
-        val savaLabels = mutableSetOf<String>()
-        for (label in data!!.extra_data?.mytags ?: mutableListOf()) {
-            savaLabels.add(
-                SharedPreferenceUtil.Object2String(
-                    NewLabel(
-                        title = label.title ?: "",
-                        id = label.id ?: -1
-                    )
-                )
-            )
-        }
-        SPUtils.getInstance(Constants.SPNAME).put("newCheckedLabels", savaLabels)
+        saveLabels(data.extra_data?.mytags ?: mutableListOf())
         if (data.userinfo != null) {
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo.nickname)
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
@@ -292,6 +282,21 @@ object UserManager {
             if (data.userinfo.isfaced != -1)
                 saveUserVerify(data.userinfo.isfaced)
         }
+    }
+
+    fun saveLabels(data: MutableList<TagBean>) {
+        val savaLabels = mutableSetOf<String>()
+        for (label in data) {
+            savaLabels.add(
+                SharedPreferenceUtil.Object2String(
+                    NewLabel(
+                        title = label.title ?: "",
+                        id = label.id ?: -1
+                    )
+                )
+            )
+        }
+        SPUtils.getInstance(Constants.SPNAME).put("newCheckedLabels", savaLabels)
     }
 
     /**
@@ -755,7 +760,7 @@ object UserManager {
                     Constants.SPNAME
                 ).getStringSet("newCheckedLabels").isEmpty()
             ) {//标签没有选择
-                context.startActivity<LabelsActivity>()
+                context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
             } else {//跳到主页
                 AppManager.instance.finishAllActivity()
                 context.startActivity<MainActivity>()

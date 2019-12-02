@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -12,13 +12,20 @@
 
     <include layout="@layout/layout_actionbar"/>
 
-    <View
-            android:background="@color/colorDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="56dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llTitle"/>
+
+
+    <TextView
+            android:id="@+id/t1"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="范本示例"
+            android:textStyle="bold"
+            android:textColor="#ff191919"
+            android:layout_marginLeft="15dp"
+            android:textSize="24sp"
+            android:layout_marginBottom="30dp"
+            />
 
     <TextView
             android:id="@+id/modelContent"
@@ -27,7 +34,6 @@
             android:minHeight="258dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="77dp"
             android:layout_marginBottom="20dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -52,4 +58,4 @@
             android:layout_marginBottom="20dp"
             android:layout_alignParentBottom="true"
             android:layout_height="wrap_content"/>
-</RelativeLayout>
+</LinearLayout>

@@ -76,7 +76,8 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         inputVerifyCode.setOnCompleteListener(object : VerificationCodeInput.Listener {
             override fun onComplete(complete: Boolean, content: String?) {
                 if (complete) {
-                    loadingDialog.show()
+                    if (!loadingDialog.isShowing)
+                        loadingDialog.show()
                     if (intent.getStringExtra("type") == "$TYPE_LOGIN_OFF") {
                         mPresenter.cancelAccount(
                             hashMapOf<String, Any>(

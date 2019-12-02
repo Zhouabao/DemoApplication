@@ -12,7 +12,10 @@ import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.google.android.flexbox.*
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MatchBean
 import kotlinx.android.synthetic.main.item_match_user.view.*
 
@@ -25,6 +28,7 @@ import kotlinx.android.synthetic.main.item_match_user.view.*
  */
 class MatchUserAdapter(data: MutableList<MatchBean>) :
     BaseQuickAdapter<MatchBean, BaseViewHolder>(R.layout.item_match_user, data) {
+    var my_tags_quality: MutableList<LabelQualityBean> = mutableListOf()
     override fun convert(holder: BaseViewHolder, item: MatchBean) {
         //为了防止indicator重复 每次先给他remove了
         holder.addOnClickListener(R.id.v1)
@@ -151,13 +155,32 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         }
 
 
-        holder.itemView.matchUserIntroduce.text = item.sign ?: ""
+        holder.itemView.matchUserIntroduce.text = item.sign ?: "" //关于自己
+        holder.itemView.matchAim.isVisible = item.intention.isNotEmpty()//标签意向
+        holder.itemView.matchAim.text = item.intention
 
-//        holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""  //标签下的描述
-        holder.itemView.matchUserLocalTagCharacter.layoutManager =
-            LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
-        val adapter1 = MatchDetailLabelAdapter(mContext)
-        adapter1.setData(item.tags ?: mutableListOf())
+        holder.itemView.matchUserLocalTagContent.isVisible = item.describle.isNotEmpty()//标签介绍
+        holder.itemView.matchUserLocalTagContent.text = item.describle ?: ""
+
+
+        holder.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty() //撮合标签
+        holder.itemView.matchBothIntersetContent.text = "${item.matching_content}"
+        GlideUtil.loadImg(mContext, item.matching_icon, holder.itemView.matchBothIntersetIv)
+
+        val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
+        manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.FLEX_START
+        holder.itemView.matchUserLocalTagCharacter.layoutManager = manager
+//            LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
+        val adapter1 = MatchDetailLabelQualityAdapter()
+        for (quality in my_tags_quality) {
+            for (quality1 in item.label_quality) {
+                if (quality1.id == quality.id) {
+                    quality1.checked = true
+                }
+            }
+        }
+        adapter1.setNewData(item.label_quality)
         holder.itemView.matchUserLocalTagCharacter.adapter = adapter1
 
 //        holder.itemView.matchUserLabelsLikeCount.visibility = if (item.tagcount == null || item.tagcount == 0) {

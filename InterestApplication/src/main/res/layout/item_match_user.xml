@@ -40,21 +40,33 @@
             android:layout_marginBottom="150dp"
             android:layout_height="match_parent"/>
 
-
-    <TextView
-            android:id="@+id/matchBothInterset"
-            android:gravity="center"
+    <LinearLayout
+            android:id="@+id/matchBothIntersetLl"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
-            android:textSize="13sp"
-            android:drawablePadding="5dp"
-            android:textColor="@color/colorWhite"
             android:background="@drawable/icon_bg_gray_15dp"
-            android:drawableLeft="@drawable/icon_cuohe_tag"
             android:padding="3dp"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="她也喜欢【蹦迪】"/>
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/matchBothIntersetIv"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_cuohe_tag"
+                android:layout_width="18dp"
+                android:layout_height="18dp"/>
+
+        <TextView
+                android:id="@+id/matchBothIntersetContent"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:textSize="13sp"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="她也喜欢【蹦迪】"/>
+    </LinearLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,7 +82,10 @@
                 android:id="@+id/matchAim"
                 android:text="找人一起玩"
                 android:textColor="@color/colorWhite"
-                android:padding="3dp"
+                android:paddingLeft="3dp"
+                android:paddingTop="3dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="3dp"
                 android:gravity="center"
                 android:layout_marginLeft="15dp"
                 android:drawablePadding="5dp"
@@ -169,7 +184,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/matchUserLocalTagCl"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
@@ -202,6 +217,7 @@
                     android:layout_width="wrap_content"
                     android:textSize="14sp"
                     android:layout_marginTop="10dp"
+                    android:overScrollMode="never"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/matchUserLocalTagContent"
@@ -234,7 +250,7 @@
 
         <LinearLayout
                 android:id="@+id/matchUserIntroduceCl"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"

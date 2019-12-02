@@ -59,7 +59,7 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
                             for (otherQuality in other.label_quality) {
                                 if (myQuality.id == otherQuality.id) {
                                     otherQuality.checked = true
-                                    other.same_quality_count.plus(1)
+                                    other.same_quality_count = other.same_quality_count + 1
                                 }
                             }
                         }

@@ -269,9 +269,10 @@ interface Api {
 
     /**
      * 匹配首页数据
+     * indexV2
      */
     @FormUrlEncoded
-    @POST("Index/index${Constants.END_BASE_URL}")
+    @POST("Index/indexV2${Constants.END_BASE_URL}")
     fun getMatchList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchListBean?>>
 
 
@@ -768,7 +769,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tags/addClassifyTag${Constants.END_BASE_URL}")
-    fun addClassifyTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LoginBean?>>
+    fun addClassifyTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TagBean>?>>
 
     /**
      * 获取我的标签

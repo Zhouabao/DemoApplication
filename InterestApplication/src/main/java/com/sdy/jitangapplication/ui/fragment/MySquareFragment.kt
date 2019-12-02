@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.fragment.BaseMvpFragment
+import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -48,16 +48,24 @@ import org.greenrobot.eventbus.ThreadMode
  * 我的点赞、我的收藏
  * //todo 解决视频无缝衔接播放问题
  */
-class MySquareFragment(val type: Int) : BaseMvpFragment<MyCollectionPresenter>(), MyCollectionView,
+class MySquareFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPresenter>(), MyCollectionView,
     OnRefreshListener,
     OnLoadMoreListener, MultiListSquareAdapter.ResetAudioListener {
-//    override fun loadData() {
-//        initView()
-//
-//        //refreshLayout.autoRefresh()
-//        mPresenter.getMySquare(params)
-//
-//    }
+    companion object {
+        const val TYPE_COLLECT = 3
+        const val TYPE_LIKE = 2
+        const val TYPE_MINE = 1
+        const val TYPE_SQUARE = 0
+    }
+
+    override fun loadData() {
+        if (type != TYPE_MINE) {
+            initView()
+            //refreshLayout.autoRefresh()
+            mPresenter.getMySquare(params)
+        }
+
+    }
 
     private val TAG = MyCollectionEtcActivity::class.java.simpleName
 
@@ -83,10 +91,12 @@ class MySquareFragment(val type: Int) : BaseMvpFragment<MyCollectionPresenter>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
 
-        //refreshLayout.autoRefresh()
-        mPresenter.getMySquare(params)
+        if (type == TYPE_MINE) {
+            initView()
+            //refreshLayout.autoRefresh()
+            mPresenter.getMySquare(params)
+        }
     }
 
     override fun resetAudioState() {
@@ -107,7 +117,8 @@ class MySquareFragment(val type: Int) : BaseMvpFragment<MyCollectionPresenter>()
     private var currPlayIndex = -1
 
     private fun initView() {
-        EventBus.getDefault().register(this)
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this)
         mPresenter = MyCollectionPresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!
@@ -201,6 +212,7 @@ class MySquareFragment(val type: Int) : BaseMvpFragment<MyCollectionPresenter>()
         }
 
     }
+
     var mediaPlayer: IjkMediaPlayerUtil? = null
 
     private fun initAudio(position: Int) {
@@ -283,7 +295,8 @@ class MySquareFragment(val type: Int) : BaseMvpFragment<MyCollectionPresenter>()
     override fun onDestroy() {
         super.onDestroy()
         GSYVideoManager.releaseAllVideos()
-        EventBus.getDefault().unregister(this)
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this)
 
         resetAudio()
     }
@@ -368,47 +381,50 @@ class MySquareFragment(val type: Int) : BaseMvpFragment<MyCollectionPresenter>()
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNotifyEvent(event: NotifyEvent) {
-        val pos = event.position
-        GSYVideoManager.releaseAllVideos()
-        //静音
-        val switchVideo = adapter.getViewByPosition(pos, R.id.squareUserVideo) as SwitchVideo
-        SwitchUtil.clonePlayState(switchVideo)
-        val state = switchVideo.currentState
-//        switchVideo.isStartAfterPrepared = false
-        //延迟加2S
-        switchVideo.seekOnStart = switchVideo.gsyVideoManager.currentPosition
-        switchVideo.startPlayLogic()
-        switchVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
-            override fun onStartPrepared(url: String?, vararg objects: Any?) {
-                super.onStartPrepared(url, *objects)
-                GSYVideoManager.instance().isNeedMute = true
-            }
+        if (event.type == type) {
 
-            override fun onPrepared(url: String?, vararg objects: Any?) {
-                super.onPrepared(url, *objects)
-                GSYVideoManager.instance().isNeedMute = true
-                if (state == GSYVideoView.CURRENT_STATE_PAUSE) {
-                    switchVideo.onVideoPause()
-                } else if (state == GSYVideoView.CURRENT_STATE_AUTO_COMPLETE || state == GSYVideoView.CURRENT_STATE_ERROR) {
+
+            val pos = event.position
+            GSYVideoManager.releaseAllVideos()
+            //静音
+            val switchVideo = adapter.getViewByPosition(pos, R.id.squareUserVideo) as SwitchVideo
+            SwitchUtil.clonePlayState(switchVideo)
+            val state = switchVideo.currentState
+//        switchVideo.isStartAfterPrepared = false
+            //延迟加2S
+            switchVideo.seekOnStart = switchVideo.gsyVideoManager.currentPosition
+            switchVideo.startPlayLogic()
+            switchVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+                override fun onStartPrepared(url: String?, vararg objects: Any?) {
+                    super.onStartPrepared(url, *objects)
+                    GSYVideoManager.instance().isNeedMute = true
+                }
+
+                override fun onPrepared(url: String?, vararg objects: Any?) {
+                    super.onPrepared(url, *objects)
+                    GSYVideoManager.instance().isNeedMute = true
+                    if (state == GSYVideoView.CURRENT_STATE_PAUSE) {
+                        switchVideo.onVideoPause()
+                    } else if (state == GSYVideoView.CURRENT_STATE_AUTO_COMPLETE || state == GSYVideoView.CURRENT_STATE_ERROR) {
+                        SwitchUtil.release()
+                        GSYVideoManager.releaseAllVideos()
+                    }
+                }
+
+                override fun onClickResume(url: String?, vararg objects: Any?) {
+                    super.onClickResume(url, *objects)
+                    switchVideo.onVideoResume()
+                }
+
+                override fun onAutoComplete(url: String?, vararg objects: Any?) {
+                    super.onAutoComplete(url, *objects)
                     SwitchUtil.release()
                     GSYVideoManager.releaseAllVideos()
+                    adapter.refreshNotifyItemChanged(pos)
+
                 }
-            }
-
-            override fun onClickResume(url: String?, vararg objects: Any?) {
-                super.onClickResume(url, *objects)
-                switchVideo.onVideoResume()
-            }
-
-            override fun onAutoComplete(url: String?, vararg objects: Any?) {
-                super.onAutoComplete(url, *objects)
-                SwitchUtil.release()
-                GSYVideoManager.releaseAllVideos()
-                adapter.refreshNotifyItemChanged(pos)
-
-            }
-        })
-
+            })
+        }
     }
 
 }

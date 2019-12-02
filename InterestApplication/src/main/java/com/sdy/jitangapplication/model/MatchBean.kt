@@ -9,6 +9,13 @@ import java.io.Serializable
  *    version: 1.0
  */
 data class MatchListBean(
+    var my_birth_day: String = "",
+    var my_constellation: String = "",
+    var my_hometown: String = "",
+    var my_label_quality: MutableList<LabelQualityBean> = mutableListOf(),
+    var my_school: String = "",
+    var my_tags: MutableList<TagBean> = mutableListOf(),
+
     var exclude: MutableList<Int>?,
     var list: MutableList<MatchBean>?,
     var lightningcnt: Int?,
@@ -26,10 +33,22 @@ data class MatchListBean(
     val total_like_times: Int//  total_like_times（最高次数）
 )
 
+
 /**
  * 匹配用户
  */
 data class MatchBean(
+    var birth_day: String = "",
+    var matching_content: String = "",
+    var matching_icon: String = "",
+    var describle: String = "",
+    var face_auditing_state: Int = 0,
+    var home_town_title: String = "",
+    var hometown: String = "",
+    var intention: String = "",
+    var label_quality: MutableList<LabelQualityBean> = mutableListOf(),
+    var personal_school: String = "",
+    var school: String = "",
     var isvip: Int = 0,    //是否会员 true是 false不是
     var isfaced: Int = 0,  //0未认证/认证不成功     1认证通过     2认证中
     var accid: String = "",
@@ -51,7 +70,7 @@ data class MatchBean(
     var square_count: Int? = 0,
     var tagcount: Int? = 0,
     var birth: Int?,
-    var tags: MutableList<Tag>?,
+    var tags: MutableList<TagBean>?,
     var jobname: String?,
     var lightningcnt: Int?,
     var countdown: Int = 0,

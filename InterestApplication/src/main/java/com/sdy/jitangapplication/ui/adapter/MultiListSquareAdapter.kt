@@ -207,7 +207,7 @@ class MultiListSquareAdapter(
             SquareBean.VIDEO -> {
                 //增加封面
                 val imageview = ImageView(mContext)
-                GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", imageview, 0)
+                GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", imageview, SizeUtils.dp2px(15F))
                 if (imageview.parent != null) {
                     val vg = imageview.parent as ViewGroup
                     vg.removeView(imageview)

@@ -33,7 +33,7 @@ class LoginActivity : BaseActivity() {
             if (UserManager.isUserInfoMade()) {//是否填写过用户信息
                 if (UserManager.getSpLabels().isEmpty()) {//是否选择过标签
                     UserManager.clearLoginData()
-//                    startActivity<LabelsActivity>()
+//                    startActivity<AddLabelActivity>()
                 } else {
                     startActivity<MainActivity>()
                 }

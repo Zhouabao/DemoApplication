@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckBox
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/labelName"
+        android:layout_marginRight="10dp"
+        android:text="任天堂"
+        android:button="@null"
+        android:background="@drawable/selector_label_quality_7dp"
+        android:textColor="@color/selector_color_label_quality"
+        android:drawablePadding="2dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:paddingLeft="9dp"
+        android:paddingRight="9dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+</CheckBox>
+

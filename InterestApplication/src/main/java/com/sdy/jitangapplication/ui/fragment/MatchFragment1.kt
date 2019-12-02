@@ -267,6 +267,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             }
 
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
+            matchUserAdapter.my_tags_quality = matchBeans.my_label_quality
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
             //保存剩余滑动次数
             UserManager.saveSlideCount(matchBeans.like_times)

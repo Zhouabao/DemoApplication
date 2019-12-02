@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.presenter
 
-import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -9,7 +8,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelQualityBean
-import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.view.MyLabelQualityView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -61,12 +60,12 @@ class MyLabelQualityPresenter : BasePresenter<MyLabelQualityView>() {
     fun addClassifyTag(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .addClassifyTag(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<LoginBean?>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<MutableList<TagBean>?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()
                 }
 
-                override fun onNext(t: BaseResp<LoginBean?>) {
+                override fun onNext(t: BaseResp<MutableList<TagBean>?>) {
                     mView.hideLoading()
                     if (t.code == 200) {
                         mView.addTagResult(true, t.data)
@@ -88,33 +87,4 @@ class MyLabelQualityPresenter : BasePresenter<MyLabelQualityView>() {
             })
     }
 
-
-    /**
-     * 删除标签
-     */
-    fun delMyTags(tag_id: Int) {
-        val params = hashMapOf<String, Any>("tag_ids" to Gson().toJson(mutableListOf(tag_id)))
-        RetrofitFactory.instance.create(Api::class.java)
-            .delMyTags(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
-                override fun onStart() {
-                    mView.showLoading()
-                }
-
-                override fun onNext(t: BaseResp<Any>) {
-                    mView.hideLoading()
-                    if (t.code == 200) {
-                        mView.delTagResult(true)
-                    } else if (t.code == 403) {
-                        TickDialog(context).show()
-                    }
-                    CommonFunction.toast(t.msg)
-                }
-
-                override fun onError(e: Throwable?) {
-                    mView.hideLoading()
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                }
-            })
-    }
 }

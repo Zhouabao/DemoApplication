@@ -19,8 +19,8 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
-import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.NewLabel
+import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.LabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.LabelQualityView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
@@ -44,7 +44,7 @@ import org.jetbrains.anko.startActivityForResult
 class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQualityView, View.OnClickListener {
     private val params by lazy { hashMapOf<String, Any>() }
     private var data: MutableList<LabelQualityBean>? = null
-    private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel }
+    private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel? }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,18 +59,19 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
         mPresenter = LabelQualityPresenter()
         mPresenter.mView = this
         mPresenter.context = this
-        hotT1.text = "兴趣介绍"
+        hotT1.visibility = View.INVISIBLE
         divider.isVisible = false
         btnBack.setOnClickListener(this)
+        rightBtn1.setOnClickListener(this)
+        rightBtn1.isVisible = true
+        rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_25dp)
+        rightBtn1.isEnabled = false
+
         labelPurposeBtn.setOnClickListener(this)
-        introduceNextBtn.setOnClickListener(this)
         labelIntroduceModel.setOnClickListener(this)
 
         if (from == AddLabelActivity.FROM_EDIT) {
-            rightBtn1.isVisible = true
             rightBtn1.text = "保存"
-            rightBtn1.setOnClickListener(this)
-            introduceNextBtn.isVisible = false
             labelPurposeCl.isVisible = false
             if (!intent.getStringExtra("describle").isNullOrEmpty()) {
                 labelIntroduceContent.setText(intent.getStringExtra("describle").trim())
@@ -83,24 +84,29 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
                     .append("/${(labelIntroduceContent.filters[0] as InputFilter.LengthFilter).max}")
                     .setFontSize(10, true)
                     .create()
+            } else {
+                labelIntroduceContent.hint = intent.getStringExtra("describleHint").trim()
             }
         } else if (from == AddLabelActivity.FROM_REGISTER) {
-            introduceNextBtn.text = "下一步"
+            rightBtn1.text = "保存并继续"
             labelPurposeCl.isVisible = true
+            labelIntroduceContent.hint = labelBean!!.intro_descr
         } else {
-            introduceNextBtn.text = "保存"
+            rightBtn1.text = "保存"
             labelPurposeCl.isVisible = true
+            labelIntroduceContent.hint = labelBean!!.intro_descr
         }
 
         params["tag_id"] = intent.getIntExtra("tag_id", 0)
         params["label_quality"] = intent.getStringExtra("label_quality")
+        if (intent.getStringExtra("intention") != null && intent.getStringExtra("intention").isNotEmpty())
+            params["intention"] = intent.getStringExtra("intention")
         params["type"] = 1
 
 
 
         labelIntroduceContent.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                introduceNextBtn.isEnabled = !labelIntroduceContent.text.isNullOrEmpty()
                 checkSaveEnable()
                 labelIntroduceInputLength.text = SpanUtils.with(labelIntroduceInputLength)
                     .append(labelIntroduceContent.length().toString())
@@ -124,6 +130,7 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
     override fun onClick(view: View) {
         when (view) {
             btnBack -> {
+
                 finish()
             }
             labelPurposeBtn -> {//标签意向
@@ -133,14 +140,15 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
                     showConditionPicker(data ?: mutableListOf())
                 }
             }
-            introduceNextBtn -> { //保存标签
-                params["describle"] = labelIntroduceContent.text.trim()
-                mPresenter.addClassifyTag(params)
-            }
-            rightBtn1 -> {//返回按钮(对于编辑已有的标签而言)
-                intent.putExtra("describle", labelIntroduceContent.text.trim().toString())
-                setResult(Activity.RESULT_OK, intent)
-                finish()
+            rightBtn1 -> { //保存标签
+                if (from == AddLabelActivity.FROM_EDIT) {
+                    intent.putExtra("describle", labelIntroduceContent.text.trim().toString())
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                } else {
+                    params["describle"] = labelIntroduceContent.text.trim()
+                    mPresenter.addClassifyTag(params)
+                }
             }
             labelIntroduceModel -> {//标签介绍模板
                 startActivityForResult<ModelAboutMeActivity>(
@@ -172,10 +180,10 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
         showConditionPicker(data ?: mutableListOf())
     }
 
-    override fun addTagResult(result: Boolean, data: LoginBean?) {
+    override fun addTagResult(result: Boolean, data: MutableList<TagBean>?) {
         if (result) {
             if (data != null) {
-                UserManager.saveUserInfo(data)
+                UserManager.saveLabels(data)
                 if (from != AddLabelActivity.FROM_REGISTER)
                     EventBus.getDefault().post(UpdateAvatorEvent(true))
             }
@@ -184,7 +192,7 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
                 if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance()))
                     ActivityUtils.finishActivity(LabelQualityActivity::class.java)
                 finish()
-                startActivity<AddLabelSuccessActivity>("name" to labelBean.title)
+                startActivity<AddLabelSuccessActivity>("data" to labelBean)
             } else {
                 EventBus.getDefault().post(UpdateMyLabelEvent())
                 if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance()))
@@ -193,8 +201,10 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
                     ActivityUtils.finishActivity(MyLabelQualityActivity::class.java)
                 if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))
                     ActivityUtils.finishActivity(AddLabelActivity::class.java)
+//                if (ActivityUtils.isActivityAlive(MyLabelActivity::class.java.newInstance()))
+//                    ActivityUtils.finishActivity(MyLabelActivity::class.java)
                 finish()
-                startActivity<MyLabelActivity>()
+//                startActivity<MyLabelActivity>()
             }
         }
     }

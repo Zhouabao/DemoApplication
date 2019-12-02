@@ -312,7 +312,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
         coverAdapter.setOnItemClickListener { _, view, position ->
             if (position == coverAdapter.data.size - 1) {
-                startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to 1)
+                startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to MySquareFragment.TYPE_MINE)
             }
         }
 
@@ -402,7 +402,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //我的动态 1,我的所有动态 2我点过赞的 3 我收藏的
             R.id.userSquareCount -> {
-                startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to 1)
+                startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to MySquareFragment.TYPE_MINE)
             }
 //            //我的足迹
             R.id.userFoot -> {

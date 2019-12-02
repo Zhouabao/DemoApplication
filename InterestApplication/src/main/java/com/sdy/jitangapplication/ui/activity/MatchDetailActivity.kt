@@ -39,8 +39,8 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
-import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
@@ -147,7 +147,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         paramsClUserInfo.height = FrameLayout.LayoutParams.WRAP_CONTENT
         clUserInfo.layoutParams = paramsClUserInfo
 
-        vpUserDetail.setScrollable(true)
+        vpUserDetail.setScrollable(false)
         detailPhotosVp.setScrollable(false)
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)

@@ -72,7 +72,9 @@ data class MyLabelBean(
     var title: String = "",
     var editMode: Boolean = false,//是否处于编辑模式
     var same_label: Boolean = false,//是否是相同标签
-    var same_quality_count: Int = 0//相同特质数量
+    var same_quality_count: Int = 0,//相同特质数量
+    var intro_descr: String = "",
+    var publish_descr: String = ""
 ) : Serializable
 
 

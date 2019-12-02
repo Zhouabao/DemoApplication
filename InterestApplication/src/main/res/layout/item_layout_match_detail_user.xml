@@ -37,7 +37,7 @@
                 android:textSize="13sp"
                 android:drawablePadding="5dp"
                 android:background="@drawable/icon_bg_gray_15dp"
-                android:drawableLeft="@drawable/icon_cuohe_tag"
+                android:drawableLeft="@drawable/icon_quality_same"
                 android:paddingLeft="3dp"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
