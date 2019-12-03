@@ -9,65 +9,17 @@
         android:fitsSystemWindows="true"
         tools:context=".ui.activity.LocationActivity">
 
-    <ImageView
-            android:id="@+id/btnBack"
-            style="@style/BckBtnStyle"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:text="选择地址"
-            android:gravity="center"
-            android:textColor="@color/colorBlackTitle"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintRight_toLeftOf="@id/locationBtn"
-            app:layout_constraintBottom_toBottomOf="@id/btnBack"
-            app:layout_constraintLeft_toRightOf="@id/btnBack"
-            app:layout_constraintTop_toTopOf="@id/btnBack"
-            />
+    <include layout="@layout/layout_actionbar"/>
 
-
-    <Button
-            android:id="@+id/locationBtn"
-            android:gravity="center"
-            android:background="@drawable/selector_confirm_btn_15dp"
-            android:layout_marginRight="12dp"
-            android:textColor="@color/colorWhite"
-            android:layout_width="50dp"
-            android:textSize="14sp"
-            android:layout_height="28dp"
-            android:text="确定"
-            android:enabled="false"
-            app:layout_constraintBottom_toBottomOf="@id/btnBack"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btnBack"/>
-
-    <View
-            android:background="@color/colorDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            app:layout_constraintTop_toBottomOf="@id/btnBack"/>
-
-    <ImageView
-            android:id="@+id/locationImg"
-            android:visibility="gone"
-            android:src="@drawable/icon_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/locationMap"
-            app:layout_constraintLeft_toLeftOf="@id/locationMap"
-            app:layout_constraintRight_toRightOf="@id/locationMap"
-            app:layout_constraintTop_toTopOf="@id/locationMap"/>
 
     <com.amap.api.maps2d.MapView
             android:id="@+id/locationMap"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toTopOf="@id/locationRv"
-            app:layout_constraintTop_toBottomOf="@id/btnBack"/>
+            app:layout_constraintTop_toBottomOf="@id/llTitle"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
