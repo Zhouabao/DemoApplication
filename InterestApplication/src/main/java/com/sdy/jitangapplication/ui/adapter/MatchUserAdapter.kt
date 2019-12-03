@@ -31,7 +31,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
     var my_tags_quality: MutableList<LabelQualityBean> = mutableListOf()
     override fun convert(holder: BaseViewHolder, item: MatchBean) {
         //为了防止indicator重复 每次先给他remove了
-        holder.addOnClickListener(R.id.v1)
+//        holder.addOnClickListener(R.id.v1)
         holder.itemView.vpIndicator.removeAllViews()
         holder.itemView.vpPhotos.setScrollable(false)
         holder.itemView.vpPhotos.tag = holder.layoutPosition
@@ -170,7 +170,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH
         manager.justifyContent = JustifyContent.FLEX_START
-        holder.itemView.matchUserLocalTagCharacter.layoutManager = manager
+        holder.itemView.matchUserLocalTagCharacter.layoutManager = manager//标签下的特质标签
+//        holder.itemView.matchUserLocalTagCharacter.layoutManager =
 //            LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
         val adapter1 = MatchDetailLabelQualityAdapter()
         for (quality in my_tags_quality) {
@@ -183,18 +184,6 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         adapter1.setNewData(item.label_quality)
         holder.itemView.matchUserLocalTagCharacter.adapter = adapter1
 
-//        holder.itemView.matchUserLabelsLikeCount.visibility = if (item.tagcount == null || item.tagcount == 0) {
-//            View.GONE
-//        } else {
-//            holder.itemView.matchUserLabelsLikeCount.text = "${item.tagcount}个标签重合"
-//            View.VISIBLE
-//        }
-//        holder.itemView.matchUserJob.visibility = if (item.job.isNullOrEmpty()) {
-//            View.GONE
-//        } else {
-//            holder.itemView.matchUserJob.text = item.job ?: ""
-//            View.VISIBLE
-//        }
         holder.itemView.matchUserName.text = item.nickname ?: ""
         holder.itemView.matchUserAge.text = "${item.age}"
         val left = mContext.resources.getDrawable(

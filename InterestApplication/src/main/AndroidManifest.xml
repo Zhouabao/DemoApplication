@@ -89,12 +89,15 @@
             android:theme="@style/MyAppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.ChooseLabelActivity">
+        </activity>
+        <activity android:name=".ui.activity.ChooseTitleActivity">
+        </activity>
         <activity android:name=".ui.activity.MyLabelQualityActivity">
         </activity>
         <activity android:name=".ui.activity.MyLabelActivity">
         </activity>
         <activity android:name=".ui.activity.AddLabelSuccessActivity">
-
         </activity>
         <activity android:name=".ui.activity.LabelIntroduceActivity">
         </activity>

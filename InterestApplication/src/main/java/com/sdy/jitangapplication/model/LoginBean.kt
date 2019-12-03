@@ -41,7 +41,7 @@ data class Userinfo(
 data class TagBean(
     var id: Int?,
     var title: String?,
-    var path: String?
+    var icon: String?
 )
 
 data class UserBean(

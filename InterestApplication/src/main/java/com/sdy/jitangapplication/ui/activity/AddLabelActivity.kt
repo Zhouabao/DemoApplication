@@ -31,9 +31,10 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         const val FROM_REGISTER = 1
         const val FROM_EDIT = 2
         const val FROM_ADD_NEW = 3
+        const val FROM_PUBLISH = 4
     }
 
-
+    private val from by lazy { intent.getIntExtra("from", FROM_EDIT) }
     private var usingLabels: MutableList<MyLabelBean> = mutableListOf()
     private var removedLabels: MutableList<MyLabelBean> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +54,6 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         mPresenter.context = this
         mPresenter.mView = this
 
-//              intent.putExtra("is_using", adapter.data as Serializable)
-//                intent.putExtra("is_removed", removedLabel as Serializable)
         if (intent.getSerializableExtra("is_using") != null) {
             usingLabels = intent.getSerializableExtra("is_using") as MutableList<MyLabelBean>
         }
@@ -63,9 +62,12 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             labelListAdapter.removedLabels = removedLabels
         }
 
+
+        setSwipeBackEnable(from != FROM_REGISTER)
+
         hotT1.text = "添加你的兴趣"
         divider.isVisible = false
-        btnBack.isVisible = intent.getIntExtra("from", FROM_EDIT) != FROM_REGISTER
+        btnBack.isVisible = from != FROM_REGISTER
         btnBack.setOnClickListener(this)
 
         stateAddLabel.retryBtn.onClick {
@@ -118,8 +120,6 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             )
         }
     }
-
-
 
 
     override fun onClick(view: View) {

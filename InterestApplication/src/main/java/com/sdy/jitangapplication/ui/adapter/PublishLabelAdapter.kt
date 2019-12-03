@@ -1,10 +1,8 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.NewLabel
 import kotlinx.android.synthetic.main.item_label_publish_index.view.*
@@ -17,22 +15,7 @@ import kotlinx.android.synthetic.main.item_label_publish_index.view.*
  */
 class PublishLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_publish_index) {
     override fun convert(holder: BaseViewHolder, item: NewLabel) {
-        if (holder.layoutPosition == 0) {
-            holder.itemView.publishLabelIcon.visibility = View.GONE
-            holder.itemView.publishLabelTv.text = "添加标签"
-            holder.itemView.publishLabelTv.setTextColor(mContext.resources.getColor(R.color.colorGrayText))
-            holder.itemView.setBackgroundResource(R.drawable.shape_rectangle_gray_white_15dp)
-            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-            params.leftMargin = SizeUtils.dp2px(15F)
-            holder.itemView.layoutParams = params
-        } else {
-            holder.itemView.publishLabelIcon.visibility = View.VISIBLE
-            holder.itemView.publishLabelTv.text = item.title
-            holder.itemView.publishLabelTv.setTextColor(mContext.resources.getColor(R.color.colorOrange))
-            holder.itemView.setBackgroundResource(R.drawable.shape_rectangle_orange_15dp)
-        }
-
+        holder.itemView.tagName.text = item.title
+        GlideUtil.loadCircleImg(mContext, item.icon, holder.itemView.tagIcon)
     }
-
-
 }

@@ -231,8 +231,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
             R.id.labelAddBtn -> { //标签添加
                 startActivity<MyLabelActivity>()
-//                startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_EDIT)
-//                startActivityForResult<LabelsActivity>(REQUEST_LABEL_CODE, "from" to "mainactivity")
             }
         }
     }
@@ -401,7 +399,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 if (labelAdapter.data[position].id == UserManager.getGlobalLabelId()) {
                     return@setOnItemClickListener
                 } else {
-                    SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelAdapter.data[position].id)
+                    UserManager.saveGlobalLabelId(labelAdapter.data[position].id)
                     EventBus.getDefault().postSticky(UpdateLabelEvent(labelList[position]))
                     enableHeadRv(false)
                 }
@@ -421,8 +419,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun initData() {
         labelList = UserManager.getSpLabels()
         if (labelList.size > 0) {
-            if (SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId") != -1) {
-                val id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
+            if (UserManager.getGlobalLabelId() != -1) {
+                val id = UserManager.getGlobalLabelId()
                 for (label in labelList) {
                     if (label.id == id) {
                         label.checked = true
@@ -431,8 +429,21 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 }
             } else {
                 labelList[0].checked = true
-                SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", labelList[0].id)
+                UserManager.saveGlobalLabelId(labelList[0].id)
             }
+        }
+
+        //避免之前的用户进来，全局标签id对应不上
+        var hasChecked = false
+        for (label in labelList) {
+            if (label.checked) {
+                hasChecked = true
+                break
+            }
+        }
+        if (!hasChecked) {
+            labelList[0].checked = true
+            UserManager.saveGlobalLabelId(labelList[0].id)
         }
         labelAdapter.setNewData(labelList)
         for (label in labelList.withIndex()) {
@@ -449,37 +460,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_LABEL_CODE) {
-                var checked = false
-                val list = UserManager.getSpLabels()
-                for (i in 0 until labelList.size) {
-                    for (j in 0 until list.size) {
-                        if (labelList[i].id == list[j].id) {
-                            list[j].checked = labelList[i].checked
-                            if (list[j].checked) {
-                                checked = true
-                                if (UserManager.getGlobalLabelId() != list[j].id) {
-                                    SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", list[j].id)
-                                    EventBus.getDefault().postSticky(UpdateLabelEvent(list[j]))
-                                }
-                            }
-                        }
-                    }
-                }
-                if (!checked) {
-                    list[0].checked = true
-                    SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", list[0].id)
-                    EventBus.getDefault().postSticky(UpdateLabelEvent(list[0]))
-                }
-                labelList = list
-                labelAdapter.setNewData(labelList)
-                for (label in labelList.withIndex()) {
-                    if (label.value.checked) {
-                        labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), label.index)
-                        break
-                    }
-                }
-            } else if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
+            if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
                 EventBus.getDefault().post(NotifyEvent(data!!.getIntExtra("position", -1)))
             }
         }
@@ -489,6 +470,20 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateAvatorEvent(event: UpdateAvatorEvent) {
         initData()
+
+        var checked = false
+        for (data in labelList) {
+            if (data.id == UserManager.getGlobalLabelId()) {
+                EventBus.getDefault().postSticky(UpdateLabelEvent(data))
+                checked = true
+                break
+            }
+        }
+        if (!checked) {
+            EventBus.getDefault().postSticky(UpdateLabelEvent(labelList[0]))
+        }
+
+
     }
 
 

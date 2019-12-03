@@ -111,7 +111,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             "page" to page,
             "pagesize" to Constants.PAGESIZE,
             "_timestamp" to System.currentTimeMillis(),
-            "tagid" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
+            "tagid" to UserManager.getGlobalLabelId()
         )
     }
 

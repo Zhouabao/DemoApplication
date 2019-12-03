@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.MyLabelsBean
+import com.sdy.jitangapplication.model.TagBean
 
 /**
  *    author : ZFM
@@ -13,6 +14,6 @@ interface MyLabelView : BaseView {
     fun getMyTagsListResult(result: Boolean, datas: MyLabelsBean?)
 
 
-    fun delTagResult(result: Boolean, position: Int)
+    fun delTagResult(result: Boolean, position: Int, data: MutableList<TagBean>?)
 
 }

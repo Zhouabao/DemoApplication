@@ -233,7 +233,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                 } else {
                     myLabelBean!!.label_quality = choosedQualityAdapter.data
                     intent.putExtra("aimData", myLabelBean)
-                    setResult(Activity.RESULT_OK,intent)
+                    setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
 
@@ -248,6 +248,10 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                 }
                 if (TextUtils.isDigitsOnly(labelQualityAddEt.text.trim())) {
                     CommonFunction.toast("请认真填写特质哦")
+                    return
+                }
+                if (choosedQualityAdapter.data.size >= MAX_QUALITY) {
+                    CommonFunction.toast("最多能填写5个兴趣特质")
                     return
                 }
                 if (labelQualityAddEt.text.trim().isNotEmpty() && !TextUtils.isDigitsOnly(labelQualityAddEt.text.trim())) {

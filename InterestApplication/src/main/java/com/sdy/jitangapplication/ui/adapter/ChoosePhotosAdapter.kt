@@ -22,6 +22,14 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
     BaseQuickAdapter<MediaBean, BaseViewHolder>(R.layout.item_choose_photo) {
 
     override fun convert(helper: BaseViewHolder, item: MediaBean) {
+        if (type == 1) {
+            val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
+            params.width = SizeUtils.dp2px(58F)
+            params.height = SizeUtils.dp2px(58F)
+            helper.itemView.layoutParams = params
+        }
+
+
         if (helper.layoutPosition == 0 && type == 1) {
             val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
             params.leftMargin = SizeUtils.dp2px(15F)
@@ -74,9 +82,14 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
         } else if (type == 1) {//1:选中的相册
             helper.itemView.chooseVideoDuration.visibility = View.GONE
             helper.itemView.choosePhotoIndex.visibility = View.GONE
-            GlideUtil.loadRoundImgCenterCropNoHolder(mContext, item.filePath, helper.itemView.choosePhoto, SizeUtils.dp2px(5F))
+            GlideUtil.loadRoundImgCenterCropNoHolder(
+                mContext,
+                item.filePath,
+                helper.itemView.choosePhoto,
+                SizeUtils.dp2px(5F)
+            )
             helper.itemView.choosePhotoDel.visibility = if (item.ischecked) {
-                helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_delete)
+                helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_delete_gray)
                 View.VISIBLE
             } else {
                 View.GONE

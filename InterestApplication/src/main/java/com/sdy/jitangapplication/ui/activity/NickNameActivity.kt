@@ -14,9 +14,6 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import kotlinx.android.synthetic.main.activity_nick_name.*
-import kotlinx.android.synthetic.main.activity_nick_name.hotT1
-import kotlinx.android.synthetic.main.activity_publish.*
-import kotlinx.android.synthetic.main.activity_publish.btnBack
 
 /**
  * 修改昵稱和簽名

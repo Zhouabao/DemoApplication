@@ -9,6 +9,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.MyLabelsBean
+import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.view.MyLabelView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -52,15 +53,15 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
         val params = hashMapOf<String, Any>("tag_ids" to Gson().toJson(mutableListOf(tag_id)))
         RetrofitFactory.instance.create(Api::class.java)
             .delMyTags(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<MutableList<TagBean>?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()
                 }
 
-                override fun onNext(t: BaseResp<Any>) {
+                override fun onNext(t: BaseResp<MutableList<TagBean>?>) {
                     mView.hideLoading()
                     if (t.code == 200) {
-                        mView.delTagResult(true, position)
+                        mView.delTagResult(true, position,t.data)
                     } else if (t.code == 403) {
                         TickDialog(context).show()
                     }

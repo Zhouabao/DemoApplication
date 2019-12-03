@@ -291,7 +291,8 @@ object UserManager {
                 SharedPreferenceUtil.Object2String(
                     NewLabel(
                         title = label.title ?: "",
-                        id = label.id ?: -1
+                        id = label.id ?: -1,
+                        icon = label.icon ?: ""
                     )
                 )
             )
@@ -486,6 +487,10 @@ object UserManager {
 
     fun getGlobalLabelId(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId", 1)
+    }
+
+    fun saveGlobalLabelId(id: Int) {
+        return SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", id)
     }
 
     fun getGlobalLabelName(): String {

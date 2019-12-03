@@ -48,6 +48,7 @@ import com.sdy.jitangapplication.event.UpdateLabelEvent
 import com.sdy.jitangapplication.event.UploadEvent
 import com.sdy.jitangapplication.model.MediaBean
 import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.player.MediaPlayerHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper
@@ -67,12 +68,12 @@ import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_publish.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
 import top.zibin.luban.OnCompressListener
 import java.io.File
-import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -86,10 +87,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     companion object {
         const val AUTHORITY = "com.sdy.jitangapplication.provider" //FileProvider的签名 7.0以上要用
-        const val REQUEST_CODE_CAPTURE_RAW = 6 //startActivityForResult时的请求码
-        const val REQUEST_CODE_VIDEO = 10 //startActivityForResult时的请求码
-        const val REQUEST_CODE_LABEL = 20 //startActivityForResult时的请求码
-        const val REQUEST_CODE_MAP = 30 //startActivityForResult时的请求码
+        const val REQUEST_CODE_CAPTURE_RAW = 6 //拍照
+        const val REQUEST_CODE_VIDEO = 10 //视频选择
+        const val REQUEST_CODE_LABEL = 20 //标签选择
+        const val REQUEST_CODE_MAP = 30 //地图选择
+        const val REQUEST_CODE_TITILE = 40 //发布标题
 
         val IMAGE_PROJECTION = arrayOf(
             MediaStore.Images.Media.DATA,
@@ -220,7 +222,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     private fun initData() {
         locationCity.text = UserManager.getCity()
-        GlideUtil.loadAvatorImg(this, UserManager.getAvator(), publisherAvator)
+//        GlideUtil.loadAvatorImg(this, UserManager.getAvator(), publisherAvator)
         contentLength.text = SpanUtils.with(contentLength)
             .append(publishContent.length().toString())
             .setFontSize(14, true)
@@ -270,6 +272,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 //            { KeyboardUtils.showSoftInput(publishContent) }, 100L
 //        )
 
+        hotT1.text = "发布内容"
+        rightBtn1.isVisible = true
+        rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_15dp)
+        rightBtn1.setTextColor(resources.getColor(R.color.complete_btn_color_selector))
+        rightBtn1.text = "发布"
 
         mPresenter = PublishPresenter()
         mPresenter.mView = this
@@ -279,8 +286,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         tabPublishWay.setOnCheckedChangeListener(this)
         tabPublishWay.check(currentWayId)//默认选中图片
         publishContent.addTextChangedListener(this)
-        publishBtn.setOnClickListener(this)
+        rightBtn1.setOnClickListener(this)
         locationCity.setOnClickListener(this)
+        chooseTitleBtn.setOnClickListener(this)
         btn_emo.setOnClickListener(this)
 
         initTags()
@@ -327,7 +335,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         tagLayoutRv.adapter = publishLabelAdapter
 
         //获取广场首页选中的标签id
-        val checkedId = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
+        val checkedId = UserManager.getGlobalLabelId()
         val myTags: MutableList<NewLabel> = UserManager.getSpLabels()
         for (tag in myTags) {
             if (checkedId == tag.id && checkedId != Constants.RECOMMEND_TAG_ID) {
@@ -336,19 +344,19 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             }
         }
 
-        publishLabelAdapter.addData(0, NewLabel("添加标签"))
         publishLabelAdapter.setOnItemClickListener { adapter, view, position ->
-            if (position == 0) {
-                startActivityForResult<PublishChooseLabelsActivity>(
-                    REQUEST_CODE_LABEL,
-                    "checkedLabels" to checkTags as Serializable
-                )
-            } else {//其他时候点击就删除标签
-                val item = publishLabelAdapter.data[position]
-                checkTags.remove(item)
-                publishLabelAdapter.data.remove(item)
-                publishLabelAdapter.notifyItemRemoved(position)
-            }
+            startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL)
+//            if (position == 0) {
+//                startActivityForResult<PublishChooseLabelsActivity>(
+//                    REQUEST_CODE_LABEL,
+//                    "checkedLabels" to checkTags as Serializable
+//                )
+//            } else {//其他时候点击就删除标签
+//                val item = publishLabelAdapter.data[position]
+//                checkTags.remove(item)
+//                publishLabelAdapter.data.remove(item)
+//                publishLabelAdapter.notifyItemRemoved(position)
+//            }
         }
     }
 
@@ -1001,7 +1009,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     private var positionItem: PoiItem? = null
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.publishBtn -> {
+            R.id.rightBtn1 -> {
                 if (checkTags.size <= 0) {
                     CommonFunction.toast("标签是必选项哦~")
                     return
@@ -1048,7 +1056,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 UserManager.publishParams = hashMapOf(
                     "token" to UserManager.getToken(),
                     "accid" to UserManager.getAccid(),
-                    "tag_id" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"),
+                    "tag_id" to UserManager.getGlobalLabelId(),
                     "descr" to "${publishContent.text}",
                     "lat" to if (positionItem == null) {
                         UserManager.getlatitude()
@@ -1267,10 +1275,15 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     emojRv.visibility = View.VISIBLE
                 }
             }
+
+            R.id.chooseTitleBtn -> {
+                startActivityForResult<ChooseTitleActivity>(REQUEST_CODE_TITILE)
+            }
         }
     }
 
 
+    private var checkedLabel: NewLabel? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -1373,12 +1386,16 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             }
             //标签返回
             else if (requestCode == REQUEST_CODE_LABEL) {
-                checkTags.clear()
-                checkTags = data!!.getSerializableExtra("checkedLabels") as MutableList<NewLabel>
-                publishLabelAdapter.data.clear()
-                publishLabelAdapter.addData(0, NewLabel("添加标签"))
-                publishLabelAdapter.addData(data!!.getSerializableExtra("checkedLabels") as MutableList<NewLabel>)
-                checkCompleteBtnEnable()
+//                checkedLabel
+                if ((data!!.getSerializableExtra("label") as MyLabelBean) != null) {
+                    val myLabelBean = data!!.getSerializableExtra("label") as MyLabelBean
+                    //todo 这里要更新选中的标签
+                    checkTags.clear()
+                    checkTags.add(NewLabel(icon = myLabelBean.icon,id = myLabelBean.id,title = myLabelBean.title))
+                    publishLabelAdapter.data.clear()
+                    publishLabelAdapter.addData(checkTags)
+                    checkCompleteBtnEnable()
+                }
             }
             //地图返回
             else if (requestCode == REQUEST_CODE_MAP) {
@@ -1386,6 +1403,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     positionItem = data!!.getParcelableExtra("poiItem") as PoiItem
                     locationCity.text = positionItem!!.title + (positionItem!!.cityName ?: "") + (positionItem!!.adName
                         ?: "") + (positionItem!!.businessArea ?: "") + (positionItem!!.snippet ?: "")
+                }
+            }
+            //发布标题返回
+            else if (requestCode == REQUEST_CODE_TITILE) {
+                if (data?.getStringExtra("title") != null) {
+                    chooseTitleBtn.text = data?.getStringExtra("title")
                 }
             }
         }
@@ -1417,7 +1440,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         val param = hashMapOf(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
-            "tag_id" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"),
+            "tag_id" to UserManager.getGlobalLabelId(),
             "descr" to "${publishContent.text}",
             "lat" to if (positionItem == null) {
                 UserManager.getlatitude()
@@ -1491,7 +1514,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     publish()
                 }
                 1 -> {
-                    keyList.add(uploadCount,
+                    keyList.add(
+                        uploadCount,
                         Gson().toJson(
                             MediaParamBean(
                                 key,
@@ -1499,7 +1523,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                                 pickedPhotos[uploadCount].width,
                                 pickedPhotos[uploadCount].height
                             )
-                        ))
+                        )
+                    )
                     uploadCount++
                     if (uploadCount == pickedPhotos.size) {
                         publish()
@@ -1544,7 +1569,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
             } else {
                 EventBus.getDefault()
-                    .post(UpdateLabelEvent(NewLabel(id = SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId"))))
+                    .post(UpdateLabelEvent(NewLabel(id = UserManager.getGlobalLabelId())))
             }
             if (!this.isFinishing)
                 finish()

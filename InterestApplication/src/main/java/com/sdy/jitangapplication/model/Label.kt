@@ -74,7 +74,8 @@ data class MyLabelBean(
     var same_label: Boolean = false,//是否是相同标签
     var same_quality_count: Int = 0,//相同特质数量
     var intro_descr: String = "",
-    var publish_descr: String = ""
+    var publish_descr: String = "",
+    var checked: Boolean = false
 ) : Serializable
 
 

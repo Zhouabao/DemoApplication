@@ -11,14 +11,17 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.MyLabelsBean
+import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.MyLabelPresenter
 import com.sdy.jitangapplication.presenter.view.MyLabelView
 import com.sdy.jitangapplication.ui.adapter.MyLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.DeleteCheckDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_label.*
 import kotlinx.android.synthetic.main.delete_check_dialog_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -119,8 +122,13 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
         }
     }
 
-    override fun delTagResult(result: Boolean, position: Int) {
+    override fun delTagResult(result: Boolean, position: Int, data: MutableList<TagBean>?) {
         if (result) {
+            if (data != null) {
+                UserManager.saveLabels(data)
+                EventBus.getDefault().post(UpdateAvatorEvent(true))
+            }
+
             removedLabel.add(adapter.data[position])
             adapter.remove(position)
         }

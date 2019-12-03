@@ -783,7 +783,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tags/delMyTags${Constants.END_BASE_URL}")
-    fun delMyTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any>>
+    fun delMyTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TagBean>?>>
 
 
     /**
