@@ -42,7 +42,7 @@
 
         <TextView
                 android:id="@+id/labelReselectBtn"
-                android:background="@drawable/icon_bg_gray_15dp"
+                android:background="@drawable/rectangle_cover_bg_6dp"
                 android:drawableLeft="@drawable/icon_reselect"
                 android:drawablePadding="4dp"
                 android:gravity="center"

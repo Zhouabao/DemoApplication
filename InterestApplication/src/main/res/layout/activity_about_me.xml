@@ -114,6 +114,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:visibility="invisible"
                 android:layout_height="43dp"/>
 
         <TextView

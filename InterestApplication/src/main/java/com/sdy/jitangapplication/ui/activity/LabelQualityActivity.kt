@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
  */
 class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQualityView, View.OnClickListener {
     companion object {
-        const val MIN_QUALITY = 3
+        const val MIN_QUALITY = 1
         const val MAX_QUALITY = 5
     }
 

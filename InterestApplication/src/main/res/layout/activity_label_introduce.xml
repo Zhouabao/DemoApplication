@@ -40,7 +40,9 @@
                 android:text="兴趣意向"
                 android:textColor="#ff191919"
                 android:textSize="16sp"
+                android:drawableLeft="@drawable/icon_heart_blue"
                 android:layout_marginLeft="15dp"
+                android:drawablePadding="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@id/labelPurposeBtn"
@@ -73,25 +75,23 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_marginTop="21dp"
+    <ScrollView
             android:layout_width="match_parent"
-            android:background="@drawable/shape_rectangle_gray_9dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:minHeight="255dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/labelPurposeCl">
+            app:layout_constraintTop_toBottomOf="@id/labelPurposeCl"
+            >
+
 
         <EditText
+                android:layout_marginTop="21dp"
                 android:id="@+id/labelIntroduceContent"
                 android:background="@null"
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="15dp"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:gravity="top"
                 android:paddingTop="5dp"
@@ -102,28 +102,39 @@
                 android:textColorHint="#FFC1C2C8"
                 android:textColor="@color/colorBlack"
                 android:textSize="15sp"
+                android:minHeight="255dp"
                 android:layout_marginBottom="20dp"
                 app:layout_constraintBottom_toTopOf="@id/labelIntroduceModel"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
+    </ScrollView>
 
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:background="#FFF5F6F8"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
 
         <TextView
                 android:id="@+id/labelIntroduceModel"
-                android:layout_marginTop="15dp"
-                android:drawableLeft="@drawable/icon_edit_model_gray"
+                android:drawableLeft="@drawable/icon_eye"
                 android:drawablePadding="4dp"
-                android:text="范本示例"
-                android:textColor="#FF909198"
+                android:text="看看别人怎么写"
+                android:textColor="#FF000000"
                 android:textSize="15sp"
                 android:paddingLeft="15dp"
                 android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="30dp"
+                android:layout_height="43dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -132,16 +143,10 @@
                 android:text="0/200"
                 android:textColor="#ffb5b7ba"
                 android:textSize="11sp"
-                android:paddingRight="15dp"
-                android:paddingLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="@id/labelIntroduceModel"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/labelIntroduceModel"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

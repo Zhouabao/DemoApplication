@@ -151,4 +151,7 @@ dependencies {
     api  'com.umeng.umsdk:share-qq:6.9.4'
     api  'com.umeng.umsdk:share-wx:6.9.4'
     api  'com.umeng.umsdk:share-sina:6.9.4'
+
+    //多渠道打包
+    api 'com.leon.channel:helper:2.0.3'
 }

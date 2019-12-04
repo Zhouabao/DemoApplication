@@ -89,6 +89,7 @@
             android:theme="@style/MyAppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.ModelLabelIntroduceActivity"/>
         <activity android:name=".ui.activity.ChooseLabelActivity">
         </activity>
         <activity android:name=".ui.activity.ChooseTitleActivity">
