@@ -36,6 +36,11 @@ import java.io.Serializable
  * 管理我的标签
  */
 class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.OnClickListener {
+    companion object {
+        val MIN_LABEL = 1
+        val MAX_LABEL = 5
+    }
+
 
     private var editMode = false //是否处于编辑模式
     private val adapter by lazy { MyLabelAdapter() }
@@ -71,8 +76,8 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
             when (view.id) {
                 R.id.labelDelete -> {
                     //TODO删除标签
-                    if (adapter.data.size <= 1) {
-                        CommonFunction.toast("至少保留一个兴趣")
+                    if (adapter.data.size <= MIN_LABEL) {
+                        CommonFunction.toast("至少保留${MIN_LABEL}个兴趣")
                         return@setOnItemChildClickListener
                     }
                     showDeleteDialog(position)
@@ -138,6 +143,11 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
     override fun onClick(p0: View) {
         when (p0) {
             addLabelBtn -> {//添加标签
+                if (adapter.data.size >= MAX_LABEL) {
+                    CommonFunction.toast("最多能拥有${MAX_LABEL}个兴趣")
+                    return
+                }
+
                 intent.putExtra("from", AddLabelActivity.FROM_ADD_NEW)
                 intent.putExtra("is_using", adapter.data as Serializable)
                 intent.putExtra("is_removed", removedLabel as Serializable)
