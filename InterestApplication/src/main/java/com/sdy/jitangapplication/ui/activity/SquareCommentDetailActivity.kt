@@ -843,6 +843,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             val dialog = DeleteDialog(this)
             dialog.show()
             dialog.tip.text = getString(R.string.report_square)
+            dialog.title.text = "动态举报"
             dialog.confirm.text = "举报"
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {

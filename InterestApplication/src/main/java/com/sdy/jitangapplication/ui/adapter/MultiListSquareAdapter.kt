@@ -33,6 +33,7 @@ import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
+import com.sdy.jitangapplication.ui.fragment.MySquareFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
@@ -61,7 +62,8 @@ class MultiListSquareAdapter(
     data: MutableList<SquareBean>,
     var playState: Int = -1,
     var playPosition: Int = 0,
-    var resetAudioListener: ResetAudioListener? = null
+    var resetAudioListener: ResetAudioListener? = null,
+    var type: Int = MySquareFragment.TYPE_SQUARE
 ) :
     BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
     companion object {
@@ -221,7 +223,8 @@ class MultiListSquareAdapter(
                             mContext as Activity,
                             holder.itemView.squareUserVideo,
                             item,
-                            holder.layoutPosition
+                            holder.layoutPosition,
+                            type
                         )
                     }
                 }
@@ -476,6 +479,7 @@ class MultiListSquareAdapter(
         moreActionDialog.report.onClick {
             val dialog = DeleteDialog(mContext)
             dialog.show()
+            dialog.title.text = "动态举报"
             dialog.tip.text = mContext.getString(R.string.report_square)
             dialog.confirm.text = "举报"
             dialog.cancel.onClick { dialog.dismiss() }

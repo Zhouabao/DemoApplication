@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.app.Activity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,9 +16,9 @@ import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.activity.LabelQualityActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelQualityActivity
-import com.sdy.jitangapplication.ui.dialog.DeleteCheckDialog
+import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import kotlinx.android.synthetic.main.delete_check_dialog_layout.*
+import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.item_add_label.view.*
 import org.jetbrains.anko.startActivity
 
@@ -66,11 +67,12 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
     }
 
 
-    private val deleteDialog by lazy { DeleteCheckDialog(mContext) }
+    private val deleteDialog by lazy { DeleteDialog(mContext) }
     private fun showDeleteDialog(position: NewLabel) {
         deleteDialog.show()
         deleteDialog.title.text = "完善兴趣"
-        deleteDialog.tip.text = "是否直接恢复「${position.title}」删除前已完善内容或重新完善该兴趣"
+        deleteDialog.title.isVisible = true
+        deleteDialog.tip.text = "是否恢复「 ${position.title} 」删除前内容"
         deleteDialog.confirm.text = "重新完善"
         deleteDialog.confirm.onClick {
             (mContext as Activity).startActivity<LabelQualityActivity>(

@@ -165,6 +165,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         dialog.show()
         when (type) {
             1 -> {
+                dialog.title.text = "清空消息"
                 dialog.tip.text = resources.getString(R.string.message_p2p_clear_tips)
                 dialog.cancel.onClick { dialog.dismiss() }
                 dialog.confirm.onClick {
@@ -176,6 +177,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
             }
             3 -> {//todo 此处差一个删除好友的接口
                 if (isfriend) {
+                    dialog.title.text = "删除好友"
                     dialog.tip.text = "确定删除该好友?"
                     dialog.cancel.onClick { dialog.dismiss() }
                     dialog.confirm.onClick {
@@ -183,6 +185,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         dialog.dismiss()
                     }
                 } else {
+                    dialog.title.text = "删除招呼"
                     dialog.tip.text = "确定删除该招呼?"
                     dialog.cancel.onClick { dialog.dismiss() }
                     dialog.confirm.onClick {

@@ -157,6 +157,11 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
                     "tag_id" to intent.getIntExtra("tag_id", 0),
                     "from" to ModelAboutMeActivity.FROM_LABEL
                 )
+//                startActivityForResult<ModelLabelIntroduceActivity>(
+//                    100,
+//                    "tag_id" to intent.getIntExtra("tag_id", 0),
+//                    "from" to ModelAboutMeActivity.FROM_LABEL
+//                )
             }
         }
     }

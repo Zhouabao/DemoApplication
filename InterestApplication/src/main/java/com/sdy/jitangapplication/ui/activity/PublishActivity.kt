@@ -274,6 +274,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
         hotT1.text = "发布内容"
         rightBtn1.isVisible = true
+        rightBtn1.isEnabled = true
         rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_15dp)
         rightBtn1.setTextColor(resources.getColor(R.color.complete_btn_color_selector))
         rightBtn1.text = "发布"
@@ -1020,6 +1021,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     return
                 }
 
+                if (chooseTitleBtn.text.isNullOrEmpty()) {
+                    CommonFunction.toast("标题为必填内容")
+                }
+
 //                if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
 //                    CommonFunction.toast("语音、图片、视频至少要选择一种发布哦~")
 //                    return
@@ -1203,6 +1208,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             R.id.deleteRecord -> {
                 val dialog = DeleteDialog(this)
                 dialog.show()
+                dialog.title.text = "重新录制"
                 dialog.tip.text = "确定重新录制？"
                 dialog.confirm.onClick {
                     if (emojRv.visibility == View.VISIBLE)
@@ -1244,6 +1250,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             R.id.recordDelete -> {
                 val dialog = DeleteDialog(this)
                 dialog.show()
+                dialog.title.text = "重新录制"
                 dialog.tip.text = "确定重新录制？"
                 dialog.confirm.onClick {
                     isTopPreview = false

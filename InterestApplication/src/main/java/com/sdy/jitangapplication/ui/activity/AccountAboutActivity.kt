@@ -89,6 +89,7 @@ class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAb
     private fun showDissolveDialog() {
         val dissolveDialog = DeleteDialog(this)
         dissolveDialog.show()
+        dissolveDialog.title.text = "解除绑定"
         dissolveDialog.tip.text = getString(R.string.dissolve_wechat)
         dissolveDialog.confirm.text = "确定"
         dissolveDialog.cancel.onClick {
