@@ -211,7 +211,12 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     return
                 }
 
-                if (from == AddLabelActivity.FROM_ADD_NEW || from == AddLabelActivity.FROM_REGISTER) {
+                if (from == AddLabelActivity.FROM_EDIT) {
+                    myLabelBean!!.label_quality = choosedQualityAdapter.data
+                    intent.putExtra("aimData", myLabelBean)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                } else {
                     val tagIds = mutableListOf<Any>()
                     for (label in choosedQualityAdapter.data) {
                         tagIds.add(label.id)
@@ -229,12 +234,6 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     intent.putExtra("data", labelBean)
                     intent.setClass(this, LabelIntroduceActivity::class.java)
                     startActivity(intent)
-
-                } else {
-                    myLabelBean!!.label_quality = choosedQualityAdapter.data
-                    intent.putExtra("aimData", myLabelBean)
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
                 }
 
             }

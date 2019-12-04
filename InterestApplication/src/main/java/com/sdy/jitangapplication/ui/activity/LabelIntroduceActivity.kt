@@ -18,6 +18,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
+import com.sdy.jitangapplication.event.UserCenterLabelEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.TagBean
@@ -195,8 +196,12 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
                 startActivity<AddLabelSuccessActivity>("data" to labelBean)
             } else {
                 EventBus.getDefault().post(UpdateMyLabelEvent())
-                if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance()))
+                if (from == AddLabelActivity.FROM_USERCENTER) {
+                    EventBus.getDefault().post(UserCenterLabelEvent())
+                }
+                if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance())) {
                     ActivityUtils.finishActivity(LabelQualityActivity::class.java)
+                }
                 if (ActivityUtils.isActivityAlive(MyLabelQualityActivity::class.java.newInstance()))
                     ActivityUtils.finishActivity(MyLabelQualityActivity::class.java)
                 if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))

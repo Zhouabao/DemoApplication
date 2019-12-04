@@ -38,7 +38,7 @@ class UserLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.ite
 //        )
         GlideUtil.loadRoundImgCenterCrop(
             mContext,
-            R.drawable.icon_logo,
+            item.icon,
             helper.itemView.labelCover,
             SizeUtils.dp2px(5F)
         )

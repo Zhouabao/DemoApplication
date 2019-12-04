@@ -27,6 +27,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.UserCenterPresenter
@@ -64,7 +65,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
 
     companion object {
-        const val REQUEST_LABEL_CODE = 10
         const val REQUEST_INFO_SETTING = 11
         const val REQUEST_MY_SQUARE = 12
         const val REQUEST_ID_VERIFY = 13
@@ -360,9 +360,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_LABEL_CODE) {
-                getTagData()
-            } else if (requestCode == REQUEST_MY_SQUARE) {
+            if (requestCode == REQUEST_MY_SQUARE) {
                 onRefreshEvent(UserCenterEvent(true))
             } else if (requestCode == REQUEST_ID_VERIFY) {
                 userInfoBean?.userinfo?.isfaced = UserManager.isUserVerify()
@@ -398,7 +396,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //我的标签
             R.id.userTagsBtn -> {
-                startActivityForResult<LabelsActivity>(REQUEST_LABEL_CODE, "from" to "usercenter")
+//                is_using
+                val is_using = mutableListOf<MyLabelBean>()
+                for (data in tagAdapter.data) {
+                    is_using.add(MyLabelBean(tag_id = data.id))
+                }
+                startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_USERCENTER,"is_using" to is_using)
             }
             //我的动态 1,我的所有动态 2我点过赞的 3 我收藏的
             R.id.userSquareCount -> {
@@ -443,7 +446,14 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         }
     }
 
-    //发布成功后回来刷新界面数据
+    //添加标签成功后更新本地的标签数据
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUserCenterLabelEvent(event: UserCenterLabelEvent) {
+        getTagData()
+    }
+
+
+    //发布进度通知
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onProgressEvent(event: UploadEvent) {
         if (event.from == 2) {

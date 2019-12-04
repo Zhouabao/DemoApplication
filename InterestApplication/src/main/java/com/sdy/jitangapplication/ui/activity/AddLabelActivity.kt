@@ -32,6 +32,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         const val FROM_EDIT = 2
         const val FROM_ADD_NEW = 3
         const val FROM_PUBLISH = 4
+        const val FROM_USERCENTER = 5
     }
 
     private val from by lazy { intent.getIntExtra("from", FROM_EDIT) }

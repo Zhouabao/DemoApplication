@@ -60,6 +60,9 @@ class RePublishEvent(var republish: Boolean, val context: Context)
 //更新用户中心信息
 class UserCenterEvent(var refresh: Boolean)
 
+//更新用户中心的标签信息
+class UserCenterLabelEvent()
+
 
 //更新用户详情状态视图
 class UserDetailViewStateEvent(var success: Boolean)
