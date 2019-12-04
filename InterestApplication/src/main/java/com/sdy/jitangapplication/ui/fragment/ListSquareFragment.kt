@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
@@ -107,14 +105,6 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
         EventBus.getDefault().register(this)
 
         val linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        listSquareRv.addItemDecoration(
-            com.sdy.jitangapplication.widgets.DividerItemDecoration(
-                activity!!,
-                com.sdy.jitangapplication.widgets.DividerItemDecoration.HORIZONTAL_LIST,
-                SizeUtils.dp2px(8F),
-                Color.parseColor("#FFF1F2F6")
-            )
-        )
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
         adapter.bindToRecyclerView(listSquareRv)

@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -133,19 +132,12 @@ class MySquareFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPres
             mPresenter.getMySquare(params)
         }
 
-        collectionRv.addItemDecoration(
-            com.sdy.jitangapplication.widgets.DividerItemDecoration(
-                activity!!,
-                com.sdy.jitangapplication.widgets.DividerItemDecoration.HORIZONTAL_LIST,
-                SizeUtils.dp2px(8F),
-                Color.parseColor("#FFF1F2F6")
-            )
-        )
 
 
 
         collectionRv.layoutManager = layoutManager
         collectionRv.adapter = adapter
+        adapter.type = type
         adapter.setEmptyView(R.layout.empty_layout, collectionRv)
         adapter.setHeaderAndEmpty(true)
         adapter.bindToRecyclerView(collectionRv)
@@ -153,9 +145,11 @@ class MySquareFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPres
 //        (collectionRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         collectionRv.itemAnimator?.changeDuration = 0
 
-        //限定范围为屏幕一半的上下偏移180
-        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
-        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
+        //限定范围为屏幕一半的上下偏移180 56+32=88
+        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(200F)
+        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(200F)
+//        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
+//        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
         scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
         collectionRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
@@ -382,10 +376,8 @@ class MySquareFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPres
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNotifyEvent(event: NotifyEvent) {
         if (event.type == type) {
-
-
             val pos = event.position
-            GSYVideoManager.releaseAllVideos()
+//            GSYVideoManager.releaseAllVideos()
             //静音
             val switchVideo = adapter.getViewByPosition(pos, R.id.squareUserVideo) as SwitchVideo
             SwitchUtil.clonePlayState(switchVideo)

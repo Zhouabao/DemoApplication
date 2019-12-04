@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
@@ -80,6 +81,8 @@ class MultiListSquareAdapter(
 
 
     override fun convert(holder: BaseViewHolder, item: SquareBean) {
+        holder.itemView.view.isVisible = holder.layoutPosition - headerLayoutCount != 0
+
         //设置点赞状态
         setLikeStatus(item.isliked, item.like_cnt, holder.itemView.squareDianzanBtn1)
         //为自己，不能聊天（用户详情界面），未开启招呼，非好友   聊天按钮不可见
