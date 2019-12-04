@@ -19,11 +19,11 @@ import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.MyLabelPresenter
 import com.sdy.jitangapplication.presenter.view.MyLabelView
 import com.sdy.jitangapplication.ui.adapter.MyLabelAdapter
-import com.sdy.jitangapplication.ui.dialog.DeleteCheckDialog
+import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_label.*
-import kotlinx.android.synthetic.main.delete_check_dialog_layout.*
+import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
@@ -95,10 +95,11 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
         }
     }
 
-    private val deleteDialog by lazy { DeleteCheckDialog(this) }
+    private val deleteDialog by lazy { DeleteDialog(this) }
     private fun showDeleteDialog(position: Int) {
         deleteDialog.show()
         deleteDialog.title.text = "删除兴趣"
+        deleteDialog.title.isVisible = true
         deleteDialog.tip.text = "您确定要删除兴趣「${adapter.data[position].title}」吗？"
         deleteDialog.confirm.onClick {
             mPresenter.delMyTags(adapter.data[position].id, position)
