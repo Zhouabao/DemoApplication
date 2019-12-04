@@ -1009,6 +1009,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         //如果更改过相册信息并且没有是强制替换头像,就新增
         if (isChange && !UserManager.isNeedChangeAvator()) {
             dialog.show()
+            dialog.title.text = "保存内容"
             dialog.tip.text = "是否保存此次编辑的内容？"
             dialog.cancel.text = "放弃"
             dialog.confirm.text = "保存"
