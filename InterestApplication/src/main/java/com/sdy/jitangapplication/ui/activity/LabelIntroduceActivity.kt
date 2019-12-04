@@ -196,9 +196,7 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
                 startActivity<AddLabelSuccessActivity>("data" to labelBean)
             } else {
                 EventBus.getDefault().post(UpdateMyLabelEvent())
-                if (from == AddLabelActivity.FROM_USERCENTER) {
-                    EventBus.getDefault().post(UserCenterLabelEvent())
-                }
+                EventBus.getDefault().post(UserCenterLabelEvent())
                 if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance())) {
                     ActivityUtils.finishActivity(LabelQualityActivity::class.java)
                 }
