@@ -14,10 +14,10 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.NewLabel
-import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.LabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.LabelQualityView
 import com.sdy.jitangapplication.ui.adapter.LabelQualityAdapter
@@ -186,7 +186,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     }
 
 
-    override fun addTagResult(result: Boolean, data: MutableList<TagBean>?) {
+    override fun addTagResult(result: Boolean, data: AddLabelResultBean?) {
 
     }
 

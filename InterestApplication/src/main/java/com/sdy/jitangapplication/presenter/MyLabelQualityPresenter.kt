@@ -7,6 +7,7 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.view.MyLabelQualityView
@@ -60,12 +61,12 @@ class MyLabelQualityPresenter : BasePresenter<MyLabelQualityView>() {
     fun addClassifyTag(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .addClassifyTag(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<MutableList<TagBean>?>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<AddLabelResultBean?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()
                 }
 
-                override fun onNext(t: BaseResp<MutableList<TagBean>?>) {
+                override fun onNext(t: BaseResp<AddLabelResultBean?>) {
                     mView.hideLoading()
                     if (t.code == 200) {
                         mView.addTagResult(true, t.data)

@@ -73,7 +73,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
         deleteDialog.title.text = "完善兴趣"
         deleteDialog.title.isVisible = true
         deleteDialog.tip.text = "是否恢复「 ${position.title} 」删除前内容"
-        deleteDialog.confirm.text = "重新完善"
+        deleteDialog.confirm.text = "重新完善"//要走推荐发布流程
         deleteDialog.confirm.onClick {
             (mContext as Activity).startActivity<LabelQualityActivity>(
                 "data" to position,

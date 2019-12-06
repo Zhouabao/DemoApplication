@@ -19,6 +19,7 @@ import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
+import com.sdy.jitangapplication.utils.GlideEngine
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.mm.opensdk.modelmsg.SendAuth
@@ -120,7 +121,7 @@ object CommonFunction {
     /**
      * 拍照或者选取照片
      */
-    fun onTakePhoto(context: Context, maxCount: Int, requestCode: Int, chooseMode: Int = 1) {
+    fun onTakePhoto(context: Context, maxCount: Int, requestCode: Int, chooseMode: Int = 1, compress: Boolean = false) {
         PictureSelector.create(context as Activity)
             .openGallery(chooseMode)
             .maxSelectNum(maxCount)
@@ -138,10 +139,11 @@ object CommonFunction {
             .isCamera(true)
             .enableCrop(false)
             .compressSavePath(UriUtils.getCacheDir(context))
-            .compress(false)
+            .compress(compress)
             .minimumCompressSize(100)
             .scaleEnabled(true)
             .showCropFrame(true)
+            .loadImageEngine(GlideEngine.createGlideEngine())// 自定义图片加载引擎
             .rotateEnabled(false)
             .withAspectRatio(9, 16)
             .compressSavePath(UriUtils.getCacheDir(context))

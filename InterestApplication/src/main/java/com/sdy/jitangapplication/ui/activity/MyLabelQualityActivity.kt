@@ -16,9 +16,9 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
+import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MyLabelBean
-import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.MyLabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.MyLabelQualityView
 import com.sdy.jitangapplication.ui.adapter.LabelQualityAdapter
@@ -34,10 +34,11 @@ class MyLabelQualityActivity : BaseMvpActivity<MyLabelQualityPresenter>(), MyLab
         const val MIN_QUALITY = 3
         const val MAX_QUALITY = 5
 
-        //获取标签的  1介绍模板 2.标签特质 3.标签意向
+        //获取标签的  1介绍模板 2.标签特质 3.标签意向   4.标签标题
         const val TYPE_MODEL = 1
         const val TYPE_QUALITY = 2
         const val TYPE_AIM = 3
+        const val TYPE_TITLE = 4
 
         const val REQUEST_INTRODUCE = 100
         const val REQUEST_QUALITY = 101
@@ -104,10 +105,10 @@ class MyLabelQualityActivity : BaseMvpActivity<MyLabelQualityPresenter>(), MyLab
     }
 
 
-    override fun addTagResult(result: Boolean, data: MutableList<TagBean>?) {
+    override fun addTagResult(result: Boolean, data: AddLabelResultBean?) {
         if (result) {
             if (data != null) {
-                UserManager.saveLabels(data)
+                UserManager.saveLabels(data.list)
                 EventBus.getDefault().post(UpdateAvatorEvent(true))
             }
 

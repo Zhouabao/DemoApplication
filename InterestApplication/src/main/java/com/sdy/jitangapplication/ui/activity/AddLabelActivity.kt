@@ -28,11 +28,11 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
  */
 class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, View.OnClickListener {
     companion object {
-        const val FROM_REGISTER = 1
-        const val FROM_EDIT = 2
-        const val FROM_ADD_NEW = 3
-        const val FROM_PUBLISH = 4
-        const val FROM_USERCENTER = 5
+        const val FROM_REGISTER = 1//注册流程进入
+        const val FROM_EDIT = 2//主页编辑已有标签
+        const val FROM_ADD_NEW = 3//主页添加新标签
+        const val FROM_PUBLISH = 4//发布界面进入
+        const val FROM_USERCENTER = 5//个人中心进入
     }
 
     private val from by lazy { intent.getIntExtra("from", FROM_EDIT) }

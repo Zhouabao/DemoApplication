@@ -167,7 +167,7 @@ interface Api {
      * 获取广场列表
      */
     @FormUrlEncoded
-    @POST("square/squareLists${Constants.END_BASE_URL}")
+    @POST("square/squareListsV2${Constants.END_BASE_URL}")
     fun getSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
 
 
@@ -261,7 +261,7 @@ interface Api {
      * 广场发布
      */
     @FormUrlEncoded
-    @POST("square/announce${Constants.END_BASE_URL}")
+    @POST("square/announceV2${Constants.END_BASE_URL}")
     fun squareAnnounce(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
@@ -758,7 +758,7 @@ interface Api {
 
 
     /**
-     * 获取标签的  1介绍模板 2.标签特质 3.标签意向
+     * 获取标签的  1介绍模板 2.标签特质 3.标签意向  4.兴趣标题
      */
     @FormUrlEncoded
     @POST("Tags/getTagTraitInfo${Constants.END_BASE_URL}")
@@ -769,7 +769,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tags/addClassifyTag${Constants.END_BASE_URL}")
-    fun addClassifyTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TagBean>?>>
+    fun addClassifyTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddLabelResultBean?>>
 
     /**
      * 获取我的标签

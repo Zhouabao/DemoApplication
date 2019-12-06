@@ -5,6 +5,7 @@
         android:orientation="vertical"
         android:paddingTop="20dp"
         android:paddingBottom="30dp"
+        android:id="@+id/guidePublishCl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -45,8 +46,8 @@
 
     <TextView
             android:id="@+id/guideReselect"
-            android:drawablePadding="6dp"
-            android:drawableLeft="@drawable/icon_reselect_gray"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/icon_reselect"
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,16 +60,12 @@
             app:layout_constraintTop_toBottomOf="@id/guideTv"
             />
 
-    <TextView
+    <ImageView
             android:id="@+id/guidePublish"
             android:layout_marginRight="10dp"
-            android:text="发布内容"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:gravity="center"
-            android:background="@drawable/shape_rectangle_gray_white_25dp"
+            android:src="@drawable/icon_guide_publish"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="@id/guideIv"
             app:layout_constraintTop_toTopOf="parent"/>

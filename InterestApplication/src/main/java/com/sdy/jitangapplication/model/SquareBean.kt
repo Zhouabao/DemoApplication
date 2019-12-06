@@ -12,12 +12,9 @@ import java.io.Serializable
 
 
 data class SquareListBean(
-    var data: MutableList<SquareBean>?,
     var list: MutableList<SquareBean>?,
-    var current_page: String?,
-    var last_page: Int?,
-    var per_page: Int?,
-    var total: Int?
+    var title_banner: MutableList<LabelQualityBean>?,
+    var friend_list: MutableList<FriendBean>?
 )
 
 /**
@@ -34,7 +31,7 @@ data class SquareBean(
     var comment_cnt: Int = 0,
     var comment: String = "",
     var create_time: String = "",
-    var descr: String = "",
+    var descr: String? = "",
     val distance: String = "",
     var id: Int?,
     var isliked: Int = 0,

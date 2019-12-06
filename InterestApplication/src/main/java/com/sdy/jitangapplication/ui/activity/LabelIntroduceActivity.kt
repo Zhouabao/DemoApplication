@@ -19,9 +19,9 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.event.UserCenterLabelEvent
+import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.NewLabel
-import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.LabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.LabelQualityView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
@@ -131,7 +131,6 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
     override fun onClick(view: View) {
         when (view) {
             btnBack -> {
-
                 finish()
             }
             labelPurposeBtn -> {//标签意向
@@ -186,33 +185,34 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
         showConditionPicker(data ?: mutableListOf())
     }
 
-    override fun addTagResult(result: Boolean, data: MutableList<TagBean>?) {
+    override fun addTagResult(result: Boolean, data: AddLabelResultBean?) {
         if (result) {
             if (data != null) {
-                UserManager.saveLabels(data)
+                UserManager.saveLabels(data.list)
                 if (from != AddLabelActivity.FROM_REGISTER)
                     EventBus.getDefault().post(UpdateAvatorEvent(true))
-            }
 
-            if (from == AddLabelActivity.FROM_REGISTER) {
-                if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance()))
-                    ActivityUtils.finishActivity(LabelQualityActivity::class.java)
-                finish()
-                startActivity<AddLabelSuccessActivity>("data" to labelBean)
-            } else {
-                EventBus.getDefault().post(UpdateMyLabelEvent())
-                EventBus.getDefault().post(UserCenterLabelEvent())
-                if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance())) {
-                    ActivityUtils.finishActivity(LabelQualityActivity::class.java)
-                }
-                if (ActivityUtils.isActivityAlive(MyLabelQualityActivity::class.java.newInstance()))
-                    ActivityUtils.finishActivity(MyLabelQualityActivity::class.java)
-                if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))
-                    ActivityUtils.finishActivity(AddLabelActivity::class.java)
+                //todo 这里标签是来自于发布或者已经在该标签下发布过内容，就不走发布流程
+                if (from != AddLabelActivity.FROM_PUBLISH && !data!!.is_published) {
+                    if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance()))
+                        ActivityUtils.finishActivity(LabelQualityActivity::class.java)
+                    finish()
+                    startActivity<AddLabelSuccessActivity>("data" to labelBean)
+                } else {
+                    EventBus.getDefault().post(UpdateMyLabelEvent())
+                    EventBus.getDefault().post(UserCenterLabelEvent())
+                    if (ActivityUtils.isActivityAlive(LabelQualityActivity::class.java.newInstance())) {
+                        ActivityUtils.finishActivity(LabelQualityActivity::class.java)
+                    }
+                    if (ActivityUtils.isActivityAlive(MyLabelQualityActivity::class.java.newInstance()))
+                        ActivityUtils.finishActivity(MyLabelQualityActivity::class.java)
+                    if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))
+                        ActivityUtils.finishActivity(AddLabelActivity::class.java)
 //                if (ActivityUtils.isActivityAlive(MyLabelActivity::class.java.newInstance()))
 //                    ActivityUtils.finishActivity(MyLabelActivity::class.java)
-                finish()
+                    finish()
 //                startActivity<MyLabelActivity>()
+                }
             }
         }
     }

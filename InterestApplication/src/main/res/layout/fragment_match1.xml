@@ -124,7 +124,7 @@
                     android:id="@+id/animation_like"
                     android:alpha="0"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/icon_like_with_circle"
+                    android:src="@drawable/icon_like_match"
                     android:layout_width="50dp"
                     android:layout_centerVertical="true"
                     android:layout_height="50dp"/>
@@ -132,7 +132,7 @@
             <ImageView
                     android:id="@+id/animation_dislike"
                     android:alpha="0"
-                    android:src="@drawable/icon_dislike_with_circle"
+                    android:src="@drawable/icon_dislike_match"
                     android:layout_width="0dp"
                     android:layout_centerVertical="true"
                     android:layout_height="0dp"/>

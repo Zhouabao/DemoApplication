@@ -27,6 +27,7 @@ import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
+import com.sdy.jitangapplication.ui.fragment.MySquareFragment
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -54,10 +55,17 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     companion object {
         public val OPTION_VIEW = "VIEW"
         public val REQUEST_CODE = 1002
-        fun startActivity(activity: Activity, transactionView: View, data: SquareBean, position: Int) {
+        fun startActivity(
+            activity: Activity,
+            transactionView: View,
+            data: SquareBean,
+            position: Int,
+            type: Int = MySquareFragment.TYPE_SQUARE
+        ) {
             val intent = Intent(activity, SquarePlayDetailActivity::class.java)
             intent.putExtra("squareBean", data)
             intent.putExtra("position", position)
+            intent.putExtra("type", type)
             //这里指定了共享的视图元素
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transactionView, OPTION_VIEW)
             ActivityCompat.startActivityForResult(activity, intent, REQUEST_CODE, options.toBundle())
@@ -323,6 +331,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             val dialog = DeleteDialog(this)
             dialog.show()
             dialog.tip.text = getString(R.string.report_square)
+            dialog.title.text = "动态举报"
             dialog.confirm.text = "举报"
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {

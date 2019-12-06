@@ -1385,16 +1385,18 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
     /**
      * 展示日历
      */
+    //错误使用案例： startDate.set(2013,1,1);  endDate.set(2020,12,1);
+    //正确使用案例： startDate.set(2013,0,1);  endDate.set(2020,11,1);
     private fun showCalender(userBirth: TextView) {
         val startDate = Calendar.getInstance()
         val endDate = Calendar.getInstance()
-        startDate.set(endDate.get(Calendar.YEAR) - 50, 1, 1)
+        startDate.set(endDate.get(Calendar.YEAR) - 50, 0, 1)
         endDate.set(endDate.get(Calendar.YEAR) - 18, endDate.get(Calendar.MONTH), endDate.get(Calendar.DATE))
         val clOptions = TimePickerBuilder(this, OnTimeSelectListener { date, v ->
             //            getZodiac
             userBirth.text =
                 "${TimeUtils.date2String(date, SimpleDateFormat("yyyy-MM-dd"))}/${TimeUtils.getZodiac(date)}"
-            savePersonalParams["birth"] = TimeUtils.date2Millis(date)
+            savePersonalParams["birth"] = TimeUtils.date2Millis(date) / 1000L
             isChange = true
             checkSaveEnable()
         })

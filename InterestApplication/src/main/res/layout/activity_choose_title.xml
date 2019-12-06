@@ -10,7 +10,7 @@
         android:fitsSystemWindows="true"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content"
+        app:msv_viewState="loading"
         tools:context=".ui.activity.ChooseTitleActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,12 +26,13 @@
                 android:maxLength="12"
                 android:singleLine="true"
                 android:background="@null"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:hint="请输入标题文本"
                 android:textColor="@color/colorBlack"
                 android:textSize="16sp"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/llTitle"/>
 

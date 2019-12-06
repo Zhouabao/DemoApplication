@@ -3,18 +3,17 @@ package com.sdy.jitangapplication.nim.session;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import com.luck.picture.lib.tools.SdkVersionUtils;
-import com.sdy.jitangapplication.R;
 import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.tools.SdkVersionUtils;
 import com.netease.nim.uikit.business.session.constant.RequestCode;
 import com.netease.nim.uikit.common.util.string.MD5;
 import com.netease.nimlib.sdk.chatroom.ChatRoomMessageBuilder;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 
 import java.io.File;
@@ -43,7 +42,7 @@ public class ChatPickImageAction extends ChatBaseAction {
     private void onTakePhoto() {
         int requestCode = makeRequestCode(RequestCode.PICK_IMAGE);
 
-        CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode, PictureMimeType.ofVideo() & PictureMimeType.ofImage());
+        CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode, PictureMimeType.ofAll(),true);
 
     }
 
@@ -55,12 +54,12 @@ public class ChatPickImageAction extends ChatBaseAction {
                 List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < selectList.size(); i++) {
                     LocalMedia media = selectList.get(i);
-                    if (media.getMimeType().startsWith(PictureConfig.IMAGE)) {//发送图片
+                    if (PictureMimeType.eqImage(media.getMimeType())) {//发送图片
                         if (SdkVersionUtils.checkedAndroid_Q())
                             sendImageAfterSelfImagePicker(new File(media.getAndroidQToPath()));
                         else
                             sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
-                    } else if (media.getMimeType().startsWith(PictureConfig.VIDEO)) {//发送视频
+                    } else if (PictureMimeType.eqVideo(media.getMimeType())) {//发送视频
                         if (SdkVersionUtils.checkedAndroid_Q())
                             sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getAndroidQToPath()));
                         else

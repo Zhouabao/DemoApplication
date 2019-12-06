@@ -42,6 +42,7 @@ data class AddLabelBean(
  */
 data class LabelQualityBean(
     var content: String = "",
+    var icon: String = "",
     var id: Int = 0,
     var title: String = "",
     var checked: Boolean = false,
@@ -105,3 +106,6 @@ data class NewJobBean(
         return title
     }
 }
+
+
+data class AddLabelResultBean(var is_published: Boolean = false, var list: MutableList<TagBean> = mutableListOf())

@@ -55,6 +55,7 @@ class MySquareFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPres
         const val TYPE_LIKE = 2
         const val TYPE_MINE = 1
         const val TYPE_SQUARE = 0
+        const val TYPE_OTHER_DETAIL = 4
     }
 
     override fun loadData() {

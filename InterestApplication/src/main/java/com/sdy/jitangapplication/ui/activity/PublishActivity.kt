@@ -15,6 +15,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.Video
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -28,11 +29,14 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.services.core.PoiItem
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.*
+import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback
+import com.chad.library.adapter.base.listener.OnItemDragListener
 import com.google.gson.Gson
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
@@ -46,10 +50,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.AnnounceEvent
 import com.sdy.jitangapplication.event.UpdateLabelEvent
 import com.sdy.jitangapplication.event.UploadEvent
-import com.sdy.jitangapplication.model.MediaBean
-import com.sdy.jitangapplication.model.MediaParamBean
-import com.sdy.jitangapplication.model.MyLabelBean
-import com.sdy.jitangapplication.model.NewLabel
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.player.MediaPlayerHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper.*
@@ -58,7 +59,6 @@ import com.sdy.jitangapplication.presenter.PublishPresenter
 import com.sdy.jitangapplication.presenter.view.PublishView
 import com.sdy.jitangapplication.ui.adapter.ChoosePhotosAdapter
 import com.sdy.jitangapplication.ui.adapter.EmojAdapter
-import com.sdy.jitangapplication.ui.adapter.PublishLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UriUtils
@@ -220,7 +220,17 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         }
     }
 
+    private var titleBean: LabelQualityBean? = null
     private fun initData() {
+        if (intent.getSerializableExtra("titleBean") != null) {
+            titleBean = intent.getSerializableExtra("titleBean") as LabelQualityBean
+            chooseTitleBtn.text = titleBean!!.content
+            chooseTitleBtn.ellipsize = TextUtils.TruncateAt.MARQUEE
+            chooseTitleBtn.isSingleLine = true
+            chooseTitleBtn.isSelected = true
+            chooseTitleBtn.isFocusable = true
+            chooseTitleBtn.isFocusableInTouchMode = true
+        }
         locationCity.text = UserManager.getCity()
 //        GlideUtil.loadAvatorImg(this, UserManager.getAvator(), publisherAvator)
         contentLength.text = SpanUtils.with(contentLength)
@@ -290,6 +300,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         rightBtn1.setOnClickListener(this)
         locationCity.setOnClickListener(this)
         chooseTitleBtn.setOnClickListener(this)
+        tagLayoutRv.setOnClickListener(this)
         btn_emo.setOnClickListener(this)
 
         initTags()
@@ -321,44 +332,19 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
 
     /***************设置选中的标签******************/
-    private val publishLabelAdapter by lazy { PublishLabelAdapter() }
     private var checkTags = mutableListOf<NewLabel>()
-    private fun initTags() {
-        tagLayoutRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        tagLayoutRv.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(8F),
-                resources.getColor(R.color.colorWhite)
-            )
-        )
-        tagLayoutRv.adapter = publishLabelAdapter
 
+    private fun initTags() {
         //获取广场首页选中的标签id
         val checkedId = UserManager.getGlobalLabelId()
         val myTags: MutableList<NewLabel> = UserManager.getSpLabels()
         for (tag in myTags) {
             if (checkedId == tag.id && checkedId != Constants.RECOMMEND_TAG_ID) {
-                publishLabelAdapter.addData(tag)
                 checkTags.add(tag)
+                tagLayoutRv.text = tag.title
             }
         }
 
-        publishLabelAdapter.setOnItemClickListener { adapter, view, position ->
-            startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL)
-//            if (position == 0) {
-//                startActivityForResult<PublishChooseLabelsActivity>(
-//                    REQUEST_CODE_LABEL,
-//                    "checkedLabels" to checkTags as Serializable
-//                )
-//            } else {//其他时候点击就删除标签
-//                val item = publishLabelAdapter.data[position]
-//                checkTags.remove(item)
-//                publishLabelAdapter.data.remove(item)
-//                publishLabelAdapter.notifyItemRemoved(position)
-//            }
-        }
     }
 
 
@@ -374,6 +360,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     private val allVideoThumbAdapter by lazy { ChoosePhotosAdapter(2) }//全部视频封面
     private var videoCheckIndex = -1
 
+    //开启拖拽
+    private var fromPos = -1
+    private var toPos = -1
     private fun initPickedRv() {
         pickedPhotosRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         //垂直分割线
@@ -385,6 +374,38 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 resources.getColor(R.color.colorWhite)
             )
         )
+
+        val itemDragAndSwpieCallBack = ItemDragAndSwipeCallback(pickedPhotoAdapter)
+        val itemTouchHelper = ItemTouchHelper(itemDragAndSwpieCallBack)
+        itemTouchHelper.attachToRecyclerView(pickedPhotosRv)
+
+        pickedPhotoAdapter.enableDragItem(itemTouchHelper, R.id.choosePhoto, true)
+        pickedPhotoAdapter.setOnItemDragListener(object : OnItemDragListener {
+            override fun onItemDragMoving(
+                p0: RecyclerView.ViewHolder?,
+                p1: Int,
+                p2: RecyclerView.ViewHolder?,
+                p3: Int
+            ) {
+            }
+
+            override fun onItemDragStart(p0: RecyclerView.ViewHolder?, position: Int) {
+                fromPos = position
+            }
+
+            override fun onItemDragEnd(p0: RecyclerView.ViewHolder?, position: Int) {
+                toPos = position
+                if (fromPos != toPos && fromPos != -1 && toPos != -1) {
+                    val data = pickedPhotos[fromPos]
+                    pickedPhotos.removeAt(fromPos)
+                    pickedPhotos.add(toPos, data)
+                    pickedPhotoAdapter.notifyDataSetChanged()
+                }
+                fromPos = -1
+                toPos = -1
+            }
+
+        })
         pickedPhotosRv.adapter = pickedPhotoAdapter
         pickedPhotoAdapter.setNewData(pickedPhotos)
         pickedPhotoAdapter.setOnItemChildClickListener { _, view, position ->
@@ -450,30 +471,22 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 }
                 //点击选中
                 R.id.choosePhotoDel -> {
-                    //相册的选择与取消选择
-                    if (pickedPhotos.size == 9) {
+                    val data = (allPhotoAdapter.data[position])
+                    if (!data.ischecked && pickedPhotos.size == 9) {
                         CommonFunction.toast("最多只能选9张图片")
                         return@setOnItemChildClickListener
                     }
                     allPhotoAdapter.data[position].ischecked = !(allPhotoAdapter.data[position].ischecked)
-                    pickedPhotos.add(allPhotoAdapter.data[position])
-                    pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
-                        View.VISIBLE
-                    } else {
-                        View.INVISIBLE
-                    }
-                    pickedPhotoAdapter.notifyDataSetChanged()
-                    allPhotoAdapter.notifyDataSetChanged()
-                    checkCompleteBtnEnable()
-                }
-                //点击取消选择
-                R.id.choosePhotoIndex -> {
-                    allPhotoAdapter.data[position].ischecked = !(allPhotoAdapter.data[position].ischecked)
-                    for (photo in pickedPhotos) {
-                        if (photo.id == allPhotoAdapter.data[position].id) {
-                            pickedPhotos.remove(photo)
-                            break
+                    if (!allPhotoAdapter.data[position].ischecked) {
+                        for (photo in pickedPhotos) {
+                            if (photo.id == allPhotoAdapter.data[position].id) {
+                                pickedPhotos.remove(photo)
+                                break
+                            }
                         }
+                    } else {
+                        //相册的选择与取消选择
+                        pickedPhotos.add(allPhotoAdapter.data[position])
                     }
                     pickedPhotosRv.visibility = if (pickedPhotos.size > 0) {
                         View.VISIBLE
@@ -1021,14 +1034,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     return
                 }
 
-                if (chooseTitleBtn.text.isNullOrEmpty()) {
-                    CommonFunction.toast("标题为必填内容")
-                }
-
-//                if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-//                    CommonFunction.toast("语音、图片、视频至少要选择一种发布哦~")
-//                    return
+//                if (chooseTitleBtn.text.isNullOrEmpty()) {
+//                    CommonFunction.toast("标题为必填内容")
 //                }
+
+                if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && chooseTitleBtn.text.isNullOrEmpty()) {
+                    CommonFunction.toast("文本内容和媒体内容至少要选择一种发布哦~")
+                    return
+                }
 
                 if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && currentActionState != ACTION_DONE && !isTopPreview) {
                     CommonFunction.toast("请录制完语音再发布")
@@ -1044,59 +1057,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     return
                 }
 
-                //todo 此处要存下所有的数据信息
                 UserManager.publishState = 1
-                for (i in 0 until checkTags.size) {
-                    UserManager.checkIds.add(checkTags[i].id)
-                }
-                val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-                    0
-                } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-                    3
-                } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) {
-                    1
-                } else {
-                    2
-                }
-                UserManager.publishParams = hashMapOf(
-                    "token" to UserManager.getToken(),
-                    "accid" to UserManager.getAccid(),
-                    "tag_id" to UserManager.getGlobalLabelId(),
-                    "descr" to "${publishContent.text}",
-                    "lat" to if (positionItem == null) {
-                        UserManager.getlatitude()
-                    } else {
-                        positionItem!!.latLonPoint?.latitude ?: 0.0
-                    },
-                    "lng" to if (positionItem == null) {
-                        UserManager.getlongtitude()
-                    } else {
-                        positionItem!!.latLonPoint?.longitude ?: 0.0
-                    },
-                    "province_name" to if (positionItem == null) {
-                        UserManager.getProvince()
-                    } else {
-                        positionItem!!.provinceName ?: ""
-                    },
-                    "city_name" to if (positionItem == null) {
-                        UserManager.getCity()
-                    } else {
-                        positionItem!!.cityName ?: ""
-                    },
-                    "city_code" to (if (positionItem == null) {
-                        UserManager.getCityCode()
-                    } else {
-                        positionItem!!.cityCode ?: ""
-                    }),
-                    "puber_address" to if (locationCity.text.toString() == "不显示位置") {
-                        ""
-                    } else {
-                        locationCity.text.toString()
-                    },
-                    //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
-                    "type" to type
-                )
-
 
                 if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//文本
                     publish()
@@ -1284,13 +1245,15 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             }
 
             R.id.chooseTitleBtn -> {
-                startActivityForResult<ChooseTitleActivity>(REQUEST_CODE_TITILE)
+                startActivityForResult<ChooseTitleActivity>(REQUEST_CODE_TITILE, "tag_id" to checkTags[0].id)
+            }
+            R.id.tagLayoutRv -> {
+                startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL)
             }
         }
     }
 
 
-    private var checkedLabel: NewLabel? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -1397,11 +1360,20 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 if ((data!!.getSerializableExtra("label") as MyLabelBean) != null) {
                     val myLabelBean = data!!.getSerializableExtra("label") as MyLabelBean
                     //todo 这里要更新选中的标签
-                    checkTags.clear()
-                    checkTags.add(NewLabel(icon = myLabelBean.icon,id = myLabelBean.id,title = myLabelBean.title))
-                    publishLabelAdapter.data.clear()
-                    publishLabelAdapter.addData(checkTags)
-                    checkCompleteBtnEnable()
+
+                    if (myLabelBean.tag_id != checkTags[0].id) {
+                        checkTags.clear()
+                        checkTags.add(
+                            NewLabel(
+                                icon = myLabelBean.icon,
+                                id = myLabelBean.tag_id,
+                                title = myLabelBean.title
+                            )
+                        )
+                        tagLayoutRv.text = checkTags[0].title
+                        chooseTitleBtn.text = ""
+                        checkCompleteBtnEnable()
+                    }
                 }
             }
             //地图返回
@@ -1410,12 +1382,23 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     positionItem = data!!.getParcelableExtra("poiItem") as PoiItem
                     locationCity.text = positionItem!!.title + (positionItem!!.cityName ?: "") + (positionItem!!.adName
                         ?: "") + (positionItem!!.businessArea ?: "") + (positionItem!!.snippet ?: "")
+
+                    locationCity.ellipsize = TextUtils.TruncateAt.MARQUEE
+                    locationCity.isSingleLine = true
+                    locationCity.isSelected = true
+                    locationCity.isFocusable = true
+                    locationCity.isFocusableInTouchMode = true
                 }
             }
             //发布标题返回
             else if (requestCode == REQUEST_CODE_TITILE) {
                 if (data?.getStringExtra("title") != null) {
                     chooseTitleBtn.text = data?.getStringExtra("title")
+                    chooseTitleBtn.ellipsize = TextUtils.TruncateAt.MARQUEE
+                    chooseTitleBtn.isSingleLine = true
+                    chooseTitleBtn.isSelected = true
+                    chooseTitleBtn.isFocusable = true
+                    chooseTitleBtn.isFocusableInTouchMode = true
                 }
             }
         }
@@ -1430,10 +1413,12 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     private val keyList: MutableList<String> = mutableListOf()
 
     private fun publish() {
+        //todo 此处要存下所有的数据信息
         val checkIds = mutableListOf<Int>()
         for (i in 0 until checkTags.size) {
             checkIds.add(checkTags[i].id)
         }
+        UserManager.checkIds = checkIds
         val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
             0
         } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
@@ -1447,8 +1432,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         val param = hashMapOf(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
-            "tag_id" to UserManager.getGlobalLabelId(),
             "descr" to "${publishContent.text}",
+            "tag_id" to checkTags[0].id,
+            "title" to "${chooseTitleBtn.text.toString()}",
             "lat" to if (positionItem == null) {
                 UserManager.getlatitude()
             } else {
@@ -1495,8 +1481,11 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             //发布图片/视频/声音 后加密的json串（ios和android定义相同数据结构）
             //  "md5_json" to ""
         )
+        UserManager.publishParams = param
 
-        mPresenter.publishContent(type, param, checkIds, keyList)
+        mPresenter.publishContent(
+            type, UserManager.publishParams, checkIds, keyList = keyList
+        )
     }
 
 

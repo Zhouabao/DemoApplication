@@ -177,11 +177,13 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
 
     private val loading by lazy { LoadingDialog(this) }
     override fun showLoading() {
-        loading.show()
+        if (!loading.isShowing)
+            loading.show()
     }
 
     override fun hideLoading() {
-        loading.hide()
+        if (loading.isShowing)
+            loading.hide()
     }
 
 

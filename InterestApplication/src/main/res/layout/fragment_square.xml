@@ -21,7 +21,7 @@
             android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_height="match_parent">
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -40,6 +40,7 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/squareDynamicRv"
                     android:orientation="vertical"
+                    android:overScrollMode="never"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -143,7 +144,7 @@
     <include
             android:id="@+id/loadingLayout"
             layout="@layout/loading_layout"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
     <include
             android:id="@+id/errorLayout"

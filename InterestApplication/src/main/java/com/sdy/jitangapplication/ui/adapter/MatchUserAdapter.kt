@@ -31,7 +31,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
     var my_tags_quality: MutableList<LabelQualityBean> = mutableListOf()
     override fun convert(holder: BaseViewHolder, item: MatchBean) {
         //为了防止indicator重复 每次先给他remove了
-//        holder.addOnClickListener(R.id.v1)
+        holder.addOnClickListener(R.id.v1)
         holder.itemView.vpIndicator.removeAllViews()
         holder.itemView.vpPhotos.setScrollable(false)
         holder.itemView.vpPhotos.tag = holder.layoutPosition

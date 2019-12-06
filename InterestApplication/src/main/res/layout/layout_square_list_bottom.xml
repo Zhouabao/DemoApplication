@@ -10,13 +10,12 @@
 
     <com.ctetin.expandabletextviewlibrary.ExpandableTextView
             android:id="@+id/squareContent1"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="12dp"
-            android:textColor="@color/colorBlack"
-            android:alpha="0.8"
-            android:textSize="15sp"
+            android:textColor="#FF2C2F31"
+            android:textSize="17sp"
             android:layout_marginLeft="15dp"
             android:ellipsize="end"
             android:lineSpacingMultiplier="1.4"
@@ -36,6 +35,27 @@
             tools:text="在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品"/>
 
 
+    <TextView
+            android:id="@+id/squareLocationAndTime1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack99"
+            android:layout_marginTop="15dp"
+            android:textSize="12sp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:layout_marginRight="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:background="@drawable/rectangle_gray_3dp"
+            app:layout_constraintLeft_toLeftOf="@id/squareContent1"
+            app:layout_constraintTop_toBottomOf="@id/squareContent1"
+            tools:text="北京市"
+            />
+
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/squareTime"
             android:layout_width="0dp"
@@ -44,6 +64,7 @@
             android:layout_marginBottom="17dp"
             android:layout_marginRight="20dp"
             android:scrollbars="none"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/squareContent1"
             app:layout_constraintRight_toLeftOf="@id/squareDianzanBtn1"
@@ -55,16 +76,14 @@
             android:drawableLeft="@drawable/icon_dianzan"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:drawablePadding="8dp"
+            android:drawablePadding="4dp"
             android:textStyle="bold"
             android:gravity="center"
             android:textColor="@color/colorBlack6f"
             android:textSize="15sp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="18dp"
-            app:layout_constraintBottom_toBottomOf="@id/squareTime"
-            app:layout_constraintRight_toLeftOf="@id/squareCommentBtn1"
-            app:layout_constraintTop_toTopOf="@id/squareTime"
+            android:layout_marginTop="20dp"
+            app:layout_constraintLeft_toLeftOf="@id/squareContent1"
+            app:layout_constraintTop_toBottomOf="@id/squareLocationAndTime1"
             tools:text="123"/>
 
 
@@ -73,32 +92,33 @@
             android:drawableLeft="@drawable/icon_comment"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:drawablePadding="8dp"
+            android:drawablePadding="4dp"
             android:textStyle="bold"
             android:gravity="center"
             android:textColor="@color/colorBlack6f"
             android:textSize="15sp"
+            android:layout_marginLeft="27dp"
             android:layout_marginRight="18dp"
-            app:layout_constraintBottom_toBottomOf="@id/squareTime"
-            app:layout_constraintRight_toLeftOf="@id/squareMoreBtn1"
-            app:layout_constraintTop_toTopOf="@id/squareTime"
+            app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+            app:layout_constraintLeft_toRightOf="@id/squareDianzanBtn1"
+            app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
             tools:text="123"/>
 
 
     <TextView
             android:id="@+id/squareZhuanfaBtn1"
-            android:visibility="gone"
+            android:visibility="visible"
             android:drawableLeft="@drawable/icon_zhuanfa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="8dp"
+            android:drawablePadding="4dp"
             android:textStyle="bold"
+            android:layout_marginLeft="27dp"
             android:gravity="center_vertical"
             android:textColor="@color/colorBlack6f"
             android:textSize="15sp"
-            android:layout_marginLeft="20dp"
             app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
-            app:layout_constraintStart_toEndOf="@id/squareCommentBtn1"
+            app:layout_constraintLeft_toRightOf="@id/squareCommentBtn1"
             app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
             tools:text="123"/>
 

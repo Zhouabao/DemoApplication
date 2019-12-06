@@ -4,7 +4,6 @@ package com.sdy.jitangapplication.ui.fragment
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,12 +26,14 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.FriendBean
+import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.SquareListBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
@@ -127,13 +128,44 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     }
 
 
+    //引导发布标题
+    val guideList by lazy { mutableListOf<LabelQualityBean>() }
+    //当前引导发布标题的下标
+    private var currentTitleIndex = -1
     //创建引导布局
     private fun initGuideSquareView(): View {
-        val guideHeadView = LayoutInflater.from(activity!!).inflate(R.layout.headerview_guide_publish, squareDynamicRv, false)
+        val guideHeadView =
+            LayoutInflater.from(activity!!).inflate(R.layout.headerview_guide_publish, squareDynamicRv, false)
+        guideHeadView.guideReselect.onClick {
+            if (currentTitleIndex < guideList.size - 1) {
+                currentTitleIndex += 1
+            } else {
+                currentTitleIndex = 0
+            }
+            setGuidePublishTitle(guideList[currentTitleIndex])
+        }
+
         guideHeadView.guidePublish.onClick {
             mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
+            adapter.headerLayout.guidePublish.isEnabled = false
+            if (currentTitleIndex != -1) {
+                activity!!.intent.putExtra("titleBean", guideList[currentTitleIndex])
+            }
         }
         return guideHeadView
+    }
+
+    /**
+     * 设置当前的标题
+     */
+    private fun setGuidePublishTitle(labelQualityBean: LabelQualityBean) {
+        GlideUtil.loadRoundImgCenterinside(
+            activity!!,
+            labelQualityBean.icon,
+            adapter.headerLayout.guideIv, 0.0f,
+            SizeUtils.dp2px(12F)
+        )
+        adapter.headerLayout.guideTv.text = labelQualityBean.content
     }
 
 
@@ -149,7 +181,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             resetAudio()
             startActivityForResult<SquarePlayListDetailActivity>(
                 200,
-                "target_accid" to (friendsAdapter.data[position].accid ?: 0)
+                ("target_accid" to (friendsAdapter.data[position].accid ?: 0)), "position" to position
             )
         }
 
@@ -173,17 +205,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             setViewState(LOADING)
 //            这个地方还要默认设置选中第一个标签来更新数据
             mPresenter.getSquareList(listParams, true, true)
-            mPresenter.getFrinedsList(friendsParams)
+            //mPresenter.getFrinedsList(friendsParams)
         }
-
-        squareDynamicRv.addItemDecoration(
-            com.sdy.jitangapplication.widgets.DividerItemDecoration(
-                activity!!,
-                com.sdy.jitangapplication.widgets.DividerItemDecoration.HORIZONTAL_LIST,
-                SizeUtils.dp2px(8F),
-                Color.parseColor("#FFF1F2F6")
-            )
-        )
 
         adapter.setHeaderAndEmpty(true)
         squareDynamicRv.layoutManager = layoutManager
@@ -267,7 +290,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         }
 
         mPresenter.getSquareList(listParams, true, true)
-        mPresenter.getFrinedsList(friendsParams)
+//        mPresenter.getFrinedsList(friendsParams)
 
     }
 
@@ -386,7 +409,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
         refreshLayout.setNoMoreData(false)
         mPresenter.getSquareList(listParams, true)
-        mPresenter.getFrinedsList(friendsParams)
+//        mPresenter.getFrinedsList(friendsParams)
 
     }
 
@@ -424,6 +447,28 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             }
 
             setViewState(CONTENT)
+            if (isRefresh) {
+                if (data!!.friend_list.isNullOrEmpty()) {
+                    adapter.headerLayout.friendTv.visibility = View.GONE
+                    adapter.headerLayout.headRv.visibility = View.GONE
+                } else {
+                    adapter.headerLayout.friendTv.visibility = View.VISIBLE
+                    adapter.headerLayout.headRv.visibility = View.VISIBLE
+                    friendsAdapter.setNewData(data!!.friend_list)
+                }
+
+                currentTitleIndex = 0
+                if (data!!.title_banner.isNullOrEmpty()) {
+                    adapter.headerLayout.guidePublishCl.isVisible = false
+                } else {
+                    adapter.headerLayout.guidePublishCl.isVisible = true
+                    guideList.clear()
+                    guideList.addAll(data!!.title_banner!!)
+                    setGuidePublishTitle(data!!.title_banner!![currentTitleIndex])
+                }
+            }
+
+
             if (data!!.list != null && data!!.list!!.size > 0) {
                 for (tempData in 0 until data!!.list!!.size) {
                     data!!.list!![tempData].type = when {
@@ -467,6 +512,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
     }
 
+
     override fun onGetSquareLikeResult(position: Int, result: Boolean) {
         if (result) {
             adapter.data[position].originalLike = adapter.data[position].isliked
@@ -502,6 +548,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             R.id.squareEdit -> {
                 mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
                 squareEdit.isEnabled = false
+                activity!!.intent.removeExtra("titleBean")
             }
         }
     }
@@ -607,7 +654,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNotifyEvent(event: NotifyEvent) {
         val pos = event.position
-        GSYVideoManager.releaseAllVideos()
+//        GSYVideoManager.releaseAllVideos()
 
 //        adapter.notifyDataSetChanged()
         //静音
@@ -793,7 +840,9 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             if (event.context is UserCenterActivity) {
                 event.context.startActivity<PublishActivity>("from" to 2)
             } else {
-                event.context.startActivity<PublishActivity>()
+
+                activity!!.intent.setClass(event.context, PublishActivity::class.java)
+                event.context.startActivity(activity!!.intent)
             }
         }
     }
@@ -921,6 +970,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             onRePublishEvent(RePublishEvent(true, activity!!))
         }
         squareEdit.isEnabled = true
+        adapter.headerLayout.guidePublish.isEnabled = true
     }
 
 
@@ -954,7 +1004,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         super.onActivityResult(requestCode, resultCode, data)
         //查看好友的，出来请求
         if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
-            mPresenter.getFrinedsList(friendsParams)
+            if (data != null)
+                if (data.getIntExtra("position", -1) != -1) {
+                    friendsAdapter.remove(data.getIntExtra("position", -1))
+                }
+//            mPresenter.getFrinedsList(friendsParams)
         }
     }
 

@@ -35,7 +35,8 @@ class MyCollectionEtcActivity : BaseActivity() {
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK)
             if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
-                EventBus.getDefault().post(NotifyEvent(data!!.getIntExtra("position", -1)))
+                EventBus.getDefault()
+                    .post(NotifyEvent(data!!.getIntExtra("position", -1), data!!.getIntExtra("type", 0)))
             }
     }
 

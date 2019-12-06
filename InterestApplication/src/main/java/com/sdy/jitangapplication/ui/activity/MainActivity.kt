@@ -218,6 +218,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 tabHeaderCl.isVisible = (position == 0 || position == 1)
                 if (position != 3) {
                     customStatusBar.setBackgroundResource(R.color.colorTransparent)
+                } else if (initializeUserMe) {
+                    onChangeStatusEvent(ChangeStatusColorEvent())
                 }
             }
         })
@@ -431,27 +433,29 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 labelList[0].checked = true
                 UserManager.saveGlobalLabelId(labelList[0].id)
             }
+
+            //避免之前的用户进来，全局标签id对应不上
+            var hasChecked = false
+            for (label in labelList) {
+                if (label.checked) {
+                    hasChecked = true
+                    break
+                }
+            }
+            if (!hasChecked) {
+                labelList[0].checked = true
+                UserManager.saveGlobalLabelId(labelList[0].id)
+            }
+            labelAdapter.setNewData(labelList)
+            for (label in labelList.withIndex()) {
+                if (label.value.checked) {
+                    labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), label.index)
+                    break
+                }
+            }
         }
 
-        //避免之前的用户进来，全局标签id对应不上
-        var hasChecked = false
-        for (label in labelList) {
-            if (label.checked) {
-                hasChecked = true
-                break
-            }
-        }
-        if (!hasChecked) {
-            labelList[0].checked = true
-            UserManager.saveGlobalLabelId(labelList[0].id)
-        }
-        labelAdapter.setNewData(labelList)
-        for (label in labelList.withIndex()) {
-            if (label.value.checked) {
-                labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), label.index)
-                break
-            }
-        }
+
     }
 
 
@@ -518,11 +522,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
+    private var initializeUserMe = false
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onChangeStatusEvent(event: ChangeStatusColorEvent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             customStatusBar.setBackgroundResource(R.drawable.gradient_orange)
         }
+        initializeUserMe = true
     }
 
 

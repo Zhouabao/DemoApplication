@@ -55,7 +55,7 @@
                 android:id="@+id/successLabelGuide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="快秀一下你的健身成果"
+                tools:text="快秀一下你的健身成果"
                 android:textColor="#ff191919"
                 android:textSize="20sp"
                 android:layout_marginTop="63dp"

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -81,7 +82,17 @@ class MultiListSquareAdapter(
 
 
     override fun convert(holder: BaseViewHolder, item: SquareBean) {
-        holder.itemView.view.isVisible = holder.layoutPosition - headerLayoutCount != 0
+        (holder.itemView.squareTitleCl.layoutParams as ConstraintLayout.LayoutParams).topMargin =
+            if (holder.layoutPosition - headerLayoutCount == 0) {
+                SizeUtils.dp2px(0F)
+            } else {
+                SizeUtils.dp2px(40F)
+            }
+
+        holder.itemView.llTOP.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
+
+        holder.itemView.squareTitleCl.isVisible = !item.title.isNullOrEmpty()
+        holder.itemView.squareTitle.text = item.title ?: ""
 
         //设置点赞状态
         setLikeStatus(item.isliked, item.like_cnt, holder.itemView.squareDianzanBtn1)
@@ -95,7 +106,7 @@ class MultiListSquareAdapter(
                 holder.itemView.squareChatBtn1.visibility = View.VISIBLE
             }
 
-        if (item.descr.isEmpty()) {
+        if (item.descr.isNullOrEmpty()) {
             holder.itemView.squareContent1.visibility = View.GONE
         } else {
             holder.itemView.squareContent1.visibility = View.VISIBLE
@@ -115,7 +126,7 @@ class MultiListSquareAdapter(
             if (item.city_name.isEmpty() || item.city_name == item.province_name || item.province_name.isNullOrEmpty()) {
                 ""
             } else {
-                "\t${item.city_name}"
+                "${item.city_name}"
             }
         ).plus("\t\t${item.out_time}")
 //        holder.itemView.squareTime.text = "${item.out_time}"

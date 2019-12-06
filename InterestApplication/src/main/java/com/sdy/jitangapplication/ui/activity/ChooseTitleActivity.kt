@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.LabelQualityBean
@@ -23,6 +24,16 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
  * 发布选择标题
  */
 class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitleView, View.OnClickListener {
+    override fun getTagTraitInfoResult(b: Boolean, mutableList: MutableList<LabelQualityBean>?) {
+        stateTitle.viewState = if (b) {
+            MultiStateView.VIEW_STATE_CONTENT
+        } else {
+            MultiStateView.VIEW_STATE_CONTENT
+        }
+        if (b && !mutableList.isNullOrEmpty()) {
+            adapter.setNewData(mutableList)
+        }
+    }
 
     private val adapter by lazy { ChooseTitleAdapter() }
 
@@ -30,6 +41,12 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_title)
         initView()
+        mPresenter.getTagTraitInfo(
+            hashMapOf(
+                "type" to MyLabelQualityActivity.TYPE_TITLE,
+                "tag_id" to intent.getIntExtra("tag_id", 0)
+            )
+        )
     }
 
 
@@ -58,18 +75,20 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
         titleRv.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
             checkPos = position
-            titleEt.setText(adapter.data[position].content)
+            titleEt.text.clear()
             for (data in adapter.data) {
                 data.checked = data == adapter.data[position]
             }
             adapter.notifyDataSetChanged()
+            checkConfirmEnable()
         }
 
         titleEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (s != null && checkPos != -1 && s.toString() != adapter.data[checkPos].content) {
+                if (s != null && s.trim().toString().isNotEmpty() && checkPos != -1) {
                     adapter.data[checkPos].checked = false
                     adapter.notifyItemChanged(checkPos)
+                    checkPos = -1
                 }
                 checkConfirmEnable()
                 titleEt.setSelection(titleEt.text.length)
@@ -83,19 +102,11 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
             }
 
         })
-
-
-        adapter.addData(LabelQualityBean(content = "标题提是点击开始看"))
-        adapter.addData(LabelQualityBean(content = "标题提是点击开始看1"))
-        adapter.addData(LabelQualityBean(content = "标题提是点击开始看2"))
-        adapter.addData(LabelQualityBean(content = "标题提是点击开始看3"))
-        adapter.addData(LabelQualityBean(content = "标题提是点击开始看4"))
-        adapter.addData(LabelQualityBean(content = "标题提是点击开始看5"))
     }
 
 
     fun checkConfirmEnable() {
-        rightBtn1.isEnabled = titleEt.text.trim().toString().isNotEmpty()
+        rightBtn1.isEnabled = titleEt.text.trim().toString().isNotEmpty() || checkPos != -1
     }
 
 
@@ -105,8 +116,13 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
                 finish()
             }
             rightBtn1 -> {
-                intent.putExtra("title", titleEt.text.trim().toString())
+                if (titleEt.text.trim().isNotEmpty()) {
+                    intent.putExtra("title", titleEt.text.trim().toString())
+                } else if (checkPos != -1) {
+                    intent.putExtra("title", adapter.data[checkPos].content)
+                }
                 setResult(Activity.RESULT_OK, intent)
+                finish()
             }
         }
     }

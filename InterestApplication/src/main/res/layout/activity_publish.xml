@@ -22,7 +22,7 @@
             app:layout_constraintTop_toBottomOf="@id/llTitle">
 
         <TextView
-                android:text="选择标题"
+                android:text="选择兴趣"
                 android:textColor="#ff191919"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"
@@ -31,10 +31,10 @@
                 />
 
         <TextView
-                android:id="@+id/chooseTitleBtn"
+                android:id="@+id/tagLayoutRv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="请选择标题"
+                android:text="请选择兴趣"
                 android:gravity="center"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/icon_more_right"
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toTopOf="@id/tagLayoutRv"
+                app:layout_constraintBottom_toTopOf="@id/chooseTitleBtn"
                 app:layout_constraintLeft_toLeftOf="parent"
                 />
 
@@ -93,7 +93,7 @@
                 android:layout_height="83dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="12dp"
-                app:layout_constraintBottom_toTopOf="@id/tagLayoutRv"
+                app:layout_constraintBottom_toTopOf="@id/chooseTitleBtn"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
 
@@ -103,45 +103,71 @@
                 android:layout_marginLeft="12dp"
                 android:layout_width="302dp"
                 android:layout_height="50dp"
-                app:layout_constraintBottom_toTopOf="@id/tagLayoutRv"
+                app:layout_constraintBottom_toTopOf="@id/chooseTitleBtn"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/tagLayoutRv"
-                android:orientation="horizontal"
-                android:layout_height="30dp"
-                android:layout_width="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/locationCity"
-                app:layout_constraintLeft_toLeftOf="@id/publishContent"
-                app:layout_constraintTop_toTopOf="@id/locationCity"/>
-
-
         <TextView
-                android:id="@+id/locationCity"
+                android:id="@+id/chooseTitleBtn"
                 android:layout_height="30dp"
                 android:background="@drawable/shape_rectangle_light_gray_15dp"
-                android:layout_width="wrap_content"
+                android:layout_width="130dp"
                 android:paddingRight="12dp"
                 android:drawablePadding="7dp"
-                android:drawableLeft="@drawable/icon_map_colorful"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="15dp"
+                android:drawableLeft="@drawable/icon_publish_title"
                 android:textColor="#ff191919"
+                android:textColorHint="#ff191919"
                 android:textSize="14sp"
+                android:maxWidth="130dp"
                 android:singleLine="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:focusableInTouchMode="true"
+                android:maxLength="12"
                 android:paddingTop="6dp"
                 android:ellipsize="marquee"
                 android:gravity="center"
                 android:paddingBottom="6dp"
-                android:focusable="true"
-                android:scrollHorizontally="true"
                 android:layout_marginRight="15dp"
+                android:hint="选择标题"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                app:layout_constraintBottom_toBottomOf="@id/locationCityLl"
+                app:layout_constraintLeft_toLeftOf="@id/publishContent"
+                app:layout_constraintTop_toTopOf="@id/locationCityLl"
+                />
+
+        <LinearLayout
+                android:id="@+id/locationCityLl"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="72dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
                 app:layout_constraintBottom_toTopOf="@id/divide"
-                app:layout_constraintLeft_toRightOf="@id/tagLayoutRv"
-                tools:text="成都市"/>
+                app:layout_constraintLeft_toRightOf="@id/chooseTitleBtn"
+                app:layout_constraintRight_toRightOf="parent">
+
+            <TextView
+                    android:id="@+id/locationCity"
+                    android:layout_height="30dp"
+                    android:background="@drawable/shape_rectangle_light_gray_15dp"
+                    android:layout_width="wrap_content"
+                    android:paddingRight="12dp"
+                    android:drawablePadding="7dp"
+                    android:drawableLeft="@drawable/icon_map_colorful"
+                    android:textColor="#ff191919"
+                    android:textSize="14sp"
+                    android:textColorHint="#ff191919"
+                    android:paddingTop="6dp"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:paddingBottom="6dp"
+                    android:hint="选择发布位置"
+                    />
+        </LinearLayout>
 
 
         <TextView
@@ -151,9 +177,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="@id/locationCity"
+                app:layout_constraintBottom_toBottomOf="@id/locationCityLl"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/locationCity"
+                app:layout_constraintTop_toTopOf="@id/locationCityLl"
                 />
 
 
@@ -172,7 +198,7 @@
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="23dp"-->
         <!--android:orientation="horizontal"-->
-        <!--app:layout_constraintLeft_toLeftOf="@id/locationCity"-->
+        <!--app:layout_constraintLeft_toLeftOf="@id/locationCityLl"-->
         <!--app:layout_constraintTop_toBottomOf="@id/divide"-->
         <!--/>-->
 

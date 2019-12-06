@@ -94,14 +94,5 @@ class MyLabelAdapter : BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.it
             data.checked = true
         }
         adapter.addData(item.label_quality)
-        val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
-        if (helper.layoutPosition == 0) {
-            params.leftMargin = SizeUtils.dp2px(9F)
-        } else {
-            params.leftMargin = 0
-        }
-        if (helper.layoutPosition == data.size - 1) {
-            params.rightMargin = SizeUtils.dp2px(9F)
-        }
     }
 }

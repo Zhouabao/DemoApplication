@@ -291,7 +291,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
         checkIds: MutableList<Int>,
         keyList: MutableList<String> = mutableListOf()
     ) {
-        params["tags"] = Gson().toJson(checkIds)
+        params["tag_id"] = checkIds[0]
         params["comment"] = Gson().toJson(keyList)
         RetrofitFactory.instance.create(Api::class.java)
             .squareAnnounce(UserManager.getSignParams(params))

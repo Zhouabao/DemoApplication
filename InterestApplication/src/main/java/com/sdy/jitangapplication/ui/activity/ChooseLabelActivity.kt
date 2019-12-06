@@ -92,7 +92,7 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
                 finish()
             }
             addMoreLabelBtn -> {
-                intent.putExtra("from", AddLabelActivity.FROM_ADD_NEW)
+                intent.putExtra("from", AddLabelActivity.FROM_PUBLISH)
                 intent.putExtra("is_using", adapter.data as Serializable)
                 intent.putExtra("is_removed", removedLabel as Serializable)
                 intent.setClass(this, AddLabelActivity::class.java)
