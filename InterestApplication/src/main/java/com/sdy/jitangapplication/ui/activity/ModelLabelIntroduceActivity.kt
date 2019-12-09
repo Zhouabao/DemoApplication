@@ -18,7 +18,6 @@ import com.sdy.jitangapplication.presenter.view.ModelAboutMeView
 import com.sdy.jitangapplication.ui.adapter.ModelLabelIntroduceAdapter
 import kotlinx.android.synthetic.main.activity_model_label_introduce.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import org.jetbrains.anko.startActivityForResult
 
 /**
  * 标签介绍
@@ -76,13 +75,7 @@ class ModelLabelIntroduceActivity : BaseMvpActivity<ModelAboutMePresenter>(), Mo
 
         modelMeRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         modelMeRv.adapter = modelMeAdapter
-        modelMeAdapter.setOnItemClickListener { _, view, position ->
-            startActivityForResult<ModelAboutMeDetailActivity>(
-                100,
-                "content" to modelMeAdapter.data[position],
-                "from" to from
-            )
-        }
+
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {

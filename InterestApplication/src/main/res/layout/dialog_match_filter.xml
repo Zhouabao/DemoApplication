@@ -194,7 +194,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:drawableRight="@drawable/icon_verify"
+            android:drawableRight="@drawable/icon_verify_other"
             android:drawablePadding="5dp"
             android:text="通过认证后可开启该筛选"
             android:textColor="#ffc5c6c8"

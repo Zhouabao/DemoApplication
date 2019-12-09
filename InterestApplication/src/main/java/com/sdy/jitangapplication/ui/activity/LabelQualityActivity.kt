@@ -42,6 +42,8 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     private val adapter by lazy { LabelQualityAdapter(false) }
     //已经选择的特质适配器
     private val choosedQualityAdapter by lazy { LabelQualityAdapter(true) }
+    //所有特质中选中的特质
+    private val choosedFromAllQuality = mutableListOf<LabelQualityBean>()
     //用户自拟标签特质
     private val customQuality = mutableListOf<String>()
 
@@ -109,29 +111,33 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
             val data = choosedQualityAdapter.data[position]
             for (tempData in adapter.data.withIndex()) {
                 if (data.id == tempData.value.id) {
-                    tempData.value.unable = false
                     tempData.value.checked = false
                     adapter.notifyItemChanged(tempData.index)
                 }
             }
             choosedQualityAdapter.remove(position)
+            for (data1 in choosedFromAllQuality) {
+                if (data1.id == data.id) {
+                    adapter.addData(data1)
+                    choosedFromAllQuality.remove(data1)
+                    break
+                }
+            }
             checkConfirmEnable()
         }
 
 
         adapter.setOnItemClickListener { _, view, position ->
             val tempData = adapter.data[position]
-            if (!tempData.unable)
-                if (!tempData.checked && choosedQualityAdapter.data.size == MAX_QUALITY) {
-                    showWarningDialog(MAX_QUALITY)
-                    return@setOnItemClickListener
-                } else {
-                    tempData.unable = true
-                    tempData.checked = false
-                    adapter.notifyItemChanged(position)
-                    choosedQualityAdapter.addData(tempData)
-                    checkConfirmEnable()
-                }
+            if (!tempData.checked && choosedQualityAdapter.data.size == MAX_QUALITY) {
+                showWarningDialog(MAX_QUALITY)
+                return@setOnItemClickListener
+            } else {
+                choosedFromAllQuality.add(tempData)
+                adapter.remove(position)
+                choosedQualityAdapter.addData(tempData)
+                checkConfirmEnable()
+            }
 
         }
 
@@ -163,8 +169,9 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
             for (data in choosedQualityAdapter.data) {
                 for (data1 in adapter.data) {
                     if (data.id == data1.id) {
-                        data1.unable = true
                         data1.checked = false
+                        adapter.data.remove(data1)
+                        choosedFromAllQuality.add(data1)
                     }
                 }
             }

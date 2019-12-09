@@ -9,15 +9,13 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.*
-import com.flyco.tablayout.listener.CustomTabEntity
-import com.flyco.tablayout.listener.OnTabSelectListener
-import com.flyco.tablayout.utils.UnreadMsgUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -34,7 +32,6 @@ import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
 import com.sdy.jitangapplication.model.InvestigateBean
 import com.sdy.jitangapplication.model.NewLabel
-import com.sdy.jitangapplication.model.TabEntity
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
@@ -62,19 +59,6 @@ import java.util.*
 //路径标签个人建议写在一个类里面，方便统一管理和维护
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
-    private val iconUnselectIds = arrayListOf<Int>(
-        R.drawable.icon_tab_match,
-        R.drawable.icon_tab_square,
-        R.drawable.icon_tab_message,
-        R.drawable.icon_tab_me
-    )
-    private val iconSelectIds = arrayListOf<Int>(
-        R.drawable.icon_tab_match_checked,
-        R.drawable.icon_tab_square_checked,
-        R.drawable.icon_tab_message_checked,
-        R.drawable.icon_tab_me_checked
-    )
-    private val mTabEntitys = arrayListOf<CustomTabEntity>()
     private val titles = arrayOf("首页", "发现", "消息", "我的")
     //fragment栈管理
     private val mStack = Stack<Fragment>()
@@ -172,13 +156,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         initHeadView()
         initFragment()
         //进入页面弹消息提醒
-        if (UserManager.getSquareCount() > 0 || UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0
-            || NIMClient.getService(MsgService::class.java).totalUnreadCount > 0
-        ) {
-            showMsgDot()
-        } else {
-            tabBottomMain.hideMsg(2)
-        }
+        showMsgDot(
+            UserManager.getSquareCount() > 0 || UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0
+                    || NIMClient.getService(MsgService::class.java).totalUnreadCount > 0
+        )
 
     }
 
@@ -187,28 +168,19 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
       初始化Fragment栈管理
    */
     private fun initFragment() {
-        for (title in titles.withIndex()) {
-            mTabEntitys.add(TabEntity(title.value, iconSelectIds[title.index], iconUnselectIds[title.index]))
-        }
+        tabMatch.setOnClickListener(this)
+        tabMatchCount.setOnClickListener(this)
+        tabSquare.setOnClickListener(this)
+        tabMe.setOnClickListener(this)
+        tabMessage.setOnClickListener(this)
 
         mStack.add(matchFragment)
         mStack.add(squareFragment)
         mStack.add(messageListFragment)
         mStack.add(myFragment)
-
-        tabBottomMain.setTabData(mTabEntitys)
-        tabBottomMain.setOnTabSelectListener(object : OnTabSelectListener {
-            override fun onTabSelect(position: Int) {
-                vpMain.currentItem = position
-            }
-
-            override fun onTabReselect(position: Int) {
-
-            }
-
-        })
         vpMain.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
         vpMain.currentItem = 0
+        switchTab(0)
         vpMain.setScrollable(false)
         vpMain.offscreenPageLimit = 4
         vpMain.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -221,15 +193,183 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
 
             override fun onPageSelected(position: Int) {
-                tabBottomMain.currentTab = position
                 tabHeaderCl.isVisible = (position == 0 || position == 1)
                 if (position != 3) {
                     customStatusBar.setBackgroundResource(R.color.colorTransparent)
                 } else if (initializeUserMe) {
                     onChangeStatusEvent(ChangeStatusColorEvent())
                 }
+                switchTab(position)
             }
         })
+    }
+
+
+    /**
+     * 切换tab
+     */
+    private fun switchTab(position: Int) {
+        when (position) {
+            0 -> {
+                if (!UserManager.isUserVip()) {
+                    tabMatch.isVisible = true
+                    tabMatchCount.text = "${UserManager.getSlideCount()}"
+                    tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
+                    tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
+                } else {
+                    tabMatch.isVisible = false
+                    tabMatchCount.text = "首页"
+                    tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
+                    tabMatchCount.setPadding(0)
+                }
+
+                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_match_checked),
+                    null,
+                    null
+                )
+                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_square),
+                    null,
+                    null
+                )
+                tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMe.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_me),
+                    null,
+                    null
+                )
+                tabMessage.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMessage.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_message),
+                    null,
+                    null
+                )
+            }
+            1 -> {
+                tabMatch.isVisible = false
+                tabMatchCount.text = "首页"
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMatchCount.setPadding(0)
+                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_match),
+                    null,
+                    null
+                )
+                tabSquare.setTextColor(resources.getColor(R.color.colorOrange))
+                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_square_checked),
+                    null,
+                    null
+                )
+                tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMe.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_me),
+                    null,
+                    null
+                )
+                tabMessage.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMessage.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_message),
+                    null,
+                    null
+                )
+            }
+            2 -> {
+                tabMatch.isVisible = false
+                tabMatchCount.text = "首页"
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMatchCount.setPadding(0)
+                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_match),
+                    null,
+                    null
+                )
+                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_square),
+                    null,
+                    null
+                )
+                tabMessage.setTextColor(resources.getColor(R.color.colorOrange))
+                tabMessage.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_message_checked),
+                    null,
+                    null
+                )
+                tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMe.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_me),
+                    null,
+                    null
+                )
+            }
+            3 -> {
+                tabMatch.isVisible = false
+                tabMatchCount.text = "首页"
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMatchCount.setPadding(0)
+                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_match),
+                    null,
+                    null
+                )
+                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_square),
+                    null,
+                    null
+                )
+                tabMessage.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMessage.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_message),
+                    null,
+                    null
+                )
+                tabMe.setTextColor(resources.getColor(R.color.colorOrange))
+                tabMe.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_me_checked),
+                    null,
+                    null
+                )
+            }
+        }
+
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateSlideCountEvent(event: UpdateSlideCountEvent) {
+        if (vpMain.currentItem == 0) {
+            if (!UserManager.isUserVip()) {
+                tabMatch.isVisible = true
+                tabMatchCount.text = "${UserManager.getSlideCount()}"
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
+                tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
+            } else {
+                tabMatch.isVisible = false
+                tabMatchCount.text = "首页"
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
+                tabMatchCount.setPadding(0)
+            }
+        }
     }
 
 
@@ -240,6 +380,18 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
             R.id.labelAddBtn -> { //标签添加
                 startActivity<MyLabelActivity>()
+            }
+            R.id.tabMatchCount, R.id.tabMatch -> {
+                vpMain.currentItem = 0
+            }
+            R.id.tabSquare -> {
+                vpMain.currentItem = 1
+            }
+            R.id.tabMessage -> {
+                vpMain.currentItem = 2
+            }
+            R.id.tabMe -> {
+                vpMain.currentItem = 3
             }
         }
     }
@@ -314,13 +466,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 UserManager.saveHiCount(0)
             else if (msgCount > allMsgCount.greetcount)
                 totalMsgUnread = msgCount - allMsgCount.greetcount
-            if ((allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || totalMsgUnread > 0)) {
-//                startMsgAnimation()
-                showMsgDot()
-            } else {
-                tabBottomMain.hideMsg(2)
-
-            }
+            showMsgDot((allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || totalMsgUnread > 0))
         }
     }
 
@@ -328,14 +474,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     /**
      * 显示未读消息红点
      */
-    private fun showMsgDot() {
-        tabBottomMain.showDot(2)
-        //设置未读消息红点
-        val msgDot = tabBottomMain.getMsgView(2)
-        if (msgDot != null) {
-            UnreadMsgUtils.setSize(msgDot, SizeUtils.dp2px(8F))
-            msgDot.backgroundColor = resources.getColor(R.color.colorOrange)
-        }
+    private fun showMsgDot(show: Boolean) {
+        ivNewMsg.isVisible = show
     }
 
 
@@ -527,11 +667,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (unreadNum == 0) {
             UserManager.saveHiCount(0)
         }
-        if (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0) {
-            showMsgDot()
-        } else {
-            tabBottomMain.hideMsg(2)
-        }
+        showMsgDot(UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0)
     }
 
 

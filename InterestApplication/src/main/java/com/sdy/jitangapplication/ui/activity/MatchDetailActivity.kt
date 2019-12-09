@@ -712,13 +712,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         //已感兴趣或者是好友不做操作
         if (matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
-            detailUserDislikeBtn.isVisible = false
+            detailUserDislikeBtn.visibility = View.INVISIBLE
             detailUserLikeBtn.isVisible = false
             detailUserGreetBtn.isVisible = true
         } else {
-            detailUserDislikeBtn.isVisible = true
-            detailUserGreetBtn.isVisible = true
+            detailUserDislikeBtn.visibility = View.VISIBLE
             detailUserLikeBtn.isVisible = true
+            detailUserGreetBtn.isVisible = true
         }
 
         //判断是否为好友 是：显示聊天

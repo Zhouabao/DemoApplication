@@ -18,6 +18,9 @@ class ReVerifyEvent(val type: Int, var avator: String = UserManager.getAvator())
 
 class UpdateAvatorEvent(val update: Boolean)
 
+//更新首页滑动次数
+class UpdateSlideCountEvent
+
 
 class EnableLabelEvent(val enable: Boolean)
 

@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.adapter
 
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.LabelQualityBean
 import kotlinx.android.synthetic.main.item_layout_model_label_introduce.view.*
@@ -16,7 +17,8 @@ class ModelLabelIntroduceAdapter : BaseQuickAdapter<LabelQualityBean, BaseViewHo
 
     override fun convert(helper: BaseViewHolder, item: LabelQualityBean) {
 
+        helper.itemView.nameTv.text = item.title
         helper.itemView.introduceTv.text = item.content
-
+        GlideUtil.loadCircleImg(mContext,item.icon,helper.itemView.avatorCiv)
     }
 }

@@ -11,6 +11,7 @@
 
     <View
             android:id="@+id/customStatusBar"
+            android:visibility="visible"
             android:background="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -19,7 +20,7 @@
             android:id="@+id/tabHeaderCl"
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:layout_gravity="center"
+            android:layout_gravity="center_horizontal"
             android:background="@color/colorTransparent"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -80,6 +81,7 @@
     <com.flyco.tablayout.CommonTabLayout
             android:id="@+id/tabBottomMain"
             android:paddingTop="6dp"
+            android:visibility="gone"
             android:background="@color/colorWhite"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -98,5 +100,112 @@
             app:tl_underline_color="@color/colorDivider"
             app:tl_underline_gravity="TOP"
             app:tl_underline_height="1dp"/>
+
+
+    <View
+            android:background="@color/colorDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="49dp">
+
+        <ImageView
+                android:id="@+id/tabMatch"
+                android:src="@drawable/icon_tab_match_checked1"
+                android:layout_width="0dp"
+                android:visibility="visible"
+                android:layout_height="41dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tabSquare"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/tabMatchCount"
+                android:textColor="@color/colorWhite"
+                android:drawableTop="@drawable/icon_tab_match_checked"
+                android:gravity="center_horizontal|bottom"
+                android:layout_width="0dp"
+                android:textSize="12sp"
+                android:layout_height="41dp"
+                android:paddingBottom="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tabSquare"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="32"
+                />
+
+        <TextView
+                android:id="@+id/tabSquare"
+                android:textColor="@color/colorGrayCCC"
+                android:text="发现"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:drawableTop="@drawable/icon_tab_square"
+                android:layout_width="0dp"
+                android:textSize="12sp"
+                android:layout_height="41dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabMatchCount"
+                app:layout_constraintRight_toLeftOf="@id/tabMessage"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+        <TextView
+                android:id="@+id/tabMessage"
+                android:textColor="@color/colorGrayCCC"
+                android:text="消息"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:drawableTop="@drawable/icon_tab_message"
+                android:layout_width="0dp"
+                android:textSize="12sp"
+                android:layout_height="41dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabSquare"
+                app:layout_constraintRight_toLeftOf="@id/tabMe"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        <ImageView
+                android:id="@+id/ivNewMsg"
+                android:background="@drawable/shape_oval_orange"
+                android:layout_width="8dp"
+                android:layout_marginLeft="28dp"
+                android:layout_height="8dp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="@id/tabMessage"
+                app:layout_constraintRight_toRightOf="@id/tabMessage"
+                app:layout_constraintTop_toTopOf="@id/tabMessage"/>
+
+
+        <TextView
+                android:id="@+id/tabMe"
+                android:textColor="@color/colorGrayCCC"
+                android:text="我的"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:drawableTop="@drawable/icon_tab_me"
+                android:layout_width="0dp"
+                android:textSize="12sp"
+                android:layout_height="41dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabMessage"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

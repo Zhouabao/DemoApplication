@@ -271,6 +271,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
             //保存剩余滑动次数
             UserManager.saveSlideCount(matchBeans.like_times)
+            EventBus.getDefault().post(UpdateSlideCountEvent())
             //保存提示剩余滑动次数
             UserManager.saveHighlightCount(matchBeans.highlight_times)
             //保存剩余招呼次数
@@ -694,6 +695,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             } else {
                 if (UserManager.getSlideCount() > 0) {
                     UserManager.saveSlideCount(UserManager.getSlideCount().minus(1))
+                    EventBus.getDefault().post(UpdateSlideCountEvent())
                     params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
                     mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
                 } else {

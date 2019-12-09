@@ -151,16 +151,16 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
                 }
             }
             labelIntroduceModel -> {//标签介绍模板
-                startActivityForResult<ModelAboutMeActivity>(
-                    100,
-                    "tag_id" to intent.getIntExtra("tag_id", 0),
-                    "from" to ModelAboutMeActivity.FROM_LABEL
-                )
-//                startActivityForResult<ModelLabelIntroduceActivity>(
+//                startActivityForResult<ModelAboutMeActivity>(
 //                    100,
 //                    "tag_id" to intent.getIntExtra("tag_id", 0),
 //                    "from" to ModelAboutMeActivity.FROM_LABEL
 //                )
+                startActivityForResult<ModelLabelIntroduceActivity>(
+                    100,
+                    "tag_id" to intent.getIntExtra("tag_id", 0),
+                    "from" to ModelAboutMeActivity.FROM_LABEL
+                )
             }
         }
     }

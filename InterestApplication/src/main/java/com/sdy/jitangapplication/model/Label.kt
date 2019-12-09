@@ -45,8 +45,7 @@ data class LabelQualityBean(
     var icon: String = "",
     var id: Int = 0,
     var title: String = "",
-    var checked: Boolean = false,
-    var unable: Boolean = false
+    var checked: Boolean = false
 ) : Serializable, IPickerViewData {
     override fun getPickerViewText(): String {
         return content

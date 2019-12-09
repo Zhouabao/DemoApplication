@@ -38,13 +38,8 @@ class LabelQualityAdapter(var myChoosed: Boolean = false) :
                 holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_choose_12dp)
                 holder.itemView.qualityTv.setTextColor(mContext.resources.getColor(R.color.colorOrange))
             } else {
-                if (model.unable) {
-                    holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_unable_12dp)
-                    holder.itemView.qualityTv.setTextColor(Color.parseColor("#FFE5E5E5"))
-                } else {
-                    holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_normal_12dp)
-                    holder.itemView.qualityTv.setTextColor(Color.parseColor("#FF787C7F"))
-                }
+                holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_normal_12dp)
+                holder.itemView.qualityTv.setTextColor(Color.parseColor("#FF787C7F"))
             }
         }
 

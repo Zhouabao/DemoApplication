@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="content">
+            app:msv_viewState="loading">
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/modelRefresh"
@@ -50,7 +50,7 @@
                         android:layout_marginTop="15dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="范本示例"
+                        android:text="看看别人怎么写"
                         android:drawablePadding="4dp"
                         android:drawableLeft="@drawable/icon_eye"
                         android:textStyle="bold"
