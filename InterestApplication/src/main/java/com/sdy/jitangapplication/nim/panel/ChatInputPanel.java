@@ -378,10 +378,12 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
     private void onTextMessageSendButtonPressed() {
 //        String text = messageEditText.getText().toString();
         String text = messageEditText.getText().toString().trim();
-        IMMessage textMessage = createTextMessage(text);
+        if (!text.isEmpty()) {
+            IMMessage textMessage = createTextMessage(text);
 
-        if (container.proxy.sendMessage(textMessage)) {
-            restoreText(true);
+            if (container.proxy.sendMessage(textMessage)) {
+                restoreText(true);
+            }
         }
     }
 

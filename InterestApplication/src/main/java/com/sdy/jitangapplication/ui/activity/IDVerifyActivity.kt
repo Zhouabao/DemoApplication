@@ -83,7 +83,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         mHelper.onActivityCreate()
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
 
-        mImageLayout.visibility = View.VISIBLE
+        mImageLayout.visibility = View.GONE
         // 根据需求添加活体动作
         MyApplication.livenessList.clear()
         MyApplication.livenessList.add(LivenessTypeEnum.Eye)
@@ -107,7 +107,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
             .setTitle("认证提醒")
             .setContent("审核将与用户头像做比对，请确认头像为本人")
             .setConfirmText("确定")
-            .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                 override fun onClick(dialog: Dialog) {
                     dialog.dismiss()
                 }
@@ -232,11 +232,11 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                             CommonFunction.toast("审核提交成功")
                             UserManager.saveUserVerify(2)
                             setResult(Activity.RESULT_OK)
-//                            finish()
+                            finish()
                         }
                         t.code == 403 -> UserManager.startToLogin(context as Activity)
                         else -> {
-                            CommonFunction.toast("认证审核提交失败，请重新进入认证")
+                            CommonFunction.toast(t.msg)
                         }
                     }
                 }

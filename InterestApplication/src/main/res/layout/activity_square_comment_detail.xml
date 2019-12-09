@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            app:msv_viewState="content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -102,6 +102,7 @@
                                 layout="@layout/layout_square_list_bottom"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginBottom="20dp"
                                 app:layout_constraintBottom_toTopOf="@id/commentList"
                                 app:layout_constraintLeft_toLeftOf="parent"
                                 />

@@ -1038,7 +1038,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 //                    CommonFunction.toast("标题为必填内容")
 //                }
 
-                if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && chooseTitleBtn.text.isNullOrEmpty()) {
+                if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && publishContent.text.isNullOrEmpty()) {
                     CommonFunction.toast("文本内容和媒体内容至少要选择一种发布哦~")
                     return
                 }

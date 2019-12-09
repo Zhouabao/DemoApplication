@@ -127,8 +127,8 @@ public class ScrollCalculatorHelper {
                     inPosition = true;
                 }
                 if (inPosition) {
-//                    startPlayLogic(gsyBaseVideoPlayer, gsyBaseVideoPlayer.getContext());
-                    gsyBaseVideoPlayer.startPlayLogic();
+                    startPlayLogic(gsyBaseVideoPlayer, gsyBaseVideoPlayer.getContext());
+//                    gsyBaseVideoPlayer.startPlayLogic();
                 }
             }
         }

@@ -47,9 +47,11 @@ data class SquareBean(
     var tag_id: Int?,
     var title: String?,
     var cover_url: String?,
+    var link_url: String?,
     var tags: MutableList<String>?,
     var video_json: MutableList<VideoJson>?,
     var type: Int = 1,
+    var category_type: Int = 1,
     var duration: Long = 0L,
     var clickTime: Int = 0,
     var originalLike: Int = 0,
@@ -73,6 +75,7 @@ data class SquareBean(
         const val PIC = 1
         const val VIDEO = 2
         const val AUDIO = 3
+        const val OFFICIAL_NOTICE = 4
     }
 }
 

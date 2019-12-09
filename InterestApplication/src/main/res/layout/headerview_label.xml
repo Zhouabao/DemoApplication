@@ -7,7 +7,7 @@
     <TextView
             android:id="@+id/friendTv"
             android:text="好友"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:layout_marginLeft="15dp"
             android:textColor="#ff000000"
             android:textSize="17sp"
@@ -19,7 +19,6 @@
             android:id="@+id/headRv"
             android:layout_marginLeft="15dp"
             android:layout_width="wrap_content"
-            android:layout_marginBottom="40dp"
             android:overScrollMode="never"
             android:scrollbars="none"
             android:layout_height="wrap_content">

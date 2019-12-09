@@ -203,7 +203,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     private val mStack = Stack<Fragment>()
     private val titles = mutableListOf(
         NewLabel(title = "TA的兴趣", checked = true),
-        NewLabel(title = "TA的兴趣", checked = false)
+        NewLabel(title = "TA的动态", checked = false)
     )
 
     //标签适配器
@@ -349,7 +349,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             "他"
         } else {
             "她"
-        }}的动态 . 10"
+        }}的动态 . ${matchBean!!.square_count ?: 0}"
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
         detailUserInformationRv.adapter = detailUserInformationAdapter

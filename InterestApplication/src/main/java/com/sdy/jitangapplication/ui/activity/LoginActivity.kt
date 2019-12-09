@@ -57,11 +57,11 @@ class LoginActivity : BaseActivity() {
 
         //隐私协议
         privacyPolicy.onClick {
-            startActivity<ProtocolActivity>("type" to 1)
+            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_PRIVACY_PROTOCOL)
         }
         //用户协议
         userAgreement.onClick {
-            startActivity<ProtocolActivity>("type" to 2)
+            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
         }
 
     }

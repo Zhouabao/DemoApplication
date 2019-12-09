@@ -132,6 +132,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     val guideList by lazy { mutableListOf<LabelQualityBean>() }
     //当前引导发布标题的下标
     private var currentTitleIndex = -1
+
     //创建引导布局
     private fun initGuideSquareView(): View {
         val guideHeadView =
@@ -478,8 +479,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                                 data!!.list!![tempData].audio_json?.get(0)?.duration ?: 0
                             SquareBean.AUDIO
                         }
-                        !data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
-                        else -> SquareBean.PIC
+                        data!!.list!![tempData].category_type != 2 && (!data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty())) -> SquareBean.PIC
+                        else -> SquareBean.OFFICIAL_NOTICE
                     }
                     data!!.list!![tempData].originalLike = data!!.list!![tempData].isliked
                     data!!.list!![tempData].originalLikeCount = data!!.list!![tempData].like_cnt

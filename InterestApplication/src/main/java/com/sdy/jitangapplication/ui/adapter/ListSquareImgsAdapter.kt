@@ -29,46 +29,27 @@ class ListSquareImgsAdapter(
         if (!fullScreenWidth) {
             if (datas.size == 1) {
                 val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
-//                holder.itemView.ivUser.setType(RoundImageView.TYPE_NORMAL)
-
-                layoutParams.height = SizeUtils.dp2px(252F)
-                layoutParams.width = ScreenUtils.getScreenWidth()
+                layoutParams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)
+                layoutParams.height = layoutParams.width
+                layoutParams.leftMargin = SizeUtils.dp2px(15F)
+                layoutParams.rightMargin = SizeUtils.dp2px(15F)
 
                 holder.itemView.ivUser.layoutParams = layoutParams
-                GlideUtil.loadRoundImgCenterCrop(mContext, datas[position].url, holder.itemView.ivUser, 0)
+                GlideUtil.loadRoundImgCenterCrop(
+                    mContext,
+                    datas[position].url,
+                    holder.itemView.ivUser,
+                    SizeUtils.dp2px(5F)
+                )
 
             } else {
-//                holder.itemView.ivUser.setmBorderRadius(20)
-//                holder.itemView.ivUser.setType(RoundImageView.TYPE_ROUND)
+
                 val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
-                layoutParams.height = SizeUtils.dp2px(252F)
-                if (item.width == 0F) {
-                    item.width = SizeUtils.dp2px(180F).toFloat()
-                }
-                if (item.height == 0F) {
-                    item.height = SizeUtils.dp2px(252F).toFloat()
-                }
-                layoutParams.width =
-                    if ((item.width / item.height * layoutParams.height).toInt() < SizeUtils.dp2px(150F).toFloat()) {
-                        SizeUtils.dp2px(150F)
-                    } else {
-                        (item.width / item.height * layoutParams.height).toInt()
-                    }
-                layoutParams.leftMargin = SizeUtils.dp2px(
-                    if (position == 0) {
-                        15F
-                    } else {
-                        10F
-                    }
-                )
+                layoutParams.width = SizeUtils.dp2px(250F)
+                layoutParams.height = SizeUtils.dp2px(250F)
+                layoutParams.leftMargin = SizeUtils.dp2px(15F)
                 if (position == datas.size - 1) {
-                    layoutParams.rightMargin = SizeUtils.dp2px(
-                        if (position == datas.size - 1) {
-                            15F
-                        } else {
-                            10F
-                        }
-                    )
+                    layoutParams.rightMargin = SizeUtils.dp2px(15F)
                 }
                 holder.itemView.ivUser.layoutParams = layoutParams
                 GlideUtil.loadRoundImgCenterCrop(
@@ -82,8 +63,6 @@ class ListSquareImgsAdapter(
 
         } else {
             val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
-
-//            holder.itemView.ivUser.setType(RoundImageView.TYPE_NORMAL)
             layoutParams.width = ScreenUtils.getScreenWidth()
             layoutParams.height = ScreenUtils.getScreenHeight()
             holder.itemView.ivUser.layoutParams = layoutParams

@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -9,17 +10,23 @@ import com.kotlin.base.common.BaseConstant
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import kotlinx.android.synthetic.main.activity_protocol.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
  * 用户隐私政策  https://devppsns.duluduludala.com/ppsns/protocol/privacyProtocol/v1.json   1
  * 用户协议 https://devppsns.duluduludala.com/ppsns/protocol/userProtocol/v1.json   2
-
+ * 防骗子 /ppsns/protocol/bewareFraud/v1.json
  */
 class ProtocolActivity : BaseActivity() {
+    companion object {
+        const val TYPE_PRIVACY_PROTOCOL = 1
+        const val TYPE_USER_PROTOCOL = 2
+        const val TYPE_ANTI_FRAUD = 3
+    }
 
-    private var type = 0
+    private val type by lazy { intent.getIntExtra("type", TYPE_PRIVACY_PROTOCOL) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +35,15 @@ class ProtocolActivity : BaseActivity() {
     }
 
     private fun initView() {
-        type = intent.getIntExtra("type", 1)
-        when (intent.getIntExtra("type", 1)) {
-            1 -> {
+        when (type) {
+            TYPE_PRIVACY_PROTOCOL -> {
                 hotT1.text = "隐私条款"
             }
-            2 -> {
+            TYPE_USER_PROTOCOL -> {
                 hotT1.text = "用户协议"
+            }
+            TYPE_ANTI_FRAUD -> {
+//                hotT1.text = "谨防骗子"
             }
         }
 
@@ -59,9 +68,6 @@ class ProtocolActivity : BaseActivity() {
 ////自适应屏幕 web.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 //
 //web.getSettings().setLoadWithOverviewMode(true);
-
-
-
 
 
         //支持javascript
@@ -91,11 +97,23 @@ class ProtocolActivity : BaseActivity() {
 //                return true
 //            }
         }
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onReceivedTitle(view: WebView?, title: String?) {
+                super.onReceivedTitle(view, title)
+                if (!title.isNullOrEmpty())
+                    hotT1.text = title
+            }
+        }
 
-        if (type == 1) {
-            webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/privacyProtocol/v1.json")
-        } else if (type == 2) {
-            webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/userProtocol/v1.json")
+        when (type) {
+            TYPE_PRIVACY_PROTOCOL -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/privacyProtocol${Constants.END_BASE_URL}")
+            TYPE_USER_PROTOCOL -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/userProtocol${Constants.END_BASE_URL}")
+            TYPE_ANTI_FRAUD -> webView.loadUrl(
+                if (!intent.getStringExtra("url").isNullOrEmpty()) {
+                    intent.getStringExtra("url")
+                } else
+                    "${BaseConstant.SERVER_ADDRESS}protocol/bewareFraud${Constants.END_BASE_URL}"
+            )
         }
 
 

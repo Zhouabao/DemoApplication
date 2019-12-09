@@ -28,7 +28,7 @@
             android:textColor="#ff333333"
             android:textSize="16sp"
             android:gravity="center"
-            android:background="@drawable/shape_rectangle_gray_white_9dp"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
             android:layout_width="100dp"
             android:layout_height="35dp"/>
 

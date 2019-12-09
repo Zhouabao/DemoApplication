@@ -795,7 +795,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     checkSaveEnable()
                 }
                 REPLACE_REQUEST,//替换头像
-                PictureConfig.CHOOSE_REQUEST//选中
+                PictureConfig.CHOOSE_REQUEST//icon_verify_not_pass
                 -> {
                     if (data != null) {
                         if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {
@@ -1397,6 +1397,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             userBirth.text =
                 "${TimeUtils.date2String(date, SimpleDateFormat("yyyy-MM-dd"))}/${TimeUtils.getZodiac(date)}"
             savePersonalParams["birth"] = TimeUtils.date2Millis(date) / 1000L
+//            savePersonalParams["birth"] = TimeUtils.date2Millis(date)
             isChange = true
             checkSaveEnable()
         })

@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -175,6 +176,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv1)
 
 
+        val params = squareTitleCl.layoutParams as ConstraintLayout.LayoutParams
+        params.topMargin = SizeUtils.dp2px(20F)
+        squareTitleCl.layoutParams = params
+        squareTitleCl.isVisible = !squareBean!!.title.isNullOrEmpty()
+        squareTitle.text = squareBean!!.title ?: ""
         squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
             resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
             null,
@@ -533,16 +539,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             refreshLayout.setNoMoreData(false)
             if (allCommentBean != null) {
                 if (allCommentBean.hotlist != null && allCommentBean.hotlist!!.size > 0) {
-                    adapter.addData(CommentBean(content = "热门评论", type = 0))
+                    adapter.addData(CommentBean(content = "热门评论", type = CommentBean.TITLE))
                     for (i in 0 until allCommentBean.hotlist!!.size) {
-                        allCommentBean.hotlist!![i]!!.type = 1
+                        allCommentBean.hotlist!![i]!!.type = CommentBean.CONTENT
                     }
                     adapter.addData(allCommentBean.hotlist!!)
                 }
                 if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
-                    adapter.addData(CommentBean(content = "所有评论", type = 0))
+                    adapter.addData(CommentBean(content = "所有评论", type = CommentBean.TITLE))
                     for (i in 0 until allCommentBean.list!!.size) {
-                        allCommentBean.list!![i]!!.type = 1
+                        allCommentBean.list!![i]!!.type = CommentBean.CONTENT
                     }
                     adapter.addData(allCommentBean.list!!)
                 }

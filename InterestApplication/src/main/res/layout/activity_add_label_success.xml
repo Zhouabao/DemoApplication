@@ -70,7 +70,7 @@
                 android:text="换一个"
                 android:drawablePadding="4dp"
                 android:textSize="12sp"
-                android:background="@drawable/shape_rectangle_gray_white_9dp"
+                android:background="@drawable/shape_rectangle_gray_white_10dp"
                 android:drawableLeft="@drawable/icon_reselect_gray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

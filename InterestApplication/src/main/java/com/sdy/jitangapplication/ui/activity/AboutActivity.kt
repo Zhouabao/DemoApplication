@@ -26,10 +26,10 @@ class AboutActivity : BaseActivity() {
         }
         hotT1.text = "关于"
         privacyPolicy.onClick {
-            startActivity<ProtocolActivity>("type" to 1)
+            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_ANTI_FRAUD )
         }
         userAgreement.onClick {
-            startActivity<ProtocolActivity>("type" to 2)
+            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
         }
         contactUs.onClick {
             ChatActivity.start(this, com.sdy.jitangapplication.common.Constants.ASSISTANT_ACCID)

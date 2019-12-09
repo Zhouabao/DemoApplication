@@ -4,7 +4,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         android:paddingTop="20dp"
-        android:paddingBottom="30dp"
         android:id="@+id/guidePublishCl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

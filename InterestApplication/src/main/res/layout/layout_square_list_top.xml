@@ -34,7 +34,6 @@
                 app:layout_constraintRight_toRightOf="@id/squareTitle"/>
 
         <TextView
-                app:layout_constraintLeft_toRightOf="@id/douhao"
                 android:id="@+id/squareTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,6 +43,7 @@
                 android:textColor="#ff000000"
                 android:visibility="visible"
                 android:textSize="24sp"
+                app:layout_constraintLeft_toRightOf="@id/douhao"
                 app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -69,8 +69,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/squareUserIv1"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:src="@drawable/icon_default_avator"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -81,6 +81,7 @@
                 android:src="@drawable/icon_vip"
                 android:layout_width="19dp"
                 android:layout_height="19dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/squareUserName1"
                 app:layout_constraintLeft_toRightOf="@id/squareUserName1"
                 app:layout_constraintTop_toTopOf="@id/squareUserName1"/>
@@ -100,14 +101,27 @@
                 tools:text="Kimberly Davis"
                 />
 
+        <TextView
+                android:id="@+id/squareOfficialTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="官方"
+                android:layout_marginRight="15dp"
+                android:textColor="#ffc5c6c8"
+                android:textSize="13sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/squareUserIv1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/squareUserIv1"
+                />
 
         <LinearLayout
                 android:id="@+id/squareChatBtn1"
                 android:background="@drawable/shape_rectangle_lightorange_15dp"
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="15dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="6dp"

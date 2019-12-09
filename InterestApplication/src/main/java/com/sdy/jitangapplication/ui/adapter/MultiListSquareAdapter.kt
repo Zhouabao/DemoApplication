@@ -4,12 +4,14 @@ import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -27,10 +29,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.switchplay.SwitchUtil
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
-import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
-import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
+import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -38,12 +37,15 @@ import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.ui.fragment.MySquareFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
+import com.sdy.jitangapplication.widgets.GalleryOnScrollListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.item_list_square_audio.view.*
+import kotlinx.android.synthetic.main.item_list_square_official.view.*
 import kotlinx.android.synthetic.main.item_list_square_pic.view.*
 import kotlinx.android.synthetic.main.item_list_square_video.view.*
 import kotlinx.android.synthetic.main.layout_square_list_bottom.view.*
@@ -78,256 +80,284 @@ class MultiListSquareAdapter(
         addItemType(SquareBean.PIC, R.layout.item_list_square_pic)
         addItemType(SquareBean.VIDEO, R.layout.item_list_square_video)
         addItemType(SquareBean.AUDIO, R.layout.item_list_square_audio)
+        addItemType(SquareBean.OFFICIAL_NOTICE, R.layout.item_list_square_official)
     }
 
 
     override fun convert(holder: BaseViewHolder, item: SquareBean) {
-        (holder.itemView.squareTitleCl.layoutParams as ConstraintLayout.LayoutParams).topMargin =
-            if (holder.layoutPosition - headerLayoutCount == 0) {
-                SizeUtils.dp2px(0F)
-            } else {
-                SizeUtils.dp2px(40F)
-            }
-
-        holder.itemView.llTOP.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
-
-        holder.itemView.squareTitleCl.isVisible = !item.title.isNullOrEmpty()
-        holder.itemView.squareTitle.text = item.title ?: ""
-
-        //设置点赞状态
-        setLikeStatus(item.isliked, item.like_cnt, holder.itemView.squareDianzanBtn1)
-        //为自己，不能聊天（用户详情界面），未开启招呼，非好友   聊天按钮不可见
-        if (item.isfriend)
-            holder.itemView.squareChatBtn1.visibility = View.VISIBLE
-        else
-            if (UserManager.getAccid() == item.accid || !item.greet_switch || !chat) {
-                holder.itemView.squareChatBtn1.visibility = View.INVISIBLE
-            } else {
-                holder.itemView.squareChatBtn1.visibility = View.VISIBLE
-            }
-
-        if (item.descr.isNullOrEmpty()) {
-            holder.itemView.squareContent1.visibility = View.GONE
-        } else {
-            holder.itemView.squareContent1.visibility = View.VISIBLE
-            holder.itemView.squareContent1.setContent(item.descr)
-        }
-
         holder.itemView.squareUserName1.text = item.nickname ?: ""
-
-        holder.itemView.squareCommentBtn1.text = "${item.comment_cnt}"
-        holder.itemView.squareUserVipIv1.visibility = if (item.isvip == 1) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.squareUserIv1)
-        holder.itemView.squareLocationAndTime1.text = item.province_name.plus(
-            if (item.city_name.isEmpty() || item.city_name == item.province_name || item.province_name.isNullOrEmpty()) {
-                ""
-            } else {
-                "${item.city_name}"
+
+        holder.itemView.squareOfficialTv.isVisible = holder.itemViewType == SquareBean.OFFICIAL_NOTICE
+        holder.itemView.squareChatBtn1.isVisible = holder.itemViewType != SquareBean.OFFICIAL_NOTICE
+        if (holder.itemViewType == SquareBean.OFFICIAL_NOTICE) {
+            holder.itemView.onClick {
+                mContext.startActivity<ProtocolActivity>(
+                    "type" to ProtocolActivity.TYPE_ANTI_FRAUD,
+                    "url" to "${item.link_url ?: ""}"
+                )
             }
-        ).plus("\t\t${item.out_time}")
+
+            holder.itemView.squareOfficialContent.text = "${item.descr}"
+            val layoutParams = holder.itemView.squareOfficialPic.layoutParams as LinearLayout.LayoutParams
+            layoutParams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)
+            layoutParams.height = layoutParams.width
+            layoutParams.leftMargin = SizeUtils.dp2px(15F)
+            layoutParams.rightMargin = SizeUtils.dp2px(15F)
+            holder.itemView.squareOfficialPic.layoutParams = layoutParams
+            GlideUtil.loadRoundImgCenterCrop(
+                mContext,
+                item.cover_url,
+                holder.itemView.squareOfficialPic,
+                SizeUtils.dp2px(5F)
+            )
+        } else {
+            (holder.itemView.squareTitleCl.layoutParams as ConstraintLayout.LayoutParams).topMargin =
+                SizeUtils.dp2px(40F)
+            holder.itemView.llTOP.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
+
+            holder.itemView.squareTitleCl.isVisible = !item.title.isNullOrEmpty()
+            holder.itemView.squareTitle.text = item.title ?: ""
+
+            //设置点赞状态
+            setLikeStatus(item.isliked, item.like_cnt, holder.itemView.squareDianzanBtn1)
+            //为自己，不能聊天（用户详情界面），未开启招呼，非好友   聊天按钮不可见
+            if (item.isfriend)
+                holder.itemView.squareChatBtn1.visibility = View.VISIBLE
+            else
+                if (UserManager.getAccid() == item.accid || !item.greet_switch || !chat) {
+                    holder.itemView.squareChatBtn1.visibility = View.INVISIBLE
+                } else {
+                    holder.itemView.squareChatBtn1.visibility = View.VISIBLE
+                }
+
+            if (item.descr.isNullOrEmpty()) {
+                holder.itemView.squareContent1.visibility = View.GONE
+            } else {
+                holder.itemView.squareContent1.visibility = View.VISIBLE
+                holder.itemView.squareContent1.setContent(item.descr)
+            }
+
+            holder.itemView.squareCommentBtn1.text = "${item.comment_cnt}"
+            holder.itemView.squareUserVipIv1.visibility = if (item.isvip == 1) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+            holder.itemView.squareLocationAndTime1.text = item.province_name.plus(
+                if (item.city_name.isEmpty() || item.city_name == item.province_name || item.province_name.isNullOrEmpty()) {
+                    ""
+                } else {
+                    "${item.city_name}"
+                }
+            ).plus("\t\t${item.out_time}")
 //        holder.itemView.squareTime.text = "${item.out_time}"
 
-        holder.itemView.squareTime.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-        if (holder.itemView.squareTime.itemDecorationCount == 0) {
-            holder.itemView.squareTime.addItemDecoration(
-                DividerItemDecoration(
-                    mContext,
-                    DividerItemDecoration.VERTICAL_LIST,
-                    SizeUtils.dp2px(6F),
-                    mContext.resources.getColor(R.color.colorWhite)
+            holder.itemView.squareTime.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+            if (holder.itemView.squareTime.itemDecorationCount == 0) {
+                holder.itemView.squareTime.addItemDecoration(
+                    DividerItemDecoration(
+                        mContext,
+                        DividerItemDecoration.VERTICAL_LIST,
+                        SizeUtils.dp2px(6F),
+                        mContext.resources.getColor(R.color.colorWhite)
+                    )
                 )
-            )
-        }
-        val squareAdapter = SquareTagAdapter()
-        holder.itemView.squareTime.adapter = squareAdapter
-        squareAdapter.setNewData(item.tags ?: mutableListOf())
-
-        //点击跳转评论详情
-        holder.itemView.squareCommentBtn1.onClick {
-            if (resetAudioListener != null) {
-                resetAudioListener!!.resetAudioState()
             }
-            SquareCommentDetailActivity.start(
-                mContext!!,
-                data[holder.layoutPosition - headerLayoutCount],
-                enterPosition = "comment",
-                position = holder.layoutPosition - headerLayoutCount
-            )
-        }
-        //更多弹窗
-        holder.itemView.squareMoreBtn1.onClick {
-            showMoreDialog(holder.layoutPosition - headerLayoutCount)
-        }
-        //点击转发
-        holder.itemView.squareZhuanfaBtn1.onClick {
-            showTranspondDialog(item)
-        }
+            val squareAdapter = SquareTagAdapter()
+            holder.itemView.squareTime.adapter = squareAdapter
+            squareAdapter.setNewData(item.tags ?: mutableListOf())
 
-        //进入聊天界面
-        holder.itemView.squareChatBtn1.onClick {
-            if (resetAudioListener != null) {
-                resetAudioListener!!.resetAudioState()
+            //点击跳转评论详情
+            holder.itemView.squareCommentBtn1.onClick {
+                if (resetAudioListener != null) {
+                    resetAudioListener!!.resetAudioState()
+                }
+                SquareCommentDetailActivity.start(
+                    mContext!!,
+                    data[holder.layoutPosition - headerLayoutCount],
+                    enterPosition = "comment",
+                    position = holder.layoutPosition - headerLayoutCount
+                )
             }
-            CommonFunction.commonGreet(
-                mContext,
-                item.isfriend,
-                item.greet_switch,
-                item.greet_state,
-                item.accid,
-                item.nickname ?: "",
-                item.isgreeted,
-                holder.itemView.squareChatBtn1
-            )
-
-        }
-
-        //点赞
-        holder.itemView.squareDianzanBtn1.onClick {
-            clickZan(holder.itemView.squareDianzanBtn1, holder.layoutPosition - headerLayoutCount)
-        }
-
-
-
-        holder.itemView.squareUserIv1.onClick {
-            if (!(UserManager.getAccid() == item.accid || !chat)) {
-                MatchDetailActivity.start(mContext, item.accid)
+            //更多弹窗
+            holder.itemView.squareMoreBtn1.onClick {
+                showMoreDialog(holder.layoutPosition - headerLayoutCount)
             }
-        }
+            //点击转发
+            holder.itemView.squareZhuanfaBtn1.onClick {
+                showTranspondDialog(item)
+            }
 
-        when (holder.itemViewType) {
-            SquareBean.PIC -> {
-                if (item.photo_json != null && item.photo_json!!.size > 0) {
-                    holder.itemView.squareUserPics1.visibility = View.VISIBLE
-                    holder.itemView.squareUserPics1.layoutManager =
-                        LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-                    val adapter = ListSquareImgsAdapter(mContext, item.photo_json ?: mutableListOf())
-                    holder.itemView.squareUserPics1.adapter = adapter
-                    adapter.setOnItemClickListener { adapter, view, position ->
-                        if (resetAudioListener != null) {
-                            resetAudioListener!!.resetAudioState()
+            //进入聊天界面
+            holder.itemView.squareChatBtn1.onClick {
+                if (resetAudioListener != null) {
+                    resetAudioListener!!.resetAudioState()
+                }
+                CommonFunction.commonGreet(
+                    mContext,
+                    item.isfriend,
+                    item.greet_switch,
+                    item.greet_state,
+                    item.accid,
+                    item.nickname ?: "",
+                    item.isgreeted,
+                    holder.itemView.squareChatBtn1
+                )
+
+            }
+
+            //点赞
+            holder.itemView.squareDianzanBtn1.onClick {
+                clickZan(holder.itemView.squareDianzanBtn1, holder.layoutPosition - headerLayoutCount)
+            }
+
+
+
+            holder.itemView.squareUserIv1.onClick {
+                if (!(UserManager.getAccid() == item.accid || !chat)) {
+                    MatchDetailActivity.start(mContext, item.accid)
+                }
+            }
+
+            when (holder.itemViewType) {
+                SquareBean.PIC -> {
+                    if (item.photo_json != null && item.photo_json!!.size > 0) {
+                        holder.itemView.squareUserPics1.visibility = View.VISIBLE
+                        holder.itemView.squareUserPics1.layoutManager =
+                            LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+                        val adapter = ListSquareImgsAdapter(mContext, item.photo_json ?: mutableListOf())
+                        holder.itemView.squareUserPics1.adapter = adapter
+
+                        //分页滑动效果
+                        holder.itemView.squareUserPics1.onFlingListener = null;
+                        CustomPagerSnapHelper().attachToRecyclerView(holder.itemView.squareUserPics1);
+                        //        //滑动动画
+                        holder.itemView.squareUserPics1.addOnScrollListener(GalleryOnScrollListener());
+                        adapter.setOnItemClickListener { adapter, view, position ->
+                            if (resetAudioListener != null) {
+                                resetAudioListener!!.resetAudioState()
+                            }
+                            mContext.startActivity<SquarePlayListDetailActivity>(
+                                "item" to item,
+                                "picPosition" to position
+                            )
                         }
-                        mContext.startActivity<SquarePlayListDetailActivity>(
-                            "item" to item,
-                            "picPosition" to position
-                        )
+                    } else {
+                        holder.itemView.squareUserPics1.visibility = View.GONE
                     }
-                } else {
-                    holder.itemView.squareUserPics1.visibility = View.GONE
-                }
 
-            }
-            SquareBean.VIDEO -> {
-                //增加封面
-                val imageview = ImageView(mContext)
-                GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", imageview, SizeUtils.dp2px(15F))
-                if (imageview.parent != null) {
-                    val vg = imageview.parent as ViewGroup
-                    vg.removeView(imageview)
                 }
-                holder.itemView.squareUserVideo.thumbImageView = imageview
-                holder.itemView.squareUserVideo.detail_btn.setOnClickListener {
-                    if (holder.itemView.squareUserVideo.isInPlayingState) {
-                        SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
-                        holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(holder.itemView.squareUserVideo)
-                        SquarePlayDetailActivity.startActivity(
-                            mContext as Activity,
-                            holder.itemView.squareUserVideo,
-                            item,
-                            holder.layoutPosition,
-                            type
-                        )
+                SquareBean.VIDEO -> {
+                    //增加封面
+                    val imageview = ImageView(mContext)
+                    GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", imageview, SizeUtils.dp2px(15F))
+                    if (imageview.parent != null) {
+                        val vg = imageview.parent as ViewGroup
+                        vg.removeView(imageview)
                     }
-                }
-                holder.itemView.squareUserVideo.playTag = TAG
-                holder.itemView.squareUserVideo.playPosition = holder.layoutPosition
-                holder.itemView.squareUserVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
-                    override fun onStartPrepared(url: String?, vararg objects: Any?) {
-                        super.onStartPrepared(url, *objects)
-                        if (resetAudioListener != null) {
-                            resetAudioListener!!.resetAudioState()
+                    holder.itemView.squareUserVideo.thumbImageView = imageview
+                    holder.itemView.squareUserVideo.detail_btn.setOnClickListener {
+                        if (holder.itemView.squareUserVideo.isInPlayingState) {
+                            SwitchUtil.savePlayState(holder.itemView.squareUserVideo)
+                            holder.itemView.squareUserVideo.gsyVideoManager.setLastListener(holder.itemView.squareUserVideo)
+                            SquarePlayDetailActivity.startActivity(
+                                mContext as Activity,
+                                holder.itemView.squareUserVideo,
+                                item,
+                                holder.layoutPosition,
+                                type
+                            )
                         }
                     }
+                    holder.itemView.squareUserVideo.playTag = TAG
+                    holder.itemView.squareUserVideo.playPosition = holder.layoutPosition
+                    holder.itemView.squareUserVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+                        override fun onStartPrepared(url: String?, vararg objects: Any?) {
+                            super.onStartPrepared(url, *objects)
+                            if (resetAudioListener != null) {
+                                resetAudioListener!!.resetAudioState()
+                            }
+                        }
 
-                    override fun onPrepared(url: String?, vararg objects: Any?) {
-                        if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen) {
-                            //静音
+                        override fun onPrepared(url: String?, vararg objects: Any?) {
+                            if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen) {
+                                //静音
+                                GSYVideoManager.instance().isNeedMute = true
+                            }
+
+                        }
+
+                        override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
+                            super.onQuitFullscreen(url, *objects)
+                            //退出全屏静音
                             GSYVideoManager.instance().isNeedMute = true
                         }
 
-                    }
+                        override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
+                            super.onEnterFullscreen(url, *objects)
+                            GSYVideoManager.instance().isNeedMute = false
+                        }
 
-                    override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
-                        super.onQuitFullscreen(url, *objects)
-                        //退出全屏静音
-                        GSYVideoManager.instance().isNeedMute = true
-                    }
+                    })
 
-                    override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
-                        super.onEnterFullscreen(url, *objects)
-                        GSYVideoManager.instance().isNeedMute = false
-                    }
-
-                })
-
-                SwitchUtil.optionPlayer(
-                    holder.itemView.squareUserVideo,
-                    item.video_json?.get(0)?.url ?: "",
-                    true
-                )
-                holder.itemView.squareUserVideo.setUp(
-                    item.video_json?.get(0)?.url ?: "",
-                    false,
-                    null,
-                    null,
-                    ""
-                )
-            }
-            SquareBean.AUDIO -> {
-                //点击播放
-                holder.addOnClickListener(R.id.audioPlayBtn)
-                val audioTimeView = holder.itemView.audioTime
-
-                if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) { //播放中
-                    holder.itemView.voicePlayView.playAnimation()
-
-                    audioTimeView.startTime((item.audio_json?.get(0)?.leftTime ?: 0).toLong(), "3")
-                    holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
-                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {//暂停中
-                    holder.itemView.voicePlayView.pauseAnimation()
-                    audioTimeView.stopTime()
-                    item.audio_json?.get(0)?.leftTime = UriUtils.stringToTimeInt(audioTimeView.text.toString())
-                    holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_STOP || item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {//停止中
-                    audioTimeView.stopTime()
-                    item.audio_json?.get(0)?.leftTime = item.audio_json?.get(0)?.duration ?: 0
-                    audioTimeView.text = UriUtils.getShowTime(item.audio_json?.get(0)?.leftTime ?: 0)
-
-                    holder.itemView.voicePlayView.pauseAnimation()
-                    holder.itemView.voicePlayView.cancelAnimation()
-                    holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-                } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
-                    audioTimeView.stopTime()
-                    item.audio_json?.get(0)?.leftTime = item.audio_json?.get(0)?.duration ?: 0
-                    audioTimeView.text = UriUtils.getShowTime(item.audio_json?.get(0)?.leftTime ?: 0)
-
-                    holder.itemView.voicePlayView.pauseAnimation()
-                    holder.itemView.voicePlayView.cancelAnimation()
-
-                    holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+                    SwitchUtil.optionPlayer(
+                        holder.itemView.squareUserVideo,
+                        item.video_json?.get(0)?.url ?: "",
+                        true
+                    )
+                    holder.itemView.squareUserVideo.setUp(
+                        item.video_json?.get(0)?.url ?: "",
+                        false,
+                        null,
+                        null,
+                        ""
+                    )
                 }
-                holder.itemView.audioRecordLl.onClick {
-                    if (resetAudioListener != null) {
-                        resetAudioListener!!.resetAudioState()
+                SquareBean.AUDIO -> {
+                    //点击播放
+                    holder.addOnClickListener(R.id.audioPlayBtn)
+                    val audioTimeView = holder.itemView.audioTime
+
+                    if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) { //播放中
+                        holder.itemView.voicePlayView.playAnimation()
+
+                        audioTimeView.startTime((item.audio_json?.get(0)?.leftTime ?: 0).toLong(), "3")
+                        holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
+                    } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {//暂停中
+                        holder.itemView.voicePlayView.pauseAnimation()
+                        audioTimeView.stopTime()
+                        item.audio_json?.get(0)?.leftTime = UriUtils.stringToTimeInt(audioTimeView.text.toString())
+                        holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+                    } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_STOP || item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {//停止中
+                        audioTimeView.stopTime()
+                        item.audio_json?.get(0)?.leftTime = item.audio_json?.get(0)?.duration ?: 0
+                        audioTimeView.text = UriUtils.getShowTime(item.audio_json?.get(0)?.leftTime ?: 0)
+
+                        holder.itemView.voicePlayView.pauseAnimation()
+                        holder.itemView.voicePlayView.cancelAnimation()
+                        holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
+                    } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
+                        audioTimeView.stopTime()
+                        item.audio_json?.get(0)?.leftTime = item.audio_json?.get(0)?.duration ?: 0
+                        audioTimeView.text = UriUtils.getShowTime(item.audio_json?.get(0)?.leftTime ?: 0)
+
+                        holder.itemView.voicePlayView.pauseAnimation()
+                        holder.itemView.voicePlayView.cancelAnimation()
+
+                        holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                     }
-                    mContext.startActivity<SquarePlayListDetailActivity>("item" to item, "from" to "squareFragment")
+                    holder.itemView.audioRecordLl.onClick {
+                        if (resetAudioListener != null) {
+                            resetAudioListener!!.resetAudioState()
+                        }
+                        mContext.startActivity<SquarePlayListDetailActivity>("item" to item, "from" to "squareFragment")
+                    }
                 }
             }
+
         }
-
     }
 
 

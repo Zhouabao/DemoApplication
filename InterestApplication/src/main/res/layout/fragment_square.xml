@@ -80,7 +80,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/uploadProgressTv"
                         android:orientation="horizontal"
-                        android:background="@drawable/shape_rectangle_gray_white_9dp"
+                        android:background="@drawable/shape_rectangle_gray_white_10dp"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"

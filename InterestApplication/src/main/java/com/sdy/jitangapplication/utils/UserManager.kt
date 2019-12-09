@@ -761,10 +761,7 @@ object UserManager {
             return
         } else {
             saveUserInfo(data)
-            if (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels") == null || SPUtils.getInstance(
-                    Constants.SPNAME
-                ).getStringSet("newCheckedLabels").isEmpty()
-            ) {//标签没有选择
+            if (getSpLabels().isNullOrEmpty()) {//标签没有选择
                 context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
             } else {//跳到主页
                 AppManager.instance.finishAllActivity()

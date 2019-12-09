@@ -90,6 +90,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     private val guideDialog by lazy { GuideDialog(this) }
 
+    private val accountDangerDialog by lazy { AccountDangerDialog(this) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +110,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             mPresenter.getQuestion(UserManager.getToken(), UserManager.getAccid())
 
         //如果定位信息没有就重新定位
-//        if (UserManager.getlatitude().toDouble() == 0.0 || UserManager.getlongtitude().toDouble() == 0.0)
         AMapManager.initLocation(this)
         filterBtn.setOnClickListener(this)
 
@@ -118,6 +119,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         if (!UserManager.getAlertProtocol())
             PrivacyDialog(this).show()
+
+//        if (!accountDangerDialog.isShowing) {
+//            accountDangerDialog.show()
+//            accountDangerDialog.changeVerifyStatus(AccountDangerDialog.VERIFY_ING)
+//        }
+
     }
 
 
@@ -265,6 +272,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private var firstClickTime = 0L
 
     override fun onBackPressed() {
+        if (accountDangerDialog.isShowing) {
+            return
+        }
+
         if (guideDialog.isShowing) {
             return
         }
@@ -518,6 +529,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
         if (UserManager.getLikeCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getSquareCount() > 0 || unreadNum > 0) {
             showMsgDot()
+        } else {
+            tabBottomMain.hideMsg(2)
         }
     }
 
