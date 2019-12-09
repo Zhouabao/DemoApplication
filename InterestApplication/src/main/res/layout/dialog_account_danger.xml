@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:background="@color/colorTransparent"
+              android:layout_height="wrap_content">
+
+
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical"
+            android:layout_width="300dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
+            android:layout_height="wrap_content">
+
+
+        <ImageView
+                android:id="@+id/accountDangerLogo"
+                android:src="@drawable/icon_account_danger"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+                android:id="@+id/accountDangerVerifyStatuLogo"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_verify_ing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+        <TextView
+                android:id="@+id/accountDangerTitle"
+                android:layout_marginTop="30dp"
+                android:text="账号异常"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="#131415"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        <TextView
+                android:id="@+id/accountDangerContent"
+                android:textSize="14sp"
+                android:layout_marginTop="10dp"
+                android:text="您的账号存在高危风险异常\n请完成认证解除异常"
+                android:textColor="#B6BABF"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.4"
+                />
+
+        <FrameLayout
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="26dp"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/accountDangerBtn"
+                    tools:text="去认证"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:background="@drawable/shape_rectangle_orange_25dp"
+                    android:layout_width="232dp"
+                    android:layout_height="40dp"
+                    />
+
+            <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/accountDangerLoading"
+                    android:layout_gravity="center"
+                    app:lottie_fileName="data_verify_ing.json"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    android:layout_width="123px"
+                    android:layout_height="match_parent"/>
+        </FrameLayout>
+
+    </LinearLayout>
+</LinearLayout>

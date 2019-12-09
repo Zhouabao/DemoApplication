@@ -15,7 +15,7 @@
             android:layout_marginLeft="44dp"
             android:layout_marginRight="44dp"
             android:layout_gravity="center"
-            android:background="@drawable/shape_rectangle_gray_white_9dp"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
             android:layout_height="wrap_content">
 
 
