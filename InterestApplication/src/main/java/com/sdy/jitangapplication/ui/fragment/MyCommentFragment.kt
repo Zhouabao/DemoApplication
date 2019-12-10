@@ -19,6 +19,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshCommentEvent
 import com.sdy.jitangapplication.model.MyCommentList
 import com.sdy.jitangapplication.presenter.MyCommentPresenter
 import com.sdy.jitangapplication.presenter.view.MyCommentView
@@ -29,11 +30,15 @@ import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_comment.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 我的评论
  */
-class MyCommentFragment : BaseMvpLazyLoadFragment<MyCommentPresenter>(), MyCommentView, OnRefreshListener, OnLoadMoreListener {
+class MyCommentFragment : BaseMvpLazyLoadFragment<MyCommentPresenter>(), MyCommentView, OnRefreshListener,
+    OnLoadMoreListener {
 
     private val adapter: MyCommentAdapter by lazy { MyCommentAdapter() }
 
@@ -56,6 +61,7 @@ class MyCommentFragment : BaseMvpLazyLoadFragment<MyCommentPresenter>(), MyComme
 
 
     private fun initView() {
+        EventBus.getDefault().register(this)
         mPresenter = MyCommentPresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!
@@ -171,5 +177,21 @@ class MyCommentFragment : BaseMvpLazyLoadFragment<MyCommentPresenter>(), MyComme
             getString(R.string.retry_net_error)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshCommentEvent(event: RefreshCommentEvent) {
+        page = 1
+        params["page"] = page
+        adapter.data.clear()
+        refreshLayout.setNoMoreData(false)
+        mPresenter.myCommentList(params, true)
+    }
+
 
 }
