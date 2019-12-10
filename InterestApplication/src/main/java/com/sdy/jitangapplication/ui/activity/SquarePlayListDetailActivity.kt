@@ -542,6 +542,12 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     override fun onGetSquareInfoResults(mutableList: SquareBean?) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (mutableList != null) {
+            if (mutableList.id == null) {
+                CommonFunction.toast("该动态已经被删除了")
+                finish()
+                return
+            }
+
             mutableList.type = when {
                 !mutableList.video_json.isNullOrEmpty() -> SquareBean.VIDEO
                 !mutableList.audio_json.isNullOrEmpty() -> SquareBean.AUDIO

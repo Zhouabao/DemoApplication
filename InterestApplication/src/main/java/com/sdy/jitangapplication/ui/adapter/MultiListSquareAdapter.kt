@@ -26,6 +26,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.switchplay.SwitchUtil
@@ -51,6 +52,7 @@ import kotlinx.android.synthetic.main.item_list_square_video.view.*
 import kotlinx.android.synthetic.main.layout_square_list_bottom.view.*
 import kotlinx.android.synthetic.main.layout_square_list_top.view.*
 import kotlinx.android.synthetic.main.switch_video.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 
@@ -655,6 +657,7 @@ class MultiListSquareAdapter(
             }
             data.removeAt(position)
             notifyItemRemoved(position + headerLayoutCount)
+            EventBus.getDefault().postSticky(UserCenterEvent(true))
         }
     }
 

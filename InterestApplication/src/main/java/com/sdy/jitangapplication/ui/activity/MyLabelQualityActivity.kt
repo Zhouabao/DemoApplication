@@ -16,6 +16,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
+import com.sdy.jitangapplication.event.UserCenterLabelEvent
 import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MyLabelBean
@@ -110,6 +111,7 @@ class MyLabelQualityActivity : BaseMvpActivity<MyLabelQualityPresenter>(), MyLab
             if (data != null) {
                 UserManager.saveLabels(data.list)
                 EventBus.getDefault().post(UpdateAvatorEvent(true))
+                EventBus.getDefault().post(UserCenterLabelEvent())
             }
 
             if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))

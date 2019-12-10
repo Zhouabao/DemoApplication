@@ -13,6 +13,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
+import com.sdy.jitangapplication.event.UserCenterLabelEvent
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.MyLabelsBean
 import com.sdy.jitangapplication.model.TagBean
@@ -134,6 +135,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
             if (data != null) {
                 UserManager.saveLabels(data)
                 EventBus.getDefault().post(UpdateAvatorEvent(true))
+                EventBus.getDefault().post(UserCenterLabelEvent())
             }
 
             removedLabel.add(adapter.data[position])

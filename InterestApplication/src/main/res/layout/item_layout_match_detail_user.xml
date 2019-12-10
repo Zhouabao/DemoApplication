@@ -29,6 +29,15 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
 
+        <View
+                android:background="@drawable/rectangle_gradient_cover_bg_12dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@id/labelIcon"
+                app:layout_constraintLeft_toLeftOf="@id/labelIcon"
+                app:layout_constraintRight_toRightOf="@id/labelIcon"
+                app:layout_constraintTop_toTopOf="@id/labelIcon"/>
+
         <TextView
                 android:id="@+id/labelSameCount"
                 android:text="你们有两个重合兴趣"
@@ -55,11 +64,10 @@
                 android:text="摄影"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
-                android:alpha="0.8"
                 android:drawableLeft="@drawable/icon_cuohe_tag"
                 android:gravity="center"
                 android:padding="3dp"
-                android:background="@drawable/rectangle_cover_bg_12dp"
+                android:textStyle="bold"
                 android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -112,5 +120,6 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/labelIntroduce"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.cardview.widget.CardView>

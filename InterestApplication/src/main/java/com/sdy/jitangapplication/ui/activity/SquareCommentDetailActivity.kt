@@ -509,8 +509,15 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
     override fun onGetSquareInfoResults(data: SquareBean?) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (data != null) {
+            if (data.id == null) {
+                CommonFunction.toast("该动态已被删除")
+                finish()
+                return
+            }
+
+
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             data.type = when {
                 !data.video_json.isNullOrEmpty() -> SquareBean.VIDEO
                 !data.audio_json.isNullOrEmpty() -> SquareBean.AUDIO
@@ -523,7 +530,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             commentParams["square_id"] = "${squareBean!!.id}"
             mPresenter.getCommentList(commentParams, true)
         } else {
-            CommonFunction.toast("该动态已经被删除了")
+            CommonFunction.toast("该动态已被删除")
             finish()
         }
     }
