@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -18,6 +19,7 @@ import com.sdy.jitangapplication.presenter.MyLabelPresenter
 import com.sdy.jitangapplication.presenter.view.MyLabelView
 import com.sdy.jitangapplication.ui.adapter.ChooseLabelAdapter
 import kotlinx.android.synthetic.main.activity_choose_label.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -55,6 +57,11 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
         rightBtn1.text = "完成"
         rightBtn1.isEnabled = true
 
+        stateChooseLabel.retryBtn.onClick {
+            stateChooseLabel.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.getMyTagsList()
+        }
+
         rvMyLabels.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvMyLabels.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
@@ -70,6 +77,15 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
         if (result) {
             stateChooseLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             adapter.setNewData(datas?.is_using ?: mutableListOf())
+
+            for (data in adapter.data.withIndex()) {
+                if (data.value.tag_id == intent.getIntExtra("tag_id", -1)) {
+                    data.value.checked = true
+                    mylabelBean = data.value
+                    adapter.notifyItemChanged(data.index)
+                    break
+                }
+            }
             removedLabel.addAll(datas?.is_removed ?: mutableListOf())
         } else {
             stateChooseLabel.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -88,6 +104,11 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
             }
 
             rightBtn1 -> {
+                if (mylabelBean == null) {
+                    CommonFunction.toast("兴趣为必选项")
+                    return
+                }
+
                 intent.putExtra("label", mylabelBean)
                 setResult(Activity.RESULT_OK, intent)
                 finish()

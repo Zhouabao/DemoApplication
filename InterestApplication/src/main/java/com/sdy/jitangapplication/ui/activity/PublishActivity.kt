@@ -1248,7 +1248,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 startActivityForResult<ChooseTitleActivity>(REQUEST_CODE_TITILE, "tag_id" to checkTags[0].id)
             }
             R.id.tagLayoutRv -> {
-                startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL)
+                startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL,"tag_id" to checkTags[0].id)
             }
         }
     }
