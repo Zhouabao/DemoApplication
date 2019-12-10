@@ -269,6 +269,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
             matchUserAdapter.my_tags_quality = matchBeans.my_label_quality
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
+            //保存 VIP信息
+            UserManager.saveUserVip(matchBeans.isvip)
+            //保存认证信息
+            UserManager.saveUserVerify(matchBeans.isfaced)
+
             //保存剩余滑动次数
             UserManager.saveSlideCount(matchBeans.like_times)
             EventBus.getDefault().post(UpdateSlideCountEvent())
@@ -278,10 +283,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
             //保存倒计时时间
             UserManager.saveCountDownTime(matchBeans.countdown)
-            //保存 VIP信息
-            UserManager.saveUserVip(matchBeans.isvip)
-            //保存认证信息
-            UserManager.saveUserVerify(matchBeans.isfaced)
+
             //保存引导次数
             UserManager.motion = matchBeans.motion
             my_percent_complete = matchBeans.my_percent_complete

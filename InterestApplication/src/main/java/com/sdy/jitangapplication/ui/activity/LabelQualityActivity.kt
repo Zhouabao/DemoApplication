@@ -34,6 +34,8 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     companion object {
         const val MIN_QUALITY = 1
         const val MAX_QUALITY = 5
+        const val MODE_NEW = 1
+        const val MODE_EDIT = 2
     }
 
     private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel? }
@@ -49,13 +51,15 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
 
     private val from by lazy { intent.getIntExtra("from", AddLabelActivity.FROM_ADD_NEW) }
 
+    private val mode by lazy { intent.getIntExtra("mode", LabelQualityActivity.MODE_NEW) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_label_quality)
         initView()
         mPresenter.getTagTraitInfo(
             hashMapOf(
-                "tag_id" to if (from == AddLabelActivity.FROM_EDIT) {
+                "tag_id" to if (mode == MODE_EDIT) {
                     myLabelBean!!.tag_id
                 } else {
                     labelBean!!.id
@@ -74,11 +78,12 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         rightBtn1.setOnClickListener(this)
         hotT1.visibility = View.INVISIBLE
         rightBtn1.isVisible = true
-        rightBtn1.text = if (from == AddLabelActivity.FROM_ADD_NEW || from == AddLabelActivity.FROM_REGISTER) {
-            "保存并继续"
-        } else {
-            "保存"
-        }
+        rightBtn1.text =
+            if (mode == MODE_NEW || from == AddLabelActivity.FROM_ADD_NEW || from == AddLabelActivity.FROM_REGISTER) {
+                "保存并继续"
+            } else {
+                "保存"
+            }
         rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_25dp)
         rightBtn1.isEnabled = false
 
@@ -135,6 +140,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
             } else {
                 choosedFromAllQuality.add(tempData)
                 adapter.remove(position)
+//                    adapter.notifyItemChanged(position)
                 choosedQualityAdapter.addData(tempData)
                 checkConfirmEnable()
             }
@@ -167,15 +173,17 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
             }
 
             for (data in choosedQualityAdapter.data) {
-                for (data1 in adapter.data) {
-                    if (data.id == data1.id) {
-                        data1.checked = false
-                        adapter.data.remove(data1)
-                        choosedFromAllQuality.add(data1)
+                for (data1 in adapter.data.withIndex()) {
+                    if (data.id == data1.value.id) {
+//                        data1.unable = true
+                        data1.value.checked = false
+                        adapter.remove(data1.index)
+                        choosedFromAllQuality.add(data1.value)
+                        break
                     }
                 }
             }
-            adapter.notifyDataSetChanged()
+
             checkConfirmEnable()
         } else {
             stateLabelQuality.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -218,7 +226,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     return
                 }
 
-                if (from == AddLabelActivity.FROM_EDIT) {
+                if (mode == MODE_EDIT) {
                     myLabelBean!!.label_quality = choosedQualityAdapter.data
                     intent.putExtra("aimData", myLabelBean)
                     setResult(Activity.RESULT_OK, intent)

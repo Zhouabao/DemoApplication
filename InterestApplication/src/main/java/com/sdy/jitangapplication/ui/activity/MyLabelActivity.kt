@@ -87,6 +87,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
                     //TODO标签编辑
                     intent.putExtra("aimData", adapter.data[position])
                     intent.putExtra("from", AddLabelActivity.FROM_EDIT)
+                    intent.putExtra("mode", LabelQualityActivity.MODE_EDIT)
                     intent.setClass(this, MyLabelQualityActivity::class.java)
                     startActivity(intent)
                 }

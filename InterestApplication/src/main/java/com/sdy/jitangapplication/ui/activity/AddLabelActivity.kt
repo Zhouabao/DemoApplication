@@ -92,7 +92,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             )
         )
         labelsRv.adapter = labelListAdapter
-        labelListAdapter.from = intent.getIntExtra("from", FROM_EDIT)
+        labelListAdapter.from = from
 
 
         labelMenuAdapter.setOnItemClickListener { _, view, position ->

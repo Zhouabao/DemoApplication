@@ -131,6 +131,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
             )
             mPresenter.publishContent(param)
         }
+        publish.isEnabled = true
     }
 
 
@@ -139,6 +140,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
             ActivityUtils.finishAllActivities()
             startActivity<MainActivity>()
         }
+        publish.isEnabled = true
     }
 
 
@@ -183,7 +185,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
                         this@AddLabelSuccessActivity,
                         1,
                         PictureConfig.CHOOSE_REQUEST,
-                        PictureMimeType.ofImage()
+                        PictureMimeType.ofImage(), true
                     )
                 }
             }
@@ -203,6 +205,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
             }
             //发布
             publish -> {
+                publish.isEnabled = false
                 if (mediaBean == null) {
                     CommonFunction.toast("请先选择要上传的图片")
                     return

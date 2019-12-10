@@ -60,7 +60,8 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
             } else if (!labelAdapter.data[position].checked) {
                 (mContext as Activity).startActivity<LabelQualityActivity>(
                     "data" to labelAdapter.data[position],
-                    "from" to from
+                    "from" to from,
+                    "mode" to LabelQualityActivity.MODE_NEW
                 )
             }
         }
@@ -77,7 +78,8 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
         deleteDialog.confirm.onClick {
             (mContext as Activity).startActivity<LabelQualityActivity>(
                 "data" to position,
-                "from" to AddLabelActivity.FROM_ADD_NEW
+                "from" to AddLabelActivity.FROM_ADD_NEW,
+                "mode" to LabelQualityActivity.MODE_NEW
             )
             // mPresenter.delMyTags(adapter.data[position].id, position)
             deleteDialog.dismiss()
@@ -94,7 +96,8 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
             (mContext as Activity).startActivity<MyLabelQualityActivity>(
                 "aimData" to tempLabel,
                 "from" to AddLabelActivity.FROM_EDIT,
-                "showDelete" to false
+                "showDelete" to false,
+                "mode" to LabelQualityActivity.MODE_EDIT
             )
             deleteDialog.dismiss()
         }

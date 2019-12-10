@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.MyLabelsBean
@@ -92,6 +93,11 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
                 finish()
             }
             addMoreLabelBtn -> {
+                if (adapter.data.size == 5) {
+                    CommonFunction.toast("至多能拥有${MyLabelActivity.MAX_LABEL}个标签")
+                    return
+                }
+
                 intent.putExtra("from", AddLabelActivity.FROM_PUBLISH)
                 intent.putExtra("is_using", adapter.data as Serializable)
                 intent.putExtra("is_removed", removedLabel as Serializable)
