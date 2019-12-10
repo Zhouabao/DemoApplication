@@ -4,11 +4,14 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.WindowManager
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
+import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import kotlinx.android.synthetic.main.dialog_account_danger.*
 import org.jetbrains.anko.startActivity
 
@@ -18,12 +21,13 @@ import org.jetbrains.anko.startActivity
  *    desc   :账号异常弹窗
  *    version: 1.0
  */
-class AccountDangerDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
+class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) : Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_account_danger)
         initWindow()
+        changeVerifyStatus(status)
     }
 
 
@@ -70,7 +74,8 @@ class AccountDangerDialog(val context1: Context) : Dialog(context1, R.style.MyDi
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
-                    //todo 去修改头像
+                    if (ActivityUtils.getTopActivity() != NewUserInfoSettingsActivity::class.java)
+                        context1.startActivity<NewUserInfoSettingsActivity>()
                 }
             }
             VERIFY_PASS -> {
@@ -83,7 +88,6 @@ class AccountDangerDialog(val context1: Context) : Dialog(context1, R.style.MyDi
                 accountDangerLoading.isVisible = false
                 accountDangerBtn.isEnabled = true
                 accountDangerBtn.onClick {
-                    //todo 更新此时的认证状态
                     dismiss()
                 }
             }
@@ -98,6 +102,10 @@ class AccountDangerDialog(val context1: Context) : Dialog(context1, R.style.MyDi
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         params?.windowAnimations = R.style.MyDialogCenterAnimation
         window?.attributes = params
+        setCancelable(false)
         setCanceledOnTouchOutside(false)
+        setOnKeyListener { dialogInterface, keyCode, event ->
+            keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0
+        }
     }
 }

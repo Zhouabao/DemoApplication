@@ -102,6 +102,15 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (!UserManager.getAlertProtocol())
             PrivacyDialog(this).show()
 
+        if (UserManager.getAccountDanger()) {
+            //0未认证/认证不成功     1认证通过     2认证中
+            if (UserManager.isUserVerify() == 0) {
+                onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NOTE))
+            } else if (UserManager.isUserVerify() == 2) {
+                onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
+            }
+        }
+
     }
 
 

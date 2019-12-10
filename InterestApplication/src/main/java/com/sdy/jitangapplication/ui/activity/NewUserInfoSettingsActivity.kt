@@ -38,8 +38,8 @@ import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.AccountDangerEvent
 import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.ReminderScoreEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.model.NewJobBean
@@ -48,10 +48,7 @@ import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.adapter.UserPhotoAdapter
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import com.sdy.jitangapplication.ui.dialog.ReminderScoreDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GetJsonDataUtil
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -63,8 +60,6 @@ import kotlinx.android.synthetic.main.dialog_delete_photo.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_add_score.view.*
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
 import org.json.JSONArray
 import top.zibin.luban.OnCompressListener
@@ -106,8 +101,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
 
     private fun initView() {
-        EventBus.getDefault().register(this)
-
         mPresenter = UserInfoSettingsPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -573,7 +566,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     photosId.add(data.value?.id)
                 }
             }
-            mPresenter.addPhotoV2(savePersonalParams, UserManager.getToken(), UserManager.getAccid(), photosId, type)
+            mPresenter.addPhotoV2(savePersonalParams, UserManager.getToken(), UserManager.getAccid(), photosId, 2)
         } else {
             mPresenter.addPhotoV2(
                 savePersonalParams,
@@ -975,10 +968,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         checkIsForceChangeAvator()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
-    }
 
     override fun scrollToFinishActivity() {
         checkIsForceChangeAvator()
@@ -994,10 +983,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         }
 
 
-        //强制替换头像下,如果已经换了头像
-        if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(adapter.data[0].url) && !isChange && UserManager.isNeedChangeAvator()) {
+        //如果已经换了头像,并且要求强制替换头像
+        if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(adapter.data[0].url) && UserManager.isNeedChangeAvator()) {
             UserManager.saveForceChangeAvator(true)
         }
+
 
         //如果修改了信息 更新本地筛选信息
         if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
@@ -1029,21 +1019,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         } else {
             setResult(Activity.RESULT_OK)
             finish()
-        }
-
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onResetScoreEvent(dialogEvent: ReminderScoreEvent) {
-        when (dialogEvent.score) {
-            20 -> {
-//                userScore20.setImageResource(R.drawable.icon_twenty_unclick)
-            }
-            80 -> {
-//                userScore80.setImageResource(R.drawable.icon_eighty_unclick)
+            if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(adapter.data[0].url) && UserManager.getAccountDanger()) { //账号异常
+                UserManager.saveUserVerify(2)
+                EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
             }
         }
+
+
     }
 
 
@@ -1178,41 +1160,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 //        userScore80.layoutParams = layoutmanager80
 
 
-    }
-
-    private fun showUploadMorePhotos() {
-        //使用AnimationUtils类的静态方法loadAnimation()来加载XML中的动画XML文件
-        val animation = AnimationUtils.loadAnimation(this, R.anim.dialog_center_in)
-        val animationOut = AnimationUtils.loadAnimation(this, R.anim.dialog_center_exit)
-        animation.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationRepeat(p0: Animation?) {
-
-            }
-
-            override fun onAnimationEnd(p0: Animation?) {
-                addPhotoTip.isVisible = true
-                Thread.sleep(200L)
-                addPhotoTip.startAnimation(animationOut)
-            }
-
-            override fun onAnimationStart(p0: Animation?) {
-            }
-
-        })
-        animationOut.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationRepeat(p0: Animation?) {
-
-            }
-
-            override fun onAnimationEnd(p0: Animation?) {
-                addPhotoTip.isVisible = false
-            }
-
-            override fun onAnimationStart(p0: Animation?) {
-            }
-
-        })
-        addPhotoTip.startAnimation(animation)
     }
 
 
