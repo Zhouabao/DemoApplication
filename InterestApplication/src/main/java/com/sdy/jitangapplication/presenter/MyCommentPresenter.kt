@@ -46,7 +46,6 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {
-
                         mView.onError(context.getString(R.string.service_error))
                         mView.onGetCommentListResult(null, refresh)
                     }

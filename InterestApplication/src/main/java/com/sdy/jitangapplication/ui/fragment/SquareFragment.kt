@@ -45,7 +45,6 @@ import com.sdy.jitangapplication.switchplay.SwitchVideo
 import com.sdy.jitangapplication.ui.activity.PublishActivity
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
-import com.sdy.jitangapplication.ui.activity.UserCenterActivity
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.adapter.SquareFriendsAdapter
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
@@ -64,7 +63,6 @@ import kotlinx.android.synthetic.main.headerview_label.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.startActivityForResult
 
@@ -786,7 +784,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     private var from = 1
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRePublishEvent(event: RePublishEvent) {
-        if (event.context is UserCenterActivity) {
+        if (event.context == UserCenterFragment::class.java.simpleName) {
             from = 2
         } else {
             from = 1
@@ -795,7 +793,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             CommonFunction.toast("还有动态正在发布哦~请稍候")
             return
         } else if (UserManager.publishState == -2) {//发布失败
-            CommonAlertDialog.Builder(event.context)
+            CommonAlertDialog.Builder(activity!!)
                 .setTitle("发布提示")
                 .setContent("您有一条内容未成功发布，是否重新发布？")
                 .setConfirmText("重新上传")
@@ -815,10 +813,10 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                         adapter.headerLayout.friendTv.layoutParams = params
                         UserManager.clearPublishParams()
                         if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-                            if (event.context is UserCenterActivity) {
-                                event.context.startActivity<PublishActivity>("from" to 2)
+                            if (event.context == UserCenterFragment::class.java.simpleName) {
+                                startActivity<PublishActivity>("from" to 2)
                             } else {
-                                event.context.startActivity<PublishActivity>()
+                                startActivity<PublishActivity>()
                             }
                     }
                 })
@@ -828,22 +826,21 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
             UserManager.clearPublishParams()
             if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-                if (event.context is UserCenterActivity) {
-                    event.context.startActivity<PublishActivity>("from" to 2)
+                if (event.context == UserCenterFragment::class.java.simpleName) {
+                    startActivity<PublishActivity>("from" to 2)
                 } else {
-                    event.context.startActivity<PublishActivity>()
+                    startActivity<PublishActivity>()
                 }
             uploadFl.isVisible = false
             val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
             params.topMargin = SizeUtils.dp2px(10F)
             adapter.headerLayout.friendTv.layoutParams = params
         } else if (UserManager.publishState == 0) {
-            if (event.context is UserCenterActivity) {
-                event.context.startActivity<PublishActivity>("from" to 2)
+            if (event.context == UserCenterFragment::class.java.simpleName) {
+                startActivity<PublishActivity>("from" to 2)
             } else {
-
-                activity!!.intent.setClass(event.context, PublishActivity::class.java)
-                event.context.startActivity(activity!!.intent)
+                activity!!.intent.setClass(activity!!, PublishActivity::class.java)
+                startActivity(activity!!.intent)
             }
         }
     }
@@ -968,7 +965,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     //验证用户是否被封禁结果
     override fun onCheckBlockResult(result: Boolean) {
         if (result) {
-            onRePublishEvent(RePublishEvent(true, activity!!))
+            onRePublishEvent(RePublishEvent(true, SquareFragment::class.java.simpleName))
         }
         squareEdit.isEnabled = true
         adapter.headerLayout.guidePublish.isEnabled = true

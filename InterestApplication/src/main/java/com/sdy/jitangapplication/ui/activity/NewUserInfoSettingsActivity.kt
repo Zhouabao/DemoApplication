@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -1116,7 +1118,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         userFinishProgress.layoutParams = params
 
 
-        totalGetScore += score //汇总每次的得分
+//        totalGetScore += score //汇总每次的得分
+        totalGetScore = 100//汇总每次的得分
         var progress =
             (totalGetScore * 1.0F / (data!!.score_rule!!.base_total) * 100).toInt()
         userScore20.text = "${progress}%"
@@ -1131,21 +1134,18 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             userFinishProgress.progress = progress
         }
 
-        val layoutmanager20 = userScore20.layoutParams as RelativeLayout.LayoutParams
-        layoutmanager20.leftMargin = if (UserManager.isUserVip() && userFinishProgress.progress == 100) {
-            ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) - SizeUtils.dp2px(50F)
-        } else  //左边距+进度条宽度-自身宽度
-            SizeUtils.dp2px(70F) +
-                    ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15))
-                            * userFinishProgress.progress * 1.0f / 100).toInt() - if (progress >= 80 * 0.8F) {
-                SizeUtils.dp2px(60F * 0.9F)
-            } else {
-                0
-            }
-        userScore20.layoutParams = layoutmanager20
+        Log.d("setScroeProgress", "${userFinishProgress.progress}")
 
-        if (!UserManager.isUserVip())
-            userScore80.isVisible = (progress != 80)
+        val translate = ObjectAnimator.ofFloat(
+            userScore20, "translationX",
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15) - SizeUtils.dp2px(45F)) * userFinishProgress.progress * 1.0f / 100)
+        )
+        translate.duration = 100
+        translate.start()
+
+        if (!UserManager.isUserVip()) {
+            userScore80.isVisible = (progress < 80)
+        }
 
     }
 

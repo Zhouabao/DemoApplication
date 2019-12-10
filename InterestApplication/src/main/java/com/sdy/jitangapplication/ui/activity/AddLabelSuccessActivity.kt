@@ -67,7 +67,6 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
 
             override fun onAnimationEnd(p0: Animator?) {
                 lottieView.isVisible = false
-                contentCl.isVisible = true
             }
 
             override fun onAnimationCancel(p0: Animator?) {

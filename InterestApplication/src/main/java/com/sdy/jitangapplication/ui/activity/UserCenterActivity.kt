@@ -330,7 +330,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
             if (UserManager.publishState == 0) {
                 startActivity<PublishActivity>("from" to 2)
             } else
-                EventBus.getDefault().post(RePublishEvent(true, this))
+                EventBus.getDefault().post(RePublishEvent(true, UserCenterActivity::class.java.simpleName))
         }
         coverAdapter.headerLayout.isEnabled = true
     }

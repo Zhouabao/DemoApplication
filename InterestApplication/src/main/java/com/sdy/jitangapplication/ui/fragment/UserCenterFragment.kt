@@ -342,7 +342,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             if (UserManager.publishState == 0) {
                 startActivity<PublishActivity>("from" to 2)
             } else
-                EventBus.getDefault().post(RePublishEvent(true, activity!!))
+                EventBus.getDefault().post(RePublishEvent(true, UserCenterFragment::class.java.simpleName))
         }
         coverAdapter.headerLayout.isEnabled = true
     }

@@ -6,37 +6,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
         tools:context=".ui.activity.AddLabelSuccessActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contentCl"
             android:layout_width="match_parent"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_height="match_parent">
 
 
-        <ImageView
-                android:id="@+id/addSuccessIv"
-                android:layout_marginTop="178dp"
-                android:src="@drawable/icon_add_label_success"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
         <TextView
                 android:id="@+id/successLabelName"
-                android:layout_marginTop="109dp"
+                android:layout_marginTop="60dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="兴趣"
                 android:textColor="#ff191919"
                 android:textSize="26sp"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addSuccessIv"/>
+                tools:text="兴趣"/>
 
         <TextView
                 android:id="@+id/t1"
@@ -55,13 +45,13 @@
                 android:id="@+id/successLabelGuide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="快秀一下你的健身成果"
                 android:textColor="#ff191919"
                 android:textSize="20sp"
-                android:layout_marginTop="63dp"
+                android:layout_marginTop="53dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/t1"
+                tools:text="快秀一下你的健身成果"
                 />
 
         <TextView
@@ -86,10 +76,10 @@
                 android:background="@drawable/icon_add_photo_label"
                 android:layout_width="232dp"
                 android:scaleType="center"
-                android:layout_marginTop="30dp"
                 android:layout_height="232dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/publish"
                 app:layout_constraintTop_toBottomOf="@id/changeLabel"/>
 
         <TextView
@@ -98,11 +88,11 @@
                 android:textColor="#ffffffff"
                 android:gravity="center"
                 android:textSize="17sp"
-                android:background="@drawable/selector_confirm_btn1"
-                android:layout_width="wrap_content"
+                android:background="@drawable/selector_confirm_btn_25dp"
+                android:layout_width="300dp"
                 android:enabled="true"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_height="38dp"
+                android:layout_marginBottom="20dp"
                 app:layout_constraintBottom_toTopOf="@id/startJitangBtn"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -121,16 +111,19 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
-
+        <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieView"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_speed="1"
+                app:lottie_fileName="data_add_label_success.json"
+                app:lottie_imageAssetsFolder="images/"
+                app:lottie_loop="true"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieView"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="data_add_label_success.json"
-            app:lottie_imageAssetsFolder="images/"
-            app:lottie_loop="false"/>
+
 </FrameLayout>

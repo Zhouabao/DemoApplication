@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.event
 
-import android.content.Context
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.WechatNameBean
 import com.sdy.jitangapplication.ui.fragment.MySquareFragment.Companion.TYPE_SQUARE
@@ -54,7 +53,7 @@ class AnnounceEvent(var serverSuccess: Boolean = false, var code: Int = 0)
 
 
 //重新上传内容的通知成功或者失败事件
-class RePublishEvent(var republish: Boolean, val context: Context)
+class RePublishEvent(var republish: Boolean, val context: String)
 
 
 //更新用户中心信息

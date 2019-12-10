@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
@@ -51,6 +50,10 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 for (i in 0 until holder.itemView.vpIndicator.size) {
                     (holder.itemView.vpIndicator[i] as RadioButton).isChecked = i == position
                 }
+
+                //首张内容  用户在该标签下的描述、标签内容
+                //次张内容  用户在发布过的内容（所有标签），参考设计内容，如用户没发布过则跳转至第三张内容
+                //三张内容  用户的「关于我」描述文本。如用用户填写过则呈现，没有则保留至最后一张显示状态
                 when (position) {
                     0 -> {  //0显示广场
                         holder.itemView.matchUserLocalTagCl.isVisible = true
@@ -121,19 +124,12 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         }
 
         /*设置封面图片recyclerview*/
-        if (item.square.isNullOrEmpty()) {
-            holder.itemView.matchUserDynamicLl.visibility = View.GONE
-            holder.itemView.matchUserIntroduceCl.visibility = View.GONE
-            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
-        } else {
-            holder.itemView.matchUserDynamicLl.visibility = View.VISIBLE
+        if (!item.square.isNullOrEmpty()) {
             holder.itemView.matchUserDynamicThumbRv.layoutManager =
                 LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
             val adapter = DetailThumbAdapter(mContext)
             adapter.setData(item.square ?: mutableListOf())
             holder.itemView.matchUserDynamicThumbRv.adapter = adapter
-            holder.itemView.matchUserIntroduceCl.visibility = View.GONE
-            holder.itemView.matchUserLocalTagCl.visibility = View.GONE
         }
 
         //点击切换上一张图片
@@ -142,17 +138,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.addOnClickListener(R.id.nextImgBtn)
 
 
-        holder.itemView.ivVip.visibility = if (item.isvip == 1) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-
-        holder.itemView.ivVerify.visibility = if (item.isfaced == 1) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+        holder.itemView.ivVip.isVisible = item.isvip == 1
+        holder.itemView.ivVerify.isVisible = item.isfaced == 1
 
 
         holder.itemView.matchUserIntroduce.text = item.sign ?: "" //关于自己

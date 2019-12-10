@@ -258,12 +258,10 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 setViewState(EMPTY)
                 btnChatCl.isVisible = false
                 tvLeftChatTime.isVisible = false
-                llLeftSlideTime.isVisible = false
             } else {
                 setViewState(CONTENT)
                 btnChatCl.isVisible = true
                 tvLeftChatTime.isVisible = true
-                llLeftSlideTime.isVisible = matchBeans.isvip != 1
             }
 
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
@@ -305,7 +303,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 }
             }
 
-            updateLeftCountStatus()
 
             tvLeftChatTime.text = "${UserManager.getLightingCount()}"
 
@@ -322,24 +319,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             EventBus.getDefault().postSticky(EnableLabelEvent(true))
     }
 
-    /**
-     * 更新剩余滑动次数的状态
-     */
-    private fun updateLeftCountStatus() {
-        if (UserManager.getSlideCount() <= UserManager.getHighlightCount()) {
-            llLeftSlideTime.alpha = 1F
-            llLeftSlideTime.setBackgroundResource(R.drawable.rectangle_white_3dp)
-            tvLeftSlideTime.setTextColor(resources.getColor(R.color.colorOrange))
-            ivLeftSlideTime.setImageResource(R.drawable.icon_smile_orange)
-        } else {
-            llLeftSlideTime.alpha = 0.3F
-            llLeftSlideTime.setBackgroundResource(R.drawable.rectangle_black_3dp)
-            tvLeftSlideTime.setTextColor(resources.getColor(R.color.colorWhite))
-            ivLeftSlideTime.setImageResource(R.drawable.icon_smile_transparent)
-        }
-        tvLeftSlideTime.text = "${UserManager.getSlideCount()}"
-
-    }
 
     /**
      * 左滑不喜欢结果
@@ -709,7 +688,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     else
                         ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
                 }
-                updateLeftCountStatus()
 
             }
         }
