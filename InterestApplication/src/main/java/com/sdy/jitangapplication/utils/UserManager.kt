@@ -53,6 +53,15 @@ object UserManager {
     var keyList: MutableList<String> = mutableListOf()
 
 
+    fun saveAccountDanger(danger: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("accountDanger", danger)
+    }
+
+    fun getAccountDanger(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("accountDanger", false)
+    }
+
+
     /**
      * 保存当前调研弹窗的版本号
      */
@@ -593,6 +602,8 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("currentVersion")
         SPUtils.getInstance(Constants.SPNAME).remove("showcard_cnt")
         SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
+        //账号异常记录清除
+        SPUtils.getInstance(Constants.SPNAME).remove("accountDanger")
 
 
         /**

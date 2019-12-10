@@ -29,10 +29,7 @@ import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
-import com.sdy.jitangapplication.event.GetNewMsgEvent
-import com.sdy.jitangapplication.event.ReVerifyEvent
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
@@ -43,6 +40,7 @@ import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
@@ -109,14 +107,36 @@ class MyApplication : BaseApplication() {
                             //发送通知更新内容
                             EventBus.getDefault().postSticky(RefreshEvent(true))
                         }
-                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                        //如果账号存在异常，就发送认证不通过弹窗
+                        if (UserManager.getAccountDanger()) {
+                            EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
+                        } else {
+                            EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                        }
                     }
                     //7强制替换头像
                     7 -> {
                         EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
                         UserManager.saveChangeAvator(customerMsgBean.msg)
                     }
-
+                    //8账号异常提示去变更账号
+                    8 -> {
+                        UserManager.saveAccountDanger(true)
+                        EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOTE))
+                    }
+                    //9人脸认证通过的通知
+                    9 -> {
+                        if (UserManager.getAccountDanger()) {
+                            UserManager.saveAccountDanger(false)
+                        }
+                        UserManager.saveUserVerify(1)
+                        if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
+                            SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
+                            //发送通知更新内容
+                            EventBus.getDefault().postSticky(RefreshEvent(true))
+                        }
+                        EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
+                    }
 
                 }
 

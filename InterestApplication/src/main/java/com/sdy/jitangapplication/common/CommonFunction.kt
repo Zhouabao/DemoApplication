@@ -134,6 +134,7 @@ object CommonFunction {
                     PictureConfig.SINGLE
                 }
             )
+            .isAndroidQTransform(false)//是否需要处理Android Q 拷贝至应用沙盒的操作
             .previewImage(true)
             .previewVideo(true)
             .isCamera(true)

@@ -32,8 +32,10 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.MyApplication
+import com.sdy.jitangapplication.event.AccountDangerEvent
 import com.sdy.jitangapplication.model.AccessTokenBean
 import com.sdy.jitangapplication.model.MatchFaceBean
+import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
@@ -43,6 +45,7 @@ import com.zhy.http.okhttp.callback.Callback
 import okhttp3.Call
 import okhttp3.Request
 import okhttp3.Response
+import org.greenrobot.eventbus.EventBus
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -233,6 +236,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                             UserManager.saveUserVerify(2)
                             setResult(Activity.RESULT_OK)
                             finish()
+                            EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
                         }
                         t.code == 403 -> UserManager.startToLogin(context as Activity)
                         else -> {

@@ -84,12 +84,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     private var squareBean: SquareBean? = null
 
-    //是否改变了点赞的状态
-    private var isChangeLike = false
-
-    //通过标志进入的入口来决定是否弹起键盘
-    private val enterPosition: String? by lazy { intent.getStringExtra("enterPosition") }
-
     private var page = 1
 
     private val commentParams = hashMapOf(

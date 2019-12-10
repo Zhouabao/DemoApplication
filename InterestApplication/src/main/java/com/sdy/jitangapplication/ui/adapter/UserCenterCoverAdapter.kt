@@ -22,11 +22,13 @@ class UserCenterCoverAdapter :
 
     override fun convert(holder: BaseViewHolder, item: CoverSquare) {
         val params = holder.itemView.ivSquare.layoutParams as ConstraintLayout.LayoutParams
-        params.width = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
-        params.height = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.width =
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.height =
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
         holder.itemView.ivSquare.layoutParams = params
 
-        holder.itemView.squareForMore.isVisible = holder.layoutPosition == data.size
+        holder.itemView.squareForMore.isVisible = (holder.layoutPosition == data.size && data.size > 2)
         holder.itemView.squareVideoType.isVisible = (item.type == 2 && holder.layoutPosition != data.size)//1图 2 视频
         GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", holder.itemView.ivSquare, SizeUtils.dp2px(5F))
     }

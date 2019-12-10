@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
+import android.animation.ObjectAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
@@ -25,63 +24,15 @@ class MyLabelAdapter : BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.it
     override fun convert(helper: BaseViewHolder, item: MyLabelBean) {
         if (notify)
             if (item.editMode) {
-                val animationLeft = TranslateAnimation(
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0F,
-                    TranslateAnimation.ABSOLUTE,
-                    -SizeUtils.dp2px(35F).toFloat(),
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0F,
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0F
-                )
-                animationLeft.fillAfter = true
-                animationLeft.duration = 100L
-                animationLeft.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationRepeat(p0: Animation?) {
-
-                    }
-
-                    override fun onAnimationEnd(p0: Animation?) {
-//                        val params = helper.itemView.content.layoutParams as FrameLayout.LayoutParams
-//                        params.rightMargin = SizeUtils.dp2px(50F)
-//                        helper.itemView.content.layoutParams = params
-                    }
-
-                    override fun onAnimationStart(p0: Animation?) {
-                    }
-
-                })
-                helper.itemView.content.startAnimation(animationLeft)
+                val translate =
+                    ObjectAnimator.ofFloat(helper.itemView.content, "translationX", -SizeUtils.dp2px(35F).toFloat())
+                translate.duration = 100
+                translate.start()
             } else {
-                val animationLeft = TranslateAnimation(
-                    TranslateAnimation.ABSOLUTE,
-                    -SizeUtils.dp2px(35F).toFloat(),
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0F,
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0F,
-                    TranslateAnimation.RELATIVE_TO_SELF,
-                    0F
-                )
-                animationLeft.fillAfter = true
-                animationLeft.duration = 100L
-                animationLeft.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationRepeat(p0: Animation?) {
+                val translate = ObjectAnimator.ofFloat(helper.itemView.content, "translationX", SizeUtils.dp2px(0F).toFloat())
+                translate.duration = 100
+                translate.start()
 
-                    }
-
-                    override fun onAnimationEnd(p0: Animation?) {
-//                        val params = helper.itemView.content.layoutParams as FrameLayout.LayoutParams
-//                        params.rightMargin = SizeUtils.dp2px(15F)
-//                        helper.itemView.content.layoutParams = params
-                    }
-
-                    override fun onAnimationStart(p0: Animation?) {
-                    }
-
-                })
-                helper.itemView.content.startAnimation(animationLeft)
             }
         helper.itemView.labelName.text = item.title
         GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon, SizeUtils.dp2px(10F))

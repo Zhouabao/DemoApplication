@@ -117,7 +117,7 @@
 
     <TextView
             android:id="@+id/squareZhuanfaBtn1"
-            android:visibility="visible"
+            android:visibility="gone"
             android:drawableLeft="@drawable/icon_zhuanfa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

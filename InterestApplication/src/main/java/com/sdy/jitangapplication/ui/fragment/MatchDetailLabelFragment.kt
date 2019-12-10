@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.OtherLabelsBean
 import com.sdy.jitangapplication.presenter.MatchDetailLabelPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailLabelView
 import com.sdy.jitangapplication.ui.adapter.MatchDetailUserLabelAdapter
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.match_detail_user_label_fragment.*
 
 /**
@@ -41,14 +44,20 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
         mPresenter = MatchDetailLabelPresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!
+
+        stateLabel.retryBtn.onClick {
+            stateLabel.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.getOtherTags(target_accid)
+        }
+
         rvLabel.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         rvLabel.adapter = adapter
         adapter.bindToRecyclerView(rvLabel)
-        adapter.setEmptyView(R.layout.empty_layout_block, rvLabel)
     }
 
     override fun getOtherTagsResult(result: Boolean, data: OtherLabelsBean?) {
         if (result) {
+            stateLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data != null) {
                 for (my in data.my) {
                     for (other in data.other) {
@@ -66,7 +75,11 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
                     }
                 }
                 adapter.setNewData(data.other)
+            } else {
+                stateLabel.viewState = MultiStateView.VIEW_STATE_EMPTY
             }
+        } else {
+            stateLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }
 

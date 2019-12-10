@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
@@ -40,6 +41,7 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_list_square.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -50,7 +52,7 @@ import org.greenrobot.eventbus.ThreadMode
  * 列表形式的广场列表
  */
 class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView,
-    OnLoadMoreListener, MultiListSquareAdapter.ResetAudioListener{
+    OnLoadMoreListener, MultiListSquareAdapter.ResetAudioListener {
     private var page = 1
     private val params by lazy {
         hashMapOf(
@@ -109,36 +111,13 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
         listSquareRv.adapter = adapter
         adapter.type = MySquareFragment.TYPE_OTHER_DETAIL
         adapter.bindToRecyclerView(listSquareRv)
-        adapter.setEmptyView(R.layout.empty_layout_block, listSquareRv)
+        stateList.retryBtn.onClick {
+            stateList.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.getSomeoneSquare(params)
+        }
 
         //取消动画，主要是闪烁
         listSquareRv.itemAnimator?.changeDuration = 0
-
-        //限定范围为屏幕一半的上下偏移180
-//        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
-//        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
-//        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
-//        listSquareRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            var firstVisibleItem = 0
-//            var lastVisibleItem = 0
-//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//                scrollCalculatorHelper.onScrollStateChanged(recyclerView, newState)
-//            }
-//
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition()
-//                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
-//                //滑动自动播放
-//                scrollCalculatorHelper.onScroll(
-//                    recyclerView,
-//                    firstVisibleItem,
-//                    lastVisibleItem,
-//                    lastVisibleItem - firstVisibleItem
-//                )
-//            }
-//        })
 
         adapter.setOnItemClickListener { _, view, position ->
             if (mediaPlayer != null) {
@@ -223,14 +202,11 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {
         if (result) {
-
-//            if ((data == null || data.list.isNullOrEmpty()) && adapter.data.isNullOrEmpty()) {
-//                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
-//            } else {
-//                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-//            }
-
+            stateList.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data == null || data.list == null || data!!.list!!.size == 0) {
+                if (adapter.data.isNullOrEmpty()) {
+                    stateList.viewState = MultiStateView.VIEW_STATE_EMPTY
+                }
                 listRefresh.finishLoadMoreWithNoMoreData()
             } else {
                 for (tempData in 0 until data!!.list!!.size) {
@@ -248,12 +224,10 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
 
             }
         } else {
-            if (listRefresh != null)
+            if (listRefresh != null && page > 1)
                 listRefresh.finishLoadMore(false)
-//            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-//            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
-//            adapter.data.clear()
-//            page = 1
+            else
+                stateList.viewState = MultiStateView.VIEW_STATE_ERROR
         }
         EventBus.getDefault().post(UserDetailViewStateEvent(result))
 

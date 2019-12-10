@@ -7,14 +7,13 @@ import retrofit2.http.*
 import rx.Observable
 
 interface Api {
-
     /****************登录板块**********************/
 
     /**
      * 获取消息总的个数汇总数据
      */
     @FormUrlEncoded
-    @POST("Index/msgList${Constants.END_BASE_URL}")
+    @POST("Index/msgListV2${Constants.END_BASE_URL}")
     fun msgList(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<AllMsgCount?>>
 
 
@@ -287,7 +286,7 @@ interface Api {
      * 匹配详情数据
      */
     @FormUrlEncoded
-    @POST("member_info/usrinfo${Constants.END_BASE_URL}")
+    @POST("member_info/usrinfoV2${Constants.END_BASE_URL}")
     fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchBean?>>
 
 
@@ -365,7 +364,7 @@ interface Api {
      * 获取用户相册
      */
     @FormUrlEncoded
-    @POST("member_info/squarePhotosList${Constants.END_BASE_URL}")
+    @POST("member_info/squarePhotosListV2${Constants.END_BASE_URL}")
     fun squarePhotosList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<BlockListBean?>>
 
 
@@ -373,7 +372,7 @@ interface Api {
      * 获取用户广场列表
      */
     @FormUrlEncoded
-    @POST("square/someoneSquare${Constants.END_BASE_URL}")
+    @POST("square/someoneSquareV2${Constants.END_BASE_URL}")
     fun someoneSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
 
 
@@ -382,7 +381,7 @@ interface Api {
      * 个人中心
      */
     @FormUrlEncoded
-    @POST("member_info/myInfo${Constants.END_BASE_URL}")
+    @POST("member_info/myInfoV2${Constants.END_BASE_URL}")
     fun myInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
 
     /**
@@ -397,7 +396,7 @@ interface Api {
      * 我的动态
      */
     @FormUrlEncoded
-    @POST("square/aboutMeSquare${Constants.END_BASE_URL}")
+    @POST("square/aboutMeSquareV2${Constants.END_BASE_URL}")
     fun aboutMeSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
 
 
@@ -504,14 +503,14 @@ interface Api {
      * 所有的消息列表
      */
     @FormUrlEncoded
-    @POST("Tidings/messageCensus${Constants.END_BASE_URL}")
+    @POST("Tidings/messageCensusV2${Constants.END_BASE_URL}")
     fun messageCensus(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MessageListBean1?>>
 
     /**
      * 广场消息列表
      */
     @FormUrlEncoded
-    @POST("tidings/squareLists${Constants.END_BASE_URL}")
+    @POST("tidings/squareListsV2${Constants.END_BASE_URL}")
     fun squareLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareMsgBean>?>>
 
     /**

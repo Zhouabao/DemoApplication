@@ -72,6 +72,9 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * 用户信息界面
+ */
 class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), UserInfoSettingsView,
     OnItemDragListener, View.OnClickListener {
     companion object {

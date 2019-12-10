@@ -9,7 +9,6 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.LabelQualityBean
@@ -22,8 +21,7 @@ import kotlinx.android.synthetic.main.error_layout.view.*
 /**
  * 标签介绍
  */
-class ModelLabelIntroduceActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAboutMeView, OnRefreshListener,
-    OnLoadMoreListener {
+class ModelLabelIntroduceActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAboutMeView, OnRefreshListener {
 
 
     companion object {
@@ -69,8 +67,6 @@ class ModelLabelIntroduceActivity : BaseMvpActivity<ModelAboutMePresenter>(), Mo
         }
 
         modelRefresh.setOnRefreshListener(this)
-        modelRefresh.setOnLoadMoreListener(this)
-        modelRefresh.setEnableLoadMore(true)
 
 
         modelMeRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -78,43 +74,28 @@ class ModelLabelIntroduceActivity : BaseMvpActivity<ModelAboutMePresenter>(), Mo
 
     }
 
-    override fun onLoadMore(refreshLayout: RefreshLayout) {
-        page++
-        mPresenter.getSignTemplate(page)
-    }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         modelMeAdapter.data.clear()
         modelRefresh.resetNoMoreData()
-        when (from) {
-            FROM_ME -> {
-                page = 1
-                mPresenter.getSignTemplate(page)
-            }
-            FROM_LABEL -> {
-                mPresenter.getTagTraitInfo(
-                    hashMapOf<String, Any>(
-                        "tag_id" to intent.getIntExtra("tag_id", 0),
-                        "type" to MyLabelQualityActivity.TYPE_MODEL
-                    )
-                )
-            }
-        }
+
+        mPresenter.getTagTraitInfo(
+            hashMapOf<String, Any>(
+                "tag_id" to intent.getIntExtra("tag_id", 0),
+                "type" to MyLabelQualityActivity.TYPE_MODEL
+            )
+        )
 
     }
 
 
     override fun getSignTemplateResult(code: Int, result: MutableList<LabelQualityBean>?) {
-        modelRefresh.finishRefresh(code == 200)
-        modelRefresh.finishLoadMore(code == 200)
-        if (code == 200 && result.isNullOrEmpty())
-            modelRefresh.finishLoadMoreWithNoMoreData()
-        modelStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
-        modelMeAdapter.addData(result ?: mutableListOf())
     }
 
 
     override fun getTagTraitInfoResult(b: Boolean, mutableList: MutableList<LabelQualityBean>?) {
+        modelRefresh.finishRefresh(b)
+        modelRefresh.finishLoadMore(b)
         if (b) {
             modelStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
             modelMeAdapter.addData(mutableList ?: mutableListOf())

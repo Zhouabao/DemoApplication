@@ -74,8 +74,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     private val guideDialog by lazy { GuideDialog(this) }
 
-    private val accountDangerDialog by lazy { AccountDangerDialog(this) }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,11 +101,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         if (!UserManager.getAlertProtocol())
             PrivacyDialog(this).show()
-
-//        if (!accountDangerDialog.isShowing) {
-//            accountDangerDialog.show()
-//            accountDangerDialog.changeVerifyStatus(AccountDangerDialog.VERIFY_ING)
-//        }
 
     }
 
@@ -424,10 +417,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private var firstClickTime = 0L
 
     override fun onBackPressed() {
-        if (accountDangerDialog.isShowing) {
-            return
-        }
-
         if (guideDialog.isShowing) {
             return
         }
@@ -689,7 +678,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 //    const val TYPE_CHANGE_AVATOR_NOT_PASS = 5//头像违规替换
 //    const val TYPE_CHANGE_AVATOR_PASS = 6//头像通过,但是不是真人
 //    const val TYPE_CHANGE_ABLUM = 7//完善相册
-    private var dialog: GotoVerifyDialog? = null
+    private var gotoVerifyDialog: GotoVerifyDialog? = null
 
     private fun showGotoVerifyDialog(type: Int, avator: String = UserManager.getAvator()) {
         var content = ""
@@ -718,12 +707,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 confirmText = "修改头像"
             }
         }
-        if (dialog != null) {
-            dialog!!.dismiss()
-            dialog = null
+        if (gotoVerifyDialog != null) {
+            gotoVerifyDialog!!.dismiss()
+            gotoVerifyDialog = null
         }
 
-        dialog = GotoVerifyDialog.Builder(ActivityUtils.getTopActivity())
+        gotoVerifyDialog = GotoVerifyDialog.Builder(ActivityUtils.getTopActivity())
             .setTitle(title)
             .setContent(content)
             .setConfirmText(confirmText)
@@ -733,9 +722,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             .setCancelIconIsVisibility(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
             .setOnCancelable(type != GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS)
             .create()
-        dialog?.show()
+        gotoVerifyDialog?.show()
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onReVerifyEvent(event: ReVerifyEvent) {
@@ -748,6 +736,19 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             UserManager.saveAlertChangeAlbum(true)
 
         showGotoVerifyDialog(event.type, event.avator)
+    }
+
+
+    private var accountDangerDialog: AccountDangerDialog? = null
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onAccountDangerEvent(event: AccountDangerEvent) {
+        if (accountDangerDialog != null) {
+            accountDangerDialog!!.dismiss()
+            accountDangerDialog = null
+        }
+        accountDangerDialog = AccountDangerDialog(ActivityUtils.getTopActivity())
+        accountDangerDialog!!.show()
+        accountDangerDialog!!.changeVerifyStatus(event.type)
     }
 
 

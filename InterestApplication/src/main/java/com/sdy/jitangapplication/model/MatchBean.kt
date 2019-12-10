@@ -67,7 +67,7 @@ data class MatchBean(
     var job: String? = null,
     var constellation: String? = null,
     var square: MutableList<Square>? = null,
-    var square_count: Int? = 0,
+    var square_cnt: Int? = 0,
     var tagcount: Int? = 0,
     var birth: Int?,
     var tags: MutableList<TagBean>?,

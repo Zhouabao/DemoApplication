@@ -36,7 +36,7 @@
                 android:id="@+id/modelRefresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srlEnableLoadMore="true"
+                app:srlEnableLoadMore="false"
                 app:srlEnableLoadMoreWhenContentNotFull="false"
                 app:srlEnableRefresh="true">
 

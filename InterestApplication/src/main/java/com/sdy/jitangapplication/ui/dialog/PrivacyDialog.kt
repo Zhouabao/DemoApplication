@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.style.ClickableSpan
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import com.blankj.utilcode.util.SpanUtils
@@ -118,5 +119,8 @@ class PrivacyDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         window?.attributes = params
         setCanceledOnTouchOutside(false)
+        setOnKeyListener { dialogInterface, keyCode, event ->
+            keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0
+        }
     }
 }

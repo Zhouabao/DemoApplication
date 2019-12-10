@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
@@ -15,10 +17,11 @@ import com.sdy.jitangapplication.event.BlockDataEvent
 import com.sdy.jitangapplication.model.Photos
 import com.sdy.jitangapplication.presenter.BlockSquarePresenter
 import com.sdy.jitangapplication.presenter.view.BlockSquareView
-import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.BlockAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_block_square.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -68,22 +71,20 @@ class BlockSquareFragment(var targetAccid: String) : BaseMvpLazyLoadFragment<Blo
             )
         )
         blockRv.adapter = blockAdapter
-        blockAdapter.setEmptyView(R.layout.empty_layout_block, blockRv)
 
         blockAdapter.setOnItemClickListener { _, view, position ->
-            SquarePlayListDetailActivity.start(activity!!, blockAdapter.data[position].square_id)
+            SquareCommentDetailActivity.start(activity!!, squareId = blockAdapter.data[position].square_id)
         }
 
-//        stateview.retryBtn.onClick {
-//            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-//            mPresenter.squarePhotosList(params)
-//        }
+        stateBlock.retryBtn.onClick {
+            stateBlock.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.squarePhotosList(params)
+        }
 
     }
 
     override fun loadData() {
         initView()
-
         mPresenter.squarePhotosList(params)
     }
 
@@ -97,24 +98,23 @@ class BlockSquareFragment(var targetAccid: String) : BaseMvpLazyLoadFragment<Blo
 
     override fun getBlockSquareResult(success: Boolean, data: MutableList<Photos>?) {
         if (success) {
-//            if (blockAdapter.data.isNullOrEmpty() && data.isNullOrEmpty()) {
-//                stateview.viewState = MultiStateView.VIEW_STATE_EMPTY
-//            } else {
-//                stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-//            }
+            stateBlock.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data.isNullOrEmpty()) {
+                if (blockAdapter.data.isNullOrEmpty()) {
+                    blockAdapter.setEmptyView(R.layout.empty_layout_block, blockRv)
+                    stateBlock.viewState = MultiStateView.VIEW_STATE_EMPTY
+
+                }
                 refreshBlock.finishLoadMoreWithNoMoreData()
             } else {
                 refreshBlock.finishLoadMore(true)
             }
             blockAdapter.addData(data ?: mutableListOf())
         } else {
-            refreshBlock.finishLoadMore(false)
-
-//            stateview.viewState = MultiStateView.VIEW_STATE_ERROR
-//            stateview.errorMsg.text = CommonFunction.getErrorMsg(activity!!)
-//            blockAdapter.data.clear()
-//            page = 1
+            if (page == 1)
+                stateBlock.viewState = MultiStateView.VIEW_STATE_ERROR
+            else
+                refreshBlock.finishLoadMore(false)
         }
     }
 

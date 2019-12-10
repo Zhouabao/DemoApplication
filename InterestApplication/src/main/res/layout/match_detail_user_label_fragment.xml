@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.layout.SmartRefreshLayout
+<com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/refreshLabel"
+        android:id="@+id/stateLabel"
+        app:msv_emptyView="@layout/empty_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_viewState="loading"
         android:layout_width="match_parent"
-        android:background="@color/colorWhite"
-        android:layout_height="match_parent"
-        app:srlEnableLoadMore="true"
-        app:srlEnableRefresh="false">
+        android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvLabel"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/refreshLabel"
             android:layout_width="match_parent"
-            android:overScrollMode="never"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:background="@color/colorWhite"
+            android:layout_height="match_parent"
+            app:srlEnableLoadMore="true"
+            app:srlEnableRefresh="false">
 
-</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvLabel"
+                android:layout_width="match_parent"
+                android:overScrollMode="never"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</com.kennyc.view.MultiStateView>
+
 
 

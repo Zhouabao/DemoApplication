@@ -349,7 +349,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             "他"
         } else {
             "她"
-        }}的动态 . ${matchBean!!.square_count ?: 0}"
+        }}的动态 . ${matchBean!!.square_cnt ?: 0}"
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
         detailUserInformationRv.adapter = detailUserInformationAdapter

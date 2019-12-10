@@ -16,6 +16,10 @@ class GetNewMsgEvent
 class ReVerifyEvent(val type: Int, var avator: String = UserManager.getAvator())
 
 
+//账号异常认证事件通知
+class AccountDangerEvent(val type: Int)
+
+
 class UpdateAvatorEvent(val update: Boolean)
 
 //更新首页滑动次数
