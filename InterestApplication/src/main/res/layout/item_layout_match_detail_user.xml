@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_marginLeft="11dp"
@@ -100,18 +101,31 @@
                 />
 
 
-        <TextView
+        <com.ctetin.expandabletextviewlibrary.ExpandableTextView
                 android:id="@+id/labelIntroduce"
                 android:layout_width="0dp"
+                android:layout_marginRight="15dp"
                 android:layout_height="wrap_content"
-                android:text="写下你对「玩游戏」的看法或者你与「玩游戏」相关的故事吧你是大佬还是萌新？有过什么好相关的故事吧你是大佬还是萌新？有过什么好…"
                 android:textColor="#ff81858a"
                 android:textSize="15sp"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.1"
+                app:ep_contract_color="@color/colorGrayText"
+                app:ep_contract_text="收起"
+                app:ep_expand_color="@color/colorGrayText"
+                app:ep_expand_text="...展开"
+                app:ep_max_line="3"
+                app:ep_need_always_showright="true"
+                app:ep_need_animation="true"
+                app:ep_need_contract="true"
+                app:ep_need_expand="true"
                 android:layout_marginTop="15dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/labelIcon"
+                tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。"
                 />
+
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/labelQualityRv"

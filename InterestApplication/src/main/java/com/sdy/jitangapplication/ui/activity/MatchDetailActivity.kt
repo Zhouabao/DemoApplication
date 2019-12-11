@@ -56,6 +56,7 @@ import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
 import com.sdy.jitangapplication.ui.fragment.MatchDetailLabelFragment
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CenterLayoutManager
+import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
@@ -157,6 +158,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         btnBack2.setOnClickListener(this)
         //用户的广场预览界面
         detailThumbRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        detailThumbRv.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL_LIST,
+                SizeUtils.dp2px(3F),
+                resources.getColor(R.color.colorTransparent)
+            )
+        )
         //用户详细信息列表
         detailUserInformationRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
 

@@ -20,7 +20,7 @@ class MatchDetailUserLabelAdapter :
     BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.item_layout_match_detail_user) {
     override fun convert(helper: BaseViewHolder, item: MyLabelBean) {
         helper.itemView.labelName.text = item.title
-        helper.itemView.labelIntroduce.text = item.describle
+        helper.itemView.labelIntroduce.setContent(item.describle)
         GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon, SizeUtils.dp2px(12F))
         helper.itemView.labelSameCount.isVisible = item.same_quality_count > 0
         helper.itemView.labelSameCount.text = "你们有${item.same_quality_count}个重合兴趣特质"
