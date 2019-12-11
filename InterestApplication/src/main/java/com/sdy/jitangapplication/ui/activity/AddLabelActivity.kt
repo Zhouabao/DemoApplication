@@ -50,6 +50,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
     //标签列表适配器
     private val labelListAdapter: AddLabelAdapter by lazy { AddLabelAdapter() }
 
+    private var menuClick = false
     private fun initView() {
         mPresenter = AddLabelPresenter()
         mPresenter.context = this
@@ -96,30 +97,37 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
 
 
         labelMenuAdapter.setOnItemClickListener { _, view, position ->
+            menuClick = true
             for (data in labelMenuAdapter.data.withIndex()) {
-                if (data.value.checked && data.index != position) {
-                    data.value.checked = false
-                    labelMenuAdapter.notifyItemChanged(data.index)
-                }
-                if (data.index == position) {
-                    data.value.checked = true
-                    labelMenuAdapter.notifyItemChanged(data.index)
-                }
+                data.value.checked = data.index == position
             }
-
+            labelMenuAdapter.notifyDataSetChanged()
 
             (labelsRv.layoutManager as LinearLayoutManager).smoothScrollToPosition(
                 labelsRv,
                 RecyclerView.State(),
                 position
             )
-
-            (labelClassRv.layoutManager as CenterLayoutManager).smoothScrollToPosition(
-                labelClassRv,
-                RecyclerView.State(),
-                position
-            )
         }
+
+        labelsRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    menuClick = false
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!menuClick) {
+                    val first = (labelsRv.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    for (data in labelMenuAdapter.data.withIndex()) {
+                        data.value.checked = data.index == first
+                    }
+                    labelMenuAdapter.notifyDataSetChanged()
+                }
+            }
+        })
     }
 
 
