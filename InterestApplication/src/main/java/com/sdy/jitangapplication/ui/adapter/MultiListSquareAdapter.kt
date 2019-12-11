@@ -392,6 +392,8 @@ class MultiListSquareAdapter(
         setLikeStatus(data[position].isliked, data[position].like_cnt, likeBtn)
 
         likeBtn.postDelayed({
+            if (data.isEmpty() || data.size - 1 < position)
+                return@postDelayed
             if (data[position].originalLike == data[position].isliked) {
                 return@postDelayed
             }
@@ -408,6 +410,7 @@ class MultiListSquareAdapter(
             )
             getSquareLike(params, position)
         }, 2000L)
+
 
     }
 

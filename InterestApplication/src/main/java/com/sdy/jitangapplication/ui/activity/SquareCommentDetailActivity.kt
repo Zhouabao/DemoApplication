@@ -188,7 +188,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             squareBean!!.like_cnt
         }}"
         squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
-        squareContent1.setContent("${squareBean!!.descr}")
+        squareContent1.isVisible = !squareBean!!.descr.isNullOrEmpty()
+        if (!squareBean!!.descr.isNullOrEmpty()) {
+            squareContent1.setContent("${squareBean!!.descr}")
+        }
+
+
         squareZhuanfaBtn1.text = "${squareBean!!.share_cnt}"
         squareUserName1.text = "${squareBean!!.nickname}"
         squareUserVipIv1.isVisible = squareBean!!.isvip == 1
