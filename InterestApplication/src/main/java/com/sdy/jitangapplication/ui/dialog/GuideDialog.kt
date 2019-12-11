@@ -60,6 +60,9 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideNext.isVisible = true
             guideDetail.isVisible = false
             guideHi.isVisible = false
+            chatTv.isVisible = false
+            likeTv.isVisible = false
+            dislikeTv.isVisible =false
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
@@ -72,6 +75,9 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideNext.isVisible = false
             guideDetail.isVisible = true
             guideHi.isVisible = false
+            chatTv.isVisible = false
+            likeTv.isVisible = false
+            dislikeTv.isVisible =false
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
@@ -84,6 +90,9 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideNext.isVisible = false
             guideDetail.isVisible = false
             guideHi.isVisible = true
+            chatTv.isVisible = true
+            likeTv.isVisible = true
+            dislikeTv.isVisible =true
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
@@ -96,6 +105,9 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideNext.isVisible = false
             guideDetail.isVisible = false
             guideHi.isVisible = false
+            guideHi.isVisible = false
+            chatTv.isVisible = false
+            likeTv.isVisible = false
             guideCl.isVisible = false
             guideLike.isVisible = true
             guideDislike.isVisible = false

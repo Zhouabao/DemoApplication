@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<rotate xmlns:android="http://schemas.android.com/apk/res/android"
-        android:fromDegrees="90"
-        android:toDegrees="90">
-    <shape xmlns:android="http://schemas.android.com/apk/res/android"
-           android:shape="line">
-        <size android:height="1dp"/>
-        <corners android:radius="10dp"/>
-        <stroke
-                android:dashGap="20dp"
-                android:dashWidth="20dp"
-                android:width="2dp"
-                android:color="@color/colorWhite"/>
-    </shape>
-</rotate>
-        <?xml version="1.0" encoding="utf-8"?>-->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 <item
         android:left="-30dp"

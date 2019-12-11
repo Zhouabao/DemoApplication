@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
        android:shape="rectangle">
-    <gradient
-            android:type="linear"
-            android:useLevel="true"
-            android:startColor="#ffaeaeae"
-            android:endColor="#00aeaeae"
-            android:angle="180"/>
+
     <corners
             android:topLeftRadius="0dp"
             android:topRightRadius="5dp"
             android:bottomLeftRadius="0dp"
             android:bottomRightRadius="5dp"/>
+
+        <gradient
+                android:type="linear"
+                android:useLevel="true"
+                android:startColor="#8fe4e7ec"
+                android:endColor="#00e4e7ec"
+                android:angle="180"/>
 </shape>
