@@ -21,6 +21,7 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -304,10 +305,17 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         headView.layoutParams = params
 
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
-        coverAdapter.headerLayout.onClick {
-            mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
-            coverAdapter.headerLayout.isEnabled = false
-        }
+
+        coverAdapter.headerLayout.onClick(object :CustomClickListener(){
+            override fun onSingleClick() {
+                mPresenter.checkBlock()
+            }
+
+            override fun onFastClick() {
+
+            }
+
+        })
 
         coverAdapter.setOnItemClickListener { _, view, position ->
             if (position == coverAdapter.data.size - 1) {
@@ -344,7 +352,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             } else
                 EventBus.getDefault().post(RePublishEvent(true, UserCenterFragment::class.java.simpleName))
         }
-        coverAdapter.headerLayout.isEnabled = true
     }
 
     override fun onError(text: String) {
@@ -373,7 +380,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         when (view.id) {
             //设置
             R.id.settingBtn -> {
-
                 startActivity<SettingsActivity>()
             }
             //个人信息设置

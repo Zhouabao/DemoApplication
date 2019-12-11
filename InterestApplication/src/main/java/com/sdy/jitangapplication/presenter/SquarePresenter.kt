@@ -17,9 +17,9 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UploadEvent
-import com.sdy.jitangapplication.model.FriendListBean
 import com.sdy.jitangapplication.model.SquareListBean
 import com.sdy.jitangapplication.presenter.view.SquareView
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
@@ -33,26 +33,6 @@ import java.io.File
  *    version: 1.0
  */
 class SquarePresenter : BasePresenter<SquareView>() {
-    /**
-     * 获取广场列表中的好友列表
-     */
-    fun getFrinedsList(params: HashMap<String, String>) {
-        val params1 = UserManager.getBaseParams()
-        params1.putAll(params)
-        RetrofitFactory.instance.create(Api::class.java)
-            .getSquareFriends(UserManager.getSignParams(params1))
-            .excute(object : BaseSubscriber<BaseResp<FriendListBean?>>(mView) {
-                override fun onNext(t: BaseResp<FriendListBean?>) {
-                    super.onNext(t)
-                    if (t.code == 200 && t.data != null)
-                        mView.onGetFriendsListResult(t.data!!.list ?: mutableListOf())
-                }
-
-                override fun onError(e: Throwable?) {
-                    mView.onGetFriendsListResult(mutableListOf())
-                }
-            })
-    }
 
     /**
      * 获取广场列表
@@ -85,39 +65,6 @@ class SquarePresenter : BasePresenter<SquareView>() {
             })
     }
 
-
-    /**
-     * 点赞 取消点赞
-     * 1 点赞 2取消点赞
-     */
-    fun getSquareLike(params: HashMap<String, Any>, position: Int) {
-
-        RetrofitFactory.instance.create(Api::class.java)
-            .getSquareLike(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
-                    super.onNext(t)
-                    if (t.code == 200) {
-                        mView.onGetSquareLikeResult(position, true)
-                    } else if (t.code == 403) {
-                        TickDialog(context).show()
-                    } else {
-                        CommonFunction.toast(t.msg)
-                        mView.onGetSquareLikeResult(position, false)
-                    }
-
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else {
-                        mView.onError(context.getString(R.string.service_error))
-                        mView.onGetSquareLikeResult(position, false)
-                    }
-                }
-            })
-    }
 
     /**
      * 收藏
@@ -215,19 +162,23 @@ class SquarePresenter : BasePresenter<SquareView>() {
     }
 
 
+    private val loadingDialog: LoadingDialog by lazy { LoadingDialog(context) }
     /**
      * 获取广场列表
      */
-    fun checkBlock(token: String, accid: String) {
+    fun checkBlock() {
         RetrofitFactory.instance.create(Api::class.java)
             .checkBlock(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
-                    super.onStart()
+                    if (!loadingDialog.isShowing)
+                        loadingDialog.show()
                 }
 
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
+                    if (loadingDialog.isShowing)
+                        loadingDialog.dismiss()
                     if (t.code == 200)
                         mView.onCheckBlockResult(true)
                     else if (t.code == 403) {
@@ -239,6 +190,8 @@ class SquarePresenter : BasePresenter<SquareView>() {
                 }
 
                 override fun onError(e: Throwable?) {
+                    if (loadingDialog.isShowing)
+                        loadingDialog.dismiss()
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {

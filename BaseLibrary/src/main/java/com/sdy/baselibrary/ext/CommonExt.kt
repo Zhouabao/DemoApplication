@@ -14,6 +14,7 @@ import com.kotlin.base.rx.BaseFuncBoolean
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.widgets.DefaultTextWatcher
 import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.baselibrary.utils.CustomClickListener
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -51,6 +52,16 @@ fun View.onClick(listener: View.OnClickListener): View {
     setOnClickListener(listener)
     return this
 }
+
+
+/**
+ * 扩展点击事件，防抖动
+ */
+fun View.onClick(listener: CustomClickListener):View{
+    setOnClickListener(listener)
+    return this
+}
+
 
 /*
     扩展点击事件，参数为方法

@@ -863,8 +863,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 )
             }
             R.id.userNickSign -> {//关于我
-                startActivityForResult<AboutMeActivity>(105, "content" to data?.sign)
-
+                startActivityForResult<AboutMeActivity>(105, "content" to "${userNickSign.text}")
             }
             R.id.userLoveStatus -> {//情感状态
                 showConditionPicker(
@@ -1118,8 +1117,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         userFinishProgress.layoutParams = params
 
 
-//        totalGetScore += score //汇总每次的得分
-        totalGetScore = 100//汇总每次的得分
+        totalGetScore += score //汇总每次的得分
         var progress =
             (totalGetScore * 1.0F / (data!!.score_rule!!.base_total) * 100).toInt()
         userScore20.text = "${progress}%"

@@ -1,6 +1,4 @@
 package com.sdy.jitangapplication.ui.fragment
-
-
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -27,6 +25,7 @@ import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -71,7 +70,7 @@ import org.jetbrains.anko.support.v4.startActivityForResult
  * 广场列表
  */
 class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
-    View.OnClickListener, MultiListSquareAdapter.ResetAudioListener {
+    MultiListSquareAdapter.ResetAudioListener {
 
     override fun loadData() {
         initView()
@@ -144,13 +143,20 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             setGuidePublishTitle(guideList[currentTitleIndex])
         }
 
-        guideHeadView.guidePublish.onClick {
-            mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
-            adapter.headerLayout.guidePublish.isEnabled = false
-            if (currentTitleIndex != -1) {
-                activity!!.intent.putExtra("titleBean", guideList[currentTitleIndex])
+        guideHeadView.guidePublish.onClick(object : CustomClickListener() {
+            override fun onSingleClick() {
+                mPresenter.checkBlock()
+                if (currentTitleIndex != -1) {
+                    activity!!.intent.putExtra("titleBean", guideList[currentTitleIndex])
+                }
+
             }
-        }
+
+            override fun onFastClick() {
+
+            }
+
+        })
         return guideHeadView
     }
 
@@ -197,7 +203,16 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         mPresenter.context = activity!!
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
-        squareEdit.setOnClickListener(this)
+        squareEdit.onClick(object : CustomClickListener() {
+            override fun onSingleClick() {
+                mPresenter.checkBlock()
+                activity!!.intent.removeExtra("titleBean")
+            }
+
+            override fun onFastClick() {
+            }
+
+        })
 
 
         retryBtn.onClick {
@@ -542,15 +557,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.squareEdit -> {
-                mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
-                squareEdit.isEnabled = false
-                activity!!.intent.removeExtra("titleBean")
-            }
-        }
-    }
 
     override fun showLoading() {
         setViewState(LOADING)
@@ -968,7 +974,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             onRePublishEvent(RePublishEvent(true, SquareFragment::class.java.simpleName))
         }
         squareEdit.isEnabled = true
-        adapter.headerLayout.guidePublish.isEnabled = true
     }
 
 
@@ -1009,6 +1014,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 //            mPresenter.getFrinedsList(friendsParams)
         }
     }
+
+
 
 
 }

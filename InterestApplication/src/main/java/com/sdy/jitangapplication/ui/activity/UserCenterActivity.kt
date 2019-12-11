@@ -295,7 +295,7 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
 
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
         coverAdapter.headerLayout.onClick {
-            mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
+            mPresenter.checkBlock()
             coverAdapter.headerLayout.isEnabled = false
         }
 
