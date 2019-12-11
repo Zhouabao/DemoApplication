@@ -502,6 +502,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     fun onUpdateCardEvent(event: GreetEvent) {
         if (event.context is MainActivity)
             if (event.success) {
+                val setting = SwipeAnimationSetting.Builder()
+                    .setDirection(Direction.Top)
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator(AccelerateInterpolator())
+                    .build()
+                manager.setSwipeAnimationSetting(setting)
                 card_stack_view.swipe()
             } else {
                 // card_stack_view.rewind()

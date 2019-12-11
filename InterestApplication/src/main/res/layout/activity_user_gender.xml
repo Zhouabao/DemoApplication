@@ -70,6 +70,7 @@
         <ImageView
                 android:src="@drawable/icon_gender_woman"
                 android:layout_width="142dp"
+                android:scaleType="centerInside"
                 android:layout_height="142dp"/>
 
         <ImageView
@@ -100,6 +101,7 @@
             app:layout_constraintTop_toTopOf="@id/rlWoman">
 
         <ImageView
+                android:scaleType="centerInside"
                 android:src="@drawable/icon_gender_man"
                 android:layout_width="142dp"
                 android:layout_height="142dp"/>

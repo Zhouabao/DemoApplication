@@ -87,7 +87,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             "token" to UserManager.getToken(),
             "tag_id" to UserManager.getGlobalLabelId(),
             "target_accid" to targetAccid,
-            "_sign" to "",
             "_timestamp" to System.currentTimeMillis()
         )
     }
@@ -96,7 +95,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "target_accid" to targetAccid,
-            "_sign" to "",
             "_timestamp" to System.currentTimeMillis()
         )
     }

@@ -58,7 +58,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         hashMapOf(
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
-            "_sign" to "",
             "_timestamp" to System.currentTimeMillis()
         )
     }
