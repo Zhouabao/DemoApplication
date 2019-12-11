@@ -241,9 +241,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
 
         })
-
     }
-
 
     private fun initView() {
         mPresenter = UserCenterPresenter()
@@ -306,7 +304,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
 
-        coverAdapter.headerLayout.onClick(object :CustomClickListener(){
+        coverAdapter.headerLayout.onClick(object : CustomClickListener() {
             override fun onSingleClick() {
                 mPresenter.checkBlock()
             }
@@ -469,7 +467,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
 
-    //发布成功后回来刷新界面数据
+    //更新用户中心信息
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRefreshEvent(event: UserCenterEvent) {
 //        multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING

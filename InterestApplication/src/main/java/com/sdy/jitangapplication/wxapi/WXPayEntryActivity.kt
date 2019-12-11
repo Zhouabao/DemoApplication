@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseReq
@@ -73,6 +74,7 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
                     if (ActivityUtils.getTopActivity() != MainActivity::class.java)
                         MainActivity.start(this, Intent())
                     EventBus.getDefault().postSticky(RefreshEvent(true))
+                    EventBus.getDefault().postSticky(UserCenterEvent(true))
                 }
             }
             .show()

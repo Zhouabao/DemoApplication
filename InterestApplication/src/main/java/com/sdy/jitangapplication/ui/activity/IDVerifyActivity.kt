@@ -106,14 +106,21 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
         CommonAlertDialog.Builder(this)
             .setIconVisible(false)
-            .setCancelIconIsVisibility(false)
+            .setCancelIconIsVisibility(true)
             .setTitle("认证提醒")
             .setContent("审核将与用户头像做比对，请确认头像为本人")
             .setConfirmText("确定")
+            .setCancelText("取消")
             .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                 override fun onClick(dialog: Dialog) {
                     dialog.dismiss()
                 }
+            })
+            .setOnCancelListener(object :CommonAlertDialog.OnConfirmListener, CommonAlertDialog.OnCancelListener {
+                override fun onClick(dialog: Dialog) {
+                    finish()
+                }
+
             })
             .create()
             .show()

@@ -21,6 +21,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshSquareEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
@@ -523,6 +524,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 adapter.remove(position)
             }
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            EventBus.getDefault().postSticky(UserCenterEvent(true))
 
         } else {
             toast("删除动态失败！")

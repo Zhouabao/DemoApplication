@@ -472,6 +472,9 @@ object UserManager {
         if (sp.getInt("audit_only", -1) != -1) {
             parmas["audit_only"] = sp.getInt("audit_only", -1)
         }
+        if (sp.getInt("online", -1) != -1) {
+            parmas["online"] = sp.getInt("online", -1)
+        }
         if (sp.getInt("filter_gender", -1) != -1) {
             parmas["gender"] = sp.getInt("filter_gender", -1)
         }

@@ -34,6 +34,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.adapter.VipBannerAdapter
@@ -411,6 +412,7 @@ class ChargeVipDialog(
                     if (ActivityUtils.getTopActivity() != MainActivity::class.java)
                         MainActivity.start(context1, Intent())
                     EventBus.getDefault().postSticky(RefreshEvent(true))
+                    EventBus.getDefault().postSticky(UserCenterEvent(true))
                 }
 
             })

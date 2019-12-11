@@ -93,8 +93,7 @@ class MyApplication : BaseApplication() {
                     2 -> {//对方删除自己,本地删除会话列表
                         CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "")
                     }
-                    3 -> {
-                        //新的招呼刷新界面
+                    3 -> { //新的招呼刷新界面
                         EventBus.getDefault().postSticky(UpdateHiEvent())
                     }
                     //4人脸认证不通过
@@ -134,6 +133,7 @@ class MyApplication : BaseApplication() {
                             SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
                             //发送通知更新内容
                             EventBus.getDefault().postSticky(RefreshEvent(true))
+                            EventBus.getDefault().postSticky(UserCenterEvent(true))
                         }
                         EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
                     }

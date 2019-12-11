@@ -33,6 +33,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshCommentEvent
 import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.AllCommentBean
 import com.sdy.jitangapplication.model.CommentBean
 import com.sdy.jitangapplication.model.SquareBean
@@ -882,6 +883,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (result) {
             CommonFunction.toast("动态删除成功!")
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            EventBus.getDefault().postSticky(UserCenterEvent(true))
             finish()
         } else {
             CommonFunction.toast("动态删除失败！")

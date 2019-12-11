@@ -199,6 +199,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 if (position != 3) {
                     customStatusBar.setBackgroundResource(R.color.colorTransparent)
                 } else if (initializeUserMe) {
+                    EventBus.getDefault().postSticky(UserCenterEvent(true))
                     onChangeStatusEvent(ChangeStatusColorEvent())
                 }
                 switchTab(position)

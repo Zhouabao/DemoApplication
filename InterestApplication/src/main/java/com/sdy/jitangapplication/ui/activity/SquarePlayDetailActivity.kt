@@ -20,6 +20,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshSquareEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.presenter.SquarePlayDetaiPresenter
 import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
@@ -364,6 +365,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             CommonFunction.toast("删除动态成功！")
             finish()
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            EventBus.getDefault().postSticky(UserCenterEvent(true))
         } else {
             CommonFunction.toast("删除动态失败！")
         }
