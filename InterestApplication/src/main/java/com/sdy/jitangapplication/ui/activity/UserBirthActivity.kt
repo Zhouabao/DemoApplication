@@ -33,6 +33,7 @@ class UserBirthActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickName
     }
 
     private fun initView() {
+        setSwipeBackEnable(false)
         mPresenter = UserNickNamePresenter()
         mPresenter.mView = this
         mPresenter.context = this

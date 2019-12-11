@@ -340,16 +340,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
     private fun initData() {
-        titles[0].title = "${if (matchBean!!.gender == 1) {
-            "他"
-        } else {
-            "她"
-        }}的兴趣"
-        titles[1].title = "${if (matchBean!!.gender == 1) {
-            "他"
-        } else {
-            "她"
-        }}的动态 . ${matchBean!!.square_cnt ?: 0}"
+        titles[1].title = "TA的动态 . ${matchBean!!.square_cnt ?: 0}"
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
         detailUserInformationRv.adapter = detailUserInformationAdapter
