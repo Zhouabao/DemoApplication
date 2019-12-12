@@ -16,7 +16,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
-import com.sdy.jitangapplication.event.UserCenterLabelEvent
 import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MyLabelBean
@@ -111,7 +110,6 @@ class MyLabelQualityActivity : BaseMvpActivity<MyLabelQualityPresenter>(), MyLab
             if (data != null) {
                 UserManager.saveLabels(data.list)
                 EventBus.getDefault().post(UpdateAvatorEvent(true))
-                EventBus.getDefault().post(UserCenterLabelEvent())
             }
 
             if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))
@@ -165,24 +163,7 @@ class MyLabelQualityActivity : BaseMvpActivity<MyLabelQualityPresenter>(), MyLab
                 startActivityForResult(intent, REQUEST_QUALITY)
             }
             myLabelIntroduceBtn -> {//兴趣介绍
-                val tagIds = mutableListOf<Int>()
-                for (label in chooseLabelQuality) {
-                    tagIds.add(label.id)
-                }
 
-                if (labelBean!!.intention.isNotEmpty()) {
-                    intent.putExtra("intention", Gson().toJson(mutableListOf(labelBean!!.intention[0].id)))
-                }
-                intent.putExtra("tag_id", labelBean!!.tag_id)
-                if (myLabelIntroduce.text.isNotEmpty())
-                    intent.putExtra("describle", myLabelIntroduce.text)
-                else
-                    intent.putExtra("describleHint", myLabelIntroduce.text)
-
-                intent.putExtra("label_quality", Gson().toJson(tagIds))
-                intent.putExtra("aimData", labelBean)
-                intent.setClass(this, LabelIntroduceActivity::class.java)
-                startActivityForResult(intent, REQUEST_INTRODUCE)
             }
             myLabelAimBtn -> { //标签意愿
                 if (aimData == null) {

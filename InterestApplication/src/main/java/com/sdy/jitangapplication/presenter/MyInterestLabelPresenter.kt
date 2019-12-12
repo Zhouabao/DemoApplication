@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.presenter
 
-import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -8,9 +7,8 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.MyLabelsBean
-import com.sdy.jitangapplication.model.TagBean
-import com.sdy.jitangapplication.presenter.view.MyLabelView
+import com.sdy.jitangapplication.model.LabelQualityBean
+import com.sdy.jitangapplication.presenter.view.MyInterestLabelView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
@@ -20,15 +18,16 @@ import com.sdy.jitangapplication.utils.UserManager
  *    desc   :
  *    version: 1.0
  */
-class MyLabelPresenter : BasePresenter<MyLabelView>() {
+class MyInterestLabelPresenter : BasePresenter<MyInterestLabelView>() {
     /**
-     * 获取我的标签
+     * 获取我感兴趣的标签
      */
-    fun getMyTagsList() {
+
+    fun getMyInterestTagsList() {
         RetrofitFactory.instance.create(Api::class.java)
-            .getMyTagsList(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<MyLabelsBean?>>(mView) {
-                override fun onNext(t: BaseResp<MyLabelsBean?>) {
+            .getMyInterestList(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<MutableList<LabelQualityBean>?>>(mView) {
+                override fun onNext(t: BaseResp<MutableList<LabelQualityBean>?>) {
                     if (t.code == 200) {
                         mView.getMyTagsListResult(true, t.data)
                     } else if (t.code == 403) {
@@ -47,21 +46,21 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
     }
 
     /**
-     * 删除标签
+     * 删除我感兴趣的标签
      */
-    fun delMyTags(tag_id: Int, position: Int) {
-        val params = hashMapOf<String, Any>("tag_ids" to Gson().toJson(mutableListOf(tag_id)))
+    fun delMyInterest(tag_id: Int, position: Int) {
+        val params = hashMapOf<String, Any>("tag_id" to tag_id)
         RetrofitFactory.instance.create(Api::class.java)
-            .delMyTags(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<MutableList<TagBean>?>>(mView) {
+            .delMyInterest(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()
                 }
 
-                override fun onNext(t: BaseResp<MutableList<TagBean>?>) {
+                override fun onNext(t: BaseResp<Any?>) {
                     mView.hideLoading()
                     if (t.code == 200) {
-                        mView.delTagResult(true, position, t.data)
+                        mView.delTagResult(true, position)
                     } else if (t.code == 403) {
                         TickDialog(context).show()
                     }
@@ -74,8 +73,6 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
                 }
             })
     }
-
-
 
 
 }

@@ -24,9 +24,7 @@
     <ImageView
             android:id="@+id/intentionChecked"
             android:visibility="gone"
-            android:layout_marginTop="7dp"
-            android:layout_marginRight="7dp"
-            android:src="@drawable/icon_checked_orange"
+            android:src="@drawable/icon_label_interest_added"
             android:layout_width="20dp"
             android:layout_height="20dp"
             app:layout_constraintRight_toRightOf="parent"

@@ -27,7 +27,8 @@ data class NewLabel(
     var removed: Boolean = false,
     var intro_descr: String = "",
     var publish_descr: String = "",
-    var used_cnt: Int = 0
+    var used_cnt: Int = 0,
+    var state: Int = 0//0 没有使用过 1正在使用中 2使用过的
 ) : Serializable
 
 

@@ -805,6 +805,28 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tags/saveRegisterInfo${Constants.END_BASE_URL}")
-    fun saveRegisterInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+    fun saveRegisterInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 我的感兴趣的列表
+     */
+    @FormUrlEncoded
+    @POST("Tags/getMyInterestList${Constants.END_BASE_URL}")
+    fun getMyInterestList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+
+    /**
+     * 我的感兴趣的列表
+     */
+    @FormUrlEncoded
+    @POST("Tags/delMyInterest${Constants.END_BASE_URL}")
+    fun delMyInterest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * 保存我的感兴趣的列表
+     */
+    @FormUrlEncoded
+    @POST("Tags/saveInterestTag${Constants.END_BASE_URL}")
+    fun saveInterestTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 }

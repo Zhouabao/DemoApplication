@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
+import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.UpdateEditModeEvent
 import com.sdy.jitangapplication.model.AddLabelBean
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.presenter.AddLabelPresenter
@@ -22,13 +25,16 @@ import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_add_label.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * 添加标签activity
  */
 class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, View.OnClickListener {
+
     companion object {
         const val FROM_REGISTER = 1//注册流程进入
+        const val FROM_INTERSERT_LABEL = 6//我感兴趣的
         const val FROM_EDIT = 2//主页编辑已有标签
         const val FROM_ADD_NEW = 3//主页添加新标签
         const val FROM_PUBLISH = 4//发布界面进入
@@ -42,7 +48,13 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_label)
         initView()
-        mPresenter.tagClassifyList()
+        mPresenter.tagClassifyList(
+            if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
+                1
+            } else {
+                2
+            }
+        )
     }
 
     //标签标题适配器
@@ -66,15 +78,33 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
 
 
         setSwipeBackEnable(from != FROM_REGISTER)
-
-        hotT1.text = "添加你的兴趣"
-        divider.isVisible = false
         btnBack.isVisible = from != FROM_REGISTER
+        hotT1.text = if (from == FROM_REGISTER || from == FROM_INTERSERT_LABEL) {
+            "感兴趣的标签"
+        } else {
+            "添加你的兴趣"
+        }
+        rightBtn1.isEnabled = true
+        rightBtn1.isVisible = (from == FROM_REGISTER || from == FROM_INTERSERT_LABEL)
+        rightBtn1.text = if (from == FROM_REGISTER) {
+            "下一步"
+        } else {
+            "保存"
+        }
+
+        divider.isVisible = false
         btnBack.setOnClickListener(this)
+        rightBtn1.setOnClickListener(this)
 
         stateAddLabel.retryBtn.onClick {
             stateAddLabel.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.tagClassifyList()
+            mPresenter.tagClassifyList(
+                if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
+                    1
+                } else {
+                    2
+                }
+            )
         }
 
         //标签种类
@@ -136,6 +166,20 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             btnBack -> {
                 finish()
             }
+            rightBtn1 -> {
+                val tag_ids = mutableListOf<Int>()
+                for (data in labelListAdapter.data) {
+                    for (tdata in data.son) {
+                        if (tdata.checked) {
+                            tag_ids.add(tdata.id)
+                        }
+                    }
+                }
+                if (tag_ids.isNotEmpty())
+                    mPresenter.saveInterestTag(Gson().toJson(tag_ids))
+                else
+                    CommonFunction.toast("暂无选中的兴趣可保存")
+            }
         }
 
     }
@@ -155,6 +199,8 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                         if (tdata1.id == tdata2.tag_id) {
                             tdata1.checked = true
                         }
+                    if (tdata1.state == 1)
+                        tdata1.checked = true
                 }
             }
 
@@ -165,6 +211,8 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                         if (tdata1.id == tdata2.tag_id) {
                             tdata1.removed = true
                         }
+                    if (tdata1.state == 2)
+                        tdata1.removed = true
                 }
             }
 
@@ -174,4 +222,13 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             stateAddLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }
+
+    override fun saveInterestTagResult(result: Boolean) {
+        if (result) {
+            EventBus.getDefault().post(UpdateEditModeEvent(MyLabelActivity.MY_INTEREST_LABEL))
+            finish()
+        }
+
+    }
+
 }

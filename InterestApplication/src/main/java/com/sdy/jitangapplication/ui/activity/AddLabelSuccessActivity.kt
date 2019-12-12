@@ -44,7 +44,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_label_success)
         initView()
-        mPresenter.getTagTraitInfo(hashMapOf("type" to MyLabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.id))
+        mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.id))
 
     }
 

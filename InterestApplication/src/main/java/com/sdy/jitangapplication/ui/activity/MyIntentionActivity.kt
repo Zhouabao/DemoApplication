@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,6 +23,10 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
  * 我的意愿
  */
 class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntentionView {
+    companion object {
+        const val FROM_REGISTER = 1
+        const val FROM_USERCENTER = 2
+    }
 
     private val adapter by lazy { MyIntentionAdapter() }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +43,10 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
 
         hotT1.text = "我的意向"
         btnBack.onClick {
+            if (intent.getIntExtra("from", -1) == MyIntentionActivity.FROM_REGISTER) {
+                intent.putExtra("intention",getCheckedIntention())
+                setResult(Activity.RESULT_OK,intent)
+            }
             finish()
         }
         rightBtn1.isVisible = true
@@ -45,19 +54,12 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
         rightBtn1.isEnabled = false
         rightBtn1.onClick(object : CustomClickListener() {
             override fun onSingleClick() {
-                var intention_id: Int? = null
-                for (data in adapter.data) {
-                    if (data.checked) {
-                        intention_id = data.id
-                        break
-                    }
-                }
-                if (intention_id == null) {
+                if (getCheckedIntentionId() == null) {
                     CommonFunction.toast("暂无可保存项")
                     return
                 }
 
-                mPresenter.saveRegisterInfo(intention_id = intention_id)
+                mPresenter.saveRegisterInfo(intention_id = getCheckedIntentionId())
             }
 
             override fun onFastClick() {
@@ -84,6 +86,28 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
             }
             adapter.notifyDataSetChanged()
         }
+    }
+
+    private fun getCheckedIntentionId(): Int? {
+        var intention_id: Int? = null
+        for (data in adapter.data) {
+            if (data.checked) {
+                intention_id = data.id
+                break
+            }
+        }
+        return intention_id
+    }
+
+    private fun getCheckedIntention(): LabelQualityBean? {
+        var intention_id: LabelQualityBean? = null
+        for (data in adapter.data) {
+            if (data.checked) {
+                intention_id = data
+                break
+            }
+        }
+        return intention_id
     }
 
     override fun onGetIntentionListResult(data: MutableList<LabelQualityBean>?) {

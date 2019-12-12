@@ -18,7 +18,7 @@
             android:layout_marginTop="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="兴趣介绍"
+            android:text="个人介绍"
             android:layout_marginLeft="15dp"
             android:textStyle="bold"
             android:textColor="#ff191919"
@@ -37,7 +37,7 @@
             app:layout_constraintTop_toBottomOf="@+id/t1">
 
         <TextView
-                android:text="兴趣意向"
+                android:text="我的意向"
                 android:textColor="#ff191919"
                 android:textSize="16sp"
                 android:drawableLeft="@drawable/icon_heart_blue"

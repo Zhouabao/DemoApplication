@@ -55,7 +55,7 @@ class ModelAboutMeActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAbou
                 mPresenter.getTagTraitInfo(
                     hashMapOf<String, Any>(
                         "tag_id" to intent.getIntExtra("tag_id", 0),
-                        "type" to MyLabelQualityActivity.TYPE_MODEL
+                        "type" to LabelQualityActivity.TYPE_MODEL
                     )
                 )
             }
@@ -83,7 +83,7 @@ class ModelAboutMeActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAbou
                     mPresenter.getTagTraitInfo(
                         hashMapOf<String, Any>(
                             "tag_id" to intent.getIntExtra("tag_id", 0),
-                            "type" to MyLabelQualityActivity.TYPE_MODEL
+                            "type" to LabelQualityActivity.TYPE_MODEL
                         )
                     )
                 }
@@ -123,7 +123,7 @@ class ModelAboutMeActivity : BaseMvpActivity<ModelAboutMePresenter>(), ModelAbou
                 mPresenter.getTagTraitInfo(
                     hashMapOf<String, Any>(
                         "tag_id" to intent.getIntExtra("tag_id", 0),
-                        "type" to MyLabelQualityActivity.TYPE_MODEL
+                        "type" to LabelQualityActivity.TYPE_MODEL
                     )
                 )
             }

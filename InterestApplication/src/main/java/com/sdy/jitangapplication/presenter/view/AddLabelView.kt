@@ -12,4 +12,7 @@ import com.sdy.jitangapplication.model.AddLabelBean
 interface AddLabelView : BaseView {
 
     fun onTagClassifyListResult(result: Boolean, data: AddLabelBean?)
+
+    fun saveInterestTagResult(result: Boolean)
+
 }

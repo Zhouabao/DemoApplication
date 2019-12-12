@@ -18,7 +18,9 @@ class UpdateChooseAllLabelEvent(var label: NewLabel)
 
 class ChooseLabelCountEvent(var count: Int)
 
-class UpdateMyLabelEvent()
+class UpdateMyLabelEvent
 
 
 class UpdateEditModeEvent(val position: Int = 0)
+
+class UpdateMyInterestLabelEvent()

@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.NewLabel
+import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import kotlinx.android.synthetic.main.item_label_all1.view.*
 
 /**
@@ -16,8 +17,16 @@ import kotlinx.android.synthetic.main.item_label_all1.view.*
  *    desc   : 所有新标签的数据
  *    version: 1.0
  */
-class AllNewLabelAdapter1(var index: Int = 1) : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all1) {
+class AllNewLabelAdapter1(var index: Int = 1, var from: Int = AddLabelActivity.FROM_ADD_NEW) :
+    BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all1) {
     override fun convert(helper: BaseViewHolder, item: NewLabel) {
+        //state: Int = 0 //0 没有使用过 1正在使用中 2使用过的
+        if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
+            helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_interest_added)
+        } else {
+            helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_added)
+        }
+
         helper.itemView.labelAdded.isVisible = item.checked
         if (index == 0) {
             val params = helper.itemView.labelRoot.layoutParams as RecyclerView.LayoutParams

@@ -14,4 +14,6 @@ interface LabelQualityView : BaseView {
     fun getTagTraitInfoResult(result: Boolean, data: MutableList<LabelQualityBean>?)
 
     fun addTagResult(result: Boolean, loginBean: AddLabelResultBean?)
+
+    fun onSaveRegisterInfo(success: Boolean)
 }

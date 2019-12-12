@@ -1,12 +1,12 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ActivityUtils
 import com.google.android.flexbox.*
 import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
@@ -14,6 +14,8 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.UpdateAvatorEvent
+import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MyLabelBean
@@ -22,20 +24,37 @@ import com.sdy.jitangapplication.presenter.LabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.LabelQualityView
 import com.sdy.jitangapplication.ui.adapter.LabelQualityAdapter
 import com.sdy.jitangapplication.ui.dialog.CorrectDialog
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_label_quality.*
 import kotlinx.android.synthetic.main.correct_dialog_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 
 /**
  * 标签特质
  */
 class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQualityView, View.OnClickListener {
+    override fun onSaveRegisterInfo(success: Boolean) {
+    }
+
     companion object {
-        const val MIN_QUALITY = 1
+        const val MIN_QUALITY = 3
         const val MAX_QUALITY = 5
         const val MODE_NEW = 1
         const val MODE_EDIT = 2
+
+
+        //获取标签的  1介绍模板 2.标签特质 3.标签意向   4.标签标题
+        const val TYPE_MODEL = 1
+        const val TYPE_QUALITY = 2
+        const val TYPE_AIM = 3
+        const val TYPE_TITLE = 4
+
+        const val REQUEST_INTRODUCE = 100
+        const val REQUEST_QUALITY = 101
     }
 
     private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel? }
@@ -63,7 +82,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     myLabelBean!!.tag_id
                 } else {
                     labelBean!!.id
-                }, "type" to MyLabelQualityActivity.TYPE_QUALITY
+                }, "type" to LabelQualityActivity.TYPE_QUALITY
             )
         )
 
@@ -95,7 +114,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                         myLabelBean!!.tag_id
                     } else {
                         labelBean!!.id
-                    }, "type" to MyLabelQualityActivity.TYPE_QUALITY
+                    }, "type" to LabelQualityActivity.TYPE_QUALITY
                 )
             )
         }
@@ -202,7 +221,33 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
 
 
     override fun addTagResult(result: Boolean, data: AddLabelResultBean?) {
+        if (result) {
+            if (data != null) {
+                UserManager.saveLabels(data.list)
+                if (from == AddLabelActivity.FROM_REGISTER) {
+                    startActivity<LabelIntroduceActivity>(
+                        "tag_id" to if (labelBean == null) {
+                            myLabelBean!!.tag_id
+                        } else {
+                            labelBean!!.id
+                        }
+                    )
+                } else {
+                    EventBus.getDefault().post(UpdateAvatorEvent(true))
 
+                    //todo 这里标签是来自于发布或者已经在该标签下发布过内容，就不走发布流程
+                    if (mode != MODE_EDIT && from != AddLabelActivity.FROM_PUBLISH && !data!!.is_published) {
+                        finish()
+                        startActivity<AddLabelSuccessActivity>("data" to labelBean)
+                    } else {
+                        EventBus.getDefault().post(UpdateMyLabelEvent())
+                        if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(AddLabelActivity::class.java)
+                        finish()
+                    }
+                }
+            }
+        }
     }
 
 
@@ -218,6 +263,8 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         labelQualityRv.postDelayed({ warningDialog.dismiss() }, 1000L)
     }
 
+
+    private val params by lazy { hashMapOf<String, Any>() }
     override fun onClick(view: View) {
         when (view) {
             rightBtn1 -> {
@@ -226,30 +273,21 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     return
                 }
 
-                if (mode == MODE_EDIT) {
-                    myLabelBean!!.label_quality = choosedQualityAdapter.data
-                    intent.putExtra("aimData", myLabelBean)
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
-                } else {
-                    val tagIds = mutableListOf<Any>()
-                    for (label in choosedQualityAdapter.data) {
-                        tagIds.add(label.id)
-                    }
-                    tagIds.addAll(customQuality)
 
-                    intent.putExtra(
-                        "tag_id", if (labelBean == null) {
-                            myLabelBean!!.tag_id
-                        } else {
-                            labelBean!!.id
-                        }
-                    )
-                    intent.putExtra("label_quality", Gson().toJson(tagIds))
-                    intent.putExtra("data", labelBean)
-                    intent.setClass(this, LabelIntroduceActivity::class.java)
-                    startActivity(intent)
+                val tagIds = mutableListOf<Any>()
+                for (label in choosedQualityAdapter.data) {
+                    tagIds.add(label.id)
                 }
+                tagIds.addAll(customQuality)
+
+                params["tag_id"] = if (labelBean == null) {
+                    myLabelBean!!.tag_id
+                } else {
+                    labelBean!!.id
+                }
+                params["label_quality"] = Gson().toJson(tagIds)
+                params["type"] = 1
+                mPresenter.addClassifyTag(params)
 
             }
             btnBack -> {
@@ -278,6 +316,17 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
 
         }
 
+    }
+
+
+    private val loading by lazy { LoadingDialog(this) }
+
+    override fun showLoading() {
+        loading.show()
+    }
+
+    override fun hideLoading() {
+        loading.dismiss()
     }
 
 

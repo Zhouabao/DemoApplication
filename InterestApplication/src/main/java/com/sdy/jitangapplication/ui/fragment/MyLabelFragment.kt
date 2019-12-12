@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
-import com.sdy.jitangapplication.event.UserCenterLabelEvent
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.MyLabelsBean
 import com.sdy.jitangapplication.model.TagBean
@@ -25,7 +25,6 @@ import com.sdy.jitangapplication.presenter.view.MyLabelView
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.activity.LabelQualityActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
-import com.sdy.jitangapplication.ui.activity.MyLabelQualityActivity
 import com.sdy.jitangapplication.ui.adapter.MyLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
@@ -85,11 +84,12 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
                 }
                 R.id.labelEdit -> {
                     //TODO标签编辑
-                    activity!!.intent.putExtra("aimData", adapter.data[position])
-                    activity!!.intent.putExtra("from", AddLabelActivity.FROM_EDIT)
-                    activity!!.intent.putExtra("mode", LabelQualityActivity.MODE_EDIT)
-                    activity!!.intent.setClass(activity!!, MyLabelQualityActivity::class.java)
-                    startActivity(activity!!.intent)
+                    val intent = Intent()
+                    intent.putExtra("aimData", adapter.data[position])
+                    intent.putExtra("from", AddLabelActivity.FROM_EDIT)
+                    intent.putExtra("mode", LabelQualityActivity.MODE_EDIT)
+                    intent.setClass(activity!!, LabelQualityActivity::class.java)
+                    startActivity(intent)
                 }
 
             }
@@ -118,9 +118,10 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
         if (result) {
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (datas != null && datas.is_using.isNullOrEmpty()) {
-                stateMyLabel.viewState = MultiStateView.VIEW_STATE_EMPTY
+                adapter.setEmptyView(R.layout.empty_layout, mylabelRv)
+            } else {
+                adapter.setNewData(datas?.is_using ?: mutableListOf())
             }
-            adapter.setNewData(datas?.is_using ?: mutableListOf())
             removedLabel.addAll(datas?.is_removed ?: mutableListOf())
         } else {
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -132,7 +133,6 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
             if (data != null) {
                 UserManager.saveLabels(data)
                 EventBus.getDefault().post(UpdateAvatorEvent(true))
-                EventBus.getDefault().post(UserCenterLabelEvent())
             }
 
             removedLabel.add(adapter.data[position])

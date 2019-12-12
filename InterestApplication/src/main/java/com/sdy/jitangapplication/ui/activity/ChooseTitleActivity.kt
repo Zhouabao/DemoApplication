@@ -43,7 +43,7 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
         initView()
         mPresenter.getTagTraitInfo(
             hashMapOf(
-                "type" to MyLabelQualityActivity.TYPE_TITLE,
+                "type" to LabelQualityActivity.TYPE_TITLE,
                 "tag_id" to intent.getIntExtra("tag_id", 0)
             )
         )

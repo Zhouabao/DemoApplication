@@ -30,11 +30,9 @@ class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
             .getTagTraitInfo(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MutableList<LabelQualityBean>?>>(mView) {
                 override fun onStart() {
-                    mView.showLoading()
                 }
 
                 override fun onNext(t: BaseResp<MutableList<LabelQualityBean>?>) {
-                    mView.hideLoading()
                     if (t.code == 200) {
                         mView.getTagTraitInfoResult(true, t.data ?: mutableListOf())
                     } else if (t.code == 403) {
@@ -46,7 +44,6 @@ class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.hideLoading()
                     mView.getTagTraitInfoResult(false, null)
                     CommonFunction.toast(CommonFunction.getErrorMsg(context))
                 }
@@ -83,6 +80,45 @@ class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
                     mView.hideLoading()
                     CommonFunction.toast(CommonFunction.getErrorMsg(context))
                     mView.addTagResult(false, null)
+                }
+            })
+    }
+
+
+    /**
+     * 保存注册信息
+     */
+    fun saveRegisterInfo(intention_id: Int? = null, aboutme: String? = null) {
+
+        val params = hashMapOf<String, Any>()
+        if (intention_id != null) {
+            params["intention_id"] = intention_id
+        }
+        if (aboutme != null && aboutme.trim().isNotEmpty()) {
+            params["aboutme"] = aboutme.trim()
+        }
+
+        RetrofitFactory.instance.create(Api::class.java)
+            .saveRegisterInfo(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        mView.onSaveRegisterInfo(true)
+                    } else if (t.code == 403) {
+                        TickDialog(context).show()
+                    } else {
+                        CommonFunction.toast(t.msg)
+                        mView.onSaveRegisterInfo(false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    mView.onSaveRegisterInfo(false)
                 }
             })
     }

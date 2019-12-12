@@ -20,9 +20,10 @@ import com.sdy.jitangapplication.utils.UserManager
  */
 class AddLabelPresenter : BasePresenter<AddLabelView>() {
 
-    fun tagClassifyList() {
+    //1 兴趣列表 2我的兴趣列表
+    fun tagClassifyList(type: Int) {
         RetrofitFactory.instance.create(Api::class.java)
-            .tagClassifyList(UserManager.getSignParams())
+            .tagClassifyList(UserManager.getSignParams(hashMapOf("type" to type)))
             .excute(object : BaseSubscriber<BaseResp<AddLabelBean>>(mView) {
                 override fun onStart() {
                     super.onStart()
@@ -46,4 +47,34 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
 
             })
     }
+
+
+    /**
+     * 保存我感兴趣的标签
+     */
+    fun saveInterestTag(tag_ids: String) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .saveInterestTag(UserManager.getSignParams(hashMapOf("tags" to tag_ids)))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onStart() {
+                    mView.showLoading()
+                }
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    mView.hideLoading()
+                    if (t.code == 200) {
+                        mView.saveInterestTagResult(true)
+                    } else if (t.code == 403) {
+                        TickDialog(context).show()
+                    }
+                    CommonFunction.toast(t.msg)
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.hideLoading()
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                }
+            })
+    }
+
 }

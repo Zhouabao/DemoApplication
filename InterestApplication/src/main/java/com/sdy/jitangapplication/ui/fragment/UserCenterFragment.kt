@@ -416,7 +416,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             // 我的意愿
             R.id.userIntention -> {
-                startActivity<MyIntentionActivity>()
+                startActivity<MyIntentionActivity>("from" to MyIntentionActivity.FROM_USERCENTER)
             }
             //我的来访
             R.id.userVisit -> {
@@ -443,12 +443,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 ChatActivity.start(activity!!, Constants.ASSISTANT_ACCID)
             }
         }
-    }
-
-    //添加标签成功后更新本地的标签数据
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUserCenterLabelEvent(event: UserCenterLabelEvent) {
-        getTagData()
     }
 
 

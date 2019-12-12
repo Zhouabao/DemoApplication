@@ -59,12 +59,12 @@ class MyIntentionPresenter : BasePresenter<MyIntentionView>() {
 
         RetrofitFactory.instance.create(Api::class.java)
             .saveRegisterInfo(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<MutableList<LabelQualityBean>?>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
                     super.onStart()
                 }
 
-                override fun onNext(t: BaseResp<MutableList<LabelQualityBean>?>) {
+                override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         mView.onSaveRegisterInfo(true)
                     } else if (t.code == 403) {

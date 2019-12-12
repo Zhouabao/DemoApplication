@@ -11,12 +11,13 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.activity.LabelQualityActivity
-import com.sdy.jitangapplication.ui.activity.MyLabelQualityActivity
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
+import com.sdy.jitangapplication.ui.fragment.MyLabelFragment
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.item_add_label.view.*
@@ -36,7 +37,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
         helper.itemView.labelTypeName.text = item.title
         GlideUtil.loadImg(mContext, item.icon, helper.itemView.labelTypeNameIv)
 
-        val labelAdapter = AllNewLabelAdapter1()
+        val labelAdapter = AllNewLabelAdapter1(from = from)
         if (helper.layoutPosition == 0) {
             helper.itemView.labelTypeRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
             helper.itemView.labelTypeRv.addItemDecoration(
@@ -55,14 +56,33 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
         helper.itemView.labelTypeRv.adapter = labelAdapter
         labelAdapter.setNewData(item.son)
         labelAdapter.setOnItemClickListener { _, view, position ->
-            if (labelAdapter.data[position].removed) {
-                showDeleteDialog(labelAdapter.data[position])
-            } else if (!labelAdapter.data[position].checked) {
-                (mContext as Activity).startActivity<LabelQualityActivity>(
-                    "data" to labelAdapter.data[position],
-                    "from" to from,
-                    "mode" to LabelQualityActivity.MODE_NEW
-                )
+            if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
+                val data = labelAdapter.data[position]
+                var checkedCount = 0
+                for (tdata in mData) {
+                    for (tdata1 in tdata.son) {
+                        if (tdata1.checked) {
+                            checkedCount += 1
+                        }
+                    }
+                }
+                if (checkedCount == MyLabelFragment.MAX_LABEL && !data.checked) {
+                    CommonFunction.toast("至多选择${MyLabelFragment.MAX_LABEL}个兴趣标签")
+                    return@setOnItemClickListener
+                }
+
+                labelAdapter.data[position].checked = !labelAdapter.data[position].checked
+                labelAdapter.notifyItemChanged(position)
+            } else {
+                if (labelAdapter.data[position].removed) {
+                    showDeleteDialog(labelAdapter.data[position])
+                } else if (!labelAdapter.data[position].checked) {
+                    (mContext as Activity).startActivity<LabelQualityActivity>(
+                        "data" to labelAdapter.data[position],
+                        "from" to from,
+                        "mode" to LabelQualityActivity.MODE_NEW
+                    )
+                }
             }
         }
     }
@@ -81,7 +101,6 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                 "from" to AddLabelActivity.FROM_ADD_NEW,
                 "mode" to LabelQualityActivity.MODE_NEW
             )
-            // mPresenter.delMyTags(adapter.data[position].id, position)
             deleteDialog.dismiss()
         }
         deleteDialog.cancel.text = "使用原内容"
@@ -93,10 +112,9 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                     break
                 }
             }
-            (mContext as Activity).startActivity<MyLabelQualityActivity>(
+            (mContext as Activity).startActivity<LabelQualityActivity>(
                 "aimData" to tempLabel,
                 "from" to AddLabelActivity.FROM_EDIT,
-                "showDelete" to false,
                 "mode" to LabelQualityActivity.MODE_EDIT
             )
             deleteDialog.dismiss()
