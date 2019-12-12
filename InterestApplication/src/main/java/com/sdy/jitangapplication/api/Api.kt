@@ -792,4 +792,19 @@ interface Api {
     @POST("MemberInfo/getOtherTags${Constants.END_BASE_URL}")
     fun getOtherTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<OtherLabelsBean?>>
 
+    /**
+     * 获取用户意向的接口
+     */
+    @FormUrlEncoded
+    @POST("Tags/getIntentionList${Constants.END_BASE_URL}")
+    fun getIntentionList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+
+
+    /**
+     * 注册用户完善意向/关于我的信息
+     */
+    @FormUrlEncoded
+    @POST("Tags/saveRegisterInfo${Constants.END_BASE_URL}")
+    fun saveRegisterInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+
 }

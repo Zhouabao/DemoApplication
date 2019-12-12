@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.activity.MyIntentionActivity">
+
+    <include layout="@layout/layout_actionbar"/>
+
+    <com.kennyc.view.MultiStateView
+            app:layout_constraintTop_toBottomOf="@id/llTitle"
+            android:id="@+id/stateIntention"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="loading">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/intentionRv"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </com.kennyc.view.MultiStateView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

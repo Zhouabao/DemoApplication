@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <com.kennyc.view.MultiStateView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/stateMyInterestLabel"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:msv_emptyView="@layout/empty_layout"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="loading"
+            tools:context=".ui.fragment.MyInterestLabelFragment">
+
+        <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/myInterestLabelRv"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="match_parent"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"/>
+
+            <TextView
+                    android:id="@+id/addInterestLabelBtn"
+                    android:background="@drawable/shape_rectangle_orange_25dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_height="46dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="match_parent"
+                    android:text="添加其他感兴趣"
+                    android:textColor="#ffffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+        </LinearLayout>
+
+
+    </com.kennyc.view.MultiStateView>

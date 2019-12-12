@@ -255,6 +255,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userFoot.setOnClickListener(this)
         userTagsBtn.setOnClickListener(this)
         userSquareCount.setOnClickListener(this)
+        userIntention.setOnClickListener(this)
         userQuestions.setOnClickListener(this)
         userRecommend.setOnClickListener(this)
         userVisit.setOnClickListener(this)
@@ -409,18 +410,14 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             R.id.userSquareCount -> {
                 startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to MySquareFragment.TYPE_MINE)
             }
-//            //我的足迹
+            //我的足迹
             R.id.userFoot -> {
                 startActivity<MyFootPrintActivity>()
             }
-//            //我的点赞
-//            R.id.userDianzan -> {
-//                startActivity<MyCollectionEtcActivity>("type" to 2)
-//            }
-//            //我的评论
-//            R.id.userComment -> {
-//                startActivity<MyCommentActivity>()
-//            }
+            // 我的意愿
+            R.id.userIntention -> {
+                startActivity<MyIntentionActivity>()
+            }
             //我的来访
             R.id.userVisit -> {
                 startActivity<MyVisitActivity>(

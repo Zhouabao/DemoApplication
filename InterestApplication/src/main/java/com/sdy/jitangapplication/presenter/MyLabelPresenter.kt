@@ -61,7 +61,7 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
                 override fun onNext(t: BaseResp<MutableList<TagBean>?>) {
                     mView.hideLoading()
                     if (t.code == 200) {
-                        mView.delTagResult(true, position,t.data)
+                        mView.delTagResult(true, position, t.data)
                     } else if (t.code == 403) {
                         TickDialog(context).show()
                     }
@@ -74,4 +74,61 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
                 }
             })
     }
+
+
+    /**
+     * 获取我感兴趣的标签
+     */
+
+    fun getMyInterestTagsList() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .getMyTagsList(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<MyLabelsBean?>>(mView) {
+                override fun onNext(t: BaseResp<MyLabelsBean?>) {
+                    if (t.code == 200) {
+                        mView.getMyTagsListResult(true, t.data)
+                    } else if (t.code == 403) {
+                        TickDialog(context).show()
+                    } else {
+                        CommonFunction.toast(t.msg)
+                        mView.getMyTagsListResult(false, null)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    mView.getMyTagsListResult(false, null)
+                }
+            })
+    }
+
+    /**
+     * 删除我感兴趣的标签
+     */
+    fun delMyInterestTags(tag_id: Int, position: Int) {
+        val params = hashMapOf<String, Any>("tag_ids" to Gson().toJson(mutableListOf(tag_id)))
+        RetrofitFactory.instance.create(Api::class.java)
+            .delMyTags(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<MutableList<TagBean>?>>(mView) {
+                override fun onStart() {
+                    mView.showLoading()
+                }
+
+                override fun onNext(t: BaseResp<MutableList<TagBean>?>) {
+                    mView.hideLoading()
+                    if (t.code == 200) {
+                        mView.delTagResult(true, position, t.data)
+                    } else if (t.code == 403) {
+                        TickDialog(context).show()
+                    }
+                    CommonFunction.toast(t.msg)
+                }
+
+                override fun onError(e: Throwable?) {
+                    mView.hideLoading()
+                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                }
+            })
+    }
+
 }

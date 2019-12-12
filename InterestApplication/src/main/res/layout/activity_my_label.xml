@@ -9,48 +9,48 @@
               android:fitsSystemWindows="true"
               tools:context=".ui.activity.MyLabelActivity">
 
-    <include layout="@layout/layout_actionbar"/>
-
-    <com.kennyc.view.MultiStateView
-            android:id="@+id/stateMyLabel"
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:msv_emptyView="@layout/empty_layout"
-            app:msv_errorView="@layout/error_layout"
-            app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            android:layout_height="56dp">
 
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <ImageView
+                android:id="@+id/btnBack"
+                style="@style/BckBtnStyle"
+                />
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/mylabelRv"
-                    android:scrollbars="none"
-                    android:overScrollMode="never"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
+        <com.flyco.tablayout.CommonTabLayout
+                android:id="@+id/tabTopLabel"
+                android:background="@color/colorWhite"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                app:tl_iconVisible="false"
+                app:tl_indicator_color="@color/colorOrange"
+                app:tl_indicator_corner_radius="2dp"
+                app:tl_indicator_height="4dp"
+                app:tl_indicator_width="25dp"
+                app:tl_textBold="SELECT"
+                app:tl_textSelectColor="#FF191919"
+                app:tl_textUnselectColor="@color/colorGrayCCC"
+                app:tl_textsize="18sp"/>
 
-            <TextView
-                    android:id="@+id/addLabelBtn"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="15dp"
-                    android:text="添加你的兴趣"
-                    android:textColor="#ffffffff"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:background="@drawable/shape_rectangle_orange_25dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="46dp"/>
-        </LinearLayout>
+        <TextView
+                android:id="@+id/rightBtn"
+                android:layout_centerVertical="true"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:gravity="center"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:text="删除"
+                android:textColor="#ff191919"
+                android:textSize="17sp"
+                android:layout_height="55dp"/>
+    </RelativeLayout>
 
-
-    </com.kennyc.view.MultiStateView>
-
+    <com.sdy.jitangapplication.widgets.NoScrollViewPager
+            android:id="@+id/vpLabel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 </LinearLayout>

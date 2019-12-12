@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+        app:msv_viewState="content">
 
 
     <androidx.core.widget.NestedScrollView
@@ -257,7 +257,7 @@
 
             <TextView
                     android:id="@+id/userTagsBtn"
-                    android:text="我的标签"
+                    android:text="我的兴趣"
                     android:textColor="#ff19191a"
                     android:textSize="16sp"
                     android:drawablePadding="12dp"
@@ -278,6 +278,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/userTagRv"
+                    android:visibility="gone"
                     android:layout_width="0dp"
                     android:layout_marginTop="15dp"
                     android:layout_height="wrap_content"
@@ -294,7 +295,7 @@
                     android:gravity="center_vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="25dp"
                     android:textStyle="bold"
                     android:text="我的动态 35"
                     android:drawableRight="@drawable/icon_more_right"
@@ -313,6 +314,24 @@
                     app:layout_constraintTop_toBottomOf="@id/userSquareCount"/>
 
             <TextView
+                    android:id="@+id/userIntention"
+                    android:textColor="#ff19191a"
+                    android:textSize="16sp"
+                    android:drawablePadding="12dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="25dp"
+                    android:drawableLeft="@drawable/icon_my_foot"
+                    android:text="我的意愿"
+                    android:layout_width="0dp"
+                    android:gravity="center_vertical"
+                    android:drawableRight="@drawable/icon_more_right"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                    app:layout_constraintTop_toBottomOf="@id/userSquaresRv"/>
+
+
+            <TextView
                     android:id="@+id/userFoot"
                     android:textColor="#ff19191a"
                     android:textSize="16sp"
@@ -327,7 +346,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
                     app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/userSquaresRv"/>
+                    app:layout_constraintTop_toBottomOf="@id/userIntention"/>
 
 
             <androidx.recyclerview.widget.RecyclerView
