@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,7 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
     }
 
     private val adapter by lazy { MyIntentionAdapter() }
+    private val checkedId by lazy { intent.getIntExtra("id", -1) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_intention)
@@ -43,17 +45,16 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
 
         hotT1.text = "我的意向"
         btnBack.onClick {
-            if (intent.getIntExtra("from", -1) == MyIntentionActivity.FROM_REGISTER) {
-                intent.putExtra("intention",getCheckedIntention())
-                setResult(Activity.RESULT_OK,intent)
-            }
+            if (getCheckedIntention() != null)
+                intent.putExtra("intention", getCheckedIntention())
+            setResult(Activity.RESULT_OK, intent)
             finish()
         }
         rightBtn1.isVisible = true
         rightBtn1.text = "保存"
         rightBtn1.isEnabled = false
         rightBtn1.onClick(object : CustomClickListener() {
-            override fun onSingleClick() {
+            override fun onSingleClick(view: View) {
                 if (getCheckedIntentionId() == null) {
                     CommonFunction.toast("暂无可保存项")
                     return
@@ -62,9 +63,7 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
                 mPresenter.saveRegisterInfo(intention_id = getCheckedIntentionId())
             }
 
-            override fun onFastClick() {
 
-            }
         })
 
         stateIntention.retryBtn.onClick {
@@ -115,6 +114,11 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
             stateIntention.viewState = MultiStateView.VIEW_STATE_ERROR
         } else {
             stateIntention.viewState = MultiStateView.VIEW_STATE_CONTENT
+            for (data1 in data) {
+                if (data1.id == checkedId) {
+                    data1.checked = true
+                }
+            }
             adapter.addData(data)
         }
     }
@@ -122,6 +126,9 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
     override fun onSaveRegisterInfo(success: Boolean) {
         if (success) {
             CommonFunction.toast("保存成功!")
+            intent.putExtra("intention", getCheckedIntention())
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         }
     }
 

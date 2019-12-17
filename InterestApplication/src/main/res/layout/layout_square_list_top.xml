@@ -71,9 +71,9 @@
                 android:id="@+id/squareUserIv1"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@color/colorDivider"
                 android:src="@drawable/icon_default_avator"
+                app:civ_border_color="@color/colorDivider"
+                app:civ_border_width="1dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -117,37 +117,24 @@
                 app:layout_constraintTop_toTopOf="@id/squareUserIv1"
                 />
 
-        <LinearLayout
-                android:id="@+id/squareChatBtn1"
-                android:background="@drawable/shape_rectangle_lightorange_15dp"
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_height="30dp"
+        <TextView
+                android:id="@+id/squareTagName"
                 android:layout_marginRight="15dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
+                android:paddingBottom="3dp"
+                android:paddingTop="3dp"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="游戏"
+                android:textColor="#ff2d2f30"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/shape_rectangle_light_gray_15dp"
                 app:layout_constraintBottom_toBottomOf="@id/squareUserIv1"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/squareUserIv1"
-                >
-
-            <ImageView
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/icon_flash"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"/>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="聊天"
-                    android:layout_marginLeft="7dp"
-                    android:textColor="#ffff6318"
-                    android:textSize="14sp"
-                    />
-        </LinearLayout>
+                app:layout_constraintTop_toTopOf="@id/squareUserIv1"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

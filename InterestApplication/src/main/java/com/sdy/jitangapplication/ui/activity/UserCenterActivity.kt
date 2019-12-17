@@ -94,7 +94,6 @@ class UserCenterActivity : BaseMvpActivity<UserCenterPresenter>(), UserCenterVie
     private fun initData() {
         //更新了信息之后更新本地缓存
         SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
-        EventBus.getDefault().post(UpdateAvatorEvent(true))
         getTagData()
         coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
         visitsAdapter.freeShow = userInfoBean?.free_show ?: false

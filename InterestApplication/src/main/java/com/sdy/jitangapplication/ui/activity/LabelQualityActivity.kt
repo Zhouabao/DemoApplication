@@ -14,7 +14,6 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
@@ -233,8 +232,6 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                         }
                     )
                 } else {
-                    EventBus.getDefault().post(UpdateAvatorEvent(true))
-
                     //todo 这里标签是来自于发布或者已经在该标签下发布过内容，就不走发布流程
                     if (mode != MODE_EDIT && from != AddLabelActivity.FROM_PUBLISH && !data!!.is_published) {
                         finish()
@@ -276,7 +273,8 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
 
                 val tagIds = mutableListOf<Any>()
                 for (label in choosedQualityAdapter.data) {
-                    tagIds.add(label.id)
+                    if (label.id != 0)
+                        tagIds.add(label.id)
                 }
                 tagIds.addAll(customQuality)
 

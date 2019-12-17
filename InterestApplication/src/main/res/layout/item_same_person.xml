@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:elevation="2dp"
+        android:background="@drawable/rectangle_white_15dp"
+        android:layout_width="match_parent"
+        android:layout_height="223dp">
+
+    <com.sdy.jitangapplication.widgets.RoundTopImageView
+            android:id="@+id/sameIv"
+            android:src="@drawable/icon_logo"
+            android:layout_width="match_parent"
+            android:layout_height="165dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:topRadius="15dp"/>
+
+    <View
+            android:background="@drawable/rectangle_cover_bg_top_left_right_15dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/sameIv"
+            app:layout_constraintLeft_toLeftOf="@id/sameIv"
+            app:layout_constraintRight_toRightOf="@id/sameIv"
+            app:layout_constraintTop_toTopOf="@id/sameIv"/>
+
+    <TextView
+            android:id="@+id/sameInterestTv"
+            android:gravity="center"
+            android:background="@drawable/rectangle_cover_bg_12dp"
+            android:layout_marginLeft="7dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="6dp"
+            android:maxLength="10"
+            android:ellipsize="end"
+            android:text="他喜欢玩乐、运动、极限"
+            android:textColor="#fff7f8f8"
+            android:textSize="11sp"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/icon_cuohe_tag"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/sameIv"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ImageView
+            android:id="@+id/sameLike"
+            android:layout_marginRight="7dp"
+            android:layout_marginTop="7dp"
+            android:padding="5dp"
+            android:background="@drawable/shape_oval_cover"
+            android:src="@drawable/icon_dianzan_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/sameAvator"
+            android:layout_width="40dp"
+            android:layout_marginTop="9dp"
+            android:src="@drawable/icon_default_avator"
+            android:layout_height="40dp"
+            app:layout_constraintLeft_toLeftOf="@id/sameInterestTv"
+            app:layout_constraintTop_toBottomOf="@id/sameIv"/>
+
+    <TextView
+            android:id="@+id/sameName"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="米明林米明林"
+            android:ellipsize="end"
+            android:textColor="#ff191919"
+            android:textSize="15sp"
+            android:layout_marginLeft="7dp"
+            android:maxLength="6"
+            app:layout_constraintBottom_toTopOf="@id/sameInfo"
+            app:layout_constraintLeft_toRightOf="@id/sameAvator"
+            app:layout_constraintTop_toTopOf="@id/sameAvator"
+            />
+
+    <TextView
+            android:id="@+id/sameInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="女·天蝎座·2.3km"
+            android:textColor="#ffb6b6b6"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/sameAvator"
+            app:layout_constraintLeft_toLeftOf="@id/sameName"
+            app:layout_constraintTop_toBottomOf="@id/sameName"
+            />
+</androidx.constraintlayout.widget.ConstraintLayout>

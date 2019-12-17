@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
-import com.sdy.jitangapplication.model.FriendBean
 import com.sdy.jitangapplication.model.SquareListBean
 
 /**
@@ -12,11 +11,6 @@ import com.sdy.jitangapplication.model.SquareListBean
  *    version: 1.0
  */
 interface SquareView : BaseView {
-
-    /**
-     * 获取好友列表
-     */
-    fun onGetFriendsListResult(friends: MutableList<FriendBean?>)
 
     /**
      * 获取广场列表

@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
@@ -62,6 +61,7 @@ import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_message_list.*
 import kotlinx.android.synthetic.main.headerview_hi.view.*
+import kotlinx.android.synthetic.main.headview_message_warm_tiping.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -71,8 +71,7 @@ import kotlin.Comparator
 
 
 /**
- * A simple [Fragment] subclass.
- *
+ * 消息中心
  */
 class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), MessageListView {
     override fun loadData() {
@@ -120,8 +119,9 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         messageListRv.adapter = adapter
         adapter.bindToRecyclerView(messageListRv)
 //        adapter.setEmptyView(R.layout.empty_layout, messageListRv)
-        adapter.addHeaderView(initFriendsView(), 0)
-        adapter.addHeaderView(initHeadsView(), 1)
+        adapter.addHeaderView(initBlackTip(), 0)
+        adapter.addHeaderView(initFriendsView(), 1)
+        adapter.addHeaderView(initHeadsView(), 2)
         adapter.setHeaderAndEmpty(true)
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -166,6 +166,14 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             }
         }
 
+    }
+
+    private fun initBlackTip(): View {
+        val friendsView = layoutInflater.inflate(R.layout.headview_message_warm_tiping, messageListRv, false)
+        friendsView.knowBtn.onClick {
+            adapter.removeHeaderView(friendsView)
+        }
+        return friendsView
     }
 
 

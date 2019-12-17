@@ -11,9 +11,6 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.*
 import com.kotlin.base.common.AppManager
@@ -31,12 +28,10 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
 import com.sdy.jitangapplication.model.InvestigateBean
-import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.ui.fragment.MatchFragment1
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
@@ -44,7 +39,6 @@ import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.ui.fragment.UserCenterFragment
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_main.*
@@ -150,12 +144,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
         //首页禁止滑动
         setSwipeBackEnable(false)
-        filterBtn.setOnClickListener(this)
         labelAddBtn.setOnClickListener(this)
         mPresenter = MainPresenter()
         mPresenter.mView = this
         mPresenter.context = this
-        initHeadView()
         initFragment()
         //进入页面弹消息提醒
         showMsgDot(
@@ -195,7 +187,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
 
             override fun onPageSelected(position: Int) {
-                tabHeaderCl.isVisible = (position == 0 || position == 1)
+//                tabHeaderCl.isVisible = (position == 0 || position == 1)
                 if (position != 3) {
                     customStatusBar.setBackgroundResource(R.color.colorTransparent)
                 } else if (initializeUserMe) {
@@ -378,9 +370,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.filterBtn -> {   //筛选对话框
-                FilterUserDialog(this).show()
-            }
             R.id.labelAddBtn -> { //标签添加
                 startActivity<MyLabelActivity>()
             }
@@ -516,96 +505,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         mPresenter.msgList(UserManager.getToken(), UserManager.getAccid())
     }
 
-    /**
-     * 好友列表和标签列表
-     * 设置头部数据一直居于最顶端
-     */
-    //标签适配器
-    private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(this) }
-    //标签数据源
-    var labelList: MutableList<NewLabel> = mutableListOf()
-
     companion object {
         const val REQUEST_LABEL_CODE = 2000
 
         fun start(context: Context, intent: Intent) {
             context.startActivity(intent.setClass(context, MainActivity::class.java))
         }
-
-    }
-
-    private val labelManager = CenterLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-    private fun initHeadView() {
-        headRvLabels.layoutManager = labelManager
-        LinearSnapHelper().attachToRecyclerView(headRvLabels)
-        headRvLabels.adapter = labelAdapter
-        labelAdapter.setNewData(labelList)
-        labelAdapter.setOnItemClickListener { _, view, position ->
-            if (labelAdapter.enable) {
-                for (index in 0 until labelAdapter.data.size) {
-                    labelAdapter.data[index].checked = index == position
-                    if (index == position)
-                        labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), position)
-                }
-                labelAdapter.notifyDataSetChanged()
-                if (labelAdapter.data[position].id == UserManager.getGlobalLabelId()) {
-                    return@setOnItemClickListener
-                } else {
-                    UserManager.saveGlobalLabelId(labelAdapter.data[position].id)
-                    EventBus.getDefault().postSticky(UpdateLabelEvent(labelList[position]))
-                    enableHeadRv(false)
-                }
-            }
-        }
-        initData()
-    }
-
-    /**
-     * 禁用或者启用标签点击选择
-     */
-    private fun enableHeadRv(enable: Boolean) {
-        labelAdapter.enable = enable
-//        labelAdapter.notifyDataSetChanged()
-    }
-
-    private fun initData() {
-        labelList = UserManager.getSpLabels()
-        if (labelList.size > 0) {
-            if (UserManager.getGlobalLabelId() != -1) {
-                val id = UserManager.getGlobalLabelId()
-                for (label in labelList) {
-                    if (label.id == id) {
-                        label.checked = true
-                        break
-                    }
-                }
-            } else {
-                labelList[0].checked = true
-                UserManager.saveGlobalLabelId(labelList[0].id)
-            }
-
-            //避免之前的用户进来，全局标签id对应不上
-            var hasChecked = false
-            for (label in labelList) {
-                if (label.checked) {
-                    hasChecked = true
-                    break
-                }
-            }
-            if (!hasChecked) {
-                labelList[0].checked = true
-                UserManager.saveGlobalLabelId(labelList[0].id)
-            }
-            labelAdapter.setNewData(labelList)
-            for (label in labelList.withIndex()) {
-                if (label.value.checked) {
-                    labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), label.index)
-                    break
-                }
-            }
-        }
-
-
     }
 
 
@@ -622,36 +527,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateAvatorEvent(event: UpdateAvatorEvent) {
-        initData()
-
-        var checked = false
-        for (data in labelList) {
-            if (data.id == UserManager.getGlobalLabelId()) {
-                EventBus.getDefault().postSticky(UpdateLabelEvent(data))
-                checked = true
-                break
-            }
-        }
-        if (!checked) {
-            EventBus.getDefault().postSticky(UpdateLabelEvent(labelList[0]))
-        }
-
-
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onShowSurveyDialogEvent(event: ShowSurveyDialogEvent) {
         if (event.slideCount == UserManager.getShowSurveyCount()) {
             showInvestigateDialog()
         }
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onNewLabelEvent(event: EnableLabelEvent) {
-        enableHeadRv(event.enable)
     }
 
 

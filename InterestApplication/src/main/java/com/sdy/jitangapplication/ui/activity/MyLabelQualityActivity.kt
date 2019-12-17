@@ -14,7 +14,6 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
@@ -109,7 +108,6 @@ class MyLabelQualityActivity : BaseMvpActivity<MyLabelQualityPresenter>(), MyLab
         if (result) {
             if (data != null) {
                 UserManager.saveLabels(data.list)
-                EventBus.getDefault().post(UpdateAvatorEvent(true))
             }
 
             if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))

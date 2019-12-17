@@ -14,8 +14,8 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.google.android.flexbox.*
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.Newtag
 import kotlinx.android.synthetic.main.item_match_user.view.*
 
 /**
@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.item_match_user.view.*
  */
 class MatchUserAdapter(data: MutableList<MatchBean>) :
     BaseQuickAdapter<MatchBean, BaseViewHolder>(R.layout.item_match_user, data) {
-    var my_tags_quality: MutableList<LabelQualityBean> = mutableListOf()
+    var my_tags_quality: MutableList<Newtag> = mutableListOf()
     override fun convert(holder: BaseViewHolder, item: MatchBean) {
         //为了防止indicator重复 每次先给他remove了
         holder.addOnClickListener(R.id.v1)
@@ -55,35 +55,18 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 //次张内容  用户在发布过的内容（所有标签），参考设计内容，如用户没发布过则跳转至第三张内容
                 //三张内容  用户的「关于我」描述文本。如用用户填写过则呈现，没有则保留至最后一张显示状态
                 when (position) {
-                    0 -> {  //0显示广场
+                    0 -> {  //0显示个人信息
                         holder.itemView.matchUserLocalTagCl.isVisible = true
                         holder.itemView.matchUserDynamicLl.isVisible = false
-                        holder.itemView.matchUserIntroduceCl.isVisible = false
                     }
-                    1 -> {//如果广场动态有，就显示广场
-                        //如果广场动态没有,就判断有没有签名, 如果有签名显示签名 ,如果没有就显示个人信息
-                        // 如果有个人信息显示个人信息
+                    else -> {//如果广场动态有，就显示广场
                         if (item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.isVisible = true
                             holder.itemView.matchUserDynamicLl.isVisible = false
-                            holder.itemView.matchUserIntroduceCl.isVisible = !item.sign.isNullOrBlank()
-                            holder.itemView.matchUserLocalTagCl.isVisible = item.sign.isNullOrBlank()
                         } else {
                             holder.itemView.matchUserDynamicLl.isVisible = true
-                            holder.itemView.matchUserIntroduceCl.isVisible = false
                             holder.itemView.matchUserLocalTagCl.isVisible = false
                         }
-                    }
-                    else -> {
-                        if (item.sign.isNullOrBlank()) {
-                            holder.itemView.matchUserIntroduceCl.isVisible = false
-                            holder.itemView.matchUserLocalTagCl.isVisible = item.square.isNullOrEmpty()
-                            holder.itemView.matchUserDynamicLl.isVisible = !item.square.isNullOrEmpty()
-                        } else {
-                            holder.itemView.matchUserIntroduceCl.isVisible = true
-                            holder.itemView.matchUserDynamicLl.isVisible = false
-                            holder.itemView.matchUserLocalTagCl.isVisible = false
-                        }
-
                     }
                 }
             }
@@ -142,34 +125,40 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.itemView.ivVerify.isVisible = item.isfaced == 1
 
 
-        holder.itemView.matchUserIntroduce.text = item.sign ?: "" //关于自己
+//        holder.itemView.matchUserIntroduce.text = item.sign ?: "" //关于自己
         holder.itemView.matchAim.isVisible = item.intention.isNotEmpty()//标签意向
         holder.itemView.matchAim.text = item.intention
 
-        holder.itemView.matchUserLocalTagContent.isVisible = item.describle.isNotEmpty()//标签介绍
-        holder.itemView.matchUserLocalTagContent.text = item.describle ?: ""
+        holder.itemView.matchUserLocalTagContent.isVisible = !item.sign.isNullOrEmpty()//标签介绍
+        holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""
 
 
         holder.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty() //撮合标签
         holder.itemView.matchBothIntersetContent.text = "${item.matching_content}"
         GlideUtil.loadImg(mContext, item.matching_icon, holder.itemView.matchBothIntersetIv)
 
-        val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
-        manager.alignItems = AlignItems.STRETCH
-        manager.justifyContent = JustifyContent.FLEX_START
-        holder.itemView.matchUserLocalTagCharacter.layoutManager = manager//标签下的特质标签
-//        holder.itemView.matchUserLocalTagCharacter.layoutManager =
-//            LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
-        val adapter1 = MatchDetailLabelQualityAdapter()
-        for (quality in my_tags_quality) {
-            for (quality1 in item.label_quality) {
-                if (quality1.id == quality.id) {
-                    quality1.checked = true
+        if (!item.newtags.isNullOrEmpty()) {
+            val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
+            manager.alignItems = AlignItems.STRETCH
+            manager.justifyContent = JustifyContent.FLEX_START
+            holder.itemView.matchUserLocalTagCharacter.layoutManager =
+                LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
+            val adapter1 = MatchDetailLabelQualityAdapter()
+            for (quality in my_tags_quality) {
+                for (quality1 in item.newtags ?: mutableListOf()) {
+                    if (quality1.id == quality.id) {
+                        adapter1.myTags = quality.label_quality
+                        break
+                    }
                 }
             }
+            holder.itemView.matchUserLocalTagCharacterLl.isVisible = true
+            holder.itemView.matchUserLocalTagName.text = item.newtags!![0].title
+            adapter1.setNewData(item.newtags!![0].label_quality)
+            holder.itemView.matchUserLocalTagCharacter.adapter = adapter1
+        } else {
+            holder.itemView.matchUserLocalTagCharacterLl.isVisible = false
         }
-        adapter1.setNewData(item.label_quality)
-        holder.itemView.matchUserLocalTagCharacter.adapter = adapter1
 
         holder.itemView.matchUserName.text = item.nickname ?: ""
         holder.itemView.matchUserAge.text = "${item.age}"

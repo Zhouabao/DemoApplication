@@ -15,6 +15,7 @@ import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
+import com.sdy.jitangapplication.event.UpdateEditShowEvent
 import com.sdy.jitangapplication.event.UpdateMyInterestLabelEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.presenter.MyInterestLabelPresenter
@@ -86,10 +87,13 @@ class MyInterestLabelFragment : BaseMvpLazyLoadFragment<MyInterestLabelPresenter
             stateMyInterestLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data != null && data.isNotEmpty()) {
                 adapter.setNewData(data)
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_INTEREST_LABEL,true))
             } else {
                 adapter.setEmptyView(R.layout.empty_layout, myInterestLabelRv)
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_INTEREST_LABEL,true))
             }
         } else {
+            EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_INTEREST_LABEL,false))
             stateMyInterestLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
 

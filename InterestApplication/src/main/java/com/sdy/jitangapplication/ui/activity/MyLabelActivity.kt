@@ -3,18 +3,22 @@ package com.sdy.jitangapplication.ui.activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.flyco.tablayout.listener.OnTabSelectListener
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
+import com.sdy.jitangapplication.event.UpdateEditShowEvent
 import com.sdy.jitangapplication.model.TabEntity
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.fragment.MyInterestLabelFragment
 import com.sdy.jitangapplication.ui.fragment.MyLabelFragment
 import kotlinx.android.synthetic.main.activity_my_label.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 /**
@@ -33,9 +37,11 @@ class MyLabelActivity : BaseActivity(), View.OnClickListener {
         initView()
     }
 
-    private val titles = arrayOf("兴趣", "感兴趣")
+    private val titles = arrayOf("我的标签", "想认识")
     private val fragments by lazy { mutableListOf<Fragment>(MyLabelFragment(), MyInterestLabelFragment()) }
     private fun initView() {
+        EventBus.getDefault().register(this)
+
         btnBack.setOnClickListener(this)
         rightBtn.setOnClickListener(this)
         rightBtn.text = "删除"
@@ -51,6 +57,7 @@ class MyLabelActivity : BaseActivity(), View.OnClickListener {
             override fun onTabReselect(position: Int) {
             }
         })
+        tabTopLabel.currentTab = 0
         vpLabel.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
@@ -61,55 +68,60 @@ class MyLabelActivity : BaseActivity(), View.OnClickListener {
 
             override fun onPageSelected(position: Int) {
                 tabTopLabel.currentTab = position
-                if (vpLabel.currentItem == 0) {
-                    rightBtn.text = if (firstEditMode) {
-                        "取消"
-                    } else {
-                        "删除"
-                    }
+                rightBtn.text = if (editModes[vpLabel.currentItem]) {
+                    "取消"
                 } else {
-                    rightBtn.text = if (secondEditMode) {
-                        "取消"
-                    } else {
-                        "删除"
-                    }
+                    "删除"
                 }
+                rightBtn.isVisible = editModesShow[vpLabel.currentItem]
             }
 
         })
         vpLabel.adapter = MainPagerAdapter(supportFragmentManager, fragments, titles)
-        vpLabel.currentItem = 0
         vpLabel.offscreenPageLimit = 2
 
+        if (intent.getIntExtra("index", -1) != -1) {
+            val index = intent.getIntExtra("index", 0)
+            vpLabel.currentItem = if (index == 0) {
+                1
+            } else {
+                0
+            }
+        } else {
+            vpLabel.currentItem = 0
+        }
 
     }
 
-    private var firstEditMode = false
-    private var secondEditMode = false
+    private val editModes by lazy { mutableListOf(false, false) }
+    private val editModesShow by lazy { mutableListOf(false, false) }
     override fun onClick(p0: View) {
         when (p0) {
             btnBack -> {
                 finish()
             }
             rightBtn -> {
-                if (vpLabel.currentItem == 0) {
-                    firstEditMode = !firstEditMode
-                    rightBtn.text = if (firstEditMode) {
-                        "取消"
-                    } else {
-                        "删除"
-                    }
+                editModes[vpLabel.currentItem] = !editModes[vpLabel.currentItem]
+                rightBtn.text = if (editModes[vpLabel.currentItem]) {
+                    "取消"
                 } else {
-                    secondEditMode = !secondEditMode
-                    rightBtn.text = if (secondEditMode) {
-                        "取消"
-                    } else {
-                        "删除"
-                    }
+                    "删除"
                 }
                 EventBus.getDefault().post(UpdateEditModeEvent(vpLabel.currentItem))
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateEditShowEvent(event: UpdateEditShowEvent) {
+        editModesShow[event.position] = event.show
+        if (vpLabel.currentItem == event.position)
+            rightBtn.isVisible = editModesShow[event.position]
     }
 
 }

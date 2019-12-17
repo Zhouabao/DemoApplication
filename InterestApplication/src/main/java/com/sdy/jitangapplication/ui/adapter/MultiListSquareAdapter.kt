@@ -39,7 +39,6 @@ import com.sdy.jitangapplication.ui.fragment.MySquareFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.sdy.jitangapplication.widgets.GalleryOnScrollListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -91,7 +90,6 @@ class MultiListSquareAdapter(
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.squareUserIv1)
 
         holder.itemView.squareOfficialTv.isVisible = holder.itemViewType == SquareBean.OFFICIAL_NOTICE
-        holder.itemView.squareChatBtn1.isVisible = holder.itemViewType != SquareBean.OFFICIAL_NOTICE
         if (holder.itemViewType == SquareBean.OFFICIAL_NOTICE) {
             holder.itemView.onClick {
                 mContext.startActivity<ProtocolActivity>(
@@ -114,6 +112,13 @@ class MultiListSquareAdapter(
                 SizeUtils.dp2px(5F)
             )
         } else {
+            if (!item.tags.isNullOrEmpty()) {
+                holder.itemView.squareTagName.text = item.tags
+                holder.itemView.squareTagName.isVisible = true
+            } else {
+                holder.itemView.squareTagName.isVisible = false
+            }
+
             (holder.itemView.squareTitleCl.layoutParams as ConstraintLayout.LayoutParams).topMargin =
                 SizeUtils.dp2px(40F)
             holder.itemView.llTOP.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
@@ -127,11 +132,12 @@ class MultiListSquareAdapter(
             if (item.isfriend)
                 holder.itemView.squareChatBtn1.visibility = View.VISIBLE
             else
-                if (UserManager.getAccid() == item.accid || !item.greet_switch || !chat) {
-                    holder.itemView.squareChatBtn1.visibility = View.INVISIBLE
-                } else {
-                    holder.itemView.squareChatBtn1.visibility = View.VISIBLE
-                }
+                holder.itemView.squareChatBtn1.visibility =
+                    if (UserManager.getAccid() == item.accid || !item.greet_switch || !chat) {
+                        View.INVISIBLE
+                    } else {
+                        View.VISIBLE
+                    }
 
             if (item.descr.isNullOrEmpty()) {
                 holder.itemView.squareContent1.visibility = View.GONE
@@ -154,22 +160,7 @@ class MultiListSquareAdapter(
                     "${item.city_name}"
                 }
             ).plus("\t\t${item.out_time}")
-//        holder.itemView.squareTime.text = "${item.out_time}"
 
-            holder.itemView.squareTime.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-            if (holder.itemView.squareTime.itemDecorationCount == 0) {
-                holder.itemView.squareTime.addItemDecoration(
-                    DividerItemDecoration(
-                        mContext,
-                        DividerItemDecoration.VERTICAL_LIST,
-                        SizeUtils.dp2px(6F),
-                        mContext.resources.getColor(R.color.colorWhite)
-                    )
-                )
-            }
-            val squareAdapter = SquareTagAdapter()
-            holder.itemView.squareTime.adapter = squareAdapter
-            squareAdapter.setNewData(item.tags ?: mutableListOf())
 
             //点击跳转评论详情
             holder.itemView.squareCommentBtn1.onClick {

@@ -18,7 +18,8 @@ data class ExtraBean(
     val im_token: String = "",
     val code: Int = 0,
     val msg: String = "",
-    val mytags:MutableList<TagBean>
+    val mytags: MutableList<TagBean>,
+    val myinterest: Boolean = false
 )
 
 

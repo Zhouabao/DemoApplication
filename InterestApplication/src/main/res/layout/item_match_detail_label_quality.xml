@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheckBox
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/labelName"
-        android:layout_marginRight="10dp"
-        android:text="任天堂"
-        android:button="@null"
-        android:background="@drawable/selector_label_quality_7dp"
-        android:textColor="@color/selector_color_label_quality"
-        android:drawablePadding="2dp"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:paddingLeft="9dp"
-        android:paddingRight="9dp"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:layout_marginTop="4dp"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:background="@color/transparent"
+              android:layout_height="wrap_content">
 
-</CheckBox>
+    <TextView
+            android:id="@+id/labelName"
+            android:text="任天堂"
+            android:textColor="@color/colorGrayE0"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:maxLength="4"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:focusable="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp">
+    </TextView>
+
+    <View
+            android:id="@+id/labelDivide"
+            android:layout_gravity="center_vertical"
+            android:background="#1AFFFFFF"
+            android:layout_width="1dp"
+            android:layout_height="16dp"/>
+</LinearLayout>
+
 

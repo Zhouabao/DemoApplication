@@ -26,6 +26,7 @@
     <color name="colorGrayCCC">#CCCCCC</color>
     <color name="colorGray3300">#33000000</color>
     <color name="colorGrayDefault">#E8E8E8</color>
+    <color name="colorGrayE0">#FFE0E0E0</color>
     <color name="colorGrayC5">#FFBDBEC5</color>
     <color name="colorTransparent">#00000000</color>
     <color name="colorRed3E">#FF003E</color>

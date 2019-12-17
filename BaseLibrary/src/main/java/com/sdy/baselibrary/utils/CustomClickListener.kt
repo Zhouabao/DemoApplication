@@ -9,14 +9,10 @@ abstract class CustomClickListener(private val timeInterval:Long = 1500L) : View
         val nowTime = System.currentTimeMillis()
         if (nowTime - mLastClickTime > timeInterval) {
             // 单次点击事件
-            onSingleClick()
+            onSingleClick(v)
             mLastClickTime = nowTime
-        } else {
-            // 快速点击事件
-            onFastClick()
         }
     }
 
-    protected abstract fun onSingleClick()
-    protected abstract fun onFastClick()
+    protected abstract fun onSingleClick(view: View)
 }

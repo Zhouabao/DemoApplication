@@ -18,7 +18,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.FriendBean
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.SquareListBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -188,10 +187,6 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
         mPresenter.getSomeoneSquare(params)
     }
 
-
-    override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
-
-    }
 
     override fun onSquareAnnounceResult(type: Int, b: Boolean, code: Int) {
     }

@@ -31,7 +31,7 @@ import com.sdy.jitangapplication.widgets.sortcontacts.PinnedHeaderDecoration
 import com.sdy.jitangapplication.widgets.sortcontacts.WaveSideBarView
 import kotlinx.android.synthetic.main.activity_contact_book.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.headerview_label.view.*
+import kotlinx.android.synthetic.main.headerview_contact.view.*
 import kotlinx.android.synthetic.main.item_contact_book.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus

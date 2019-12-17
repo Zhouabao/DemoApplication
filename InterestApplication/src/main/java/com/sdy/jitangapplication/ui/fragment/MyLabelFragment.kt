@@ -14,8 +14,8 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.UpdateAvatorEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
+import com.sdy.jitangapplication.event.UpdateEditShowEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.MyLabelsBean
@@ -30,11 +30,13 @@ import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
+import kotlinx.android.synthetic.main.empty_label_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_my_label.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.support.v4.startActivity
 import java.io.Serializable
 
 
@@ -118,12 +120,22 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
         if (result) {
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (datas != null && datas.is_using.isNullOrEmpty()) {
-                adapter.setEmptyView(R.layout.empty_layout, mylabelRv)
+                addLabelBtn.isVisible = false
+                adapter.setEmptyView(R.layout.empty_label_layout, mylabelRv)
+                adapter.emptyView.addLabelBtn.onClick {
+                    startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_ADD_NEW)
+                }
+                adapter.emptyView.emptyLabelTip.isVisible = false
+                adapter.emptyView.emptyTip.isVisible = false
+                adapter.emptyView.addLabelBtn.text ="添加标签"
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL,false))
             } else {
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL,true))
                 adapter.setNewData(datas?.is_using ?: mutableListOf())
             }
             removedLabel.addAll(datas?.is_removed ?: mutableListOf())
         } else {
+            EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL,false))
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }
@@ -132,7 +144,6 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
         if (result) {
             if (data != null) {
                 UserManager.saveLabels(data)
-                EventBus.getDefault().post(UpdateAvatorEvent(true))
             }
 
             removedLabel.add(adapter.data[position])

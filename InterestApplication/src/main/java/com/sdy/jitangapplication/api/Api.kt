@@ -182,7 +182,7 @@ interface Api {
      * 获取某一广场详情
      */
     @FormUrlEncoded
-    @POST("square/squareInfo${Constants.END_BASE_URL}")
+    @POST("square/squareInfoV2${Constants.END_BASE_URL}")
     fun getSquareInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareBean?>>
 
 
@@ -828,5 +828,26 @@ interface Api {
     @FormUrlEncoded
     @POST("Tags/saveInterestTag${Constants.END_BASE_URL}")
     fun saveInterestTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     *V2获取广场标题菜单栏目
+     */
+    @FormUrlEncoded
+    @POST("Tags/getTitleMenuList${Constants.END_BASE_URL}")
+    fun getTitleMenuList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+
+    /**
+     *V1获取标题列表详情页
+     */
+    @FormUrlEncoded
+    @POST("Tags/getTitleInfo${Constants.END_BASE_URL}")
+    fun getTitleInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SamePersonBean>?>>
+
+    /**
+     *V2获取更多标题详情
+     */
+    @FormUrlEncoded
+    @POST("Tags/getTitleLists${Constants.END_BASE_URL}")
+    fun getTitleLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TopicBean>?>>
 
 }

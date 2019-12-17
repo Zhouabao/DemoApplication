@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ImageView
+            android:id="@+id/emptyImg"
+            android:layout_marginTop="124dp"
+            android:src="@drawable/icon_empty_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/emptyLabelTip"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/emptyLabelTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标签未完善"
+            android:textColor="#ff191919"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="69dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emptyImg"
+            />
+
+
+    <TextView
+            android:id="@+id/emptyTip"
+            android:text="请先完善自身标签\n我们将根据您的标签为您推荐同好"
+            android:layout_marginTop="22dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/emptyImg"
+            android:textColor="@color/colorBlack99"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.2"
+            app:layout_constraintTop_toBottomOf="@id/emptyLabelTip"/>
+
+    <TextView
+            android:id="@+id/addLabelBtn"
+            android:text="完善标签"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/shape_rectangle_orange_25dp"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emptyTip"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+</androidx.constraintlayout.widget.ConstraintLayout>

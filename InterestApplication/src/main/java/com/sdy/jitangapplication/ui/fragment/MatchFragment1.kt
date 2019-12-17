@@ -1,6 +1,8 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,8 +14,10 @@ import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.FragmentUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -32,21 +36,20 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.MatchBean
-import com.sdy.jitangapplication.model.MatchListBean
-import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
+import com.sdy.jitangapplication.ui.activity.MyIntentionActivity
+import com.sdy.jitangapplication.ui.activity.MyLabelActivity
+import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.GotoVerifyDialog
-import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
-import com.sdy.jitangapplication.ui.dialog.SayHiDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_match1.*
@@ -54,6 +57,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.support.v4.startActivityForResult
 
 /**
  * 匹配页面(新版)
@@ -78,6 +82,18 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     private var myCount: Int = 0//当前滑动次数
     private var maxCount: Int = 0//最大滑动次数
 
+    companion object {
+        private const val LOADING = 0
+        private const val CONTENT = 1
+        private const val ERROR = 2
+        private const val EMPTY = 3
+        private const val PAGESIZE = 20
+
+        const val WANT_MATCH = 1
+        const val SAME_MATCH = 2
+
+    }
+
 
     //请求广场的参数 TODO要更新tagid
     private val matchParams by lazy {
@@ -88,7 +104,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             "tagid" to UserManager.getGlobalLabelId(),
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat(),
-            "city_code" to UserManager.getCityCode()
+            "city_code" to UserManager.getCityCode(),
+            "type" to WANT_MATCH
         )
 
     }
@@ -112,10 +129,10 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     private fun updateLocation() {
         //加入本地的筛选对话框的筛选条件
-        if (params["audit_only"] != null)
-            params.remove("audit_only")
-        if (params["local_only"] != null)
-            params.remove("local_only")
+        if (matchParams["audit_only"] != null)
+            matchParams.remove("audit_only")
+        if (matchParams["local_only"] != null)
+            matchParams.remove("local_only")
         val params = UserManager.getFilterConditions()
         params.forEach {
             matchParams[it.key] = it.value
@@ -137,12 +154,16 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
         retryBtn.setOnClickListener(this)
         greetBtn.setOnClickListener(this)
+        filterBtn.setOnClickListener(this)
+        manageLabel.setOnClickListener(this)
+        findToTalk.setOnClickListener(this)
         dislikeBtn.setOnClickListener(this)
         likeBtn.setOnClickListener(this)
         likeBtn.setOnClickListener(this)
 
-        initialize()
+        initHeadView()
 
+        initialize()
 
         updateLocation()
         mPresenter.getMatchList(matchParams)
@@ -192,18 +213,75 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     }
 
+    //标签适配器
+    private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(activity!!) }
+    //标签数据源
+    var labelList: MutableList<NewLabel> = mutableListOf()
+    private val labelManager by lazy { CenterLayoutManager(activity!!, LinearLayoutManager.HORIZONTAL, false) }
+    //标记当前选中的匹配类型  1想认识  2找同好
+    private var checkedTitle = WANT_MATCH
+
+    private fun initHeadView() {
+        labelList.add(NewLabel(title = "想认识", checked = true))
+        labelList.add(NewLabel(title = "找同好", checked = false))
+
+        headRvLabels.layoutManager = labelManager
+        LinearSnapHelper().attachToRecyclerView(headRvLabels)
+        headRvLabels.adapter = labelAdapter
+        labelAdapter.setNewData(labelList)
+        labelAdapter.setOnItemClickListener { _, view, position ->
+            if (labelAdapter.enable) {
+                if (position == checkedTitle - 1) {
+                    return@setOnItemClickListener
+                } else {
+                    for (index in 0 until labelAdapter.data.size) {
+                        labelAdapter.data[index].checked = index == position
+                        if (index == position)
+                            labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), position)
+                    }
+                    labelAdapter.notifyDataSetChanged()
+                    checkedTitle = position + 1
+
+                    if (checkedTitle == 1) {
+                        t1.text = "为你推荐${matchUserAdapter.my_tags_quality.size}个标签"
+                    } else {
+                        t1.text = "根据我的标签推荐"
+                    }
+                    updateLabelEvent()
+                }
+            }
+        }
+    }
+
+
     val params by lazy {
         hashMapOf<String, Any>(
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "target_accid" to "",
-            "tag_id" to UserManager.getGlobalLabelId()
+            "type" to checkedTitle
         )
     }
 
 
     override fun onClick(view: View) {
         when (view.id) {
+            R.id.filterBtn -> {//筛选
+                FilterUserDialog(activity!!).show()
+            }
+            R.id.manageLabel -> {//标签管理
+                startActivity<MyLabelActivity>("index" to checkedTitle - 1)
+            }
+            R.id.findToTalk -> {//找人说话
+                startActivityForResult<MyIntentionActivity>(
+                    100,
+                    "id" to if (myIntention != null) {
+                        myIntention!!.id
+                    } else {
+                        -1
+                    }, "from" to MyIntentionActivity.FROM_USERCENTER
+                )
+            }
             R.id.greetBtn -> {
                 CommonFunction.commonGreet(
                     activity!!, matchUserAdapter.data[manager.topPosition].isfriend == 1,
@@ -250,8 +328,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
      * 匹配列表数据
      */
     private var paramsLastFiveIds = mutableListOf<Int>()
-
+    private var myIntention: LabelQualityBean? = null
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
+        labelAdapter.enable = true
         if (success) {
             hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
@@ -264,8 +343,14 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 tvLeftChatTime.isVisible = true
             }
 
+            if (matchBeans.intention != null) {
+                myIntention = matchBeans.intention
+                findToTalk.text = myIntention!!.title
+            }
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
-            matchUserAdapter.my_tags_quality = matchBeans.my_label_quality
+
+            matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
+            t1.text = "为你推荐${(matchBeans.mytags ?: mutableListOf<Newtag>()).size}个标签"
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
             //保存 VIP信息
             UserManager.saveUserVip(matchBeans.isvip)
@@ -314,9 +399,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 activity!!.getString(R.string.retry_net_error)
             }
         }
-
-        if (fragmentManager?.let { FragmentUtils.getTopShow(it) } == this)
-            EventBus.getDefault().postSticky(EnableLabelEvent(true))
     }
 
 
@@ -401,15 +483,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     }
 
 
-    companion object {
-        private const val LOADING = 0
-        private const val CONTENT = 1
-        private const val ERROR = 2
-        private const val EMPTY = 3
-        private const val PAGESIZE = 20
-    }
-
-
     /**
      * 改变当前页面的状态
      */
@@ -444,22 +517,31 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 100) {
+                if (data != null && data.getSerializableExtra("intention") != null) {
+                    myIntention = data.getSerializableExtra("intention") as LabelQualityBean
+                    findToTalk.text = myIntention!!.title
+                }
+            }
+        }
+    }
+
     /*---------------------事件总线--------------------------------*/
 
     /**
      * 通过全局的标签来更新数据
      */
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onUpdateLabelEvent(event: UpdateLabelEvent) {
+    fun updateLabelEvent() {
         setViewState(LOADING)
-
-        params["tag_id"] = event.label.id
+        matchParams["type"] = checkedTitle
         matchUserAdapter.data.clear()
         hasMore = false
-        matchParams["tagid"] = event.label.id
-        //这个地方还要默认设置选中第一个标签来更新数据
         updateLocation()
         mPresenter.getMatchList(matchParams)
+        labelAdapter.enable = false
     }
 
 
@@ -582,8 +664,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
                 animation_dislike.alpha = ratio
                 val params = animation_dislike.layoutParams as RelativeLayout.LayoutParams
-//                params.width = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
-//                params.height = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.leftMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
@@ -610,47 +690,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
                 animation_like.alpha = ratio
                 val params = animation_like.layoutParams as RelativeLayout.LayoutParams
-//                params.width = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
-//                params.height = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
                 animation_like.layoutParams = params
             }
-            //上滑时加载动画
-//            Direction.Top -> {
-//                //重置左边、上边的距离
-//                val paramsDisLike = animation_dislike.layoutParams as RelativeLayout.LayoutParams
-//                paramsDisLike.width = 0
-//                paramsDisLike.height = 0
-//                animation_dislike.layoutParams = paramsDisLike
-//                animation_dislike.alpha = 0F
-//
-//                val paramsLike = animation_like.layoutParams as RelativeLayout.LayoutParams
-//                paramsLike.width = 0
-//                paramsLike.height = 0
-//                animation_like.layoutParams = paramsLike
-//                animation_like.alpha = 0F
-//
-//
-//
-//
-//                animation_chathi.alpha = ratio
-//                val params = animation_chathi.layoutParams as RelativeLayout.LayoutParams
-////                params.width = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
-////                params.height = (ScreenUtils.getScreenWidth() / 2F * ratio).toInt()
-//                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-//                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-//                params.topMargin =
-//                    ((ScreenUtils.getScreenHeight() / 2F * ratio) - SizeUtils.dp2px(126F) - params.height / 2F).toInt()
-//                Log.d(
-//                    "CardStackView",
-//                    "topMargin= ${params.topMargin}, getScreenHeight = ${ScreenUtils.getScreenHeight()}"
-//                )
-//
-//                animation_chathi.layoutParams = params
-//
-//            }
+
 
         }
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
@@ -673,28 +718,27 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         resetAnimation()
         if (direction == Direction.Left) {//左滑不喜欢
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+            if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
+                params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             //保存剩余滑动次数
-            if (UserManager.isUserVip()) {
-                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
-            } else {
-                if (UserManager.getSlideCount() > 0) {
+            if (UserManager.isUserVip() || UserManager.getSlideCount() > 0) {
+                if (!UserManager.isUserVip() && UserManager.getSlideCount() > 0) {
                     UserManager.saveSlideCount(UserManager.getSlideCount().minus(1))
                     EventBus.getDefault().post(UpdateSlideCountEvent())
-                    params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
-                    mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
-                } else {
-                    card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
-                    card_stack_view.isEnabled = false
-
-                    if (my_percent_complete <= normal_percent_complete)
-                        RightSlideOutdDialog(activity!!, myCount, maxCount).show()
-                    else
-                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
                 }
-
+                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+                if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
+                    params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
+                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
+            } else {
+                card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
+                card_stack_view.isEnabled = false
+                if (my_percent_complete <= normal_percent_complete)
+                    RightSlideOutdDialog(activity!!, myCount, maxCount).show()
+                else
+                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
             }
         }
 

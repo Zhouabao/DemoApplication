@@ -201,8 +201,8 @@
                     android:background="@drawable/rectangle_cover_bg_10dp"
                     android:padding="5dp"
                     android:textColor="#FFF8F8F8"
-                    android:maxLines="3"
                     android:ellipsize="end"
+                    android:maxLines="3"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -210,18 +210,38 @@
                     />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/matchUserLocalTagCharacter"
+            <LinearLayout
+                    android:id="@+id/matchUserLocalTagCharacterLl"
                     android:orientation="horizontal"
                     android:gravity="center"
+                    android:background="@drawable/rectangle_label_25_orange_7dp"
                     android:layout_width="wrap_content"
                     android:textSize="14sp"
                     android:layout_marginTop="10dp"
-                    android:overScrollMode="never"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/matchUserLocalTagContent"
-                    />
+                   >
+                <TextView
+                        android:id="@+id/matchUserLocalTagName"
+                        tools:text="游戏"
+                        android:gravity="center"
+                        android:paddingRight="9dp"
+                        android:paddingLeft="9dp"
+                        android:textColor="#ffffffff"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:background="@drawable/rectangle_label_orange_7dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/matchUserLocalTagCharacter"
+                        android:overScrollMode="never"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"/>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

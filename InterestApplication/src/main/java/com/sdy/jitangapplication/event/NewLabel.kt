@@ -23,4 +23,6 @@ class UpdateMyLabelEvent
 
 class UpdateEditModeEvent(val position: Int = 0)
 
+class UpdateEditShowEvent(val position:Int,val show: Boolean)
+
 class UpdateMyInterestLabelEvent()

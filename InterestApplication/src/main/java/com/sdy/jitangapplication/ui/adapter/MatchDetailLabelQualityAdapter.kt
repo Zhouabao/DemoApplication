@@ -3,8 +3,7 @@ package com.sdy.jitangapplication.ui.adapter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.LabelQualityBean
-import kotlinx.android.synthetic.main.item_match_detail_label.view.*
+import kotlinx.android.synthetic.main.item_match_detail_label_quality.view.*
 
 
 /**
@@ -14,10 +13,14 @@ import kotlinx.android.synthetic.main.item_match_detail_label.view.*
  *    version: 1.0
  */
 class MatchDetailLabelQualityAdapter :
-    BaseQuickAdapter<LabelQualityBean, BaseViewHolder>(R.layout.item_match_detail_label_quality) {
-    override fun convert(holder: BaseViewHolder, model: LabelQualityBean) {
-        holder.itemView.isEnabled = false
-        holder.itemView.labelName.text = model.content
-        holder.itemView.labelName.isChecked = model.checked
+    BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_match_detail_label_quality) {
+    var myTags: MutableList<String> = mutableListOf()
+    override fun convert(holder: BaseViewHolder, model: String) {
+        holder.itemView.labelName.text = model
+        if (myTags.contains(model)) {
+            holder.itemView.labelName.setTextColor(mContext.resources.getColor(R.color.colorOrange))
+        } else {
+            holder.itemView.labelName.setTextColor(mContext.resources.getColor(R.color.colorGrayE0))
+        }
     }
 }

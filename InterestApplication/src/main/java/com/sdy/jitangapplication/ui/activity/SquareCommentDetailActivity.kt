@@ -45,14 +45,12 @@ import com.sdy.jitangapplication.presenter.view.SquareDetailView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.adapter.ListSquareImgsAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListCommentAdapter
-import com.sdy.jitangapplication.ui.adapter.SquareTagAdapter
 import com.sdy.jitangapplication.ui.dialog.CommentActionDialog
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -169,6 +167,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
         GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv1)
+        if (!squareBean!!.tags.isNullOrEmpty()) {
+            squareTagName.text = squareBean!!.tags ?: ""
+            squareTagName.isVisible = true
+        } else {
+            squareTagName.isVisible = false
+        }
 
 
         val params = squareTitleCl.layoutParams as ConstraintLayout.LayoutParams
@@ -202,8 +206,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (squareBean!!.isfriend)
             squareChatBtn1.isVisible = true
         else
-            squareChatBtn1.isVisible =
-                !(UserManager.getAccid() == squareBean!!.accid || !squareBean!!.greet_switch)
+            squareChatBtn1.visibility =
+                if (!(UserManager.getAccid() == squareBean!!.accid || !squareBean!!.greet_switch)) {
+                    View.VISIBLE
+                } else {
+                    View.INVISIBLE
+                }
+
         squareChatBtn1.onClick {
             CommonFunction.commonGreet(
                 this,
@@ -228,20 +237,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 ""
             }}".plus("\t\t${squareBean!!.out_time}")
 
-
-        squareTime.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        squareTime.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(6F),
-                resources.getColor(R.color.colorWhite)
-            )
-        )
-        val squareAdapter = SquareTagAdapter()
-        squareTime.adapter = squareAdapter
-        squareAdapter.setNewData(squareBean!!.tags ?: mutableListOf())
-//        squareTime.text = "\t\t${squareBean!!.out_time}"
 
     }
 

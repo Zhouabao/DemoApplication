@@ -244,6 +244,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
                             mediaBean!!.compressPath
                         }, publishImage, SizeUtils.dp2px(12F)
                     )
+                    publish.isEnabled = true
                 }
             }
         }

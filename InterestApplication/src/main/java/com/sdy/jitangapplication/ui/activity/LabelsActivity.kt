@@ -21,7 +21,10 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.event.ChooseLabelCountEvent
+import com.sdy.jitangapplication.event.UpdateAllNewLabelEvent
+import com.sdy.jitangapplication.event.UpdateChooseAllLabelEvent
+import com.sdy.jitangapplication.event.UpdateChooseLabelEvent
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.presenter.NewLabelsPresenter
@@ -57,7 +60,6 @@ class LabelsActivity : BaseMvpActivity<NewLabelsPresenter>(), NewLabelsView, Vie
                     "from"
                 ) == "publish" || intent.getStringExtra("from") == "usercenter")
             ) {
-                EventBus.getDefault().post(UpdateAvatorEvent(true))
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else {

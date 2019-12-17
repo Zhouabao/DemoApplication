@@ -101,7 +101,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     private fun initData() {
         //更新了信息之后更新本地缓存
         SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
-        EventBus.getDefault().post(UpdateAvatorEvent(true))
         getTagData()
         coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
         visitsAdapter.freeShow = userInfoBean?.free_show ?: false
@@ -305,13 +304,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
 
         coverAdapter.headerLayout.onClick(object : CustomClickListener() {
-            override fun onSingleClick() {
+            override fun onSingleClick(view: View) {
                 mPresenter.checkBlock()
             }
 
-            override fun onFastClick() {
-
-            }
 
         })
 

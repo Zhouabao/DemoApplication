@@ -35,7 +35,6 @@
             tools:text="在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品"/>
 
 
-
     <LinearLayout
             android:id="@+id/squareLocationAndTime1Ll"
             android:layout_width="0dp"
@@ -66,20 +65,7 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/squareTime"
-            android:layout_width="0dp"
-            android:layout_height="23dp"
-            android:layout_marginTop="23dp"
-            android:layout_marginBottom="17dp"
-            android:layout_marginRight="20dp"
-            android:scrollbars="none"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/squareContent1"
-            app:layout_constraintRight_toLeftOf="@id/squareDianzanBtn1"
-            app:layout_constraintTop_toBottomOf="@id/squareContent1"
-            />
+
 
     <TextView
             android:id="@+id/squareDianzanBtn1"
@@ -91,9 +77,9 @@
             android:gravity="center"
             android:textColor="@color/colorBlack6f"
             android:textSize="15sp"
-            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="@id/squareChatBtn1"
             app:layout_constraintLeft_toLeftOf="@id/squareContent1"
-            app:layout_constraintTop_toBottomOf="@id/squareLocationAndTime1Ll"
+            app:layout_constraintTop_toTopOf="@id/squareChatBtn1"
             tools:text="123"/>
 
 
@@ -135,12 +121,45 @@
 
     <ImageView
             android:id="@+id/squareMoreBtn1"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="25dp"
             android:src="@drawable/icon_more_black"
             android:layout_width="22dp"
             android:layout_height="22dp"
             app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/squareCommentBtn1"
             app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"/>
+
+
+    <LinearLayout
+            android:id="@+id/squareChatBtn1"
+            android:background="@drawable/shape_rectangle_lightorange_15dp"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_height="30dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="6dp"
+            android:layout_marginRight="15dp"
+            android:paddingBottom="6dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/squareLocationAndTime1Ll"
+            >
+
+        <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_flash"
+                android:layout_width="18dp"
+                android:layout_height="18dp"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="聊天"
+                android:layout_marginLeft="7dp"
+                android:textColor="#ffff6318"
+                android:textSize="14sp"
+                />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
