@@ -32,7 +32,7 @@ class LoginActivity : BaseActivity() {
 
         //判断是否有登录
         //移除老用户的标签
-        if (!SPUtils.getInstance(Constants.SPNAME).getString("checkedLabels").isNullOrEmpty())
+        if (!SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNullOrEmpty())
             SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
 
         if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过

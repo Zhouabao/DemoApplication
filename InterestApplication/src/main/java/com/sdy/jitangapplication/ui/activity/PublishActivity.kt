@@ -241,7 +241,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             chooseTitleBtn.isFocusableInTouchMode = true
         }
         locationCity.text = UserManager.getCity()
-//        GlideUtil.loadAvatorImg(this, UserManager.getAvator(), publisherAvator)
         contentLength.text = SpanUtils.with(contentLength)
             .append(publishContent.length().toString())
             .setFontSize(14, true)

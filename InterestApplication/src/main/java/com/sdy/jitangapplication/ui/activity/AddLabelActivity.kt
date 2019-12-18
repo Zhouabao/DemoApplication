@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.ShowCompleteLabelEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
+import com.sdy.jitangapplication.event.UpdateMyInterestLabelEvent
 import com.sdy.jitangapplication.model.AddLabelBean
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.presenter.AddLabelPresenter
@@ -230,7 +231,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             if (from == FROM_REGISTER) {
                 startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
             } else if (from == FROM_INTERSERT_LABEL) {
-                EventBus.getDefault().post(UpdateEditModeEvent(MyLabelActivity.MY_INTEREST_LABEL))
+                EventBus.getDefault().post(UpdateMyInterestLabelEvent())
             } else {
                 EventBus.getDefault().post(UpdateEditModeEvent(MyLabelActivity.MY_LABEL))
                 EventBus.getDefault().post(ShowCompleteLabelEvent(false))

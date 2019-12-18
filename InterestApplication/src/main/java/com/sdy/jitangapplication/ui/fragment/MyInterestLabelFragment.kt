@@ -125,7 +125,7 @@ class MyInterestLabelFragment : BaseMvpLazyLoadFragment<MyInterestLabelPresenter
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateEditModeEvent(event: UpdateMyInterestLabelEvent) {
+    fun onUpdateMyInterestLabelEvent(event: UpdateMyInterestLabelEvent) {
         mPresenter.getMyInterestTagsList()
     }
 

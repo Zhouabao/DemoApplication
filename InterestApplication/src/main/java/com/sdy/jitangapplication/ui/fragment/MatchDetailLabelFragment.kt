@@ -11,13 +11,11 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.OtherLabelsBean
 import com.sdy.jitangapplication.presenter.MatchDetailLabelPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailLabelView
 import com.sdy.jitangapplication.ui.adapter.MatchDetailUserInterestLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchDetailUserLabelAdapter
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.footer__label_match_detail_user.view.*
 import kotlinx.android.synthetic.main.match_detail_user_label_fragment.*
@@ -69,12 +67,6 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
                 adapter.setNewData(data.other_tags)
                 if (!data.other_interest.isNullOrEmpty()) {
                     interestAdapter.setNewData(data.other_interest)
-                } else {
-                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
-                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
-                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
-                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
-                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
                 }
             } else {
                 stateLabel.viewState = MultiStateView.VIEW_STATE_EMPTY

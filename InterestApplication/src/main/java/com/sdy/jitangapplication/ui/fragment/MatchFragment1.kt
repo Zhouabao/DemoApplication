@@ -348,6 +348,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             if (matchBeans.intention != null) {
                 myIntention = matchBeans.intention
                 findToTalk.text = myIntention!!.title
+            } else {
+                findToTalk.text = "选择意向"
             }
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
 
