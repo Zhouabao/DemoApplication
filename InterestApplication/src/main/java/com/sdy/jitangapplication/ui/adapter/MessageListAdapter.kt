@@ -41,7 +41,7 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
                 if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
                     "『招呼消息』"
                 } else if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) {
-                    "通过『" + (item.getAttachment() as ChatHiAttachment).tag + "』匹配"
+                    "『匹配消息』"
                 } else if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND) {
                     "『好友消息』"
                 } else if ((item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME) {

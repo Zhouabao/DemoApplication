@@ -224,7 +224,12 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
             if (data != null) {
                 UserManager.saveLabels(data.list)
                 if (from == AddLabelActivity.FROM_REGISTER) {
-                    startActivity<UserIntroduceActivity>(("from" to UserIntroduceActivity.REGISTER))
+                    if (UserManager.getUserIntroduce().isNullOrEmpty()) {
+                        startActivity<UserIntroduceActivity>(("from" to UserIntroduceActivity.REGISTER))
+                    } else {
+                        ActivityUtils.finishAllActivities()
+                        startActivity<MainActivity>()
+                    }
                 } else {
                     //todo 这里标签是来自于发布或者已经在该标签下发布过内容，就不走发布流程
                     if (mode != MODE_EDIT && from != AddLabelActivity.FROM_PUBLISH && !data!!.is_published) {

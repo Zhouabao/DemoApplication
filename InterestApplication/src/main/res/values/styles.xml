@@ -53,7 +53,7 @@
     </style>
 
 
-    <!-- window 透明的-->
+    <!-- window 半透明-->
     <style name="BlackTheme" parent="MyAppTheme">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowFullscreen">false</item>

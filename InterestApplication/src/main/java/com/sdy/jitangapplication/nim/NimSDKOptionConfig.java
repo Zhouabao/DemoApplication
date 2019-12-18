@@ -170,7 +170,7 @@ public class NimSDKOptionConfig {
     public static int CHATHI_OUTTIME = 4;*/
                 switch (((ChatHiAttachment) message.getAttachment()).getShowType()) {
                     case 1:
-                        return "通过『"+((ChatHiAttachment) message.getAttachment()).getTag()+"』匹配";
+                        return "『匹配消息』";
                     case 2:
                         return "『招呼消息』";
                     case 3:

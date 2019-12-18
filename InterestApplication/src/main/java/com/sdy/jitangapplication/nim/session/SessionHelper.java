@@ -247,7 +247,7 @@ public class SessionHelper {
                         if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_HI) {
                             return "『招呼消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_MATCH) {
-                            return "通过『" + ((ChatHiAttachment) recent.getAttachment()).getTag() + "』匹配";
+                            return "『匹配消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
                             return "『好友消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_OUTTIME) {

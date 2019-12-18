@@ -31,7 +31,6 @@ import com.sdy.jitangapplication.presenter.view.MessageHiView
 import com.sdy.jitangapplication.ui.adapter.MessageHiListAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_hi.*
-import kotlinx.android.synthetic.main.activity_message_list.btnBack
 import kotlinx.android.synthetic.main.empty_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
@@ -170,7 +169,8 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
                             if ((recentContactt.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
                                 "『招呼消息』"
                             } else if ((recentContactt.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) {
-                                "通过『" + (recentContactt.getAttachment() as ChatHiAttachment).tag + "』匹配"
+//                                "通过『" + (recentContactt.getAttachment() as ChatHiAttachment).tag + "』匹配"
+                                "『匹配消息』"
                             } else if ((recentContactt.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND) {
                                 "『好友消息』"
                             } else if ((recentContactt.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME) {

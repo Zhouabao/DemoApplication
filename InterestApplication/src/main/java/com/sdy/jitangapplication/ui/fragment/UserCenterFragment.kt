@@ -35,7 +35,6 @@ import com.sdy.jitangapplication.presenter.UserCenterPresenter
 import com.sdy.jitangapplication.presenter.view.UserCenterView
 import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.UserCenterCoverAdapter
-import com.sdy.jitangapplication.ui.adapter.UserLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -72,8 +71,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         const val REQUEST_INTENTION = 15
     }
 
-    //用户标签adapter
-    private val tagAdapter by lazy { UserLabelAdapter() }
     //动态封面适配器
     private val coverAdapter by lazy { UserCenterCoverAdapter() }
     //我的访客adapter
@@ -103,7 +100,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     private fun initData() {
         //更新了信息之后更新本地缓存
         SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
-        getTagData()
         coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
         visitsAdapter.freeShow = userInfoBean?.free_show ?: false
         visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
@@ -120,10 +116,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         checkVip()
     }
 
-    //从缓存中获取标签信息
-    private fun getTagData() {
-        tagAdapter.setNewData(UserManager.getSpLabels())
-    }
 
 
     //是否认证 0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
@@ -270,18 +262,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             mPresenter.getMemberInfo(params)
         }
 
-        //用户标签
-        val manager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        userTagRv.addItemDecoration(
-            DividerItemDecoration(
-                activity!!,
-                DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(10F),
-                resources.getColor(R.color.colorWhite)
-            )
-        )
-        userTagRv.layoutManager = manager
-        userTagRv.adapter = tagAdapter
 
         //用户动态照片
         val squareManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)

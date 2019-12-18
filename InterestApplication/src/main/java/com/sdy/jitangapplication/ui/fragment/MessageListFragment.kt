@@ -266,15 +266,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         return headView
     }
 
-    override fun onResume() {
-        super.onResume()
-        //获取最近消息 延迟一秒请求
-//        Handler().postDelayed({
-//            mPresenter.messageCensus(params)
-//        }, 1000)
-//        setHiData()  模拟数据请求
-    }
-
 
     /**
      * 获取消息中心的顶部数据
@@ -366,7 +357,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     when {
                         loadedRecent.attachment is ChatHiAttachment -> when {
                             (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
-                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH -> "通过『" + (loadedRecent.getAttachment() as ChatHiAttachment).tag + "』匹配"
+                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
                             (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
                             (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
                             else -> ""

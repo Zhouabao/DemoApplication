@@ -138,10 +138,7 @@
         </activity>
         <activity android:name=".ui.activity.NewUserInfoSettingsActivity">
         </activity>
-        <activity
-                android:name=".ui.activity.LabelsActivity"
-                android:screenOrientation="portrait">
-        </activity>
+
         <activity
                 android:name=".ui.activity.SplashActivity"
                 android:screenOrientation="portrait">
@@ -224,10 +221,7 @@
                 android:name=".ui.activity.MessageSquareActivity"
                 android:screenOrientation="portrait">
         </activity>
-        <activity
-                android:name=".ui.activity.MessageListActivity"
-                android:screenOrientation="portrait">
-        </activity>
+
         <activity
                 android:name=".ui.activity.MyJobActivity"
                 android:screenOrientation="portrait">
@@ -266,9 +260,7 @@
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="adjustNothing">
         </activity>
-        <activity
-                android:name=".ui.activity.PublishChooseLabelsActivity"
-                android:screenOrientation="portrait"/>
+
         <activity
                 android:name=".ui.activity.SquarePlayListDetailActivity"
                 android:screenOrientation="portrait"
@@ -300,10 +292,7 @@
                 android:name=".ui.activity.UserBirthActivity"
                 android:screenOrientation="portrait">
         </activity>
-        <activity
-                android:name=".ui.activity.SetInfoActivity"
-                android:screenOrientation="portrait">
-        </activity>
+
         <activity
                 android:name=".ui.activity.VerifyCodeActivity"
                 android:screenOrientation="portrait">

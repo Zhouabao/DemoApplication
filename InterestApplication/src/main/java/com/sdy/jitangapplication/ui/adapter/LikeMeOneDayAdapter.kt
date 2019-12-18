@@ -33,6 +33,7 @@ class LikeMeOneDayAdapter(var freeShow: Boolean) :
         params.width = SizeUtils.dp2px(180F)
         params.height = (16 / 9F * params.width).toInt()
         itemView.layoutParams = params
+        itemView.likeMeTag.isVisible = !item.tag_title.isNullOrEmpty()
         itemView.likeMeTag.text = "${item.tag_title}"
         itemView.likeMeNickname.text = "${item.nickname}"
         itemView.likeMeInfo.text = "${item.age} / ${if (item.gender == 1) {

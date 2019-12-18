@@ -61,6 +61,7 @@
             android:layout_width="5dp"
             android:layout_height="5dp"
             android:layout_marginRight="5dp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/likeMeNickname"
             app:layout_constraintLeft_toLeftOf="@id/likeMeInfo"
             app:layout_constraintTop_toTopOf="@id/likeMeNickname"/>
@@ -73,7 +74,6 @@
             android:ellipsize="end"
             android:textColor="#ffffffff"
             android:textSize="14sp"
-            android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@id/likeMeInfo"

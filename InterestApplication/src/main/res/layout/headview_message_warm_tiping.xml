@@ -3,7 +3,7 @@
               android:orientation="horizontal"
               android:background="#FFF5F6F8"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="41dp">
 
     <TextView
             android:layout_marginBottom="12dp"
@@ -12,8 +12,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="主动加微信/QQ的女生可能是骗子，请及时举报！"
+            android:text="主动加微信/QQ的可能是骗子，请及时举报！"
             android:textColor="#ff191919"
+            android:textStyle="bold"
             android:textSize="12sp"
             />
 
@@ -22,14 +23,14 @@
             android:id="@+id/knowBtn"
             android:layout_marginRight="15dp"
             android:layout_gravity="right|center_vertical"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
-            android:background="@drawable/shape_rectangle_orange_25dp"
+            android:background="@drawable/shape_rectangle_gary_white_12dp"
             android:textStyle="bold"
-            android:textColor="@color/colorWhite"
+            android:textSize="11sp"
+            android:gravity="center"
+            android:textColor="#191919"
             android:text="知道了"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="22dp"/>
 </LinearLayout>

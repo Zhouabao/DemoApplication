@@ -445,6 +445,10 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getString("avatar")
     }
 
+    fun getUserIntroduce(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce")
+    }
+
 
     fun saveIsInterestLabel(isInterest: Boolean) {
         return SPUtils.getInstance(Constants.SPNAME).put("isInterestLabel", isInterest)
@@ -530,7 +534,7 @@ object UserManager {
     }
 
     fun getGlobalLabelId(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId", 1)
+        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId", 0)
     }
 
     fun saveGlobalLabelId(id: Int) {

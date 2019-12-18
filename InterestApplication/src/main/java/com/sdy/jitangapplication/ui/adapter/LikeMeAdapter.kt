@@ -49,7 +49,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
         holder.addOnClickListener(R.id.likeMeCount)
         val itemView = holder.itemView
         itemView.likeMeDate.text = item.date ?: ""
-        itemView.likeMeCount.text = "${item.count} 人对你感标签"
+        itemView.likeMeCount.text = "${item.count} 人对你感兴趣"
         itemView.likeMeNew.isVisible = item.hasread ?: false
 
         itemView.likeOneDayRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)

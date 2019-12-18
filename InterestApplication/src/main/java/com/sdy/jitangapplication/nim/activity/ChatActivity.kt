@@ -45,6 +45,7 @@ import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.model.NimBean
 import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.greenrobot.eventbus.EventBus
@@ -55,8 +56,6 @@ import org.greenrobot.eventbus.EventBus
  *
  */
 class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
-
-
     private var isResume = false
 
     companion object {
@@ -78,19 +77,30 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
                 context.startActivity(intent)
             } else {
+                val loadingDialog = LoadingDialog(context)
                 val params = UserManager.getBaseParams()
                 params["target_accid"] = contactId
                 RetrofitFactory.instance.create(Api::class.java)
                     .getTargetInfo(UserManager.getSignParams(params))
                     .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
+                        override fun onStart() {
+                            if (!loadingDialog.isShowing) {
+                                loadingDialog.show()
+                            }
+                        }
+
                         override fun onNext(t: BaseResp<NimBean?>) {
                             super.onNext(t)
+                            loadingDialog.dismiss()
                             if (t.code == 200) {
                                 val intent = Intent()
                                 intent.putExtra(Extras.EXTRA_ACCOUNT, contactId)
                                 intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
                                 if (anchor != null) {
                                     intent.putExtra(Extras.EXTRA_ANCHOR, anchor)
+                                }
+                                if (t.data != null) {
+                                    intent.putExtra("nimBean", t.data)
                                 }
                                 intent.setClass(context, ChatActivity::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -99,6 +109,11 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                             } else if (t.code == 400) {
                                 CommonFunction.toast(t.msg)
                             }
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            loadingDialog.dismiss()
+                            CommonFunction.toast(CommonFunction.getErrorMsg(context))
                         }
                     })
             }

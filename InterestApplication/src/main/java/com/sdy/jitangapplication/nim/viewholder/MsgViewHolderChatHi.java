@@ -50,7 +50,8 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
         ChatHiAttachment attachment = (ChatHiAttachment) message.getAttachment();
         //匹配的标签 1.匹配  2.招呼 3.好友
         if (attachment.getShowType() == ChatHiAttachment.CHATHI_MATCH) {
-            chatHiMatch.setText("通过『" + attachment.getTag() + "』匹配");
+//            chatHiMatch.setText("通过『" + attachment.getTag() + "』匹配");
+            chatHiMatch.setText("匹配成功");
             targetMatchContent.setText("找到一样的人了就和他聊聊天吧");
             targetMatchIv.setImageResource(R.drawable.icon_like);
         } else if (attachment.getShowType() == ChatHiAttachment.CHATHI_HI) {

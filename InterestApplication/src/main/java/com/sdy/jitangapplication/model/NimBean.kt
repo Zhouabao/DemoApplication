@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.model
 
+import java.io.Serializable
+
 /**
  *    author : ZFM
  *    date   : 2019/8/1715:06
@@ -19,9 +21,7 @@ data class NimBean(
     val countdown: Int = 0,//剩余时间
     val residue_msg_cnt: Int = 0,//	该条招呼的剩余发起消息次数
     val isread: Boolean = false
-
-
-)
+) : Serializable
 
 
 /**

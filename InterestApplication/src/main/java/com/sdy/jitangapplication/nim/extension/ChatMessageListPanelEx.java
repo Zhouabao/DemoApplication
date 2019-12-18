@@ -60,14 +60,11 @@ import com.netease.nimlib.sdk.robot.model.RobotMsgType;
 import com.netease.nimlib.sdk.team.constant.TeamMemberType;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.sdy.baselibrary.glide.GlideUtil;
-import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.event.NimHeadEvent;
-import com.sdy.jitangapplication.model.NewLabel;
 import com.sdy.jitangapplication.model.Tag;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.adapter.ChatHiLabelAdapter;
-import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.DividerItemDecoration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -1368,23 +1365,6 @@ public class ChatMessageListPanelEx {
         //头像
         GlideUtil.loadAvatorImg(container.activity, avator, chatHiAvator);
         //用户标签
-//        MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(container.activity);
-        ArrayList<NewLabel> mytags = (ArrayList<NewLabel>) UserManager.INSTANCE.getSpLabels();
-
-        if (tags != null && tags.size() > 0) {
-            if (mytags.size() > 0)
-                for (int i = 0; i < tags.size(); i++) {
-                    for (int j = 0; j < mytags.size(); j++) {
-                        if (mytags.get(j).getId() == tags.get(i).getId() && tags.get(i).getId() != Constants.RECOMMEND_TAG_ID) {
-                            tags.get(i).setSameLabel(true);
-                            break;
-                        } else {
-                            tags.get(i).setSameLabel(false);
-                        }
-                    }
-                }
-            hiLabelAdapter.setData(tags);
-        }
     }
 
 }
