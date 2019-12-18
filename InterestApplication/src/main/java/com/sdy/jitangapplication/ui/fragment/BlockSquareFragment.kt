@@ -17,7 +17,7 @@ import com.sdy.jitangapplication.event.BlockDataEvent
 import com.sdy.jitangapplication.model.Photos
 import com.sdy.jitangapplication.presenter.BlockSquarePresenter
 import com.sdy.jitangapplication.presenter.view.BlockSquareView
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity1
 import com.sdy.jitangapplication.ui.adapter.BlockAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
@@ -73,7 +73,7 @@ class BlockSquareFragment(var targetAccid: String) : BaseMvpLazyLoadFragment<Blo
         blockRv.adapter = blockAdapter
 
         blockAdapter.setOnItemClickListener { _, view, position ->
-            SquareCommentDetailActivity.start(activity!!, squareId = blockAdapter.data[position].square_id)
+            SquareCommentDetailActivity1.start(activity!!, squareId = blockAdapter.data[position].square_id)
         }
 
         stateBlock.retryBtn.onClick {

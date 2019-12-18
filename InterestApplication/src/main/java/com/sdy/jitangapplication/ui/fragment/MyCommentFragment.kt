@@ -23,7 +23,7 @@ import com.sdy.jitangapplication.event.RefreshCommentEvent
 import com.sdy.jitangapplication.model.MyCommentList
 import com.sdy.jitangapplication.presenter.MyCommentPresenter
 import com.sdy.jitangapplication.presenter.view.MyCommentView
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity1
 import com.sdy.jitangapplication.ui.adapter.MyCommentAdapter
 import com.sdy.jitangapplication.ui.dialog.CommentActionDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -85,7 +85,7 @@ class MyCommentFragment : BaseMvpLazyLoadFragment<MyCommentPresenter>(), MyComme
         }
         //点击跳转到广场详情
         adapter.setOnItemClickListener { _, view, position ->
-            SquareCommentDetailActivity.start(
+            SquareCommentDetailActivity1.start(
                 activity!!,
                 squareId = adapter.data[position].square_id ?: 0
             )

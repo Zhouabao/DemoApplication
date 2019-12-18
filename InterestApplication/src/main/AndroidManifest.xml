@@ -95,7 +95,6 @@
         </activity>
         <activity android:name=".ui.activity.MyIntentionActivity">
         </activity>
-        <activity android:name=".ui.activity.ModelLabelIntroduceActivity"/>
         <activity android:name=".ui.activity.ChooseLabelActivity">
         </activity>
         <activity android:name=".ui.activity.ChooseTitleActivity">
@@ -104,8 +103,7 @@
         </activity>
         <activity android:name=".ui.activity.AddLabelSuccessActivity">
         </activity>
-        <activity android:name=".ui.activity.LabelIntroduceActivity">
-        </activity>
+        <activity android:name=".ui.activity.UserIntroduceActivity"/>
         <activity android:name=".ui.activity.LabelQualityActivity">
         </activity>
         <activity android:name=".ui.activity.AddLabelActivity">
@@ -128,17 +126,12 @@
         </activity>
         <activity android:name=".ui.activity.UserNickNameActivity">
         </activity>
-        <activity android:name=".ui.activity.ModelAboutMeDetailActivity">
-        </activity>
         <activity android:name=".ui.activity.ModelAboutMeActivity">
         </activity>
         <activity
                 android:name=".ui.activity.LoginHelpReasonActivity"
                 android:windowSoftInputMode="adjustPan"/>
-        <activity
-                android:name=".ui.activity.AboutMeActivity"
-                android:windowSoftInputMode="adjustResize">
-        </activity>
+
         <activity android:name=".ui.activity.ChooseSchoolActivity">
         </activity>
         <activity android:name=".ui.activity.ReportReasonActivity">
@@ -259,10 +252,7 @@
                 android:name=".ui.activity.SettingsActivity"
                 android:screenOrientation="portrait">
         </activity>
-        <activity
-                android:name=".ui.activity.UserCenterActivity"
-                android:screenOrientation="portrait">
-        </activity>
+
         <activity
                 android:name=".ui.activity.LocationActivity"
                 android:screenOrientation="portrait">
@@ -291,6 +281,11 @@
                 android:windowSoftInputMode="adjustPan"/>
         <activity
                 android:name=".ui.activity.SquareCommentDetailActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/Theme.AppCompat.Transitions"
+                android:windowSoftInputMode="adjustResize"/>
+        <activity
+                android:name=".ui.activity.SquareCommentDetailActivity1"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustResize"/>

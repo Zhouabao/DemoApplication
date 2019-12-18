@@ -19,7 +19,8 @@ data class ExtraBean(
     val code: Int = 0,
     val msg: String = "",
     val mytags: MutableList<TagBean>,
-    val myinterest: Boolean = false
+    val myinterest: Boolean = false,
+    val aboutme: String = ""
 )
 
 
@@ -36,7 +37,8 @@ data class Userinfo(
     val vip_express: String = "",
     var isfaced: Int = -1,//   0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     var identification: Int = 0,// int（认证分数）
-    var percent_complete: Int = 0// float（百分比例如 80.99）
+    var percent_complete: Int = 0,// float（百分比例如 80.99）
+    var intention: LabelQualityBean? = null //意向
 )
 
 data class TagBean(

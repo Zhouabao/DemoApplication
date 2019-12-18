@@ -12,13 +12,10 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -26,12 +23,11 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
-import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.NotifyEvent
 import com.sdy.jitangapplication.event.RefreshCommentEvent
-import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.AllCommentBean
@@ -39,54 +35,49 @@ import com.sdy.jitangapplication.model.CommentBean
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
-import com.sdy.jitangapplication.player.UpdateVoiceTimeThread
 import com.sdy.jitangapplication.presenter.SquareDetailPresenter
 import com.sdy.jitangapplication.presenter.view.SquareDetailView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
-import com.sdy.jitangapplication.ui.adapter.ListSquareImgsAdapter
+import com.sdy.jitangapplication.switchplay.SwitchVideo
 import com.sdy.jitangapplication.ui.adapter.MultiListCommentAdapter
+import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.dialog.CommentActionDialog
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
-import com.sdy.jitangapplication.utils.UriUtils
+import com.sdy.jitangapplication.ui.fragment.MySquareFragment
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
-import com.sdy.jitangapplication.widgets.GalleryOnScrollListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
-import com.umeng.socialize.UMShareAPI
-import kotlinx.android.synthetic.main.activity_square_comment_detail.*
+import kotlinx.android.synthetic.main.activity_square_comment_detail1.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import kotlinx.android.synthetic.main.layout_record_audio.*
-import kotlinx.android.synthetic.main.layout_square_list_bottom.*
-import kotlinx.android.synthetic.main.layout_square_list_top.*
-import kotlinx.android.synthetic.main.switch_video.view.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 
 /**
  * 广场详情页 包含内容详情以及点赞评论信息
  */
-class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView, View.OnClickListener,
-    OnRefreshListener, OnLoadMoreListener {
-    private val TAG = SquareCommentDetailActivity1::class.java.simpleName
+class SquareCommentDetailActivity1 : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView, View.OnClickListener,
+    OnRefreshListener, OnLoadMoreListener, MultiListSquareAdapter.ResetAudioListener {
+    override fun resetAudioState() {
+        resetAudio()
+    }
 
+    private val TAG = SquareCommentDetailActivity1::class.java.simpleName
     //评论数据
     private var commentDatas: MutableList<CommentBean> = mutableListOf()
-    private val adapter: MultiListCommentAdapter by lazy { MultiListCommentAdapter(this, commentDatas) }
-
+    private val commentAdapter: MultiListCommentAdapter by lazy { MultiListCommentAdapter(this, commentDatas) }
     private var squareBean: SquareBean? = null
-
     private var page = 1
-
     private val commentParams = hashMapOf(
         "token" to UserManager.getToken(),
         "accid" to UserManager.getAccid(),
@@ -125,15 +116,26 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     }
 
+    private val squareAdapter by lazy {
+        MultiListSquareAdapter(
+            mutableListOf(),
+            resetAudioListener = this,
+            type = MySquareFragment.TYPE_SQUARE_COMMENT
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_square_comment_detail)
+        setContentView(R.layout.activity_square_comment_detail1)
         initView()
         if (intent.getSerializableExtra("squareBean") != null) {
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             squareBean = intent.getSerializableExtra("squareBean") as SquareBean
-            initData()
+            squareAdapter.addData(squareBean!!)
+            if (squareBean!!.type == SquareBean.AUDIO) {
+                initAudio(0)
+                mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+            }
             commentParams["square_id"] = "${squareBean!!.id}"
             mPresenter.getCommentList(commentParams, true)
         } else {
@@ -148,101 +150,62 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     }
 
-    private fun initData() {
+    private fun initAudio(position: Int) {
+        resetAudio()
+        mediaPlayer = IjkMediaPlayerUtil(this!!, position, object : OnPlayingListener {
 
-        when {
-            squareBean!!.type == 1 -> {
-                squareUserPics.visibility = View.VISIBLE
-                initPics()
+            override fun onPlay(position: Int) {
+                squareAdapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
+                squareAdapter.refreshNotifyItemChanged(position)
             }
-            squareBean!!.type == 2 -> {
-                squareUserVideo.visibility = View.VISIBLE
-                initVideo()
+
+            override fun onPause(position: Int) {
+                squareAdapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
+                squareAdapter.refreshNotifyItemChanged(position)
             }
-            else -> {
-                audioRecordLl.isVisible = true
-//                initAudio()
-                initAudio(0)
-                mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+
+            override fun onStop(position: Int) {
+                squareAdapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                resetAudio()
+                squareAdapter.refreshNotifyItemChanged(position)
             }
-        }
 
+            override fun onError(position: Int) {
+                CommonFunction.toast("音频播放出错")
+                squareAdapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
+                resetAudio()
+                squareAdapter.refreshNotifyItemChanged(position)
+            }
 
-        GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv1)
-        if (!squareBean!!.tags.isNullOrEmpty()) {
-            squareTagName.text = squareBean!!.tags ?: ""
-            squareTagName.isVisible = true
-        } else {
-            squareTagName.isVisible = false
-        }
+            override fun onPrepared(position: Int) {
+                mediaPlayer!!.startPlay()
+            }
 
+            override fun onPreparing(position: Int) {
+                squareAdapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PREPARE
+                squareAdapter.refreshNotifyItemChanged(position)
+            }
 
-        val params = squareTitleCl.layoutParams as ConstraintLayout.LayoutParams
-        params.topMargin = SizeUtils.dp2px(20F)
-        squareTitleCl.layoutParams = params
-        squareTitleCl.isVisible = !squareBean!!.title.isNullOrEmpty()
-        squareTitle.text = squareBean!!.title ?: ""
-        squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
-            resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
-            null,
-            null,
-            null
-        )
+            override fun onRelease(position: Int) {
+                squareAdapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
+                squareAdapter.refreshNotifyItemChanged(position)
 
-        squareDianzanBtn1.text = "${if (squareBean!!.like_cnt < 0) {
-            0
-        } else {
-            squareBean!!.like_cnt
-        }}"
-        squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
-        squareContent1.isVisible = !squareBean!!.descr.isNullOrEmpty()
-        if (!squareBean!!.descr.isNullOrEmpty()) {
-            squareContent1.setContent("${squareBean!!.descr}")
-        }
+            }
 
-
-        squareZhuanfaBtn1.text = "${squareBean!!.share_cnt}"
-        squareUserName1.text = "${squareBean!!.nickname}"
-        squareUserVipIv1.isVisible = squareBean!!.isvip == 1
-
-        if (squareBean!!.isfriend)
-            squareChatBtn1.isVisible = true
-        else
-            squareChatBtn1.visibility =
-                if (!(UserManager.getAccid() == squareBean!!.accid || !squareBean!!.greet_switch)) {
-                    View.VISIBLE
-                } else {
-                    View.INVISIBLE
-                }
-
-        squareChatBtn1.onClick {
-            CommonFunction.commonGreet(
-                this,
-                squareBean?.isfriend ?: false,
-                squareBean?.greet_switch ?: false,
-                squareBean?.greet_state ?: false,
-                squareBean?.accid ?: "",
-                squareBean?.nickname ?: "",
-                squareBean?.isgreeted ?: false,
-                squareChatBtn1
-            )
-        }
-        squareUserIv1.onClick {
-            if ((squareBean?.accid ?: "") != UserManager.getAccid())
-                MatchDetailActivity.start(this, squareBean?.accid ?: "")
-        }
-
-        squareLocationAndTime1.text =
-            "${squareBean!!.province_name}${if (!squareBean!!.province_name.isNullOrEmpty() && squareBean!!.city_name.isNotEmpty() && squareBean!!.city_name != squareBean!!.province_name) {
-                "\t${squareBean!!.city_name}"
-            } else {
-                ""
-            }}".plus("\t\t${squareBean!!.out_time}")
-
-
+        }).getInstance()
     }
 
+    private fun resetAudio() {
+        if (mediaPlayer != null) {
+            mediaPlayer!!.resetMedia()
+            mediaPlayer = null
+        }
+    }
+
+
     private fun initView() {
+        EventBus.getDefault().register(this)
+
         mPresenter = SquareDetailPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -251,8 +214,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             if (intent.getSerializableExtra("squareBean") != null) {
                 stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-                squareBean = intent.getSerializableExtra("squareBean") as SquareBean
-                initData()
                 commentParams["square_id"] = "${squareBean!!.id}"
                 mPresenter.getCommentList(commentParams, true)
             } else {
@@ -270,21 +231,36 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
 
+        commentSquareRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        commentSquareRv.adapter = squareAdapter
+        squareAdapter.bindToRecyclerView(commentSquareRv)
+        squareAdapter.setOnItemChildClickListener { _, view, position ->
+            val squareBean = squareAdapter.data[0]
+            when (view.id) {
+                //播放音频
+                R.id.audioPlayBtn -> {
+                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE || squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {
+                        mediaPlayer!!.startPlay()
+                    } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {
+                        mediaPlayer!!.resumePlay()
+                    } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) {
+                        mediaPlayer!!.pausePlay()
+                    }
+                    commentAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+
+
         commentList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        commentList.adapter = adapter
-        adapter.setEmptyView(R.layout.empty_layout_comment, commentList)
+        commentList.adapter = commentAdapter
+        commentAdapter.setEmptyView(R.layout.empty_layout_comment, commentList)
 
         btnBack.onClick {
             onBackPressed()
         }
         hotT1.text = "动态详情"
 
-
-        squareZhuanfaBtn1.setOnClickListener(this)
-        squareDianzanBtn1.setOnClickListener(this)
-        squareCommentBtn1.setOnClickListener(this)
-        squareMoreBtn1.setOnClickListener(this)
-        sendCommentBtn.setOnClickListener(this)
 
         showCommentEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(charSequence: Editable?) {
@@ -306,38 +282,33 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         })
 
 
-        adapter.setOnItemLongClickListener { adapter, view, position ->
+        commentAdapter.setOnItemLongClickListener { adapter, view, position ->
             showCommentDialog(position)
             true
         }
 
-        adapter.setOnItemClickListener { _, view, position ->
+        commentAdapter.setOnItemClickListener { _, view, position ->
             reply = true
-            reply_id = adapter.data[position].id!!.toInt()
+            reply_id = commentAdapter.data[position].id!!.toInt()
             showCommentEt.isFocusable = true
-            showCommentEt.hint = "『回复\t${adapter.data[position].nickname}：』"
+            showCommentEt.hint = "『回复\t${commentAdapter.data[position].nickname}：』"
             KeyboardUtils.showSoftInput(showCommentEt)
         }
 
 
-        adapter.setOnItemChildClickListener { _, view, position ->
+        commentAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.commentUser -> {
-                    if ((adapter.data[position].member_accid ?: "") != UserManager.getAccid())
-                        MatchDetailActivity.start(this, adapter.data[position].member_accid ?: "")
-//                    reply = true
-//                    reply_id = adapter.data[position].reply_id!!
-//                    showCommentEt.isFocusable = true
-//                    showCommentEt.hint = "『回复\t${adapter.data[position].replyed_nickname}：』"
-//                    KeyboardUtils.showSoftInput(showCommentEt)
+                    if ((commentAdapter.data[position].member_accid ?: "") != UserManager.getAccid())
+                        MatchDetailActivity.start(this, commentAdapter.data[position].member_accid ?: "")
                 }
                 R.id.llCommentDianzanBtn -> {
                     mPresenter.getCommentLike(
                         hashMapOf(
                             "token" to UserManager.getToken(),
                             "accid" to UserManager.getAccid(),
-                            "reply_id" to adapter.data[position].id!!,
-                            "type" to if (adapter.data[position].isliked == 0) {
+                            "reply_id" to commentAdapter.data[position].id!!,
+                            "type" to if (commentAdapter.data[position].isliked == 0) {
                                 1
                             } else {
                                 2
@@ -349,8 +320,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 }
                 R.id.commentReplyBtn -> {
                     reply = true
-                    reply_id = adapter.data[position].id!!
-                    showCommentEt.hint = "『回复${adapter.data[position].replyed_nickname}：』"
+                    reply_id = commentAdapter.data[position].id!!
+                    showCommentEt.hint = "『回复${commentAdapter.data[position].replyed_nickname}：』"
                     KeyboardUtils.showSoftInput(showCommentEt)
                 }
             }
@@ -359,149 +330,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
     var mediaPlayer: IjkMediaPlayerUtil? = null
-
-    private fun initAudio(position: Int) {
-        if (mediaPlayer != null) {
-            mediaPlayer!!.resetMedia()
-            mediaPlayer = null
-        }
-        mediaPlayer = IjkMediaPlayerUtil(this, position, object : OnPlayingListener {
-            override fun onPlay(position: Int) {
-                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
-                voicePlayView.playAnimation()
-                UpdateVoiceTimeThread.getInstance(
-                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-                    audioTime
-                ).start()
-                audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
-            }
-
-            override fun onPause(position: Int) {
-                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
-                voicePlayView.cancelAnimation()
-                UpdateVoiceTimeThread.getInstance(
-                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-                    audioTime
-                ).pause()
-                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-            }
-
-            override fun onStop(position: Int) {
-                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                voicePlayView.cancelAnimation()
-                UpdateVoiceTimeThread.getInstance(
-                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-                    audioTime
-                ).stop()
-                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-
-            }
-
-            override fun onError(position: Int) {
-                CommonFunction.toast("音频播放出错")
-                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
-                voicePlayView.cancelAnimation()
-                UpdateVoiceTimeThread.getInstance(
-                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-                    audioTime
-                ).stop()
-                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-                mediaPlayer!!.resetMedia()
-            }
-
-            override fun onPrepared(position: Int) {
-                mediaPlayer!!.startPlay()
-            }
-
-            override fun onPreparing(position: Int) {
-                voicePlayView.cancelAnimation()
-                UpdateVoiceTimeThread.getInstance(
-                    squareBean!!.audio_json?.get(0)?.duration?.let { UriUtils.getShowTime(it) },
-                    audioTime
-                ).stop()
-                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-            }
-
-            override fun onRelease(position: Int) {
-//                squareBean!!.isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-//                voicePlayView.stop()
-//                UpdateVoiceTimeThread.getInstance("03:40", audioTime).stop()
-//                audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
-//                mediaPlayer!!.resetMedia()
-//                mediaPlayer = null
-            }
-
-        }).getInstance()
-
-        audioPlayBtn.setOnClickListener {
-            when (squareBean!!.isPlayAudio) {
-                IjkMediaPlayerUtil.MEDIA_ERROR -> {
-                    initAudio(0)
-                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
-                }
-                IjkMediaPlayerUtil.MEDIA_PREPARE -> {//准备中
-                    mediaPlayer!!.prepareMedia()
-                }
-                IjkMediaPlayerUtil.MEDIA_STOP -> {//停止就重新准备
-                    initAudio(0)
-                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
-                }
-                IjkMediaPlayerUtil.MEDIA_PLAY -> {//播放点击就暂停
-                    mediaPlayer!!.pausePlay()
-                }
-                IjkMediaPlayerUtil.MEDIA_PAUSE -> {//暂停再次点击就播放
-                    mediaPlayer!!.resumePlay()
-                }
-            }
-        }
-    }
-
-
-    /**
-     * 初始化播放视频
-     */
-    private fun initVideo() {
-        squareUserVideo.detail_btn.onClick {
-            if (squareUserVideo.isInPlayingState) {
-                SwitchUtil.savePlayState(squareUserVideo)
-                squareUserVideo.gsyVideoManager.setLastListener(squareUserVideo)
-                SquarePlayDetailActivity.startActivity(this, squareUserVideo, squareBean!!, 0)
-            }
-        }
-
-        SwitchUtil.optionPlayer(squareUserVideo, squareBean!!.video_json?.get(0)?.url ?: "", true)
-        squareUserVideo.setUp(squareBean!!.video_json?.get(0)?.url ?: "", false, null, null, "")
-//        squareUserVideo.setSwitchUrl(squareBean!!.video_json?.get(0)?.url ?: "")
-//        squareUserVideo.setSwitchCache(false)
-//        squareUserVideo.setUp(squareBean!!.video_json?.get(0)?.url ?: "", false, "")
-        squareUserVideo.startPlayLogic()
-    }
-
-
-    /**
-     * 初始化图片列表
-     */
-    private val imgsAdapter by lazy { ListSquareImgsAdapter(this, squareBean!!.photo_json ?: mutableListOf()) }
-
-    private fun initPics() {
-        if (squareBean!!.photo_json != null && squareBean!!.photo_json!!.size > 0) {
-            squareUserPics.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-            squareUserPics.adapter = imgsAdapter
-
-            //分页滑动效果
-            squareUserPics.onFlingListener = null
-            CustomPagerSnapHelper().attachToRecyclerView(squareUserPics)
-            //滑动动画
-            squareUserPics.addOnScrollListener(GalleryOnScrollListener())
-            imgsAdapter.setOnItemClickListener { _, view, position ->
-                startActivity<BigImageActivity>(
-                    BigImageActivity.IMG_KEY to squareBean!!,
-                    BigImageActivity.IMG_POSITION to position
-                )
-            }
-        }
-    }
-
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
         commentParams["page"] = page
@@ -510,12 +338,11 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
-        adapter.data.clear()
+        commentAdapter.data.clear()
         commentParams["page"] = page
         mPresenter.getCommentList(commentParams, true)
 
     }
-
 
     override fun onGetSquareInfoResults(data: SquareBean?) {
         if (data != null) {
@@ -529,13 +356,21 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             data.type = when {
                 !data.video_json.isNullOrEmpty() -> SquareBean.VIDEO
-                !data.audio_json.isNullOrEmpty() -> SquareBean.AUDIO
+                !data.audio_json.isNullOrEmpty() -> {
+                    initAudio(0)
+                    mediaPlayer!!.setDataSource(data.audio_json?.get(0)?.url ?: "").prepareMedia()
+                    SquareBean.AUDIO
+                }
                 !data.photo_json.isNullOrEmpty() ||
                         (data.photo_json.isNullOrEmpty() && data.audio_json.isNullOrEmpty() && data.video_json.isNullOrEmpty()) -> SquareBean.PIC
                 else -> SquareBean.PIC
             }
             squareBean = data
-            initData()
+            squareAdapter.addData(squareBean!!)
+            if (squareBean!!.type == SquareBean.AUDIO) {
+                initAudio(0)
+                mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+            }
             commentParams["square_id"] = "${squareBean!!.id}"
             mPresenter.getCommentList(commentParams, true)
         } else {
@@ -549,18 +384,18 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             refreshLayout.setNoMoreData(false)
             if (allCommentBean != null) {
                 if (allCommentBean.hotlist != null && allCommentBean.hotlist!!.size > 0) {
-                    adapter.addData(CommentBean(content = "热门评论", type = CommentBean.TITLE))
+                    commentAdapter.addData(CommentBean(content = "热门评论", type = CommentBean.TITLE))
                     for (i in 0 until allCommentBean.hotlist!!.size) {
                         allCommentBean.hotlist!![i]!!.type = CommentBean.CONTENT
                     }
-                    adapter.addData(allCommentBean.hotlist!!)
+                    commentAdapter.addData(allCommentBean.hotlist!!)
                 }
                 if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
-                    adapter.addData(CommentBean(content = "所有评论", type = CommentBean.TITLE))
+                    commentAdapter.addData(CommentBean(content = "所有评论", type = CommentBean.TITLE))
                     for (i in 0 until allCommentBean.list!!.size) {
                         allCommentBean.list!![i]!!.type = CommentBean.CONTENT
                     }
-                    adapter.addData(allCommentBean.list!!)
+                    commentAdapter.addData(allCommentBean.list!!)
                 }
             }
             refreshLayout.finishRefresh(true)
@@ -575,13 +410,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                     for (i in 0 until allCommentBean.hotlist!!.size) {
                         allCommentBean.hotlist!![i]!!.type = 1
                     }
-                    adapter.addData(allCommentBean.hotlist!!)
+                    commentAdapter.addData(allCommentBean.hotlist!!)
                 }
                 if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
                     for (i in 0 until allCommentBean.list!!.size) {
                         allCommentBean.list!![i]!!.type = 1
                     }
-                    adapter.addData(allCommentBean.list!!)
+                    commentAdapter.addData(allCommentBean.list!!)
                 }
             }
             refreshLayout.finishLoadMore(true)
@@ -603,26 +438,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
     override fun onGetSquareLikeResult(result: Boolean) {
-        if (result) {
-            squareBean!!.isliked = if (squareBean!!.isliked == 0) {
-                squareBean!!.like_cnt = squareBean!!.like_cnt?.plus(1)
-                1
-            } else {
-                squareBean!!.like_cnt = squareBean!!.like_cnt?.minus(1)
-                0
-            }
-            squareDianzanBtn1.text = "${squareBean!!.like_cnt}"
-            squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
-                resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
-                null,
-                null,
-                null
-            )
-
-            EventBus.getDefault()
-                .post(RefreshLikeEvent(squareBean?.isliked ?: 0, intent.getIntExtra("position", -1)))
-//            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
-        }
     }
 
     override fun onGetSquareReport(data: BaseResp<Any?>?) {
@@ -635,25 +450,26 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         resetCommentEt()
         if (result) {
             page = 1
-            adapter.data.clear()
+            commentAdapter.data.clear()
             commentParams["page"] = page
             mPresenter.getCommentList(commentParams, true)
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.plus(1)
             EventBus.getDefault().post(RefreshCommentEvent(squareBean!!.comment_cnt, intent.getIntExtra("position", 0)))
-            squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
+            squareAdapter.data[0].comment_cnt = squareBean!!.comment_cnt
+            squareAdapter.notifyItemChanged(0)
         }
     }
 
     override fun onLikeCommentResult(data: BaseResp<Any?>, position: Int) {
         if (data.code == 200) {
-            adapter.data[position].isliked = if (adapter.data[position].isliked == 0) {
-                adapter.data[position].like_count = adapter.data[position].like_count!!.plus(1)
+            commentAdapter.data[position].isliked = if (commentAdapter.data[position].isliked == 0) {
+                commentAdapter.data[position].like_count = commentAdapter.data[position].like_count!!.plus(1)
                 1
             } else {
-                adapter.data[position].like_count = adapter.data[position].like_count!!.minus(1)
+                commentAdapter.data[position].like_count = commentAdapter.data[position].like_count!!.minus(1)
                 0
             }
-            adapter.notifyItemChanged(position)
+            commentAdapter.notifyItemChanged(position)
         } else {
             CommonFunction.toast(data.msg)
         }
@@ -661,11 +477,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
     override fun onDeleteCommentResult(data: BaseResp<Any?>, position: Int) {
         if (data.msg == "删除成功!") {
-            adapter.data.removeAt(position)
-            adapter.notifyItemRemoved(position)
+            commentAdapter.data.removeAt(position)
+            commentAdapter.notifyItemRemoved(position)
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.minus(1)
             EventBus.getDefault().post(RefreshCommentEvent(squareBean!!.comment_cnt, intent.getIntExtra("position", 0)))
-            squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
+            squareAdapter.data[0].comment_cnt = squareBean!!.comment_cnt
+            squareAdapter.notifyItemChanged(0)
         }
     }
 
@@ -723,83 +540,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         val transpondDialog = TranspondDialog(this, squareBean!!)
         transpondDialog.show()
     }
-
-
-//    var moreActionDialog: MoreActionDialog? = null
-//    /**
-//     * 展示更多操作对话框
-//     */
-//    private fun showMoreDialog() {
-//        if (moreActionDialog == null)
-//            moreActionDialog = MoreActionDialog(this!!, "square")
-//        moreActionDialog!!.show()
-//
-//        if (squareBean!!.iscollected == 0) {
-//            moreActionDialog!!.collect.text = "收藏"
-//            moreActionDialog!!.collectBtn.setImageResource(R.drawable.icon_collect_no)
-//        } else {
-//            moreActionDialog!!.collect.text = "取消收藏"
-//            moreActionDialog!!.collectBtn.setImageResource(R.drawable.icon_collectt)
-//        }
-//
-//        if (squareBean!!.accid == UserManager.getAccid()) {
-//            moreActionDialog!!.llDelete.visibility = View.VISIBLE
-//            moreActionDialog!!.llJubao.visibility = View.GONE
-//            moreActionDialog!!.llCollect.visibility = View.GONE
-//        } else {
-//            moreActionDialog!!.llDelete.visibility = View.GONE
-//            moreActionDialog!!.llJubao.visibility = View.VISIBLE
-//            moreActionDialog!!.llCollect.visibility = View.VISIBLE
-//        }
-//        moreActionDialog!!.llDelete.onClick {
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "square_id" to squareBean!!.id!!
-//            )
-//            mPresenter.removeMySquare(params)
-//            moreActionDialog!!.dismiss()
-//
-//        }
-//
-//        moreActionDialog!!.llCollect.onClick {
-//            //发起收藏请求
-//            val params = hashMapOf(
-//                "accid" to UserManager.getAccid(),
-//                "token" to UserManager.getToken(),
-//                "type" to if (squareBean!!.iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to squareBean!!.id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareCollect(params)
-//            moreActionDialog!!.dismiss()
-//        }
-//        moreActionDialog!!.llJubao.onClick {
-//            //发起举报请求
-//            mPresenter.getSquareReport(
-//                hashMapOf(
-//                    "accid" to UserManager.getAccid(),
-//                    "token" to UserManager.getToken(),
-//                    "square_id" to squareBean!!.id!!,
-//                    "_timestamp" to System.currentTimeMillis()
-//                )
-//            )
-//            moreActionDialog!!.dismiss()
-//
-//        }
-//        moreActionDialog!!.cancel.onClick {
-//            moreActionDialog!!.dismiss()
-//        }
-//        moreActionDialog!!.setOnDismissListener {
-//            moreActionDialog = null
-//        }
-//
-//    }
-
 
     lateinit var moreActionDialog: MoreActionNewDialog
     /**
@@ -900,7 +640,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     private fun showCommentDialog(position: Int) {
         if (commentActionDialog == null) {
             //判断该条评论是不是自己发的
-            if (adapter.data[position].member_accid!! == UserManager.getAccid())
+            if (commentAdapter.data[position].member_accid!! == UserManager.getAccid())
                 commentActionDialog = CommentActionDialog(this, "self")
             else
                 commentActionDialog = CommentActionDialog(this, "others")
@@ -915,8 +655,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         commentActionDialog!!.replyComment.onClick {
             reply = true
-            reply_id = adapter.data[position].id!!
-            showCommentEt.hint = "『回复\t${adapter.data[position].nickname}：』"
+            reply_id = commentAdapter.data[position].id!!
+            showCommentEt.hint = "『回复\t${commentAdapter.data[position].nickname}：』"
             showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 100L)
 
             commentActionDialog!!.dismiss()
@@ -928,7 +668,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 hashMapOf(
                     "token" to UserManager.getToken(),
                     "accid" to UserManager.getAccid(),
-                    "id" to adapter.data[position].id!!
+                    "id" to commentAdapter.data[position].id!!
                 )
                 , position
             )
@@ -941,7 +681,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 hashMapOf(
                     "token" to UserManager.getToken(),
                     "accid" to UserManager.getAccid(),
-                    "id" to adapter.data[position].id!!
+                    "id" to commentAdapter.data[position].id!!
                 )
                 , position
             )
@@ -958,7 +698,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         //获取剪贴板管理器
         val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         //创建普通字符串clipData
-        val clipData = ClipData.newPlainText("label", "${adapter.data[position].content}")
+        val clipData = ClipData.newPlainText("label", "${commentAdapter.data[position].content}")
         //将clipdata内容放到系统剪贴板里
         cm.setPrimaryClip(clipData)
         CommonFunction.toast("已复制内容到剪贴板")
@@ -988,19 +728,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         super.onStart()
         Log.d(TAG1, "super.onStart()")
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
-//        if (!enterPosition.isNullOrEmpty()) {
-//            showCommentEt.isFocusable = true
-//            showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 500L)
-//        }
     }
 
     override fun onResume() {
         super.onResume()
         Log.d(TAG1, "super.onResume()")
-        squareUserVideo.onVideoResume(false)
         if (mediaPlayer != null)
             mediaPlayer!!.resumePlay()
-//        squareUserVideo.onVideoResume()
     }
 
     override fun onDestroy() {
@@ -1012,6 +746,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
         if (showCommentEt.isFocused)
             resetCommentEt()
+
+//        GSYVideoManager.releaseAllVideos()
+        EventBus.getDefault().unregister(this)
     }
 
 
@@ -1023,10 +760,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
         if (showCommentEt.isFocused)
             resetCommentEt()
-        //释放所有
-        squareUserVideo.gsyVideoManager.setListener(squareUserVideo.gsyVideoManager.lastListener())
-        squareUserVideo.gsyVideoManager.setLastListener(null)
-        squareUserVideo.release()
         GSYVideoManager.releaseAllVideos()
         SwitchUtil.release()
     }
@@ -1040,10 +773,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             mediaPlayer = null
         }
 
-        //释放所有
-        squareUserVideo.gsyVideoManager.setListener(squareUserVideo.gsyVideoManager.lastListener())
-        squareUserVideo.gsyVideoManager.setLastListener(null)
-        squareUserVideo.release()
         GSYVideoManager.releaseAllVideos()
         SwitchUtil.release()
         super.onBackPressed()
@@ -1061,50 +790,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         showCommentEt.text.clear()
         showCommentEt.hint = "有什么感受说来听听"
         KeyboardUtils.hideSoftInput(showCommentEt)
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
-                GSYVideoManager.releaseAllVideos()
-                SwitchUtil.clonePlayState(squareUserVideo)
-                val state = squareUserVideo.currentState
-                //延迟加2S
-                squareUserVideo.seekOnStart = squareUserVideo.gsyVideoManager.currentPosition + 1000
-                squareUserVideo.startPlayLogic()
-                squareUserVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
-                    override fun onStartPrepared(url: String?, vararg objects: Any?) {
-                        super.onStartPrepared(url, *objects)
-                        GSYVideoManager.instance().isNeedMute = true
-                    }
-
-                    override fun onPrepared(url: String?, vararg objects: Any?) {
-                        super.onPrepared(url, *objects)
-                        GSYVideoManager.instance().isNeedMute = true
-                        if (state == GSYVideoView.CURRENT_STATE_PAUSE) {
-                            squareUserVideo.onVideoPause()
-                        } else if (state == GSYVideoView.CURRENT_STATE_AUTO_COMPLETE || state == GSYVideoView.CURRENT_STATE_ERROR) {
-                            SwitchUtil.release()
-                            GSYVideoManager.releaseAllVideos()
-                        }
-                    }
-
-                    override fun onClickResume(url: String?, vararg objects: Any?) {
-                        super.onClickResume(url, *objects)
-                        squareUserVideo.onVideoResume()
-                    }
-
-                    override fun onAutoComplete(url: String?, vararg objects: Any?) {
-                        super.onAutoComplete(url, *objects)
-                        SwitchUtil.release()
-                        GSYVideoManager.releaseAllVideos()
-                    }
-                })
-            }
-        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
@@ -1131,5 +816,58 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         return super.dispatchTouchEvent(ev)
     }
 
+
+    /**
+     * 无缝切换小屏和全屏
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onNotifyEvent(event: NotifyEvent) {
+        val pos = event.position
+        val switchVideo = squareAdapter.getViewByPosition(pos, R.id.squareUserVideo) as SwitchVideo
+        SwitchUtil.clonePlayState(switchVideo)
+        val state = switchVideo.currentState
+        //延迟加2S
+        switchVideo.seekOnStart = switchVideo.gsyVideoManager.currentPosition
+        switchVideo.startPlayLogic()
+        switchVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+            override fun onStartPrepared(url: String?, vararg objects: Any?) {
+                super.onStartPrepared(url, *objects)
+                GSYVideoManager.instance().isNeedMute = false
+            }
+
+            override fun onPrepared(url: String?, vararg objects: Any?) {
+                super.onPrepared(url, *objects)
+                GSYVideoManager.instance().isNeedMute = false
+                if (state == GSYVideoView.CURRENT_STATE_PAUSE) {
+                    switchVideo.onVideoPause()
+                } else if (state == GSYVideoView.CURRENT_STATE_AUTO_COMPLETE || state == GSYVideoView.CURRENT_STATE_ERROR) {
+                    SwitchUtil.release()
+                    GSYVideoManager.releaseAllVideos()
+                }
+            }
+
+            override fun onClickResume(url: String?, vararg objects: Any?) {
+                super.onClickResume(url, *objects)
+                switchVideo.onVideoResume()
+            }
+
+            override fun onAutoComplete(url: String?, vararg objects: Any?) {
+                super.onAutoComplete(url, *objects)
+                SwitchUtil.release()
+                GSYVideoManager.releaseAllVideos()
+                squareAdapter.refreshNotifyItemChanged(pos)
+
+            }
+        })
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK)
+            if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
+                onNotifyEvent(NotifyEvent(data!!.getIntExtra("position", -1)))
+            }
+    }
 
 }

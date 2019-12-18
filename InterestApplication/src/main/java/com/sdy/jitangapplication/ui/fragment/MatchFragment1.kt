@@ -40,10 +40,7 @@ import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
-import com.sdy.jitangapplication.ui.activity.MainActivity
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.ui.activity.MyIntentionActivity
-import com.sdy.jitangapplication.ui.activity.MyLabelActivity
+import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
@@ -144,6 +141,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         }
     }
 
+    //    CompleteLabelDialog
     private val manager by lazy { CardStackLayoutManager(activity!!, this) }
 
     private fun initView() {
@@ -155,6 +153,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         retryBtn.setOnClickListener(this)
         greetBtn.setOnClickListener(this)
         filterBtn.setOnClickListener(this)
+        completeLabelBtn.setOnClickListener(this)
         manageLabel.setOnClickListener(this)
         findToTalk.setOnClickListener(this)
         dislikeBtn.setOnClickListener(this)
@@ -269,6 +268,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             R.id.filterBtn -> {//筛选
                 FilterUserDialog(activity!!).show()
             }
+            R.id.completeLabelBtn -> {//完善标签
+                startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_ADD_NEW)
+            }
             R.id.manageLabel -> {//标签管理
                 startActivity<MyLabelActivity>("index" to checkedTitle - 1)
             }
@@ -350,8 +352,20 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
 
             matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
-            t1.text = "为你推荐${(matchBeans.mytags ?: mutableListOf<Newtag>()).size}个标签"
+            t1.text = "为你推荐${matchBeans.myinterest_count}个标签"
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
+            //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容
+            if ((matchBeans.mytags ?: mutableListOf<Newtag>()).size == 0) {
+                if (UserManager.isShowCompleteLabelDialog())
+                    completeLabelBtn.isVisible = true
+                else {
+                    matchBeans.interest_times = 1
+                    UserManager.saveCompleteLabelCount(matchBeans.interest_times)
+                    completeLabelBtn.isVisible = false
+                }
+            }
+
+
             //保存 VIP信息
             UserManager.saveUserVip(matchBeans.isvip)
             //保存认证信息
@@ -570,6 +584,18 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             .repeat(0)
             .playOn(card_stack_view)
     }
+    /**
+     * 是否展示完善标签
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onShowCompleteLabelEvent(event: ShowCompleteLabelEvent) {
+        if (event.show) {
+            completeLabelBtn.isVisible = true
+            UserManager.saveIsShowCompleteLabelDialog(true)
+        } else {
+            completeLabelBtn.isVisible = false
+        }
+    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -654,14 +680,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 paramsLike.height = 0
                 animation_like.layoutParams = paramsLike
 
-                animation_chathi.alpha = 0F
-                val paramsChathi = animation_chathi.layoutParams as RelativeLayout.LayoutParams
-                paramsChathi.width = 0
-                paramsChathi.height = 0
-                animation_chathi.layoutParams = paramsChathi
-
-
-
                 animation_dislike.alpha = ratio
                 val params = animation_dislike.layoutParams as RelativeLayout.LayoutParams
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
@@ -678,15 +696,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 paramsLike.height = 0
                 animation_dislike.layoutParams = paramsLike
                 animation_dislike.alpha = 0F
-
-
-                val paramsChathi = animation_chathi.layoutParams as RelativeLayout.LayoutParams
-                paramsChathi.width = 0
-                paramsChathi.height = 0
-                animation_chathi.layoutParams = paramsChathi
-                animation_chathi.alpha = 0F
-
-
 
                 animation_like.alpha = ratio
                 val params = animation_like.layoutParams as RelativeLayout.LayoutParams
@@ -727,6 +736,13 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 if (!UserManager.isUserVip() && UserManager.getSlideCount() > 0) {
                     UserManager.saveSlideCount(UserManager.getSlideCount().minus(1))
                     EventBus.getDefault().post(UpdateSlideCountEvent())
+                }
+                //如果当前弹窗的滑动剩余次数为0并且没有显示过完善标签的弹窗，就弹窗
+                if (UserManager.getCompleteLabelCount() != -1
+                    && UserManager.getCompleteLabelCount() == UserManager.slide_times
+                    && !UserManager.isShowCompleteLabelDialog()
+                ) {
+                    CompleteLabelDialog(activity!!).show()
                 }
                 params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
                 if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
@@ -782,11 +798,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     }
 
     private fun resetAnimation() {
-        val params = animation_chathi.layoutParams
-        params.width = 0
-        params.height = 0
-        animation_chathi.alpha = 0F
-        animation_chathi.layoutParams = params
 
         val params1 = animation_like.layoutParams
         params1.width = 0

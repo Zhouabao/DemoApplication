@@ -63,6 +63,29 @@ object UserManager {
 
 
     /**
+     * 保存当前需要弹去完善标签弹窗的次数
+     */
+    fun saveCompleteLabelCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("completeLabelCount", count)
+    }
+
+    fun getCompleteLabelCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("completeLabelCount", -1)
+    }
+
+    /**
+     * 是否弹窗过，弹过窗就直接浮窗
+     */
+    fun saveIsShowCompleteLabelDialog(show: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("IsShowCompleteLabelDialog", show)
+    }
+
+    fun isShowCompleteLabelDialog(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("IsShowCompleteLabelDialog", false)
+    }
+
+
+    /**
      * 保存当前调研弹窗的版本号
      */
     fun saveCurrentSurveyVersion() {
@@ -278,7 +301,6 @@ object UserManager {
      * 登录成功保存用户信息
      */
     fun saveUserInfo(data: LoginBean) {
-        saveLabels(data.extra_data?.mytags ?: mutableListOf())
         if (data.userinfo != null) {
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo.nickname)
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
@@ -290,6 +312,8 @@ object UserManager {
 
             if (data.userinfo.isfaced != -1)
                 saveUserVerify(data.userinfo.isfaced)
+            SPUtils.getInstance(Constants.SPNAME).put("isInterestLabel", data.extra_data?.myinterest ?: false)
+            SPUtils.getInstance(Constants.SPNAME).put("userIntroduce", data.extra_data?.aboutme ?: "")
         }
     }
 
@@ -331,9 +355,11 @@ object UserManager {
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").contains(Constants.DEFAULT_AVATAR) ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
-                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0)
-//                SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty() ||
-//                SPUtils.getInstance(Constants.SPNAME).getString("birth").toLong() == 0L )
+                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0 ||
+                SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce").isNullOrEmpty() ||
+                SPUtils.getInstance(Constants.SPNAME).getBoolean("isInterestLabel", false) == false
+                )
+
     }
 
 
@@ -418,6 +444,12 @@ object UserManager {
     fun getAvator(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("avatar")
     }
+
+
+    fun saveIsInterestLabel(isInterest: Boolean) {
+        return SPUtils.getInstance(Constants.SPNAME).put("isInterestLabel", isInterest)
+    }
+
 
     /**
      * 判断用户是否是vip
@@ -505,6 +537,7 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", id)
     }
 
+
     fun getGlobalLabelName(): String {
         val labels = getSpLabels()
         val id = getGlobalLabelId()
@@ -550,6 +583,8 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("isvip")
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
         SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
+        SPUtils.getInstance(Constants.SPNAME).remove("isInterestLabel")
+        SPUtils.getInstance(Constants.SPNAME).remove("userIntroduce")
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
         SPUtils.getInstance(Constants.SPNAME).remove("countdowntime")
         SPUtils.getInstance(Constants.SPNAME).remove("lightingCount")
@@ -605,6 +640,9 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("currentVersion")
         SPUtils.getInstance(Constants.SPNAME).remove("showcard_cnt")
         SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("completeLabelCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("IsShowCompleteLabelDialog")
+
         //账号异常记录清除
         SPUtils.getInstance(Constants.SPNAME).remove("accountDanger")
 
@@ -764,23 +802,27 @@ object UserManager {
         if (data == null || data.userinfo == null || data.userinfo.nickname.isNullOrEmpty()) {
             context.startActivity<UserNickNameActivity>()
             return
-        } else if (data.userinfo.birth == 0) {
+        } else if (data.userinfo.birth == 0) {//生日没填写
             context.startActivity<UserBirthActivity>()
             return
-        } else if (data.userinfo.gender == 0) {
+        } else if (data.userinfo.gender == 0) {//性别没选择
             context.startActivity<UserGenderActivity>()
             return
-        } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {
+        } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {//头像未选择
             context.startActivity<UserAvatorActivity>()
             return
-        } else {
+        } else if (data.extra_data?.myinterest ?: false == false) {//感兴趣标签没有选择
+            context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
+            return
+        } else if (data.extra_data?.aboutme.isNullOrEmpty()) {//个人介绍未填写
+            context.startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
+            return
+        } else {//跳到主页
+
             saveUserInfo(data)
-            if (getSpLabels().isNullOrEmpty()) {//标签没有选择
-                context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
-            } else {//跳到主页
-                AppManager.instance.finishAllActivity()
-                context.startActivity<MainActivity>()
-            }
+            AppManager.instance.finishAllActivity()
+            context.startActivity<MainActivity>()
+
         }
     }
 

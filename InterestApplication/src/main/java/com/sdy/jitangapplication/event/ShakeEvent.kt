@@ -7,3 +7,6 @@ class ShakeEvent(val left: Boolean)
 class UpdateHiCountEvent()
 
 class GreetEvent(val context: Context, val success: Boolean)
+
+
+class ShowCompleteLabelEvent(val show: Boolean)

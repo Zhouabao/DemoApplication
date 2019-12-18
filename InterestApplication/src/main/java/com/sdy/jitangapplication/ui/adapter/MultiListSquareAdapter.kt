@@ -167,7 +167,7 @@ class MultiListSquareAdapter(
                 if (resetAudioListener != null) {
                     resetAudioListener!!.resetAudioState()
                 }
-                SquareCommentDetailActivity.start(
+                SquareCommentDetailActivity1.start(
                     mContext!!,
                     data[holder.layoutPosition - headerLayoutCount],
                     enterPosition = "comment",
@@ -224,10 +224,10 @@ class MultiListSquareAdapter(
                         holder.itemView.squareUserPics1.adapter = adapter
 
                         //分页滑动效果
-                        holder.itemView.squareUserPics1.onFlingListener = null;
-                        CustomPagerSnapHelper().attachToRecyclerView(holder.itemView.squareUserPics1);
-                        //        //滑动动画
-                        holder.itemView.squareUserPics1.addOnScrollListener(GalleryOnScrollListener());
+                        holder.itemView.squareUserPics1.onFlingListener = null
+                        CustomPagerSnapHelper().attachToRecyclerView(holder.itemView.squareUserPics1)
+                        //滑动动画
+                        holder.itemView.squareUserPics1.addOnScrollListener(GalleryOnScrollListener())
                         adapter.setOnItemClickListener { adapter, view, position ->
                             if (resetAudioListener != null) {
                                 resetAudioListener!!.resetAudioState()
@@ -275,7 +275,7 @@ class MultiListSquareAdapter(
                         }
 
                         override fun onPrepared(url: String?, vararg objects: Any?) {
-                            if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen) {
+                            if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen && type != MySquareFragment.TYPE_SQUARE_COMMENT) {
                                 //静音
                                 GSYVideoManager.instance().isNeedMute = true
                             }
@@ -285,7 +285,8 @@ class MultiListSquareAdapter(
                         override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
                             super.onQuitFullscreen(url, *objects)
                             //退出全屏静音
-                            GSYVideoManager.instance().isNeedMute = true
+                            if (type != MySquareFragment.TYPE_SQUARE_COMMENT)
+                                GSYVideoManager.instance().isNeedMute = true
                         }
 
                         override fun onEnterFullscreen(url: String?, vararg objects: Any?) {
@@ -307,6 +308,9 @@ class MultiListSquareAdapter(
                         null,
                         ""
                     )
+                    if (type == MySquareFragment.TYPE_SQUARE_COMMENT) {
+                        holder.itemView.squareUserVideo.startPlayLogic()
+                    }
                 }
                 SquareBean.AUDIO -> {
                     //点击播放

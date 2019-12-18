@@ -46,10 +46,7 @@ import com.sdy.jitangapplication.presenter.SquarePresenter
 import com.sdy.jitangapplication.presenter.view.SquareView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
-import com.sdy.jitangapplication.ui.activity.AllTitleActivity
-import com.sdy.jitangapplication.ui.activity.MyLabelActivity
-import com.sdy.jitangapplication.ui.activity.PublishActivity
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
+import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.AllTitleAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
@@ -310,12 +307,13 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         labelAdapter.setNewData(labelList)
         labelAdapter.setOnItemClickListener { _, view, position ->
             if (labelAdapter.enable) {
+                labelAdapter.enable = false
                 for (index in 0 until labelAdapter.data.size) {
                     labelAdapter.data[index].checked = index == position
                     if (index == position)
                         labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), position)
-                    updateChooseTitle(position)
                 }
+                updateChooseTitle(position)
                 labelAdapter.notifyDataSetChanged()
             }
         }
@@ -325,9 +323,9 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
          */
         if (sp.getInt("filter_gender", 3) == 3) {
             filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
-        }else if (sp.getInt("filter_gender", 3) == 1) {
+        } else if (sp.getInt("filter_gender", 3) == 1) {
             filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
-        }else if (sp.getInt("filter_gender", 3) == 2) {
+        } else if (sp.getInt("filter_gender", 3) == 2) {
             filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
         }
         filterGenderBtn.onClick {
@@ -376,13 +374,13 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
      */
     private fun updateChooseTitle(position: Int) {
         if (position == chooseTitileIndex - 1) {
+            labelAdapter.enable = true
             return
         }
         setViewState(LOADING)
         chooseTitileIndex = position + 1
         listParams["type"] = chooseTitileIndex
         refreshLayout.autoRefresh()
-        labelAdapter.enable = false
 
         when (position) {
             0 -> {
@@ -467,7 +465,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         adapter.setOnItemClickListener { _, view, position ->
             view.isEnabled = false
             resetAudio()
-            SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
+            SquareCommentDetailActivity1.start(activity!!, adapter.data[position], position = position)
             view.postDelayed({ view.isEnabled = true }, 1000L)
         }
 
@@ -631,10 +629,12 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {
-        labelAdapter.enable = true
+        refreshLayout.postDelayed({
+            labelAdapter.enable = true
+        }, 500L)
         if (result) {
+            adapter.removeAllHeaderView()
             if (chooseTitileIndex == SQUARE_SAME_PERSON && (data?.banner_title ?: mutableListOf()).size > 0) {
-                adapter.removeAllHeaderView()
                 adapter.addHeaderView(initRecommendTopicHeader())
                 topicAdapter.setNewData(data?.banner_title ?: mutableListOf<TopicBean>())
                 adapter.headerLayout.isVisible = true
@@ -652,6 +652,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             setViewState(CONTENT)
 //            (data!!.list?: mutableListOf<SquareBean>()).clear()
             if (data!!.list != null && data!!.list!!.size > 0) {
+                adapter.isUseEmpty(false)
                 for (tempData in 0 until data!!.list!!.size) {
                     data!!.list!![tempData].type = when {
                         !data!!.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
@@ -679,7 +680,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     adapter.emptyView.emptyFriendTitle.text = "标签未完善"
                     adapter.emptyView.emptyFriendGoBtn.text = "完善标签"
                     adapter.emptyView.emptyFriendGoBtn.onClick {
-                        startActivity<MyLabelActivity>("index" to chooseTitileIndex - 1)
+                        startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_ADD_NEW)
                     }
                 } else if (chooseTitileIndex == SQUARE_FRIEND) {
                     adapter.setEmptyView(R.layout.empty_friend_layout, squareDynamicRv)

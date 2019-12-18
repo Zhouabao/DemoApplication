@@ -27,7 +27,7 @@ import com.sdy.jitangapplication.presenter.SquarePresenter
 import com.sdy.jitangapplication.presenter.view.SquareView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity1
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
@@ -123,7 +123,7 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
                 mediaPlayer!!.resetMedia()
                 mediaPlayer = null
             }
-            SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
+            SquareCommentDetailActivity1.start(activity!!, adapter.data[position], position = position)
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -141,7 +141,7 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
                         mediaPlayer!!.resetMedia()
                         mediaPlayer = null
                     }
-                    SquareCommentDetailActivity.start(
+                    SquareCommentDetailActivity1.start(
                         activity!!,
                         adapter.data[position],
                         enterPosition = "comment",

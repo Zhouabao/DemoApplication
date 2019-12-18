@@ -25,7 +25,9 @@ data class MatchListBean(
     val my_like_times: Int,//（我的次数）
     val total_like_times: Int,//  total_like_times（最高次数）
     var mytags: MutableList<Newtag>? = null,
-    var intention: LabelQualityBean? = null
+    var intention: LabelQualityBean? = null,
+    var myinterest_count: Int=0,
+    var interest_times: Int=0
 )
 
 /**
@@ -53,7 +55,7 @@ data class MatchBean(
     var job: String? = null,
     var constellation: String? = null,
     var square: MutableList<Square>? = null,
-    var square_count: Int? = 0,
+    var square_cnt: Int? = 0,
     var tags: MutableList<TagBean>?,
     var lightningcnt: Int?,
     var countdown: Int = 0,

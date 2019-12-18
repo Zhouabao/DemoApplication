@@ -20,8 +20,6 @@ import com.sdy.jitangapplication.utils.UserManager
  *    version: 1.0
  */
 class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
-
-
     /**
      *  获取标签的  特质/模板/意向  type  1 2 3
      */

@@ -4,10 +4,18 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
 import com.kotlin.base.ext.onClick
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
-import kotlinx.android.synthetic.main.dialog_harassment.*
+import com.sdy.jitangapplication.event.ShowCompleteLabelEvent
+import com.sdy.jitangapplication.ui.activity.AddLabelActivity
+import com.sdy.jitangapplication.utils.UserManager
+import kotlinx.android.synthetic.main.dialog_complete_label.*
+import kotlinx.android.synthetic.main.dialog_harassment.harassmentClose
+import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -27,6 +35,17 @@ class CompleteLabelDialog(val context1: Context) : Dialog(context1, R.style.MyDi
         harassmentClose.onClick {
             dismiss()
         }
+        completeLabelBtn.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                context1.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_ADD_NEW)
+            }
+
+        })
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        EventBus.getDefault().post(ShowCompleteLabelEvent(true))
     }
 
 
@@ -38,8 +57,8 @@ class CompleteLabelDialog(val context1: Context) : Dialog(context1, R.style.MyDi
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         params?.windowAnimations = R.style.MyDialogCenterAnimation
         window?.attributes = params
-        setCanceledOnTouchOutside(true)
-
+        setCanceledOnTouchOutside(false)
+        setCancelable(false)
     }
 
 

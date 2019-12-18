@@ -13,6 +13,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.ShowCompleteLabelEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
 import com.sdy.jitangapplication.model.AddLabelBean
 import com.sdy.jitangapplication.model.MyLabelBean
@@ -26,6 +27,7 @@ import kotlinx.android.synthetic.main.activity_add_label.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 
 /**
  * 添加标签activity
@@ -80,9 +82,9 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         setSwipeBackEnable(from != FROM_REGISTER)
         btnBack.isVisible = from != FROM_REGISTER
         hotT1.text = if (from == FROM_REGISTER || from == FROM_INTERSERT_LABEL) {
-            "感兴趣的标签"
+            "想认识的人"
         } else {
-            "添加你的兴趣"
+            "添加你的标签"
         }
         rightBtn1.isEnabled = true
         rightBtn1.isVisible = (from == FROM_REGISTER || from == FROM_INTERSERT_LABEL)
@@ -225,7 +227,14 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
 
     override fun saveInterestTagResult(result: Boolean) {
         if (result) {
-            EventBus.getDefault().post(UpdateEditModeEvent(MyLabelActivity.MY_INTEREST_LABEL))
+            if (from == FROM_REGISTER) {
+                startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
+            } else if (from == FROM_INTERSERT_LABEL) {
+                EventBus.getDefault().post(UpdateEditModeEvent(MyLabelActivity.MY_INTEREST_LABEL))
+            } else {
+                EventBus.getDefault().post(UpdateEditModeEvent(MyLabelActivity.MY_LABEL))
+                EventBus.getDefault().post(ShowCompleteLabelEvent(false))
+            }
             finish()
         }
 

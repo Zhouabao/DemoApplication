@@ -274,7 +274,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 }
                 //点击内容跳转到评论详情页面
                 R.id.detailPlayContent, R.id.detailPlayCommentBtn -> {
-                    SquareCommentDetailActivity.start(this, adapter.data[position])
+                    SquareCommentDetailActivity1.start(this, adapter.data[position])
                 }
                 R.id.audioFl -> {
                     hideCover(position, SquareBean.AUDIO)

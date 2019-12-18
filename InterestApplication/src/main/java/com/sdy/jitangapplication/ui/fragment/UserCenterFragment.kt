@@ -27,6 +27,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -68,6 +69,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         const val REQUEST_MY_SQUARE = 12
         const val REQUEST_ID_VERIFY = 13
         const val REQUEST_PUBLISH = 14
+        const val REQUEST_INTENTION = 15
     }
 
     //用户标签adapter
@@ -365,6 +367,9 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             } else if (requestCode == REQUEST_ID_VERIFY) {
                 userInfoBean?.userinfo?.isfaced = UserManager.isUserVerify()
                 checkVerify()
+            } else if (requestCode == REQUEST_INTENTION) {
+                if (data != null && data.getSerializableExtra("intention") != null)
+                    userInfoBean?.userinfo?.intention = data.getSerializableExtra("intention") as LabelQualityBean?
             }
         }
     }
@@ -412,7 +417,11 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             // 我的意愿
             R.id.userIntention -> {
-                startActivity<MyIntentionActivity>("from" to MyIntentionActivity.FROM_USERCENTER)
+                startActivityForResult<MyIntentionActivity>(
+                    REQUEST_INTENTION,
+                    "id" to userInfoBean?.userinfo?.intention?.id,
+                    "from" to MyIntentionActivity.FROM_USERCENTER
+                )
             }
             //我的来访
             R.id.userVisit -> {

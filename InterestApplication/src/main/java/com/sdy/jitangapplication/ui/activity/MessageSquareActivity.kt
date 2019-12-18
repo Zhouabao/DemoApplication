@@ -88,12 +88,12 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
                 1 -> {//点击点赞跳转动态详情
                     //0文本 1图片 2视频 3 语音
                     if (item.category == 0)
-                        SquareCommentDetailActivity.start(this, squareId = item.id ?: 0)
+                        SquareCommentDetailActivity1.start(this, squareId = item.id ?: 0)
                     else
                         SquarePlayListDetailActivity.start(this, item.id ?: 0)
                 }
                 2, 3 -> {//点击评论进入评论详情
-                    SquareCommentDetailActivity.start(this, squareId = item.id ?: 0, enterPosition = "comment")
+                    SquareCommentDetailActivity1.start(this, squareId = item.id ?: 0, enterPosition = "comment")
                 }
             }
         }

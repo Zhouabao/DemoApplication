@@ -45,12 +45,9 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
 
         hotT1.text = "我的意向"
         btnBack.onClick {
-            if (getCheckedIntention() != null)
-                intent.putExtra("intention", getCheckedIntention())
-            setResult(Activity.RESULT_OK, intent)
             finish()
         }
-        rightBtn1.isVisible = true
+        rightBtn1.isVisible = intent.getIntExtra("from", FROM_USERCENTER) != FROM_REGISTER
         rightBtn1.text = "保存"
         rightBtn1.isEnabled = false
         rightBtn1.onClick(object : CustomClickListener() {
@@ -60,7 +57,13 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
                     return
                 }
 
-                mPresenter.saveRegisterInfo(intention_id = getCheckedIntentionId())
+                if (intent.getIntExtra("from", FROM_USERCENTER) == FROM_REGISTER) {
+                    if (getCheckedIntention() != null)
+                        intent.putExtra("intention", getCheckedIntention())
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                } else
+                    mPresenter.saveRegisterInfo(intention_id = getCheckedIntentionId())
             }
 
 
@@ -84,6 +87,13 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
                 }
             }
             adapter.notifyDataSetChanged()
+            if (intent.getIntExtra("from", FROM_USERCENTER) == FROM_REGISTER) {
+                if (getCheckedIntention() != null) {
+                    intent.putExtra("intention", getCheckedIntention())
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
+            }
         }
     }
 

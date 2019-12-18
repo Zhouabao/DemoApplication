@@ -863,7 +863,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 )
             }
             R.id.userNickSign -> {//关于我
-                startActivityForResult<AboutMeActivity>(105, "content" to "${userNickSign.text}")
+                startActivityForResult<UserIntroduceActivity>(
+                    105,
+                    "content" to "${userNickSign.text}",
+                    "from" to UserIntroduceActivity.USERCENTER
+                )
             }
             R.id.userLoveStatus -> {//情感状态
                 showConditionPicker(

@@ -51,7 +51,7 @@ class AllTitlePresenter : BasePresenter<AllTitleView>() {
      * 获取标题内容
      */
     fun getTitleLists(page: Int, tag_id: Int) {
-        val params = hashMapOf<String, Any>("page" to page, "tag_id" to tag_id)
+        val params = hashMapOf<String, Any>("page" to page, "id" to tag_id)
         RetrofitFactory.instance.create(Api::class.java)
             .getTitleLists(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MutableList<TopicBean>?>>(mView) {

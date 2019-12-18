@@ -89,7 +89,7 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
         samePersonRv.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
             view.isEnabled = false
-            SquareCommentDetailActivity.start(this, squareId = adapter.data[position].id)
+            SquareCommentDetailActivity1.start(this, squareId = adapter.data[position].id)
             view.postDelayed({
                 view.isEnabled = true
             }, 1000L)

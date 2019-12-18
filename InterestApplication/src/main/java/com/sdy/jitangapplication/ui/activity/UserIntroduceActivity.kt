@@ -8,6 +8,8 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
@@ -16,29 +18,39 @@ import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.presenter.LabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.LabelQualityView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import kotlinx.android.synthetic.main.activity_label_introduce.*
+import kotlinx.android.synthetic.main.activity_user_introduce.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 
 /**
- * 兴趣介绍
- * accid复制
- * token
- * tag_id [int]	是	标签id
- * type [int]	是	默认 1 新建或则 编辑 2直接复用以前的
- * describle [string]	是	兴趣介绍
- * intention [json]	是	标签意向json串
- * label_quality[json]	是	标签特质 json串
+ * 个人介绍
  */
-class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQualityView, View.OnClickListener {
+class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQualityView, View.OnClickListener {
 
+    companion object {
+        const val REGISTER = 1
+        const val USERCENTER = 2
+    }
+
+    private val from by lazy { intent.getIntExtra("from", USERCENTER) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_label_introduce)
+        setContentView(R.layout.activity_user_introduce)
         initView()
 
     }
+
+    override fun onPause() {
+        super.onPause()
+        KeyboardUtils.hideSoftInput(labelIntroduceContent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        labelIntroduceContent.postDelayed({ KeyboardUtils.showSoftInput(labelIntroduceContent) }, 200L)
+    }
+
     private fun initView() {
         mPresenter = LabelQualityPresenter()
         mPresenter.mView = this
@@ -55,6 +67,11 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
         labelPurposeBtn.setOnClickListener(this)
         labelIntroduceModel.setOnClickListener(this)
 
+
+        if (!intent.getStringExtra("content").isNullOrEmpty()) {
+            labelIntroduceContent.setText(intent.getStringExtra("content"))
+            labelIntroduceContent.setSelection(labelIntroduceContent.length())
+        }
 
         labelIntroduceContent.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -87,15 +104,20 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
                 startActivityForResult<MyIntentionActivity>(100, "from" to MyIntentionActivity.FROM_REGISTER)
             }
             rightBtn1 -> { //保存个人介绍
-                mPresenter.saveRegisterInfo(
-                    intention_id = intention?.id ?: null,
-                    aboutme = labelIntroduceContent.text.toString()
-                )
+                if (from == REGISTER)
+                    mPresenter.saveRegisterInfo(
+                        intention_id = intention?.id ?: null,
+                        aboutme = labelIntroduceContent.text.toString()
+                    )
+                else {
+                    intent.putExtra("content", labelIntroduceContent.text.toString())
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                    KeyboardUtils.hideSoftInput(labelIntroduceContent)
+                }
             }
             labelIntroduceModel -> {//个人介绍模板
-                startActivity<ModelLabelIntroduceActivity>(
-                    "tag_id" to intent.getIntExtra("tag_id", 0)
-                )
+                startActivity<ModelAboutMeActivity>()
             }
         }
     }
@@ -123,7 +145,10 @@ class LabelIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQu
     }
 
     override fun onSaveRegisterInfo(success: Boolean) {
-
+        if (success) {
+            ActivityUtils.finishAllActivities()
+            startActivity<MainActivity>()
+        }
     }
 
     private var intention: LabelQualityBean? = null
