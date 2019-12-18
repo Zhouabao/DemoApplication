@@ -6,15 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.OtherLabelsBean
 import com.sdy.jitangapplication.presenter.MatchDetailLabelPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailLabelView
+import com.sdy.jitangapplication.ui.adapter.MatchDetailUserInterestLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchDetailUserLabelAdapter
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.footer__label_match_detail_user.view.*
 import kotlinx.android.synthetic.main.match_detail_user_label_fragment.*
 
 /**
@@ -29,6 +34,7 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
     }
 
     private val adapter by lazy { MatchDetailUserLabelAdapter() }
+    private val interestAdapter by lazy { MatchDetailUserInterestLabelAdapter() }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.match_detail_user_label_fragment, container, false)
     }
@@ -52,6 +58,7 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
 
         rvLabel.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         rvLabel.adapter = adapter
+        adapter.addFooterView(initFooterView())
         adapter.bindToRecyclerView(rvLabel)
     }
 
@@ -60,7 +67,7 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
             stateLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data != null) {
                 for (my in data.my) {
-                    for (other in data.other) {
+                    for (other in data.other_tags) {
                         if (my.id == other.id) {
                             other.same_label = true
                         }
@@ -74,13 +81,33 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
                         }
                     }
                 }
-                adapter.setNewData(data.other)
+                adapter.setNewData(data.other_tags)
+                if (!data.other_interest.isNullOrEmpty()) {
+                    interestAdapter.setNewData(data.other_interest)
+                } else {
+                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
+                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
+                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
+                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
+                    interestAdapter.addData(LabelQualityBean(title = "1111111",icon = UserManager.getAvator()))
+                }
             } else {
                 stateLabel.viewState = MultiStateView.VIEW_STATE_EMPTY
             }
         } else {
             stateLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
+    }
+
+    private fun initFooterView(): View? {
+        val footerView = LayoutInflater.from(activity!!)
+            .inflate(R.layout.footer__label_match_detail_user, rvLabel, false)
+        val manager = FlexboxLayoutManager(activity!!, FlexDirection.ROW, FlexWrap.WRAP)
+        manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.FLEX_START
+        footerView.labelInterestRv.layoutManager = manager
+        footerView.labelInterestRv.adapter = interestAdapter
+        return footerView
     }
 
 }

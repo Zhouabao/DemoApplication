@@ -85,9 +85,10 @@ data class MyLabelBean(
  */
 data class OtherLabelsBean(
     var my: MutableList<MyLabelBean> = mutableListOf(),
-    var other: MutableList<MyLabelBean> = mutableListOf()
+    var other_tags: MutableList<MyLabelBean> = mutableListOf(),
+    var my_interest: MutableList<LabelQualityBean> = mutableListOf(),
+    var other_interest: MutableList<LabelQualityBean> = mutableListOf()
 )
-
 
 //职业
 data class NewJobBean(

@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.google.android.flexbox.*
@@ -20,21 +19,9 @@ class MatchDetailUserLabelAdapter :
     BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.item_layout_match_detail_user) {
     override fun convert(helper: BaseViewHolder, item: MyLabelBean) {
         helper.itemView.labelName.text = item.title
-        helper.itemView.labelIntroduce.setContent(item.describle)
-        GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon, SizeUtils.dp2px(12F))
+        GlideUtil.loadImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon)
         helper.itemView.labelSameCount.isVisible = item.same_quality_count > 0
-        helper.itemView.labelSameCount.text = "你们有${item.same_quality_count}个重合兴趣特质"
-        if (item.same_label) {
-            val left = mContext.resources.getDrawable(R.drawable.icon_cuohe_tag)
-            helper.itemView.labelName.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
-        } else {
-            helper.itemView.labelName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
-        }
-
-        helper.itemView.labelAim.isVisible = item.intention.isNotEmpty()
-        if (item.intention.isNotEmpty()) {
-            helper.itemView.labelAim.text = item.intention[0].content
-        }
+        helper.itemView.labelSameCount.text = "${item.same_quality_count}个重合标签特质"
         val labelQualityMyAdapter = LabelQualityAdapter()
         val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH

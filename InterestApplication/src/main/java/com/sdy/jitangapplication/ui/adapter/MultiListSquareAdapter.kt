@@ -167,7 +167,7 @@ class MultiListSquareAdapter(
                 if (resetAudioListener != null) {
                     resetAudioListener!!.resetAudioState()
                 }
-                SquareCommentDetailActivity1.start(
+                SquareCommentDetailActivity.start(
                     mContext!!,
                     data[holder.layoutPosition - headerLayoutCount],
                     enterPosition = "comment",

@@ -459,7 +459,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             }
             //点击内容跳转到评论详情页面
             R.id.detailPlayContent, R.id.detailPlayCommentBtn -> {
-                SquareCommentDetailActivity1.start(this, squareBean)
+                SquareCommentDetailActivity.start(this, squareBean)
             }
             R.id.detailPlayCommentSend -> {
                 if (!detailPlayComment.text.toString().isEmpty()) {

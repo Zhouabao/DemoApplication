@@ -465,7 +465,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         adapter.setOnItemClickListener { _, view, position ->
             view.isEnabled = false
             resetAudio()
-            SquareCommentDetailActivity1.start(activity!!, adapter.data[position], position = position)
+            SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
             view.postDelayed({ view.isEnabled = true }, 1000L)
         }
 

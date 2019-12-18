@@ -29,7 +29,7 @@ import com.sdy.jitangapplication.presenter.view.MyCollectionView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
 import com.sdy.jitangapplication.ui.activity.MyCollectionEtcActivity
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity1
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
@@ -177,7 +177,7 @@ class MySquareFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPres
 
         adapter.setOnItemClickListener { _, view, position ->
             resetAudio()
-            SquareCommentDetailActivity1.start(activity!!, adapter.data[position], position = position)
+            SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->

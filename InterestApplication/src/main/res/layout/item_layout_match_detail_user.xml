@@ -8,123 +8,66 @@
         android:layout_marginLeft="11dp"
         android:layout_marginRight="15dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
         app:cardBackgroundColor="@color/colorWhite"
         app:cardCornerRadius="15dp"
         app:cardElevation="4dp"
-        app:cardPreventCornerOverlap="true"
+        android:layout_marginTop="5dp"
+        app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
-        app:contentPadding="15dp">
+        app:contentPadding="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/labelIcon"
-                android:src="@drawable/icon_logo"
-                android:layout_width="0dp"
-                android:layout_height="180dp"
+                android:src="@drawable/icon_gender_woman"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
 
-        <View
-                android:background="@drawable/rectangle_gradient_cover_bg_12dp"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="@id/labelIcon"
-                app:layout_constraintLeft_toLeftOf="@id/labelIcon"
-                app:layout_constraintRight_toRightOf="@id/labelIcon"
-                app:layout_constraintTop_toTopOf="@id/labelIcon"/>
 
         <TextView
                 android:id="@+id/labelSameCount"
-                android:text="你们有两个重合兴趣"
-                android:textColor="@color/colorWhite"
+                tools:text="你们有两个重合兴趣"
+                android:textColor="#191919"
                 android:layout_marginLeft="10dp"
                 android:textSize="13sp"
                 android:drawablePadding="5dp"
-                android:background="@drawable/rectangle_cover_bg_12dp"
+                android:background="@drawable/shape_rectangle_gray_f6_12dp"
                 android:drawableLeft="@drawable/icon_quality_same"
                 android:paddingLeft="3dp"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
                 android:paddingRight="6dp"
                 android:gravity="center"
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="@id/labelIcon"
+                app:layout_constraintBottom_toBottomOf="@id/labelIcon"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/labelIcon"/>
 
 
         <TextView
                 android:id="@+id/labelName"
-                android:text="摄影"
-                android:textColor="@color/colorWhite"
-                android:textSize="20sp"
-                android:drawableLeft="@drawable/icon_cuohe_tag"
+                android:text="喝酒蹦迪k歌"
+                android:textColor="#ff191919"
+                android:textSize="17sp"
                 android:gravity="center"
-                android:padding="3dp"
                 android:textStyle="bold"
-                android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="5dp"
                 android:layout_marginLeft="10dp"
                 app:layout_constraintBottom_toBottomOf="@id/labelIcon"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                app:layout_constraintLeft_toRightOf="@id/labelIcon"
+                app:layout_constraintTop_toTopOf="@id/labelIcon"
+               />
 
 
-        <TextView
-                android:id="@+id/labelAim"
-                android:text="找人一起玩"
-                android:textColor="@color/colorWhite"
-                android:paddingLeft="3dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:paddingRight="6dp"
-                android:layout_marginLeft="5dp"
-                android:drawablePadding="5dp"
-                android:drawableLeft="@drawable/icon_match_aim"
-                android:background="@drawable/shape_rectangle_blue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                app:layout_constraintBottom_toBottomOf="@id/labelName"
-                app:layout_constraintLeft_toRightOf="@id/labelName"
-                app:layout_constraintTop_toTopOf="@id/labelName"
-                />
 
-
-        <com.ctetin.expandabletextviewlibrary.ExpandableTextView
-                android:id="@+id/labelIntroduce"
-                android:layout_width="0dp"
-                android:layout_marginRight="15dp"
-                android:layout_height="wrap_content"
-                android:textColor="#ff81858a"
-                android:textSize="15sp"
-                android:ellipsize="end"
-                android:lineSpacingMultiplier="1.1"
-                app:ep_contract_color="@color/colorGrayText"
-                app:ep_contract_text="收起"
-                app:ep_expand_color="@color/colorGrayText"
-                app:ep_expand_text="...展开"
-                app:ep_max_line="3"
-                app:ep_need_always_showright="true"
-                app:ep_need_animation="true"
-                app:ep_need_contract="true"
-                app:ep_need_expand="true"
-                android:layout_marginTop="15dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/labelIcon"
-                tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。"
-                />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -132,7 +75,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/labelIntroduce"/>
+                app:layout_constraintTop_toBottomOf="@id/labelIcon"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

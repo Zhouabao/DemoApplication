@@ -191,11 +191,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         detailSquareSwitchRg.setOnCheckedChangeListener { radioGroup, checkedId ->
             if (checkedId == R.id.rbList) {
+                vpUserDetail.currentItem = 0
+                lastIndicator = 0
+            } else if (checkedId == R.id.rbBlock) {
                 vpUserDetail.currentItem = 1
                 lastIndicator = 1
-            } else if (checkedId == R.id.rbBlock) {
-                vpUserDetail.currentItem = 2
-                lastIndicator = 2
             }
         }
         detailSquareSwitchRg.check(R.id.rbList)
@@ -209,14 +209,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     private val titles = mutableListOf(
-        NewLabel(title = "TA的兴趣", checked = true),
-        NewLabel(title = "TA的动态", checked = false)
+        NewLabel(title = "动态", checked = true),
+        NewLabel(title = "标签", checked = false)
     )
 
     //标签适配器
     private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(this) }
     private val labelManager = CenterLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-    private var lastIndicator = 1//默认选中列表
+    private var lastIndicator = 0//默认选中列表
     private fun iniTabRv() {
         tabUserDettail.layoutManager = labelManager
         LinearSnapHelper().attachToRecyclerView(tabUserDettail)
@@ -228,15 +228,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
             labelAdapter.notifyDataSetChanged()
             if (labelAdapter.data[position].checked) {
-                detailSquareSwitchRg.isVisible = position == 1
-                if (position == 1) {
-                    if (lastIndicator == 2) {
-                        vpUserDetail.currentItem = 2
-                    } else if (lastIndicator == 1) {
+                detailSquareSwitchRg.isVisible = position == 0
+                if (position == 0) {
+                    if (lastIndicator == 1) {
                         vpUserDetail.currentItem = 1
+                    } else if (lastIndicator == 0) {
+                        vpUserDetail.currentItem = 0
                     }
                 } else {
-                    vpUserDetail.currentItem = 0
+                    vpUserDetail.currentItem = 2
                 }
 
             }
@@ -249,9 +249,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
    */
     private fun initFragment() {
         iniTabRv()
-        mStack.add(MatchDetailLabelFragment(targetAccid))
         mStack.add(ListSquareFragment(targetAccid))
         mStack.add(BlockSquareFragment(targetAccid))
+        mStack.add(MatchDetailLabelFragment(targetAccid))
         vpUserDetail.offscreenPageLimit = 3
         vpUserDetail.adapter = MainPagerAdapter(supportFragmentManager, mStack)
         vpUserDetail.currentItem = 0
@@ -347,7 +347,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
     private fun initData() {
-        titles[1].title = "TA的动态 . ${matchBean!!.square_count ?: 0}"
+        titles[0].title = "动态.${matchBean!!.square_cnt ?: 0}"
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
         detailUserInformationRv.adapter = detailUserInformationAdapter
