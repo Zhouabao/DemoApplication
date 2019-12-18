@@ -77,7 +77,7 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
             checkPos = position
             titleEt.text.clear()
             for (data in adapter.data) {
-                data.checked = data == adapter.data[position]
+                data.isfuse = data == adapter.data[position]
             }
             adapter.notifyDataSetChanged()
             checkConfirmEnable()
@@ -86,7 +86,7 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
         titleEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s != null && s.trim().toString().isNotEmpty() && checkPos != -1) {
-                    adapter.data[checkPos].checked = false
+                    adapter.data[checkPos].isfuse = false
                     adapter.notifyItemChanged(checkPos)
                     checkPos = -1
                 }

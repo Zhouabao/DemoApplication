@@ -55,7 +55,7 @@ class AllTitleActivity : BaseMvpActivity<AllTitlePresenter>(), AllTitleView, OnR
         titleNavAdapter.setOnItemClickListener { _, view, position ->
             view.isEnabled = false
             for (data in titleNavAdapter.data) {
-                data.checked = data == titleNavAdapter.data[position]
+                data.isfuse = data == titleNavAdapter.data[position]
                 choosedId = titleNavAdapter.data[position].id
             }
             titleNavAdapter.notifyDataSetChanged()
@@ -86,7 +86,7 @@ class AllTitleActivity : BaseMvpActivity<AllTitlePresenter>(), AllTitleView, OnR
     override fun onGetTitleMenuListResult(b: Boolean, data: MutableList<LabelQualityBean>?) {
         if (b) {
             if (!data.isNullOrEmpty()) {
-                data[0].checked = true
+                data[0].isfuse = true
                 titleNavAdapter.setNewData(data ?: mutableListOf())
                 choosedId = data[0].id
                 mPresenter.getTitleLists(page, data[0].id)

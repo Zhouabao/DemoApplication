@@ -67,7 +67,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                     }
                 }
                 if (checkedCount == MyLabelFragment.MAX_LABEL && !data.checked) {
-                    CommonFunction.toast("至多选择${MyLabelFragment.MAX_LABEL}个兴趣标签")
+                    CommonFunction.toast("至多选择${MyLabelFragment.MAX_LABEL}个标签标签")
                     return@setOnItemClickListener
                 }
 
@@ -91,7 +91,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
     private val deleteDialog by lazy { DeleteDialog(mContext) }
     private fun showDeleteDialog(position: NewLabel) {
         deleteDialog.show()
-        deleteDialog.title.text = "完善兴趣"
+        deleteDialog.title.text = "完善标签"
         deleteDialog.title.isVisible = true
         deleteDialog.tip.text = "是否恢复「 ${position.title} 」删除前内容"
         deleteDialog.confirm.text = "重新完善"//要走推荐发布流程

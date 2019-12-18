@@ -68,7 +68,7 @@ class MyLabelQualityActivity : BaseMvpActivity<MyLabelQualityPresenter>(), MyLab
             if (labelBean!!.intention.isNotEmpty())
                 myLabelAim.text = labelBean!!.intention[0].content
             for (data in labelBean!!.label_quality) {
-                data.checked = true
+                data.isfuse = true
                 chooseLabelQuality.add(data)
             }
             labelQualityMyAdapter.setNewData(labelBean!!.label_quality)
@@ -135,7 +135,7 @@ class MyLabelQualityActivity : BaseMvpActivity<MyLabelQualityPresenter>(), MyLab
                     return
                 }
                 if (myLabelIntroduce.text.trim().isEmpty()) {
-                    CommonFunction.toast("请先填写兴趣介绍")
+                    CommonFunction.toast("请先填写标签介绍")
                     return
                 }
                 params["tag_id"] = labelBean!!.tag_id

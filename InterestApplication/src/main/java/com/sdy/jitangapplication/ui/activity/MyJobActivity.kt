@@ -95,7 +95,7 @@ class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClick
 
         for (job in mutableList?: mutableListOf()) {
             if (job == checkedJob) {
-//                job.checked = true
+//                job.isfuse = true
                 break
             }
         }

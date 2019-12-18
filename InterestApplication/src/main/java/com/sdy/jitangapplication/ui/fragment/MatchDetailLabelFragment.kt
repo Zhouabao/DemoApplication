@@ -66,21 +66,6 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
         if (result) {
             stateLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data != null) {
-                for (my in data.my) {
-                    for (other in data.other_tags) {
-                        if (my.id == other.id) {
-                            other.same_label = true
-                        }
-                        for (myQuality in my.label_quality) {
-                            for (otherQuality in other.label_quality) {
-                                if (myQuality.id == otherQuality.id) {
-                                    otherQuality.checked = true
-                                    other.same_quality_count = other.same_quality_count + 1
-                                }
-                            }
-                        }
-                    }
-                }
                 adapter.setNewData(data.other_tags)
                 if (!data.other_interest.isNullOrEmpty()) {
                     interestAdapter.setNewData(data.other_interest)

@@ -62,7 +62,7 @@ class MyLabelAdapter : BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.it
             helper.itemView.labelQualityRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
             helper.itemView.labelQualityRv.adapter = adapter
             for (data in item.label_quality) {
-                data.checked = true
+                data.isfuse = true
             }
             adapter.addData(item.label_quality)
         }

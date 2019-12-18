@@ -7,4 +7,6 @@ interface SquareSamePersonView : BaseView {
 
     fun onGetTitleInfoResult(b: Boolean, data: MutableList<SamePersonBean>?)
 
+    fun onCheckBlockResult(b: Boolean)
+
 }

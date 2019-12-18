@@ -13,8 +13,6 @@ import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
 class ChooseTitlePresenter : BasePresenter<ChooseTitleView>() {
-
-
     /**
     *  获取标签的  特质/模板/意向/标题  type  1 2 3 4
     */

@@ -220,11 +220,20 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         }
     }
 
-    private var titleBean: LabelQualityBean? = null
+    private var titleBean: TopicBean? = null
     private fun initData() {
         if (intent.getSerializableExtra("titleBean") != null) {
-            titleBean = intent.getSerializableExtra("titleBean") as LabelQualityBean
-            chooseTitleBtn.text = titleBean!!.content
+            titleBean = intent.getSerializableExtra("titleBean") as TopicBean
+            chooseLabelBtn.text = titleBean!!.tag_title
+            checkTags.add(NewLabel(id = titleBean!!.tag_id, title = titleBean!!.tag_title))
+
+            chooseTitleBtn.text = titleBean!!.title
+            chooseTitleBtn.setCompoundDrawablesWithIntrinsicBounds(
+                resources.getDrawable(R.drawable.icon_publish_title_enable),
+                null,
+                null,
+                null
+            )
             chooseTitleBtn.ellipsize = TextUtils.TruncateAt.MARQUEE
             chooseTitleBtn.isSingleLine = true
             chooseTitleBtn.isSelected = true
@@ -300,10 +309,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         rightBtn1.setOnClickListener(this)
         locationCity.setOnClickListener(this)
         chooseTitleBtn.setOnClickListener(this)
-        tagLayoutRv.setOnClickListener(this)
+        chooseLabelBtn.setOnClickListener(this)
         btn_emo.setOnClickListener(this)
 
-        initTags()
         initPhotos()
         initVideos()
         initAudioLl()
@@ -333,19 +341,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     /***************设置选中的标签******************/
     private var checkTags = mutableListOf<NewLabel>()
-
-    private fun initTags() {
-        //获取广场首页选中的标签id
-        val checkedId = UserManager.getGlobalLabelId()
-        val myTags: MutableList<NewLabel> = UserManager.getSpLabels()
-        for (tag in myTags) {
-            if (checkedId == tag.id && checkedId != Constants.RECOMMEND_TAG_ID) {
-                checkTags.add(tag)
-                tagLayoutRv.text = tag.title
-            }
-        }
-
-    }
 
 
     /*****************设置相册和视频信息********************/
@@ -1029,10 +1024,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     return
                 }
 
-                if (publishContent.text.isNullOrEmpty()) {
-                    CommonFunction.toast("文本内容是必填的哦~")
-                    return
-                }
+//                if (publishContent.text.isNullOrEmpty()) {
+//                    CommonFunction.toast("文本内容是必填的哦~")
+//                    return
+//                }
 
 //                if (chooseTitleBtn.text.isNullOrEmpty()) {
 //                    CommonFunction.toast("标题为必填内容")
@@ -1245,10 +1240,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             }
 
             R.id.chooseTitleBtn -> {
+                if (checkTags.isNullOrEmpty()) {
+                    CommonFunction.toast("请先选择标签")
+                    return
+                }
                 startActivityForResult<ChooseTitleActivity>(REQUEST_CODE_TITILE, "tag_id" to checkTags[0].id)
             }
-            R.id.tagLayoutRv -> {
-                startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL,"tag_id" to checkTags[0].id)
+            R.id.chooseLabelBtn -> {
+                startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL)
             }
         }
     }
@@ -1360,20 +1359,23 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 if ((data!!.getSerializableExtra("label") as MyLabelBean) != null) {
                     val myLabelBean = data!!.getSerializableExtra("label") as MyLabelBean
                     //todo 这里要更新选中的标签
-
-                    if (myLabelBean.tag_id != checkTags[0].id) {
-                        checkTags.clear()
-                        checkTags.add(
-                            NewLabel(
-                                icon = myLabelBean.icon,
-                                id = myLabelBean.tag_id,
-                                title = myLabelBean.title
-                            )
+                    checkTags.clear()
+                    checkTags.add(
+                        NewLabel(
+                            icon = myLabelBean.icon,
+                            id = myLabelBean.tag_id,
+                            title = myLabelBean.title
                         )
-                        tagLayoutRv.text = checkTags[0].title
-                        chooseTitleBtn.text = ""
-                        checkCompleteBtnEnable()
-                    }
+                    )
+                    chooseLabelBtn.text = checkTags[0].title
+                    chooseTitleBtn.text = ""
+                    checkCompleteBtnEnable()
+                    chooseTitleBtn.setCompoundDrawablesWithIntrinsicBounds(
+                        resources.getDrawable(R.drawable.icon_publish_title_enable),
+                        null,
+                        null,
+                        null
+                    )
                 }
             }
             //地图返回

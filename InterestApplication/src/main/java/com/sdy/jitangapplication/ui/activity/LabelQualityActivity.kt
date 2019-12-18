@@ -134,7 +134,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
             val data = choosedQualityAdapter.data[position]
             for (tempData in adapter.data.withIndex()) {
                 if (data.id == tempData.value.id) {
-                    tempData.value.checked = false
+                    tempData.value.isfuse = false
                     adapter.notifyItemChanged(tempData.index)
                 }
             }
@@ -152,7 +152,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
 
         adapter.setOnItemClickListener { _, view, position ->
             val tempData = adapter.data[position]
-            if (!tempData.checked && choosedQualityAdapter.data.size == MAX_QUALITY) {
+            if (!tempData.isfuse && choosedQualityAdapter.data.size == MAX_QUALITY) {
                 showWarningDialog(MAX_QUALITY)
                 return@setOnItemClickListener
             } else {
@@ -194,7 +194,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                 for (data1 in adapter.data.withIndex()) {
                     if (data.id == data1.value.id) {
 //                        data1.unable = true
-                        data1.value.checked = false
+                        data1.value.isfuse = false
                         adapter.remove(data1.index)
                         choosedFromAllQuality.add(data1.value)
                         break
@@ -295,7 +295,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     return
                 }
                 if (choosedQualityAdapter.data.size >= MAX_QUALITY) {
-                    CommonFunction.toast("最多能填写5个兴趣特质")
+                    CommonFunction.toast("最多能填写5个标签特质")
                     return
                 }
                 if (labelQualityAddEt.text.trim().isNotEmpty() && !TextUtils.isDigitsOnly(labelQualityAddEt.text.trim())) {

@@ -32,14 +32,16 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
-import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.model.NewLabel
+import com.sdy.jitangapplication.model.SquareBean
+import com.sdy.jitangapplication.model.SquareListBean
+import com.sdy.jitangapplication.model.TopicBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
 import com.sdy.jitangapplication.presenter.SquarePresenter
@@ -63,7 +65,6 @@ import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.empty_layout.view.emptyImg
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_square.*
-import kotlinx.android.synthetic.main.headerview_guide_publish.view.*
 import kotlinx.android.synthetic.main.headerview_square_recommend_title.view.*
 import kotlinx.android.synthetic.main.popupwindow_square_filter_gender.view.*
 import org.greenrobot.eventbus.EventBus
@@ -118,60 +119,10 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         )
     }
 
-    //好友的params
-    private val friendsParams = hashMapOf(
-        "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-        "token" to SPUtils.getInstance(Constants.SPNAME).getString("token")
-    )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_square, container, false)
-    }
-
-
-    //引导发布标题
-    val guideList by lazy { mutableListOf<LabelQualityBean>() }
-    //当前引导发布标题的下标
-    private var currentTitleIndex = -1
-
-    //创建引导布局
-    private fun initGuideSquareView(): View {
-        val guideHeadView =
-            LayoutInflater.from(activity!!).inflate(R.layout.headerview_guide_publish, squareDynamicRv, false)
-        guideHeadView.guideReselect.onClick {
-            if (currentTitleIndex < guideList.size - 1) {
-                currentTitleIndex += 1
-            } else {
-                currentTitleIndex = 0
-            }
-            setGuidePublishTitle(guideList[currentTitleIndex])
-        }
-
-        guideHeadView.guidePublish.onClick(object : CustomClickListener() {
-            override fun onSingleClick(view: View) {
-                mPresenter.checkBlock()
-                if (currentTitleIndex != -1) {
-                    activity!!.intent.putExtra("titleBean", guideList[currentTitleIndex])
-                }
-
-            }
-
-        })
-        return guideHeadView
-    }
-
-    /**
-     * 设置当前的标题
-     */
-    private fun setGuidePublishTitle(labelQualityBean: LabelQualityBean) {
-        GlideUtil.loadRoundImgCenterinside(
-            activity!!,
-            labelQualityBean.icon,
-            adapter.headerLayout.guideIv, 0.0f,
-            SizeUtils.dp2px(12F)
-        )
-        adapter.headerLayout.guideTv.text = labelQualityBean.content
     }
 
 
@@ -413,9 +364,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         squareEdit.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
                 mPresenter.checkBlock()
-                activity!!.intent.removeExtra("titleBean")
             }
-
         })
 
 

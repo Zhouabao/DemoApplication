@@ -20,8 +20,8 @@ class MatchDetailUserLabelAdapter :
     override fun convert(helper: BaseViewHolder, item: MyLabelBean) {
         helper.itemView.labelName.text = item.title
         GlideUtil.loadImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon)
-        helper.itemView.labelSameCount.isVisible = item.same_quality_count > 0
-        helper.itemView.labelSameCount.text = "${item.same_quality_count}个重合标签特质"
+        helper.itemView.labelSameCount.isVisible = !item.msg.isNullOrEmpty()
+        helper.itemView.labelSameCount.text = item.msg
         val labelQualityMyAdapter = LabelQualityAdapter()
         val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH

@@ -29,7 +29,7 @@ class LabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_la
 //            mItemClickListener?.onItemClick(model, position)
 //        }
 //
-//        if (model.checked) {
+//        if (model.isfuse) {
 //            holder.itemView.llroot.setBackgroundResource(R.drawable.cb_label_checked)
 //            holder.itemView.checkedIcon.visibility = View.VISIBLE
 //            holder.itemView.labelTv.isChecked = true
@@ -39,7 +39,7 @@ class LabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_la
 //            holder.itemView.labelTv.isChecked = false
 //        }
 
-//        holder.itemView.labelTv.isChecked = model.checked
+//        holder.itemView.labelTv.isChecked = model.isfuse
         holder.itemView.labelTv.text = model.title
     }
 

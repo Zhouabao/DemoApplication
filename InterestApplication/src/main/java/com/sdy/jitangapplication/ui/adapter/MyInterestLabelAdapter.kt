@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.item_label_my_interest.view.*
 class MyInterestLabelAdapter : BaseQuickAdapter<LabelQualityBean, BaseViewHolder>(R.layout.item_label_my_interest) {
 
     override fun convert(helper: BaseViewHolder, item: LabelQualityBean) {
-        helper.itemView.labelDelete.isVisible = item.checked
+        helper.itemView.labelDelete.isVisible = item.isfuse
         helper.itemView.labelName.text = item.title
         GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.labelImg, SizeUtils.dp2px(15F))
         helper.addOnClickListener(R.id.labelDelete)

@@ -86,6 +86,7 @@ data class TopicBean(
     var id: Int = 0,
     var son: MutableList<SquarePicBean> = mutableListOf(),
     var tag_id: Int = 0,
+    var tag_title: String = "",
     var title: String = "",
     var used_cnt: Int = 0
 ) : Serializable
@@ -93,7 +94,7 @@ data class TopicBean(
 data class SquarePicBean(
     var cover_url: String = "",
     var square_id: Int = 0
-):Serializable
+) : Serializable
 
 
 data class VideoJson(

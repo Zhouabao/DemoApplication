@@ -21,7 +21,7 @@ class MyIntentionAdapter : BaseQuickAdapter<LabelQualityBean, BaseViewHolder>(R.
 
         helper.itemView.intentionName.text = item.title
         GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.intentionIcon, SizeUtils.dp2px(0F))
-        helper.itemView.intentionChecked.isVisible = item.checked
+        helper.itemView.intentionChecked.isVisible = item.isfuse
 
 
     }

@@ -20,6 +20,7 @@ import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.SamePersonBean
 import com.sdy.jitangapplication.model.TopicBean
@@ -29,6 +30,7 @@ import com.sdy.jitangapplication.ui.adapter.SquareSamePersonAdapter
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_square_same_person.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.jetbrains.anko.startActivity
 
 /**
  * 通过标题找到的同类人
@@ -70,6 +72,17 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
         hotT1.setTextColor(Color.WHITE)
         rightBtn1.text = "发布"
         rightBtn1.setBackgroundResource(R.drawable.shape_rectangle_orange_25dp)
+
+        rightBtn1.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                mPresenter.checkBlock()
+            }
+        })
+        publish.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                mPresenter.checkBlock()
+            }
+        })
 
         sameAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
             llTitle.isVisible = Math.abs(verticalOffset) >= SizeUtils.dp2px(56F) + BarUtils.getStatusBarHeight()
@@ -141,6 +154,11 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
             else
                 refreshSamePerson.finishLoadMore(b)
         }
+    }
+
+    override fun onCheckBlockResult(b: Boolean) {
+        if (b)
+            startActivity<PublishActivity>("titleBean" to topicBean)
     }
 
 }

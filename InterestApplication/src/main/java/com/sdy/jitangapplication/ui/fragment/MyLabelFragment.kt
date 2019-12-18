@@ -78,7 +78,7 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
                 R.id.labelDelete -> {
                     //TODO删除标签
                     if (adapter.data.size <= MIN_LABEL) {
-                        CommonFunction.toast("至少保留${MIN_LABEL}个兴趣")
+                        CommonFunction.toast("至少保留${MIN_LABEL}个标签")
                         return@setOnItemChildClickListener
                     }
                     showDeleteDialog(position)
@@ -101,9 +101,9 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
     private val deleteDialog by lazy { DeleteDialog(activity!!) }
     private fun showDeleteDialog(position: Int) {
         deleteDialog.show()
-        deleteDialog.title.text = "删除兴趣"
+        deleteDialog.title.text = "删除标签"
         deleteDialog.title.isVisible = true
-        deleteDialog.tip.text = "您确定要删除兴趣「${adapter.data[position].title}」吗？"
+        deleteDialog.tip.text = "您确定要删除标签「${adapter.data[position].title}」吗？"
         deleteDialog.confirm.onClick {
             mPresenter.delMyTags(adapter.data[position].id, position)
             deleteDialog.dismiss()
@@ -156,7 +156,7 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
         when (p0) {
             addLabelBtn -> {//添加标签
                 if (adapter.data.size >= MAX_LABEL) {
-                    CommonFunction.toast("最多能拥有${MAX_LABEL}个兴趣")
+                    CommonFunction.toast("最多能拥有${MAX_LABEL}个标签")
                     return
                 }
 

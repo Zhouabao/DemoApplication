@@ -10,12 +10,12 @@ import kotlinx.android.synthetic.main.item_choose_title.view.*
 
 class ChooseTitleAdapter : BaseQuickAdapter<LabelQualityBean, BaseViewHolder>(R.layout.item_choose_title) {
     override fun convert(helper: BaseViewHolder, item: LabelQualityBean) {
-        if (item.checked) {
+        if (item.isfuse) {
             helper.itemView.titleName.setTextColor(mContext.resources.getColor(R.color.colorOrange))
         } else {
             helper.itemView.titleName.setTextColor(Color.parseColor("#191919"))
         }
-        helper.itemView.titleChecked.isVisible = item.checked
+        helper.itemView.titleChecked.isVisible = item.isfuse
         helper.itemView.titleName.text = item.content
     }
 }

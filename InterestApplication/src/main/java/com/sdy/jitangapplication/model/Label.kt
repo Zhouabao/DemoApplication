@@ -46,7 +46,7 @@ data class LabelQualityBean(
     var icon: String = "",
     var id: Int = 0,
     var title: String = "",
-    var checked: Boolean = false
+    var isfuse: Boolean = false
 ) : Serializable, IPickerViewData {
     override fun getPickerViewText(): String {
         return content
@@ -76,6 +76,7 @@ data class MyLabelBean(
     var same_quality_count: Int = 0,//相同特质数量
     var intro_descr: String = "",
     var publish_descr: String = "",
+    var msg: String = "",
     var checked: Boolean = false
 ) : Serializable
 
@@ -89,7 +90,6 @@ data class OtherLabelsBean(
     var my_interest: MutableList<LabelQualityBean> = mutableListOf(),
     var other_interest: MutableList<LabelQualityBean> = mutableListOf()
 )
-
 //职业
 data class NewJobBean(
     var title: String = "",

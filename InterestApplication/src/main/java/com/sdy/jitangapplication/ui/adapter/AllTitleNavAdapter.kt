@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.item_title_class.view.*
 class AllTitleNavAdapter : BaseQuickAdapter<LabelQualityBean, BaseViewHolder>(R.layout.item_title_class) {
 
     override fun convert(helper: BaseViewHolder, item: LabelQualityBean) {
-        if (item.checked) {
+        if (item.isfuse) {
             helper.itemView.titleClassTv.setBackgroundResource(R.drawable.shape_rectangle_gray_14dp)
             helper.itemView.titleClassTv.setTextColor(Color.parseColor("#191919"))
             helper.itemView.titleClassTv.paint.isFakeBoldText = true

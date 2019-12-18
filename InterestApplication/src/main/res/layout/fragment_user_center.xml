@@ -257,7 +257,7 @@
 
             <TextView
                     android:id="@+id/userTagsBtn"
-                    android:text="我的兴趣"
+                    android:text="我的标签"
                     android:textColor="#ff19191a"
                     android:textSize="16sp"
                     android:drawablePadding="12dp"

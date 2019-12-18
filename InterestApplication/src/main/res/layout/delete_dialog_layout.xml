@@ -26,7 +26,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="20dp"
-                android:text="确认删除兴趣？"
+                android:text="确认删除标签？"
                 android:textColor="#ff191919"
                 android:textSize="18sp"
                 />

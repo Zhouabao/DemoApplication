@@ -34,7 +34,7 @@ class LabelQualityAdapter(var myChoosed: Boolean = false) :
                 null,
                 null
             )
-            if (model.checked) {
+            if (model.isfuse) {
                 holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_choose_12dp)
                 holder.itemView.qualityTv.setTextColor(mContext.resources.getColor(R.color.colorOrange))
             } else {
@@ -44,7 +44,12 @@ class LabelQualityAdapter(var myChoosed: Boolean = false) :
         }
 
 
-        holder.itemView.qualityTv.text = model.content.trim()
+
+        holder.itemView.qualityTv.text = if (model.title.trim().isNullOrEmpty()) {
+            model.content.trim()
+        } else {
+            model.title.trim()
+        }
     }
 
 

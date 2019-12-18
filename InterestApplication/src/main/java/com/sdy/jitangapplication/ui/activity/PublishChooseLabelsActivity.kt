@@ -68,7 +68,7 @@ class PublishChooseLabelsActivity : BaseMvpActivity<LabelsPresenter>(), View.OnC
                 return@setOnItemClickListener
             }
 
-            //                adapter.dataList[position].checked = !item.checked
+            //                adapter.dataList[position].isfuse = !item.isfuse
             adapter.data[position].checked = !adapter.data[position].checked
             adapter.notifyItemChanged(position)
             updateCheckedLabels(adapter.data[position])

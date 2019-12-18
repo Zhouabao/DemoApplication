@@ -37,7 +37,7 @@
 
             <TextView
                     android:id="@+id/addMoreLabelBtn"
-                    android:text="添加其他兴趣"
+                    android:text="添加其他标签"
                     android:textColor="@color/colorWhite"
                     android:textSize="16sp"
                     android:textStyle="bold"

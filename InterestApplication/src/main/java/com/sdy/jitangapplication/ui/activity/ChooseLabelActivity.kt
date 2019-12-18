@@ -53,7 +53,7 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
         btnBack.setOnClickListener(this)
         rightBtn1.setOnClickListener(this)
         addMoreLabelBtn.setOnClickListener(this)
-        hotT1.text = "选择兴趣"
+        hotT1.text = "选择标签"
         rightBtn1.isVisible = true
         rightBtn1.text = "完成"
         rightBtn1.isEnabled = true
@@ -78,15 +78,6 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
         if (result) {
             stateChooseLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             adapter.setNewData(datas?.is_using ?: mutableListOf())
-
-            for (data in adapter.data.withIndex()) {
-                if (data.value.tag_id == intent.getIntExtra("tag_id", -1)) {
-                    data.value.checked = true
-                    mylabelBean = data.value
-                    adapter.notifyItemChanged(data.index)
-                    break
-                }
-            }
             removedLabel.addAll(datas?.is_removed ?: mutableListOf())
         } else {
             stateChooseLabel.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -106,7 +97,7 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
 
             rightBtn1 -> {
                 if (mylabelBean == null) {
-                    CommonFunction.toast("兴趣为必选项")
+                    CommonFunction.toast("标签为必选项")
                     return
                 }
 

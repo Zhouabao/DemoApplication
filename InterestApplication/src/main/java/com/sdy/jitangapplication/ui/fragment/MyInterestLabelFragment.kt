@@ -54,7 +54,7 @@ class MyInterestLabelFragment : BaseMvpLazyLoadFragment<MyInterestLabelPresenter
 
         addInterestLabelBtn.onClick {
             if (adapter.data.size >= MyLabelFragment.MAX_LABEL) {
-                CommonFunction.toast("最多能拥有${MyLabelFragment.MAX_LABEL}个兴趣")
+                CommonFunction.toast("最多能拥有${MyLabelFragment.MAX_LABEL}个标签")
                 return@onClick
             }
 
@@ -118,7 +118,7 @@ class MyInterestLabelFragment : BaseMvpLazyLoadFragment<MyInterestLabelPresenter
             editMode = !editMode
             addInterestLabelBtn.isVisible = !editMode
             for (data in adapter.data) {
-                data.checked = editMode
+                data.isfuse = editMode
             }
             adapter.notifyDataSetChanged()
         }

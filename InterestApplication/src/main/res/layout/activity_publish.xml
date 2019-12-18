@@ -22,7 +22,7 @@
             app:layout_constraintTop_toBottomOf="@id/llTitle">
 
         <TextView
-                android:text="选择兴趣"
+                android:text="选择标签"
                 android:textColor="#ff191919"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"
@@ -31,10 +31,10 @@
                 />
 
         <TextView
-                android:id="@+id/tagLayoutRv"
+                android:id="@+id/chooseLabelBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="请选择兴趣"
+                android:text="请选择标签"
                 android:gravity="center"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/icon_more_right"
@@ -114,7 +114,7 @@
                 android:layout_width="130dp"
                 android:paddingRight="12dp"
                 android:drawablePadding="7dp"
-                android:drawableLeft="@drawable/icon_publish_title"
+                android:drawableLeft="@drawable/icon_publish_title_unable"
                 android:textColor="#ff191919"
                 android:textColorHint="#ff191919"
                 android:textSize="14sp"

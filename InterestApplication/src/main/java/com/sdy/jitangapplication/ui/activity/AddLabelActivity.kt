@@ -180,7 +180,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                 if (tag_ids.isNotEmpty())
                     mPresenter.saveInterestTag(Gson().toJson(tag_ids))
                 else
-                    CommonFunction.toast("暂无选中的兴趣可保存")
+                    CommonFunction.toast("暂无选中的标签可保存")
             }
         }
 

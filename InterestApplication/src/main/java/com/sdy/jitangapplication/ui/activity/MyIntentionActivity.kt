@@ -80,10 +80,10 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
         adapter.setOnItemClickListener { _, view, position ->
             for (data in adapter.data.withIndex()) {
                 if (data.index == position) {
-                    data.value.checked = !data.value.checked
-                    rightBtn1.isEnabled = data.value.checked
+                    data.value.isfuse = !data.value.isfuse
+                    rightBtn1.isEnabled = data.value.isfuse
                 } else {
-                    data.value.checked = false
+                    data.value.isfuse = false
                 }
             }
             adapter.notifyDataSetChanged()
@@ -100,7 +100,7 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
     private fun getCheckedIntentionId(): Int? {
         var intention_id: Int? = null
         for (data in adapter.data) {
-            if (data.checked) {
+            if (data.isfuse) {
                 intention_id = data.id
                 break
             }
@@ -111,7 +111,7 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
     private fun getCheckedIntention(): LabelQualityBean? {
         var intention_id: LabelQualityBean? = null
         for (data in adapter.data) {
-            if (data.checked) {
+            if (data.isfuse) {
                 intention_id = data
                 break
             }
@@ -126,7 +126,7 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
             stateIntention.viewState = MultiStateView.VIEW_STATE_CONTENT
             for (data1 in data) {
                 if (data1.id == checkedId) {
-                    data1.checked = true
+                    data1.isfuse = true
                 }
             }
             adapter.addData(data)
