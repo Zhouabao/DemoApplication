@@ -269,7 +269,6 @@
 
 
         <LinearLayout
-                android:id="@+id/matchUserIntroduceCl"
                 android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
@@ -279,7 +278,6 @@
                 app:layout_constraintTop_toBottomOf="@id/matchUserAge">
 
             <TextView
-                    android:id="@+id/matchUserIntroduce"
                     android:background="@drawable/rectangle_cover_bg_10dp"
                     android:padding="5dp"
                     android:layout_width="wrap_content"

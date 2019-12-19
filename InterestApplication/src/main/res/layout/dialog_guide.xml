@@ -53,7 +53,6 @@
                     />
 
             <View
-                    android:id="@+id/dash_vertical"
                     android:layerType="software"
                     android:background="@drawable/shape_dash_line_vertical"
                     android:layout_width="wrap_content"
@@ -432,7 +431,6 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
             <View
-                    android:id="@+id/guide_center_line_like"
                     android:layout_width="1dp"
                     android:layout_height="1dp"
                     android:background="@color/transparent"
@@ -443,7 +441,6 @@
 
 
             <ImageView
-                    android:id="@+id/guide_like_arrow_right"
                     android:src="@drawable/icon_guide_arrow_right"
                     android:layout_marginBottom="4dp"
                     android:layout_width="wrap_content"
@@ -507,7 +504,6 @@
 
 
             <ImageView
-                    android:id="@+id/guide_dislike_arrow_left"
                     android:src="@drawable/icon_guide_arrow_left"
                     android:layout_marginBottom="4dp"
                     android:layout_width="wrap_content"
@@ -572,7 +568,6 @@
 
 
             <ImageView
-                    android:id="@+id/guide_chathi_arrow_top"
                     android:src="@drawable/icon_guide_arrow_top"
                     android:layout_marginBottom="30dp"
                     android:layout_width="wrap_content"

@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 apply plugin: 'channel'
+apply plugin: 'com.growingio.android'
 android {
     signingConfigs {
 
@@ -54,6 +55,8 @@ android {
 //            abiFilters 'armeabi', 'armeabi-v7a', 'x86'
             abiFilters "armeabi", "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
         }
+        resValue("string", "growingio_project_id", "9e7076438fd6471a")
+        resValue("string", "growingio_url_scheme", "growing.fb176594ca56d270")
 
     }
     compileOptions {
@@ -222,6 +225,9 @@ dependencies {
 
     //联动选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    //growing增长
+    implementation 'com.growingio.android:vds-android-agent:autotrack-2.8.7'
+
     //微信支付
 //    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 //    implementation project(path: ':faceplatform')

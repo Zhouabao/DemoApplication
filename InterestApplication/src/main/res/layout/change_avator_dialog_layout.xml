@@ -74,7 +74,6 @@
             app:layout_constraintTop_toBottomOf="@id/tip"/>
 
     <TextView
-            android:id="@+id/changeAvatorBtn"
             android:text="修改头像"
             android:textColor="#ff333333"
             android:textSize="18sp"

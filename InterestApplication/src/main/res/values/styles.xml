@@ -14,9 +14,9 @@
     <!-- Base application theme. -->
     <style name="SplashTheme" parent="MyAppTheme">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@drawable/splash_loading_bg</item>
+        <item name="android:windowBackground">@drawable/icon_splash</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
 
@@ -29,15 +29,6 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
 
-    </style>
-
-    <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <!--<item name="android:windowNoTitle">true</item>//无标题-->
-        <!--<item name="android:windowActionBar">false</item>//无ActionBar-->
-        <item name="android:windowFullscreen">true</item>//全屏即无通知栏
-        <item name="android:windowContentOverlay">@null</item>//是否有遮盖
     </style>
 
     <!--<style name="AppTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">-->
@@ -183,14 +174,5 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">17sp</item>
     </style>
-
-    <style name="MyAppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="MyAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-    <style name="MyAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

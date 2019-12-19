@@ -29,7 +29,6 @@
             android:layout_height="wrap_content"/>
 
     <ImageView
-            android:id="@+id/questionDel"
             android:scaleType="center"
             android:src="@drawable/icon_delete_label"
             android:layout_marginRight="15dp"

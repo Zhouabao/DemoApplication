@@ -21,7 +21,6 @@
     </TextView>
 
     <View
-            android:id="@+id/labelDivide"
             android:layout_gravity="center_vertical"
             android:background="#1AFFFFFF"
             android:layout_width="1dp"

@@ -68,7 +68,6 @@
                 />
 
         <LinearLayout
-                android:id="@+id/wayEditLl"
                 android:visibility="gone"
                 android:layout_marginTop="28dp"
                 android:orientation="vertical"
@@ -86,7 +85,6 @@
                     android:layout_height="3dp"/>
 
             <EditText
-                    android:id="@+id/wayEt"
                     android:background="@null"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"/>
