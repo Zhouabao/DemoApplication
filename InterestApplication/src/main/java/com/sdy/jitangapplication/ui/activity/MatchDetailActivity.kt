@@ -76,7 +76,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
-    private val thumbAdapter by lazy { DetailThumbAdapter(this) }
+    private val thumbAdapter by lazy { DetailThumbAdapter(from = DetailThumbAdapter.FROM_MATCH_DETAIL) }
 
     var photos: MutableList<String> = mutableListOf()
     private val photosAdapter by lazy { MatchImgsPagerAdapter(this, photos) }
@@ -386,7 +386,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             detailThumbRv.visibility = View.GONE
         } else {
             detailThumbRv.adapter = thumbAdapter
-            thumbAdapter.setData(matchBean!!.square ?: mutableListOf())
+            thumbAdapter.setNewData(matchBean!!.square ?: mutableListOf())
         }
 
         //用户照片

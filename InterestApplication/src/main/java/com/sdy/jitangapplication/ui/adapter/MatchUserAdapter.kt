@@ -16,6 +16,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.Newtag
+import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.item_match_user.view.*
 
 /**
@@ -33,12 +34,13 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.addOnClickListener(R.id.v1)
         holder.itemView.vpIndicator.removeAllViews()
         holder.itemView.vpPhotos.setScrollable(false)
+        holder.itemView.vpPhotos.currentItem = 0
         holder.itemView.vpPhotos.tag = holder.layoutPosition
         holder.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(
             mContext,
             if (item.photos.isNullOrEmpty()) mutableListOf(item.avatar ?: "") else item.photos!!
         )
-        holder.itemView.vpPhotos.currentItem = 0
+
         holder.itemView.vpPhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             }
@@ -107,11 +109,27 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         }
 
         /*设置封面图片recyclerview*/
+
+        val itemDecoration = DividerItemDecoration(
+            mContext,
+            DividerItemDecoration.VERTICAL_LIST,
+            SizeUtils.dp2px(3F),
+            mContext.resources.getColor(R.color.colorTransparent)
+        )
         if (!item.square.isNullOrEmpty()) {
             holder.itemView.matchUserDynamicThumbRv.layoutManager =
                 LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-            val adapter = DetailThumbAdapter(mContext)
-            adapter.setData(item.square ?: mutableListOf())
+            for (decoration in 0 until holder.itemView.matchUserDynamicThumbRv.itemDecorationCount) {
+                holder.itemView.matchUserDynamicThumbRv.removeItemDecorationAt(decoration)
+            }
+            holder.itemView.matchUserDynamicThumbRv.addItemDecoration(itemDecoration)
+
+            val adapter = DetailThumbAdapter(dataSize = (item.square ?: mutableListOf()).size)
+            if ((item.square ?: mutableListOf()).size > DetailThumbAdapter.MAX_MATCH_COUNT) {
+                adapter.setNewData(item.square!!.subList(0, DetailThumbAdapter.MAX_MATCH_COUNT))
+            } else {
+                adapter.setNewData(item.square ?: mutableListOf())
+            }
             holder.itemView.matchUserDynamicThumbRv.adapter = adapter
         }
 
