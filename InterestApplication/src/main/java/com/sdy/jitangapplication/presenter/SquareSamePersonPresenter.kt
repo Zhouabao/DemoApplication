@@ -9,7 +9,7 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.SamePersonBean
+import com.sdy.jitangapplication.model.SamePersonListBean
 import com.sdy.jitangapplication.presenter.view.SquareSamePersonView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -24,12 +24,12 @@ class SquareSamePersonPresenter : BasePresenter<SquareSamePersonView>() {
 
         RetrofitFactory.instance.create(Api::class.java)
             .getTitleInfo(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<MutableList<SamePersonBean>?>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<SamePersonListBean?>>(mView) {
                 override fun onStart() {
                     super.onStart()
                 }
 
-                override fun onNext(t: BaseResp<MutableList<SamePersonBean>?>) {
+                override fun onNext(t: BaseResp<SamePersonListBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
                         mView.onGetTitleInfoResult(true, t.data)

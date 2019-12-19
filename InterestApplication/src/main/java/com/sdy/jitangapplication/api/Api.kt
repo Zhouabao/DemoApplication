@@ -841,7 +841,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tags/getTitleInfo${Constants.END_BASE_URL}")
-    fun getTitleInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SamePersonBean>?>>
+    fun getTitleInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SamePersonListBean?>>
 
     /**
      *V2获取更多标题详情

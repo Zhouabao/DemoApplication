@@ -14,6 +14,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
@@ -222,7 +223,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     override fun addTagResult(result: Boolean, data: AddLabelResultBean?) {
         if (result) {
             if (data != null) {
-                UserManager.saveLabels(data.list)
+                UserManager.saveIsShowCompleteLabelDialog(true)
                 if (from == AddLabelActivity.FROM_REGISTER) {
                     if (UserManager.getUserIntroduce().isNullOrEmpty()) {
                         startActivity<UserIntroduceActivity>(("from" to UserIntroduceActivity.REGISTER))
@@ -237,6 +238,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                         startActivity<AddLabelSuccessActivity>("data" to labelBean)
                     } else {
                         EventBus.getDefault().post(UpdateMyLabelEvent())
+                        EventBus.getDefault().post(RefreshEvent(true))
                         if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(AddLabelActivity::class.java)
                         finish()

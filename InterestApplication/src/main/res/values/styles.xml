@@ -11,6 +11,14 @@
         <item name="android:statusBarColor">@color/colorLightGray</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="SplashTheme" parent="MyAppTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/splash_loading_bg</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
 
     <!--微信支付 -->
     <style name="wx_theme" parent="AppTheme">

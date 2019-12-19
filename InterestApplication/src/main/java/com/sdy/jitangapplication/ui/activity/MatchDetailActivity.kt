@@ -479,7 +479,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     //1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
     override fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchBean?) {
         if (success) {
-//            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             matchBean = matchUserDetailBean
             updateBlockStatus()
             initData()

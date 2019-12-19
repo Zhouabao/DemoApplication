@@ -57,6 +57,8 @@ class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQua
         mPresenter.context = this
         hotT1.visibility = View.INVISIBLE
         divider.isVisible = false
+        setSwipeBackEnable(from != REGISTER)
+        btnBack.isVisible = from != REGISTER
         btnBack.setOnClickListener(this)
         rightBtn1.setOnClickListener(this)
         rightBtn1.isVisible = true
@@ -163,5 +165,10 @@ class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQua
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        if (from != REGISTER)
+            super.onBackPressed()
     }
 }

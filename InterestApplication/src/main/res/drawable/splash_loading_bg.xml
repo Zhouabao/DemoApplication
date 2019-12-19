@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools">
+
+    <item android:drawable="@color/colorWhite"/>
+    <item>
+        <bitmap
+                android:src="@drawable/icon_splash"
+                android:antialias="true"
+                android:mipMap="true"
+                android:dither="true"
+                android:filter="true"
+                android:gravity="center_horizontal|bottom"
+                tools:ignore="UnusedAttribute"
+                />
+    </item>
+</layer-list>

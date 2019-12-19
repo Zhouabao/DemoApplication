@@ -190,12 +190,14 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         pause = false;
         inputPanel.onResume();
         messageListPanel.onResume();
-        if (!sessionId.equals(Constants.ASSISTANT_ACCID) && nimBean == null) {
-            getTargetInfo(sessionId);
-        } else {
+        if (!sessionId.equals(Constants.ASSISTANT_ACCID))
+            if (nimBean == null) {
+                getTargetInfo(sessionId);
+            } else {
+                setTargetInfoData();
+            }
+        else
             messageActivityBottomLayout.setVisibility(View.VISIBLE);
-            setTargetInfoData();
-        }
         NIMClient.getService(MsgService.class).setChattingAccount(sessionId, sessionType);
         getActivity().setVolumeControlStream(AudioManager.STREAM_VOICE_CALL); // 默认使用听筒播放
     }

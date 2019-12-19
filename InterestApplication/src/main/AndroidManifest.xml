@@ -140,6 +140,7 @@
         </activity>
 
         <activity
+                android:theme="@style/SplashTheme"
                 android:name=".ui.activity.SplashActivity"
                 android:screenOrientation="portrait">
             <intent-filter>
@@ -308,8 +309,8 @@
         <activity
                 android:name=".ui.activity.MainActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:launchMode="singleTop"
                 android:screenOrientation="portrait"
+                android:launchMode="singleTask"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustNothing|stateAlwaysHidden">
         </activity>

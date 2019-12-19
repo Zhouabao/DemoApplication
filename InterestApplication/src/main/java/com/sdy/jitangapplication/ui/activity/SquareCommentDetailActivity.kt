@@ -232,12 +232,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 MatchDetailActivity.start(this, squareBean?.accid ?: "")
         }
 
-        squareLocationAndTime1.text =
-            "${squareBean!!.province_name}${if (!squareBean!!.province_name.isNullOrEmpty() && squareBean!!.city_name.isNotEmpty() && squareBean!!.city_name != squareBean!!.province_name) {
-                "\t${squareBean!!.city_name}"
-            } else {
-                ""
-            }}".plus("\t\t${squareBean!!.out_time}")
+        squareLocationAndTime1.text = "${squareBean!!.puber_address}" +
+                "${if (!squareBean!!.puber_address.isNullOrEmpty()) {
+                    "."
+                } else {
+                    ""
+                }}${squareBean!!.out_time}"
 
 
     }

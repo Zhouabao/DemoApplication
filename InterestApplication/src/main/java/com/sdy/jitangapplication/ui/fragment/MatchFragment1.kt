@@ -24,6 +24,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
@@ -40,7 +41,10 @@ import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
-import com.sdy.jitangapplication.ui.activity.*
+import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
+import com.sdy.jitangapplication.ui.activity.MyIntentionActivity
+import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
@@ -48,6 +52,7 @@ import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.yuyakaido.android.cardstackview.*
+import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_match1.*
 import org.greenrobot.eventbus.EventBus
@@ -240,9 +245,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     }
                     labelAdapter.notifyDataSetChanged()
                     checkedTitle = position + 1
-
-                    if (checkedTitle == 1) {
-                        t1.text = "为你推荐${matchUserAdapter.my_tags_quality.size}个标签"
+                    if (checkedTitle == WANT_MATCH) {
+                        t1.text = "为你推荐${UserManager.getInterestLabelCount()}个标签"
                     } else {
                         t1.text = "根据我的标签推荐"
                     }
@@ -269,7 +273,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 FilterUserDialog(activity!!).show()
             }
             R.id.completeLabelBtn -> {//完善标签
-                startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_ADD_NEW)
+                startActivity<MyLabelActivity>()
             }
             R.id.manageLabel -> {//标签管理
                 startActivity<MyLabelActivity>("index" to checkedTitle - 1)
@@ -352,16 +356,27 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 findToTalk.text = "选择意向"
             }
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
-
             matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
-            t1.text = "为你推荐${matchBeans.myinterest_count}个标签"
+            UserManager.saveMyLabelCount((matchBeans.mytags ?: mutableListOf<MyLabelBean>()).size)
+            if (checkedTitle == WANT_MATCH) {
+                UserManager.saveInterestLabelCount(matchBeans.myinterest_count)
+                t1.text = "为你推荐${UserManager.getInterestLabelCount()}个标签"
+            }
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
             //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容
-            if ((matchBeans.mytags ?: mutableListOf<Newtag>()).size == 0) {
-                if (UserManager.isShowCompleteLabelDialog())
+            var noQuality = false//某个标签没有特质
+            for (mytag in matchBeans.mytags ?: mutableListOf()) {
+                if (mytag.label_quality.isNullOrEmpty()) {
+                    noQuality = true
+                    break
+                }
+            }
+            if (matchBeans.mytags.isNullOrEmpty() || noQuality) {
+                if (UserManager.isShowCompleteLabelDialog()) {
                     completeLabelBtn.isVisible = true
-                else {
-                    matchBeans.interest_times = 1
+                } else {
+                    //todo 记得还原
+                    matchBeans.interest_times = 3
                     UserManager.saveCompleteLabelCount(matchBeans.interest_times)
                     completeLabelBtn.isVisible = false
                 }
@@ -524,6 +539,42 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             }
             EMPTY -> {
                 emptyLayout.isVisible = true
+                if (checkedTitle == SAME_MATCH) {
+                    if (UserManager.getMyLabelCount() > 0) {
+                        emptyLayout.emptyFriendTitle.isVisible = false
+                        emptyLayout.emptyFriendGoBtn.isVisible = false
+                        emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_match)
+                        emptyLayout.emptyFriendTip.text = "暂时没有人了"
+                    } else {
+                        emptyLayout.emptyFriendTitle.isVisible = true
+                        emptyLayout.emptyFriendGoBtn.isVisible = true
+                        emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_label)
+                        emptyLayout.emptyFriendTitle.text = "标签未完善"
+                        emptyLayout.emptyFriendGoBtn.text = "去看看"
+                        emptyLayout.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
+                        emptyLayout.emptyFriendGoBtn.onClick {
+                            startActivity<MyLabelActivity>("from" to MyLabelActivity.MY_LABEL)
+                        }
+                    }
+                } else {
+                    if (UserManager.getInterestLabelCount() > 0) {
+                        emptyLayout.emptyFriendTitle.isVisible = false
+                        emptyLayout.emptyFriendGoBtn.isVisible = false
+                        emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_match)
+                        emptyLayout.emptyFriendTip.text = "暂时没有人了"
+                    } else {
+                        emptyLayout.emptyFriendTitle.isVisible = true
+                        emptyLayout.emptyFriendGoBtn.isVisible = true
+                        emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_label)
+                        emptyLayout.emptyFriendTitle.text = "标签未完善"
+                        emptyLayout.emptyFriendGoBtn.text = "去看看"
+                        emptyLayout.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
+                        emptyLayout.emptyFriendGoBtn.onClick {
+                            startActivity<MyLabelActivity>("from" to MyLabelActivity.MY_INTEREST_LABEL)
+
+                        }
+                    }
+                }
                 contentLayout.isVisible = false
                 errorLayout.isVisible = false
                 loadingLayout.isVisible = false
@@ -586,6 +637,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             .repeat(0)
             .playOn(card_stack_view)
     }
+
     /**
      * 是否展示完善标签
      */
@@ -654,7 +706,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         card_stack_view.layoutManager = manager
         card_stack_view.adapter = matchUserAdapter
         matchUserAdapter.bindToRecyclerView(card_stack_view)
-//        matchUserAdapter.setEmptyView(R.layout.loading_layout_match, card_stack_view)
         card_stack_view.itemAnimator.apply {
             if (this is DefaultItemAnimator) {
                 supportsChangeAnimations = false
@@ -781,15 +832,16 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     override fun onCardAppeared(view: View?, position: Int) {
         Log.d("CardStackView", "onCardAppeared: ($position)")
-        btnChatCl.isEnabled = matchUserAdapter.data[position].greet_switch
-        if (matchUserAdapter.data[position].greet_switch) {
-            tvLeftChatTime.visibility = View.VISIBLE
-            greetBtn.visibility = View.VISIBLE
-        } else {
-            tvLeftChatTime.visibility = View.INVISIBLE
-            greetBtn.visibility = View.INVISIBLE
+        if (matchUserAdapter.data.size > 0 && matchUserAdapter.data.size > position) {
+            btnChatCl.isEnabled = matchUserAdapter.data[position].greet_switch
+            if (matchUserAdapter.data[position].greet_switch) {
+                tvLeftChatTime.visibility = View.VISIBLE
+                greetBtn.visibility = View.VISIBLE
+            } else {
+                tvLeftChatTime.visibility = View.INVISIBLE
+                greetBtn.visibility = View.INVISIBLE
+            }
         }
-
     }
 
     override fun onCardRewound() {

@@ -13,6 +13,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.ShowCompleteLabelEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
 import com.sdy.jitangapplication.event.UpdateMyInterestLabelEvent
@@ -232,13 +233,19 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                 startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
             } else if (from == FROM_INTERSERT_LABEL) {
                 EventBus.getDefault().post(UpdateMyInterestLabelEvent())
+                EventBus.getDefault().post(RefreshEvent(true))
             } else {
                 EventBus.getDefault().post(UpdateEditModeEvent(MyLabelActivity.MY_LABEL))
                 EventBus.getDefault().post(ShowCompleteLabelEvent(false))
+                EventBus.getDefault().post(RefreshEvent(true))
             }
             finish()
         }
 
     }
 
+    override fun onBackPressed() {
+        if (from != FROM_REGISTER)
+            super.onBackPressed()
+    }
 }

@@ -145,25 +145,13 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     private fun initData() {
         GlideUtil.loadAvatorImg(this, squareBean.avatar, detailPlayUserAvatar)
-        detailPlayUserLocationAndTime.text =
-            if (squareBean.puber_address.isNullOrEmpty()) {
-                squareBean.province_name.plus(
-                    if (squareBean.city_name != squareBean.province_name) {
-                        squareBean.city_name
-                    } else {
-                        ""
-                    }
-                ).plus(
-                    if (!squareBean.province_name.isNullOrEmpty() || !squareBean.city_name.isEmpty()) {
-                        "\t\t"
-                    } else {
-                        ""
-                    }
-                )
-            } else {
-                squareBean.puber_address.plus("\t\t")
-            }
-                .plus(squareBean.out_time)
+        detailPlayUserLocationAndTime.text =  "${squareBean!!.puber_address}" +
+                "${if (!squareBean!!.puber_address.isNullOrEmpty()) {
+                    "."
+                } else {
+                    ""
+                }}${squareBean!!.out_time}"
+
 
 
 

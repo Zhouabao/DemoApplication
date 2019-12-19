@@ -81,6 +81,7 @@
                     android:layout_width="wrap_content"
                     android:textColorHint="@color/colorOrange"
                     android:hint="选择意向"
+                    android:gravity="center"
                     android:textColor="@color/colorOrange"
                     android:textSize="13sp"
                     android:paddingLeft="8dp"
@@ -242,7 +243,7 @@
 
         <include
                 android:id="@+id/emptyLayout"
-                layout="@layout/empty_match_layout"
+                layout="@layout/empty_friend_layout"
                 android:visibility="gone"/>
     </FrameLayout>
 </LinearLayout>

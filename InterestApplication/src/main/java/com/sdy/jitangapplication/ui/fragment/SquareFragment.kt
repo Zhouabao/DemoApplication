@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -48,7 +49,10 @@ import com.sdy.jitangapplication.presenter.SquarePresenter
 import com.sdy.jitangapplication.presenter.view.SquareView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
-import com.sdy.jitangapplication.ui.activity.*
+import com.sdy.jitangapplication.ui.activity.AllTitleActivity
+import com.sdy.jitangapplication.ui.activity.MyLabelActivity
+import com.sdy.jitangapplication.ui.activity.PublishActivity
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.AllTitleAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
@@ -114,7 +118,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             "token" to UserManager.getToken(),
             "page" to page,
             "pagesize" to Constants.PAGESIZE,
-            "gender" to sp.getInt("filter_gender", 3),
+            "gender" to sp.getInt("filter_square_gender", 3),
             "type" to chooseTitileIndex
         )
     }
@@ -220,7 +224,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 contentView.genderMan.setTextColor(Color.parseColor("#191919"))
                 contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
                 filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
-                sp.put("filter_gender", 3)
+                sp.put("filter_square_gender", 3)
                 refreshLayout.autoRefresh()
                 dismiss()
             }
@@ -229,7 +233,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 contentView.genderAll.setTextColor(Color.parseColor("#191919"))
                 contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
                 filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
-                sp.put("filter_gender", 1)
+                sp.put("filter_square_gender", 1)
                 refreshLayout.autoRefresh()
                 dismiss()
 
@@ -239,7 +243,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 contentView.genderAll.setTextColor(Color.parseColor("#191919"))
                 contentView.genderMan.setTextColor(Color.parseColor("#191919"))
                 filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
-                sp.put("filter_gender", 2)
+                sp.put("filter_square_gender", 2)
                 refreshLayout.autoRefresh()
                 dismiss()
             }
@@ -264,6 +268,10 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     if (index == position)
                         labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), position)
                 }
+                if (position == chooseTitileIndex - 1) {
+                    labelAdapter.enable = true
+                    return@setOnItemClickListener
+                }
                 updateChooseTitle(position)
                 labelAdapter.notifyDataSetChanged()
             }
@@ -272,11 +280,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         /**
          *性别筛选
          */
-        if (sp.getInt("filter_gender", 3) == 3) {
+        if (sp.getInt("filter_square_gender", 3) == 3) {
             filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
-        } else if (sp.getInt("filter_gender", 3) == 1) {
+        } else if (sp.getInt("filter_square_gender", 3) == 1) {
             filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
-        } else if (sp.getInt("filter_gender", 3) == 2) {
+        } else if (sp.getInt("filter_square_gender", 3) == 2) {
             filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
         }
         filterGenderBtn.onClick {
@@ -284,19 +292,19 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 filterPopupWindow.dismiss()
             } else {
                 filterPopupWindow.showAsDropDown(filterGenderBtn, 0, SizeUtils.dp2px(-15F))
-                if (sp.getInt("filter_gender", 3) == 3) {
+                if (sp.getInt("filter_square_gender", 3) == 3) {
                     filterPopupWindow.contentView.genderAll.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
                     filterPopupWindow.contentView.genderMan.setTextColor(Color.parseColor("#191919"))
                     filterPopupWindow.contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
                     filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
 
-                } else if (sp.getInt("filter_gender", 3) == 1) {
+                } else if (sp.getInt("filter_square_gender", 3) == 1) {
                     filterPopupWindow.contentView.genderMan.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
                     filterPopupWindow.contentView.genderAll.setTextColor(Color.parseColor("#191919"))
                     filterPopupWindow.contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
                     filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
 
-                } else if (sp.getInt("filter_gender", 3) == 2) {
+                } else if (sp.getInt("filter_square_gender", 3) == 2) {
                     filterPopupWindow.contentView.genderWoman.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
                     filterPopupWindow.contentView.genderAll.setTextColor(Color.parseColor("#191919"))
                     filterPopupWindow.contentView.genderMan.setTextColor(Color.parseColor("#191919"))
@@ -324,30 +332,27 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
      * 0-想认识 1-找同好 2-好友
      */
     private fun updateChooseTitle(position: Int) {
-        if (position == chooseTitileIndex - 1) {
-            labelAdapter.enable = true
-            return
-        }
         setViewState(LOADING)
         chooseTitileIndex = position + 1
+        setTitileContent()
         listParams["type"] = chooseTitileIndex
         refreshLayout.autoRefresh()
+    }
 
-        when (position) {
-            0 -> {
+    private fun setTitileContent() {
+        when (chooseTitileIndex) {
+            SQUARE_WANT_KNOW -> {
+                squareRecommendTitle.text = "为你推荐${UserManager.getInterestLabelCount()}个标签"
                 squareRecommendCl.isVisible = true
-                squareRecommendTitle.text = "为你推荐3个标签"
             }
-            1 -> {
-                squareRecommendCl.isVisible = true
+            SQUARE_SAME_PERSON -> {
                 squareRecommendTitle.text = "根据我的标签推荐"
+                squareRecommendCl.isVisible = true
             }
-            2 -> {
+            SQUARE_FRIEND -> {
                 squareRecommendCl.isVisible = false
             }
         }
-
-
     }
 
     private fun initView() {
@@ -378,6 +383,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         squareDynamicRv.layoutManager = layoutManager
         squareDynamicRv.adapter = adapter
         adapter.setHeaderAndEmpty(false)
+        adapter.setEmptyView(R.layout.empty_friend_layout, squareDynamicRv)
+        adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(squareDynamicRv)
         //取消动画，主要是闪烁
 //        (squareDynamicRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
@@ -557,7 +564,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
         listParams["page"] = page
-        listParams["gender"] = sp.getInt("filter_gender", 3)
+        listParams["gender"] = sp.getInt("filter_square_gender", 3)
 
         resetAudio()
 
@@ -597,9 +604,12 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 adapter.notifyDataSetChanged()
                 squareDynamicRv.scrollToPosition(0)
             }
-
             setViewState(CONTENT)
-//            (data!!.list?: mutableListOf<SquareBean>()).clear()
+            //更新标题显示内容数据
+            if (data != null && chooseTitileIndex == SQUARE_WANT_KNOW)
+                UserManager.saveInterestLabelCount(data?.myinterest_count)
+            setTitileContent()
+//            (data!!.list ?: mutableListOf<SquareBean>()).clear()
             if (data!!.list != null && data!!.list!!.size > 0) {
                 adapter.isUseEmpty(false)
                 for (tempData in 0 until data!!.list!!.size) {
@@ -618,27 +628,29 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 }
                 adapter.addData(data!!.list!!)
             } else {
+                adapter.isUseEmpty(true)
                 if (adapter.headerLayout != null)
                     adapter.headerLayout.isVisible = false
                 if (chooseTitileIndex == SQUARE_WANT_KNOW) {
-                    adapter.setEmptyView(R.layout.empty_layout, squareDynamicRv)
+                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_square)
+                    adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
+                    adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+                    adapter.emptyView.emptyFriendGoBtn.isVisible = false
                 } else if (chooseTitileIndex == SQUARE_SAME_PERSON) {
-                    adapter.setEmptyView(R.layout.empty_friend_layout, squareDynamicRv)
                     adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_label)
                     adapter.emptyView.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
                     adapter.emptyView.emptyFriendTitle.text = "标签未完善"
                     adapter.emptyView.emptyFriendGoBtn.text = "完善标签"
+                    adapter.emptyView.emptyFriendGoBtn.isVisible = true
                     adapter.emptyView.emptyFriendGoBtn.onClick {
-                        startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_ADD_NEW)
+                        startActivity<MyLabelActivity>()
                     }
                 } else if (chooseTitileIndex == SQUARE_FRIEND) {
-                    adapter.setEmptyView(R.layout.empty_friend_layout, squareDynamicRv)
                     adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
-                    adapter.emptyView.emptyFriendTitle.text = "您还没有好友"
-                    adapter.emptyView.emptyFriendTip.text = "这个是没有好友空状态\n文本内容尚未确定还会修改"
-                    adapter.emptyView.emptyFriendGoBtn.text = "去看看"
+                    adapter.emptyView.emptyFriendTitle.text = "暂时没有动态"
+                    adapter.emptyView.emptyFriendTip.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
+                    adapter.emptyView.emptyFriendGoBtn.isVisible = false
                 }
-
             }
 
             refreshLayout.finishRefresh(result)
@@ -750,9 +762,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRefreshEvent(event: RefreshEvent) {
         squareDynamicRv.scrollToPosition(0)
-        //这个地方还要默认设置选中第一个标签来更新数据
-        listParams["gender"] = sp.getInt("filter_gender", 3)
-        refreshLayout.autoRefresh()
+        updateChooseTitle(chooseTitileIndex - 1)
     }
 
     /**
@@ -827,7 +837,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     (((event.currentFileIndex - 1) * 1.0F / event.totalFileCount + (1.0F / event.totalFileCount * event.progress)) * 100).toInt()
                 uploadProgressTv.text = "正在发布    ${uploadProgressBar.progress}%"
                 uploadFl.isVisible = true
-                if (!changeMarTop) {
+                if (!changeMarTop && adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
                     val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
                     params.topMargin = SizeUtils.dp2px(45F)
                     adapter.headerLayout.recommendTitle.layoutParams = params
@@ -848,16 +858,20 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             uploadProgressTv.text = "动态发布成功!"
             uploadFl.postDelayed({
                 uploadFl.isVisible = false
-                val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
-                params.topMargin = SizeUtils.dp2px(10F)
-                adapter.headerLayout.recommendTitle.layoutParams = params
+                if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                    val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                    params.topMargin = SizeUtils.dp2px(10F)
+                    adapter.headerLayout.recommendTitle.layoutParams = params
+                }
             }, 500)
         } else {
             UserManager.cancelUpload = true
             uploadFl.isVisible = true
-            val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
-            params.topMargin = SizeUtils.dp2px(45F)
-            adapter.headerLayout.recommendTitle.layoutParams = params
+            if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                params.topMargin = SizeUtils.dp2px(45F)
+                adapter.headerLayout.recommendTitle.layoutParams = params
+            }
             uploadProgressBar.progress = 0
             llRetry.isVisible = true
             btnClose.isVisible = true
@@ -874,9 +888,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     startActivity<PublishActivity>()
                     UserManager.publishState = 0
                     uploadFl.isVisible = false
-                    val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
-                    params.topMargin = SizeUtils.dp2px(10F)
-                    adapter.headerLayout.recommendTitle.layoutParams = params
+                    if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                        val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                        params.topMargin = SizeUtils.dp2px(10F)
+                        adapter.headerLayout.recommendTitle.layoutParams = params
+                    }
                 }
             } else { //发布失败重新发布
                 UserManager.publishState = -2
@@ -890,9 +906,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             //TODO 取消重新发布，清除本地所存下的发布的数据
             btnClose.onClick {
                 uploadFl.isVisible = false
-                val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
-                params.topMargin = SizeUtils.dp2px(10F)
-                adapter.headerLayout.recommendTitle.layoutParams = params
+                if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                    val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                    params.topMargin = SizeUtils.dp2px(10F)
+                    adapter.headerLayout.recommendTitle.layoutParams = params
+                }
                 UserManager.clearPublishParams()
             }
         }
@@ -926,9 +944,12 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     override fun onClick(dialog: Dialog) {
                         dialog.cancel()
                         uploadFl.isVisible = false
-                        val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
-                        params.topMargin = SizeUtils.dp2px(10F)
-                        adapter.headerLayout.recommendTitle.layoutParams = params
+                        if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                            val params =
+                                adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                            params.topMargin = SizeUtils.dp2px(10F)
+                            adapter.headerLayout.recommendTitle.layoutParams = params
+                        }
                         UserManager.clearPublishParams()
                         if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
                             if (event.context == UserCenterFragment::class.java.simpleName) {
@@ -950,9 +971,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     startActivity<PublishActivity>()
                 }
             uploadFl.isVisible = false
-            val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
-            params.topMargin = SizeUtils.dp2px(10F)
-            adapter.headerLayout.recommendTitle.layoutParams = params
+            if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                params.topMargin = SizeUtils.dp2px(10F)
+                adapter.headerLayout.recommendTitle.layoutParams = params
+            }
         } else if (UserManager.publishState == 0) {
             if (event.context == UserCenterFragment::class.java.simpleName) {
                 startActivity<PublishActivity>("from" to 2)

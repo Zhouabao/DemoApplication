@@ -60,7 +60,7 @@
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
                 android:background="@drawable/rectangle_gray_3dp"
-                tools:text="北京市"
+                tools:text="北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市"
                 />
 
     </LinearLayout>

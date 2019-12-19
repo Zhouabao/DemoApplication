@@ -144,11 +144,11 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             holder.itemView.matchUserLocalTagCharacter.layoutManager =
                 LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
             val adapter1 = MatchDetailLabelQualityAdapter()
-            for (quality in my_tags_quality) {
+            outFor@ for (quality in my_tags_quality) {
                 for (quality1 in item.newtags ?: mutableListOf()) {
                     if (quality1.id == quality.id) {
                         adapter1.myTags = quality.label_quality
-                        break
+                        break@outFor
                     }
                 }
             }

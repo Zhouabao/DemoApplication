@@ -121,7 +121,6 @@ class MultiListSquareAdapter(
 
             (holder.itemView.squareTitleCl.layoutParams as ConstraintLayout.LayoutParams).topMargin =
                 SizeUtils.dp2px(40F)
-            holder.itemView.llTOP.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
 
             holder.itemView.squareTitleCl.isVisible = !item.title.isNullOrEmpty()
             holder.itemView.squareTitle.text = item.title ?: ""
@@ -153,14 +152,12 @@ class MultiListSquareAdapter(
                 View.GONE
             }
 
-            holder.itemView.squareLocationAndTime1.text = item.province_name.plus(
-                if (item.city_name.isEmpty() || item.city_name == item.province_name || item.province_name.isNullOrEmpty()) {
-                    ""
+            holder.itemView.squareLocationAndTime1.text =
+                "${item.puber_address}${if (!item.puber_address.isNullOrEmpty()) {
+                    "."
                 } else {
-                    "${item.city_name}"
-                }
-            ).plus("\t\t${item.out_time}")
-
+                    ""
+                }}${item.out_time}"
 
             //点击跳转评论详情
             holder.itemView.squareCommentBtn1.onClick {

@@ -66,20 +66,13 @@ class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: C
 
         GlideUtil.loadAvatorImg(context, item.avatar, holder.itemView.detailPlayUserAvatar)
         holder.itemView.detailPlayUserLocationAndTime.text =
+            "${item.puber_address}" +
+                    "${if (!item.puber_address.isNullOrEmpty()) {
+                        "."
+                    } else {
+                        ""
+                    }}${item.out_time}"
 
-            item.province_name.plus(
-                if (item.city_name != item.province_name) {
-                    item.city_name
-                } else {
-                    ""
-                }
-            ).plus(
-                if (!item.province_name.isNullOrEmpty() || !item.city_name.isNullOrEmpty()) {
-                    "\t\t"
-                } else {
-                    ""
-                }
-            ).plus(item.out_time)
         holder.itemView.detailPlayUserName.text = item.nickname ?: ""
         holder.itemView.detailPlayContent.text = item.descr
         holder.itemView.detailPlayUserVipIv.isVisible = item.isvip == 1

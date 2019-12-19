@@ -14,6 +14,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
 import com.sdy.jitangapplication.event.UpdateEditShowEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
@@ -28,7 +29,6 @@ import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.ui.adapter.MyLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.empty_label_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -76,11 +76,11 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.labelDelete -> {
-                    //TODO删除标签
-                    if (adapter.data.size <= MIN_LABEL) {
-                        CommonFunction.toast("至少保留${MIN_LABEL}个标签")
-                        return@setOnItemChildClickListener
-                    }
+                    //TODO 删除标签
+//                    if (adapter.data.size <= MIN_LABEL) {
+//                        CommonFunction.toast("至少保留${MIN_LABEL}个标签")
+//                        return@setOnItemChildClickListener
+//                    }
                     showDeleteDialog(position)
 
                 }
@@ -142,12 +142,9 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
 
     override fun delTagResult(result: Boolean, position: Int, data: MutableList<TagBean>?) {
         if (result) {
-            if (data != null) {
-                UserManager.saveLabels(data)
-            }
-
             removedLabel.add(adapter.data[position])
             adapter.remove(position)
+            EventBus.getDefault().post(RefreshEvent(true))
         }
     }
 

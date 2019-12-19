@@ -14,6 +14,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
 import com.sdy.jitangapplication.event.UpdateEditShowEvent
 import com.sdy.jitangapplication.event.UpdateMyInterestLabelEvent
@@ -23,6 +24,8 @@ import com.sdy.jitangapplication.presenter.view.MyInterestLabelView
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.ui.adapter.MyInterestLabelAdapter
+import com.sdy.jitangapplication.ui.dialog.DeleteDialog
+import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_my_interest_label.*
 import org.greenrobot.eventbus.EventBus
@@ -74,26 +77,47 @@ class MyInterestLabelFragment : BaseMvpLazyLoadFragment<MyInterestLabelPresenter
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.labelDelete -> {
-                    mPresenter.delMyInterest(adapter.data[position].id, position)
+                    if (adapter.data.size <= 1) {
+                        CommonFunction.toast("至少要保留${MyLabelFragment.MIN_LABEL}个标签")
+                        return@setOnItemChildClickListener
+                    }
+
+                    showDeleteDialog(position)
+
                 }
             }
         }
 
     }
 
+    private val deleteDialog by lazy { DeleteDialog(activity!!) }
+    private fun showDeleteDialog(position: Int) {
+        deleteDialog.show()
+        deleteDialog.title.text = "删除标签"
+        deleteDialog.title.isVisible = true
+        deleteDialog.tip.text = "您确定要删除标签「${adapter.data[position].title}」吗？"
+        deleteDialog.confirm.onClick {
+            mPresenter.delMyInterest(adapter.data[position].id, position)
+            deleteDialog.dismiss()
+        }
+        deleteDialog.cancel.onClick {
+            deleteDialog.dismiss()
+        }
+
+    }
 
     override fun getMyTagsListResult(result: Boolean, data: MutableList<LabelQualityBean>?) {
         if (result) {
             stateMyInterestLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data != null && data.isNotEmpty()) {
                 adapter.setNewData(data)
-                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_INTEREST_LABEL,true))
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_INTEREST_LABEL, true))
             } else {
                 adapter.setEmptyView(R.layout.empty_layout, myInterestLabelRv)
-                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_INTEREST_LABEL,true))
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_INTEREST_LABEL, true))
             }
         } else {
-            EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_INTEREST_LABEL,false))
+            EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_INTEREST_LABEL, false))
             stateMyInterestLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
 
@@ -103,6 +127,7 @@ class MyInterestLabelFragment : BaseMvpLazyLoadFragment<MyInterestLabelPresenter
     override fun delTagResult(result: Boolean, position: Int) {
         if (result) {
             adapter.remove(position)
+            EventBus.getDefault().post(RefreshEvent(true))
         }
     }
 

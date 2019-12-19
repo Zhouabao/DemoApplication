@@ -10,7 +10,6 @@
             android:textColor="@color/colorGrayE0"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:maxLength="4"
             android:ellipsize="marquee"
             android:singleLine="true"
             android:focusable="true"

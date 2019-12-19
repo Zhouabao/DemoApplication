@@ -44,7 +44,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_label_success)
         initView()
-        mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.id))
+//        mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.id))
 
     }
 
@@ -53,7 +53,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
         mPresenter.mView = this
         mPresenter.context = this
 
-        successLabelName.text = "${labelBean.title}"
+//        successLabelName.text = "${labelBean.title}"
         startJitangBtn.setOnClickListener(this)
         changeLabel.setOnClickListener(this)
         publishImage.setOnClickListener(this)

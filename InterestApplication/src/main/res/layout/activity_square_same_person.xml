@@ -6,7 +6,7 @@
         android:id="@+id/stateSamePerson"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorTransparent"
+        android:background="@color/colorWhite"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
         app:msv_viewState="loading"
@@ -175,7 +175,7 @@
                 app:srlDisableContentWhenRefresh="true"
                 app:srlEnableLoadMore="true"
                 app:srlEnableLoadMoreWhenContentNotFull="false"
-                app:srlEnableRefresh="true">
+                app:srlEnableRefresh="false">
 
             <com.scwang.smartrefresh.layout.header.ClassicsHeader
                     android:layout_marginLeft="25dp"

@@ -74,6 +74,27 @@ object UserManager {
     }
 
     /**
+     * 感兴趣的标签个数
+     */
+    fun saveInterestLabelCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("interestLabelCount", count)
+    }
+
+    fun getInterestLabelCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("interestLabelCount", -1)
+    }
+    /**
+     * 我的兴趣的标签个数
+     */
+    fun saveMyLabelCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("myLabelCount", count)
+    }
+
+    fun getMyLabelCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("myLabelCount", -1)
+    }
+
+    /**
      * 是否弹窗过，弹过窗就直接浮窗
      */
     fun saveIsShowCompleteLabelDialog(show: Boolean) {
@@ -612,6 +633,7 @@ object UserManager {
 
         //筛选信息
         SPUtils.getInstance(Constants.SPNAME).remove("filter_gender")
+        SPUtils.getInstance(Constants.SPNAME).remove("filter_square_gender")
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_high")
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_low")
         SPUtils.getInstance(Constants.SPNAME).remove("local_only")
@@ -646,6 +668,8 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
         SPUtils.getInstance(Constants.SPNAME).remove("completeLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("IsShowCompleteLabelDialog")
+        SPUtils.getInstance(Constants.SPNAME).remove("interestLabelCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("myLabelCount")
 
         //账号异常记录清除
         SPUtils.getInstance(Constants.SPNAME).remove("accountDanger")

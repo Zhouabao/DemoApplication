@@ -14,7 +14,8 @@ import java.io.Serializable
 data class SquareListBean(
     var list: MutableList<SquareBean>?,
     var banner_title: MutableList<TopicBean>? = mutableListOf(),//标题
-    var friend_list: MutableList<FriendBean>?
+    var friend_list: MutableList<FriendBean>?,
+    var myinterest_count: Int = 0
 )
 
 /**
@@ -49,7 +50,6 @@ data class SquareBean(
     var isfriend: Boolean = true,
     var greet_switch: Boolean = true,//接收招呼开关   true  接收招呼      false   不接受招呼
     var greet_state: Boolean = true,// 认证招呼开关   true  开启认证      flase   不开启认证
-
     var icon: String = "",
     var isPlayAudio: Int = 0, //0未播放  1 播放中 2暂停  3 停止
     var comment: String = "",

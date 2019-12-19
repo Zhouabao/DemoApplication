@@ -10,8 +10,7 @@ import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.ShowCompleteLabelEvent
-import com.sdy.jitangapplication.ui.activity.AddLabelActivity
-import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import kotlinx.android.synthetic.main.dialog_complete_label.*
 import kotlinx.android.synthetic.main.dialog_harassment.harassmentClose
 import org.greenrobot.eventbus.EventBus
@@ -37,7 +36,7 @@ class CompleteLabelDialog(val context1: Context) : Dialog(context1, R.style.MyDi
         }
         completeLabelBtn.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
-                context1.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_ADD_NEW)
+                context1.startActivity<MyLabelActivity>()
             }
 
         })

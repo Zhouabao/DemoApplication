@@ -6,8 +6,7 @@
               android:layout_height="41dp">
 
     <TextView
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

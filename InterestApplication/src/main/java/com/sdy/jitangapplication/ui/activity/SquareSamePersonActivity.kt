@@ -22,7 +22,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.SamePersonBean
+import com.sdy.jitangapplication.model.SamePersonListBean
 import com.sdy.jitangapplication.model.TopicBean
 import com.sdy.jitangapplication.presenter.SquareSamePersonPresenter
 import com.sdy.jitangapplication.presenter.view.SquareSamePersonView
@@ -118,7 +118,6 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
             .priority(Priority.NORMAL)
             .transform(BlurTransformation(25))
             .into(samePersonBgBlur)
-        samePersonCount.text = "${topicBean.used_cnt}人参与·391条动态"
         samePersonTitle.text = topicBean.title
         hotT1.text = topicBean.title
 
@@ -135,13 +134,15 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
         mPresenter.getTitleInfo(page, topicBean.id)
     }
 
-    override fun onGetTitleInfoResult(b: Boolean, data: MutableList<SamePersonBean>?) {
+    override fun onGetTitleInfoResult(b: Boolean, data: SamePersonListBean?) {
         if (b) {
             stateSamePerson.viewState = MultiStateView.VIEW_STATE_CONTENT
-            for (tdata in data ?: mutableListOf()) {
+            for (tdata in data?.list ?: mutableListOf()) {
                 tdata.originalLike = tdata.isliked
             }
-            adapter.addData(data ?: mutableListOf())
+            adapter.addData(data?.list ?: mutableListOf())
+            samePersonCount.text = "${data?.people_cnt}人参与·${data?.square_cnt}条动态"
+
         } else {
             stateSamePerson.viewState = MultiStateView.VIEW_STATE_ERROR
         }
@@ -149,7 +150,7 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
             refreshSamePerson.finishRefresh(b)
             refreshSamePerson.resetNoMoreData()
         } else if (refreshSamePerson.state == RefreshState.Loading) {
-            if (b && data.isNullOrEmpty())
+            if (b && data?.list.isNullOrEmpty())
                 refreshSamePerson.finishLoadMoreWithNoMoreData()
             else
                 refreshSamePerson.finishLoadMore(b)

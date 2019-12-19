@@ -183,13 +183,14 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
      * IM登录
      */
     override fun onIMLoginResult(nothing: LoginInfo?, success: Boolean) {
+        loadingDialog.dismiss()
+        inputVerifyCode.isEnabled = true
         if (success) {
             UserManager.startToPersonalInfoActivity(this, nothing, data)
         } else {
             CommonFunction.toast("登录失败！请重试")
-            loadingDialog.dismiss()
-            inputVerifyCode.isEnabled = true
         }
+
     }
 
 
