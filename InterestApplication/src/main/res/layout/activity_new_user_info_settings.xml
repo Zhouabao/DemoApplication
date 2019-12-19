@@ -96,7 +96,6 @@
                             />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/mLinearLayout"
                             android:layout_marginTop="25dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
@@ -150,7 +149,6 @@
                                 tools:text="Rollinc"/>
 
                         <View
-                                android:id="@+id/dash1"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -226,7 +224,6 @@
                                 tools:text="1993/07/15"/>
 
                         <View
-                                android:id="@+id/dash3"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -391,7 +388,6 @@
                                 app:layout_constraintTop_toTopOf="@id/userLoveStatus"/>
 
                         <View
-                                android:id="@+id/dash6"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -439,7 +435,6 @@
                                 app:layout_constraintTop_toTopOf="@id/userHomeTown"/>
 
                         <View
-                                android:id="@+id/dash7"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -487,7 +482,6 @@
                                 app:layout_constraintTop_toTopOf="@id/userLiveNow"/>
 
                         <View
-                                android:id="@+id/dash8"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -536,7 +530,6 @@
                                 app:layout_constraintTop_toTopOf="@id/userJob"/>
 
                         <View
-                                android:id="@+id/dash9"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -585,7 +578,6 @@
                                 app:layout_constraintTop_toTopOf="@id/userFriendsAim"/>
 
                         <View
-                                android:id="@+id/dash10"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -633,7 +625,6 @@
                                 app:layout_constraintTop_toTopOf="@id/userSchool"/>
 
                         <View
-                                android:id="@+id/dash11"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -682,7 +673,6 @@
                                 app:layout_constraintTop_toTopOf="@id/userDrink"/>
 
                         <View
-                                android:id="@+id/dash12"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -731,7 +721,6 @@
                                 app:layout_constraintTop_toTopOf="@id/userSmoke"/>
 
                         <View
-                                android:id="@+id/dash13"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -780,7 +769,6 @@
                                 app:layout_constraintTop_toTopOf="@id/userEat"/>
 
                         <View
-                                android:id="@+id/dash14"
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
@@ -801,7 +789,6 @@
 
 
             <RelativeLayout
-                    android:id="@+id/userFinishProgressRl"
                     android:layout_marginTop="16dp"
                     android:background="@color/colorWhite"
                     android:layout_width="match_parent"
@@ -818,7 +805,6 @@
                         android:layout_height="12dp"/>
 
                 <TextView
-                        android:id="@+id/userScoreTv"
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:layout_width="55dp"
@@ -874,7 +860,6 @@
             </RelativeLayout>
 
             <TextView
-                    android:id="@+id/addPhotoTip"
                     android:textColor="@color/colorWhite"
                     android:text="再传两张生活照吧"
                     android:gravity="center"

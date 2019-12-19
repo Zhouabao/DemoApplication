@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/tabHeaderCl"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="44dp"
@@ -38,7 +37,6 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
-                android:id="@+id/filterLl"
                 android:background="@drawable/icon_gradient_white"
                 android:layout_width="135dp"
                 android:orientation="horizontal"
@@ -80,7 +78,6 @@
     </com.sdy.jitangapplication.widgets.NoScrollViewPager>
 
     <com.flyco.tablayout.CommonTabLayout
-            android:id="@+id/tabBottomMain"
             android:paddingTop="6dp"
             android:visibility="gone"
             android:background="@color/colorWhite"

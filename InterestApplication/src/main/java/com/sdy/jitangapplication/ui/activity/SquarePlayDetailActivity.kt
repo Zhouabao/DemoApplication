@@ -147,7 +147,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         GlideUtil.loadAvatorImg(this, squareBean.avatar, detailPlayUserAvatar)
         detailPlayUserLocationAndTime.text =  "${squareBean!!.puber_address}" +
                 "${if (!squareBean!!.puber_address.isNullOrEmpty()) {
-                    "."
+                    "·"
                 } else {
                     ""
                 }}${squareBean!!.out_time}"

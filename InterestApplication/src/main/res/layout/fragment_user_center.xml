@@ -140,7 +140,6 @@
 
 
                 <LinearLayout
-                        android:id="@+id/vipLl"
                         android:layout_marginTop="18dp"
                         android:background="@drawable/shape_rectangle_orange_usersetting"
                         android:layout_width="0dp"

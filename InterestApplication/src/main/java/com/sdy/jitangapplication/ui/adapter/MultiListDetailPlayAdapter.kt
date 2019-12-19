@@ -68,7 +68,7 @@ class MultiListDetailPlayAdapter(var currentPicPosition: Int = 0, var context: C
         holder.itemView.detailPlayUserLocationAndTime.text =
             "${item.puber_address}" +
                     "${if (!item.puber_address.isNullOrEmpty()) {
-                        "."
+                        "·"
                     } else {
                         ""
                     }}${item.out_time}"

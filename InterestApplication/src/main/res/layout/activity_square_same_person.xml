@@ -27,7 +27,6 @@
                 android:id="@+id/samePersonBgBlur"
                 android:visibility="invisible"
                 android:scaleType="centerCrop"
-                android:background="@drawable/icon_detail_play_cover_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"/>
 
@@ -51,7 +50,6 @@
 
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
-                    android:id="@+id/userCollapsingTitle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:minHeight="79dp"
@@ -108,7 +106,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="508人参与·391条动态"
+                            tools:text="508人参与·391条动态"
                             android:textColor="#ffffffff"
                             android:textSize="12sp"
                             app:layout_constraintLeft_toLeftOf="@id/ll1"

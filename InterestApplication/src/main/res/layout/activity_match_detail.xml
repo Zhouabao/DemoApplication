@@ -126,7 +126,6 @@
                     android:layout_height="wrap_content">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
-                        android:id="@+id/userCollapsingTitle"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:minHeight="56dp"
@@ -140,7 +139,6 @@
                         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <FrameLayout
-                            android:id="@+id/cl1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 

@@ -14,6 +14,8 @@ import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.google.gson.Gson
+import com.growingio.android.sdk.collection.Configuration
+import com.growingio.android.sdk.collection.GrowingIO
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
 import com.leon.channel.helper.ChannelReaderUtil
@@ -213,6 +215,20 @@ class MyApplication : BaseApplication() {
 
         //数美黑产
         initSM()
+
+        initGrowingIO()
+    }
+
+    private fun initGrowingIO() {
+        if (ThreadUtils.isMainThread()) {
+            GrowingIO.startWithConfiguration(
+                this, Configuration()
+                    .trackAllFragments()
+                    .setTestMode(true)
+                    .setDebugMode(true)
+                    .setChannel(ChannelReaderUtil.getChannel(this) ?: "")
+            )
+        }
     }
 
     private fun initUmeng() {

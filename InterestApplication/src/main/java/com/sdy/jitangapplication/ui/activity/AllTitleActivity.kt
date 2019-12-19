@@ -68,6 +68,8 @@ class AllTitleActivity : BaseMvpActivity<AllTitlePresenter>(), AllTitleView, OnR
 
         titlesRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         titlesRv.adapter = titlesAdapter
+        titlesAdapter.setEmptyView(R.layout.empty_layout, titlesRv)
+        titlesAdapter.isUseEmpty(false)
     }
 
 
@@ -110,7 +112,12 @@ class AllTitleActivity : BaseMvpActivity<AllTitlePresenter>(), AllTitleView, OnR
 
         if (b) {
             stateTitle.viewState = MultiStateView.VIEW_STATE_CONTENT
-            titlesAdapter.addData(data ?: mutableListOf())
+            if (data.isNullOrEmpty()) {
+                titlesAdapter.isUseEmpty(true)
+            } else {
+                titlesAdapter.addData(data ?: mutableListOf())
+                titlesAdapter.isUseEmpty(false)
+            }
         } else {
             stateTitle.viewState = MultiStateView.VIEW_STATE_ERROR
         }

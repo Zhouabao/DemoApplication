@@ -18,7 +18,7 @@ import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.presenter.ModelAboutMePresenter
 import com.sdy.jitangapplication.presenter.view.ModelAboutMeView
 import com.sdy.jitangapplication.ui.adapter.ModelLabelIntroduceAdapter
-import kotlinx.android.synthetic.main.activity_model_label_introduce.*
+import kotlinx.android.synthetic.main.activity_model_about_me.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 
 /**

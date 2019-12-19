@@ -87,7 +87,6 @@
                 />
 
         <VideoView
-                android:id="@+id/pickedVideo"
                 android:visibility="gone"
                 android:layout_width="83dp"
                 android:layout_height="83dp"

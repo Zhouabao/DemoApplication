@@ -154,7 +154,7 @@ class MultiListSquareAdapter(
 
             holder.itemView.squareLocationAndTime1.text =
                 "${item.puber_address}${if (!item.puber_address.isNullOrEmpty()) {
-                    "."
+                    "·"
                 } else {
                     ""
                 }}${item.out_time}"

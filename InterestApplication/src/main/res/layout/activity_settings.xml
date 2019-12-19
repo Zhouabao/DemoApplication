@@ -296,7 +296,6 @@
                         />
 
                 <TextView
-                        android:id="@+id/newVersionTip"
                         android:visibility="gone"
                         android:layout_marginRight="40dp"
                         android:text="有版本更新"

@@ -160,6 +160,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                     if (!reportPicAdapter.data.contains("")) {
                         reportPicAdapter.addData(reportPicAdapter.data.size, "")
                     }
+                    checkConfirm()
                 }
             }
         }
@@ -176,7 +177,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                 check = false
             }
         }
-        reportConfirm.isEnabled = check
+        reportConfirm.isEnabled = check && (reportPicAdapter.data.size - 1) > 0
     }
 
 
@@ -194,6 +195,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                     if (reportPicAdapter.data.size == 4) {
                         reportPicAdapter.remove(reportPicAdapter.data.size - 1)
                     }
+                    checkConfirm()
                 }
             }
         }

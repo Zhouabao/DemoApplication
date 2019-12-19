@@ -77,7 +77,7 @@ import org.jetbrains.anko.startActivity
  */
 class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView, View.OnClickListener,
     OnRefreshListener, OnLoadMoreListener {
-    private val TAG = SquareCommentDetailActivity1::class.java.simpleName
+    private val TAG = SquareCommentDetailActivity::class.java.simpleName
 
     //评论数据
     private var commentDatas: MutableList<CommentBean> = mutableListOf()
@@ -103,7 +103,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             enterPosition: String? = null,
             position: Int? = 0
         ) {
-            context.startActivity<SquareCommentDetailActivity1>(
+            context.startActivity<SquareCommentDetailActivity>(
                 if (squareBean != null) {
                     "squareBean" to squareBean
                 } else {
@@ -234,7 +234,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         squareLocationAndTime1.text = "${squareBean!!.puber_address}" +
                 "${if (!squareBean!!.puber_address.isNullOrEmpty()) {
-                    "."
+                    "·"
                 } else {
                     ""
                 }}${squareBean!!.out_time}"

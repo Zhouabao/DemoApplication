@@ -193,7 +193,8 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
 
     private fun doWhenLocationSuccess() {
         //120200楼宇 190107街道
-        mQuery = PoiSearch.Query("", "", UserManager.getCity())
+//        地名地址信息|道路附属设施|公共设施
+        mQuery = PoiSearch.Query("地名地址信息|道路附属设施|公共设施", "", UserManager.getCity())
         mQuery!!.pageSize = 100
         mQuery!!.pageNum = 0//设置查询第一页
         mPoiSearch = PoiSearch(this, mQuery)

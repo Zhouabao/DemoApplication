@@ -114,9 +114,8 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
         GlideUtil.loadImgCenterCrop(this, topicBean.icon, samePersonBg)
         Glide.with(this)
             .load(topicBean.icon)
-            .thumbnail(0.5F)
-            .priority(Priority.NORMAL)
-            .transform(BlurTransformation(25))
+            .priority(Priority.LOW)
+            .transform(BlurTransformation(14,3))
             .into(samePersonBgBlur)
         samePersonTitle.text = topicBean.title
         hotT1.text = topicBean.title
@@ -141,7 +140,12 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
                 tdata.originalLike = tdata.isliked
             }
             adapter.addData(data?.list ?: mutableListOf())
-            samePersonCount.text = "${data?.people_cnt}人参与·${data?.square_cnt}条动态"
+            if (data?.people_cnt == 0) {
+                samePersonCount.visibility = View.INVISIBLE
+            } else {
+                samePersonCount.visibility = View.VISIBLE
+                samePersonCount.text = "${data?.people_cnt}人参与·${data?.square_cnt}条动态"
+            }
 
         } else {
             stateSamePerson.viewState = MultiStateView.VIEW_STATE_ERROR

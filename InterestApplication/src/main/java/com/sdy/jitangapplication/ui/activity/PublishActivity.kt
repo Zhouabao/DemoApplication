@@ -310,7 +310,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         chooseTitleBtn.setOnClickListener(this)
         chooseLabelBtn.setOnClickListener(this)
         btn_emo.setOnClickListener(this)
-        rightBtn1.onClick(object :CustomClickListener(){
+        rightBtn1.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
                 if (checkTags.size <= 0) {
                     CommonFunction.toast("标签是必选项哦~")
@@ -1375,8 +1375,13 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             else if (requestCode == REQUEST_CODE_MAP) {
                 if (data?.getParcelableExtra<PoiItem>("poiItem") != null) {
                     positionItem = data!!.getParcelableExtra("poiItem") as PoiItem
-                    locationCity.text = positionItem!!.title
-//                    + (positionItem!!.cityName ?: "") + (positionItem!!.adName ?: "") + (positionItem!!.businessArea ?: "") + (positionItem!!.snippet ?: "")
+                    locationCity.text =
+                        (positionItem!!.cityName ?: "") + if (!positionItem!!.cityName.isNullOrEmpty()) {
+                            "·"
+                        } else {
+                            ""
+                        } + positionItem!!.title
+//                    +  + (positionItem!!.adName ?: "") + (positionItem!!.businessArea ?: "") + (positionItem!!.snippet ?: "")
 
                     locationCity.ellipsize = TextUtils.TruncateAt.MARQUEE
                     locationCity.isSingleLine = true

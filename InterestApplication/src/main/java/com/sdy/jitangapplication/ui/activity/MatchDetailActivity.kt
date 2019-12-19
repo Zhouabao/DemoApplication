@@ -347,7 +347,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
     private fun initData() {
-        titles[0].title = "动态.${matchBean!!.square_cnt ?: 0}"
+        titles[0].title = "动态·${matchBean!!.square_cnt ?: 0}"
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
         detailUserInformationRv.adapter = detailUserInformationAdapter
