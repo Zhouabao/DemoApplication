@@ -96,17 +96,16 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.likeMeCount -> {
-                    if (adapter.freeShow)
-                        startActivity<MessageLikeMeOneDayActivity>(
-                            "date" to "${adapter.data[position].date}",
-                            "count" to adapter.data[position].count,
-                            "hasread" to adapter.data[position].hasread,
-                            "freeShow" to adapter.freeShow,
-                            "my_percent_complete" to adapter.my_percent_complete,
-                            "normal_percent_complete" to adapter.normal_percent_complete,
-                            "myCount" to adapter.myCount,
-                            "maxCount" to adapter.maxCount
-                        )
+                    startActivity<MessageLikeMeOneDayActivity>(
+                        "date" to "${adapter.data[position].date}",
+                        "count" to adapter.data[position].count,
+                        "hasread" to adapter.data[position].hasread,
+                        "freeShow" to adapter.freeShow,
+                        "my_percent_complete" to adapter.my_percent_complete,
+                        "normal_percent_complete" to adapter.normal_percent_complete,
+                        "myCount" to adapter.myCount,
+                        "maxCount" to adapter.maxCount
+                    )
                 }
             }
         }

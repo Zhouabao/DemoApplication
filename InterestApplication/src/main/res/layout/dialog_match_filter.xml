@@ -184,7 +184,10 @@
             android:text="仅显示认证用户"
             android:textColor="#ff191919"
             android:textSize="17sp"
+            android:drawableRight="@drawable/icon_verify_other"
+            android:drawablePadding="5dp"
             android:textStyle="bold"
+            android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="@id/tv1"
             app:layout_constraintTop_toBottomOf="@id/tv2"/>
 
@@ -194,8 +197,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:drawableRight="@drawable/icon_verify_other"
-            android:drawablePadding="5dp"
             android:text="通过认证后可开启该筛选"
             android:textColor="#ffc5c6c8"
             android:textSize="13sp"

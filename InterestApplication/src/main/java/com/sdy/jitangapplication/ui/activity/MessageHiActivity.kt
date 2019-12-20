@@ -102,6 +102,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         adapter.bindToRecyclerView(messageHiRv)
         adapter.setEmptyView(R.layout.empty_layout, messageHiRv)
         adapter.emptyView.emptyTip.text = "还没有消息哦，不如主动出击？"
+        adapter.isUseEmpty(false)
 
         adapter.setOnItemClickListener { _, view, position ->
             //发送通知告诉剩余时间，并且开始倒计时
@@ -116,6 +117,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
             try {
                 Thread.sleep(500)
             } catch (e: Exception) {
+
             }
             ChatActivity.start(this, adapter.data[position].accid ?: "")
             EventBus.getDefault().post(NewMsgEvent())
@@ -188,6 +190,11 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
             }
         }
         adapter.addData(t.data ?: mutableListOf())
+        if (adapter.data.isEmpty()) {
+            adapter.isUseEmpty(true)
+        } else {
+            adapter.isUseEmpty(false)
+        }
         checkTagAllReadEnable()
 
     }

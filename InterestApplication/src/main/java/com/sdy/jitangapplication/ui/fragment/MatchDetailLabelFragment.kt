@@ -16,6 +16,7 @@ import com.sdy.jitangapplication.presenter.MatchDetailLabelPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailLabelView
 import com.sdy.jitangapplication.ui.adapter.MatchDetailUserInterestLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchDetailUserLabelAdapter
+import kotlinx.android.synthetic.main.empty_layout_block.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.footer__label_match_detail_user.view.*
 import kotlinx.android.synthetic.main.match_detail_user_label_fragment.*
@@ -57,13 +58,17 @@ class MatchDetailLabelFragment(val target_accid: String) : BaseMvpLazyLoadFragme
         rvLabel.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         rvLabel.adapter = adapter
         adapter.addFooterView(initFooterView())
+        adapter.setEmptyView(R.layout.empty_layout_block, rvLabel)
+        adapter.isUseEmpty(false)
+        adapter.emptyView.emptyTip.text = "暂无标签"
+
         adapter.bindToRecyclerView(rvLabel)
     }
 
     override fun getOtherTagsResult(result: Boolean, data: OtherLabelsBean?) {
         if (result) {
             stateLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
-            if (data != null) {
+            if (data != null && !data.other_interest.isNullOrEmpty() && !data.other_tags.isNullOrEmpty()) {
                 adapter.setNewData(data.other_tags)
                 if (!data.other_interest.isNullOrEmpty()) {
                     interestAdapter.setNewData(data.other_interest)

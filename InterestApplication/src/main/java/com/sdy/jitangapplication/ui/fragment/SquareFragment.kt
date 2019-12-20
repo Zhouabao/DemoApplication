@@ -631,19 +631,21 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 adapter.isUseEmpty(true)
                 if (adapter.headerLayout != null)
                     adapter.headerLayout.isVisible = false
-                if (chooseTitileIndex == SQUARE_WANT_KNOW) {
+                if (chooseTitileIndex == SQUARE_WANT_KNOW || (chooseTitileIndex == SQUARE_SAME_PERSON && UserManager.getMyLabelCount() > 0)) {
                     adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_square)
                     adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
                     adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
                     adapter.emptyView.emptyFriendGoBtn.isVisible = false
                 } else if (chooseTitileIndex == SQUARE_SAME_PERSON) {
-                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_label)
-                    adapter.emptyView.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
-                    adapter.emptyView.emptyFriendTitle.text = "标签未完善"
-                    adapter.emptyView.emptyFriendGoBtn.text = "完善标签"
-                    adapter.emptyView.emptyFriendGoBtn.isVisible = true
-                    adapter.emptyView.emptyFriendGoBtn.onClick {
-                        startActivity<MyLabelActivity>()
+                    if (UserManager.getMyLabelCount() == 0) {
+                        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_label)
+                        adapter.emptyView.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
+                        adapter.emptyView.emptyFriendTitle.text = "标签未完善"
+                        adapter.emptyView.emptyFriendGoBtn.text = "完善标签"
+                        adapter.emptyView.emptyFriendGoBtn.isVisible = true
+                        adapter.emptyView.emptyFriendGoBtn.onClick {
+                            startActivity<MyLabelActivity>()
+                        }
                     }
                 } else if (chooseTitileIndex == SQUARE_FRIEND) {
                     adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
