@@ -113,6 +113,7 @@ android {
         Yingyonghui {}//投放应用汇市场
         Smartisan {}//投放锤子市场
         Samsung {}//投放三星市场
+        Advertisement {}//投放三星市场
 
         //manifestPlaceholders 使用相关的值替换了UMENG_CHANNEL_VALUE
         productFlavors.all {
