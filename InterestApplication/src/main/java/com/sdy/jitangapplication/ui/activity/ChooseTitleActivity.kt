@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.presenter.ChooseTitlePresenter
 import com.sdy.jitangapplication.presenter.view.ChooseTitleView
@@ -85,6 +86,8 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
 
         titleEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+
+
                 if (s != null && s.trim().toString().isNotEmpty() && checkPos != -1) {
                     adapter.data[checkPos].isfuse = false
                     adapter.notifyItemChanged(checkPos)
@@ -99,6 +102,11 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!s.isNullOrEmpty() && s.length > 12) {
+                    titleEt.setText(s.subSequence(0, 12))
+                    CommonFunction.toast("标题长度最大为12")
+                    return
+                }
             }
 
         })

@@ -23,7 +23,6 @@
                 android:id="@+id/titleEt"
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="15dp"
-                android:maxLength="12"
                 android:singleLine="true"
                 android:background="@null"
                 android:layout_width="0dp"
