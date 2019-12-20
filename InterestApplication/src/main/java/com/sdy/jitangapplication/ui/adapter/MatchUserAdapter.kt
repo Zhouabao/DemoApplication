@@ -19,6 +19,8 @@ import com.sdy.jitangapplication.model.Newtag
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.item_match_user.view.*
 
+
+
 /**
  *    author : ZFM
  *    date   : 2019/6/2415:13
@@ -174,6 +176,12 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             holder.itemView.matchUserLocalTagName.text = item.newtags!![0].title
             adapter1.setNewData(item.newtags!![0].label_quality)
             holder.itemView.matchUserLocalTagCharacter.adapter = adapter1
+
+
+            holder.itemView.matchUserLocalTagCharacter.setOnTouchListener { v, event ->
+                v.parent.requestDisallowInterceptTouchEvent(true)
+                false
+            }
         } else {
             holder.itemView.matchUserLocalTagCharacterLl.isVisible = false
         }
