@@ -374,6 +374,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     UserManager.saveCompleteLabelCount(matchBeans.interest_times)
                     completeLabelBtn.isVisible = false
                 }
+            } else {
+                completeLabelBtn.isVisible = false
+                UserManager.saveIsShowCompleteLabelDialog(true)
             }
 
 

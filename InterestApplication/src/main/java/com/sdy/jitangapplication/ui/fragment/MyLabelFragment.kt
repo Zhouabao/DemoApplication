@@ -36,10 +36,11 @@ import kotlinx.android.synthetic.main.fragment_my_label.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.support.v4.startActivity
 import java.io.Serializable
 
-
+/**
+ * 我的标签
+ */
 class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView, View.OnClickListener {
     companion object {
         val MIN_LABEL = 1
@@ -123,7 +124,11 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
                 addLabelBtn.isVisible = false
                 adapter.setEmptyView(R.layout.empty_label_layout, mylabelRv)
                 adapter.emptyView.addLabelBtn.onClick {
-                    startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_ADD_NEW)
+                    activity!!.intent.putExtra("from", AddLabelActivity.FROM_ADD_NEW)
+                    activity!!.intent.putExtra("is_using", adapter.data as Serializable)
+                    activity!!.intent.putExtra("is_removed", removedLabel as Serializable)
+                    activity!!.intent.setClass(activity!!, AddLabelActivity::class.java)
+                    startActivity(activity!!.intent)
                 }
                 adapter.emptyView.emptyLabelTip.isVisible = false
                 adapter.emptyView.emptyTip.isVisible = false
