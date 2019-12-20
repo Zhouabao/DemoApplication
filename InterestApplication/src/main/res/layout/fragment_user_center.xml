@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+        app:msv_viewState="content">
 
 
     <androidx.core.widget.NestedScrollView
@@ -52,6 +52,7 @@
                         android:textSize="21sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toTopOf="@id/userVerify"
                         app:layout_constraintLeft_toRightOf="@id/userAvator"
                         app:layout_constraintTop_toTopOf="@id/userAvator"
                         tools:text="Username"/>
@@ -71,7 +72,7 @@
                         android:src="@drawable/icon_verify_not_me"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:layout_marginTop="5dp"
+                        app:layout_constraintBottom_toBottomOf="@id/userAvator"
                         app:layout_constraintLeft_toLeftOf="@id/userName"
                         app:layout_constraintLeft_toRightOf="@id/userVip"
                         app:layout_constraintTop_toBottomOf="@id/userName"/>
@@ -273,7 +274,6 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/userInfoCl"
                     />
-
 
 
             <TextView
