@@ -549,10 +549,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 emptyLayout.isVisible = true
                 if (checkedTitle == SAME_MATCH) {
                     if (UserManager.getMyLabelCount() > 0) {
-                        emptyLayout.emptyFriendTitle.isVisible = false
+                        emptyLayout.emptyFriendTitle.isVisible = true
                         emptyLayout.emptyFriendGoBtn.isVisible = false
                         emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_match)
-                        emptyLayout.emptyFriendTip.text = "暂时没有人了"
+                        emptyLayout.emptyFriendTitle.text = "暂时没有人了"
+                        emptyLayout.emptyFriendTip.text = "一会儿再回来看看吧"
                     } else {
                         emptyLayout.emptyFriendTitle.isVisible = true
                         emptyLayout.emptyFriendGoBtn.isVisible = true
@@ -566,10 +567,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     }
                 } else {
                     if (UserManager.getInterestLabelCount() > 0) {
-                        emptyLayout.emptyFriendTitle.isVisible = false
+                        emptyLayout.emptyFriendTitle.isVisible = true
                         emptyLayout.emptyFriendGoBtn.isVisible = false
                         emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_match)
-                        emptyLayout.emptyFriendTip.text = "暂时没有人了"
+                        emptyLayout.emptyFriendTitle.text = "暂时没有人了"
+                        emptyLayout.emptyFriendTip.text = "一会儿再回来看看吧"
                     } else {
                         emptyLayout.emptyFriendTitle.isVisible = true
                         emptyLayout.emptyFriendGoBtn.isVisible = true
