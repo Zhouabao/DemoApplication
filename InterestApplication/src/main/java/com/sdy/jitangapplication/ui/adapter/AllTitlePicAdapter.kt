@@ -22,15 +22,8 @@ class AllTitlePicAdapter(private var spanCount: Int = 5) :
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).height =
                 ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F)) / 5f).toInt()
         } else {
-            (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = SizeUtils.dp2px(50F)
-            (helper.itemView.layoutParams as RecyclerView.LayoutParams).height = SizeUtils.dp2px(50F)
-            (helper.itemView.layoutParams as RecyclerView.LayoutParams).leftMargin =
-                if (helper.layoutPosition == 0) {
-                    0
-                } else {
-                    SizeUtils.dp2px(5F)
-                }
-            (helper.itemView.layoutParams as RecyclerView.LayoutParams).rightMargin = 0
+            (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = SizeUtils.dp2px(48F)
+            (helper.itemView.layoutParams as RecyclerView.LayoutParams).height = SizeUtils.dp2px(48F)
         }
         GlideUtil.loadRoundImgCenterCrop(
             mContext,

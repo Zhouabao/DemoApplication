@@ -119,8 +119,8 @@ public class ScrollCalculatorHelper {
             if (gsyBaseVideoPlayer != null) {
                 int[] screenPosition = new int[2];
                 gsyBaseVideoPlayer.getLocationOnScreen(screenPosition);
-                int halfHeight = 0;
-//                int halfHeight = gsyBaseVideoPlayer.getHeight() / 2;
+//                int halfHeight = 0;
+                int halfHeight = gsyBaseVideoPlayer.getHeight() / 2;
                 int rangePosition = screenPosition[1] + halfHeight;
                 //中心点在播放区域内
                 if (rangePosition >= rangeTop && rangePosition <= rangeBottom) {

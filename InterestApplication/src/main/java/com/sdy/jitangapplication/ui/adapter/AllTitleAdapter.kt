@@ -23,11 +23,11 @@ class AllTitleAdapter(var spancount: Int = 5) :
 
     override fun convert(helper: BaseViewHolder, item: TopicBean) {
         if (spancount == 3) {
-            (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = RecyclerView.LayoutParams.WRAP_CONTENT
-            (helper.itemView.layoutParams as RecyclerView.LayoutParams).leftMargin = SizeUtils.dp2px(10F)
+            (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = SizeUtils.dp2px(180F)
+            (helper.itemView.layoutParams as RecyclerView.LayoutParams).leftMargin =0
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).rightMargin = 0
 
-            (helper.itemView.titlePicRv.layoutParams as ConstraintLayout.LayoutParams).height = SizeUtils.dp2px(50F)
+            (helper.itemView.titlePicRv.layoutParams as ConstraintLayout.LayoutParams).height = SizeUtils.dp2px(48F)
 
         } else {
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = RecyclerView.LayoutParams.MATCH_PARENT
