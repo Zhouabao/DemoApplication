@@ -22,12 +22,9 @@ class VisitUserAvatorAdater :
 
     public var freeShow = false
     override fun convert(holder: BaseViewHolder, item: String) {
-        if (holder.layoutPosition != 0) {
-            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-            params.setMargins(SizeUtils.dp2px(-12F), 0, 0, 0)
-            holder.itemView.layoutParams = params
-        }
-
+        val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+        params.setMargins(if (holder.layoutPosition != 0) SizeUtils.dp2px(-12F) else 0, 0, 0, 0)
+        holder.itemView.layoutParams = params
         //如果不是会员，就高斯模糊看过我的
         if (freeShow) {
             GlideUtil.loadImg(mContext, item, holder.itemView.visitCoverImg)
