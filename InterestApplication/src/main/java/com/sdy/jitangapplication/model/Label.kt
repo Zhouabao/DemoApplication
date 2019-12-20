@@ -77,7 +77,8 @@ data class MyLabelBean(
     var intro_descr: String = "",
     var publish_descr: String = "",
     var msg: String = "",
-    var checked: Boolean = false
+    var checked: Boolean = false,
+    var animated: Boolean = false
 ) : Serializable
 
 

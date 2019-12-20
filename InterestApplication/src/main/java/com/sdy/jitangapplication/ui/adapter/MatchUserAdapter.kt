@@ -149,7 +149,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.itemView.matchAim.isVisible = item.intention.isNotEmpty()//标签意向
         holder.itemView.matchAim.text = item.intention
 
-        holder.itemView.matchUserLocalTagContent.isVisible = !item.sign.isNullOrEmpty()//标签介绍
+        holder.itemView.matchUserLocalTagContent.isVisible = !item.sign.isNullOrBlank()//标签介绍
         holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""
 
 

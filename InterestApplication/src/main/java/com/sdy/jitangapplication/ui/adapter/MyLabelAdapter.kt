@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.animation.ObjectAnimator
+import android.graphics.Path
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,9 +47,18 @@ class MyLabelAdapter : BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.it
         helper.addOnClickListener(R.id.labelEdit)
 
         if (item.label_quality.isNullOrEmpty()) {
+            helper.itemView.labelQualityAddBtn.isVisible = true
+            if (!item.animated) {
+                val path = Path()
+                path.moveTo(0.8F, 0.8F)
+                path.lineTo(1F, 1F)
+                ObjectAnimator.ofFloat(helper.itemView.labelQualityAddBtn, "scaleX", "scaleY", path)
+                    .setDuration(450L)
+                    .start()
+                item.animated = true
+            }
             helper.itemView.labelQualityRv.isVisible = false
-            helper.itemView.labelQualityAdd.isVisible = true
-            helper.itemView.labelQualityAdd.onClick {
+            helper.itemView.labelQualityAddBtn.onClick {
                 mContext.startActivity<LabelQualityActivity>(
                     "aimData" to item,
                     "from" to AddLabelActivity.FROM_EDIT,
@@ -56,7 +66,7 @@ class MyLabelAdapter : BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.it
                 )
             }
         } else {
-            helper.itemView.labelQualityAdd.isVisible = false
+            helper.itemView.labelQualityAddBtn.isVisible = false
             helper.itemView.labelQualityRv.isVisible = true
             val adapter = LabelQualityAdapter()
             helper.itemView.labelQualityRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
