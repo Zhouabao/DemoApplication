@@ -59,7 +59,6 @@
     <string name="make_friend_tip">聊得来就与TA成为好友吧</string>
     <string name="stop_count_down_tip">已停止倒数</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="real_avator_tip">请确保头像为真人,留下最好的第一印象</string>
     <string name="report_square">确认举报该条动态？</string>
     <string name="dissolve_wechat">是否确定解除微信绑定？</string>
@@ -67,5 +66,4 @@
 
     <!--拍摄照片时的滤镜    -->
 
-    <!-- TODO: Remove or change this placeholder text -->
 </resources>

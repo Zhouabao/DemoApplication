@@ -232,7 +232,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                         startActivity<MainActivity>()
                     }
                 } else {
-                    //todo 这里标签是来自于发布或者已经在该标签下发布过内容，就不走发布流程
+                    // 这里标签是来自于发布或者已经在该标签下发布过内容，就不走发布流程
                     if (mode != MODE_EDIT && from != AddLabelActivity.FROM_PUBLISH && !data!!.is_published) {
                         finish()
                         startActivity<AddLabelSuccessActivity>("data" to labelBean)

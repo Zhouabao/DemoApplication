@@ -15,7 +15,6 @@ import com.sdy.jitangapplication.R
  */
 class CommentExpandAdapter(var context: Context,var grounpCount:Int) : BaseExpandableListAdapter() {
 
-    //    todo 根据父级数量来设置回复数
 
     override fun getGroupCount(): Int {
         return grounpCount
@@ -46,7 +45,6 @@ class CommentExpandAdapter(var context: Context,var grounpCount:Int) : BaseExpan
             holder = view.tag as GroupHolder
         }
 
-        //todo 数据填充
 
         return view
     }
@@ -68,8 +66,6 @@ class CommentExpandAdapter(var context: Context,var grounpCount:Int) : BaseExpan
             view = convertView
             holder = view.tag as ChildHolder
         }
-
-        //todo 数据填充
 
         return view
     }

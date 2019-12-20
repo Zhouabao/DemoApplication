@@ -994,7 +994,6 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                             if (checkGreetSendBeanBaseResp.getCode() == 200 && checkGreetSendBeanBaseResp.getData() != null) {
                                 CheckGreetSendBean checkGreetSendBean = checkGreetSendBeanBaseResp.getData();
                                 if (checkGreetSendBean.getIsfriend()) {//是好友，发送好友通知
-                                    //todo 发送成为好友通知
                                     //发送通知
                                     updateActionsState(true);
                                     view.findViewById(com.sdy.jitangapplication.R.id.btnMakeFriends).setVisibility(View.GONE);

@@ -314,7 +314,7 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
             }
 
             override fun onPrepared(position: Int) {
-                //todo  异步准备 准备好了才会实现播放。
+                // 异步准备 准备好了才会实现播放。
 //                adapter.data[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
 //                adapter.notifyItemChanged(position)
 //                adapter.notifyDataSetChanged()

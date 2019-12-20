@@ -318,7 +318,6 @@
                 android:name=".ui.activity.MainActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:screenOrientation="portrait"
-                android:launchMode="singleTask"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustNothing|stateAlwaysHidden">
         </activity>

@@ -923,7 +923,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
 
         commentActionDialog!!.jubaoComment.onClick {
-            //todo 举报
+            //举报
             mPresenter.commentReport(
                 hashMapOf(
                     "token" to UserManager.getToken(),

@@ -22,6 +22,8 @@ import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MediaParamBean
 import com.sdy.jitangapplication.model.NewLabel
@@ -30,6 +32,7 @@ import com.sdy.jitangapplication.presenter.view.AddLabelSuccessView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_add_label_success.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -44,7 +47,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_label_success)
         initView()
-//        mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.id))
+        mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.id))
 
     }
 
@@ -53,7 +56,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
         mPresenter.mView = this
         mPresenter.context = this
 
-//        successLabelName.text = "${labelBean.title}"
+        successLabelName.text = "${labelBean.title}"
         startJitangBtn.setOnClickListener(this)
         changeLabel.setOnClickListener(this)
         publishImage.setOnClickListener(this)
@@ -190,8 +193,12 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
             }
             //稍后再说
             startJitangBtn -> {
-                ActivityUtils.finishAllActivities()
-                startActivity<MainActivity>()
+                EventBus.getDefault().post(UpdateMyLabelEvent())
+                EventBus.getDefault().post(RefreshEvent(true))
+                if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance())) {
+                    ActivityUtils.finishActivity(AddLabelActivity::class.java)
+                }
+                finish()
             }
             //换一个标题
             changeLabel -> {

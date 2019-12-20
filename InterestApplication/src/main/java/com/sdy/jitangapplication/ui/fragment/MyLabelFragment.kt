@@ -76,11 +76,11 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.labelDelete -> {
-                    //TODO 删除标签
-//                    if (adapter.data.size <= MIN_LABEL) {
-//                        CommonFunction.toast("至少保留${MIN_LABEL}个标签")
-//                        return@setOnItemChildClickListener
-//                    }
+                    // 删除标签
+                    if (adapter.data.size <= MIN_LABEL) {
+                        CommonFunction.toast("至少保留${MIN_LABEL}个标签")
+                        return@setOnItemChildClickListener
+                    }
                     showDeleteDialog(position)
 
                 }
@@ -127,15 +127,15 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
                 }
                 adapter.emptyView.emptyLabelTip.isVisible = false
                 adapter.emptyView.emptyTip.isVisible = false
-                adapter.emptyView.addLabelBtn.text ="添加标签"
-                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL,false))
+                adapter.emptyView.addLabelBtn.text = "添加标签"
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, false))
             } else {
-                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL,true))
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, true))
                 adapter.setNewData(datas?.is_using ?: mutableListOf())
             }
             removedLabel.addAll(datas?.is_removed ?: mutableListOf())
         } else {
-            EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL,false))
+            EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, false))
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }

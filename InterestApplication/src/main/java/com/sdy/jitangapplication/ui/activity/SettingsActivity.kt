@@ -154,7 +154,7 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
                 if (switchContacts.isChecked) {
                     mPresenter.blockedAddressBook(UserManager.getAccid(), UserManager.getToken())
                 } else {
-                    //TODO 请求接口看是否已经屏蔽过通讯录
+                    // 请求接口看是否已经屏蔽过通讯录
                     if (!PermissionUtils.isGranted(PermissionConstants.CONTACTS)) {
                         PermissionUtils.permission(PermissionConstants.CONTACTS)
                             .callback(object : PermissionUtils.SimpleCallback {

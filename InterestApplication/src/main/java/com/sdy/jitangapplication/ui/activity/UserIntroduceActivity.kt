@@ -55,10 +55,10 @@ class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQua
         mPresenter = LabelQualityPresenter()
         mPresenter.mView = this
         mPresenter.context = this
-        hotT1.visibility = View.INVISIBLE
+
         divider.isVisible = false
         setSwipeBackEnable(from != REGISTER)
-        btnBack.isVisible = from != REGISTER
+
         btnBack.setOnClickListener(this)
         rightBtn1.setOnClickListener(this)
         rightBtn1.isVisible = true
@@ -70,9 +70,32 @@ class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQua
         labelIntroduceModel.setOnClickListener(this)
 
 
+        if (from == REGISTER) {
+            btnBack.isVisible = false
+            t1.isVisible = true
+            labelPurposeCl.isVisible = true
+            hotT1.visibility = View.INVISIBLE
+        } else {
+            btnBack.isVisible = true
+            t1.isVisible = false
+            labelPurposeCl.isVisible = false
+            hotT1.visibility = View.VISIBLE
+            hotT1.text = "关于我"
+        }
+
+
         if (!intent.getStringExtra("content").isNullOrEmpty()) {
             labelIntroduceContent.setText(intent.getStringExtra("content"))
             labelIntroduceContent.setSelection(labelIntroduceContent.length())
+            checkSaveEnable()
+            labelIntroduceInputLength.text = SpanUtils.with(labelIntroduceInputLength)
+                .append(labelIntroduceContent.length().toString())
+                .setFontSize(14, true)
+                .setForegroundColor(resources.getColor(R.color.colorOrange))
+                .setBold()
+                .append("/${(labelIntroduceContent.filters[0] as InputFilter.LengthFilter).max}")
+                .setFontSize(10, true)
+                .create()
         }
 
         labelIntroduceContent.addTextChangedListener(object : TextWatcher {

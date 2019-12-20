@@ -99,6 +99,13 @@ public class GlideUtil {
                 .into(targetImg);
     }
 
+    public static void loadCircleImg(Context context, int url, ImageView targetImg) {
+        Glide.with(context)
+                .load(url)
+                .apply(getOptions().circleCrop().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
+                .into(targetImg);
+    }
+
 
     /**
      * 加载圆角图片内部居中

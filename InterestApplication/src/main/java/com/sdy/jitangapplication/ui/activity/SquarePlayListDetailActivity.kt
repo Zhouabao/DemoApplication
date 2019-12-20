@@ -219,7 +219,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 R.id.detailPlayBtn -> {
                     if (mediaPlayer == null || currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
                         initAudio(position)
-                        //todo  还原播放器
+                        //还原播放器
                         mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
                         currPlayIndex = position
                     }

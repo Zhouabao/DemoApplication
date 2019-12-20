@@ -184,13 +184,13 @@ class GotoVerifyDialog : Dialog {
                     dialog.cancel()
                 }
                 dialog.verifyHuman?.onClick {
-                    //todo 人工审核
+                    // 人工审核
                     humanVerify(1)
                     if (this.cancelable)
                         dialog.cancel()
                 }
                 dialog.verifyChange?.onClick {
-                    //TODO 替换头像
+                    // 替换头像
                     humanVerify(2)
                     if (ActivityUtils.getTopActivity() != NewUserInfoSettingsActivity::class.java)
                         context.startActivity<NewUserInfoSettingsActivity>()

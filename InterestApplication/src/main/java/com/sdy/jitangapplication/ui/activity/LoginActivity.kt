@@ -15,11 +15,7 @@ import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
 
-/**
- * 欢迎页
- */
-
-//todo(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
+//(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
 class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

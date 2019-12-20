@@ -390,8 +390,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 //        (squareDynamicRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         squareDynamicRv.itemAnimator?.changeDuration = 0
         //限定范围为屏幕一半的上下偏移180
-        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(150F)
-        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(150F)
+        val playTop = ScreenUtils.getScreenHeight() / 2 - ScreenUtils.getScreenHeight() / 4
+        val playBottom = ScreenUtils.getScreenHeight() / 2 + ScreenUtils.getScreenHeight() / 4
         scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
         squareDynamicRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
@@ -903,7 +903,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     retryPublish()
                 }
             }
-            //TODO 取消重新发布，清除本地所存下的发布的数据
+            //取消重新发布，清除本地所存下的发布的数据
             btnClose.onClick {
                 uploadFl.isVisible = false
                 if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {

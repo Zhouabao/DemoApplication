@@ -175,7 +175,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                     dialog.dismiss()
                 }
             }
-            3 -> {//todo 此处差一个删除好友的接口
+            3 -> {
                 if (isfriend) {
                     dialog.title.text = "删除好友"
                     dialog.tip.text = "确定删除该好友?"

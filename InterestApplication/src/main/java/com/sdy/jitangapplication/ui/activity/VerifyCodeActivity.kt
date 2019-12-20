@@ -25,7 +25,7 @@ import org.jetbrains.anko.startActivity
 /**
  * 填写验证码界面
  *
- * //todo 新增账号注销界面，待完善注销逻辑:填写验证码之后给一个提示  然后跳转到登录/注册的首页
+ * // 新增账号注销界面，待完善注销逻辑:填写验证码之后给一个提示  然后跳转到登录/注册的首页
  */
 class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickListener, VerifyCodeView {
 

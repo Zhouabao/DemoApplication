@@ -624,7 +624,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.detailUserLikeBtn -> {//感兴趣
                 mPresenter.likeUser(params)
             }
-            //todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
+            //这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
             //1.首先判断是否有次数，
             // 若有 就打招呼
             // 若无 就弹充值

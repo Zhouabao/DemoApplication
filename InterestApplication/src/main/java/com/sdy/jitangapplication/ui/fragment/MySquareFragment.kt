@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
@@ -45,7 +44,6 @@ import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 我的点赞、我的收藏
- * //todo 解决视频无缝衔接播放问题
  */
 class MySquareFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPresenter>(), MyCollectionView,
     OnRefreshListener,
@@ -148,10 +146,8 @@ class MySquareFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPres
         collectionRv.itemAnimator?.changeDuration = 0
 
         //限定范围为屏幕一半的上下偏移180 56+32=88
-        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(200F)
-        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(200F)
-//        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
-//        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
+        val playTop = ScreenUtils.getScreenHeight() / 2 - ScreenUtils.getScreenHeight() / 4
+        val playBottom = ScreenUtils.getScreenHeight() / 2 + ScreenUtils.getScreenHeight() / 4
         scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
         collectionRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0

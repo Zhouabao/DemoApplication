@@ -33,6 +33,7 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -160,7 +161,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         filterBtn.setOnClickListener(this)
         completeLabelBtn.setOnClickListener(this)
         manageLabel.setOnClickListener(this)
-        findToTalk.setOnClickListener(this)
+        findToTalkLl.setOnClickListener(this)
         dislikeBtn.setOnClickListener(this)
         likeBtn.setOnClickListener(this)
         likeBtn.setOnClickListener(this)
@@ -278,7 +279,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             R.id.manageLabel -> {//标签管理
                 startActivity<MyLabelActivity>("index" to checkedTitle - 1)
             }
-            R.id.findToTalk -> {//找人说话
+            R.id.findToTalkLl -> {//找人说话
                 startActivityForResult<MyIntentionActivity>(
                     100,
                     "id" to if (myIntention != null) {
@@ -349,11 +350,13 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 tvLeftChatTime.isVisible = true
             }
 
-            if (matchBeans.intention != null) {
+            if (matchBeans.intention != null && matchBeans.intention.id != 0) {
                 myIntention = matchBeans.intention
-                findToTalk.text = myIntention!!.title
+                findToTalkTv.text = myIntention!!.title
+                GlideUtil.loadImg(activity!!, myIntention!!.icon, findToTalkIv)
             } else {
-                findToTalk.text = "选择意向"
+                findToTalkTv.text = "选择意向"
+                GlideUtil.loadImg(activity!!, R.drawable.icon_switch_gray, findToTalkIv)
             }
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
             matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
@@ -375,8 +378,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 if (UserManager.isShowCompleteLabelDialog()) {
                     completeLabelBtn.isVisible = true
                 } else {
-                    //todo 记得还原
-                    matchBeans.interest_times = 3
                     UserManager.saveCompleteLabelCount(matchBeans.interest_times)
                     completeLabelBtn.isVisible = false
                 }
@@ -590,7 +591,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             if (requestCode == 100) {
                 if (data != null && data.getSerializableExtra("intention") != null) {
                     myIntention = data.getSerializableExtra("intention") as LabelQualityBean
-                    findToTalk.text = myIntention!!.title
+                    findToTalkTv.text = myIntention!!.title
+                    GlideUtil.loadImg(activity!!, myIntention!!.icon, findToTalkIv)
                 }
             }
         }
@@ -764,7 +766,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     }
 
     //此时已经飞出去了
-    //todo 放开注释
     override fun onCardSwiped(direction: Direction?) {
         if (UserManager.slide_times != -1) {
             UserManager.slide_times++

@@ -25,9 +25,9 @@ data class MatchListBean(
     val my_like_times: Int,//（我的次数）
     val total_like_times: Int,//  total_like_times（最高次数）
     var mytags: MutableList<Newtag>? = null,
-    var intention: LabelQualityBean? = null,
-    var myinterest_count: Int=0,
-    var interest_times: Int=0
+    val intention: LabelQualityBean? = null,
+    var myinterest_count: Int = 0,
+    var interest_times: Int = 0
 )
 
 /**

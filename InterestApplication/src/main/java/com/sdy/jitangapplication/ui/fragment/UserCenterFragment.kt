@@ -369,8 +369,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //会员问题
             R.id.isVipProblem -> {
-                //todo 下标的popupwindow
-
             }
             //会员权益
             R.id.isVipPowerBtn -> {

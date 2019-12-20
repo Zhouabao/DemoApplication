@@ -2,7 +2,6 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/llVideo"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:background="@color/colorWhite"
@@ -12,6 +11,7 @@
             layout="@layout/layout_square_list_top"/>
 
     <RelativeLayout
+            android:id="@+id/llVideo"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"

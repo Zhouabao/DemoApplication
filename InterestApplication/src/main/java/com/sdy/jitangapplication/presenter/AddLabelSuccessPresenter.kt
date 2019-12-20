@@ -68,7 +68,7 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
                     mView.hideLoading()
                     if (t.code == 200) {
                         mView.onSquareAnnounceResult(true, 200)
-                    }else if (t.code == 403) {
+                    } else if (t.code == 403) {
                         TickDialog(context).show()
                     } else {
                         mView.onError(t.msg)
@@ -93,17 +93,17 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
     fun uploadFile(filePath: String, imagePath: String) {
         val file = File(filePath)
         if (!file.exists()) {
-            mView.onUploadImgResult(false,"")
+            mView.onUploadImgResult(false, "")
             return
         }
         if (!checkNetWork()) {
             CommonFunction.toast("网络不可用")
-            mView.onUploadImgResult(false,"")
+            mView.onUploadImgResult(false, "")
             return
         }
         Log.d("OkHttp", filePath)
         Log.d("OkHttp", "${file.absolutePath},${file.length() / 1024f / 1024F}")
-
+        mView.showLoading()
         QNUploadManager.getInstance().put(
             filePath,
             imagePath,
@@ -112,9 +112,10 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
                 Log.d("OkHttp", response.toString())
                 Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null) {
-                    mView.onUploadImgResult(info.isOK,key)
+                    mView.onUploadImgResult(info.isOK, key)
                 } else {
-                    mView.onUploadImgResult(false,key)
+                    mView.onUploadImgResult(false, key)
+                    mView.hideLoading()
                 }
             }, null
         )

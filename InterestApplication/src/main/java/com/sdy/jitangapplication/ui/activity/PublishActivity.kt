@@ -1351,7 +1351,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 //                checkedLabel
                 if ((data!!.getSerializableExtra("label") as MyLabelBean) != null) {
                     val myLabelBean = data!!.getSerializableExtra("label") as MyLabelBean
-                    //todo 这里要更新选中的标签
+                    //这里要更新选中的标签
                     checkTags.clear()
                     checkTags.add(
                         NewLabel(
@@ -1413,7 +1413,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     private val keyList: MutableList<String> = mutableListOf()
 
     private fun publish() {
-        //todo 此处要存下所有的数据信息
+        // 此处要存下所有的数据信息
         val checkIds = mutableListOf<Int>()
         for (i in 0 until checkTags.size) {
             checkIds.add(checkTags[i].id)

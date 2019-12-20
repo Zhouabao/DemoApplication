@@ -75,27 +75,42 @@
                     app:layout_constraintLeft_toRightOf="@id/t1"
                     app:layout_constraintTop_toTopOf="parent"/>
 
-            <TextView
-                    android:id="@+id/findToTalk"
-                    android:layout_width="wrap_content"
-                    android:textColorHint="@color/colorOrange"
-                    android:hint="选择意向"
-                    android:gravity="center"
-                    android:textColor="@color/colorOrange"
-                    android:textSize="13sp"
+            <LinearLayout
+                    android:id="@+id/findToTalkLl"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/shape_rectangle_lightorange_15dp"
-                    android:drawablePadding="4dp"
                     android:minWidth="80dp"
-                    android:drawableLeft="@drawable/icon_switch_gray"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                        android:id="@+id/findToTalkIv"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/icon_switch_gray"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"/>
+
+                <TextView
+                        android:id="@+id/findToTalkTv"
+                        android:layout_marginLeft="4dp"
+                        android:layout_width="wrap_content"
+                        android:textColorHint="@color/colorOrange"
+                        android:hint="选择意向"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="13sp"
+                        />
+            </LinearLayout>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

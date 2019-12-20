@@ -286,16 +286,16 @@ class ChargeVipDialog(
                         // 判断resultStatus 为9000则代表支付成功
                         if (TextUtils.equals(resultStatus, "9000")) {
                             // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付成功！")
+                            showAlert(context1, "支付成功！", true)
                         } else if (TextUtils.equals(resultStatus, "8000")) {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付结果确认中！")
+                            showAlert(context1, "支付结果确认中！", false)
                         } else if (TextUtils.equals(resultStatus, "6001")) {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付取消！")
+                            showAlert(context1, "支付取消！", false)
                         } else {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付失败！")
+                            showAlert(context1, "支付失败！", false)
                         }
 
                     }
@@ -400,7 +400,7 @@ class ChargeVipDialog(
     }
 
 
-    private fun showAlert(ctx: Context, info: String) {
+    private fun showAlert(ctx: Context, info: String, result: Boolean) {
         CommonAlertDialog.Builder(ctx)
             .setTitle("支付结果")
             .setContent(info)
@@ -408,11 +408,14 @@ class ChargeVipDialog(
             .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
-                    dismiss()
-                    if (ActivityUtils.getTopActivity() != MainActivity::class.java)
-                        MainActivity.start(context1, Intent())
-                    EventBus.getDefault().postSticky(RefreshEvent(true))
-                    EventBus.getDefault().postSticky(UserCenterEvent(true))
+                    if (result) {
+                        if (ActivityUtils.getTopActivity() != MainActivity::class.java) {
+                            MainActivity.start(context1, Intent())
+                        }
+                        EventBus.getDefault().postSticky(RefreshEvent(true))
+                        EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        dismiss()
+                    }
                 }
 
             })

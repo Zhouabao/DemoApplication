@@ -70,8 +70,6 @@ class AccountAboutActivity : BaseMvpActivity<AccountAboutPresenter>(), AccountAb
                 startActivityForResult<ChangeAccountActivity>(100, "phone" to phone)
             }
             //微信绑定
-            //todo 如果已经绑定，显示微信号及解除绑定按钮,点击后显示二次确认弹窗
-            //TODO 如果未绑定，显示未绑定及绑定按钮 ,点击后拉起微信、授权 ,完成后显示绑定成功弹窗
             wechatChangeBtn -> {
 //                CorrectDialog(this).show()
 //                showDissolveDialog()
