@@ -208,7 +208,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             0 -> {
                 if (!UserManager.isUserVip()) {
                     tabMatch.isVisible = true
-                    tabMatchCount.text = "${UserManager.getSlideCount()}"
+                    tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
                     tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
                     tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
                 } else {
@@ -355,7 +355,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (vpMain.currentItem == 0) {
             if (!UserManager.isUserVip()) {
                 tabMatch.isVisible = true
-                tabMatchCount.text = "${UserManager.getSlideCount()}"
+                tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
                 tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
             } else {

@@ -39,6 +39,9 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
 
         val labelAdapter = AllNewLabelAdapter1(from = from)
         if (helper.layoutPosition == 0) {
+            for (decoration in 0 until helper.itemView.labelTypeRv.itemDecorationCount) {
+                helper.itemView.labelTypeRv.removeItemDecorationAt(decoration)
+            }
             helper.itemView.labelTypeRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
             helper.itemView.labelTypeRv.addItemDecoration(
                 DividerItemDecoration(
@@ -74,6 +77,14 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                 labelAdapter.data[position].checked = !labelAdapter.data[position].checked
                 val hotLabels = mData[0]
                 if (helper.layoutPosition != 0) {
+
+                    for (data in hotLabels.son) {
+                        if (data.id == labelAdapter.data[position].id) {
+                            data.checked = labelAdapter.data[position].checked
+                        }
+                    }
+                    notifyDataSetChanged()
+                } else {
                     for (index in 1 until mData.size) {
                         for (tdata1 in mData[index].son) {
                             if (tdata1.id == labelAdapter.data[position].id) {
@@ -81,13 +92,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                             }
                         }
                     }
-                    notifyDataSetChanged()
-                } else {
-                    for (data in hotLabels.son) {
-                        if (data.id == labelAdapter.data[position].id) {
-                            data.checked = labelAdapter.data[position].checked
-                        }
-                    }
+
                     notifyDataSetChanged()
                 }
 

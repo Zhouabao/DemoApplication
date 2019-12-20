@@ -172,8 +172,8 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             }
             rightBtn1 -> {
                 val tag_ids = mutableListOf<Int>()
-                for (data in labelListAdapter.data) {
-                    for (tdata in data.son) {
+                for (index in 1 until labelListAdapter.data.size) {
+                    for (tdata in labelListAdapter.data[index].son) {
                         if (tdata.checked) {
                             tag_ids.add(tdata.id)
                         }

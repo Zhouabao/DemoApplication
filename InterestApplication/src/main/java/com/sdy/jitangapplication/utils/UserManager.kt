@@ -74,6 +74,17 @@ object UserManager {
     }
 
     /**
+     * 保存滑动次数
+     */
+    fun saveSlideCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("SlideCount", count)
+    }
+
+    fun getSlideCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("SlideCount", -1)
+    }
+
+    /**
      * 感兴趣的标签个数
      */
     fun saveInterestLabelCount(count: Int) {
@@ -670,6 +681,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("IsShowCompleteLabelDialog")
         SPUtils.getInstance(Constants.SPNAME).remove("interestLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("myLabelCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("SlideCount")
 
         //账号异常记录清除
         SPUtils.getInstance(Constants.SPNAME).remove("accountDanger")
@@ -703,14 +715,14 @@ object UserManager {
     /**
      * 保存剩余滑动次数
      */
-    fun saveSlideCount(slideTimes: Int) {
+    fun saveLeftSlideCount(slideTimes: Int) {
         SPUtils.getInstance(Constants.SPNAME).put("leftSlideCount", slideTimes)
     }
 
     /**
      * 获取剩余滑动次数
      */
-    fun getSlideCount(): Int {
+    fun getLeftSlideCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("leftSlideCount", 0)
     }
 

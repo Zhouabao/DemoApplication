@@ -359,7 +359,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             }
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
 
-            //todo 上线还原次数
             //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容
             var noQuality = false//某个标签没有特质
             for (mytag in matchBeans.mytags ?: mutableListOf()) {
@@ -372,7 +371,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 if (UserManager.isShowCompleteLabelDialog()) {
                     completeLabelBtn.isVisible = true
                 } else {
-                    matchBeans.interest_times = 3//todo 上线还原次数
                     UserManager.saveCompleteLabelCount(matchBeans.interest_times)
                     completeLabelBtn.isVisible = false
                 }
@@ -385,7 +383,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             UserManager.saveUserVerify(matchBeans.isfaced)
 
             //保存剩余滑动次数
-            UserManager.saveSlideCount(matchBeans.like_times)
+            UserManager.saveLeftSlideCount(matchBeans.like_times)
             EventBus.getDefault().post(UpdateSlideCountEvent())
             //保存提示剩余滑动次数
             UserManager.saveHighlightCount(matchBeans.highlight_times)
@@ -405,11 +403,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
                 }
                 GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> {
-                    matchBeans.replace_times = 4//todo 上线还原次数
                     UserManager.replace_times = matchBeans.replace_times
                 }
                 GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
-                    matchBeans.perfect_times = 2//todo 上线还原次数
                     UserManager.perfect_times = matchBeans.perfect_times
                 }
                 else -> {
@@ -793,15 +789,16 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
+            UserManager.saveSlideCount(UserManager.getSlideCount()+1)
             //保存剩余滑动次数
-            if (UserManager.isUserVip() || UserManager.getSlideCount() > 0) {
-                if (!UserManager.isUserVip() && UserManager.getSlideCount() > 0) {
-                    UserManager.saveSlideCount(UserManager.getSlideCount().minus(1))
+            if (UserManager.isUserVip() || UserManager.getLeftSlideCount() > 0) {
+                if (!UserManager.isUserVip() && UserManager.getLeftSlideCount() > 0) {
+                    UserManager.saveLeftSlideCount(UserManager.getLeftSlideCount().minus(1))
                     EventBus.getDefault().post(UpdateSlideCountEvent())
                 }
                 //如果当前弹窗的滑动剩余次数为0并且没有显示过完善标签的弹窗，就弹窗
                 if (UserManager.getCompleteLabelCount() != -1
-                    && UserManager.getCompleteLabelCount() == UserManager.slide_times
+                    && UserManager.getCompleteLabelCount() == UserManager.getSlideCount()
                     && !UserManager.isShowCompleteLabelDialog()
                 ) {
                     CompleteLabelDialog(activity!!).show()
