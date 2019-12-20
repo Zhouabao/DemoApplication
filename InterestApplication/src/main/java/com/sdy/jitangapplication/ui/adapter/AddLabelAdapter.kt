@@ -59,7 +59,6 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
             if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
                 val data = labelAdapter.data[position]
                 var checkedCount = 0
-                val hotLabels = mData[0]
                 for (index in 1 until mData.size) {
                     for (tdata1 in mData[index].son) {
                         if (tdata1.checked) {
@@ -73,6 +72,25 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                 }
 
                 labelAdapter.data[position].checked = !labelAdapter.data[position].checked
+                val hotLabels = mData[0]
+                if (helper.layoutPosition != 0) {
+                    for (index in 1 until mData.size) {
+                        for (tdata1 in mData[index].son) {
+                            if (tdata1.id == labelAdapter.data[position].id) {
+                                tdata1.checked = labelAdapter.data[position].checked
+                            }
+                        }
+                    }
+                    notifyDataSetChanged()
+                } else {
+                    for (data in hotLabels.son) {
+                        if (data.id == labelAdapter.data[position].id) {
+                            data.checked = labelAdapter.data[position].checked
+                        }
+                    }
+                    notifyDataSetChanged()
+                }
+
                 labelAdapter.notifyItemChanged(position)
             } else {
                 if (labelAdapter.data[position].removed) {
