@@ -130,6 +130,7 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
                 adapter.emptyView.addLabelBtn.text = "添加标签"
                 EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, false))
             } else {
+                addLabelBtn.isVisible = true
                 EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, true))
                 adapter.setNewData(datas?.is_using ?: mutableListOf())
             }

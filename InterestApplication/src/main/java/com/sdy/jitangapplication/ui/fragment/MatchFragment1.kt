@@ -340,15 +340,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         labelAdapter.enable = true
         if (success) {
             hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
-            if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
-                setViewState(EMPTY)
-                btnChatCl.isVisible = false
-                tvLeftChatTime.isVisible = false
-            } else {
-                setViewState(CONTENT)
-                btnChatCl.isVisible = true
-                tvLeftChatTime.isVisible = true
-            }
+
 
             if (matchBeans.intention != null && matchBeans.intention.id != 0) {
                 myIntention = matchBeans.intention
@@ -366,6 +358,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 t1.text = "为你推荐${UserManager.getInterestLabelCount()}个标签"
             }
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
+
+            //todo 上线还原次数
             //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容
             var noQuality = false//某个标签没有特质
             for (mytag in matchBeans.mytags ?: mutableListOf()) {
@@ -378,6 +372,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 if (UserManager.isShowCompleteLabelDialog()) {
                     completeLabelBtn.isVisible = true
                 } else {
+                    matchBeans.interest_times = 3//todo 上线还原次数
                     UserManager.saveCompleteLabelCount(matchBeans.interest_times)
                     completeLabelBtn.isVisible = false
                 }
@@ -410,9 +405,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
                 }
                 GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> {
+                    matchBeans.replace_times = 4//todo 上线还原次数
                     UserManager.replace_times = matchBeans.replace_times
                 }
                 GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
+                    matchBeans.perfect_times = 2//todo 上线还原次数
                     UserManager.perfect_times = matchBeans.perfect_times
                 }
                 else -> {
@@ -422,6 +419,17 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
 
             tvLeftChatTime.text = "${UserManager.getLightingCount()}"
+
+
+            if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
+                setViewState(EMPTY)
+                btnChatCl.isVisible = false
+                tvLeftChatTime.isVisible = false
+            } else {
+                setViewState(CONTENT)
+                btnChatCl.isVisible = true
+                tvLeftChatTime.isVisible = true
+            }
 
         } else {
             setViewState(ERROR)

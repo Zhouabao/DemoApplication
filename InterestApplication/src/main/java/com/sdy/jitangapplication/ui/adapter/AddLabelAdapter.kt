@@ -59,8 +59,9 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
             if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
                 val data = labelAdapter.data[position]
                 var checkedCount = 0
-                for (tdata in mData) {
-                    for (tdata1 in tdata.son) {
+                val hotLabels = mData[0]
+                for (index in 1 until mData.size) {
+                    for (tdata1 in mData[index].son) {
                         if (tdata1.checked) {
                             checkedCount += 1
                         }
