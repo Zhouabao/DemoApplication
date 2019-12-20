@@ -65,7 +65,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         )
 
         switchOnLine.isVisible = UserManager.isUserVip()
-        switchOnLine.isChecked = sp.getInt("online", 1) == 2
+        switchOnLine.isChecked = sp.getInt("online_only", 1) == 2
         btnGoVip1.isVisible = !UserManager.isUserVip()
         switchSameCity.isVisible = UserManager.isUserVip()
         switchSameCity.isChecked = sp.getInt("local_only", 1) == 2
@@ -141,9 +141,9 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
 
             //添加在线用户筛选
             if (switchOnLine.isChecked) {
-                sp.put("online", 2)
+                sp.put("online_only", 2)
             } else {
-                sp.put("online", 1)
+                sp.put("online_only", 1)
             }
             EventBus.getDefault().post(RefreshEvent(true))
             dismiss()

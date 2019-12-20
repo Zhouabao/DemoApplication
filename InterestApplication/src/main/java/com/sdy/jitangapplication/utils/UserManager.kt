@@ -540,8 +540,8 @@ object UserManager {
         if (sp.getInt("audit_only", -1) != -1) {
             parmas["audit_only"] = sp.getInt("audit_only", -1)
         }
-        if (sp.getInt("online", -1) != -1) {
-            parmas["online"] = sp.getInt("online", -1)
+        if (sp.getInt("online_only", -1) != -1) {
+            parmas["online_only"] = sp.getInt("online_only", -1)
         }
         if (sp.getInt("filter_gender", -1) != -1) {
             parmas["gender"] = sp.getInt("filter_gender", -1)
@@ -648,7 +648,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_high")
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_low")
         SPUtils.getInstance(Constants.SPNAME).remove("local_only")
-        SPUtils.getInstance(Constants.SPNAME).remove("online")
+        SPUtils.getInstance(Constants.SPNAME).remove("online_only")
         SPUtils.getInstance(Constants.SPNAME).remove("city_code")
         SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
 
