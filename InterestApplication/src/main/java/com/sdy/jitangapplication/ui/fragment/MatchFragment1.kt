@@ -274,7 +274,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 FilterUserDialog(activity!!).show()
             }
             R.id.completeLabelBtn -> {//完善标签
-                startActivity<MyLabelActivity>("index" to MyLabelActivity.MY_LABEL)
+                startActivity<MyLabelActivity>()
             }
             R.id.manageLabel -> {//标签管理
                 startActivity<MyLabelActivity>("index" to checkedTitle - 1)
