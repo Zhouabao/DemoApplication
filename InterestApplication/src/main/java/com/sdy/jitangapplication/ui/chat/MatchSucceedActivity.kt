@@ -6,6 +6,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import com.blankj.utilcode.util.KeyboardUtils
@@ -36,27 +37,28 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
     }
 
     private fun initData() {
-        GlideUtil.loadRoundImgCenterCrop(this, avator, iconOther, SizeUtils.dp2px(10F))
+//        GlideUtil.loadRoundImgCenterCrop(this, avator, iconOther, SizeUtils.dp2px(10F))
         GlideUtil.loadRoundImgCenterCrop(this, UserManager.getAvator(), iconMine, SizeUtils.dp2px(10F))
 
-        matchTip.text = "你和 $nickname 都彼此欣赏 \n不如就说先点什么吧"
+        matchTip.text = "你和 nickname 都彼此欣赏 \n不如就说先点什么吧"
     }
 
-        private lateinit var accid: String
-    private lateinit var avator: String
-    private lateinit var nickname: String
+//    private lateinit var accid: String
+//    private lateinit var avator: String
+//    private lateinit var nickname: String
 
     private fun initView() {
 //        setSwipeBackEnable(false)
 
-        accid = intent.getStringExtra("accid") ?: ""
-        avator = intent.getStringExtra("avator") ?: ""
-        nickname = intent.getStringExtra("nickname") ?: ""
+//        accid = intent.getStringExtra("accid") ?: ""
+//        avator = intent.getStringExtra("avator") ?: ""
+//        nickname = intent.getStringExtra("nickname") ?: ""
 
         btnBack.onClick { onBackPressed() }
 
         KeyboardUtils.registerSoftInputChangedListener(this) {
-            val ani = ObjectAnimator.ofFloat(clMsg, "translationY", it.toFloat())
+            Log.d("registerSoftInputChangedListener", "$it")
+            val ani = ObjectAnimator.ofFloat(clMsg, "translationY", -it.toFloat())
             ani.duration = 50L
             ani.start()
 
