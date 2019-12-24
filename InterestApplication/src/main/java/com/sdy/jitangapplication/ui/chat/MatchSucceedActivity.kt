@@ -56,7 +56,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         btnBack.onClick { onBackPressed() }
 
         KeyboardUtils.registerSoftInputChangedListener(this) {
-            val ani = ObjectAnimator.ofFloat(clMsg, "translationY", 0.toFloat())
+            val ani = ObjectAnimator.ofFloat(clMsg, "translationY", it.toFloat())
             ani.duration = 50L
             ani.start()
 
