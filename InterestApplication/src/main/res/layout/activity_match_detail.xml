@@ -186,7 +186,7 @@
 
                             <ImageView
                                     android:id="@+id/detailUserVerify"
-                                    android:src="@drawable/icon_verify_other"
+                                    android:src="@drawable/icon_verify_pass"
                                     android:layout_width="25dp"
                                     android:layout_marginLeft="5dp"
                                     android:layout_height="25dp"
@@ -205,7 +205,7 @@
                                     android:textColor="#FF696E73"
                                     android:textSize="13sp"
                                     android:layout_marginTop="15dp"
-                                    android:drawableLeft="@drawable/icon_gender_woman_gray"
+                                    android:drawableLeft="@drawable/icon_gender_woman_gray_userdetail"
                                     app:layout_constraintStart_toStartOf="@id/detailUserName"
                                     app:layout_constraintTop_toBottomOf="@id/detailUserName"
                                     tools:text="女"/>
@@ -220,7 +220,7 @@
                                     android:textColor="#FF696E73"
                                     android:textSize="13sp"
                                     android:layout_marginLeft="10dp"
-                                    android:drawableLeft="@drawable/icon_collapstation"
+                                    android:drawableLeft="@drawable/icon_collapstation_userdetail"
                                     android:layout_marginTop="15dp"
                                     app:layout_constraintLeft_toRightOf="@id/detailUserInfoAge"
                                     app:layout_constraintTop_toBottomOf="@id/detailUserName"
@@ -235,7 +235,7 @@
                                     android:textColor="#FF696E73"
                                     android:textSize="13sp"
                                     android:layout_marginLeft="10dp"
-                                    android:drawableLeft="@drawable/icon_map_gray"
+                                    android:drawableLeft="@drawable/icon_map_gray_userdetail"
                                     android:layout_marginTop="15dp"
                                     app:layout_constraintLeft_toRightOf="@id/detailUserConstellation"
                                     app:layout_constraintTop_toBottomOf="@id/detailUserName"

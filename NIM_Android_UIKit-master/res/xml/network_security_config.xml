@@ -7,12 +7,12 @@
         </trust-anchors>
     </base-config>
 
-    <!--<domain-config>-->
-        <!--<domain includeSubdomains="true">ppsns.duluduludala.com</domain>-->
-        <!--<domain includeSubdomains="true">fengkongcloud.com</domain>-->
-        <!--<trust-anchors>-->
-            <!--<certificates src="system"/>-->
-            <!--<certificates src="user"/>-->
-        <!--</trust-anchors>-->
-    <!--</domain-config>-->
+    <domain-config>
+        <domain includeSubdomains="true">ppsns.duluduludala.com</domain>
+        <domain includeSubdomains="true">fengkongcloud.com</domain>
+        <trust-anchors>
+            <certificates src="system"/>
+            <certificates src="user"/>
+        </trust-anchors>
+    </domain-config>
 </network-security-config>

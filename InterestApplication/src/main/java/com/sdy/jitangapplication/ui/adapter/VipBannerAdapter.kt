@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -23,8 +22,8 @@ class VipBannerAdapter(var type: Int = 1) : BaseQuickAdapter<VipDescr, BaseViewH
         holder.itemView.banner_name.text = "${data.title}"
         holder.itemView.banner_content.text = "${data.rule}"
         val params = holder.itemView.banner_img.layoutParams
-        params.height = SizeUtils.dp2px(130F)
-        params.width = LinearLayout.LayoutParams.WRAP_CONTENT
+        params.height = SizeUtils.dp2px(95F)
+        params.width = SizeUtils.dp2px(95F)
         holder.itemView.banner_img.layoutParams = params
         GlideUtil.loadRoundImgCenterinside(mContext, data.url ?: "", holder.itemView.banner_img, 0.1F, 0)
 

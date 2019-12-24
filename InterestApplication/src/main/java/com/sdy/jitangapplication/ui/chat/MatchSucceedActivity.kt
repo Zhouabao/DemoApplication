@@ -12,13 +12,10 @@ import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
-import com.netease.nim.uikit.business.session.module.Container
 import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
@@ -45,9 +42,10 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         matchTip.text = "你和 $nickname 都彼此欣赏 \n不如就说先点什么吧"
     }
 
-    private lateinit var accid: String
+        private lateinit var accid: String
     private lateinit var avator: String
     private lateinit var nickname: String
+
     private fun initView() {
 //        setSwipeBackEnable(false)
 
@@ -56,6 +54,14 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         nickname = intent.getStringExtra("nickname") ?: ""
 
         btnBack.onClick { onBackPressed() }
+
+        KeyboardUtils.registerSoftInputChangedListener(this) {
+            val ani = ObjectAnimator.ofFloat(clMsg, "translationY", 0.toFloat())
+            ani.duration = 50L
+            ani.start()
+
+        }
+
 
         //主动弹起键盘
         etMsg.postDelayed({
@@ -101,11 +107,6 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
             ObjectAnimator.ofFloat(iconOther, "alpha", 0f, 1f)
         )
         animator1.start()
-
-        //笑脸动画
-//        YoYo.with(Techniques.RubberBand)
-//            .duration(2000)
-//            .playOn(iconLike)
     }
 
 
@@ -145,13 +146,9 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
     /*--------------------------消息代理------------------------*/
     //发送匹配成功第一次对话
     private fun sendMatchHiMessage() {
-        val container = Container(this, accid, SessionTypeEnum.P2P, this, true)
-        val message = MessageBuilder.createTextMessage(
-            accid,
-            SessionTypeEnum.P2P,
-            etMsg.text.toString()
-        )
-        container.proxy.sendMessage(message)
+//        val container = Container(this, accid, SessionTypeEnum.P2P, this, true)
+//        val message = MessageBuilder.createTextMessage(accid, SessionTypeEnum.P2P, etMsg.text.toString())
+//        container.proxy.sendMessage(message)
     }
 
 

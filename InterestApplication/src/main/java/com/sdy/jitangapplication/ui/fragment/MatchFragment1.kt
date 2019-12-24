@@ -42,7 +42,6 @@ import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
-import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.MyIntentionActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
@@ -673,18 +672,17 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateCardEvent(event: GreetEvent) {
-        if (event.context is MainActivity)
-            if (event.success) {
-                val setting = SwipeAnimationSetting.Builder()
-                    .setDirection(Direction.Top)
-                    .setDuration(Duration.Normal.duration)
-                    .setInterpolator(AccelerateInterpolator())
-                    .build()
-                manager.setSwipeAnimationSetting(setting)
-                card_stack_view.swipe()
-            } else {
-                // card_stack_view.rewind()
-            }
+        if (event.success) {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Top)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(AccelerateInterpolator())
+                .build()
+            manager.setSwipeAnimationSetting(setting)
+            card_stack_view.swipe()
+        } else {
+//             card_stack_view.rewind()
+        }
     }
     /*---------------------卡片参数和方法------------------------------*/
 
@@ -794,7 +792,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
-            UserManager.saveSlideCount(UserManager.getSlideCount()+1)
+            UserManager.saveSlideCount(UserManager.getSlideCount() + 1)
             //保存剩余滑动次数
             if (UserManager.isUserVip() || UserManager.getLeftSlideCount() > 0) {
                 if (!UserManager.isUserVip() && UserManager.getLeftSlideCount() > 0) {

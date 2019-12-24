@@ -184,7 +184,7 @@
             android:text="仅显示认证用户"
             android:textColor="#ff191919"
             android:textSize="17sp"
-            android:drawableRight="@drawable/icon_verify_other"
+            android:drawableRight="@drawable/icon_verify_pass"
             android:drawablePadding="5dp"
             android:textStyle="bold"
             android:gravity="center_vertical"

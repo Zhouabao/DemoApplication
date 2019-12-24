@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
@@ -40,7 +41,6 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.NewMsgEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
-import com.sdy.jitangapplication.model.HiMessageBean
 import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -52,16 +52,17 @@ import com.sdy.jitangapplication.ui.activity.ContactBookActivity
 import com.sdy.jitangapplication.ui.activity.MessageHiActivity
 import com.sdy.jitangapplication.ui.activity.MessageLikeMeActivity
 import com.sdy.jitangapplication.ui.activity.MessageSquareActivity
+import com.sdy.jitangapplication.ui.adapter.MessageCenterAllAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
-import com.sdy.jitangapplication.ui.adapter.MessageListFriensAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
+import com.sdy.jitangapplication.ui.adapter.MessageListLikeMeAdapter
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_message_list.*
-import kotlinx.android.synthetic.main.headerview_hi.view.*
-import kotlinx.android.synthetic.main.headview_message_warm_tiping.view.*
+import kotlinx.android.synthetic.main.headerview_like_me.view.*
+import kotlinx.android.synthetic.main.headview_message_all.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -114,13 +115,17 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             startActivity<ContactBookActivity>()
         }
 
+        knowBtn.onClick {
+            blackLl.isVisible = false
+        }
+
 
         messageListRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         messageListRv.adapter = adapter
         adapter.bindToRecyclerView(messageListRv)
 //        adapter.setEmptyView(R.layout.empty_layout, messageListRv)
-        adapter.addHeaderView(initBlackTip(), 0)
-        adapter.addHeaderView(initFriendsView(), 1)
+        adapter.addHeaderView(initMessageAllHeader(), 0)
+        adapter.addHeaderView(initLikeMesView(), 1)
         adapter.addHeaderView(initHeadsView(), 2)
         adapter.setHeaderAndEmpty(true)
 
@@ -168,38 +173,59 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     }
 
-    private fun initBlackTip(): View {
-        val friendsView = layoutInflater.inflate(R.layout.headview_message_warm_tiping, messageListRv, false)
-        friendsView.knowBtn.onClick {
-            adapter.removeHeaderView(friendsView)
+
+    /**
+     * 消息汇总中心
+     */
+    private val allMessageTypeAdapter by lazy { MessageCenterAllAdapter() }
+    private fun initMessageAllHeader(): View {
+        allMessageTypeAdapter.addData(MessageListBean(title = "点赞", icon = R.drawable.icon_message_like))
+        allMessageTypeAdapter.addData(MessageListBean(title = "评论", icon = R.drawable.icon_message_comment))
+        allMessageTypeAdapter.addData(MessageListBean(title = "招呼", icon = R.drawable.icon_message_greet))
+        val friendsView = layoutInflater.inflate(R.layout.headview_message_all, messageListRv, false)
+        friendsView.messageCenterRv.layoutManager = GridLayoutManager(activity!!, 3)
+        friendsView.messageCenterRv.adapter = allMessageTypeAdapter
+        allMessageTypeAdapter.setOnItemClickListener { _, view, position ->
+            when (position) {
+                0 -> {//喜欢我的消息
+                    startActivity<MessageLikeMeActivity>()
+                }
+                1 -> {//广场消息
+                    startActivity<MessageSquareActivity>()
+                }
+                else -> {//招呼
+                    startActivity<MessageHiActivity>()
+                }
+            }
+            allMessageTypeAdapter.data[position].count = 0
+            allMessageTypeAdapter.notifyItemChanged(position)
         }
         return friendsView
     }
 
 
     //创建打招呼好友布局
-    private var hiDatas = mutableListOf<HiMessageBean>()
-    private val hiAdapter by lazy { MessageListFriensAdapter(hiDatas) }
-    private fun initFriendsView(): View {
-        val friendsView = layoutInflater.inflate(R.layout.headerview_hi, messageListRv, false)
+    private val likeMeAdapter by lazy { MessageListLikeMeAdapter() }
+    private fun initLikeMesView(): View {
+        val friendsView = layoutInflater.inflate(R.layout.headerview_like_me, messageListRv, false)
         val linearLayoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
         friendsView.headRv.layoutManager = linearLayoutManager
-        friendsView.headRv.adapter = hiAdapter
+        friendsView.headRv.adapter = likeMeAdapter
         friendsView.headRv.addItemDecoration(
             DividerItemDecoration(
                 activity!!,
                 DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(10f),
+                SizeUtils.dp2px(20f),
                 resources.getColor(R.color.colorWhite)
             )
         )
         friendsView.friendTv.onClick {
-            startActivity<MessageHiActivity>()
+            startActivity<MessageLikeMeActivity>()
         }
-        hiAdapter.setOnItemClickListener { _, view, position ->
+        likeMeAdapter.setOnItemClickListener { _, view, position ->
             //发送通知告诉剩余时间，并且开始倒计时
             NIMClient.getService(MsgService::class.java)
-                .clearUnreadCount(hiAdapter.data[position].accid, SessionTypeEnum.P2P)
+                .clearUnreadCount(likeMeAdapter.data[position].accid, SessionTypeEnum.P2P)
 
             // 通知中的 RecentContact 对象的未读数为0
             //做招呼的已读状态更新
@@ -211,23 +237,22 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             } catch (e: Exception) {
             }
 
-            ChatActivity.start(activity!!, hiAdapter.data[position].accid ?: "")
+            ChatActivity.start(activity!!, likeMeAdapter.data[position].accid ?: "")
             EventBus.getDefault().post(NewMsgEvent())
 
         }
 
-//        hiAdapter.addData(mutableListOf(""))
+//        likeMeAdapter.addData(mutableListOf(""))
         return friendsView
     }
 
 
     /**
-     * 创建头布局
+     * 创建小助手布局
      */
     private val headAdapter by lazy { MessageListHeadAdapter() }
-
     private fun initHeadsView(): View {
-        val headView = LayoutInflater.from(activity!!).inflate(R.layout.headerview_hi, messageListRv, false)
+        val headView = LayoutInflater.from(activity!!).inflate(R.layout.headerview_like_me, messageListRv, false)
         headView.rlFriend.visibility = View.GONE
         val linearLayoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         headView.headRv.layoutManager = linearLayoutManager
@@ -274,6 +299,10 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
         UserManager.saveSquareCount(data?.square_cnt ?: 0)
         UserManager.saveLikeCount(data?.liked_unread_cnt ?: 0)
+        allMessageTypeAdapter.data[0].count = data?.liked_unread_cnt ?: 0
+        allMessageTypeAdapter.data[1].count = data?.square_cnt ?: 0
+        allMessageTypeAdapter.data[2].count = data?.greet_cnt ?: 0
+        allMessageTypeAdapter.notifyDataSetChanged()
         if (UserManager.getLikeCount() > 0 || UserManager.getSquareCount() > 0)
             EventBus.getDefault().post(NewMsgEvent())
 
@@ -283,44 +312,9 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             SPUtils.getInstance(Constants.SPNAME).put("isShowHarassment", true)
         }
 
-        val squa = MessageListBean(
-            "发现", when (data?.square_type) {
-                1 -> {
-                    "${data.square_nickname}赞了你的动态"
-                }
-                2 -> {
-                    "${data.square_nickname}评论了你的动态"
-                }
-                3 -> {
-                    "${data.square_nickname}赞了你的评论"
-                }
-                4 -> {
-                    "${data.square_nickname}"
-                }
-                else -> {
-                    "暂时没有新动态哦"
-                }
-            }, data?.square_cnt ?: 0, "${data?.square_time}", R.drawable.icon_square_msg
-        )
-
-
-        val like = MessageListBean(
-            "对我感兴趣的",
-            if ((data?.liked_cnt ?: 0) == 0) {
-                "暂时没有最新对你感兴趣的哦"
-            } else {
-                "有${data?.liked_cnt ?: 0}个人对你感兴趣"
-            },
-            data?.liked_unread_cnt ?: 0,
-            "${data?.liked_time}",
-            R.drawable.icon_like_msg
-        )
-
         headAdapter.data.clear()
         headAdapter.addData(ass)
-        headAdapter.addData(squa)
-        headAdapter.addData(like)
-        hiAdapter.data.clear()
+        likeMeAdapter.data.clear()
         if (data?.greet != null && data?.greet.isNotEmpty()) {
             if (data.greet_cnt > 0) {
                 adapter.headerLayout.hiCount.text = "${data.greet_cnt}"
@@ -329,10 +323,10 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                 adapter.headerLayout.hiCount.isVisible = false
             }
             adapter.headerLayout.rlFriend.visibility = View.VISIBLE
-            hiAdapter.setNewData(data.greet)
+            likeMeAdapter.setNewData(data.greet)
         } else {
             adapter.headerLayout.rlFriend.visibility = View.GONE
-            hiAdapter.notifyDataSetChanged()
+            likeMeAdapter.notifyDataSetChanged()
         }
 
         //获取最近联系人列表
@@ -344,33 +338,27 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     }
 
     //官方助手
-    var ass = MessageListBean("官方助手", "暂时没有助手消息哦", 0, "", R.drawable.icon_assistant)
+    private val ass by lazy { MessageListBean("官方助手", "暂时没有助手消息哦", 0, "", R.drawable.icon_default_avator_logo) }
 
     //获取最近会话（但是要获取最近的联系人列表）
     override fun onGetRecentContactResults(result: MutableList<RecentContact>) {
         setViewState(BaseActivity.CONTENT)
-
         for (loadedRecent in result) {
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
-                ass = MessageListBean(
-                    "官方助手",
-                    when {
-                        loadedRecent.attachment is ChatHiAttachment -> when {
-                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
-                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
-                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
-                            (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
-                            else -> ""
-                        }
-                        loadedRecent.attachment is ShareSquareAttachment -> "『动态分享内容』"
-                        else -> loadedRecent.content
-                    },
-                    loadedRecent.unreadCount,
-                    TimeUtil.getTimeShowString(loadedRecent.time, true),
-                    R.drawable.icon_assistant,
-                    loadedRecent.contactId
-                )
-
+                ass.msg = when {
+                    loadedRecent.attachment is ChatHiAttachment -> when {
+                        (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
+                        (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
+                        (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
+                        (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
+                        else -> ""
+                    }
+                    loadedRecent.attachment is ShareSquareAttachment -> "『动态分享内容』"
+                    else -> loadedRecent.content
+                }
+                ass.count = loadedRecent.unreadCount
+                ass.time = TimeUtil.getTimeShowString(loadedRecent.time, true)
+                ass.id = loadedRecent.contactId
                 //本地小助手发送通知通过认证通知，本地修改认证状态
                 if (loadedRecent.content.contains("已通过认证")) {
                     //更改本地的认证状态
@@ -392,7 +380,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         val iterator = result.iterator()
         while (iterator.hasNext()) {
             val contact = iterator.next()
-            for (hiBean in hiAdapter.data) {
+            for (hiBean in likeMeAdapter.data) {
                 if (contact.contactId == hiBean.accid) {
                     iterator.remove()
                     break
@@ -403,16 +391,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         adapter.data.clear()
         adapter.setNewData(result)
         refreshMessages()
-
-        //初次加载，更新离线的消息中是否有@我的消息
-//        var recentAited = mutableListOf<RecentContact>()
-//        for (loadedRecent in result) {
-//            if (loadedRecent.sessionType == SessionTypeEnum.Team) {
-//                recentAited.add(loadedRecent)
-//            }
-//        }
-//        if (recentAited.size > 0)
-//            mPresenter.mView.updateOfflineContactAited(recentAited)
     }
 
 
@@ -525,14 +503,14 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             if (!DropManager.getInstance().isTouchable) {
                 // 正在拖拽红点，缓存数据
                 for (r in recentContacts) {
-                    cached.put(r.contactId, r)
+                    cached[r.contactId] = r
                 }
                 return@Observer
             }
-            onRecentContactChanged(recentContacts)
+            onRecentContactChanged()
         }
 
-    private fun onRecentContactChanged(recentContacts: MutableList<RecentContact>) {
+    private fun onRecentContactChanged() {
         mPresenter.messageCensus(params)
     }
 
@@ -547,7 +525,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     }
 
 
-    internal var onlineStateChangeObserver: OnlineStateChangeObserver =
+    private var onlineStateChangeObserver: OnlineStateChangeObserver =
         OnlineStateChangeObserver { adapter.notifyDataSetChanged() }
 
     private fun registerDropCompletedListener(register: Boolean) {
@@ -558,7 +536,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         }
     }
 
-    internal var dropCompletedListener: DropCover.IDropCompletedListener =
+    private var dropCompletedListener: DropCover.IDropCompletedListener =
         DropCover.IDropCompletedListener { id, explosive ->
             if (cached != null && !cached.isEmpty()) {
                 // 红点爆裂，已经要清除未读，不需要再刷cached
@@ -575,7 +553,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     val recentContacts = ArrayList<RecentContact>(cached.size)
                     recentContacts.addAll(cached.values)
                     cached.clear()
-                    onRecentContactChanged(recentContacts)
+                    onRecentContactChanged()
                 }
             }
         }
@@ -636,7 +614,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         super.onDestroy()
         registerObservers(false)
         EventBus.getDefault().unregister(this)
-        hiAdapter.cancelAllTimers()//取消所有的定时器
     }
 
     override fun onStart() {

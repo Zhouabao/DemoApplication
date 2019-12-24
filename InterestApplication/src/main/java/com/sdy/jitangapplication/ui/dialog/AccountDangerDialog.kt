@@ -56,7 +56,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) 
             VERIFY_ING -> {
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
-                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_ing)
+                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_ing)
                 accountDangerTitle.text = "认证审核中"
                 accountDangerContent.text = "认证审核通过后将为您解冻账号\n请耐心等待"
                 accountDangerBtn.text = ""
@@ -67,7 +67,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) 
             VERIFY_NOT_PASS -> {
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
-                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_not_pass)
+                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_not_pass)
                 accountDangerTitle.text = "认证审核不通过"
                 accountDangerContent.text = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
                 accountDangerBtn.text = "修改头像"
@@ -81,7 +81,7 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) 
             VERIFY_PASS -> {
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
-                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_pass)
+                accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_pass)
                 accountDangerTitle.text = "认证审核成功"
                 accountDangerContent.text = "您已通过认证审核\n已为您解冻账号，现在可按正常流程操作"
                 accountDangerBtn.text = "知道了"

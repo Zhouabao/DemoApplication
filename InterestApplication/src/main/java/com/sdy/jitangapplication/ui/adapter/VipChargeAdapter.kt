@@ -24,13 +24,16 @@ class VipChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layou
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         params.height = SizeUtils.dp2px(130F)
         params.width =
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(41F) * 2 - SizeUtils.dp2px(9F) * 2) / 3F).toInt()
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(17F) * 2 - SizeUtils.dp2px(9F) * 2) / 3F).toInt()
         if (holder.layoutPosition == 0) {
-            params.leftMargin = SizeUtils.dp2px(26F)
+            params.leftMargin = SizeUtils.dp2px(17F)
             params.rightMargin = SizeUtils.dp2px(9F)
         } else if (holder.layoutPosition == mData.size - 1) {
-            params.rightMargin = SizeUtils.dp2px(26F)
+            params.rightMargin = SizeUtils.dp2px(17F)
             params.leftMargin = SizeUtils.dp2px(9F)
+        } else {
+            params.rightMargin = SizeUtils.dp2px(0F)
+            params.leftMargin = SizeUtils.dp2px(0F)
         }
         holder.itemView.layoutParams = params
 
@@ -50,36 +53,40 @@ class VipChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layou
                 .setBold()
                 .create()
         holder.itemView.vipNowPrice.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
-        holder.itemView.vipOriginalPrice.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
+        holder.itemView.vipLong.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
         if (item.type == 1) {//	1 原价售卖 2折扣价售卖 3限时折扣
-            holder.itemView.vipOriginalPrice.visibility = View.INVISIBLE
+            holder.itemView.vipLong.visibility = View.INVISIBLE
         } else {
-            holder.itemView.vipOriginalPrice.visibility = View.VISIBLE
-            holder.itemView.vipOriginalPrice.text =
-                SpanUtils.with(holder.itemView.vipOriginalPrice).append("¥${item.original_price ?: "0"}")
+            holder.itemView.vipLong.visibility = View.VISIBLE
+            holder.itemView.vipLong.text =
+                SpanUtils.with(holder.itemView.vipLong).append("¥${item.original_price ?: "0"}")
                     .setStrikethrough().create()
         }
-        holder.itemView.vipLong.text = item.ename ?: ""
+        holder.itemView.vipDiscount.text = item.ename ?: ""
         holder.itemView.vipSaleType.text = item.descr ?: ""
         if (item.check) {
-            holder.itemView.vipSaleType.isVisible = item.type == 3
-            holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_rectangle_orange)
-            holder.itemView.vipOriginalPrice.setTextColor(mContext.resources.getColor(R.color.colorOrange))
-            holder.itemView.vipNowPrice.setTextColor(mContext.resources.getColor(R.color.colorOrange))
-            holder.itemView.vipLong.setTextColor(mContext.resources.getColor(R.color.colorOrange))
+            holder.itemView.vipSaleType.isVisible = true
+//            holder.itemView.vipSaleType.isVisible = item.type == 3
+            holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_vip_charge_checked_bg)
+            holder.itemView.vipLong.setTextColor(mContext.resources.getColor(R.color.colorOrangeVip))
+            holder.itemView.vipNowPrice.setTextColor(mContext.resources.getColor(R.color.colorOrangeVip))
+            holder.itemView.vipDiscount.setTextColor(mContext.resources.getColor(R.color.colorWhite))
+            holder.itemView.vipDiscount.setBackgroundResource(R.drawable.shape_vip_charge_discount_checked_bg)
 
         } else {
             holder.itemView.vipSaleType.isVisible = false
-            holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_rectangle_gray_vip)
-            holder.itemView.vipOriginalPrice.setTextColor(mContext.resources.getColor(R.color.colorBlackTitle))
-            holder.itemView.vipNowPrice.setTextColor(mContext.resources.getColor(R.color.colorBlackTitle))
+            holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_vip_charge_normal_bg)
             holder.itemView.vipLong.setTextColor(mContext.resources.getColor(R.color.colorBlackTitle))
+            holder.itemView.vipNowPrice.setTextColor(mContext.resources.getColor(R.color.colorBlackTitle))
+            holder.itemView.vipDiscount.setTextColor(mContext.resources.getColor(R.color.colorBlackTitle))
+            holder.itemView.vipDiscount.background = null
+
 
         }
 
 
         //                vipOneMonth.setBackgroundResource(R.drawable.shape_rectangle_orange)
-//                vipThreeMonth.setBackgroundResource(R.drawable.shape_rectangle_gray_vip)
-//                vipOneYear.setBackgroundResource(R.drawable.shape_rectangle_gray_vip)
+//                vipThreeMonth.setBackgroundResource(R.drawable.shape_vip_charge_normal_bg)
+//                vipOneYear.setBackgroundResource(R.drawable.shape_vip_charge_normal_bg)
     }
 }

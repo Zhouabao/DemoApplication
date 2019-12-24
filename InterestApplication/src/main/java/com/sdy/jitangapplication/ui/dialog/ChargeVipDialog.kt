@@ -89,11 +89,11 @@ class ChargeVipDialog(
 
     private fun initWindow() {
         val window = this.window
-        window?.setGravity(Gravity.BOTTOM)
+        window?.setGravity(Gravity.CENTER)
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.windowAnimations = R.style.MyDialogBottomAnimation
+        params?.windowAnimations = R.style.MyDialogCenterAnimation
 //        params?.y = SizeUtils.dp2px(20F)
 
         window?.attributes = params
@@ -118,7 +118,6 @@ class ChargeVipDialog(
      * 设置VIP的权益广告栏
      */
     private val vipBannerAdapter by lazy { VipBannerAdapter(PURCHASE_VIP) }
-
     //权益栏
     private fun initVipPowerData(banners: MutableList<VipDescr>) {
         bannerVip.adapter = vipBannerAdapter

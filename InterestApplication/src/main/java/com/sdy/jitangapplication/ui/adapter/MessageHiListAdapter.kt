@@ -4,6 +4,7 @@ import android.os.CountDownTimer
 import android.util.SparseArray
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.UpdateHiEvent
@@ -18,7 +19,7 @@ import org.greenrobot.eventbus.EventBus
  *    version: 1.0
  */
 class MessageHiListAdapter :
-    BaseQuickAdapter<HiMessageBean, MessageListFriensAdapter.MyViewHolder>(R.layout.item_message_hi_list) {
+    BaseQuickAdapter<HiMessageBean, MessageHiListAdapter.MyViewHolder>(R.layout.item_message_hi_list) {
     private var coundownMap: SparseArray<CountDownTimer> = SparseArray()
 
     /**
@@ -34,7 +35,7 @@ class MessageHiListAdapter :
     }
 
 
-    override fun convert(holder: MessageListFriensAdapter.MyViewHolder, item: HiMessageBean) {
+    override fun convert(holder: MyViewHolder, item: HiMessageBean) {
         val itemView = holder.itemView
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.msgIcon)
         holder.itemView.msgTitle.text = item.nickname ?: ""
@@ -109,6 +110,11 @@ class MessageHiListAdapter :
 
         }
 
+
+    }
+
+    public class MyViewHolder(view: View) : BaseViewHolder(view) {
+        public var countDownTimer: CountDownTimer? = null
 
     }
 

@@ -121,19 +121,19 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     //是否认证 0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     private fun checkVerify() {
         if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
-            userVerify.setImageResource(R.drawable.icon_verify_not_white)
+            userVerify.setImageResource(R.drawable.icon_verify_pass)
             userVerifyTipBtn.text = "已认证"
             userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorWhite))
             userVerifyTipBtn.isEnabled = false
             userVerifyScore.isVisible = false
         } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) { //审核中
-            userVerify.setImageResource(R.drawable.icon_verify_not_me)
+            userVerify.setImageResource(R.drawable.icon_verify_reject)
             userVerifyTipBtn.text = "认证审核中"
             userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayTextBF))
             userVerifyTipBtn.isEnabled = false
             userVerifyScore.isVisible = false
         } else {
-            userVerify.setImageResource(R.drawable.icon_verify_not_me)
+            userVerify.setImageResource(R.drawable.icon_verify_reject)
             userVerifyTipBtn.isVisible = true
             userVerifyTipBtn.isEnabled = true
             userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayTextBF))

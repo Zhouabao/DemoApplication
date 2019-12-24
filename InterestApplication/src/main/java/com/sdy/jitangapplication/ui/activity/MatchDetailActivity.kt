@@ -152,6 +152,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
+        detailUserGreetBtn.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)
         backBtn.setOnClickListener(this)
         backBtn1.setOnClickListener(this)
@@ -357,9 +358,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         titleUsername.text = matchBean!!.nickname
         val left = resources.getDrawable(
             if (matchBean!!.gender == 1) {
-                R.drawable.icon_gender_man_gray
+                R.drawable.icon_gender_man_gray_userdetail
             } else {
-                R.drawable.icon_gender_woman_gray
+                R.drawable.icon_gender_woman_gray_userdetail
             }
         )
         detailUserInfoAge.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
@@ -629,6 +630,20 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             // 若有 就打招呼
             // 若无 就弹充值
             R.id.detailUserChatBtn -> {
+                if (matchBean != null)
+                    CommonFunction.commonGreet(
+                        this,
+                        matchBean!!.isfriend == 1,
+                        matchBean!!.greet_switch,
+                        matchBean!!.greet_state,
+                        matchBean!!.accid,
+                        matchBean!!.nickname ?: "",
+                        matchBean!!.isgreeted,
+                        detailUserChatBtn
+                    )
+            }
+
+            R.id.detailUserGreetBtn -> {
                 if (matchBean != null)
                     CommonFunction.commonGreet(
                         this,

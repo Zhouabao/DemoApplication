@@ -793,7 +793,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     checkSaveEnable()
                 }
                 REPLACE_REQUEST,//替换头像
-                PictureConfig.CHOOSE_REQUEST//icon_verify_not_pass
+                PictureConfig.CHOOSE_REQUEST//icon_verify_account_not_pass
                 -> {
                     if (data != null) {
                         if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {

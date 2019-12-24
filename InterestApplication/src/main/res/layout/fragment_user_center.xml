@@ -69,7 +69,7 @@
 
                 <ImageView
                         android:id="@+id/userVerify"
-                        android:src="@drawable/icon_verify_not_me"
+                        android:src="@drawable/icon_verify_reject"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         app:layout_constraintBottom_toBottomOf="@id/userAvator"
