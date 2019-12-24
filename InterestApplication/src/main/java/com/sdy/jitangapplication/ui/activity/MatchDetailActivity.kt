@@ -152,6 +152,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
+        detailUserGreetBtn.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)
         backBtn.setOnClickListener(this)
         backBtn1.setOnClickListener(this)
@@ -628,6 +629,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             //1.首先判断是否有次数，
             // 若有 就打招呼
             // 若无 就弹充值
+            R.id.detailUserGreetBtn,
             R.id.detailUserChatBtn -> {
                 if (matchBean != null)
                     CommonFunction.commonGreet(
