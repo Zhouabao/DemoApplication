@@ -140,6 +140,9 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
                 tdata.originalLike = tdata.isliked
             }
             adapter.addData(data?.list ?: mutableListOf())
+            if (!data?.list.isNullOrEmpty()) {
+                adapter.notifyDataSetChanged()
+            }
             if (data?.people_cnt == 0) {
                 samePersonCount.visibility = View.INVISIBLE
             } else {

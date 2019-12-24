@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:elevation="2dp"
         android:background="@drawable/rectangle_white_15dp"
@@ -74,9 +75,9 @@
     <TextView
             android:id="@+id/sameName"
             android:textStyle="bold"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:singleLine="true"
             android:layout_height="wrap_content"
-            android:text="米明林米明林"
             android:ellipsize="end"
             android:textColor="#ff191919"
             android:textSize="15sp"
@@ -84,18 +85,24 @@
             android:maxLength="6"
             app:layout_constraintBottom_toTopOf="@id/sameInfo"
             app:layout_constraintLeft_toRightOf="@id/sameAvator"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/sameAvator"
+            tools:text="米明林米明林"
             />
 
     <TextView
             android:id="@+id/sameInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="女·天蝎座·2.3km"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:textColor="#ffb6b6b6"
             android:textSize="12sp"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="@id/sameAvator"
             app:layout_constraintLeft_toLeftOf="@id/sameName"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sameName"
+            tools:text="女·天蝎座·2.3km"
             />
 </androidx.constraintlayout.widget.ConstraintLayout>
