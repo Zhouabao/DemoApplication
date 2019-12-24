@@ -57,6 +57,14 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
         btnBack.onClick { onBackPressed() }
 
+
+        KeyboardUtils.registerSoftInputChangedListener(this) {
+            val ani = ObjectAnimator.ofFloat(clMsg, "translationY", it.toFloat())
+            ani.duration = 50L
+            ani.start()
+
+        }
+
         //主动弹起键盘
         etMsg.postDelayed({
             KeyboardUtils.showSoftInput(etMsg)

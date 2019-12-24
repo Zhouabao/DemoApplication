@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:gs="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBlack"
+        android:background="@drawable/gradient_match_succeed_bg"
         tools:context=".ui.chat.MatchSucceedActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:background="@drawable/gradient_match_succeed_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -96,6 +95,16 @@
                 app:layout_constraintTop_toBottomOf="@id/iconLike"
                 />
 
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clMsg"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            >
+
         <EditText
                 android:id="@+id/etMsg"
                 android:hint="说点什么打破僵局吧"
@@ -123,8 +132,6 @@
                 app:layout_constraintBottom_toBottomOf="@id/etMsg"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/etMsg"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
