@@ -59,7 +59,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
 
         KeyboardUtils.registerSoftInputChangedListener(this) {
-            val ani = ObjectAnimator.ofFloat(clMsg, "translationY", it.toFloat())
+            val ani = ObjectAnimator.ofFloat(clMsg, "translationY", -it.toFloat())
             ani.duration = 50L
             ani.start()
 
