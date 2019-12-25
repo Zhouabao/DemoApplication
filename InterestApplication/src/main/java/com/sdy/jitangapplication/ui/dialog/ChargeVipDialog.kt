@@ -54,13 +54,13 @@ import org.greenrobot.eventbus.EventBus
  *    version: 1.0
  */
 class ChargeVipDialog(
-    public var currentPos: Int, val context1: Context,
-    public var purchaseType: Int = PURCHASE_VIP
+    private var currentPos: Int, val context1: Context,
+    private var purchaseType: Int = PURCHASE_VIP
 ) :
     Dialog(context1, R.style.MyDialog) {
     companion object {
-        const val VIP_LOGO = 1//会员logo
         const val INFINITE_SLIDE = 0//无限滑动
+        const val VIP_LOGO = 1//会员logo
         const val FILTER = 2//独享筛选
         const val LOOKED_ME = 3//看过我的
         const val LIKED_ME = 4//喜欢我的
@@ -69,6 +69,7 @@ class ChargeVipDialog(
         //购买类型
         const val PURCHASE_VIP = 100//VIP购买
         const val PURCHASE_GREET_COUNT = 200//招呼次数购买
+        const val PURCHASE_RENEW_VIP = 300//vip续费
 
     }
 
@@ -104,13 +105,15 @@ class ChargeVipDialog(
     /**
      * 设置支付价格的数据
      */
-    private fun setChargeWayData(chargeWays: MutableList<ChargeWayBean>) {
+    private fun setChargeWayData(chargeWays: MutableList<ChargeWayBean>, purchaseType: Int) {
         if (chargeWays.size > 2) {
             chargeWays[1].check = true
         } else {
             chargeWays[0].check = true
         }
+        vipChargeAdapter.purchaseType = purchaseType
         vipChargeAdapter.setNewData(chargeWays)
+        setUpPrice()
     }
 
 
@@ -118,6 +121,7 @@ class ChargeVipDialog(
      * 设置VIP的权益广告栏
      */
     private val vipBannerAdapter by lazy { VipBannerAdapter(PURCHASE_VIP) }
+
     //权益栏
     private fun initVipPowerData(banners: MutableList<VipDescr>) {
         bannerVip.adapter = vipBannerAdapter
@@ -165,6 +169,7 @@ class ChargeVipDialog(
             for (data in vipChargeAdapter.data.withIndex()) {
                 data.value.check = data.index == position
             }
+            setUpPrice()
             vipChargeAdapter.notifyDataSetChanged()
         }
 
@@ -183,6 +188,22 @@ class ChargeVipDialog(
             createOrder(3)
         }
 
+        //取消支付
+        refuseBtn.onClick {
+            dismiss()
+        }
+
+    }
+
+    private fun setUpPrice() {
+        for (data in vipChargeAdapter.data) {
+            if (data.check) {
+                zhiPayPrice.text = "以${data.discount_price}元购买"
+                wechatPayPrice.text = "以${data.discount_price}元购买"
+                break
+            }
+        }
+
     }
 
     /**
@@ -193,18 +214,19 @@ class ChargeVipDialog(
             if (purchaseType == PURCHASE_VIP) {
                 purchaseType = PURCHASE_GREET_COUNT
                 vipBannerAdapter.type = purchaseType
-
                 bannerIndicator.isVisible = false
+                purchaseBg.setImageResource(R.drawable.icon_gradient_greet_charge_bg)
                 if (chargeWayBeans != null) {
-                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf())
+                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf(), PURCHASE_GREET_COUNT)
                     initVipPowerData(chargeWayBeans!!.greet_icon_list ?: mutableListOf())
                 }
             } else {
                 purchaseType = PURCHASE_VIP
                 vipBannerAdapter.type = purchaseType
                 bannerIndicator.isVisible = true
+                purchaseBg.setImageResource(R.drawable.icon_gradient_vip_charge_bg)
                 if (chargeWayBeans != null) {
-                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf())
+                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf(), PURCHASE_VIP)
                     initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
                 }
 
@@ -214,15 +236,17 @@ class ChargeVipDialog(
             if (purchaseType == PURCHASE_VIP) {
                 vipBannerAdapter.type = purchaseType
                 bannerIndicator.isVisible = true
+                purchaseBg.setImageResource(R.drawable.icon_gradient_vip_charge_bg)
                 if (chargeWayBeans != null) {
-                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf())
+                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf(), purchaseType)
                     initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
                 }
             } else {
                 vipBannerAdapter.type = purchaseType
                 bannerIndicator.isVisible = false
+                purchaseBg.setImageResource(R.drawable.icon_gradient_greet_charge_bg)
                 if (chargeWayBeans != null) {
-                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf())
+                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf(), purchaseType)
                     initVipPowerData(chargeWayBeans!!.greet_icon_list ?: mutableListOf())
                 }
             }
@@ -274,9 +298,6 @@ class ChargeVipDialog(
                 SDK_PAY_FLAG -> {
                     run {
                         val payResult = PayResult(msg.obj as Map<String, String>)
-                        /**
-                         * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-                         */
                         /**
                          * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                          */
@@ -364,7 +385,7 @@ class ChargeVipDialog(
 
                         payways.addAll(chargeWayBeans!!.paylist ?: mutableListOf())
                         initPayWay()
-                        loading.visibility = View.GONE
+                        loading.isVisible = false
                         dialogView.visibility = View.VISIBLE
                     }
                 }

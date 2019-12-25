@@ -2,7 +2,6 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_marginLeft="20dp"
@@ -13,12 +12,24 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/dialogView"
-            android:visibility="visible"
-            android:layout_gravity="bottom"
+            android:visibility="gone"
             android:orientation="vertical"
             android:background="@drawable/gradient_vip_charge_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+        <com.sdy.jitangapplication.widgets.RoundTopImageView
+                android:id="@+id/purchaseBg"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_gradient_vip_charge_bg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_marginBottom="100dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:topRadius="10dp"/>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,6 +37,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/transparent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -55,9 +67,10 @@
                 android:id="@+id/vipChargeRv"
                 android:orientation="vertical"
                 android:layout_width="0dp"
+                android:layout_marginTop="22dp"
+                android:background="@color/transparent"
                 android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/purchaseLl"/>
@@ -76,6 +89,7 @@
                 app:layout_constraintTop_toBottomOf="@id/vipChargeRv">
 
             <TextView
+                    android:id="@+id/zhiPayPrice"
                     android:text="支付宝支付"
                     android:textColor="#ffffffff"
                     android:textSize="16sp"
@@ -106,6 +120,7 @@
                 app:layout_constraintTop_toBottomOf="@id/zhiPayBtn">
 
             <TextView
+                    android:id="@+id/wechatPayPrice"
                     android:text="微信支付"
                     android:layout_gravity="center"
                     android:gravity="center"
@@ -149,8 +164,8 @@
 
         <TextView
                 android:id="@+id/refuseBtn"
-                android:paddingTop="13dp"
-                android:paddingBottom="20dp"
+                android:layout_marginTop="13dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="不，谢谢"
@@ -167,9 +182,9 @@
     <include
             android:id="@+id/loading"
             layout="@layout/loading_layout"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_gravity="bottom"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="580dp"/>
+            android:layout_height="550dp"/>
 </FrameLayout>

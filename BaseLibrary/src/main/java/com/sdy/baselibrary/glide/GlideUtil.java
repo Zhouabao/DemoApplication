@@ -115,7 +115,7 @@ public class GlideUtil {
      * @param tartgetImg
      * @param scale      是否缩放 0.0-1.0F
      */
-    public static void loadRoundImgCenterinside(Context context, String url, ImageView tartgetImg, float scale, int radius) {
+    public static void loadRoundImgCenterinside(Context context, Object url, ImageView tartgetImg, float scale, int radius) {
         MultiTransformation multiTransformation = new MultiTransformation(new CenterInside(), new RoundedCornersTransformation(radius, 0));
         Glide.with(context)
                 .load(url)

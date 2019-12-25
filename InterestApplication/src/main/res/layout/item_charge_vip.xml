@@ -10,18 +10,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/vipCl"
-            android:layout_marginTop="9dp"
+            android:layout_marginTop="13dp"
             android:orientation="vertical"
             android:background="@drawable/shape_vip_charge_normal_bg"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:gravity="center_horizontal"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-                android:paddingLeft="17dp"
-                android:paddingRight="17dp"
                 android:id="@+id/vipLong"
                 android:textStyle="normal"
                 android:textColor="@color/colorBlackTitle"
@@ -35,8 +33,6 @@
                 tools:text="三个月"/>
 
         <TextView
-                android:paddingLeft="17dp"
-                android:paddingRight="17dp"
                 android:id="@+id/vipNowPrice"
                 android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
@@ -53,15 +49,16 @@
 
         <TextView
                 android:id="@+id/vipDiscount"
-                android:layout_marginTop="10dp"
                 android:layout_width="0dp"
-                android:layout_height="33dp"
+                android:layout_height="wrap_content"
                 android:textColor="#ff333333"
                 android:textSize="12sp"
                 android:gravity="center"
                 android:background="@null"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/vipNowPrice"
                 tools:text="优惠50%"
                 />
@@ -72,9 +69,9 @@
             android:visibility="gone"
             android:background="@drawable/shape_vip_charge_popular_bg"
             android:textColor="@color/colorWhite"
-            android:layout_width="48dp"
+            android:layout_width="72dp"
             android:gravity="center"
-            android:textSize="8sp"
-            android:layout_height="18dp"
+            android:textSize="12sp"
+            android:layout_height="25dp"
             tools:text="限时特惠"/>
 </RelativeLayout>

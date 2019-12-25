@@ -117,7 +117,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
 
-
     //是否认证 0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     private fun checkVerify() {
         if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
@@ -156,7 +155,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             isVipCl.visibility = View.VISIBLE
             isVipTimeout.text = "到期时间\t\t${userInfoBean?.userinfo?.vip_express ?: ""}"
             notVipPowerLl.visibility = View.GONE
-            isVipPowerBtn.isVisible = false
+            isVipPowerBtn.isVisible = true
+            isVipPowerBtn.text = "会员权益"
         } else {
             userVip.visibility = View.GONE
             isVipCl.visibility = View.GONE
@@ -374,6 +374,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             R.id.isVipPowerBtn -> {
                 if (userInfoBean?.userinfo?.isvip != 1) {
                     vipDialog.show()
+                } else {
+                    startActivity<VipPowerActivity>("nickname" to userInfoBean?.userinfo?.nickname)
                 }
             }
             //我的标签
