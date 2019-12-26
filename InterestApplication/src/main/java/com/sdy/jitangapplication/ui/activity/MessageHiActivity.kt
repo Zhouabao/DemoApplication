@@ -245,7 +245,6 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         super.onDestroy()
         EventBus.getDefault().unregister(this)
         registerObservers(false)
-        adapter.cancelAllTimers()//取消所有的定时器
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
