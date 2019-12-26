@@ -45,39 +45,28 @@ class VipChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layou
                 .append("¥")
                 .setFontSize(14, true)
                 .setBold()
-                .append(
-                    if (item.type == 1) {
-                        "${item.original_price ?: ""}"
-                    } else {
-                        "${item.discount_price ?: ""}"
-                    }
-                )
+                .append("${item.unit_price}")
                 .setFontSize(28, true)
                 .setBold()
                 .create()
         holder.itemView.vipNowPrice.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
         holder.itemView.vipDiscount.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
-        if (item.type == 1) {//	1 原价售卖 2折扣价售卖 3限时折扣
+        if (item.save_percent == 0) {//	1 原价售卖 2折扣价售卖 3限时折扣
             holder.itemView.vipDiscount.visibility = View.INVISIBLE
         } else {
             holder.itemView.vipDiscount.visibility = View.VISIBLE
             holder.itemView.vipDiscount.text =
                 SpanUtils.with(holder.itemView.vipDiscount)
                     .append("节省")
-                    .append(
-                        "${String.format(
-                            "%.0f",
-                            (item.discount_price ?: 0F).div(item.original_price ?: 0F).times(100)
-                        )}"
-                    )
+                    .append("${item.save_percent}")
                     .setBold()
                     .append("%")
                     .create()
         }
         holder.itemView.vipLong.text = item.ename ?: ""
         holder.itemView.vipSaleType.text = item.descr ?: ""
-        if (item.check) {
-            holder.itemView.vipSaleType.isVisible = true
+        if (item.is_promote) {
+            holder.itemView.vipSaleType.isVisible = !item.descr.isNullOrEmpty()
 //            holder.itemView.vipSaleType.isVisible = item.type == 3
             (holder.itemView.vipDiscount.layoutParams as ConstraintLayout.LayoutParams).topMargin = SizeUtils.dp2px(10F)
             when (purchaseType) {

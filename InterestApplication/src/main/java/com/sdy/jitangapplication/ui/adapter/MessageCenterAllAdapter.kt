@@ -16,7 +16,11 @@ import kotlinx.android.synthetic.main.item_message_center_all.view.*
 class MessageCenterAllAdapter : BaseQuickAdapter<MessageListBean, BaseViewHolder>(R.layout.item_message_center_all) {
     override fun convert(holder: BaseViewHolder, item: MessageListBean) {
         GlideUtil.loadImg(mContext, item.icon, holder.itemView.messageAllIcon)
-        holder.itemView.messageAllCount.text = "${item.count}"
+        holder.itemView.messageAllCount.text = "${if (item.count > 99) {
+            "99+"
+        } else {
+            item.count
+        }}"
         holder.itemView.messageAlType.text = "${item.title}"
     }
 

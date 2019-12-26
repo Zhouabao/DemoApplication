@@ -107,9 +107,9 @@ class ChargeVipDialog(
      */
     private fun setChargeWayData(chargeWays: MutableList<ChargeWayBean>, purchaseType: Int) {
         if (chargeWays.size > 2) {
-            chargeWays[1].check = true
+            chargeWays[1].is_promote = true
         } else {
-            chargeWays[0].check = true
+            chargeWays[0].is_promote = true
         }
         vipChargeAdapter.purchaseType = purchaseType
         vipChargeAdapter.setNewData(chargeWays)
@@ -167,7 +167,7 @@ class ChargeVipDialog(
         vipChargeRv.adapter = vipChargeAdapter
         vipChargeAdapter.setOnItemClickListener { _, _, position ->
             for (data in vipChargeAdapter.data.withIndex()) {
-                data.value.check = data.index == position
+                data.value.is_promote = data.index == position
             }
             setUpPrice()
             vipChargeAdapter.notifyDataSetChanged()
@@ -197,9 +197,13 @@ class ChargeVipDialog(
 
     private fun setUpPrice() {
         for (data in vipChargeAdapter.data) {
-            if (data.check) {
-                zhiPayPrice.text = "以${data.discount_price}元购买"
-                wechatPayPrice.text = "以${data.discount_price}元购买"
+            if (data.is_promote) {
+                zhiPayPrice.text = "以${if ((data.discount_price ?: 0F) == 0F) {
+                    data.original_price?:0F
+                } else {
+                    data.discount_price ?: 0F
+                }}元购买"
+                wechatPayPrice.text = zhiPayPrice.text
                 break
             }
         }
@@ -268,7 +272,7 @@ class ChargeVipDialog(
             }
         }
         for (charge in vipChargeAdapter.data) {
-            if (charge.check) {
+            if (charge.is_promote) {
                 params["product_id"] = charge.id
                 break
             }

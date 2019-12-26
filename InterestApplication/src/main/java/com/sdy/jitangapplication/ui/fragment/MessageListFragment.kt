@@ -29,6 +29,9 @@ import com.netease.nim.uikit.common.util.sys.TimeUtil
 import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
+import com.netease.nimlib.sdk.friend.FriendService
+import com.netease.nimlib.sdk.friend.constant.VerifyType
+import com.netease.nimlib.sdk.friend.model.AddFriendData
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
@@ -49,7 +52,7 @@ import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
 import com.sdy.jitangapplication.ui.activity.ContactBookActivity
-import com.sdy.jitangapplication.ui.activity.MessageHiActivity
+import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.ui.activity.MessageLikeMeActivity
 import com.sdy.jitangapplication.ui.activity.MessageSquareActivity
 import com.sdy.jitangapplication.ui.adapter.MessageCenterAllAdapter
@@ -178,6 +181,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
      * 消息汇总中心
      */
     private val allMessageTypeAdapter by lazy { MessageCenterAllAdapter() }
+
     private fun initMessageAllHeader(): View {
         allMessageTypeAdapter.addData(MessageListBean(title = "点赞", icon = R.drawable.icon_message_like))
         allMessageTypeAdapter.addData(MessageListBean(title = "评论", icon = R.drawable.icon_message_comment))
@@ -194,7 +198,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     startActivity<MessageSquareActivity>()
                 }
                 else -> {//招呼
-                    startActivity<MessageHiActivity>()
+                    startActivity<GreetReceivedActivity>()
                 }
             }
             allMessageTypeAdapter.data[position].count = 0
@@ -206,6 +210,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     //创建打招呼好友布局
     private val likeMeAdapter by lazy { MessageListLikeMeAdapter() }
+
     private fun initLikeMesView(): View {
         val friendsView = layoutInflater.inflate(R.layout.headerview_like_me, messageListRv, false)
         val linearLayoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
@@ -251,6 +256,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
      * 创建小助手布局
      */
     private val headAdapter by lazy { MessageListHeadAdapter() }
+
     private fun initHeadsView(): View {
         val headView = LayoutInflater.from(activity!!).inflate(R.layout.headerview_like_me, messageListRv, false)
         headView.rlFriend.visibility = View.GONE
@@ -388,7 +394,17 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             }
         }
 
+
         adapter.data.clear()
+        for (loadedRecent in result) {
+            if (!NIMClient.getService(FriendService::class.java).isMyFriend(loadedRecent.contactId))
+                NIMClient.getService(FriendService::class.java).addFriend(
+                    AddFriendData(
+                        loadedRecent.contactId,
+                        VerifyType.DIRECT_ADD
+                    )
+                )
+        }
         adapter.setNewData(result)
         refreshMessages()
     }
@@ -563,7 +579,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             val index = getItemIndex(message.uuid)
             if (index >= 0 && index < adapter.data.size) {
                 val item = adapter.data.get(index)
-                item.setMsgStatus(message.status)
+                item.msgStatus = message.status
 
                 adapter.notifyItemChanged(index + adapter.headerLayoutCount)
             }
@@ -613,6 +629,8 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     override fun onDestroy() {
         super.onDestroy()
         registerObservers(false)
+        registerDropCompletedListener(false)
+        registerOnlineStateChangeListener(false)
         EventBus.getDefault().unregister(this)
     }
 

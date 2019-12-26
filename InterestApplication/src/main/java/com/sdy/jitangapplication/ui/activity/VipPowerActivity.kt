@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -92,7 +91,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
         vipChargeRv.adapter = vipChargeAdapter
         vipChargeAdapter.setOnItemClickListener { _, _, position ->
             for (data in vipChargeAdapter.data.withIndex()) {
-                data.value.check = data.index == position
+                data.value.is_promote = data.index == position
             }
             vipChargeAdapter.notifyDataSetChanged()
             setupPrice()
@@ -108,9 +107,13 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
 
     private fun setupPrice() {
         for (data in vipChargeAdapter.data) {
-            if (data.check) {
-                zhiPayPrice.text = "以${data.discount_price}元续费"
-                wechatPayPrice.text = "以${data.discount_price}元续费"
+            if (data.is_promote) {
+                zhiPayPrice.text = "以${if ((data.discount_price ?: 0F) == 0F) {
+                    data.original_price ?: 0F
+                } else {
+                    data.discount_price ?: 0F
+                }}元续费"
+                wechatPayPrice.text = zhiPayPrice.text
                 break
             }
         }
@@ -120,7 +123,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
     override fun getChargeDataResult(data: ChargeWayBeans?) {
         if (data != null) {
             if (!data.list.isNullOrEmpty())
-                data.list[0].check = true
+                data.list[0].is_promote = true
             vipChargeAdapter.setNewData(data.list)
             setupPrice()
 
@@ -204,7 +207,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
             }
         }
         for (charge in vipChargeAdapter.data) {
-            if (charge.check) {
+            if (charge.is_promote) {
                 params["product_id"] = charge.id
                 break
             }

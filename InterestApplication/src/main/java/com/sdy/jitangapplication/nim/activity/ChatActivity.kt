@@ -245,7 +245,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         } else {
             chatMore.setVisible(true)
         }
-        chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)
+        chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P).plus("${NimUIKitImpl.getOnlineStateContentProvider().getDetailDisplay(sessionId)}")
     }
 
     private fun displayOnlineState() {

@@ -36,6 +36,7 @@ import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
 import com.sdy.jitangapplication.nim.NimSDKOptionConfig
+import com.sdy.jitangapplication.nim.event.DemoOnlineStateContentProvider
 import com.sdy.jitangapplication.nim.mixpush.DemoMixPushMessageHandler
 import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
 import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
@@ -304,7 +305,6 @@ class MyApplication : BaseApplication() {
         NIMClient.init(this, UserManager.loginInfo(), NimSDKOptionConfig.getSDKOptions(this))
 
         if (NIMUtil.isMainProcess(this)) {
-
             // 注册自定义推送消息处理，这个是可选项
             NIMPushClient.registerMixPushMessageHandler(DemoMixPushMessageHandler())
 
@@ -313,19 +313,16 @@ class MyApplication : BaseApplication() {
             NimUIKit.setLocationProvider(NimDemoLocationProvider())
             // IM 会话窗口的定制初始化。
             SessionHelper.init()
-            //初始化消息提醒
-            NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
-            //云信相关业务初始化
-            NIMInitManager.getInstance().init(true)
-
             // 添加自定义推送文案以及选项，请开发者在各端（Android、IOS、PC、Web）消息发送时保持一致，以免出现通知不一致的情况
             NimUIKit.setCustomPushContentProvider(DemoPushContentProvider())
-
-
             //在线状态内容提供者
-//            NimUIKit.setOnlineStateContentProvider(DemoOnlineStateContentProvider())
-            NIMClient.getService(MsgServiceObserve::class.java)
-                .observeCustomNotification(customNotificationObserver, true)
+            NimUIKit.setOnlineStateContentProvider(DemoOnlineStateContentProvider())
+            //初始化消息提醒
+            NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
+            //自定义通知监听
+            NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, true)
+            //云信相关业务初始化
+            NIMInitManager.getInstance().init(true)
 
         }
     }

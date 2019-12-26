@@ -20,8 +20,7 @@ class VipBannerAdapter(var type: Int = 1) : BaseQuickAdapter<VipDescr, BaseViewH
     override fun convert(holder: BaseViewHolder, data: VipDescr) {
         holder.itemView.banner_name.text = "${data.title}"
         holder.itemView.banner_content.text = "${data.rule}"
-//        GlideUtil.loadRoundImgCenterinside(mContext, data.url ?: "", holder.itemView.banner_img, 0.1F, 0)
-        GlideUtil.loadImg(mContext, R.drawable.icon_power, holder.itemView.banner_img)
+        GlideUtil.loadImgCenterCrop(mContext, data.url ?: "", holder.itemView.banner_img)
 
         if (type == ChargeVipDialog.PURCHASE_GREET_COUNT) {
             if (data.countdown > 0) {

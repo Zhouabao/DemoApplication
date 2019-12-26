@@ -111,7 +111,6 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         }
 
         /*设置封面图片recyclerview*/
-
         val itemDecoration = DividerItemDecoration(
             mContext,
             DividerItemDecoration.VERTICAL_LIST,

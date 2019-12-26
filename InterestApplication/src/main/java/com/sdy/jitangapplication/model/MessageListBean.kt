@@ -35,6 +35,7 @@ data class HiMessageBean(
     var read_time: String = "",
     var countdown_total: Int = 0,//	倒计时 总时长（秒）
     var timer: Int = 0,
+    var msgs: MutableList<String> = mutableListOf(), //该用户发出来的招呼消息
     var type: Int = 0//	1，新消息 2，倒计时 3，普通样式 4 过期
 ) : MultiItemEntity {
     override fun getItemType(): Int {
