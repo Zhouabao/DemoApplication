@@ -382,17 +382,17 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             }
         }
 
-        //遍历删除招呼消息
-        val iterator = result.iterator()
-        while (iterator.hasNext()) {
-            val contact = iterator.next()
-            for (hiBean in likeMeAdapter.data) {
-                if (contact.contactId == hiBean.accid) {
-                    iterator.remove()
-                    break
-                }
-            }
-        }
+        //todo 遍历删除招呼消息
+//        val iterator = result.iterator()
+//        while (iterator.hasNext()) {
+//            val contact = iterator.next()
+//            for (hiBean in likeMeAdapter.data) {
+//                if (contact.contactId == hiBean.accid) {
+//                    iterator.remove()
+//                    break
+//                }
+//            }
+//        }
 
 
         adapter.data.clear()

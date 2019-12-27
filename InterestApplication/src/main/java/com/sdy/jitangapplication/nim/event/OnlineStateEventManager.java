@@ -437,6 +437,7 @@ public class OnlineStateEventManager {
      */
     private static boolean enableOnlineStateEvent() {
         String packageName = DemoCache.getContext().getPackageName();
-        return enable = (packageName != null && packageName.equals("com.sdy.jitangapplication"));
+         enable = (packageName != null && packageName.equals("com.sdy.jitangapplication"));
+        return true;
     }
 }

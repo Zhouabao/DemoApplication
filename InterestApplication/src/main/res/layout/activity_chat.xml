@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:background="@color/colorWhite"
+        android:background="@color/colorDivider1"
         tools:context=".nim.activity.ChatActivity">
 
     <RelativeLayout
@@ -59,12 +59,6 @@
                 android:layout_height="match_parent"
                 />
 
-
-        <View
-                android:background="@color/colorDivider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 
 

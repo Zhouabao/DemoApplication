@@ -12,11 +12,11 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.SizeUtils;
-import com.google.android.flexbox.*;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
@@ -61,10 +61,11 @@ import com.netease.nimlib.sdk.team.constant.TeamMemberType;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.event.NimHeadEvent;
-import com.sdy.jitangapplication.model.Tag;
+import com.sdy.jitangapplication.model.Square;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
-import com.sdy.jitangapplication.ui.adapter.ChatHiLabelAdapter;
+import com.sdy.jitangapplication.ui.adapter.ChatTaregetSquareAdapter;
+import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.DividerItemDecoration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -126,11 +127,14 @@ public class ChatMessageListPanelEx {
     private boolean mIsInitFetchingLocal;
 
     //頭部數據
-    private ImageView chatHiAvator;
-    private RecyclerView chatHiTags;
+    private TextView targetUserDetail;
+    private ImageView targetUserAvator;
+    private ImageView myAvator;
+    private RecyclerView targetSquare;
+    private TextView targetBothInterest;
     private ConstraintLayout targetCl;
     private View headView;
-    private ChatHiLabelAdapter hiLabelAdapter;
+    private ChatTaregetSquareAdapter targetSquareAdapter;
 
     public ChatMessageListPanelEx(Container container, View rootView, boolean recordOnly, boolean remote) {
         this(container, rootView, null, recordOnly, remote);
@@ -1333,38 +1337,54 @@ public class ChatMessageListPanelEx {
         if (headView == null) {
             headView = initHeadView();
             adapter.addHeaderView(headView);
-            setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
+            setHeadData(event.getNimBean().getAvatar());
         }
-        //else {
-        //   setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
-//        }
     }
 
 
     private View initHeadView() {
         headView = LayoutInflater.from(container.activity).inflate(com.sdy.jitangapplication.R.layout.item_chat_head, messageListView, false);
         //初始化数据
-        chatHiAvator = headView.findViewById(com.sdy.jitangapplication.R.id.targetAvator);
-        chatHiTags = headView.findViewById(com.sdy.jitangapplication.R.id.targetLabels);
+        targetUserDetail = headView.findViewById(com.sdy.jitangapplication.R.id.targetUserDetail);
+        targetBothInterest = headView.findViewById(com.sdy.jitangapplication.R.id.targetBothInterest);
+        targetUserAvator = headView.findViewById(com.sdy.jitangapplication.R.id.targetAvator);
+        myAvator = headView.findViewById(com.sdy.jitangapplication.R.id.myAvator);
+        targetSquare = headView.findViewById(com.sdy.jitangapplication.R.id.targetSquare);
         targetCl = headView.findViewById(com.sdy.jitangapplication.R.id.targetCl);
-        chatHiAvator.setOnClickListener(view -> MatchDetailActivity.start(container.activity, container.account, -1, -1));
+        targetUserDetail.setOnClickListener(view -> MatchDetailActivity.start(container.activity, container.account, -1, -1));
 
-        FlexboxLayoutManager manager = new FlexboxLayoutManager(container.activity, FlexDirection.ROW, FlexWrap.WRAP);
-        manager.setAlignItems(AlignItems.STRETCH);
-        manager.setJustifyContent(JustifyContent.CENTER);
-
-        chatHiTags.setLayoutManager(manager);
-        chatHiTags.addItemDecoration(new DividerItemDecoration(container.activity, DividerItemDecoration.BOTH_SET, SizeUtils.dp2px(8F), container.activity.getResources().getColor(R.color.white)));
-        hiLabelAdapter = new ChatHiLabelAdapter(container.activity);
-        chatHiTags.setAdapter(hiLabelAdapter);
+        LinearLayoutManager manager = new LinearLayoutManager(container.activity, RecyclerView.HORIZONTAL, false);
+        targetSquare.setLayoutManager(manager);
+        targetSquare.addItemDecoration(new DividerItemDecoration(container.activity, DividerItemDecoration.VERTICAL_LIST, SizeUtils.dp2px(5F), container.activity.getResources().getColor(R.color.white)));
+        targetSquareAdapter = new ChatTaregetSquareAdapter();
+        targetSquare.setAdapter(targetSquareAdapter);
         return headView;
     }
 
 
-    public void setHeadData(String avator, ArrayList<Tag> tags) {
+    public void setHeadData(String avator) {
         //头像
-        GlideUtil.loadAvatorImg(container.activity, avator, chatHiAvator);
+        GlideUtil.loadAvatorImg(container.activity, avator, targetUserAvator);
+        GlideUtil.loadAvatorImg(container.activity, UserManager.INSTANCE.getAvator(), myAvator);
         //用户标签
+        ArrayList<Square> square = new ArrayList<>();
+
+        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
+        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
+        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
+        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
+        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
+        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
+        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
+        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
+        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
+
+        targetSquareAdapter.setDataSize(square.size());
+        if (square.size() > ChatTaregetSquareAdapter.MAX_SHOW_COUNT) {
+            targetSquareAdapter.setNewData(square.subList(0, ChatTaregetSquareAdapter.MAX_SHOW_COUNT));
+        } else {
+            targetSquareAdapter.setNewData(square);
+        }
     }
 
 }
