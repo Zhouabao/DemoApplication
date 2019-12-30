@@ -65,7 +65,9 @@ import com.sdy.jitangapplication.model.Square;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.adapter.ChatTaregetSquareAdapter;
+import com.sdy.jitangapplication.ui.dialog.ReportChatContentDialog;
 import com.sdy.jitangapplication.utils.UserManager;
+import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 import com.sdy.jitangapplication.widgets.DividerItemDecoration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -900,19 +902,23 @@ public class ChatMessageListPanelEx {
             MsgTypeEnum msgType = selectedItem.getMsgType();
 
             MessageAudioControl.getInstance(container.activity).stopAudio();
-
-            // 0 EarPhoneMode 扬声器
-            longClickItemEarPhoneMode(alertDialog, msgType);
-            // 1 resend 重新发送
-            longClickItemResend(selectedItem, alertDialog);
-            // 2 copy 复制文本
-            longClickItemCopy(selectedItem, alertDialog, msgType);
-            // 3 revoke 撤回
-//            if (enableRevokeButton(selectedItem)) {
-//                longClickRevokeMsg(selectedItem, alertDialog);
-//            }
-            // 4 delete 删除
+            // 0 delete 删除
             longClickItemDelete(selectedItem, alertDialog);
+            // 1 copy 复制文本
+            longClickItemCopy(selectedItem, alertDialog, msgType);
+            // 2 EarPhoneMode 扬声器
+            longClickItemEarPhoneMode(alertDialog, msgType);
+            // 3 resend 重新发送
+            longClickItemResend(selectedItem, alertDialog);
+            // 4 revoke 撤回
+            if (enableRevokeButton(selectedItem)) {
+                longClickRevokeMsg(selectedItem, alertDialog);
+            }
+            //5 举报 (文本、图片、视频、音频)
+            if (selectedItem.getDirect() == MsgDirectionEnum.In
+                    && (selectedItem.getMsgType() == MsgTypeEnum.audio || selectedItem.getMsgType() == MsgTypeEnum.video
+                    || selectedItem.getMsgType() == MsgTypeEnum.image || selectedItem.getMsgType() == MsgTypeEnum.text))
+                longClickReportContent(selectedItem, alertDialog);
             // 5 trans 语音转文字
 //            longClickItemVoidToText(selectedItem, alertDialog, msgType);
 
@@ -1094,41 +1100,56 @@ public class ChatMessageListPanelEx {
             alertDialog.addItem(container.activity.getString(R.string.withdrawn_msg), new CustomAlertDialog.onSeparateItemClickListener() {
                 @Override
                 public void onClick() {
-                    if (!NetworkUtil.isNetAvailable(container.activity)) {
-                        ToastHelper.showToast(container.activity, R.string.network_is_not_available);
-                        return;
-                    }
-                    Map<String, Object> payload = null;
-
-                    CustomPushContentProvider customConfig = NimUIKitImpl.getCustomPushContentProvider();
-                    if (customConfig != null) {
-                        payload = customConfig.getPushPayload(item);
-                    }
-//                    NIMClient.getService(MsgService.class).revokeMessage(item).setCallback(new RequestCallback<Void>() {
-                    NIMClient.getService(MsgService.class).revokeMessageEx(item, "撤回一条消息", payload).setCallback(new RequestCallback<Void>() {
-                        @Override
-                        public void onSuccess(Void param) {
-                            deleteItem(item, false);
-                            MessageHelper.getInstance().onRevokeMessage(item, NimUIKit.getAccount());
-                        }
-
-                        @Override
-                        public void onFailed(int code) {
-                            if (code == ResponseCode.RES_OVERDUE) {
-                                ToastHelper.showToast(container.activity, R.string.revoke_failed);
-                            } else {
-                                ToastHelper.showToast(container.activity, "revoke msg failed, code:" + code);
-                            }
-                        }
-
-                        @Override
-                        public void onException(Throwable exception) {
-
-                        }
-                    });
+                    showRevokeAlert(item);
                 }
             });
         }
+
+
+        private void showRevokeAlert(IMMessage item) {
+            new CommonAlertDialog.Builder(container.activity)
+                    .setContent("是否撤回此条消息")
+                    .setTitle("撤回")
+                    .setCancelIconIsVisibility(true)
+                    .setOnConfirmListener(dialog -> {
+                        if (!NetworkUtil.isNetAvailable(container.activity)) {
+                            ToastHelper.showToast(container.activity, R.string.network_is_not_available);
+                            return;
+                        }
+                        Map<String, Object> payload = null;
+
+                        CustomPushContentProvider customConfig = NimUIKitImpl.getCustomPushContentProvider();
+                        if (customConfig != null) {
+                            payload = customConfig.getPushPayload(item);
+                        }
+                        NIMClient.getService(MsgService.class).revokeMessageEx(item, "撤回一条消息", payload).setCallback(new RequestCallback<Void>() {
+                            @Override
+                            public void onSuccess(Void param) {
+                                deleteItem(item, false);
+                                MessageHelper.getInstance().onRevokeMessage(item, NimUIKit.getAccount());
+                            }
+
+                            @Override
+                            public void onFailed(int code) {
+                                if (code == ResponseCode.RES_OVERDUE) {
+                                    ToastHelper.showToast(container.activity, R.string.revoke_failed);
+                                } else {
+                                    ToastHelper.showToast(container.activity, "revoke msg failed, code:" + code);
+                                }
+                            }
+
+                            @Override
+                            public void onException(Throwable exception) {
+
+                            }
+                        });
+                        dialog.dismiss();
+                    })
+                    .setOnCancelListener(dialog -> dialog.dismiss())
+                    .create()
+                    .show();
+        }
+
 
         // 长按-取消上传附件
         private void longClickItemCancelUpload(final IMMessage selectedItem, CustomAlertDialog alertDialog) {
@@ -1147,6 +1168,17 @@ public class ChatMessageListPanelEx {
                 @Override
                 public void onClick() {
                     NIMClient.getService(MsgService.class).cancelUploadAttachment(selectedItem);
+                }
+            });
+        }
+
+        //长按-举报聊天内容
+        private void longClickReportContent(final IMMessage selectedItem, CustomAlertDialog alertDialog) {
+            alertDialog.addItem("举报", new CustomAlertDialog.onSeparateItemClickListener() {
+                @Override
+                public void onClick() {
+                    //举报聊天内容
+                    new ReportChatContentDialog(container.activity, selectedItem).show();
                 }
             });
         }
@@ -1366,9 +1398,9 @@ public class ChatMessageListPanelEx {
         //头像
         GlideUtil.loadAvatorImg(container.activity, avator, targetUserAvator);
         GlideUtil.loadAvatorImg(container.activity, UserManager.INSTANCE.getAvator(), myAvator);
-        //用户标签
+        //用户广场
         ArrayList<Square> square = new ArrayList<>();
-
+        //todo 添加用户的广场内容
         square.add(new Square(0, UserManager.INSTANCE.getAvator()));
         square.add(new Square(0, UserManager.INSTANCE.getAvator()));
         square.add(new Square(0, UserManager.INSTANCE.getAvator()));

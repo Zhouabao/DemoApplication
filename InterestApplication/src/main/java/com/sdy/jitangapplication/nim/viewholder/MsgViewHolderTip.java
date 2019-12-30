@@ -1,10 +1,8 @@
 package com.sdy.jitangapplication.nim.viewholder;
 
+import android.text.Html;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ImageSpan;
 import android.widget.TextView;
-import com.netease.nim.uikit.business.session.emoji.MoonUtil;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
 
@@ -48,8 +46,9 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
     }
 
     private void handleTextNotification(String text) {
-        MoonUtil.identifyFaceExpressionAndATags(context, notificationTextView, text, ImageSpan.ALIGN_BOTTOM);
-        notificationTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        notificationTextView.setText(Html.fromHtml(text));
+//        MoonUtil.identifyFaceExpressionAndATags(context, notificationTextView, text, ImageSpan.ALIGN_BOTTOM);
+//        notificationTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override

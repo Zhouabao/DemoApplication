@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.adapter
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -13,13 +14,22 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.HiMessageBean
-import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.model.GreetedListBean
 import kotlinx.android.synthetic.main.item_greet_user.view.*
 
-class GreetUserAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.layout.item_greet_user) {
-    override fun convert(helper: BaseViewHolder, item: HiMessageBean) {
+class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.layout.item_greet_user) {
+    override fun convert(helper: BaseViewHolder, item: GreetedListBean) {
         helper.itemView.matchUserName.text = item.nickname
+        helper.itemView.matchUserConstellation.text = item.constellation
+        helper.itemView.matchUserAge.text = "${item.age}"
+        helper.itemView.matchUserDistance.text = "${item.distance}"
+        helper.itemView.ivVip.isVisible = item.isvip == 1
+        helper.itemView.ivVerify.isVisible = item.isfaced == 1
+        helper.itemView.matchAim.isVisible = !item.intention_title.isNullOrEmpty()
+        helper.itemView.matchAim.text = item.intention_title
+        helper.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty()
+        helper.itemView.matchBothIntersetContent.text = item.matching_content
+
 
         helper.itemView.rvChatContent.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
         val adapter = ChatContentAdapter()
@@ -32,16 +42,11 @@ class GreetUserAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.layou
             false
         }
 
-
-
         helper.itemView.vpIndicator.removeAllViews()
         helper.itemView.vpPhotos.setScrollable(false)
         helper.itemView.vpPhotos.currentItem = 0
         helper.itemView.vpPhotos.tag = helper.layoutPosition
-        helper.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(
-            mContext,
-            mutableListOf(item.avatar, UserManager.getAvator(), item.avatar)
-        )
+        helper.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(mContext, item.photos)
 
         helper.itemView.vpPhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {

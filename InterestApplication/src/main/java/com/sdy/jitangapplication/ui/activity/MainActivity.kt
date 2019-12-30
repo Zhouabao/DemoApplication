@@ -28,7 +28,6 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
 import com.sdy.jitangapplication.model.InvestigateBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
@@ -123,7 +122,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 intent.removeExtra(NimIntent.EXTRA_NOTIFY_CONTENT)
                 when (message.sessionType) {
                     SessionTypeEnum.P2P -> {
-                        ChatActivity.start(this, message.sessionId)
+                        //跳转到消息列表
+                        vpMain.currentItem = 2
+//                        ChatActivity.start(this, message.sessionId)
                     }
                 }
             }

@@ -279,7 +279,7 @@ interface Api {
      * 打招呼还是聊天判断
      */
     @FormUrlEncoded
-    @POST("Relationship/greetState${Constants.END_BASE_URL}")
+    @POST("Relationship/greetStateV3${Constants.END_BASE_URL}")
     fun greetState(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetBean?>>
 
     /**
@@ -310,7 +310,7 @@ interface Api {
      * 打招呼、上滑
      */
     @FormUrlEncoded
-    @POST("relationship/greet${Constants.END_BASE_URL}")
+    @POST("relationship/greetV3${Constants.END_BASE_URL}")
     fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
 
 
@@ -485,11 +485,18 @@ interface Api {
 
     /****************************消息************************************/
     /**
+     * 无效招呼
+     */
+    @FormUrlEncoded
+    @POST("Tidings/pastGreetList${Constants.END_BASE_URL}")
+    fun pastGreetList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<HiMessageBean>?>>
+
+    /**
      * 给我打招呼的列表
      */
     @FormUrlEncoded
-    @POST("tidings/greetLists${Constants.END_BASE_URL}")
-    fun greatLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<HiMessageBean>?>>
+    @POST("tidings/myGreetList${Constants.END_BASE_URL}")
+    fun myGreetList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<GreetedListBean>?>>
 
     /**
      * 删除过时消息
@@ -503,14 +510,14 @@ interface Api {
      * 所有的消息列表
      */
     @FormUrlEncoded
-    @POST("Tidings/messageCensusV2${Constants.END_BASE_URL}")
+    @POST("Tidings/messageCensusV3${Constants.END_BASE_URL}")
     fun messageCensus(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MessageListBean1?>>
 
     /**
      * 广场消息列表
      */
     @FormUrlEncoded
-    @POST("tidings/squareListsV2${Constants.END_BASE_URL}")
+    @POST("tidings/squareListsV3${Constants.END_BASE_URL}")
     fun squareLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareMsgBean>?>>
 
     /**
@@ -849,5 +856,20 @@ interface Api {
     @FormUrlEncoded
     @POST("Tags/getTitleLists${Constants.END_BASE_URL}")
     fun getTitleLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TopicBean>?>>
+
+    /**
+     *聊天举报
+     */
+    @FormUrlEncoded
+    @POST("Tidings/chatReport${Constants.END_BASE_URL}")
+    fun chatReport(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     *招呼的左右滑动
+     */
+    @FormUrlEncoded
+    @POST("Tidings/likeOrGreetState${Constants.END_BASE_URL}")
+    fun likeOrGreetState(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 }

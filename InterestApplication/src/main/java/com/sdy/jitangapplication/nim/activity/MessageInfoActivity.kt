@@ -27,6 +27,7 @@ import com.netease.nimlib.sdk.friend.FriendService
 import com.netease.nimlib.sdk.friend.model.MuteListChangedNotify
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.sdy.baselibrary.widgets.swipeback.Utils
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
@@ -102,11 +103,10 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
     private fun initView() {
         btnBack.onClick { finish() }
 
-
+        GlideUtil.loadCircleImg(this, UserInfoHelper.getAvatar(account), civAvator)
         //TA的主页
         chatDetailBtn.onClick { MatchDetailActivity.start(this, account ?: "") }
         //删除好友
-
         friendDelete.onClick {
             showDeleteDialog(3)
         }
@@ -130,9 +130,9 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         friendHistoryClean.onClick {
             showDeleteDialog(1)
 
-//            val title = resources.getString(R.string.message_p2p_clear_tips)
+//            val title1 = resources.getString(R.string.message_p2p_clear_tips)
 //            val alertDialog = CustomAlertDialog(this)
-//            alertDialog.setTitle(title)
+//            alertDialog.setTitle1(title1)
 //            alertDialog.addItem("确定") {
 //                NIMClient.getService(MsgService::class.java)
 //                    .clearServerHistory(account ?: "", SessionTypeEnum.P2P, true)

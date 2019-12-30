@@ -109,7 +109,11 @@ object CommonFunction {
                                         }
                                     }
                                 } else {
-                                    ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, context, ChargeVipDialog.PURCHASE_GREET_COUNT).show()
+                                    ChargeVipDialog(
+                                        ChargeVipDialog.DOUBLE_HI,
+                                        context,
+                                        ChargeVipDialog.PURCHASE_GREET_COUNT
+                                    ).show()
                                 }
                             }
 
@@ -135,10 +139,11 @@ object CommonFunction {
     }
 
 
-    fun dissolveRelationship(target_accid: String) {
+    fun dissolveRelationship(target_accid: String, negative: Boolean = false) {
         NIMClient.getService(MsgService::class.java).deleteRecentContact2(target_accid, SessionTypeEnum.P2P)
         // 删除与某个聊天对象的全部消息记录
-        NIMClient.getService(MsgService::class.java).clearChattingHistory(target_accid, SessionTypeEnum.P2P)
+        if (!negative)
+            NIMClient.getService(MsgService::class.java).clearChattingHistory(target_accid, SessionTypeEnum.P2P)
         ActivityUtils.finishAllActivities()
         ActivityUtils.startActivity(MainActivity::class.java)
 //        EventBus.getDefault().post(UpdateContactBookEvent())

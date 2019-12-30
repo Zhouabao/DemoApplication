@@ -38,7 +38,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
- * 打招呼列表
+ * 过往招呼
  */
 class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, OnLoadMoreListener, OnRefreshListener {
 
@@ -72,18 +72,6 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         btnBack.onClick {
             finish()
         }
-
-        //删除过期消息
-        tagAllRead.onClick {
-            mPresenter.delTimeoutGreet(
-                hashMapOf(
-                    "token" to UserManager.getToken(),
-                    "accid" to UserManager.getAccid()
-                )
-            )
-            tagAllRead.isEnabled = false
-        }
-
         mPresenter = MessageHiPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -147,7 +135,6 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         } else {
             CommonFunction.toast("删除超时消息失败！")
             adapter.notifyDataSetChanged()
-            checkTagAllReadEnable()
         }
     }
 
@@ -185,7 +172,6 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
                     } else {
                         data.content = recentContactt.content
                     }
-                    data.count = recentContactt.unreadCount
                 }
             }
         }
@@ -195,22 +181,9 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         } else {
             adapter.isUseEmpty(false)
         }
-        checkTagAllReadEnable()
 
     }
 
-    private fun checkTagAllReadEnable() {
-        if (adapter.data.isNullOrEmpty()) {
-            tagAllRead.isEnabled = false
-        } else {
-            for (tempdata in adapter.data) {
-                if (tempdata.type == 4) {
-                    tagAllRead.isEnabled = true
-                    break
-                }
-            }
-        }
-    }
 
 
     override fun onRefresh(refreshLayout: RefreshLayout) {

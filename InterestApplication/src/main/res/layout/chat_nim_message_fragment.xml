@@ -21,12 +21,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-            <ProgressBar
-                    android:id="@+id/outdateTime"
-                    android:visibility="gone"
-                    style="@style/progressBarHorizontal"
-                    />
-
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/messageListView"
@@ -35,16 +29,7 @@
                     android:layout_height="match_parent"/>
         </LinearLayout>
 
-        <com.sdy.jitangapplication.widgets.TimeRunTextView
-                android:id="@+id/outdateTimeText"
-                android:gravity="center"
-                android:textSize="14sp"
-                android:textColor="@color/colorWhite"
-                android:text="12:08:23后消息过期"
-                android:visibility="gone"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="27dp"/>
+
 
         <TextView
                 android:id="@+id/btnMakeFriends"
@@ -55,12 +40,12 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_marginTop="85dp"
+                android:layout_marginTop="58dp"
                 android:drawablePadding="10dp"
                 android:paddingLeft="10dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:gravity="center_vertical"
-                android:drawableLeft="@drawable/icon_like_white"
+                android:drawableLeft="@drawable/icon_make_friends"
                 android:layout_height="35dp"/>
     </FrameLayout>
 

@@ -26,10 +26,10 @@ import com.netease.nimlib.sdk.msg.attachment.AudioAttachment
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum
-import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.HiMessageBean
+import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.model.GreetedListBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.GreetReceivedPresenter
 import com.sdy.jitangapplication.presenter.view.GreetReceivedView
@@ -39,6 +39,7 @@ import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.activity_greet_received.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -102,7 +103,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
     }
 
     private var hasMore = true
-    override fun onGreatListResult(t: BaseResp<MutableList<HiMessageBean>?>) {
+    override fun onGreatListResult(t: BaseResp<MutableList<GreetedListBean>?>) {
         if (t != null && t.code == 200) {
             if (t.data.isNullOrEmpty()) {
                 hasMore = false
@@ -118,28 +119,23 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                     .queryMessageListEx(anchor, QueryDirectionEnum.QUERY_OLD, 10, true)
                     .setCallback(object : RequestCallback<MutableList<IMMessage>> {
                         override fun onSuccess(p0: MutableList<IMMessage>?) {
-                            if (p0.isNullOrEmpty()) {
-                                recentContactt.value.msgs.add(0,recentContactt.value.content)
-                            } else {
-                                for (msg in p0) {
-                                    if (msg.fromAccount != UserManager.getAccid() && msg.attachment !is ChatHiAttachment) {
-                                        if (msg.attachment is AudioAttachment) {
-                                            recentContactt.value.msgs.add(0,"语音")
-                                        } else {
-                                            recentContactt.value.msgs.add(0,msg.content)
-                                        }
+                            for (msg in p0 ?: mutableListOf()) {
+                                if (msg.fromAccount != UserManager.getAccid() && msg.attachment !is ChatHiAttachment) {
+                                    if (msg.attachment is AudioAttachment) {
+                                        recentContactt.value.msgs.add(0, "语音")
+                                    } else {
+                                        recentContactt.value.msgs.add(0, msg.content)
                                     }
                                 }
-                                if (recentContactt.value.msgs.isNullOrEmpty())
-                                    recentContactt.value.msgs.add(0,"")
                             }
+                            if (recentContactt.value.msgs.isNullOrEmpty())
+                                recentContactt.value.msgs.add(0, "")
                             adapter.notifyItemChanged(recentContactt.index)
                         }
 
                         override fun onFailed(p0: Int) {
-                            recentContactt.value.msgs.add(recentContactt.value.content)
                             if (recentContactt.value.msgs.isNullOrEmpty())
-                                recentContactt.value.msgs.add(0,"")
+                                recentContactt.value.msgs.add(0, "")
                         }
 
                         override fun onException(p0: Throwable?) {
@@ -164,12 +160,15 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
     }
 
 
-    override fun onGetRecentContactResults(
-        contacts: MutableList<RecentContact>,
-        t: BaseResp<MutableList<HiMessageBean>?>
-    ) {
-
-
+    //1 右滑招呼 2坐滑招呼
+    override fun onLikeOrGreetStateResult(result: Boolean, type: Int) {
+        if (!result) {
+            greetRv.rewind()
+        } else {
+            if (type == 1) {
+                EventBus.getDefault().post(UpdateHiEvent())
+            }
+        }
     }
 
 
@@ -255,14 +254,21 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                 params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
                 animation_like.layoutParams = params
             }
-
-
         }
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
 
-    override fun onCardSwiped(direction: Direction?) {
+    override fun onCardSwiped(direction: Direction) {
         resetAnimation()
+
+        //1 右滑招呼 2坐滑招呼
+        mPresenter.likeOrGreetState(
+            adapter.data[manager.topPosition - 1].greet_id, if (direction == Direction.Left) {
+                2
+            } else {
+                1
+            }
+        )
         if (hasMore && manager.topPosition == adapter.itemCount - 5) {
             page++
             mPresenter.greatLists(params)

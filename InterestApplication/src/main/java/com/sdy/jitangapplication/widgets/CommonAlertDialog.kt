@@ -70,10 +70,10 @@ class CommonAlertDialog : Dialog {
     class Builder(val context: Context) {
         var confirmListener: OnConfirmListener? = null
         var cancelListener: OnCancelListener? = null
-        var title: String? = null
+        var title1: String? = null
         var icon: Any? = 0
         var iconVisble: Boolean = false
-        var content: String? = null
+        var content1: String? = null
         var btConfirmText: String? = null
         var tvCancelText: String? = null
         var cancelIsVisibility: Boolean? = true
@@ -89,7 +89,7 @@ class CommonAlertDialog : Dialog {
         }
 
         fun setTitle(title: String): Builder {
-            this.title = title
+            this.title1 = title
             return this
         }
 
@@ -104,7 +104,7 @@ class CommonAlertDialog : Dialog {
         }
 
         fun setContent(content: String): Builder {
-            this.content = content
+            this.content1 = content
             return this
         }
 
@@ -127,13 +127,13 @@ class CommonAlertDialog : Dialog {
 
         fun create(): CommonAlertDialog {
             val dialog = CommonAlertDialog(context, R.style.MyDialog)
-            if (!TextUtils.isEmpty(title)) {
-                dialog.tvTitle?.text = this.title
+            if (!TextUtils.isEmpty(title1)) {
+                dialog.tvTitle?.text = this.title1
             } else {
                 dialog.tvTitle?.visibility = View.GONE
             }
 
-            dialog.tvDialogContent?.text = this.content
+            dialog.tvDialogContent?.text = this.content1
             if (icon != 0) {
                 GlideUtil.loadImg(context,this.icon,dialog.ivDialogIcon)
 //                dialog.ivDialogIcon?.setImageResource(this.icon!!)

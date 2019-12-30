@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.alibaba.fastjson.JSON
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
@@ -241,11 +242,11 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     private fun requestBuddyInfo() {
         if (sessionId == Constants.ASSISTANT_ACCID) {
-            chatMore.setVisible(false)
+            chatMore.visibility = View.INVISIBLE
         } else {
             chatMore.setVisible(true)
         }
-        chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P).plus("${NimUIKitImpl.getOnlineStateContentProvider().getDetailDisplay(sessionId)}")
+        chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)
     }
 
     private fun displayOnlineState() {

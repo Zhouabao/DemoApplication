@@ -93,8 +93,8 @@ class MyApplication : BaseApplication() {
                         EventBus.getDefault().postSticky(UpdateHiEvent())
                         initNotificationManager(customerMsgBean.msg)
                     }
-                    2 -> {//对方删除自己,本地删除会话列表
-                        CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "")
+                    2 -> {//对方删除自己,本地不删除会话列表
+                        CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "",true)
                     }
                     3 -> { //新的招呼刷新界面
                         EventBus.getDefault().postSticky(UpdateHiEvent())

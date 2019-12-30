@@ -26,6 +26,7 @@
             android:layout_width="@dimen/avatar_size_in_session"
             android:layout_height="@dimen/avatar_size_in_session"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
             android:layout_below="@id/message_item_time"
             android:layout_marginRight="@dimen/bubble_head_margin_horizontal"
             android:visibility="gone"/>
@@ -35,6 +36,7 @@
             android:layout_width="@dimen/avatar_size_in_session"
             android:layout_height="@dimen/avatar_size_in_session"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:layout_below="@id/message_item_time"
             android:layout_marginLeft="@dimen/bubble_head_margin_horizontal"
             android:visibility="gone"/>

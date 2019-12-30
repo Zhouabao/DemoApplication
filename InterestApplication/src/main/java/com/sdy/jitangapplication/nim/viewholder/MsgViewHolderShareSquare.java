@@ -81,7 +81,7 @@ public class MsgViewHolderShareSquare extends MsgViewHolderBase {
 
     @Override
     protected boolean shouldDisplayReceipt() {
-        return true;
+        return false;
     }
 
     @Override

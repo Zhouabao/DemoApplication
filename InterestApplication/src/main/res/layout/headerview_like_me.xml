@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"/>
 
         <TextView
-                android:id="@+id/hiCount"
+                android:id="@+id/likedCount"
                 android:layout_toRightOf="@id/t1"
                 android:layout_marginLeft="5dp"
                 android:text="3"

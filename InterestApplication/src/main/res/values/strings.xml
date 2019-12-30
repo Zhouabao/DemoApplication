@@ -53,12 +53,6 @@
     <string name="friends_map_navigation_web">在网页中打开</string>
     <string name="location_open_map_error">打开地图出错</string>
 
-    <!-- 通讯录 -->
-    <string name="has_read_hi_tip">已读对方招呼，如不回复倒计时结束后招呼将过期</string>
-    <string name="he_has_read_hi_tip">对方已读你的消息，倒计时内对方未回复消息将过期</string>
-    <string name="make_friend_tip">聊得来就与TA成为好友吧</string>
-    <string name="stop_count_down_tip">已停止倒数</string>
-
     <string name="real_avator_tip">请确保头像为真人,留下最好的第一印象</string>
     <string name="report_square">确认举报该条动态？</string>
     <string name="dissolve_wechat">是否确定解除微信绑定？</string>

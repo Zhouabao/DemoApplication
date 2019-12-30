@@ -36,22 +36,6 @@
                 android:layout_height="match_parent"
                 />
 
-
-        <Button
-                android:id="@+id/tagAllRead"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:text="删除超时"
-                android:background="@drawable/selector_confirm_btn_15dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="86dp"
-                android:enabled="false"
-                android:visibility="visible"
-                android:textColor="@color/complete_btn_color_selector"
-                android:textSize="14sp"
-                android:layout_marginRight="15dp"
-                android:layout_height="30dp"/>
-
         <View
                 android:background="@color/colorDivider"
                 android:layout_alignParentBottom="true"

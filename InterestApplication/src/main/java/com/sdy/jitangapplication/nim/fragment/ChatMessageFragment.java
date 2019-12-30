@@ -9,12 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.blankj.utilcode.util.TimeUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.api.UIKitOptions;
@@ -58,7 +54,6 @@ import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
 import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
 import com.sdy.jitangapplication.nim.session.*;
 import com.sdy.jitangapplication.utils.UserManager;
-import com.sdy.jitangapplication.widgets.TimeRunTextView;
 import org.greenrobot.eventbus.EventBus;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -105,8 +100,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     private View rootView;
     private TextView btnMakeFriends;
-    private TimeRunTextView outdateTimeText;
-    private ProgressBar outdateTime;
     private LinearLayout messageActivityBottomLayout;
 
     @Override
@@ -119,8 +112,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.chat_nim_message_fragment, container, false);
         btnMakeFriends = rootView.findViewById(R.id.btnMakeFriends);
-        outdateTimeText = rootView.findViewById(R.id.outdateTimeText);
-        outdateTime = rootView.findViewById(R.id.outdateTime);
         messageActivityBottomLayout = rootView.findViewById(R.id.messageActivityBottomLayout);
 
 
@@ -150,9 +141,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                 if (objectBaseResp.getCode() == 200) {
                                     //隐藏倒计时控件
                                     btnMakeFriends.setVisibility(View.GONE);
-                                    outdateTimeText.stopTime();
-                                    outdateTimeText.setVisibility(View.GONE);
-                                    outdateTime.setVisibility(View.GONE);
                                     //发送通知，可以发所有类型的消息
                                     EventBus.getDefault().post(new EnablePicEvent(true));
                                     EventBus.getDefault().post(new UpdateContactBookEvent());
@@ -200,8 +188,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             } else {
                 setTargetInfoData();
             }
-        else
+        else {
             messageActivityBottomLayout.setVisibility(View.VISIBLE);
+            btnMakeFriends.setVisibility(View.GONE);
+        }
         NIMClient.getService(MsgService.class).setChattingAccount(sessionId, sessionType);
         getActivity().setVolumeControlStream(AudioManager.STREAM_VOICE_CALL); // 默认使用听筒播放
     }
@@ -374,45 +364,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             if (!sessionId.equals(Constants.ASSISTANT_ACCID) && nimBean != null && !nimBean.getIsfriend()) {
                 if (nimBean.getType() == 2 && !nimBean.getIsinitiated()) {
                     nimBean.setType(3);
-                    outdateTime.setVisibility(View.GONE);
-                    outdateTimeText.stopTime();
-                    outdateTimeText.setVisibility(View.GONE);
                     messageActivityBottomLayout.setVisibility(View.VISIBLE);
                     EventBus.getDefault().post(new NimHeadEvent(nimBean));
-
-
-                    //在没有发过6的前提下
-                    if (!UserManager.INSTANCE.getSecondReply()) {
-                        //在没有发过6的前提下，循环会话列表是否有自己的会话
-                        checkHasMine();
-                        //第二轮回复提示，  判断当前消息中有没有自己回复过的，并且发过5
-                        if (!nimBean.getIsinitiated() && hasMineMsg && UserManager.INSTANCE.getStopTime()) {
-                            IMMessage tipMessage = MessageBuilder.createTipMessage(sessionId, sessionType);
-                            tipMessage.setContent(getActivity().getResources().getString(R.string.make_friend_tip));
-                            tipMessage.setStatus(MsgStatusEnum.success);
-                            CustomMessageConfig config = new CustomMessageConfig();
-                            config.enablePush = false;//不推送
-                            config.enableUnreadCount = false;
-                            tipMessage.setConfig(config);
-                            NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
-                            UserManager.INSTANCE.saveSecondReply(true);
-                            ScaleAnimation scaleAnimation = (ScaleAnimation) AnimationUtils.loadAnimation(getActivity(), R.anim.anim_scale);
-                            btnMakeFriends.startAnimation(scaleAnimation);
-                        }
-
-                        //发送停止倒数tip  判断当前消息中有没有自己回复过的，并且没发过5
-                        if (!nimBean.getIsinitiated() && hasMineMsg && !UserManager.INSTANCE.getStopTime()) {
-                            IMMessage tipMessage = MessageBuilder.createTipMessage(sessionId, sessionType);
-                            tipMessage.setContent(getActivity().getResources().getString(R.string.stop_count_down_tip));
-                            tipMessage.setStatus(MsgStatusEnum.success);
-                            CustomMessageConfig config = new CustomMessageConfig();
-                            config.enablePush = false;//不推送
-                            config.enableUnreadCount = false;
-                            tipMessage.setConfig(config);
-                            NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
-                            UserManager.INSTANCE.saveStopTime(true);
-                        }
-                    }
                 }
             }
 
@@ -636,84 +589,22 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (nimBean.getIsfriend()) { //是好友了，按钮消失
             //隐藏倒计时控件
             btnMakeFriends.setVisibility(View.GONE);
-            outdateTimeText.stopTime();
-            outdateTimeText.setVisibility(View.GONE);
-            outdateTime.setVisibility(View.GONE);
             messageActivityBottomLayout.setVisibility(View.VISIBLE);
             //发送通知，可以发所有类型的消息
             EventBus.getDefault().post(new EnablePicEvent(true));
         } else {
-
-            //1，新消息 2，倒计时 3，普通样式 4 过期
-            if (nimBean.getType() == 2) { //倒计时消息
-                messageActivityBottomLayout.setVisibility(View.VISIBLE);
-                if (nimBean.getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
-                    btnMakeFriends.setVisibility(View.GONE);
-                } else {//非好友并且是别人发起的招呼,按钮显示
-                    btnMakeFriends.setVisibility(View.VISIBLE);
-                }
-
-                if (nimBean.getCountdown() > 0) {
-                    //倒计时进度条
-                    outdateTime.setVisibility(View.VISIBLE);
-                    outdateTimeText.setVisibility(View.VISIBLE);
-                    //文本倒计时
-                    if (!pause) {
-                        outdateTimeText.startTime(nimBean.getCountdown(), "2", "后过期");
-                    }
-                    outdateTime.setMax(nimBean.getCountdown_total());
-                    outdateTime.setProgress(nimBean.getCountdown());
-                    if (countDownTimer != null) {
-                        countDownTimer.cancel();
-                        //防止new出多个导致时间跳动加速
-                        countDownTimer = null;
-                    }
-                    countDownTimer = new CountDownTimer((nimBean.getCountdown()) * 1000, 1000) {
-
-                        @Override
-                        public void onTick(long l) {
-                            if (!pause) {
-                                time++;
-                                outdateTime.setProgress((nimBean.getCountdown() - time));
-                            }
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            outdateTimeText.setText("消息已于 " + TimeUtils.getNowString() + " 过期");
-                            //过期消息不展示消息面板
-                            inputPanel.collapse(true);
-                            messageActivityBottomLayout.setVisibility(View.GONE);
-                            outdateTime.setProgress(0);
-                            btnMakeFriends.setVisibility(View.GONE);
-
-                        }
-                    }.start();
-                }
-            } else if (nimBean.getType() == 4) {//过期消息
+            if (nimBean.getType() == 4) {//过期消息
                 //过期消息不展示消息面板
                 inputPanel.collapse(true);
                 messageActivityBottomLayout.setVisibility(View.GONE);
                 btnMakeFriends.setVisibility(View.GONE);
-                outdateTime.setVisibility(View.VISIBLE);
-                outdateTime.setProgress(0);
-                outdateTimeText.setVisibility(View.VISIBLE);
-                outdateTimeText.stopTime();
-                if (nimBean.getTimeout_time().isEmpty()) {
-                    outdateTimeText.setText("招呼已过期");
-                } else {
-                    outdateTimeText.setText("招呼已于 " + nimBean.getTimeout_time() + " 过期");
-                }
             } else {
+                messageActivityBottomLayout.setVisibility(View.VISIBLE);
                 if (nimBean.getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
                     btnMakeFriends.setVisibility(View.GONE);
                 } else {//非好友并且是别人发起的招呼,按钮显示
                     btnMakeFriends.setVisibility(View.VISIBLE);
                 }
-                outdateTime.setVisibility(View.GONE);
-                outdateTimeText.stopTime();
-                outdateTimeText.setVisibility(View.GONE);
-                messageActivityBottomLayout.setVisibility(View.VISIBLE);
             }
         }
         if (!nimBean.getIsfriend())
@@ -721,38 +612,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         EventBus.getDefault().post(new NimHeadEvent(nimBean));
         EventBus.getDefault().postSticky(new StarEvent(nimBean.getStared(), nimBean.getIsfriend()));
         EventBus.getDefault().postSticky(new EnablePicEvent(nimBean.getIsfriend()));
-
-
-        //已读对方的消息  判断有没有发送过二次回复，再判断当前会话里面有没有发送过这个tip，发送过就不再发
-        if (!sessionId.equals(Constants.ASSISTANT_ACCID) && nimBean != null && !nimBean.getIsfriend() && !nimBean.getIsinitiated()
-                && (!UserManager.INSTANCE.getSecondReply() && !checkHasTip(getActivity().getResources().getString(R.string.has_read_hi_tip)))) {
-            IMMessage tipMessage = MessageBuilder.createTipMessage(sessionId, sessionType);
-            tipMessage.setContent(getActivity().getResources().getString(R.string.has_read_hi_tip));
-            tipMessage.setStatus(MsgStatusEnum.success);
-            CustomMessageConfig config = new CustomMessageConfig();
-            config.enablePush = false;//不推送
-            config.enableUnreadCount = false;
-            tipMessage.setConfig(config);
-//                                        container.proxy.sendMessage(tipMessage);
-            NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
-            UserManager.INSTANCE.saveReadHe(true);
-        }
-
-        //对方已读招呼
-        if (!sessionId.equals(Constants.ASSISTANT_ACCID) && nimBean != null && !nimBean.getIsfriend() && nimBean.getIsinitiated() && nimBean.getType() == 2
-                && nimBean.getIsread() && !UserManager.INSTANCE.getHeRead()) {
-            IMMessage tipMessage = MessageBuilder.createTipMessage(sessionId, sessionType);
-            tipMessage.setContent(getActivity().getResources().getString(R.string.he_has_read_hi_tip));
-            tipMessage.setStatus(MsgStatusEnum.success);
-            CustomMessageConfig config = new CustomMessageConfig();
-            config.enablePush = false;//不推送
-            config.enableUnreadCount = false;
-            tipMessage.setConfig(config);
-//                                        container.proxy.sendMessage(tipMessage);
-            NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
-            UserManager.INSTANCE.saveHeRead(true);
-
-        }
     }
 
 

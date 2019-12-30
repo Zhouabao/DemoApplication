@@ -20,15 +20,19 @@ class MessageHiListAdapter :
         val itemView = holder.itemView
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.msgIcon)
         holder.itemView.msgTitle.text = item.nickname
-//        holder.itemView.text.text = item.content ?: ""
-        holder.itemView.latelyTime.text = item.create_time
+        holder.itemView.latelyTime.text = item.out_time
         holder.itemView.text.text = if (item.content.isEmpty()) {
             "对方向您打了一个招呼"
         } else {
             item.content
         }
 
-        holder.itemView.msgUserInfo.text = "男.23岁.西安市"
+        //"男.23岁.西安市"
+        holder.itemView.msgUserInfo.text = "${if (item.gender == 1) {
+            "男"
+        } else {
+            "女"
+        }}.${item.age}岁.${item.distance}"
 
     }
 

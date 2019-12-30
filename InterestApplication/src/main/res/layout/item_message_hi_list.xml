@@ -28,7 +28,7 @@
             android:layout_marginTop="37dp"
             android:layout_width="11dp"
             android:layout_height="11dp"
-            android:visibility="visible"
+            android:visibility="gone"
             android:background="@drawable/shape_rectangle_green_vip"
             app:layout_constraintLeft_toLeftOf="@id/msgIcon"
             app:layout_constraintTop_toTopOf="@id/msgIcon"

@@ -24,7 +24,6 @@
                 android:layout_alignParentLeft="true"/>
 
         <TextView
-                android:id="@+id/chatName"
                 android:textColor="#ff222222"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -32,34 +31,54 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                tools:text="Javer"
+                android:text="聊天详情"
                 />
 
-        <TextView
-                android:id="@+id/chatDetailBtn"
-                android:layout_alignParentRight="true"
-                android:textColor="#ff222222"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:text="TA的主页"
-                android:layout_centerVertical="true"
-                android:background="@drawable/shape_rectangle_black22_white_15dp"
-                android:layout_marginRight="15dp"
-                android:layout_width="88dp"
-                android:layout_height="32dp"/>
 
     </RelativeLayout>
 
-    <View
-            android:background="@color/colorDivider"
+    <RelativeLayout
+            android:id="@+id/chatDetailBtn"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            />
+            android:layout_height="108dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civAvator"
+                android:layout_width="58dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_default_avator"
+                android:layout_height="58dp"/>
+
+
+        <TextView
+                android:id="@+id/chatName"
+                android:layout_toRightOf="@id/civAvator"
+                android:text="Gregory Davis"
+                android:textColor="#ff191919"
+                android:textSize="17sp"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:layout_width="match_parent"
+                android:drawableRight="@drawable/icon_more_right"
+                android:layout_height="wrap_content"/>
+
+        <View
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+
+    </RelativeLayout>
+
 
     <FrameLayout
             android:id="@+id/flStar"
             android:gravity="center"
+            android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="50dp">

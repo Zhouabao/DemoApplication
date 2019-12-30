@@ -11,8 +11,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.HiMessageBean
-import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.model.Likelist
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.item_message_likelist.view.*
 
@@ -20,14 +19,15 @@ import kotlinx.android.synthetic.main.item_message_likelist.view.*
 /**
  * 对我感兴趣的适配器
  */
-class MessageListLikeMeAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.layout.item_message_likelist) {
-    override fun convert(helper: BaseViewHolder, item: HiMessageBean) {
+class MessageListLikeMeAdapter : BaseQuickAdapter<Likelist, BaseViewHolder>(R.layout.item_message_likelist) {
+    public var freeShow: Boolean = false
+    override fun convert(helper: BaseViewHolder, item: Likelist) {
+        helper.addOnClickListener(R.id.likeMeAvator)
+        helper.addOnClickListener(R.id.likeMeAvatorBtn)
         val itemView = helper.itemView
-        if (UserManager.isUserVip()) {
+        if (freeShow) {
             GlideUtil.loadCircleImg(mContext, item.avatar, itemView.likeMeAvator)
             itemView.likeMeAvatorBtn.isVisible = true
-
-
         } else {
             itemView.likeMeAvatorBtn.isVisible = false
             val transformation = MultiTransformation(
@@ -41,6 +41,11 @@ class MessageListLikeMeAdapter : BaseQuickAdapter<HiMessageBean, BaseViewHolder>
                 .thumbnail(0.5F)
                 .transform(transformation)
                 .into(itemView.likeMeAvator)
+        }
+        if (item.isfriend) {
+            itemView.likeMeAvatorBtn.setImageResource(R.drawable.icon_chat_message_center)
+        } else {
+            itemView.likeMeAvatorBtn.setImageResource(R.drawable.icon_like_message_center)
         }
     }
 
