@@ -62,10 +62,21 @@ data class GreetedListBean(
     var nickname: String = "",
     var photos: MutableList<String> = mutableListOf(),
     var sign: String = "",
-    var msgs: MutableList<String> = mutableListOf()//该用户发出来的招呼消息
-
+    var send_msg: MutableList<SendMsgBean> = mutableListOf()//该用户发出来的招呼消息
 )
 
+data class SendMsgBean(
+    var content: String = "",
+    var type: Int = 0,
+    var duration: Int = 0,
+    var leftDuration: Int = 0,
+    var isPlayAudio: Int = 0 //0未播放  1 播放中 2暂停  3 停止
+) : MultiItemEntity {
+    override fun getItemType(): Int {
+        return type
+    }
+
+}
 
 /**
  * 被删除的超时的accid

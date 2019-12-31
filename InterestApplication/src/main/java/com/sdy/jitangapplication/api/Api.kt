@@ -522,9 +522,10 @@ interface Api {
 
     /**
      * 标记广场消息已读
+     * （type  1点赞   2评论）
      */
     @FormUrlEncoded
-    @POST("Tidings/markSquareRead${Constants.END_BASE_URL}")
+    @POST("Tidings/markSquareReadV3${Constants.END_BASE_URL}")
     fun markSquareRead(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
@@ -664,7 +665,7 @@ interface Api {
      * 聊天界面获取信息
      */
     @FormUrlEncoded
-    @POST("MemberInfo/getTargetInfo${Constants.END_BASE_URL}")
+    @POST("MemberInfo/getTargetInfoV3${Constants.END_BASE_URL}")
     fun getTargetInfo(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<NimBean?>>
 
 
@@ -679,7 +680,7 @@ interface Api {
      * 发消息请求服务器
      */
     @FormUrlEncoded
-    @POST("Tidings/sendMsgRequest${Constants.END_BASE_URL}")
+    @POST("Tidings/sendMsgRequestV3${Constants.END_BASE_URL}")
     fun sendMsgRequest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
     /*--------------------------------会员充值---------------------------------*/
 

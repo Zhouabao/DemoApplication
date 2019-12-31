@@ -53,8 +53,13 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
             .markSquareRead(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
+                    //  type=1  点赞的  type=2 评论的
                     if (t.code == 200) {
-                        UserManager.saveSquareCount(0)
+                        if (params["type"] == 1) {
+                            UserManager.saveThumbsUpCount(0)
+                        } else {
+                            UserManager.saveCommentCount(0)
+                        }
                         EventBus.getDefault().post(NewMsgEvent())
                     }
                 }

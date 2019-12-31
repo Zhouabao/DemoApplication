@@ -98,25 +98,38 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@id/rvChatContent">
 
-            <TextView
+            <LinearLayout
                     android:id="@+id/matchAim"
-                    android:text="找人一起玩"
-                    android:textColor="@color/colorWhite"
-                    android:paddingLeft="3dp"
-                    android:paddingTop="3dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="1dp"
+                    android:paddingTop="1dp"
                     android:paddingRight="6dp"
-                    android:paddingBottom="3dp"
+                    android:paddingBottom="1dp"
                     android:gravity="center"
                     android:layout_marginLeft="15dp"
-                    android:drawablePadding="5dp"
-                    android:drawableLeft="@drawable/icon_match_aim"
                     android:background="@drawable/shape_rectangle_blue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     app:layout_constraintBottom_toTopOf="@id/matchUserName"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/matchAimIv"
+                        android:layout_width="23dp"
+                        android:src="@drawable/icon_match_aim"
+                        android:layout_height="23dp"/>
+
+                <TextView
+                        android:id="@+id/matchAimTv"
+                        android:text="找人一起玩"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/colorWhite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+            </LinearLayout>
 
 
             <TextView

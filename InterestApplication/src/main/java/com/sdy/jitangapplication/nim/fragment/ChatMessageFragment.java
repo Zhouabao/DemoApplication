@@ -33,6 +33,9 @@ import com.netease.nimlib.sdk.friend.model.AddFriendData;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
+import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
+import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -339,6 +342,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public boolean sendMessage(IMMessage message) {
         Log.d("sendMessage", ".....");
+        if (message.getMsgType() == MsgTypeEnum.audio)
+            Log.d("sendMessage", ((AudioAttachment) message.getAttachment()).getDuration() + "");
+
         if (isAllowSendMessage(message)) {
             appendPushConfig(message);
             // send message to server and save to db
@@ -346,7 +352,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             NIMClient.getService(MsgService.class).sendMessage(message, false).setCallback(new RequestCallback<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    sendMsgRequest(finalMessage.getContent(), sessionId);
+                    sendMsgRequest(finalMessage, sessionId);
                 }
 
                 @Override
@@ -381,36 +387,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             aitManager.reset();
         }
         return true;
-    }
-
-    /**
-     * 检查当前会话是否有我的消息
-     */
-    private void checkHasMine() {
-        for (int i = messageListPanel.getItems().size() - 1; i >= 0; i--) {
-            IMMessage message = messageListPanel.getItems().get(i);
-            if (messageListPanel.isMyMessage(message) && message.getMsgType() != MsgTypeEnum.tip) {
-                hasMineMsg = true;
-                break;
-            }
-        }
-    }
-
-
-    /**
-     * 检查是否有tip消息
-     *
-     * @param tip
-     */
-    private boolean checkHasTip(String tip) {
-        for (int i = messageListPanel.getItems().size() - 1; i >= 0; i--) {
-            IMMessage message = messageListPanel.getItems().get(i);
-            if (messageListPanel.isMyMessage(message) && message.getContent().equals(tip)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     // 被对方拉入黑名单后，发消息失败的交互处理
@@ -615,10 +591,20 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
 
-    private void sendMsgRequest(String content, String target_accid) {
+    private void sendMsgRequest(IMMessage content, String target_accid) {
         HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
         params.put("target_accid", target_accid);
-        params.put("content", content);
+        if (content.getMsgType() == MsgTypeEnum.text) {
+            params.put("content", content.getContent());
+        } else if (content.getMsgType() == MsgTypeEnum.image) {
+            params.put("content", ((ImageAttachment) content.getAttachment()).getUrl());
+        } else if (content.getMsgType() == MsgTypeEnum.audio) {
+            params.put("content", ((AudioAttachment) content.getAttachment()).getUrl());
+            params.put("duration", Math.ceil(((AudioAttachment) content.getAttachment()).getDuration()));
+        } else if (content.getMsgType() == MsgTypeEnum.video) {
+            params.put("content", ((VideoAttachment) content.getAttachment()).getUrl());
+        }
+        params.put("type", content.getMsgType().getValue());
         RetrofitFactory.Companion.getInstance().create(Api.class)
                 .sendMsgRequest(UserManager.INSTANCE.getSignParams(params))
                 .subscribeOn(Schedulers.io())

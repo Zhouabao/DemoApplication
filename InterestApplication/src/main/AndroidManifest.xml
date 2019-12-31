@@ -89,6 +89,7 @@
             android:theme="@style/MyAppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:name,android:theme,android:icon">
+
         <activity android:name=".ui.activity.GreetReceivedActivity">
         </activity>
         <activity android:name=".ui.activity.VipPowerActivity">
@@ -225,7 +226,7 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MessageHiActivity"
+                android:name=".ui.activity.MessageHiPastActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity

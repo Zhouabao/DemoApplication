@@ -40,7 +40,7 @@ import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.ui.activity.MessageHiActivity
+import com.sdy.jitangapplication.ui.activity.MessageHiPastActivity
 import com.sdy.jitangapplication.ui.activity.ReportReasonActivity
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -404,8 +404,8 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(ChatActivity::class.java)
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(MessageHiActivity::class.java)
+                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiPastActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(MessageHiPastActivity::class.java)
                         EventBus.getDefault().post(UpdateHiEvent())
                     } else {
                         CommonFunction.toast(t.msg)

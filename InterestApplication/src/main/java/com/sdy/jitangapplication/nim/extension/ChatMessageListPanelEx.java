@@ -61,7 +61,7 @@ import com.netease.nimlib.sdk.team.constant.TeamMemberType;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.event.NimHeadEvent;
-import com.sdy.jitangapplication.model.Square;
+import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.adapter.ChatTaregetSquareAdapter;
@@ -1369,7 +1369,7 @@ public class ChatMessageListPanelEx {
         if (headView == null) {
             headView = initHeadView();
             adapter.addHeaderView(headView);
-            setHeadData(event.getNimBean().getAvatar());
+            setHeadData(event.getNimBean());
         }
     }
 
@@ -1394,28 +1394,17 @@ public class ChatMessageListPanelEx {
     }
 
 
-    public void setHeadData(String avator) {
+    public void setHeadData(NimBean nimBean) {
         //头像
-        GlideUtil.loadAvatorImg(container.activity, avator, targetUserAvator);
+        GlideUtil.loadAvatorImg(container.activity, nimBean.getAvatar(), targetUserAvator);
         GlideUtil.loadAvatorImg(container.activity, UserManager.INSTANCE.getAvator(), myAvator);
+        targetBothInterest.setText(nimBean.getMatching_content());
         //用户广场
-        ArrayList<Square> square = new ArrayList<>();
-        //todo 添加用户的广场内容
-        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
-        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
-        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
-        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
-        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
-        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
-        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
-        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
-        square.add(new Square(0, UserManager.INSTANCE.getAvator()));
-
-        targetSquareAdapter.setDataSize(square.size());
-        if (square.size() > ChatTaregetSquareAdapter.MAX_SHOW_COUNT) {
-            targetSquareAdapter.setNewData(square.subList(0, ChatTaregetSquareAdapter.MAX_SHOW_COUNT));
+        targetSquareAdapter.setDataSize(nimBean.getSquare().size());
+        if (nimBean.getSquare().size() > ChatTaregetSquareAdapter.MAX_SHOW_COUNT) {
+            targetSquareAdapter.setNewData(nimBean.getSquare().subList(0, ChatTaregetSquareAdapter.MAX_SHOW_COUNT));
         } else {
-            targetSquareAdapter.setNewData(square);
+            targetSquareAdapter.setNewData(nimBean.getSquare());
         }
     }
 

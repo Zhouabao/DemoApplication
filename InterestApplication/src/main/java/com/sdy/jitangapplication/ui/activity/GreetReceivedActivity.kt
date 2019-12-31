@@ -18,19 +18,16 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
-import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
-import com.netease.nimlib.sdk.msg.attachment.AudioAttachment
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
-import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.NewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.GreetedListBean
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.model.SendMsgBean
 import com.sdy.jitangapplication.presenter.GreetReceivedPresenter
 import com.sdy.jitangapplication.presenter.view.GreetReceivedView
 import com.sdy.jitangapplication.ui.adapter.GreetUserAdapter
@@ -87,7 +84,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         rightBtn.setTextColor(Color.WHITE)
         rightBtn.text = "过往招呼"
         rightBtn.setOnClickListener {
-            startActivity<MessageHiActivity>()
+            startActivity<MessageHiPastActivity>()
         }
         divider.setBackgroundColor(Color.TRANSPARENT)
         llTitle.setBackgroundColor(Color.TRANSPARENT)
@@ -108,43 +105,13 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
             if (t.data.isNullOrEmpty()) {
                 hasMore = false
             }
-            adapter.addData(t.data ?: mutableListOf())
-            for (recentContactt in adapter.data.withIndex()) {
-                val anchor = MessageBuilder.createEmptyMessage(
-                    recentContactt.value.accid,
-                    SessionTypeEnum.P2P,
-                    System.currentTimeMillis()
-                )
-                NIMClient.getService(MsgService::class.java)
-                    .queryMessageListEx(anchor, QueryDirectionEnum.QUERY_OLD, 10, true)
-                    .setCallback(object : RequestCallback<MutableList<IMMessage>> {
-                        override fun onSuccess(p0: MutableList<IMMessage>?) {
-                            for (msg in p0 ?: mutableListOf()) {
-                                if (msg.fromAccount != UserManager.getAccid() && msg.attachment !is ChatHiAttachment) {
-                                    if (msg.attachment is AudioAttachment) {
-                                        recentContactt.value.msgs.add(0, "语音")
-                                    } else {
-                                        recentContactt.value.msgs.add(0, msg.content)
-                                    }
-                                }
-                            }
-                            if (recentContactt.value.msgs.isNullOrEmpty())
-                                recentContactt.value.msgs.add(0, "")
-                            adapter.notifyItemChanged(recentContactt.index)
-                        }
 
-                        override fun onFailed(p0: Int) {
-                            if (recentContactt.value.msgs.isNullOrEmpty())
-                                recentContactt.value.msgs.add(0, "")
-                        }
-
-                        override fun onException(p0: Throwable?) {
-
-                        }
-
-                    })
+            for (data in t.data ?: mutableListOf()) {
+                for (sendmsg in data.send_msg) {
+                    sendmsg.leftDuration = sendmsg.duration
+                }
             }
-
+            adapter.addData(t.data ?: mutableListOf())
             if (page == 1 && t.data.isNullOrEmpty()) {
                 stateGreet.viewState = MultiStateView.VIEW_STATE_EMPTY
             } else {
@@ -154,8 +121,6 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
             stateGreet.viewState = MultiStateView.VIEW_STATE_ERROR
         }
 
-        //获取最近联系人列表
-//        mPresenter.getRecentContacts(t)
 
     }
 
@@ -260,7 +225,16 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
 
     override fun onCardSwiped(direction: Direction) {
         resetAnimation()
+        //清空此人的未读消息数量
+        NIMClient.getService(MsgService::class.java)
+            .clearUnreadCount(adapter.data[manager.topPosition - 1].accid, SessionTypeEnum.P2P)
+        //做招呼的已读状态更新
+        if (UserManager.getHiCount() > 0) {
+            UserManager.saveHiCount(UserManager.getHiCount() - 1)
+        }
+        EventBus.getDefault().post(NewMsgEvent())
 
+        adapter.resetAudio()
         //1 右滑招呼 2坐滑招呼
         mPresenter.likeOrGreetState(
             adapter.data[manager.topPosition - 1].greet_id, if (direction == Direction.Left) {
@@ -321,7 +295,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                 for (contact in adapter.data) {
                     for (imMessage in imMessages) {
                         if (contact.accid == imMessage.fromAccount) {
-                            contact.msgs.add(0, imMessage.content ?: "")
+                            contact.send_msg.add(0, SendMsgBean(imMessage.content ?: "", imMessage.msgType.value))
                         }
                     }
                 }

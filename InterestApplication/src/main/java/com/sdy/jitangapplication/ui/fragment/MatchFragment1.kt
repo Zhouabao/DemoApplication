@@ -160,7 +160,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         filterBtn.setOnClickListener(this)
         completeLabelBtn.setOnClickListener(this)
         manageLabel.setOnClickListener(this)
-        findToTalkLl.setOnClickListener(this)
+        findToTalkIv.setOnClickListener(this)
         dislikeBtn.setOnClickListener(this)
         likeBtn.setOnClickListener(this)
         likeBtn.setOnClickListener(this)
@@ -278,7 +278,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             R.id.manageLabel -> {//标签管理
                 startActivity<MyLabelActivity>("index" to checkedTitle - 1)
             }
-            R.id.findToTalkLl -> {//找人说话
+            R.id.findToTalkIv -> {//找人说话
                 startActivityForResult<MyIntentionActivity>(
                     100,
                     "id" to if (myIntention != null) {
@@ -343,11 +343,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
             if (matchBeans.intention != null && matchBeans.intention.id != 0) {
                 myIntention = matchBeans.intention
-                findToTalkTv.text = myIntention!!.title
                 GlideUtil.loadImg(activity!!, myIntention!!.icon, findToTalkIv)
             } else {
-                findToTalkTv.text = "选择意向"
-                GlideUtil.loadImg(activity!!, R.drawable.icon_switch_gray, findToTalkIv)
+                GlideUtil.loadImg(activity!!, R.drawable.icon_matching_default_black, findToTalkIv)
             }
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
             matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
@@ -599,7 +597,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             if (requestCode == 100) {
                 if (data != null && data.getSerializableExtra("intention") != null) {
                     myIntention = data.getSerializableExtra("intention") as LabelQualityBean
-                    findToTalkTv.text = myIntention!!.title
                     GlideUtil.loadImg(activity!!, myIntention!!.icon, findToTalkIv)
                 }
             }

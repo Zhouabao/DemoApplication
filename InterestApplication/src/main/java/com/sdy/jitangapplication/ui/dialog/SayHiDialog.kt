@@ -363,6 +363,7 @@ class SayHiDialog(
         val params = UserManager.getBaseParams()
         params["tag_id"] = UserManager.getGlobalLabelId()
         params["target_accid"] = target_accid
+        params["content"] = sayHiContent.text.trim().toString()
         RetrofitFactory.instance.create(Api::class.java)
             .greet(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {

@@ -54,10 +54,7 @@ import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
-import com.sdy.jitangapplication.ui.activity.ContactBookActivity
-import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
-import com.sdy.jitangapplication.ui.activity.MessageLikeMeActivity
-import com.sdy.jitangapplication.ui.activity.MessageSquareActivity
+import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.MessageCenterAllAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
@@ -168,13 +165,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     // 通知中的 RecentContact 对象的未读数为0
                     NIMClient.getService(MsgService::class.java)
                         .clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
-                    if (UserManager.getHiCount() > 0) {
-                        UserManager.saveHiCount(UserManager.getHiCount() - 1)
-                    }
-                    try {
-                        Thread.sleep(500)
-                    } catch (e: Exception) {
-                    }
                     ChatActivity.start(activity!!, adapter.data[position].contactId)
                     EventBus.getDefault().post(NewMsgEvent())
 
@@ -235,30 +225,13 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         friendsView.friendTv.onClick {
             startActivity<MessageLikeMeActivity>()
         }
-        likeMeAdapter.setOnItemClickListener { _, view, position ->
-            //发送通知告诉剩余时间，并且开始倒计时
-            NIMClient.getService(MsgService::class.java)
-                .clearUnreadCount(likeMeAdapter.data[position].accid, SessionTypeEnum.P2P)
-
-            // 通知中的 RecentContact 对象的未读数为0
-            //做招呼的已读状态更新
-            if (UserManager.getHiCount() > 0) {
-                UserManager.saveHiCount(UserManager.getHiCount() - 1)
-            }
-            try {
-                Thread.sleep(500)
-            } catch (e: Exception) {
-            }
-
-            ChatActivity.start(activity!!, likeMeAdapter.data[position].accid)
-            EventBus.getDefault().post(NewMsgEvent())
-
-        }
 
         likeMeAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.likeMeAvator -> {
-
+                    if (msgBean?.like_free_show == true) {
+                        MatchDetailActivity.start(activity!!, likeMeAdapter.data[position].accid)
+                    }
                 }
                 R.id.likeMeAvatorBtn -> {
                     if (likeMeAdapter.data[position].isfriend) {
@@ -269,7 +242,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                 }
             }
         }
-
         return friendsView
     }
 
@@ -290,14 +262,8 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         headAdapter.setOnItemClickListener { adapter, view, position ->
             when (position) {
                 0 -> {//官方助手
-                    // 触发 MsgServiceObserve#observeRecentContact(Observer, boolean) 通知，
-                    // 通知中的 RecentContact 对象的未读数为0
                     NIMClient.getService(MsgService::class.java)
                         .clearUnreadCount(Constants.ASSISTANT_ACCID, SessionTypeEnum.P2P)
-                    try {
-                        Thread.sleep(500)
-                    } catch (e: Exception) {
-                    }
                     ChatActivity.start(activity!!, Constants.ASSISTANT_ACCID)
                     EventBus.getDefault().post(NewMsgEvent())
                     headAdapter.data[0].count = 0
@@ -316,13 +282,13 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     override fun onMessageCensusResult(data: MessageListBean1?) {
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
-        UserManager.saveSquareCount((data?.comment_count ?: 0).plus(data?.thumbs_up_count ?: 0))
-        UserManager.saveLikeCount(data?.thumbs_up_count ?: 0)
+        UserManager.saveCommentCount((data?.comment_count ?: 0))
+        UserManager.saveThumbsUpCount(data?.thumbs_up_count ?: 0)
         allMessageTypeAdapter.data[0].count = data?.thumbs_up_count ?: 0
         allMessageTypeAdapter.data[1].count = data?.comment_count ?: 0
         allMessageTypeAdapter.data[2].count = data?.greet_count ?: 0
         allMessageTypeAdapter.notifyDataSetChanged()
-        if (UserManager.getLikeCount() > 0 || UserManager.getSquareCount() > 0)
+        if (UserManager.getThumbsUpCount() > 0 || UserManager.getCommentCount() > 0)
             EventBus.getDefault().post(NewMsgEvent())
 
         //如果满足招呼认证提醒，就开启认证提醒

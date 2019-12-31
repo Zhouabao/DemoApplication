@@ -30,8 +30,9 @@ import com.sdy.jitangapplication.presenter.MessageHiPresenter
 import com.sdy.jitangapplication.presenter.view.MessageHiView
 import com.sdy.jitangapplication.ui.adapter.MessageHiListAdapter
 import com.sdy.jitangapplication.utils.UserManager
-import kotlinx.android.synthetic.main.activity_message_hi.*
-import kotlinx.android.synthetic.main.empty_layout.view.*
+import kotlinx.android.synthetic.main.activity_message_hi_past.*
+import kotlinx.android.synthetic.main.empty_friend_layout.view.*
+import kotlinx.android.synthetic.main.empty_friend_layout.view.emptyImg
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -40,7 +41,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 过往招呼
  */
-class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, OnLoadMoreListener, OnRefreshListener {
+class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, OnLoadMoreListener, OnRefreshListener {
 
     private var page = 1
     private val params by lazy {
@@ -54,7 +55,7 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_message_hi)
+        setContentView(R.layout.activity_message_hi_past)
         EventBus.getDefault().register(this)
         registerObservers(true)
         initView()
@@ -88,29 +89,18 @@ class MessageHiActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, 
         messageHiRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         messageHiRv.adapter = adapter
         adapter.bindToRecyclerView(messageHiRv)
-        adapter.setEmptyView(R.layout.empty_layout, messageHiRv)
-        adapter.emptyView.emptyTip.text = "还没有消息哦，不如主动出击？"
+        adapter.setEmptyView(R.layout.empty_friend_layout, messageHiRv)
+        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_hi_past_empty)
+        adapter.emptyView.emptyFriendTitle.text = "暂时没有招呼"
+        adapter.emptyView.emptyFriendTitle.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
         adapter.isUseEmpty(false)
 
         adapter.setOnItemClickListener { _, view, position ->
             //发送通知告诉剩余时间，并且开始倒计时
-            NIMClient.getService(MsgService::class.java)
-                .clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
-
-            // 通知中的 RecentContact 对象的未读数为0
-            //做招呼的已读状态更新
-            if (UserManager.getHiCount() > 0) {
-                UserManager.saveHiCount(UserManager.getHiCount() - 1)
-            }
-            try {
-                Thread.sleep(500)
-            } catch (e: Exception) {
-
-            }
-            ChatActivity.start(this, adapter.data[position].accid ?: "")
+            NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
             EventBus.getDefault().post(NewMsgEvent())
-
-
+            // 通知中的 RecentContact 对象的未读数为0
+            ChatActivity.start(this, adapter.data[position].accid ?: "")
         }
     }
 

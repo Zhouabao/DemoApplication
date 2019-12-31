@@ -1010,7 +1010,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                                 resetActions();
                                             }
                                         }
-                                        if (checkGreetSendBean.getIslimit() && checkGreetSendBean.getResidue_msg_cnt() == 3 && !UserManager.INSTANCE.getHeRead()) {
+                                        if (checkGreetSendBean.getIslimit() && checkGreetSendBean.getResidue_msg_cnt() == 3) {
                                             IMMessage tipMessage = MessageBuilder.createTipMessage(container.account, container.sessionType);
                                             tipMessage.setContent("在收到对方回复前只能发送三条消息");
                                             tipMessage.setStatus(MsgStatusEnum.success);
@@ -1018,11 +1018,11 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                             config.enablePush = false;//不推送
                                             config.enableUnreadCount = false;
                                             tipMessage.setConfig(config);
-//                                        container.proxy.sendMessage(tipMessage);
+//                                        container.proxy.sendMessage(t ipMessage);
                                             NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
                                         }
                                     } else if (checkGreetSendBean.getResidue_msg_cnt() == 0) {//次数用尽不能再发消息
-                                        if (!sendTip && !UserManager.INSTANCE.getHeRead()) {
+                                        if (!sendTip) {
                                             resetActions();
                                             IMMessage msg = MessageBuilder.createTipMessage(container.account, container.sessionType);
                                             msg.setContent("你已发送三条消息，请等待对方回复");
@@ -1031,16 +1031,9 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                                             config.enablePush = false;//不推送
                                             config.enableUnreadCount = false;
                                             msg.setConfig(config);
-//                                        container.proxy.sendMessage(msg);
-
                                             NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
                                             sendTip = true;
                                         }
-//                                    CustomMessageConfig config = new CustomMessageConfig();
-//                                    config.enablePush = false; // 不推送
-//                                    msg.setConfig(config);
-//                                    container.proxy.sendMessage(msg);
-//                                    ToastUtils.showShort("消息次数已用完！");
                                     }
                                 }
 

@@ -21,16 +21,26 @@
                 android:layout_width="0dp"
                 android:layout_height="44dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/filterBtn"
+                app:layout_constraintRight_toLeftOf="@id/findToTalkIv"
                 app:layout_constraintTop_toTopOf="parent"/>
 
+
+        <ImageView
+                android:id="@+id/findToTalkIv"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_matching_default_black"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="15dp"
+                app:layout_constraintBottom_toBottomOf="@id/filterBtn"
+                app:layout_constraintRight_toLeftOf="@id/filterBtn"
+                app:layout_constraintTop_toTopOf="@id/filterBtn"/>
 
         <ImageView
                 android:id="@+id/filterBtn"
                 android:paddingRight="15dp"
                 android:scaleType="center"
                 android:layout_width="wrap_content"
-                android:paddingLeft="15dp"
                 android:src="@drawable/icon_filter"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="@id/headRvLabels"
@@ -74,41 +84,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/t1"
                     app:layout_constraintTop_toTopOf="parent"/>
-
-            <LinearLayout
-                    android:id="@+id/findToTalkLl"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/shape_rectangle_lightorange_15dp"
-                    android:minWidth="80dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                        android:id="@+id/findToTalkIv"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/icon_switch_gray"
-                        android:layout_width="17dp"
-                        android:layout_height="17dp"/>
-
-                <TextView
-                        android:id="@+id/findToTalkTv"
-                        android:layout_marginLeft="4dp"
-                        android:layout_width="wrap_content"
-                        android:textColorHint="@color/colorOrange"
-                        android:hint="选择意向"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/colorOrange"
-                        android:textSize="13sp"
-                        />
-            </LinearLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

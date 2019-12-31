@@ -233,81 +233,6 @@ object UserManager {
     }
 
     /**
-     * 保存发送tip消息
-     * 打招呼方-送出招呼消息
-     * 点击打招呼/聊天icon时显示「在收到对方回复前只能发送三条消息」
-     */
-    fun saveTipSend(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("TipSend", isTip)
-    }
-
-    fun getTipSend(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("TipSend", false)
-    }
-
-    /**
-     * 保存是否提示过三次机会
-     * 打招呼方-发送3条后
-     * 你已发送三条消息，请等待对方回复
-     */
-    fun saveTipThreeTimes(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("threetimes", isTip)
-    }
-
-    fun getTipThreeTimes(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("threetimes", false)
-    }
-
-    /**
-     * 打招呼方-被读消息后
-     * 对方已读你的消息，10分钟内对方未回复消息将过期
-     */
-    fun saveHeRead(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("heread", isTip)
-    }
-
-    fun getHeRead(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("heread", false)
-    }
-
-    /**
-     * 收消息方-已读消息后
-     * 已读对方招呼，如不回复10分钟后招呼将过期
-     */
-    fun saveReadHe(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("readhe", isTip)
-    }
-
-    fun getReadHe(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("readhe", false)
-    }
-
-    /**
-     * 收消息方-回复消息后
-     * 已停止倒数k
-     */
-    fun saveStopTime(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("StopTime", isTip)
-    }
-
-    fun getStopTime(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("StopTime", false)
-    }
-
-    /**
-     * 收消息方-第二轮回复
-     * 聊得来就与他/她（根据性别）成为好友吧（此时成为好友最好有点动效果UI）
-     */
-    fun saveSecondReply(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("secondReply", isTip)
-    }
-
-    fun getSecondReply(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("secondReply", false)
-    }
-
-
-    /**
      * 清除打招呼轻提示
      */
     fun cleanHiTime() {
@@ -756,28 +681,37 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("countdowntime", 0)
     }
 
-    fun saveLikeCount(likeCount: Int) {
+    /**
+     * 保存点赞的数量
+     */
+    fun saveThumbsUpCount(likeCount: Int) {
         SPUtils.getInstance(Constants.SPNAME).put("likeCount", likeCount)
     }
 
-    fun saveSquareCount(squareCount: Int) {
+    fun getThumbsUpCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("likeCount", 0)
+    }
+
+    /**
+     * 广场评论数量
+     */
+    fun saveCommentCount(squareCount: Int) {
         SPUtils.getInstance(Constants.SPNAME).put("squareCount", squareCount)
     }
 
+    fun getCommentCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("squareCount", 0)
+    }
+
+    /**
+     * 保存招呼个数
+     */
     fun saveHiCount(greetCount: Int = 0) {
         SPUtils.getInstance(Constants.SPNAME).put("hiCount", greetCount)
     }
 
-    fun getLikeCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("likeCount", 0)
-    }
-
     fun getHiCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("hiCount", 0)
-    }
-
-    fun getSquareCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("squareCount", 0)
     }
 
 

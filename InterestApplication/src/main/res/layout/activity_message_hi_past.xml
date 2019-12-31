@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
         android:fitsSystemWindows="true"
-        tools:context=".ui.activity.MessageHiActivity">
+        tools:context=".ui.activity.MessageHiPastActivity">
 
     <RelativeLayout
             android:id="@+id/llTitle"
@@ -26,7 +26,7 @@
 
         <TextView
                 android:id="@+id/hotT1"
-                android:text="招呼列表"
+                android:text="过往招呼"
                 android:textColor="@color/colorBlackTitle"
                 android:textSize="18sp"
                 android:textStyle="bold"

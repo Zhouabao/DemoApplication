@@ -146,7 +146,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
 
 //        holder.itemView.matchUserIntroduce.text = item.sign ?: "" //关于自己
         holder.itemView.matchAim.isVisible = item.intention.isNotEmpty()//标签意向
-        holder.itemView.matchAim.text = item.intention
+        holder.itemView.matchAimTv.text = item.intention
+        GlideUtil.loadCircleImg(mContext,item.intention_icon,holder.itemView.matchAimIv)
 
         holder.itemView.matchUserLocalTagContent.isVisible = !item.sign.isNullOrBlank()//标签介绍
         holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""

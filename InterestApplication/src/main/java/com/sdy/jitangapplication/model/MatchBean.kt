@@ -38,6 +38,7 @@ data class MatchBean(
     var matching_icon: String = "",
     var face_auditing_state: Int = 0,
     var intention: String = "",
+    var intention_icon: String = "",
     var label_quality: MutableList<LabelQualityBean> = mutableListOf(),
     var isvip: Int = 0,    //是否会员 true是 false不是
     var isfaced: Int = 0,  //0未认证/认证不成功     1认证通过     2认证中

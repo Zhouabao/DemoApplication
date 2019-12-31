@@ -56,10 +56,6 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         initView()
         //获取喜欢我的列表
         mPresenter.likeLists(params)
-        stateview.postDelayed({
-            //标记已读
-            mPresenter.markLikeRead(params)
-        }, 100)
     }
 
     private val adapter by lazy { LikeMeAdapter() }
