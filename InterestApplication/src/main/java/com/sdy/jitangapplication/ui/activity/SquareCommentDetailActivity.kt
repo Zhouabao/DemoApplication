@@ -619,8 +619,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 null
             )
 
-            EventBus.getDefault()
-                .post(RefreshLikeEvent(squareBean?.isliked ?: 0, intent.getIntExtra("position", -1)))
+            if (intent.getIntExtra("position", -1) != -1)
+                EventBus.getDefault().post(
+                    RefreshLikeEvent(
+                        squareBean?.isliked ?: 0,
+                        intent.getIntExtra("position", -1)
+                    )
+                )
 //            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
@@ -723,7 +728,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         val transpondDialog = TranspondDialog(this, squareBean!!)
         transpondDialog.show()
     }
-
 
 
     lateinit var moreActionDialog: MoreActionNewDialog

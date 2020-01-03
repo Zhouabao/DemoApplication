@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
-import com.amap.api.maps2d.AMap
-import com.amap.api.maps2d.CameraUpdateFactory
-import com.amap.api.maps2d.model.BitmapDescriptorFactory
-import com.amap.api.maps2d.model.LatLng
-import com.amap.api.maps2d.model.Marker
-import com.amap.api.maps2d.model.MarkerOptions
+import com.amap.api.maps.AMap
+import com.amap.api.maps.CameraUpdateFactory
+import com.amap.api.maps.model.BitmapDescriptorFactory
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.Marker
+import com.amap.api.maps.model.MarkerOptions
 import com.amap.api.services.core.LatLonPoint
 import com.amap.api.services.core.PoiItem
 import com.amap.api.services.poisearch.PoiResult
@@ -92,6 +92,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         adapter.setOnItemClickListener { _, view, position ->
             adapter.checkPosition = position
             adapter.notifyDataSetChanged()
+            aMap.clear()
             moveMapCamera(adapter.data[position].latLonPoint.latitude, adapter.data[position].latLonPoint.longitude)
         }
     }
@@ -180,6 +181,7 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
                             MarkerOptions()
                                 .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
                                 .draggable(false)
+                                .position(LatLng(latitude,longitude))
                                 .anchor(0.5F, 0.5F)
                         )
                     }
@@ -187,7 +189,6 @@ class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnC
         }
         if (marker != null)
             marker!!.position = LatLng(latitude, longitude)
-        aMap.invalidate()
     }
 
 

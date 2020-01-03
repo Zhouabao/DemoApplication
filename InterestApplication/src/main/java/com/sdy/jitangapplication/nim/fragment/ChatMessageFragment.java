@@ -52,6 +52,7 @@ import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.event.*;
 import com.sdy.jitangapplication.model.NimBean;
+import com.sdy.jitangapplication.model.ResidueCountBean;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
 import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
@@ -303,8 +304,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             //新消息来了请求接口，更新键盘啊头布局等数据。
             if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
                 messageActivityBottomLayout.setVisibility(View.VISIBLE);
-            } else if (nimBean == null || !nimBean.getIsfriend()) {
-                getTargetInfo(sessionId);
             }
 
             // 发送已读回执
@@ -325,7 +324,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             messageListPanel.receiveReceipt();
             //收到已读回执,调用接口,改变此时招呼或者消息的状态
             Log.d("已读回执----", "对方已读你的消息，10分钟内对方未回复消息将过期");
-
             if (!sessionId.equals(Constants.ASSISTANT_ACCID) && (nimBean == null || !nimBean.getIsfriend())) {
                 getTargetInfo(sessionId);
             }
@@ -336,45 +334,42 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     /**
      * ********************** implements ModuleProxy *********************
      */
-    //判断当前招呼中是否有自己的消息
-    private boolean hasMineMsg = false;
 
     @Override
     public boolean sendMessage(IMMessage message) {
         Log.d("sendMessage", ".....");
-        if (message.getMsgType() == MsgTypeEnum.audio)
-            Log.d("sendMessage", ((AudioAttachment) message.getAttachment()).getDuration() + "");
-
         if (isAllowSendMessage(message)) {
-            appendPushConfig(message);
-            // send message to server and save to db
-            IMMessage finalMessage = message;
-            NIMClient.getService(MsgService.class).sendMessage(message, false).setCallback(new RequestCallback<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    sendMsgRequest(finalMessage, sessionId);
+            if (sendAlready3Msgs())
+                if (message.getMsgType() == MsgTypeEnum.text) {
+                    sendMsgRequest(message, sessionId);
+                } else {
+                    appendPushConfig(message);
+                    // send message to server and save to db
+                    IMMessage finalMessage = message;
+                    NIMClient.getService(MsgService.class).sendMessage(message, false).setCallback(new RequestCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            sendMsgRequest(finalMessage, sessionId);
+                        }
+
+                        @Override
+                        public void onFailed(int i) {
+
+                        }
+
+                        @Override
+                        public void onException(Throwable throwable) {
+
+                        }
+                    });
+                    messageListPanel.onMsgSend(message);
+                    if (!sessionId.equals(Constants.ASSISTANT_ACCID) && nimBean != null && !nimBean.getIsfriend()) {
+                        if (nimBean.getIsgreet() && !nimBean.getIsinitiated()) {
+                            messageActivityBottomLayout.setVisibility(View.VISIBLE);
+                            EventBus.getDefault().post(new NimHeadEvent(nimBean));
+                        }
+                    }
                 }
-
-                @Override
-                public void onFailed(int i) {
-
-                }
-
-                @Override
-                public void onException(Throwable throwable) {
-
-                }
-            });
-            messageListPanel.onMsgSend(message);
-            //var type: Int = 0,//类型1，新消息 2，倒计时 3，普通样式 4 过期
-            if (!sessionId.equals(Constants.ASSISTANT_ACCID) && nimBean != null && !nimBean.getIsfriend()) {
-                if (nimBean.getType() == 2 && !nimBean.getIsinitiated()) {
-                    nimBean.setType(3);
-                    messageActivityBottomLayout.setVisibility(View.VISIBLE);
-                    EventBus.getDefault().post(new NimHeadEvent(nimBean));
-                }
-            }
-
         } else {
             // 替换成tip
             message = MessageBuilder.createTipMessage(message.getSessionId(), message.getSessionType());
@@ -387,6 +382,26 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             aitManager.reset();
         }
         return true;
+    }
+
+    private Boolean sendAlready3Msgs() {
+        if (!nimBean.getIsfriend() && leftGreetCount == 0) {
+            if (!sendTip) {
+                inputPanel.resetActions();
+                IMMessage msg = MessageBuilder.createTipMessage(sessionId, sessionType);
+                msg.setContent("你已发送三条消息，请等待对方回复");
+                msg.setStatus(MsgStatusEnum.success);
+                CustomMessageConfig config = new CustomMessageConfig();
+                config.enablePush = false;//不推送
+                config.enableUnreadCount = false;
+                msg.setConfig(config);
+                NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
+                sendTip = true;
+                messageListPanel.onMsgSend(msg);
+            }
+            return false;
+        } else
+            return true;
     }
 
     // 被对方拉入黑名单后，发消息失败的交互处理
@@ -562,6 +577,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
      * 设置消息体制内的数据
      */
     private void setTargetInfoData() {
+        leftGreetCount = nimBean.getResidue_msg_cnt();
         if (nimBean.getIsfriend()) { //是好友了，按钮消失
             //隐藏倒计时控件
             btnMakeFriends.setVisibility(View.GONE);
@@ -569,7 +585,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             //发送通知，可以发所有类型的消息
             EventBus.getDefault().post(new EnablePicEvent(true));
         } else {
-            if (nimBean.getType() == 4) {//过期消息
+            if (nimBean.getIsgreet() == false) {//过期消息
                 //过期消息不展示消息面板
                 inputPanel.collapse(true);
                 messageActivityBottomLayout.setVisibility(View.GONE);
@@ -590,6 +606,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         EventBus.getDefault().postSticky(new EnablePicEvent(nimBean.getIsfriend()));
     }
 
+    private int leftGreetCount = 0;
+    private boolean sendTip = false;
 
     private void sendMsgRequest(IMMessage content, String target_accid) {
         HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
@@ -609,7 +627,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 .sendMsgRequest(UserManager.INSTANCE.getSignParams(params))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new rx.Observer<BaseResp<Object>>() {
+                .subscribe(new rx.Observer<BaseResp<ResidueCountBean>>() {
                     @Override
                     public void onCompleted() {
 
@@ -621,9 +639,46 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     }
 
                     @Override
-                    public void onNext(BaseResp<Object> nimBeanBaseResp) {
+                    public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
+                        if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
+                            leftGreetCount = nimBeanBaseResp.getData().getResidue_msg_cnt();
+                            if (nimBeanBaseResp.getCode() == 211) {
+                                CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
+                            }
+                            if (content.getMsgType() != MsgTypeEnum.text) {
+                                appendPushConfig(content);
+                                // send message to server and save to db
+                                NIMClient.getService(MsgService.class).sendMessage(content, false).setCallback(new RequestCallback<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
 
+                                    }
+
+                                    @Override
+                                    public void onFailed(int i) {
+
+                                    }
+
+                                    @Override
+                                    public void onException(Throwable throwable) {
+
+                                    }
+                                });
+                                messageListPanel.onMsgSend(content);
+                                if (!sessionId.equals(Constants.ASSISTANT_ACCID) && nimBean != null && !nimBean.getIsfriend()) {
+                                    if (nimBean.getIsgreet() && !nimBean.getIsinitiated()) {
+                                        messageActivityBottomLayout.setVisibility(View.VISIBLE);
+                                        EventBus.getDefault().post(new NimHeadEvent(nimBean));
+                                    }
+                                }
+                            }
+                        } else if (nimBeanBaseResp.getCode() == 410) {
+                            sendAlready3Msgs();
+                        } else {
+                            CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
+                        }
                     }
+
                 });
     }
 

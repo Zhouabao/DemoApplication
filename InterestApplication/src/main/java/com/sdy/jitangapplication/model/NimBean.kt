@@ -10,7 +10,7 @@ import java.io.Serializable
  */
 
 data class NimBean(
-    var type: Int = 0,//类型1，新消息 2，倒计时 3，普通样式 4 过期
+    var isgreet: Boolean = true,//招呼是否有效
     var avatar: String = "",
     var isblocked: Boolean = false,
     var isfriend: Boolean = false,
@@ -18,14 +18,15 @@ data class NimBean(
     var islimit: Boolean = false,
     var matching_content: String = "",
     var matching_icon: String = "",
-    var residue_msg_cnt: Int = 0,
+    var residue_msg_cnt: Int = 0,//剩余可发送的招呼消息次数
     var square: MutableList<Square> = mutableListOf(),
     var square_cnt: Int = 0,
     var stared: Boolean = false
 ) : Serializable
 
-
-
+data class ResidueCountBean(
+    var residue_msg_cnt: Int = 0//剩余可发送的招呼消息次数
+)
 
 
 /**

@@ -48,9 +48,24 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
         next.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
         detail.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
 
-        guide_dislike_hand_left.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_left_to_right) as TranslateAnimation))
-        guide_like_hand_right.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_right_to_left) as TranslateAnimation))
-        guide_hi_hand_top.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_bottom_to_top) as TranslateAnimation))
+        guide_dislike_hand_left.startAnimation(
+            (AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_left_to_right
+            ) as TranslateAnimation)
+        )
+        guide_like_hand_right.startAnimation(
+            (AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_right_to_left
+            ) as TranslateAnimation)
+        )
+        guide_hi_hand_top.startAnimation(
+            (AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_bottom_to_top
+            ) as TranslateAnimation)
+        )
 
 
 
@@ -62,11 +77,12 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideHi.isVisible = false
             chatTv.isVisible = false
             likeTv.isVisible = false
-            dislikeTv.isVisible =false
+            dislikeTv.isVisible = false
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
             guideChathi.isVisible = false
+            intentionMatchingCl.isVisible = false
         }
 
         guideNext.onClick {
@@ -77,11 +93,12 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideHi.isVisible = false
             chatTv.isVisible = false
             likeTv.isVisible = false
-            dislikeTv.isVisible =false
+            dislikeTv.isVisible = false
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
             guideChathi.isVisible = false
+            intentionMatchingCl.isVisible = false
         }
 
         guideDetail.onClick {
@@ -92,11 +109,13 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideHi.isVisible = true
             chatTv.isVisible = true
             likeTv.isVisible = true
-            dislikeTv.isVisible =true
+            dislikeTv.isVisible = true
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
             guideChathi.isVisible = false
+            intentionMatchingCl.isVisible = false
+
         }
 
         guideHi.onClick {
@@ -113,6 +132,8 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideDislike.isVisible = false
             guideChathi.isVisible = false
             useCl.isVisible = false
+            intentionMatchingCl.isVisible = false
+
         }
 
         guideLike.onClick {
@@ -121,20 +142,25 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideDislike.isVisible = true
             guideChathi.isVisible = false
             useCl.isVisible = false
+            intentionMatchingCl.isVisible = false
+
         }
         guideDislike.onClick {
-            //关闭上滑
-//            guideCl.isVisible = false
-//            guideLike.isVisible = false
-//            guideDislike.isVisible = false
-//            guideChathi.isVisible = true
-//            useCl.isVisible = false
-
-
             guideCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
             guideChathi.isVisible = false
+            useCl.isVisible = false
+            intentionMatchingCl.isVisible = true
+        }
+
+
+        intentionMatchingCl.onClick {
+            guideCl.isVisible = false
+            guideLike.isVisible = false
+            guideDislike.isVisible = false
+            guideChathi.isVisible = false
+            intentionMatchingCl.isVisible = false
             useCl.isVisible = true
         }
 
@@ -146,6 +172,8 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             useCl.isVisible = true
         }
 
+
+
         onceAgain.onClick {
             guideCl.isVisible = true
             guideLast.isVisible = true
@@ -156,6 +184,7 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideDislike.isVisible = false
             guideChathi.isVisible = false
             useCl.isVisible = false
+            intentionMatchingCl.isVisible = false
         }
         startUse.onClick {
             last.clearAnimation()

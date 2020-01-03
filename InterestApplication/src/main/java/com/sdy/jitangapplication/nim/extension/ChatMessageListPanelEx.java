@@ -64,6 +64,7 @@ import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity;
 import com.sdy.jitangapplication.ui.adapter.ChatTaregetSquareAdapter;
 import com.sdy.jitangapplication.ui.dialog.ReportChatContentDialog;
 import com.sdy.jitangapplication.utils.UserManager;
@@ -1390,6 +1391,8 @@ public class ChatMessageListPanelEx {
         targetSquare.addItemDecoration(new DividerItemDecoration(container.activity, DividerItemDecoration.VERTICAL_LIST, SizeUtils.dp2px(5F), container.activity.getResources().getColor(R.color.white)));
         targetSquareAdapter = new ChatTaregetSquareAdapter();
         targetSquare.setAdapter(targetSquareAdapter);
+        targetSquareAdapter.setOnItemClickListener((adapter, view, position) ->
+                SquareCommentDetailActivity.Companion.start(container.activity, null, targetSquareAdapter.getData().get(position).getId(), "", -1));
         return headView;
     }
 

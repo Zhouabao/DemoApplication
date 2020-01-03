@@ -11,20 +11,19 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.amap.api.maps2d.*;
-import com.amap.api.maps2d.AMap.OnCameraChangeListener;
-import com.amap.api.maps2d.model.CameraPosition;
-import com.amap.api.maps2d.model.LatLng;
-import com.sdy.jitangapplication.R;
-import com.sdy.jitangapplication.nim.location.helper.NimGeocoder;
-import com.sdy.jitangapplication.nim.location.helper.NimLocationManager;
-import com.sdy.jitangapplication.nim.location.model.NimLocation;
+import com.amap.api.maps.*;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
 import com.netease.nim.uikit.api.model.location.LocationProvider;
 import com.netease.nim.uikit.api.wrapper.NimToolBarOptions;
 import com.netease.nim.uikit.common.activity.ToolBarOptions;
 import com.netease.nim.uikit.common.activity.UI;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.nim.location.helper.NimGeocoder;
+import com.sdy.jitangapplication.nim.location.helper.NimLocationManager;
+import com.sdy.jitangapplication.nim.location.model.NimLocation;
 
-public class LocationAmapActivity extends UI implements OnCameraChangeListener, OnClickListener
+public class LocationAmapActivity extends UI implements AMap.OnCameraChangeListener, OnClickListener
         , NimLocationManager.NimLocationListener {
 
 //	private static final String TAG = "LocationAmapActivity";

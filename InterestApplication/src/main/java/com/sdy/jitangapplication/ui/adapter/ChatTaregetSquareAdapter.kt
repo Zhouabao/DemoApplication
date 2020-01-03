@@ -32,7 +32,7 @@ class ChatTaregetSquareAdapter(var dataSize: Int = 0) :
 
         GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url, holder.itemView.ivThumb, SizeUtils.dp2px(6F))
 
-        if (holder.layoutPosition + 1 == MAX_SHOW_COUNT) {
+        if (holder.layoutPosition + 1 == MAX_SHOW_COUNT && dataSize > MAX_SHOW_COUNT) {
             holder.itemView.bgThumb.isVisible = true
             holder.itemView.lengthThumb.text = "+${dataSize - MAX_SHOW_COUNT}"
         } else {

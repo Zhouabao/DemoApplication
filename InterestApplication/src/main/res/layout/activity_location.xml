@@ -13,7 +13,7 @@
     <include layout="@layout/layout_actionbar"/>
 
 
-    <com.amap.api.maps2d.MapView
+    <com.amap.api.maps.MapView
             android:id="@+id/locationMap"
             android:layout_width="match_parent"
             android:layout_height="0dp"

@@ -126,6 +126,17 @@ class MyIntentionActivity : BaseMvpActivity<MyIntentionPresenter>(), MyIntention
                 }
             }
         }
+
+
+        switchDistance.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                switchDistanceContentOpen.isVisible = true
+                switchDistanceContentClose.isVisible = false
+            } else {
+                switchDistanceContentOpen.isVisible = false
+                switchDistanceContentClose.isVisible = true
+            }
+        }
     }
 
     private fun getCheckedIntentionId(): Int? {

@@ -43,7 +43,7 @@
                 android:layout_marginTop="58dp"
                 android:drawablePadding="10dp"
                 android:paddingLeft="10dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:gravity="center_vertical"
                 android:drawableLeft="@drawable/icon_make_friends"
                 android:layout_height="35dp"/>
