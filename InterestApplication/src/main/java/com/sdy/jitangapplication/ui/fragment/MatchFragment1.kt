@@ -1,6 +1,8 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -11,13 +13,16 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -174,13 +179,27 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
             val item = matchUserAdapter.data[manager.topPosition]
+            val itemView = manager.topView
             when (view.id) {
                 R.id.v1 -> {
+                    (itemView.findViewById<ConstraintLayout>(R.id.v1)).isEnabled = false
                     if ((matchUserAdapter.data[manager.topPosition].accid ?: "") != UserManager.getAccid())
-                        MatchDetailActivity.start(activity!!, (matchUserAdapter.data[manager.topPosition].accid ?: ""))
+                        MatchDetailActivity.start(activity!!, matchUserAdapter.data[manager.topPosition].accid)
+                    (itemView.findViewById<ConstraintLayout>(R.id.v1)).isEnabled = true
+                }
+                R.id.btnHiLottieView,
+                R.id.btnHi -> {
+                    CommonFunction.commonGreet(
+                        activity!!,
+                        matchUserAdapter.data[manager.topPosition].isfriend == 1,
+                        matchUserAdapter.data[manager.topPosition].greet_switch,
+                        matchUserAdapter.data[manager.topPosition].greet_state,
+                        matchUserAdapter.data[manager.topPosition].accid,
+                        matchUserAdapter.data[manager.topPosition].nickname ?: "",
+                        view = itemView.findViewById(R.id.btnHi)
+                    )
                 }
                 R.id.nextImgBtn -> {
-                    val itemView = manager.topView
                     if (itemView != null) {
                         val vpPhotos = itemView.findViewById<ViewPager>(R.id.vpPhotos)
                         if (vpPhotos.currentItem < (item.photos ?: mutableListOf<MatchBean>()).size - 1) {
@@ -419,12 +438,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
                 setViewState(EMPTY)
-                btnChatCl.isVisible = false
-                tvLeftChatTime.isVisible = false
             } else {
                 setViewState(CONTENT)
-                btnChatCl.isVisible = true
-                tvLeftChatTime.isVisible = true
             }
 
         } else {
@@ -787,7 +802,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
             if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
                 params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
-            mPresenter.dislikeUser(params)
+//            mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             UserManager.saveSlideCount(UserManager.getSlideCount() + 1)
             //保存剩余滑动次数
@@ -806,7 +821,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
                 if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
                     params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
-                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
+//                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
             } else {
                 card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
                 card_stack_view.isEnabled = false
@@ -824,8 +839,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             mPresenter.getMatchList(matchParams, paramsLastFiveIds)
         } else if (!hasMore && manager.topPosition == matchUserAdapter.itemCount) {
             setViewState(EMPTY)
-            btnChatCl.isVisible = false
-            tvLeftChatTime.isVisible = false
         }
     }
 
@@ -838,14 +851,81 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     override fun onCardAppeared(view: View?, position: Int) {
         Log.d("CardStackView", "onCardAppeared: ($position)")
-        if (matchUserAdapter.data.size > 0 && matchUserAdapter.data.size > position) {
-            btnChatCl.isEnabled = matchUserAdapter.data[position].greet_switch
-            if (matchUserAdapter.data[position].greet_switch) {
-                tvLeftChatTime.visibility = View.VISIBLE
-                greetBtn.visibility = View.VISIBLE
-            } else {
-                tvLeftChatTime.visibility = View.INVISIBLE
-                greetBtn.visibility = View.INVISIBLE
+        if (view != null) {
+//            view.findViewById<ViewPager>(R.id.vpPhotos).currentItem = 0
+
+            if (matchUserAdapter.data[manager.topPosition].greet_switch) {
+                (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
+                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible = true
+
+                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).addAnimatorListener(object :
+                    Animator.AnimatorListener {
+                    override fun onAnimationEnd(animation: Animator?) {
+                        (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.VISIBLE
+                        (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).visibility = View.INVISIBLE
+
+
+                        //透明度起始为1，结束时为0
+                        val animator =
+                            ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiIv), "alpha", 1f, 0f)
+                        val animator1 = ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiLeftTime), "alpha", 0f, 1f)
+                        val animator2 = ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiIv), "alpha", 0f, 1f)
+                        val animator3 = ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiLeftTime), "alpha", 1f, 0f)
+                        animator.duration = 300//时间1s
+                        animator1.duration = animator.duration//时间1s
+                        animator2.duration = animator.duration//时间1s
+                        animator3.duration = animator.duration//时间1s
+                        animator.addListener(object : Animator.AnimatorListener {
+                            override fun onAnimationRepeat(animation: Animator?) {
+
+                            }
+
+                            override fun onAnimationEnd(animation: Animator?) {
+                                animator1.start()
+                            }
+
+                            override fun onAnimationCancel(animation: Animator?) {
+                            }
+
+                            override fun onAnimationStart(animation: Animator?) {
+                            }
+
+                        })
+                        animator1.addListener(object : Animator.AnimatorListener {
+                            override fun onAnimationRepeat(animation: Animator?) {
+
+                            }
+
+                            override fun onAnimationEnd(animation: Animator?) {
+                                view.postDelayed({
+                                    animator2.start()
+                                    animator3.start()
+                                }, 1000L)
+                            }
+
+                            override fun onAnimationCancel(animation: Animator?) {
+
+                            }
+
+                            override fun onAnimationStart(animation: Animator?) {
+                            }
+
+                        })
+                        animator.start()
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+                    }
+
+                    override fun onAnimationRepeat(animation: Animator?) {
+
+                    }
+
+                })
+                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).playAnimation()
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.graphics.Color
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
@@ -19,8 +20,10 @@ class MatchDetailLabelQualityAdapter :
         holder.itemView.labelName.text = model
         if (myTags.contains(model)) {
             holder.itemView.labelName.setTextColor(mContext.resources.getColor(R.color.colorOrange))
+            holder.itemView.setBackgroundResource(R.drawable.shape_rectangle_light_yellow_8dp)
         } else {
-            holder.itemView.labelName.setTextColor(mContext.resources.getColor(R.color.colorGrayE0))
+            holder.itemView.setBackgroundResource(R.drawable.shape_rectangle_lightgray_8dp)
+            holder.itemView.labelName.setTextColor(Color.parseColor("#FF787C7F"))
         }
     }
 }

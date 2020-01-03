@@ -88,7 +88,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         AMapManager.initLocation(this)
         filterBtn.setOnClickListener(this)
 
-        IntentionMatchingDialog(this).show()
+//        IntentionMatchingDialog(this).show()
 
         if (!UserManager.isShowGuide()) {
             guideDialog.show()

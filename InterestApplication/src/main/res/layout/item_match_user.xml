@@ -74,7 +74,6 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_width="match_parent"
             android:paddingBottom="26dp"
-            android:paddingRight="71dp"
             android:background="@drawable/gradient_match_user_bg"
             android:layout_height="wrap_content">
 
@@ -91,7 +90,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                app:layout_constraintBottom_toTopOf="@id/matchUserName"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -198,116 +196,138 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/matchUserLocalTagCl"
-                android:visibility="visible"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="5dp"
+                android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="@id/matchUserName"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/rectangle_white_15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/matchUserAge">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/matchUserLocalTagCharacter"
+                    android:overScrollMode="never"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:minHeight="26dp"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/btnHiView"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
 
             <TextView
                     android:id="@+id/matchUserLocalTagContent"
                     android:gravity="center_vertical"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:textSize="14sp"
-                    android:background="@drawable/rectangle_cover_bg_10dp"
                     android:padding="5dp"
-                    android:textColor="#FFF8F8F8"
+                    android:textColor="#FF191919"
                     android:ellipsize="end"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
                     android:maxLines="3"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/btnHiView"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="手游端游主机都玩，但时间紧主手游目前常驻fgo偶尔明日方舟剑乱舞，PC只玩steam上的，是个以撒狂个以，是个以撒狂个以是个以撒狂个以是个以撒狂个以"
                     />
 
-
-            <LinearLayout
-                    android:id="@+id/matchUserLocalTagCharacterLl"
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/matchUserDynamicThumbRv"
+                    android:layout_width="0dp"
+                    android:layout_height="57dp"
                     android:orientation="horizontal"
-                    android:gravity="center"
-                    android:background="@drawable/rectangle_label_25_orange_7dp"
-                    android:layout_width="wrap_content"
-                    android:textSize="14sp"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:visibility="gone"
+                    android:layout_marginBottom="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/matchUserLocalTagContent"
-                    >
+                    app:layout_constraintRight_toLeftOf="@id/btnHiView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
-                <TextView
-                        android:id="@+id/matchUserLocalTagName"
-                        android:gravity="center"
-                        android:paddingRight="9dp"
-                        android:paddingLeft="9dp"
-                        android:textColor="#ffffffff"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:layout_gravity="center"
-                        android:background="@drawable/rectangle_label_orange_7dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="26dp"
-                        tools:text="游戏"/>
+            <View
+                    android:id="@+id/btnHiView"
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:layout_marginRight="10dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/matchUserLocalTagCharacter"
-                        android:overScrollMode="never"
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="26dp"/>
-            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <LinearLayout
-                android:id="@+id/matchUserDynamicLl"
-                android:background="@drawable/rectangle_cover_bg_10dp"
-                android:layout_width="wrap_content"
-                android:visibility="gone"
-                android:padding="5dp"
-                android:orientation="vertical"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="@id/matchUserName"
-                app:layout_constraintTop_toBottomOf="@id/matchUserAge">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/btnHi"
+                android:background="@drawable/icon_oval_orange_hi_bg"
+                android:layout_width="50dp"
+                android:visibility="visible"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="@id/matchUserLocalTagCl"
+                app:layout_constraintLeft_toLeftOf="@id/btnHiLottieView"
+                app:layout_constraintRight_toRightOf="@id/btnHiLottieView"
+                app:layout_constraintTop_toTopOf="@id/matchUserLocalTagCl">
 
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/matchUserDynamicThumbRv"
+            <ImageView
+                    android:id="@+id/btnHiIv"
+                    android:src="@drawable/icon_hi_no_bg"
+                    android:alpha="1"
                     android:layout_width="wrap_content"
-                    android:layout_height="57dp"
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     />
-        </LinearLayout>
-
-
-        <LinearLayout
-                android:visibility="gone"
-                android:layout_width="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="@id/matchUserName"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/matchUserAge">
 
             <TextView
-                    android:background="@drawable/rectangle_cover_bg_10dp"
-                    android:padding="5dp"
+                    android:id="@+id/btnHiLeftTime"
+                    android:alpha="0"
+                    android:text="3"
+                    android:textStyle="bold"
+                    android:textColor="#ffffffff"
+                    android:textSize="26sp"
                     android:layout_width="wrap_content"
-                    android:textColor="#FFF8F8F8"
-                    android:textSize="14sp"
-                    android:lineSpacingMultiplier="1.25"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    tools:text="AntV 是蚂蚁金服全新代数据可视化解决方案，致力于提供一套…单方便、专业可靠、无限可能的数据可视化最佳实践。"/>
-        </LinearLayout>
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/btnHiLottieView"
+                android:layout_width="53dp"
+                android:layout_height="117dp"
+                android:layout_marginRight="17dp"
+                android:scaleType="centerInside"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@id/btnHi"
+                app:layout_constraintRight_toRightOf="parent"
+                app:lottie_autoPlay="false"
+                app:lottie_fileName="data_greet.json"
+                app:lottie_imageAssetsFolder="images_hi/"
+                app:lottie_loop="false"
+                app:lottie_speed="1"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <LinearLayout
             android:id="@+id/vpIndicator"

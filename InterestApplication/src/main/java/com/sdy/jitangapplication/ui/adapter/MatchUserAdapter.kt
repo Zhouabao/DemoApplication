@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
@@ -20,7 +21,6 @@ import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.item_match_user.view.*
 
 
-
 /**
  *    author : ZFM
  *    date   : 2019/6/2415:13
@@ -32,16 +32,24 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
     BaseQuickAdapter<MatchBean, BaseViewHolder>(R.layout.item_match_user, data) {
     var my_tags_quality: MutableList<Newtag> = mutableListOf()
     override fun convert(holder: BaseViewHolder, item: MatchBean) {
-        //为了防止indicator重复 每次先给他remove了
+        //点击切换上一张图片
+        holder.addOnClickListener(R.id.lastImgBtn)
+        //点击切换下一张图片
+        holder.addOnClickListener(R.id.nextImgBtn)
         holder.addOnClickListener(R.id.v1)
+        holder.addOnClickListener(R.id.btnHi)
+        holder.addOnClickListener(R.id.btnHiLottieView)
+        holder.itemView.btnHiIv.alpha = 1F
+        holder.itemView.btnHiLeftTime.alpha = 0F
+        //为了防止indicator重复 每次先给他remove了
         holder.itemView.vpIndicator.removeAllViews()
         holder.itemView.vpPhotos.setScrollable(false)
-        holder.itemView.vpPhotos.currentItem = 0
         holder.itemView.vpPhotos.tag = holder.layoutPosition
         holder.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(
             mContext,
             if (item.photos.isNullOrEmpty()) mutableListOf(item.avatar ?: "") else item.photos!!
         )
+
 
         holder.itemView.vpPhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -55,30 +63,86 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                     (holder.itemView.vpIndicator[i] as RadioButton).isChecked = i == position
                 }
 
-                //首张内容  用户在该标签下的描述、标签内容
-                //次张内容  用户在发布过的内容（所有标签），参考设计内容，如用户没发布过则跳转至第三张内容
-                //三张内容  用户的「关于我」描述文本。如用用户填写过则呈现，没有则保留至最后一张显示状态
+                //首张内容  用户在该标签下的特质
+                //次张内容  用户的「关于我」描述文本。如用用户填写过则呈现，没有则保留至最后一张显示状态
+                //三张内容  用户在发布过的内容（所有标签），参考设计内容，如用户没发布过则跳转至第三张内容
                 when (position) {
-                    0 -> {  //0显示个人信息
-                        holder.itemView.matchUserLocalTagCl.isVisible = true
-                        holder.itemView.matchUserDynamicLl.isVisible = false
-                    }
-                    else -> {//如果广场动态有，就显示广场
-                        if (item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserLocalTagCl.isVisible = true
-                            holder.itemView.matchUserDynamicLl.isVisible = false
+                    0 -> {  //0显示用户在该标签下的特质
+                        if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else if (!item.sign.isNullOrBlank()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserLocalTagContent.isVisible = true
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else if (!item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
                         } else {
-                            holder.itemView.matchUserDynamicLl.isVisible = true
-                            holder.itemView.matchUserLocalTagCl.isVisible = false
+                            holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
+                        }
+
+                    }
+                    1 -> {
+                        if (!item.sign.isNullOrBlank()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                            holder.itemView.matchUserLocalTagContent.isVisible = true
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else if (!item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                        } else if (!item.newtags.isNullOrEmpty() && !item.newtags!![0].label_quality.isEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else {
+
+                            holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
+                        }
+                    }
+                    else -> {
+                        if (!item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                        } else if (!item.sign.isNullOrBlank()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserLocalTagContent.isVisible = true
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else if (!item.newtags.isNullOrEmpty() && !item.newtags!![0].label_quality.isEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
                         }
                     }
                 }
             }
 
         })
+        holder.itemView.vpPhotos.currentItem = 0
 
         /*生成indicator*/
         if ((item.photos ?: mutableListOf<MatchBean>()).size > 1) {
+            holder.itemView.vpIndicator.isVisible = true
             val size = (item.photos ?: mutableListOf<MatchBean>()).size
             for (i in 0 until size) {
 //                val width = ((ScreenUtils.getScreenWidth()
@@ -108,6 +172,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 indicator.isChecked = i == 0
                 holder.itemView.vpIndicator.addView(indicator)
             }
+        } else {
+            holder.itemView.vpIndicator.isVisible = false
         }
 
         /*设置封面图片recyclerview*/
@@ -134,25 +200,40 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             holder.itemView.matchUserDynamicThumbRv.adapter = adapter
         }
 
-        //点击切换上一张图片
-        holder.addOnClickListener(R.id.lastImgBtn)
-        //点击切换下一张图片
-        holder.addOnClickListener(R.id.nextImgBtn)
-
 
         holder.itemView.ivVip.isVisible = item.isvip == 1
         holder.itemView.ivVerify.isVisible = item.isfaced == 1
+        holder.itemView.btnHi.isVisible = item.greet_switch
+        holder.itemView.btnHiView.isVisible = item.greet_switch
+        if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
+            holder.itemView.matchUserLocalTagCl.isVisible = true
+            holder.itemView.matchUserLocalTagCharacter.isVisible = true
+            holder.itemView.matchUserLocalTagContent.isVisible = false
+            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+        } else if (!item.sign.isNullOrBlank()) {
+            holder.itemView.matchUserLocalTagCl.isVisible = true
+            holder.itemView.matchUserLocalTagContent.isVisible = true
+            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+        } else if (!item.square.isNullOrEmpty()) {
+            holder.itemView.matchUserLocalTagCl.isVisible = true
+            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+            holder.itemView.matchUserLocalTagContent.isVisible = false
+            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+        } else {
+            holder.itemView.matchUserLocalTagCl.visibility = View.GONE
+        }
 
+
+//        holder.itemView.matchUserLocalTagContent.isVisible = !item.sign.isNullOrBlank()
+//        holder.itemView.matchUserLocalTagCharacter.isVisible = !item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()
+//        holder.itemView.matchUserDynamicThumbRv.isVisible = !item.square.isNullOrEmpty()
 
 //        holder.itemView.matchUserIntroduce.text = item.sign ?: "" //关于自己
         holder.itemView.matchAim.isVisible = item.intention.isNotEmpty()//标签意向
         holder.itemView.matchAimTv.text = item.intention
-        GlideUtil.loadCircleImg(mContext,item.intention_icon,holder.itemView.matchAimIv)
-
-        holder.itemView.matchUserLocalTagContent.isVisible = !item.sign.isNullOrBlank()//标签介绍
+        GlideUtil.loadCircleImg(mContext, item.intention_icon, holder.itemView.matchAimIv)
         holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""
-
-
         holder.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty() //撮合标签
         holder.itemView.matchBothIntersetContent.text = "${item.matching_content}"
         GlideUtil.loadImg(mContext, item.matching_icon, holder.itemView.matchBothIntersetIv)
@@ -161,8 +242,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
             manager.alignItems = AlignItems.STRETCH
             manager.justifyContent = JustifyContent.FLEX_START
-            holder.itemView.matchUserLocalTagCharacter.layoutManager =
-                LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
+//            holder.itemView.matchUserLocalTagCharacter.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
+            holder.itemView.matchUserLocalTagCharacter.layoutManager = manager
             val adapter1 = MatchDetailLabelQualityAdapter()
             outFor@ for (quality in my_tags_quality) {
                 for (quality1 in item.newtags ?: mutableListOf()) {
@@ -172,18 +253,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                     }
                 }
             }
-            holder.itemView.matchUserLocalTagCharacterLl.isVisible = true
-            holder.itemView.matchUserLocalTagName.text = item.newtags!![0].title
             adapter1.setNewData(item.newtags!![0].label_quality)
             holder.itemView.matchUserLocalTagCharacter.adapter = adapter1
-
-
-            holder.itemView.matchUserLocalTagCharacter.setOnTouchListener { v, event ->
-                v.parent.requestDisallowInterceptTouchEvent(true)
-                false
-            }
-        } else {
-            holder.itemView.matchUserLocalTagCharacterLl.isVisible = false
         }
 
         holder.itemView.matchUserName.text = item.nickname ?: ""

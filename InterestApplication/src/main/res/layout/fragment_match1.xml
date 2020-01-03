@@ -118,7 +118,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/btnChatCl"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="35dp"
