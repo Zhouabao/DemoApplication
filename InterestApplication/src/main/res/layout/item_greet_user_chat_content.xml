@@ -15,18 +15,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-            android:id="@+id/chatContentIndex"
-            android:layout_marginRight="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1/3"
-            android:textColor="#ffc5c6c8"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/chatContentDouhao1"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/chatContentDouhao1"
-            />
 
     <TextView
             android:id="@+id/chatContentMsg"
@@ -43,12 +31,12 @@
             android:layout_marginBottom="6dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="15dp"
             android:layout_marginLeft="5dp"
             android:lineSpacingMultiplier="1.1"
             app:layout_constraintBottom_toTopOf="@id/chatContentDouhao2"
             app:layout_constraintLeft_toLeftOf="@id/chatContentDouhao1"
-            app:layout_constraintRight_toRightOf="@id/chatContentIndex"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chatContentDouhao1"
             />
 

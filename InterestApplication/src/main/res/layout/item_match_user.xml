@@ -274,9 +274,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/btnHi"
                 android:background="@drawable/icon_oval_orange_hi_bg"
-                android:layout_width="50dp"
+                android:layout_width="51dp"
                 android:visibility="visible"
-                android:layout_height="50dp"
+                android:layout_height="51dp"
                 app:layout_constraintBottom_toBottomOf="@id/matchUserLocalTagCl"
                 app:layout_constraintLeft_toLeftOf="@id/btnHiLottieView"
                 app:layout_constraintRight_toRightOf="@id/btnHiLottieView"
@@ -297,7 +297,7 @@
             <TextView
                     android:id="@+id/btnHiLeftTime"
                     android:alpha="0"
-                    android:text="3"
+                    android:text="0"
                     android:textStyle="bold"
                     android:textColor="#ffffffff"
                     android:textSize="26sp"
@@ -310,6 +310,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/btnHiLottieView"

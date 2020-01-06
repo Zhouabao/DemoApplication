@@ -27,14 +27,15 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.NewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.GreetedListBean
-import com.sdy.jitangapplication.model.SendMsgBean
 import com.sdy.jitangapplication.presenter.GreetReceivedPresenter
 import com.sdy.jitangapplication.presenter.view.GreetReceivedView
 import com.sdy.jitangapplication.ui.adapter.GreetUserAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.activity_greet_received.*
+import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.error_layout.view.emptyImg
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
@@ -89,6 +90,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         divider.setBackgroundColor(Color.TRANSPARENT)
         llTitle.setBackgroundColor(Color.TRANSPARENT)
 
+
         stateGreet.retryBtn.onClick {
             stateGreet.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.greatLists(params)
@@ -105,17 +107,10 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
             if (t.data.isNullOrEmpty()) {
                 hasMore = false
             }
-
-            for (data in t.data ?: mutableListOf()) {
-                for (sendmsg in data.send_msg) {
-                    sendmsg.leftDuration = sendmsg.duration
-                }
-            }
+            stateGreet.viewState = MultiStateView.VIEW_STATE_CONTENT
             adapter.addData(t.data ?: mutableListOf())
             if (page == 1 && t.data.isNullOrEmpty()) {
-                stateGreet.viewState = MultiStateView.VIEW_STATE_EMPTY
-            } else {
-                stateGreet.viewState = MultiStateView.VIEW_STATE_CONTENT
+                adapter.isUseEmpty(true)
             }
         } else {
             stateGreet.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -170,6 +165,13 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         greetRv.layoutManager = manager
         greetRv.adapter = adapter
         adapter.bindToRecyclerView(greetRv)
+        adapter.setEmptyView(R.layout.empty_friend_layout, greetRv)
+        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_hi_past_empty)
+        adapter.emptyView.emptyFriendTitle.text = "这里什么都没有"
+        adapter.emptyView.emptyFriendTitle.setTextColor(Color.WHITE)
+        adapter.emptyView.emptyFriendTip.text = "看到心仪的TA记得主动打个招呼\n丰富资料还能为你赢得更多招呼"
+        adapter.emptyView.emptyFriendTip.setTextColor(Color.parseColor("#FFB5B7B9"))
+        adapter.isUseEmpty(false)
         greetRv.itemAnimator.apply {
             if (this is DefaultItemAnimator) {
                 supportsChangeAnimations = false
@@ -233,8 +235,6 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
             UserManager.saveHiCount(UserManager.getHiCount() - 1)
         }
         EventBus.getDefault().post(NewMsgEvent())
-
-        adapter.resetAudio()
         //1 右滑招呼 2坐滑招呼
         mPresenter.likeOrGreetState(
             adapter.data[manager.topPosition - 1].greet_id, if (direction == Direction.Left) {
@@ -295,7 +295,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                 for (contact in adapter.data) {
                     for (imMessage in imMessages) {
                         if (contact.accid == imMessage.fromAccount) {
-                            contact.send_msg.add(0, SendMsgBean(imMessage.content ?: "", imMessage.msgType.value))
+                            contact.send_msg = imMessage.content ?: ""
                         }
                     }
                 }

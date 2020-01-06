@@ -30,7 +30,6 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
@@ -435,16 +434,6 @@ class SayHiDialog(
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
                 if (msg.msgType == MsgTypeEnum.text) {
-                    //发送tip消息
-                    val tipMessage = MessageBuilder.createTipMessage(target_accid, SessionTypeEnum.P2P)
-                    tipMessage.content = "在收到对方回复前只能发送三条消息"
-                    tipMessage.status = MsgStatusEnum.success
-                    val config = CustomMessageConfig()
-                    config.enablePush = false//不推送
-                    config.enableUnreadCount = false
-                    tipMessage.config = config
-                    NIMClient.getService(MsgService::class.java).saveMessageToLocal(tipMessage, true)
-
                     loadingDialog.dismiss()
                     startAnimation()
                     //发送通知修改招呼次数

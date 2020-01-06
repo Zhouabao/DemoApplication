@@ -802,6 +802,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
             if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
                 params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
+            //todo 释放注释
 //            mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             UserManager.saveSlideCount(UserManager.getSlideCount() + 1)
@@ -821,6 +822,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
                 if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
                     params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
+                //todo 释放注释
+
 //                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
             } else {
                 card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
@@ -852,8 +855,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     override fun onCardAppeared(view: View?, position: Int) {
         Log.d("CardStackView", "onCardAppeared: ($position)")
         if (view != null) {
-//            view.findViewById<ViewPager>(R.id.vpPhotos).currentItem = 0
-
             if (matchUserAdapter.data[manager.topPosition].greet_switch) {
                 (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
                 (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible = true
@@ -868,9 +869,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                         //透明度起始为1，结束时为0
                         val animator =
                             ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiIv), "alpha", 1f, 0f)
-                        val animator1 = ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiLeftTime), "alpha", 0f, 1f)
-                        val animator2 = ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiIv), "alpha", 0f, 1f)
-                        val animator3 = ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiLeftTime), "alpha", 1f, 0f)
+                        val animator1 =
+                            ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiLeftTime), "alpha", 0f, 1f)
+                        val animator2 =
+                            ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiIv), "alpha", 0f, 1f)
+                        val animator3 =
+                            ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiLeftTime), "alpha", 1f, 0f)
                         animator.duration = 300//时间1s
                         animator1.duration = animator.duration//时间1s
                         animator2.duration = animator.duration//时间1s
@@ -911,7 +915,10 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                             }
 
                         })
-                        animator.start()
+
+                        view.postDelayed({
+                            animator.start()
+                        }, 2000L)
                     }
 
                     override fun onAnimationCancel(animation: Animator?) {

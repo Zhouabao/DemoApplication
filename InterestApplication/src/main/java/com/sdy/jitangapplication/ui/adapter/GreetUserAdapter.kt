@@ -5,9 +5,6 @@ import android.widget.RadioButton
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.size
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -15,10 +12,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.GreetedListBean
-import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
-import com.sdy.jitangapplication.player.OnPlayingListener
 import kotlinx.android.synthetic.main.item_greet_user.view.*
 
 class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.layout.item_greet_user) {
@@ -35,45 +29,8 @@ class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.lay
 
         helper.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty()
         helper.itemView.matchBothIntersetContent.text = item.matching_content
+        helper.itemView.chatContentMsg.text = item.send_msg
 
-
-        helper.itemView.rvChatContent.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-        val adapter = ChatContentAdapter()
-        adapter.setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-                R.id.audioPlayBtn -> {
-                    val squareBean = adapter.data[position]
-                    if (currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
-                        initAudio(helper.layoutPosition, position)
-                        mediaPlayer!!.setDataSource(squareBean.content).prepareMedia()
-                        currPlayIndex = position
-                    }
-                    for (index in 0 until adapter.data.size) {
-                        if (index != currPlayIndex && adapter.data[index].type == 3) {
-                            adapter.data[index].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                        }
-                    }
-                    if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE || squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {
-                        mediaPlayer!!.startPlay()
-                    } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {
-                        mediaPlayer!!.resumePlay()
-                    } else if (squareBean.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) {
-                        mediaPlayer!!.pausePlay()
-                    }
-                    adapter.notifyDataSetChanged()
-                }
-            }
-        }
-
-
-        helper.itemView.rvChatContent.onFlingListener = null
-        PagerSnapHelper().attachToRecyclerView(helper.itemView.rvChatContent)
-        adapter.setNewData(item.send_msg)
-        helper.itemView.rvChatContent.adapter = adapter
-        helper.itemView.rvChatContent.setOnTouchListener { v, event ->
-            v.parent.requestDisallowInterceptTouchEvent(true)
-            false
-        }
 
         helper.itemView.vpIndicator.removeAllViews()
         helper.itemView.vpPhotos.setScrollable(false)
@@ -138,61 +95,5 @@ class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.lay
         }
     }
 
-
-    var mediaPlayer: IjkMediaPlayerUtil? = null
-    fun initAudio(parent: Int, position: Int) {
-        resetAudio()
-        mediaPlayer = IjkMediaPlayerUtil(mContext!!, position, object : OnPlayingListener {
-
-            override fun onPlay(position: Int) {
-                mData[parent].send_msg[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PLAY
-                refreshNotifyItemChanged(parent)
-
-            }
-
-            override fun onPause(position: Int) {
-                mData[parent].send_msg[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PAUSE
-                refreshNotifyItemChanged(parent)
-            }
-
-            override fun onStop(position: Int) {
-                mData[parent].send_msg[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                refreshNotifyItemChanged(parent)
-                resetAudio()
-            }
-
-            override fun onError(position: Int) {
-                mData[parent].send_msg[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_ERROR
-                refreshNotifyItemChanged(parent)
-                CommonFunction.toast("音频播放出错")
-                resetAudio()
-            }
-
-            override fun onPrepared(position: Int) {
-                mediaPlayer!!.startPlay()
-            }
-
-            override fun onPreparing(position: Int) {
-                mData[parent].send_msg[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_PREPARE
-                refreshNotifyItemChanged(parent)
-            }
-
-            override fun onRelease(position: Int) {
-                mData[parent].send_msg[position].isPlayAudio = IjkMediaPlayerUtil.MEDIA_STOP
-                refreshNotifyItemChanged(parent)
-
-            }
-
-        }).getInstance()
-    }
-
-    private var currPlayIndex = -1
-    fun resetAudio() {
-        currPlayIndex = -1
-        if (mediaPlayer != null) {
-            mediaPlayer!!.resetMedia()
-            mediaPlayer = null
-        }
-    }
 
 }

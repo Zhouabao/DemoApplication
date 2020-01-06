@@ -90,9 +90,9 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
         messageHiRv.adapter = adapter
         adapter.bindToRecyclerView(messageHiRv)
         adapter.setEmptyView(R.layout.empty_friend_layout, messageHiRv)
-        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_hi_past_empty)
+        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_hi_received_bg)
         adapter.emptyView.emptyFriendTitle.text = "暂时没有招呼"
-        adapter.emptyView.emptyFriendTitle.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
+        adapter.emptyView.emptyFriendTip.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
         adapter.isUseEmpty(false)
 
         adapter.setOnItemClickListener { _, view, position ->

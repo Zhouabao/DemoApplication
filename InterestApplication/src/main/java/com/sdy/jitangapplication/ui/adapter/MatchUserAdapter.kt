@@ -17,6 +17,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.Newtag
+import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.item_match_user.view.*
 
@@ -232,6 +233,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
 //        holder.itemView.matchUserIntroduce.text = item.sign ?: "" //关于自己
         holder.itemView.matchAim.isVisible = item.intention.isNotEmpty()//标签意向
         holder.itemView.matchAimTv.text = item.intention
+        holder.itemView.btnHiLeftTime.text = "${UserManager.getLightingCount()}"
         GlideUtil.loadCircleImg(mContext, item.intention_icon, holder.itemView.matchAimIv)
         holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""
         holder.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty() //撮合标签
