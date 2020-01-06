@@ -18,10 +18,11 @@
     <string name="readed">已读</string>
 
     <!-- session -->
-    <string name="input_panel_photo">图 片</string>
-    <string name="input_panel_video">视 频</string>
-    <string name="input_panel_location">位 置</string>
-    <string name="input_panel_take">拍 摄</string>
+    <string name="input_panel_photo">图片</string>
+    <string name="input_panel_take_photo">拍照</string>
+    <string name="input_panel_video">视频</string>
+    <string name="input_panel_location">位置</string>
+    <string name="input_panel_take">拍摄</string>
     <string name="repeat_download_message">重新下载?</string>
     <string name="repeat_send_has_blank">重 发</string>
     <string name="repeat_send_message">重发消息?</string>
