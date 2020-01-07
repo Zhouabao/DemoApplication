@@ -54,7 +54,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         setContentView(R.layout.activity_add_label)
         initView()
         mPresenter.tagClassifyList(
-            if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
+            if (from == FROM_REGISTER || from == FROM_INTERSERT_LABEL) {
                 1
             } else {
                 2
@@ -104,7 +104,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         stateAddLabel.retryBtn.onClick {
             stateAddLabel.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.tagClassifyList(
-                if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
+                if (from == FROM_REGISTER || from == FROM_INTERSERT_LABEL) {
                     1
                 } else {
                     2
@@ -172,6 +172,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                 finish()
             }
             rightBtn1 -> {
+
                 val tag_ids = mutableListOf<Int>()
                 for (index in 1 until labelListAdapter.data.size) {
                     for (tdata in labelListAdapter.data[index].son) {
@@ -180,10 +181,12 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                         }
                     }
                 }
-                if (tag_ids.isNotEmpty())
+                if (tag_ids.isNotEmpty()) {
                     mPresenter.saveInterestTag(Gson().toJson(tag_ids))
-                else
+
+                } else {
                     CommonFunction.toast("暂无选中的标签可保存")
+                }
             }
         }
 
@@ -192,7 +195,11 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
     override fun onTagClassifyListResult(result: Boolean, data: AddLabelBean?) {
         if (result) {
             stateAddLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
-            UserManager.saveMaxInterestLabelCount(data!!.limit_count)
+            if (from == FROM_REGISTER || from == FROM_INTERSERT_LABEL) {
+                UserManager.saveMaxInterestLabelCount(data!!.limit_count)
+            } else {
+                UserManager.saveMaxMyLabelCount(data!!.limit_count)
+            }
             if (data!!.menu.isNotEmpty()) {
                 data.menu[0].checked = true
             }

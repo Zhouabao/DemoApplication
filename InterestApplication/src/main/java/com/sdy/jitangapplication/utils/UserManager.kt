@@ -107,12 +107,12 @@ object UserManager {
     /**
      * 我的兴趣的标签个数
      */
-    fun saveMyLabelCount(count: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("myLabelCount", count)
+    fun saveMaxMyLabelCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("maxMyLabelCount", count)
     }
 
-    fun getMyLabelCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("myLabelCount", -1)
+    fun getMaxMyLabelCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("maxMyLabelCount", -1)
     }
 
     /**
@@ -611,7 +611,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("completeLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("IsShowCompleteLabelDialog")
         SPUtils.getInstance(Constants.SPNAME).remove("interestLabelCount")
-        SPUtils.getInstance(Constants.SPNAME).remove("myLabelCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("maxMyLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("SlideCount")
 
         //账号异常记录清除

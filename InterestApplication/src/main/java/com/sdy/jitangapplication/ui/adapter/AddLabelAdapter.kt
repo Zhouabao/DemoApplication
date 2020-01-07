@@ -69,8 +69,17 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                         }
                     }
                 }
-                if (checkedCount == UserManager.getMaxInterestLabelCount() && !data.checked) {
-                    CommonFunction.toast("至多选择${UserManager.getMaxInterestLabelCount()}个标签标签")
+                if (checkedCount == if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
+                        UserManager.getMaxInterestLabelCount()
+                    } else {
+                        UserManager.getMaxMyLabelCount()
+                    } && !data.checked
+                ) {
+                    CommonFunction.toast("至多选择${if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
+                        UserManager.getMaxInterestLabelCount()
+                    } else {
+                        UserManager.getMaxMyLabelCount()
+                    }}个标签标签")
                     return@setOnItemClickListener
                 }
 

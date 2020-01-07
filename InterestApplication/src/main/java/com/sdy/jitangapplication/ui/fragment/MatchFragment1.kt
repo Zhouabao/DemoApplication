@@ -350,7 +350,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
             matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
-            UserManager.saveMyLabelCount((matchBeans.mytags ?: mutableListOf<MyLabelBean>()).size)
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
 
             //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容

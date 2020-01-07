@@ -119,7 +119,7 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
         if (result) {
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
             //保存标签的最大个数
-            UserManager.saveMaxInterestLabelCount(datas?.limit_count ?: 0)
+            UserManager.saveMaxMyLabelCount(datas?.limit_count ?: 0)
             if (datas != null && datas.is_using.isNullOrEmpty()) {
                 addLabelBtn.isVisible = false
                 adapter.setEmptyView(R.layout.empty_label_layout, mylabelRv)
@@ -155,8 +155,8 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
     override fun onClick(p0: View) {
         when (p0) {
             addLabelBtn -> {//添加标签
-                if (adapter.data.size >= UserManager.getMaxInterestLabelCount()) {
-                    CommonFunction.toast("最多能拥有${UserManager.getMaxInterestLabelCount()}个标签")
+                if (adapter.data.size >= UserManager.getMaxMyLabelCount()) {
+                    CommonFunction.toast("最多能拥有${UserManager.getMaxMyLabelCount()}个标签")
                     return
                 }
 
