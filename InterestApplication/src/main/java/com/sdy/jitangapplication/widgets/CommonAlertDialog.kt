@@ -40,7 +40,9 @@ class CommonAlertDialog : Dialog {
     private fun initView() {
         setContentView(R.layout.customer_alert_dialog_layout)
         initWindow()
+        //点击外部可取消
         setCanceledOnTouchOutside(false)
+        setCancelable(false)
         //        ivDialogCancel = findViewById(R.id.iv_dialog_cancel);
         tvTitle = findViewById(R.id.title)
         ivDialogIcon = findViewById(R.id.icon)
@@ -49,7 +51,6 @@ class CommonAlertDialog : Dialog {
         tvDialogCancel = findViewById(R.id.cancel)
         viewDialog = findViewById(R.id.cancelView)
     }
-
 
 
     private fun initWindow() {
@@ -63,8 +64,6 @@ class CommonAlertDialog : Dialog {
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         window?.attributes = params
-        //点击外部可取消
-        setCanceledOnTouchOutside(true)
     }
 
     class Builder(val context: Context) {
@@ -77,6 +76,7 @@ class CommonAlertDialog : Dialog {
         var btConfirmText: String? = null
         var tvCancelText: String? = null
         var cancelIsVisibility: Boolean? = true
+        var cancelAble1: Boolean = true
 
         fun setOnConfirmListener(confirmListener: OnConfirmListener): Builder {
             this.confirmListener = confirmListener
@@ -95,6 +95,11 @@ class CommonAlertDialog : Dialog {
 
         fun setIconVisible(visible: Boolean): Builder {
             this.iconVisble = visible
+            return this
+        }
+
+        fun setCancelAble(cancelAble: Boolean): Builder {
+            this.cancelAble1 = cancelAble
             return this
         }
 
@@ -135,7 +140,7 @@ class CommonAlertDialog : Dialog {
 
             dialog.tvDialogContent?.text = this.content1
             if (icon != 0) {
-                GlideUtil.loadImg(context,this.icon,dialog.ivDialogIcon)
+                GlideUtil.loadImg(context, this.icon, dialog.ivDialogIcon)
 //                dialog.ivDialogIcon?.setImageResource(this.icon!!)
             }
             dialog.ivDialogIcon?.isVisible = this.iconVisble
@@ -147,6 +152,8 @@ class CommonAlertDialog : Dialog {
                 dialog.tvDialogCancel?.visibility = View.GONE
                 dialog.viewDialog?.visibility = View.GONE
             }
+            dialog.setCancelable(this.cancelAble1)
+
 
             if (cancelListener != null) {
                 dialog.tvDialogCancel?.setOnClickListener { v -> cancelListener!!.onClick(dialog) }

@@ -17,4 +17,11 @@ public interface SessionEventListener {
 
     // 已读回执事件处理，用于群组的已读回执事件的响应，弹出消息已读详情
     void onAckMsgClicked(Context context, IMMessage message);
+
+    // 获取已读回执，用于弹出会员窗口
+    void onGetReceivcedMsgClicked(Context context, IMMessage message);
+
+
+    // 用户是否是VIP
+    boolean isUserVip();
 }

@@ -176,7 +176,14 @@ object CommonFunction {
     /**
      * 拍照或者选取照片
      */
-    fun onTakePhoto(context: Context, maxCount: Int, requestCode: Int, chooseMode: Int = 1, compress: Boolean = false) {
+    fun onTakePhoto(
+        context: Context,
+        maxCount: Int,
+        requestCode: Int,
+        chooseMode: Int = 1,
+        compress: Boolean = false,
+        showCamera: Boolean = true
+    ) {
         PictureSelector.create(context as Activity)
             .openGallery(chooseMode)
             .maxSelectNum(maxCount)
@@ -192,7 +199,7 @@ object CommonFunction {
             .isAndroidQTransform(false)//是否需要处理Android Q 拷贝至应用沙盒的操作
             .previewImage(true)
             .previewVideo(true)
-            .isCamera(true)
+            .isCamera(showCamera)
             .enableCrop(false)
             .compressSavePath(UriUtils.getCacheDir(context))
             .compress(compress)
@@ -204,6 +211,21 @@ object CommonFunction {
             .withAspectRatio(9, 16)
             .compressSavePath(UriUtils.getCacheDir(context))
             .openClickSound(false)
+            .forResult(requestCode)
+    }
+
+    /**
+     * 单独拍照
+     */
+    fun openCamera(context: Context, requestCode: Int, chooseMode: Int = 1, compress: Boolean = false) {
+        PictureSelector.create(context as Activity)
+            .openCamera(chooseMode)
+            .enableCrop(false)
+            .isAndroidQTransform(false)//是否需要处理Android Q 拷贝至应用沙盒的操作
+            .compressSavePath(UriUtils.getCacheDir(context))
+            .compress(compress)
+            .loadImageEngine(GlideEngine.createGlideEngine())// 自定义图片加载引擎
+            .compressSavePath(UriUtils.getCacheDir(context))
             .forResult(requestCode)
     }
 

@@ -1,12 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/textViewAlreadyRead"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:layout_marginBottom="3dip"
-    android:background="@color/transparent"
-    android:text="@string/readed"
-    android:textColor="#666666"
-    android:textSize="12sp"
-    android:visibility="gone"/>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/textViewAlreadyReadLl"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:visibility="visible"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="3dip"
+        android:layout_height="wrap_content">
+
+    <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/textViewAlreadyReadIv"
+            android:drawableLeft="@drawable/icon_readed"
+            android:layout_width="15dp"
+            android:layout_height="15dp"/>
+
+    <TextView
+            android:id="@+id/textViewAlreadyRead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawablePadding="5dp"
+            android:background="@color/transparent"
+            android:text="@string/readed"
+            android:textColor="#ffc5c6c8"
+            android:textSize="12sp"
+            />
+
+    <TextView
+            android:id="@+id/textViewAlreadyReadBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="5dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:background="@drawable/global_blue_round_box_4"
+            android:text="@string/get_readed"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="gone"/>
+
+</LinearLayout>

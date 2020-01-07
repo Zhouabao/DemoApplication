@@ -3,11 +3,11 @@
               android:id="@+id/actionsLayout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/white"
+              android:background="#ffededed"
               android:orientation="vertical"
               android:layout_gravity="center"
-              android:paddingTop="10dp"
-              android:paddingBottom="10dp"
+              android:paddingTop="15dp"
+              android:paddingBottom="15dp"
               android:gravity="center"
               android:visibility="visible">
 
@@ -20,7 +20,7 @@
             android:scrollbars="none"
             android:fastScrollEnabled="false"
             android:nestedScrollingEnabled="false"
-            android:layout_height="24dp"
+            android:layout_height="wrap_content"
             />
 
 

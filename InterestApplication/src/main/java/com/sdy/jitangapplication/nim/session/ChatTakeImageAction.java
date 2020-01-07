@@ -22,34 +22,32 @@ import java.util.List;
 /**
  * Created by zhoujianghua on 2015/7/31.
  */
-public class ChatPickImageAction extends ChatBaseAction {
+public class ChatTakeImageAction extends ChatBaseAction {
     private static final int PICK_IMAGE_COUNT = 9;
 
-    public ChatPickImageAction() {
-        super(R.drawable.send_img_check, R.drawable.send_img_uncheck, R.string.input_panel_photo);
+    public ChatTakeImageAction() {
+        super(R.drawable.send_take_img_uncheck, R.drawable.send_take_img_uncheck, R.string.input_panel_take_photo);
     }
 
     @Override
     public void onClick() {
-        onTakePhoto();
+        openCamera();
     }
 
 
     /**
-     * * 打开图片选择器
-     * 拍照或者选取照片
+     * 拍摄
      */
-    private void onTakePhoto() {
-        int requestCode = makeRequestCode(RequestCode.PICK_IMAGE);
+    private void openCamera() {
+        int requestCode = makeRequestCode(RequestCode.TAKE_IMAGE);
 
-        CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode, PictureMimeType.ofImage() & PictureMimeType.ofVideo(), true,true);
-
+        CommonFunction.INSTANCE.openCamera(getActivity(), requestCode, PictureMimeType.ofImage(), true);
     }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RequestCode.PICK_IMAGE) {
+        if (requestCode == RequestCode.TAKE_IMAGE) {
             if (data != null) {
                 List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                 for (int i = 0; i < selectList.size(); i++) {

@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.nim.activity
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -48,6 +49,7 @@ import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.greenrobot.eventbus.EventBus
 
@@ -82,7 +84,8 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     override fun onStart() {
         super.onStart()
-        getTargetInfo()
+        if (sessionId != Constants.ASSISTANT_ACCID)
+            getTargetInfo()
     }
 
     private fun getTargetInfo() {
@@ -102,12 +105,28 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                     super.onNext(t)
                     loadingDialog.dismiss()
                     if (t.code == 200) {
-                        if (t.data != null) {
+                        if (t.data != null)
                             intent.putExtra("nimBean", t.data)
-                        } else if (t.code == 400) {
-                            CommonFunction.toast(t.msg)
-                        }
+                    } else if (t.code == 400) {
+                        CommonAlertDialog.Builder(this@ChatActivity)
+                            .setTitle("提示")
+                            .setContent(t.msg)
+                            .setCancelIconIsVisibility(false)
+                            .setConfirmText("知道了")
+                            .setCancelAble(false)
+                            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                                override fun onClick(dialog: Dialog) {
+                                    dialog.cancel()
+                                    NIMClient.getService(MsgService::class.java)
+                                        .deleteRecentContact2(sessionId, SessionTypeEnum.P2P)
+                                    finish()
+                                }
+
+                            })
+                            .create()
+                            .show()
                     }
+
                 }
 
                 override fun onError(e: Throwable?) {

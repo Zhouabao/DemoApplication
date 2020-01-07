@@ -5,12 +5,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.business.session.module.list.MsgAdapter;
 import com.netease.nim.uikit.business.team.helper.TeamHelper;
@@ -56,6 +51,9 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
     protected FrameLayout contentContainer;
     protected LinearLayout nameContainer;
     protected TextView readReceiptTextView;
+    protected ImageView readReceiptTextViewIv;
+    protected TextView readReceiptTextViewBtn;
+    protected LinearLayout readReceiptTextViewLl;
     protected TextView ackMsgTextView;
 
     private HeadImageView avatarLeft;
@@ -165,12 +163,15 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         return message.getDirect() == MsgDirectionEnum.In;
     }
 
+    private int position;
+
     /// -- 以下是基类实现代码
     @Override
     public void convert(BaseViewHolder holder, IMMessage data, int position, boolean isScrolling) {
         view = holder.getConvertView();
         context = holder.getContext();
         message = data;
+        this.position = position;
 
         inflate();
         refresh();
@@ -188,6 +189,9 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         nameIconView = findViewById(R.id.message_item_name_icon);
         nameContainer = findViewById(R.id.message_item_name_layout);
         readReceiptTextView = findViewById(R.id.textViewAlreadyRead);
+        readReceiptTextViewIv = findViewById(R.id.textViewAlreadyReadIv);
+        readReceiptTextViewBtn = findViewById(R.id.textViewAlreadyReadBtn);
+        readReceiptTextViewLl = findViewById(R.id.textViewAlreadyReadLl);
         ackMsgTextView = findViewById(R.id.team_ack_msg);
 
         // 这里只要inflate出来后加入一次即可
@@ -310,6 +314,16 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
                 }
             });
         }
+
+        // 获取已读回执响应事件
+        if (NimUIKitImpl.getSessionListener() != null) {
+            readReceiptTextViewBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NimUIKitImpl.getSessionListener().onGetReceivcedMsgClicked(context, message);
+                }
+            });
+        }
     }
 
     /**
@@ -369,12 +383,13 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         }
 
         LinearLayout bodyContainer = (LinearLayout) view.findViewById(R.id.message_item_body);
+        LinearLayout bodyContainerChild = (LinearLayout) view.findViewById(R.id.message_item_body1);
 
         // 调整container的位置
-        int index = isReceivedMessage() ? 0 : 4;
-        if (bodyContainer.getChildAt(index) != contentContainer) {
-            bodyContainer.removeView(contentContainer);
-            bodyContainer.addView(contentContainer, index);
+        int index = isReceivedMessage() ? 0 : 3;
+        if (bodyContainerChild.getChildAt(index) != contentContainer) {
+            bodyContainerChild.removeView(contentContainer);
+            bodyContainerChild.addView(contentContainer, index);
         }
 
         if (isMiddleItem()) {
@@ -391,10 +406,36 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
     }
 
     private void setReadReceipt() {
-        if (shouldDisplayReceipt() && !TextUtils.isEmpty(getMsgAdapter().getUuid()) && message.getUuid().equals(getMsgAdapter().getUuid())) {
-            readReceiptTextView.setVisibility(View.VISIBLE);
+
+        //是最后一条自己发送的消息
+        if (shouldDisplayReceipt()) {
+            readReceiptTextViewLl.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(getMsgAdapter().getUuid())) {
+                if (message.getUuid().equals(getMsgAdapter().getUuid())) {
+                    if (NimUIKitImpl.getSessionListener().isUserVip()) {
+                        readReceiptTextView.setText(context.getString(R.string.readed));
+                        readReceiptTextViewIv.setImageResource(R.drawable.icon_readed);
+                        readReceiptTextViewBtn.setVisibility(View.GONE);
+                    } else {
+                        readReceiptTextView.setText(context.getString(R.string.sended));
+                        readReceiptTextViewIv.setImageResource(R.drawable.icon_sended);
+                        readReceiptTextViewBtn.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    readReceiptTextViewLl.setVisibility(View.GONE);
+                }
+            } else if (!message.isRemoteRead() && getMsgAdapter().getBottomDataPosition() == position) {
+                readReceiptTextViewIv.setImageResource(R.drawable.icon_sended);
+                readReceiptTextView.setText(context.getString(R.string.sended));
+                if (!NimUIKitImpl.getSessionListener().isUserVip())
+                    readReceiptTextViewBtn.setVisibility(View.VISIBLE);
+                else
+                    readReceiptTextViewBtn.setVisibility(View.GONE);
+            } else {
+                readReceiptTextViewLl.setVisibility(View.GONE);
+            }
         } else {
-            readReceiptTextView.setVisibility(View.GONE);
+            readReceiptTextViewLl.setVisibility(View.GONE);
         }
     }
 

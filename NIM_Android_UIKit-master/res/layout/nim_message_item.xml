@@ -89,49 +89,57 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="bottom"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-            <ProgressBar
-                    android:id="@+id/message_item_progress"
-                    android:layout_width="20dip"
-                    android:layout_height="20dip"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:indeterminate="true"
-                    android:indeterminateDrawable="@drawable/nim_progress_small_white"
-                    android:visibility="gone"/>
-
-            <ImageView
-                    android:id="@+id/message_item_alert"
+            <LinearLayout
+                    android:id="@+id/message_item_body1"
+                    android:background="@android:color/transparent"
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:src="@drawable/nim_ic_failed"
-                    android:visibility="gone"/>
+                    android:layout_height="wrap_content">
+
+                <ProgressBar
+                        android:id="@+id/message_item_progress"
+                        android:layout_width="20dip"
+                        android:layout_height="20dip"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:indeterminate="true"
+                        android:indeterminateDrawable="@drawable/nim_progress_small_white"
+                        android:visibility="gone"/>
+
+                <ImageView
+                        android:id="@+id/message_item_alert"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:src="@drawable/nim_ic_failed"
+                        android:visibility="gone"/>
+
+
+                <TextView
+                        android:id="@+id/team_ack_msg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:paddingTop="5dp"
+                        android:layout_marginBottom="3dip"
+                        android:background="@color/transparent"
+                        android:textColor="#666666"
+                        android:textSize="12sp"/>
+
+                <FrameLayout
+                        android:id="@+id/message_item_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"/>
+            </LinearLayout>
 
             <include layout="@layout/nim_read_recipt_layout"/>
-
-            <TextView
-                    android:id="@+id/team_ack_msg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:paddingTop="5dp"
-                    android:layout_marginBottom="3dip"
-                    android:background="@color/transparent"
-                    android:textColor="#666666"
-                    android:textSize="12sp"/>
-
-            <FrameLayout
-                    android:id="@+id/message_item_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@android:color/transparent"/>
-
         </LinearLayout>
     </FrameLayout>
 </RelativeLayout>

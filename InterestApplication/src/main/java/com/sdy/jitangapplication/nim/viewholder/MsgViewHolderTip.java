@@ -52,6 +52,11 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
     }
 
     @Override
+    protected boolean shouldDisplayReceipt() {
+        return false;
+    }
+
+    @Override
     protected boolean isMiddleItem() {
         return true;
     }

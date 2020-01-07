@@ -1242,7 +1242,7 @@ public class ChatMessageListPanelEx {
         return msg != null
                 && msg.getSessionType() == SessionTypeEnum.P2P
                 && msg.getDirect() == MsgDirectionEnum.Out
-                //&& msg.getMsgType() != MsgTypeEnum.tip
+                && msg.getMsgType() != MsgTypeEnum.tip
                 && msg.getMsgType() != MsgTypeEnum.notification
                 && msg.isRemoteRead();
 

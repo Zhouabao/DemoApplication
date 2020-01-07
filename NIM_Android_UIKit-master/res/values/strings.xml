@@ -16,6 +16,8 @@
     <string name="menu">菜单</string>
     <string name="now_allow_space">不能含有空格</string>
     <string name="readed">已读</string>
+    <string name="get_readed">获取回执</string>
+    <string name="sended">已发送</string>
 
     <!-- session -->
     <string name="input_panel_photo">图片</string>
