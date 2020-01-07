@@ -12,13 +12,11 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -176,11 +174,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             squareTagName.isVisible = false
         }
 
-
-        val params = squareTitleCl.layoutParams as ConstraintLayout.LayoutParams
-        params.topMargin = SizeUtils.dp2px(20F)
-        squareTitleCl.layoutParams = params
-        squareTitleCl.isVisible = !squareBean!!.title.isNullOrEmpty()
+        squareTitleLl.isVisible = !squareBean!!.title.isNullOrEmpty()
         squareTitle.text = squareBean!!.title ?: ""
         squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
             resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),

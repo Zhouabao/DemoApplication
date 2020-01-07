@@ -36,35 +36,58 @@
 
 
     <LinearLayout
+            android:id="@+id/squareTitleLl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/squareLocationAndTime1Ll"
+            app:layout_constraintLeft_toLeftOf="@id/squareContent1"
+            app:layout_constraintRight_toLeftOf="@id/squareLocationAndTime1Ll"
+            app:layout_constraintTop_toTopOf="@id/squareLocationAndTime1Ll">
+
+        <TextView
+                android:id="@+id/squareTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:text="#优先显示标题文字最多字"
+                android:textColor="#ff6796fa"
+                android:drawablePadding="5dp"
+                android:textSize="12sp"
+                android:drawableLeft="@drawable/icon_publish_title_enable"
+                android:paddingRight="5dp"
+                android:gravity="center"
+                android:background="@drawable/shape_rectangle_gray_f6_12dp"
+                />
+
+    </LinearLayout>
+
+    <LinearLayout
             android:id="@+id/squareLocationAndTime1Ll"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toRightOf="@id/squareTitleLl"
+            app:layout_constraintRight_toRightOf="@id/squareContent1"
             app:layout_constraintTop_toBottomOf="@id/squareContent1">
 
         <TextView
                 android:id="@+id/squareLocationAndTime1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorBlack99"
+                android:textColor="#27d593"
                 android:textSize="12sp"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:background="@drawable/rectangle_gray_3dp"
+                android:paddingRight="5dp"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/icon_location_green"
+                android:background="@drawable/shape_rectangle_light_green_12dp"
                 tools:text="北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市北京市"
                 />
 
     </LinearLayout>
-
 
 
     <TextView

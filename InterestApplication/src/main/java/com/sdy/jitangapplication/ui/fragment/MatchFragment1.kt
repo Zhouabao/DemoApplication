@@ -74,6 +74,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     private val tags by lazy { mutableListOf<TagBean>() }
     private val tagAdapter by lazy { TagAdapter() }
+    private var checkedId = 0
     private fun initTagsView() {
         matchTagRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
         matchTagRv.adapter = tagAdapter
@@ -91,8 +92,8 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 tagAdapter.notifyDataSetChanged()
 
                 //todo 请求数据
-                UserManager.saveGlobalLabelId(tagAdapter.data[position].id)
-                matchParams["tag_id"] = UserManager.getGlobalLabelId()
+                checkedId = tagAdapter.data[position].id
+                matchParams["tag_id"] = checkedId
                 mPresenter.getMatchList(matchParams)
                 matchUserAdapter.data.clear()
                 setViewState(LOADING)
@@ -106,16 +107,16 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         tags.addAll(UserManager.getSpLabels())
         tags.add(TagBean(-1))
         //初始化选中的tag
-        if (UserManager.getGlobalLabelId() == 0) {
+        if (checkedId == 0) {
             if (tags.isNotEmpty()) {
                 tags[0].cheked = true
                 matchParams["tag_id"] = tags[0].id
-                UserManager.saveGlobalLabelId(tags[0].id)
+                checkedId = tags[0].id
             }
         } else {
             var hasCheck = false
             for (tag in tags) {
-                if (tag.id == UserManager.getGlobalLabelId()) {
+                if (tag.id == checkedId) {
                     tag.cheked = true
                     matchParams["tag_id"] = tag.id
                     hasCheck = true
@@ -125,7 +126,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             if (!hasCheck) {
                 tags[0].cheked = true
                 matchParams["tag_id"] = tags[0].id
-                UserManager.saveGlobalLabelId(tags[0].id)
+                checkedId = tags[0].id
             }
         }
         tagAdapter.setNewData(tags)
@@ -158,7 +159,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
             "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
             "_timestamp" to System.currentTimeMillis(),
-            "tag_id" to UserManager.getGlobalLabelId(),
+            "tag_id" to checkedId,
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat(),
             "city_code" to UserManager.getCityCode(),
@@ -286,7 +287,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "target_accid" to "",
-            "tag_id" to UserManager.getGlobalLabelId(),
+            "tag_id" to checkedId,
             "type" to 1
         )
     }

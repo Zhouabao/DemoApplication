@@ -15,7 +15,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SPUtils
@@ -39,9 +38,9 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.SquareListBean
+import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.model.TopicBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
@@ -49,16 +48,12 @@ import com.sdy.jitangapplication.presenter.SquarePresenter
 import com.sdy.jitangapplication.presenter.view.SquareView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
-import com.sdy.jitangapplication.ui.activity.AllTitleActivity
-import com.sdy.jitangapplication.ui.activity.MyLabelActivity
-import com.sdy.jitangapplication.ui.activity.PublishActivity
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
+import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.AllTitleAdapter
-import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
+import com.sdy.jitangapplication.ui.adapter.TagAdapter
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -82,12 +77,7 @@ import org.jetbrains.anko.support.v4.startActivity
  */
 class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
     MultiListSquareAdapter.ResetAudioListener {
-    companion object {
-        const val SQUARE_WANT_KNOW = 1
-        const val SQUARE_SAME_PERSON = 2
-        const val SQUARE_FRIEND = 3
-    }
-
+    private var checkedId = 0
     override fun loadData() {
         initView()
 
@@ -117,15 +107,22 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "page" to page,
+            "tag_id" to checkedId,
             "pagesize" to Constants.PAGESIZE,
             "gender" to sp.getInt("filter_square_gender", 3),
-            "type" to chooseTitileIndex
+            "type" to when (rgSquare.checkedRadioButtonId) {
+                R.id.tabSquare -> {
+                    1
+                }
+                else -> {
+                    3
+                }
+            }
         )
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_square, container, false)
     }
 
@@ -194,20 +191,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             }
         }
 
-
         return recommendTopicView
     }
 
 
     private var currPlayIndex = -1
-
-
-    //标签适配器
-    private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(activity!!) }
-    //标签数据源
-    var labelList: MutableList<NewLabel> = mutableListOf()
-    private val labelManager by lazy { CenterLayoutManager(activity!!, LinearLayoutManager.HORIZONTAL, false) }
-    private var chooseTitileIndex = 1//当前选中的广场类型
 
     private val filterPopupWindow by lazy {
         PopupWindow(activity!!).apply {
@@ -251,31 +239,73 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     }
 
     private val sp by lazy { SPUtils.getInstance(Constants.SPNAME) }
-    private fun initHeadView() {
-        labelList.add(NewLabel(title = "想认识", checked = true))
-        labelList.add(NewLabel(title = "找同好", checked = false))
-        labelList.add(NewLabel(title = "好友", checked = false))
 
-        headRvLabels.layoutManager = labelManager
-        LinearSnapHelper().attachToRecyclerView(headRvLabels)
-        headRvLabels.adapter = labelAdapter
-        labelAdapter.setNewData(labelList)
-        labelAdapter.setOnItemClickListener { _, view, position ->
-            if (labelAdapter.enable) {
-                labelAdapter.enable = false
-                for (index in 0 until labelAdapter.data.size) {
-                    labelAdapter.data[index].checked = index == position
-                    if (index == position)
-                        labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), position)
+
+    private val tags by lazy { mutableListOf<TagBean>() }
+    private val tagAdapter by lazy { TagAdapter() }
+
+    private fun setTagData() {
+        tags.clear()
+        tags.addAll(UserManager.getSpLabels())
+        tags.add(TagBean(-1))
+        //初始化选中的tag
+        if (checkedId == 0) {
+            if (tags.isNotEmpty()) {
+                tags[0].cheked = true
+                listParams["tag_id"] = tags[0].id
+                checkedId = tags[0].id
+            }
+        } else {
+            var hasCheck = false
+            for (tag in tags) {
+                if (tag.id == checkedId) {
+                    tag.cheked = true
+                    listParams["tag_id"] = tag.id
+                    hasCheck = true
+                    break
                 }
-                if (position == chooseTitileIndex - 1) {
-                    labelAdapter.enable = true
-                    return@setOnItemClickListener
-                }
-                updateChooseTitle(position)
-                labelAdapter.notifyDataSetChanged()
+            }
+            if (!hasCheck) {
+                tags[0].cheked = true
+                listParams["tag_id"] = tags[0].id
+                checkedId = tags[0].id
             }
         }
+        tagAdapter.setNewData(tags)
+    }
+
+    private fun initTagsView() {
+        squareTagRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        squareTagRv.adapter = tagAdapter
+        setTagData()
+        tagAdapter.setOnItemClickListener { _, view, position ->
+            if (tagAdapter.data[position].id == -1) {
+                val intent = Intent()
+                intent.putExtra("from", AddLabelActivity.FROM_INTERSERT_LABEL)
+                intent.setClass(activity!!, AddLabelActivity::class.java)
+                startActivity(intent)
+            } else {
+                for (tag in tagAdapter.data) {
+                    tag.cheked = tag == tagAdapter.data[position]
+                }
+                tagAdapter.notifyDataSetChanged()
+                checkedId = tagAdapter.data[position].id
+                listParams["tag_id"] = checkedId
+                updateChooseTitle()
+            }
+        }
+
+    }
+
+    private fun initHeadView() {
+        initTagsView()
+
+        rgSquare.setOnCheckedChangeListener { _, checkedId ->
+            squareTagRv.isVisible = checkedId == R.id.tabSquare
+            updateChooseTitle()
+        }
+        rgSquare.check(R.id.tabSquare)
+
 
         /**
          *性别筛选
@@ -315,45 +345,26 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             }
         }
 
-        /**
-         * 管理标签
-         */
-        manageLabelBtn.onClick(object : CustomClickListener() {
-            override fun onSingleClick(view: View) {
-                startActivity<MyLabelActivity>()
-            }
-
-
-        })
     }
 
     /**
      * 更新选中的广场类型
      * 0-想认识 1-找同好 2-好友
+     *
      */
-    private fun updateChooseTitle(position: Int) {
+    private fun updateChooseTitle() {
         setViewState(LOADING)
-        chooseTitileIndex = position + 1
-        setTitileContent()
-        listParams["type"] = chooseTitileIndex
+        listParams["type"] = when (rgSquare.checkedRadioButtonId) {
+            R.id.tabSquare -> {
+                1
+            }
+            else -> {
+                3
+            }
+        }
         refreshLayout.autoRefresh()
     }
 
-    private fun setTitileContent() {
-        when (chooseTitileIndex) {
-            SQUARE_WANT_KNOW -> {
-                squareRecommendTitle.text = "为你推荐${UserManager.getInterestLabelCount()}个标签"
-                squareRecommendCl.isVisible = true
-            }
-            SQUARE_SAME_PERSON -> {
-                squareRecommendTitle.text = "根据我的标签推荐"
-                squareRecommendCl.isVisible = true
-            }
-            SQUARE_FRIEND -> {
-                squareRecommendCl.isVisible = false
-            }
-        }
-    }
 
     private fun initView() {
         EventBus.getDefault().register(this)
@@ -362,7 +373,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         mPresenter.context = activity!!
 
         initHeadView()
-
 
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
@@ -585,12 +595,9 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {
-        refreshLayout.postDelayed({
-            labelAdapter.enable = true
-        }, 500L)
         if (result) {
             adapter.removeAllHeaderView()
-            if (chooseTitileIndex == SQUARE_SAME_PERSON && (data?.banner_title ?: mutableListOf()).size > 0) {
+            if ((data?.banner_title ?: mutableListOf()).size > 0) {
                 adapter.addHeaderView(initRecommendTopicHeader())
                 topicAdapter.setNewData(data?.banner_title ?: mutableListOf<TopicBean>())
                 adapter.headerLayout.isVisible = true
@@ -606,10 +613,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             }
             setViewState(CONTENT)
             //更新标题显示内容数据
-            if (data != null && chooseTitileIndex == SQUARE_WANT_KNOW)
+            if (data != null && rgSquare.checkedRadioButtonId == R.id.tabSquare)
                 UserManager.saveInterestLabelCount(data?.myinterest_count)
-            setTitileContent()
-//            (data!!.list ?: mutableListOf<SquareBean>()).clear()
             if (data!!.list != null && data!!.list!!.size > 0) {
                 adapter.isUseEmpty(false)
                 for (tempData in 0 until data!!.list!!.size) {
@@ -631,13 +636,13 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 adapter.isUseEmpty(true)
                 if (adapter.headerLayout != null)
                     adapter.headerLayout.isVisible = false
-                if (chooseTitileIndex == SQUARE_WANT_KNOW || (chooseTitileIndex == SQUARE_SAME_PERSON && UserManager.getMaxMyLabelCount() > 0)) {
-                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_square)
-                    adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
-                    adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
-                    adapter.emptyView.emptyFriendGoBtn.isVisible = false
-                } else if (chooseTitileIndex == SQUARE_SAME_PERSON) {
-                    if (UserManager.getMaxMyLabelCount() == 0) {
+                if (rgSquare.checkedRadioButtonId == R.id.tabSquare) {
+                    if (UserManager.getMaxMyLabelCount() > 0) {
+                        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_square)
+                        adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
+                        adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+                        adapter.emptyView.emptyFriendGoBtn.isVisible = false
+                    } else {
                         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_label)
                         adapter.emptyView.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
                         adapter.emptyView.emptyFriendTitle.text = "标签未完善"
@@ -647,7 +652,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                             startActivity<MyLabelActivity>()
                         }
                     }
-                } else if (chooseTitileIndex == SQUARE_FRIEND) {
+                } else {
                     adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
                     adapter.emptyView.emptyFriendTitle.text = "暂时没有动态"
                     adapter.emptyView.emptyFriendTip.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
@@ -764,7 +769,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRefreshEvent(event: RefreshEvent) {
         squareDynamicRv.scrollToPosition(0)
-        updateChooseTitle(chooseTitileIndex - 1)
+        updateChooseTitle()
     }
 
     /**

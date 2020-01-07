@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -119,10 +118,7 @@ class MultiListSquareAdapter(
                 holder.itemView.squareTagName.isVisible = false
             }
 
-            (holder.itemView.squareTitleCl.layoutParams as ConstraintLayout.LayoutParams).topMargin =
-                SizeUtils.dp2px(40F)
-
-            holder.itemView.squareTitleCl.isVisible = !item.title.isNullOrEmpty()
+            holder.itemView.squareTitle.isVisible = !item.title.isNullOrEmpty()
             holder.itemView.squareTitle.text = item.title ?: ""
 
             //设置点赞状态
