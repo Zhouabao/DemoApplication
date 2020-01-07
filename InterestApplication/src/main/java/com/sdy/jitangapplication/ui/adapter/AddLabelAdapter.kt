@@ -17,7 +17,7 @@ import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.activity.LabelQualityActivity
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.fragment.MyLabelFragment
+import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.item_add_label.view.*
@@ -69,8 +69,8 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                         }
                     }
                 }
-                if (checkedCount == MyLabelFragment.MAX_LABEL && !data.checked) {
-                    CommonFunction.toast("至多选择${MyLabelFragment.MAX_LABEL}个标签标签")
+                if (checkedCount == UserManager.getMaxInterestLabelCount() && !data.checked) {
+                    CommonFunction.toast("至多选择${UserManager.getMaxInterestLabelCount()}个标签标签")
                     return@setOnItemClickListener
                 }
 

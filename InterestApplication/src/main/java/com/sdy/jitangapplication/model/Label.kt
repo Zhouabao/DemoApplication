@@ -34,7 +34,8 @@ data class NewLabel(
 
 data class AddLabelBean(
     var list: MutableList<NewLabel> = mutableListOf(),
-    var menu: MutableList<NewLabel> = mutableListOf()
+    var menu: MutableList<NewLabel> = mutableListOf(),
+    var limit_count: Int = 0
 )
 
 
@@ -56,7 +57,8 @@ data class LabelQualityBean(
 
 data class MyLabelsBean(
     var is_using: MutableList<MyLabelBean> = mutableListOf(),
-    var is_removed: MutableList<MyLabelBean> = mutableListOf()
+    var is_removed: MutableList<MyLabelBean> = mutableListOf(),
+    var limit_count: Int = 0
 )
 
 /**
@@ -91,6 +93,7 @@ data class OtherLabelsBean(
     var my_interest: MutableList<LabelQualityBean> = mutableListOf(),
     var other_interest: MutableList<LabelQualityBean> = mutableListOf()
 )
+
 //职业
 data class NewJobBean(
     var title: String = "",

@@ -320,7 +320,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
          */
         manageLabelBtn.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
-                startActivity<MyLabelActivity>("index" to chooseTitileIndex - 1)
+                startActivity<MyLabelActivity>()
             }
 
 

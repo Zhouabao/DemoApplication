@@ -26,19 +26,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/labelIcon"
                     android:src="@drawable/default_image_10dp"
                     android:scaleType="centerCrop"
-                    android:layout_width="84dp"
-                    android:layout_height="84dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                     android:id="@+id/labelName"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="篮球"
@@ -67,7 +66,7 @@
                     android:id="@+id/labelQualityRv"
                     android:orientation="horizontal"
                     android:layout_width="0dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="10dp"
                     android:overScrollMode="never"
                     android:layout_height="wrap_content"
                     app:layout_constraintLeft_toLeftOf="@id/labelName"

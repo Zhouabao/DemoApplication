@@ -3,11 +3,10 @@ package com.sdy.jitangapplication.ui.adapter
 import android.animation.ObjectAnimator
 import android.graphics.Path
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.google.android.flexbox.*
 import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
@@ -69,7 +68,11 @@ class MyLabelAdapter : BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.it
             helper.itemView.labelQualityAddBtn.isVisible = false
             helper.itemView.labelQualityRv.isVisible = true
             val adapter = LabelQualityAdapter()
-            helper.itemView.labelQualityRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
+
+            val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
+            manager.alignItems = AlignItems.STRETCH
+            manager.justifyContent = JustifyContent.FLEX_START
+            helper.itemView.labelQualityRv.layoutManager = manager
             helper.itemView.labelQualityRv.adapter = adapter
             for (data in item.label_quality) {
                 data.isfuse = true

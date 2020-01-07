@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.item_label_quality.view.*
  *    author : ZFM
  *    date   : 2019/6/2020:48
  *    desc   : 标签特质,分三种情况，1.我的特质标记所有都为选中
- *                                 2.所有的特质，能选的为正常色儿， 不能选的为暗灰色
+ *                               2.所有的特质，能选的为正常色儿， 不能选的为暗灰色
  *
  *    version: 1.0
  */

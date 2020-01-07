@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.model
 
+import java.io.Serializable
+
 data class LoginBean(
     val accid: String?,
     val phone_check: Boolean?,
@@ -18,7 +20,7 @@ data class ExtraBean(
     val im_token: String = "",
     val code: Int = 0,
     val msg: String = "",
-    val mytags: MutableList<TagBean>,
+    val taglist: MutableList<TagBean>,
     val myinterest: Boolean = false,
     val aboutme: String = ""
 )
@@ -42,10 +44,10 @@ data class Userinfo(
 )
 
 data class TagBean(
-    var id: Int?,
-    var title: String?,
-    var icon: String?
-)
+    var id: Int = 0,
+    var title: String = "",
+    var cheked: Boolean = false
+) : Serializable
 
 data class UserBean(
     var taglist: MutableList<TagBean?>?,

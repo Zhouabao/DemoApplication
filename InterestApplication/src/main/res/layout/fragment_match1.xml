@@ -7,93 +7,20 @@
               android:orientation="vertical"
               android:layout_height="match_parent">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/colorTransparent"
-            android:gravity="center_vertical">
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/headRvLabels"
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/findToTalkIv"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-
-        <ImageView
-                android:id="@+id/findToTalkIv"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_matching_default_black"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginRight="15dp"
-                app:layout_constraintBottom_toBottomOf="@id/filterBtn"
-                app:layout_constraintRight_toLeftOf="@id/filterBtn"
-                app:layout_constraintTop_toTopOf="@id/filterBtn"/>
-
-        <ImageView
-                android:id="@+id/filterBtn"
-                android:paddingRight="15dp"
-                android:scaleType="center"
-                android:layout_width="wrap_content"
-                android:src="@drawable/icon_filter"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="@id/headRvLabels"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/headRvLabels"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/headRvLabels">
-
-            <TextView
-                    android:id="@+id/t1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:textColor="#ff888d92"
-                    android:layout_marginLeft="15dp"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@id/manageLabel"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/manageLabel"
-                    tools:text="为你推荐3个标签"
-                    />
-
-            <TextView
-                    android:id="@+id/manageLabel"
-                    android:background="@drawable/shape_rectangle_gray_white_15dp"
-                    android:text="管理标签"
-                    android:paddingLeft="7dp"
-                    android:paddingRight="7dp"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#ff888d92"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/t1"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/matchTagRv"
+            android:background="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"/>
 
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+        <View
+                android:background="@drawable/icon_shadow_white_down"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
 
         <LinearLayout
                 android:id="@+id/contentLayout"

@@ -16,13 +16,14 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.ShowCompleteLabelEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
-import com.sdy.jitangapplication.event.UpdateMyInterestLabelEvent
 import com.sdy.jitangapplication.model.AddLabelBean
 import com.sdy.jitangapplication.model.MyLabelBean
+import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.AddLabelPresenter
 import com.sdy.jitangapplication.presenter.view.AddLabelView
 import com.sdy.jitangapplication.ui.adapter.AddLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
+import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_add_label.*
@@ -191,6 +192,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
     override fun onTagClassifyListResult(result: Boolean, data: AddLabelBean?) {
         if (result) {
             stateAddLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
+            UserManager.saveMaxInterestLabelCount(data!!.limit_count)
             if (data!!.menu.isNotEmpty()) {
                 data.menu[0].checked = true
             }
@@ -227,12 +229,17 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         }
     }
 
-    override fun saveInterestTagResult(result: Boolean) {
+    override fun saveInterestTagResult(
+        result: Boolean,
+        data: MutableList<TagBean>?
+    ) {
         if (result) {
             if (from == FROM_REGISTER) {
                 startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
             } else if (from == FROM_INTERSERT_LABEL) {
-                EventBus.getDefault().post(UpdateMyInterestLabelEvent())
+                //todo 更新全局的感兴趣标签
+                //保存标签
+                UserManager.saveLabels(data ?: mutableListOf())
                 EventBus.getDefault().post(RefreshEvent(true))
             } else {
                 EventBus.getDefault().post(UpdateEditModeEvent(MyLabelActivity.MY_LABEL))

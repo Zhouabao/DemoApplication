@@ -296,7 +296,11 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         val detailContent =
             NimUIKitImpl.getOnlineStateContentProvider()
                 .getDetailDisplay(sessionId)
-        setSubTitle(detailContent)
+//        setSubTitle(detailContent)
+        chatName.text = "${UserInfoHelper.getUserTitleName(
+            sessionId,
+            SessionTypeEnum.P2P
+        )}-$detailContent"
     }
 
     private fun registerObservers(register: Boolean) {

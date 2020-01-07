@@ -380,11 +380,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //我的标签
             R.id.userTagsBtn -> {
-//                val is_using = mutableListOf<MyLabelBean>()
-//                for (data in tagAdapter.data) {
-//                    is_using.add(MyLabelBean(tag_id = data.id))
-//                }
-//                startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_USERCENTER,"is_using" to is_using)
                 startActivity<MyLabelActivity>()
             }
             //我的动态 1,我的所有动态 2我点过赞的 3 我收藏的

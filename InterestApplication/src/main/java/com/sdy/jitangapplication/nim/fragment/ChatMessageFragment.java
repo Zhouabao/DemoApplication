@@ -617,7 +617,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             params.put("content", ((ImageAttachment) content.getAttachment()).getUrl());
         } else if (content.getMsgType() == MsgTypeEnum.audio) {
             params.put("content", ((AudioAttachment) content.getAttachment()).getUrl());
-            params.put("duration", Math.ceil(((AudioAttachment) content.getAttachment()).getDuration()));
         } else if (content.getMsgType() == MsgTypeEnum.video) {
             params.put("content", ((VideoAttachment) content.getAttachment()).getUrl());
         }

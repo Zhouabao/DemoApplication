@@ -3,7 +3,6 @@ package com.sdy.jitangapplication.ui.fragment
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,7 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
@@ -38,7 +36,6 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
-import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -47,15 +44,14 @@ import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
+import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.ui.activity.MyIntentionActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
-import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
+import com.sdy.jitangapplication.ui.adapter.TagAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.*
@@ -64,7 +60,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.startActivityForResult
 
 /**
  * 匹配页面(新版)
@@ -73,12 +68,70 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
 
     override fun loadData() {
-
+        initTagsView()
         initView()
     }
 
-    private var hasMore = false
+    private val tags by lazy { mutableListOf<TagBean>() }
+    private val tagAdapter by lazy { TagAdapter() }
+    private fun initTagsView() {
+        matchTagRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        matchTagRv.adapter = tagAdapter
+        setTagData()
+        tagAdapter.setOnItemClickListener { _, view, position ->
+            if (tagAdapter.data[position].id == -1) {
+                val intent = Intent()
+                intent.putExtra("from", AddLabelActivity.FROM_INTERSERT_LABEL)
+                intent.setClass(activity!!, AddLabelActivity::class.java)
+                startActivity(intent)
+            } else {
+                for (tag in tagAdapter.data) {
+                    tag.cheked = tag == tagAdapter.data[position]
+                }
+                tagAdapter.notifyDataSetChanged()
 
+                //todo 请求数据
+                UserManager.saveGlobalLabelId(tagAdapter.data[position].id)
+                matchParams["tag_id"] = UserManager.getGlobalLabelId()
+                mPresenter.getMatchList(matchParams)
+                matchUserAdapter.data.clear()
+                setViewState(LOADING)
+            }
+        }
+
+    }
+
+    private fun setTagData() {
+        tags.clear()
+        tags.addAll(UserManager.getSpLabels())
+        tags.add(TagBean(-1))
+        //初始化选中的tag
+        if (UserManager.getGlobalLabelId() == 0) {
+            if (tags.isNotEmpty()) {
+                tags[0].cheked = true
+                matchParams["tag_id"] = tags[0].id
+                UserManager.saveGlobalLabelId(tags[0].id)
+            }
+        } else {
+            var hasCheck = false
+            for (tag in tags) {
+                if (tag.id == UserManager.getGlobalLabelId()) {
+                    tag.cheked = true
+                    matchParams["tag_id"] = tag.id
+                    hasCheck = true
+                    break
+                }
+            }
+            if (!hasCheck) {
+                tags[0].cheked = true
+                matchParams["tag_id"] = tags[0].id
+                UserManager.saveGlobalLabelId(tags[0].id)
+            }
+        }
+        tagAdapter.setNewData(tags)
+    }
+
+    private var hasMore = false
 
     //用户适配器
     private val matchUserAdapter: MatchUserAdapter by lazy { MatchUserAdapter(mutableListOf()) }
@@ -96,9 +149,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         private const val EMPTY = 3
         private const val PAGESIZE = 20
 
-        const val WANT_MATCH = 1
-        const val SAME_MATCH = 2
-
     }
 
 
@@ -108,11 +158,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
             "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
             "_timestamp" to System.currentTimeMillis(),
-            "tagid" to UserManager.getGlobalLabelId(),
+            "tag_id" to UserManager.getGlobalLabelId(),
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat(),
             "city_code" to UserManager.getCityCode(),
-            "type" to WANT_MATCH
+            "type" to 1
         )
 
     }
@@ -130,7 +180,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
     }
 
 
@@ -155,26 +204,21 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     private val manager by lazy { CardStackLayoutManager(activity!!, this) }
 
     private fun initView() {
-
         mPresenter = MatchPresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!
 
         retryBtn.setOnClickListener(this)
         greetBtn.setOnClickListener(this)
-        filterBtn.setOnClickListener(this)
         completeLabelBtn.setOnClickListener(this)
-        manageLabel.setOnClickListener(this)
-        findToTalkIv.setOnClickListener(this)
         dislikeBtn.setOnClickListener(this)
         likeBtn.setOnClickListener(this)
         likeBtn.setOnClickListener(this)
 
-        initHeadView()
-
         initialize()
 
         updateLocation()
+
         mPresenter.getMatchList(matchParams)
 
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
@@ -236,76 +280,22 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     }
 
-    //标签适配器
-    private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(activity!!) }
-    //标签数据源
-    var labelList: MutableList<NewLabel> = mutableListOf()
-    private val labelManager by lazy { CenterLayoutManager(activity!!, LinearLayoutManager.HORIZONTAL, false) }
-    //标记当前选中的匹配类型  1想认识  2找同好
-    private var checkedTitle = WANT_MATCH
-
-    private fun initHeadView() {
-        labelList.add(NewLabel(title = "想认识", checked = true))
-        labelList.add(NewLabel(title = "找同好", checked = false))
-
-        headRvLabels.layoutManager = labelManager
-        LinearSnapHelper().attachToRecyclerView(headRvLabels)
-        headRvLabels.adapter = labelAdapter
-        labelAdapter.setNewData(labelList)
-        labelAdapter.setOnItemClickListener { _, view, position ->
-            if (labelAdapter.enable) {
-                if (position == checkedTitle - 1) {
-                    return@setOnItemClickListener
-                } else {
-                    for (index in 0 until labelAdapter.data.size) {
-                        labelAdapter.data[index].checked = index == position
-                        if (index == position)
-                            labelManager.smoothScrollToPosition(headRvLabels, RecyclerView.State(), position)
-                    }
-                    labelAdapter.notifyDataSetChanged()
-                    checkedTitle = position + 1
-                    if (checkedTitle == WANT_MATCH) {
-                        t1.text = "为你推荐${UserManager.getInterestLabelCount()}个标签"
-                    } else {
-                        t1.text = "根据我的标签推荐"
-                    }
-                    updateLabelEvent()
-                }
-            }
-        }
-    }
-
 
     val params by lazy {
         hashMapOf<String, Any>(
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "target_accid" to "",
-            "type" to checkedTitle
+            "tag_id" to UserManager.getGlobalLabelId(),
+            "type" to 1
         )
     }
 
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.filterBtn -> {//筛选
-                FilterUserDialog(activity!!).show()
-            }
             R.id.completeLabelBtn -> {//完善标签
                 startActivity<MyLabelActivity>()
-            }
-            R.id.manageLabel -> {//标签管理
-                startActivity<MyLabelActivity>("index" to checkedTitle - 1)
-            }
-            R.id.findToTalkIv -> {//找人说话
-                startActivityForResult<MyIntentionActivity>(
-                    100,
-                    "id" to if (myIntention != null) {
-                        myIntention!!.id
-                    } else {
-                        -1
-                    }, "from" to MyIntentionActivity.FROM_USERCENTER
-                )
             }
             R.id.greetBtn -> {
                 CommonFunction.commonGreet(
@@ -353,26 +343,14 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
      * 匹配列表数据
      */
     private var paramsLastFiveIds = mutableListOf<Int>()
-    private var myIntention: LabelQualityBean? = null
+
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
-        labelAdapter.enable = true
         if (success) {
             hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
 
-
-            if (matchBeans.intention != null && matchBeans.intention.id != 0) {
-                myIntention = matchBeans.intention
-                GlideUtil.loadImg(activity!!, myIntention!!.icon, findToTalkIv)
-            } else {
-                GlideUtil.loadImg(activity!!, R.drawable.icon_matching_default_black, findToTalkIv)
-            }
             matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
             matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
             UserManager.saveMyLabelCount((matchBeans.mytags ?: mutableListOf<MyLabelBean>()).size)
-            if (checkedTitle == WANT_MATCH) {
-                UserManager.saveInterestLabelCount(matchBeans.myinterest_count)
-                t1.text = "为你推荐${UserManager.getInterestLabelCount()}个标签"
-            }
             paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
 
             //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容
@@ -434,8 +412,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
 
             tvLeftChatTime.text = "${UserManager.getLightingCount()}"
-
-
+            UserManager.saveInterestLabelCount(matchBeans.myinterest_count)
             if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
                 setViewState(EMPTY)
             } else {
@@ -559,42 +536,22 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             }
             EMPTY -> {
                 emptyLayout.isVisible = true
-                if (checkedTitle == SAME_MATCH) {
-                    if (UserManager.getMyLabelCount() > 0) {
-                        emptyLayout.emptyFriendTitle.isVisible = true
-                        emptyLayout.emptyFriendGoBtn.isVisible = false
-                        emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_match)
-                        emptyLayout.emptyFriendTitle.text = "暂时没有人了"
-                        emptyLayout.emptyFriendTip.text = "一会儿再回来看看吧"
-                    } else {
-                        emptyLayout.emptyFriendTitle.isVisible = true
-                        emptyLayout.emptyFriendGoBtn.isVisible = true
-                        emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_label)
-                        emptyLayout.emptyFriendTitle.text = "标签未完善"
-                        emptyLayout.emptyFriendGoBtn.text = "去看看"
-                        emptyLayout.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
-                        emptyLayout.emptyFriendGoBtn.onClick {
-                            startActivity<MyLabelActivity>("from" to MyLabelActivity.MY_LABEL)
-                        }
-                    }
-                } else {
-                    if (UserManager.getInterestLabelCount() > 0) {
-                        emptyLayout.emptyFriendTitle.isVisible = true
-                        emptyLayout.emptyFriendGoBtn.isVisible = false
-                        emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_match)
-                        emptyLayout.emptyFriendTitle.text = "暂时没有人了"
-                        emptyLayout.emptyFriendTip.text = "一会儿再回来看看吧"
-                    } else {
-                        emptyLayout.emptyFriendTitle.isVisible = true
-                        emptyLayout.emptyFriendGoBtn.isVisible = true
-                        emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_label)
-                        emptyLayout.emptyFriendTitle.text = "标签未完善"
-                        emptyLayout.emptyFriendGoBtn.text = "去看看"
-                        emptyLayout.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
-                        emptyLayout.emptyFriendGoBtn.onClick {
-                            startActivity<MyLabelActivity>("from" to MyLabelActivity.MY_INTEREST_LABEL)
 
-                        }
+                if (UserManager.getInterestLabelCount() > 0) {
+                    emptyLayout.emptyFriendTitle.isVisible = true
+                    emptyLayout.emptyFriendGoBtn.isVisible = false
+                    emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_match)
+                    emptyLayout.emptyFriendTitle.text = "暂时没有人了"
+                    emptyLayout.emptyFriendTip.text = "一会儿再回来看看吧"
+                } else {
+                    emptyLayout.emptyFriendTitle.isVisible = true
+                    emptyLayout.emptyFriendGoBtn.isVisible = true
+                    emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_label)
+                    emptyLayout.emptyFriendTitle.text = "标签未完善"
+                    emptyLayout.emptyFriendGoBtn.text = "去看看"
+                    emptyLayout.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
+                    emptyLayout.emptyFriendGoBtn.onClick {
+                        startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_INTERSERT_LABEL)
                     }
                 }
                 contentLayout.isVisible = false
@@ -606,18 +563,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 100) {
-                if (data != null && data.getSerializableExtra("intention") != null) {
-                    myIntention = data.getSerializableExtra("intention") as LabelQualityBean
-                    GlideUtil.loadImg(activity!!, myIntention!!.icon, findToTalkIv)
-                }
-            }
-        }
-    }
-
     /*---------------------事件总线--------------------------------*/
 
     /**
@@ -625,12 +570,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
      */
     fun updateLabelEvent() {
         setViewState(LOADING)
-        matchParams["type"] = checkedTitle
+        matchParams["type"] = 1
         matchUserAdapter.data.clear()
         hasMore = false
         updateLocation()
         mPresenter.getMatchList(matchParams)
-        labelAdapter.enable = false
     }
 
 
@@ -641,6 +585,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     fun onRefreshEvent(event: RefreshEvent) {
 //        matchStateview.viewState = MultiStateView.VIEW_STATE_LOADING
         setViewState(LOADING)
+        setTagData()
 
         matchUserAdapter.data.clear()
         hasMore = false

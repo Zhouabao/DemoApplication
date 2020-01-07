@@ -13,7 +13,6 @@ import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.MediaParamBean
-import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
@@ -94,6 +93,17 @@ object UserManager {
     fun getInterestLabelCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("interestLabelCount", -1)
     }
+    /**
+     * 感兴趣的标签个数
+     */
+    fun saveMaxInterestLabelCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("maxInterestLabelCount", count)
+    }
+
+    fun getMaxInterestLabelCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("maxInterestLabelCount", 0)
+    }
+
     /**
      * 我的兴趣的标签个数
      */
@@ -271,21 +281,16 @@ object UserManager {
                 saveUserVerify(data.userinfo.isfaced)
             SPUtils.getInstance(Constants.SPNAME).put("isInterestLabel", data.extra_data?.myinterest ?: false)
             SPUtils.getInstance(Constants.SPNAME).put("userIntroduce", data.extra_data?.aboutme ?: "")
+            if (!data.extra_data?.taglist.isNullOrEmpty()) {
+                saveLabels(data.extra_data?.taglist ?: mutableListOf())
+            }
         }
     }
 
     fun saveLabels(data: MutableList<TagBean>) {
         val savaLabels = mutableSetOf<String>()
         for (label in data) {
-            savaLabels.add(
-                SharedPreferenceUtil.Object2String(
-                    NewLabel(
-                        title = label.title ?: "",
-                        id = label.id ?: -1,
-                        icon = label.icon ?: ""
-                    )
-                )
-            )
+            savaLabels.add(SharedPreferenceUtil.Object2String(label))
         }
         SPUtils.getInstance(Constants.SPNAME).put("newCheckedLabels", savaLabels)
     }
@@ -479,11 +484,11 @@ object UserManager {
     /**
      * 获取本地存放的标签
      */
-    fun getSpLabels(): MutableList<NewLabel> {
-        val tempLabels = mutableListOf<NewLabel>()
+    fun getSpLabels(): MutableList<TagBean> {
+        val tempLabels = mutableListOf<TagBean>()
         if (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels").isNotEmpty()) {
             (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels")).forEach {
-                tempLabels.add(SharedPreferenceUtil.String2Object(it) as NewLabel)
+                tempLabels.add(SharedPreferenceUtil.String2Object(it) as TagBean)
             }
         }
         tempLabels.sortWith(Comparator { p0, p1 -> p0.id.compareTo(p1.id) })
@@ -557,6 +562,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("squareCount")
         SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
         SPUtils.getInstance(Constants.SPNAME).remove("newCheckedLabels")
+        SPUtils.getInstance(Constants.SPNAME).remove("maxInterestLabelCount")
 
 
         //位置信息

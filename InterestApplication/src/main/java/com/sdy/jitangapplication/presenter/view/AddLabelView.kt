@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.AddLabelBean
+import com.sdy.jitangapplication.model.TagBean
 
 /**
  *    author : ZFM
@@ -13,6 +14,9 @@ interface AddLabelView : BaseView {
 
     fun onTagClassifyListResult(result: Boolean, data: AddLabelBean?)
 
-    fun saveInterestTagResult(result: Boolean)
+    fun saveInterestTagResult(
+        result: Boolean,
+        data: MutableList<TagBean>?
+    )
 
 }

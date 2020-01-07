@@ -32,7 +32,7 @@ import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.*
-import com.sdy.jitangapplication.ui.fragment.MatchFragment1
+import com.sdy.jitangapplication.ui.fragment.IndexFragment
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
 import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.ui.fragment.UserCenterFragment
@@ -56,7 +56,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     //匹配
-    private val matchFragment by lazy { MatchFragment1() }
+//    private val matchFragment by lazy { MatchFragment1() }
+    private val matchFragment by lazy { IndexFragment() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
     //消息

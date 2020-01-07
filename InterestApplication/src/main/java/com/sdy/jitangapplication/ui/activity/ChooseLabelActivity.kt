@@ -18,7 +18,7 @@ import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.MyLabelPresenter
 import com.sdy.jitangapplication.presenter.view.MyLabelView
 import com.sdy.jitangapplication.ui.adapter.ChooseLabelAdapter
-import com.sdy.jitangapplication.ui.fragment.MyLabelFragment
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_choose_label.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -107,7 +107,7 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
             }
             addMoreLabelBtn -> {
                 if (adapter.data.size == 5) {
-                    CommonFunction.toast("至多能拥有${MyLabelFragment.MAX_LABEL}个标签")
+                    CommonFunction.toast("至多能拥有${UserManager.getMaxInterestLabelCount()}个标签")
                     return
                 }
 

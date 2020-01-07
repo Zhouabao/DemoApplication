@@ -835,7 +835,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tags/saveInterestTag${Constants.END_BASE_URL}")
-    fun saveInterestTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    fun saveInterestTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TagBean>?>>
 
     /**
      *V2获取广场标题菜单栏目

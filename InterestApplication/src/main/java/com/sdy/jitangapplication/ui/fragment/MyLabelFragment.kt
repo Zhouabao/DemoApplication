@@ -16,7 +16,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
-import com.sdy.jitangapplication.event.UpdateEditShowEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.MyLabelsBean
@@ -29,6 +28,7 @@ import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.ui.adapter.MyLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.empty_label_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -44,7 +44,6 @@ import java.io.Serializable
 class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView, View.OnClickListener {
     companion object {
         val MIN_LABEL = 1
-        val MAX_LABEL = 5
     }
 
 
@@ -57,7 +56,6 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_label, container, false)
     }
 
@@ -86,7 +84,7 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
 
                 }
                 R.id.labelEdit -> {
-                    //TODO标签编辑
+                    //TODO 标签编辑
                     val intent = Intent()
                     intent.putExtra("aimData", adapter.data[position])
                     intent.putExtra("from", AddLabelActivity.FROM_EDIT)
@@ -120,6 +118,8 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
     override fun getMyTagsListResult(result: Boolean, datas: MyLabelsBean?) {
         if (result) {
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
+            //保存标签的最大个数
+            UserManager.saveMaxInterestLabelCount(datas?.limit_count ?: 0)
             if (datas != null && datas.is_using.isNullOrEmpty()) {
                 addLabelBtn.isVisible = false
                 adapter.setEmptyView(R.layout.empty_label_layout, mylabelRv)
@@ -133,15 +133,12 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
                 adapter.emptyView.emptyLabelTip.isVisible = false
                 adapter.emptyView.emptyTip.isVisible = false
                 adapter.emptyView.addLabelBtn.text = "添加标签"
-                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, false))
             } else {
                 addLabelBtn.isVisible = true
-                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, true))
                 adapter.setNewData(datas?.is_using ?: mutableListOf())
             }
             removedLabel.addAll(datas?.is_removed ?: mutableListOf())
         } else {
-            EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, false))
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }
@@ -158,8 +155,8 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
     override fun onClick(p0: View) {
         when (p0) {
             addLabelBtn -> {//添加标签
-                if (adapter.data.size >= MAX_LABEL) {
-                    CommonFunction.toast("最多能拥有${MAX_LABEL}个标签")
+                if (adapter.data.size >= UserManager.getMaxInterestLabelCount()) {
+                    CommonFunction.toast("最多能拥有${UserManager.getMaxInterestLabelCount()}个标签")
                     return
                 }
 
