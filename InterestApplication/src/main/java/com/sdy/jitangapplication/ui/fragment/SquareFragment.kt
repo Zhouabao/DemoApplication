@@ -48,7 +48,10 @@ import com.sdy.jitangapplication.presenter.SquarePresenter
 import com.sdy.jitangapplication.presenter.view.SquareView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
-import com.sdy.jitangapplication.ui.activity.*
+import com.sdy.jitangapplication.ui.activity.AddLabelActivity
+import com.sdy.jitangapplication.ui.activity.AllTitleActivity
+import com.sdy.jitangapplication.ui.activity.PublishActivity
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.AllTitleAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.adapter.TagAdapter
@@ -637,21 +640,10 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 if (adapter.headerLayout != null)
                     adapter.headerLayout.isVisible = false
                 if (rgSquare.checkedRadioButtonId == R.id.tabSquare) {
-                    if (UserManager.getMaxMyLabelCount() > 0) {
-                        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_square)
-                        adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
-                        adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
-                        adapter.emptyView.emptyFriendGoBtn.isVisible = false
-                    } else {
-                        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_label)
-                        adapter.emptyView.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
-                        adapter.emptyView.emptyFriendTitle.text = "标签未完善"
-                        adapter.emptyView.emptyFriendGoBtn.text = "完善标签"
-                        adapter.emptyView.emptyFriendGoBtn.isVisible = true
-                        adapter.emptyView.emptyFriendGoBtn.onClick {
-                            startActivity<MyLabelActivity>()
-                        }
-                    }
+                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_square)
+                    adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
+                    adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+                    adapter.emptyView.emptyFriendGoBtn.isVisible = false
                 } else {
                     adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
                     adapter.emptyView.emptyFriendTitle.text = "暂时没有动态"

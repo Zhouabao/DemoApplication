@@ -276,6 +276,116 @@
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintRight_toRightOf="parent"
                                     app:layout_constraintTop_toBottomOf="@id/detailUserSign"/>
+
+                            <TextView
+                                    android:id="@+id/tag1"
+                                    android:text="标签"
+                                    android:textColor="#ff191919"
+                                    android:textSize="20sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textStyle="bold"
+                                    android:layout_marginTop="20dp"
+                                    app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                                    app:layout_constraintTop_toBottomOf="@id/detailUserInformationRv"/>
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/detailRvTag"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="15dp"
+                                    app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/tag1"
+                                    />
+
+
+                            <LinearLayout
+                                    android:id="@+id/detailInterestRvTagBg"
+                                    android:orientation="vertical"
+                                    android:layout_width="0dp"
+                                    android:layout_marginTop="30dp"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                                    app:layout_constraintRight_toRightOf="@id/detailRvTag"
+                                    app:layout_constraintTop_toBottomOf="@id/detailRvTag">
+
+                                <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="想认识"
+                                        android:textStyle="bold"
+                                        android:textColor="#ff2d2f30"
+                                        android:textSize="20sp"
+                                        />
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                        android:id="@+id/detailInterestRvTag"
+                                        android:layout_marginTop="20dp"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        />
+                            </LinearLayout>
+
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/t2"
+                                    android:layout_width="0dp"
+                                    android:layout_marginTop="30dp"
+                                    android:orientation="horizontal"
+                                    android:background="@color/colorWhite"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/detailInterestRvTagBg">
+
+                                <TextView
+                                        android:gravity="center_vertical"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="动态"
+                                        android:textStyle="bold"
+                                        android:textColor="#ff191919"
+                                        android:textSize="20sp"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        />
+
+                                <RadioGroup
+                                        android:id="@+id/detailSquareSwitchRg"
+                                        android:layout_marginRight="15dp"
+                                        android:layout_width="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:layout_height="24dp"
+                                        android:visibility="visible"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintRight_toRightOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent">
+
+                                    <RadioButton
+                                            android:id="@+id/rbBlock"
+                                            android:background="@drawable/selector_block"
+                                            android:button="@null"
+                                            android:layout_width="24dp"
+                                            android:layout_marginRight="10dp"
+                                            android:layout_height="24dp"/>
+
+                                    <RadioButton
+                                            android:id="@+id/rbList"
+                                            android:background="@drawable/selector_list"
+                                            android:button="@null"
+                                            android:layout_width="24dp"
+                                            android:layout_height="24dp"/>
+                                </RadioGroup>
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </FrameLayout>
 
@@ -325,71 +435,21 @@
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
 
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:background="@color/colorWhite"
-                        android:layout_gravity="center_vertical"
-                        android:layout_height="44dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/tabUserDettail"
-                            android:layout_width="0dp"
-                            android:background="@color/colorWhite"
-                            android:paddingBottom="10dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_height="44dp"
-                            android:layout_marginRight="15dp"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toLeftOf="@id/detailSquareSwitchRg"
-                            app:layout_constraintTop_toTopOf="parent"
-                            />
-
-
-                    <RadioGroup
-                            android:id="@+id/detailSquareSwitchRg"
-                            android:layout_marginRight="15dp"
-                            android:layout_width="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_height="24dp"
-                            android:visibility="visible"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                        <RadioButton
-                                android:id="@+id/rbBlock"
-                                android:background="@drawable/selector_block"
-                                android:button="@null"
-                                android:layout_width="24dp"
-                                android:layout_marginRight="10dp"
-                                android:layout_height="24dp"/>
-
-                        <RadioButton
-                                android:id="@+id/rbList"
-                                android:background="@drawable/selector_list"
-                                android:button="@null"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"/>
-                    </RadioGroup>
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.appbar.AppBarLayout>
 
 
             <com.sdy.jitangapplication.widgets.CommonNoScrollViewPager
                     android:id="@+id/vpUserDetail"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="49dp"
                     android:background="@color/colorWhite"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:layout_height="110dp"
                     app:layout_anchor="@id/vpUserDetail"
                     app:layout_anchorGravity="bottom">
@@ -410,6 +470,7 @@
                         android:layout_height="49dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"/>
+
                 <ImageView
                         android:id="@+id/detailUserDislikeBtn"
                         android:layout_marginBottom="5dp"

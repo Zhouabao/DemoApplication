@@ -1,82 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="11dp"
-        android:layout_marginRight="15dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/colorWhite"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="4dp"
-        android:layout_marginTop="5dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="10dp">
+        android:layout_width="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/labelIcon"
-                android:src="@drawable/icon_gender_woman"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/labelIcon"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/icon_gender_woman"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
 
-
-        <TextView
-                android:id="@+id/labelSameCount"
-                tools:text="你们有两个重合兴趣"
-                android:textColor="#191919"
-                android:layout_marginLeft="10dp"
-                android:textSize="13sp"
-                android:drawablePadding="5dp"
-                android:background="@drawable/shape_rectangle_gray_f6_12dp"
-                android:drawableLeft="@drawable/icon_quality_same"
-                android:paddingLeft="3dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:paddingRight="6dp"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/labelIcon"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/labelIcon"/>
+    <TextView
+            android:id="@+id/labelName"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:text="篮球"
+            android:textColor="#FF191919"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@id/labelIcon"
+            app:layout_constraintLeft_toRightOf="@id/labelIcon"
+            app:layout_constraintTop_toTopOf="@id/labelIcon"
+            />
 
 
-        <TextView
-                android:id="@+id/labelName"
-                android:text="喝酒蹦迪k歌"
-                android:textColor="#ff191919"
-                android:textSize="17sp"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                app:layout_constraintBottom_toBottomOf="@id/labelIcon"
-                app:layout_constraintLeft_toRightOf="@id/labelIcon"
-                app:layout_constraintTop_toTopOf="@id/labelIcon"
-               />
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/labelQualityRv"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_width="0dp"
+            android:layout_marginRight="15dp"
+            app:layout_constraintLeft_toLeftOf="@id/labelIcon"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelIcon"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/labelQualityRv"
-                android:layout_marginTop="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/labelIcon"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</androidx.cardview.widget.CardView>

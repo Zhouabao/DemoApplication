@@ -111,6 +111,8 @@ class MultiListSquareAdapter(
                 SizeUtils.dp2px(5F)
             )
         } else {
+            holder.itemView.headSquareView.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
+
             if (!item.tags.isNullOrEmpty()) {
                 holder.itemView.squareTagName.text = item.tags
                 holder.itemView.squareTagName.isVisible = true
@@ -118,7 +120,7 @@ class MultiListSquareAdapter(
                 holder.itemView.squareTagName.isVisible = false
             }
 
-            holder.itemView.squareTitle.isVisible = !item.title.isNullOrEmpty()
+            holder.itemView.squareTitleLl.isVisible = !item.title.isNullOrEmpty()
             holder.itemView.squareTitle.text = item.title ?: ""
 
             //设置点赞状态

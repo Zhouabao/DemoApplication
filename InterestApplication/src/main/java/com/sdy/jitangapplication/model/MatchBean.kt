@@ -72,7 +72,9 @@ data class MatchBean(
     val my_like_times: Int,//（我的次数）
     val total_like_times: Int,//  total_like_times（最高次数）
     var interesttags: MutableList<TagBean>? = null,
-    var newtags: MutableList<Newtag>? = null
+    var newtags: MutableList<Newtag>? = null,
+    var other_tags: MutableList<MyLabelBean> = mutableListOf(),
+    var other_interest: MutableList<LabelQualityBean> = mutableListOf()
 ) : Serializable
 
 

@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import androidx.core.view.isVisible
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.google.android.flexbox.*
@@ -20,8 +19,6 @@ class MatchDetailUserLabelAdapter :
     override fun convert(helper: BaseViewHolder, item: MyLabelBean) {
         helper.itemView.labelName.text = item.title
         GlideUtil.loadImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon)
-        helper.itemView.labelSameCount.isVisible = !item.msg.isNullOrEmpty()
-        helper.itemView.labelSameCount.text = item.msg
         val labelQualityMyAdapter = LabelQualityAdapter()
         val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH

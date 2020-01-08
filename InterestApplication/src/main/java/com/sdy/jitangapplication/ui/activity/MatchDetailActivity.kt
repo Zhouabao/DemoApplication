@@ -14,8 +14,8 @@ import androidx.core.view.isVisible
 import androidx.core.view.marginTop
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ScreenUtils
@@ -40,7 +40,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
 import com.sdy.jitangapplication.model.MatchBean
-import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
@@ -53,9 +52,7 @@ import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
 import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
-import com.sdy.jitangapplication.ui.fragment.MatchDetailLabelFragment
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail.*
@@ -126,6 +123,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         EventBus.getDefault().unregister(this)
     }
 
+
+    private val userTagAdapter by lazy { MatchDetailUserLabelAdapter() }
+    private val userInterestAdapter by lazy { MatchDetailUserInterestLabelAdapter() }
     private fun initView() {
         EventBus.getDefault().register(this)
 
@@ -170,6 +170,24 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //用户详细信息列表
         detailUserInformationRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
 
+
+        detailRvTag.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        detailRvTag.adapter = userTagAdapter
+
+        val manager = GridLayoutManager(this, 2, RecyclerView.VERTICAL, false)
+        detailInterestRvTag.layoutManager = manager
+        detailInterestRvTag.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.BOTH_SET,
+                SizeUtils.dp2px(10F),
+                resources.getColor(R.color.colorWhite)
+            )
+        )
+        detailInterestRvTag.adapter = userInterestAdapter
+
+
+
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
             if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
                 if (ScreenUtils.isFullScreen(this))
@@ -193,10 +211,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailSquareSwitchRg.setOnCheckedChangeListener { radioGroup, checkedId ->
             if (checkedId == R.id.rbList) {
                 vpUserDetail.currentItem = 0
-                lastIndicator = 0
             } else if (checkedId == R.id.rbBlock) {
                 vpUserDetail.currentItem = 1
-                lastIndicator = 1
             }
         }
         detailSquareSwitchRg.check(R.id.rbList)
@@ -209,50 +225,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    private val titles = mutableListOf(
-        NewLabel(title = "动态", checked = true),
-        NewLabel(title = "标签", checked = false)
-    )
-
-    //标签适配器
-    private val labelAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(this) }
-    private val labelManager = CenterLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-    private var lastIndicator = 0//默认选中列表
-    private fun iniTabRv() {
-        tabUserDettail.layoutManager = labelManager
-        LinearSnapHelper().attachToRecyclerView(tabUserDettail)
-        tabUserDettail.adapter = labelAdapter
-        labelAdapter.setNewData(titles)
-        labelAdapter.setOnItemClickListener { _, view, position ->
-            for (index in 0 until labelAdapter.data.size) {
-                labelAdapter.data[index].checked = index == position
-            }
-            labelAdapter.notifyDataSetChanged()
-            if (labelAdapter.data[position].checked) {
-                detailSquareSwitchRg.isVisible = position == 0
-                if (position == 0) {
-                    if (lastIndicator == 1) {
-                        vpUserDetail.currentItem = 1
-                    } else if (lastIndicator == 0) {
-                        vpUserDetail.currentItem = 0
-                    }
-                } else {
-                    vpUserDetail.currentItem = 2
-                }
-
-            }
-        }
-    }
-
-
     /*
       初始化Fragment栈管理
    */
     private fun initFragment() {
-        iniTabRv()
         mStack.add(ListSquareFragment(targetAccid))
         mStack.add(BlockSquareFragment(targetAccid))
-        mStack.add(MatchDetailLabelFragment(targetAccid))
+//        mStack.add(MatchDetailLabelFragment(targetAccid))
         vpUserDetail.offscreenPageLimit = 3
         vpUserDetail.adapter = MainPagerAdapter(supportFragmentManager, mStack)
         vpUserDetail.currentItem = 0
@@ -348,7 +327,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
     private fun initData() {
-        titles[0].title = "动态·${matchBean!!.square_cnt ?: 0}"
+        userTagAdapter.setNewData(matchBean!!.other_tags)
+        userInterestAdapter.setNewData(matchBean!!.other_interest)
+
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
         detailUserInformationRv.adapter = detailUserInformationAdapter
@@ -489,6 +470,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             stateview.errorMsg.text = CommonFunction.getErrorMsg(this)
         }
     }
+
 
     /**
      * 更新拉黑状态

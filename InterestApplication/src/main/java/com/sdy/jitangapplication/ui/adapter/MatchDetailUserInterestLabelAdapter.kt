@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
@@ -17,6 +18,6 @@ class MatchDetailUserInterestLabelAdapter :
     BaseQuickAdapter<LabelQualityBean, BaseViewHolder>(R.layout.item_layout_match_detail_user_interest) {
     override fun convert(helper: BaseViewHolder, item: LabelQualityBean) {
         helper.itemView.interestLabelName.text = item.title
-        GlideUtil.loadImgCenterCrop(mContext, item.icon, helper.itemView.interestLabelIcon)
+        GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.interestLabelIcon, SizeUtils.dp2px(10F))
     }
 }
