@@ -334,7 +334,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         initUserInfomationData()//初始化个人信息数据
         detailUserInformationRv.adapter = detailUserInformationAdapter
 //        EventBus.getDefault().post(UpdateSquareEvent())
-
+        squareCount.text = "动态 ${matchBean!!.square_cnt?:0}"
         detailUserName.text = matchBean!!.nickname
         titleUsername.text = matchBean!!.nickname
         val left = resources.getDrawable(

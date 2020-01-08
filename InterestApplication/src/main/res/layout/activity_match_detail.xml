@@ -128,7 +128,7 @@
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:minHeight="56dp"
+                        android:minHeight="?attr/actionBarSize"
                         app:collapsedTitleGravity="left"
                         app:collapsedTitleTextAppearance="@style/matchdetailTitleCollpseStyle"
                         app:contentScrim="@color/colorTransparent"
@@ -342,6 +342,7 @@
                                     app:layout_constraintTop_toBottomOf="@id/detailInterestRvTagBg">
 
                                 <TextView
+                                        android:id="@+id/squareCount"
                                         android:gravity="center_vertical"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -437,11 +438,10 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-
             <com.sdy.jitangapplication.widgets.CommonNoScrollViewPager
                     android:id="@+id/vpUserDetail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginBottom="49dp"
                     android:background="@color/colorWhite"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
@@ -449,7 +449,6 @@
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:visibility="gone"
                     android:layout_height="110dp"
                     app:layout_anchor="@id/vpUserDetail"
                     app:layout_anchorGravity="bottom">
