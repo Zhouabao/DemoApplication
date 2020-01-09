@@ -2,16 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+
     <ImageView
             android:id="@+id/likeMeOneDayAvator"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/default_image_5dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -21,14 +21,98 @@
     <ImageView
             android:id="@+id/likeMeOneDayType"
             android:scaleType="centerInside"
-            android:background="@drawable/shape_oval_white"
             android:src="@drawable/icon_like_with_circle"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             app:layout_constraintRight_toRightOf="@id/likeMeOneDayAvator"
             app:layout_constraintTop_toTopOf="@id/likeMeOneDayAvator"/>
+
+    <View
+            android:background="@drawable/gradient_like_me_bg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/likeMeNickname"/>
+
+
+    <View
+            android:id="@+id/view"
+            android:background="@drawable/shape_oval_orange"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:visibility="gone"
+            android:layout_marginLeft="7dp"
+            app:layout_constraintBottom_toBottomOf="@id/likeMeNickname"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/likeMeNickname"/>
+
+    <TextView
+            android:id="@+id/likeMeNickname"
+            android:layout_marginBottom="3dp"
+            android:ellipsize="marquee"
+            android:textColor="#ffffffff"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:focusable="true"
+            android:layout_width="0dp"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            app:layout_constraintBottom_toTopOf="@id/likeMeInfo"
+            app:layout_constraintLeft_toRightOf="@id/view"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="这大概就是这大概就是"/>
+
+
+    <TextView
+            android:id="@+id/likeMeInfo"
+            android:layout_marginLeft="7dp"
+            android:layout_marginBottom="7dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp"
+            android:layout_width="0dp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeOneDayAvator"
+            app:layout_constraintRight_toRightOf="@id/likeMeOneDayAvator"
+            app:layout_goneMarginBottom="10dp"
+            tools:text="22 / 女 / 巨蟹座 / 18.85km / 产品 "/>
+
+
+    <TextView
+            android:id="@+id/likeMeNicknameCover"
+            android:visibility="gone"
+            android:layout_marginBottom="3dp"
+            android:background="@color/colorWhite"
+            android:textSize="14sp"
+            android:layout_width="0dp"
+            android:layout_height="17dp"
+            app:layout_constraintBottom_toBottomOf="@id/likeMeNickname"
+            app:layout_constraintLeft_toLeftOf="@id/view"
+            app:layout_constraintRight_toRightOf="@id/likeMeNickname"
+            app:layout_constraintTop_toTopOf="@id/likeMeNickname"/>
+
+    <TextView
+            android:id="@+id/likeMeInfoCover"
+            android:visibility="gone"
+            android:background="#CCC"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/likeMeInfo"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeInfo"
+            app:layout_constraintRight_toRightOf="@id/likeMeInfo"
+            app:layout_constraintTop_toTopOf="@id/likeMeInfo"
+            />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

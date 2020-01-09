@@ -35,6 +35,19 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
+            <TextView
+                    android:id="@+id/vipOutTime"
+                    android:layout_width="119dp"
+                    android:layout_height="17dp"
+                    android:text="2020年10月12日到期"
+                    android:textColor="#ffffe6b3"
+                    android:textSize="12sp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintRight_toRightOf="@id/powerUserBg"
+                    app:layout_constraintTop_toTopOf="@id/powerUserBg"
+                    />
+
             <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/vipPowerAvator"
                     android:src="@drawable/icon_default_avator_logo"
@@ -92,6 +105,7 @@
                         android:background="@color/transparent"
                         android:gravity="center_horizontal"
                         android:overScrollMode="never"
+                        android:minHeight="100dp"
                         android:layout_height="wrap_content"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"

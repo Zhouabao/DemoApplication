@@ -122,6 +122,33 @@ data class LikeMeBean(
     val list: MutableList<LikeMeOneDayBean>? = mutableListOf()
 )
 
+data class NewLikeMeBean(
+    var list: MutableList<PositiveLikeBean> = mutableListOf(),
+    var count: Int = 0,
+    var my_like_times: Int = 0,
+    var normal_percent_complete: Int = 0,
+    var my_percent_complete: Int = 0,
+    var total_like_times: Int = 0
+)
+
+
+data class PositiveLikeBean(
+    var accid: String = "",
+    var age: Int = 0,
+    var avatar: String = "",
+    var constellation: String = "",
+    var distance: String = "",
+    var gender: Int = 0,
+    var isfaced: Boolean = false,
+    var isvip: Boolean = false,
+    var nickname: String = "",
+    var tag_id: Int = 0,
+    var photo: MutableList<String> = mutableListOf(),
+    var sametag: MutableList<String> = mutableListOf(),
+    var title: String = ""
+)
+
+
 data class LikeMeOneDayBean(
     val age: Int? = 0,
     val avatar: String? = "",
@@ -131,6 +158,7 @@ data class LikeMeOneDayBean(
     val distance: String? = "",
     val gender: Int? = 0,
     var isfriend: Int = 0,
+    var isfaced: Int = 0,
     val isvip: Int? = 0,
     val job: String? = "",
     val nickname: String? = "",

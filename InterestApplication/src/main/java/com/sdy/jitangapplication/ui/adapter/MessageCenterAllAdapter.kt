@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.graphics.Typeface
+import androidx.core.view.isVisible
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
@@ -16,6 +18,8 @@ import kotlinx.android.synthetic.main.item_message_center_all.view.*
 class MessageCenterAllAdapter : BaseQuickAdapter<MessageListBean, BaseViewHolder>(R.layout.item_message_center_all) {
     override fun convert(holder: BaseViewHolder, item: MessageListBean) {
         GlideUtil.loadImg(mContext, item.icon, holder.itemView.messageAllIcon)
+        holder.itemView.messageAllCount.isVisible = item.count != 0
+        holder.itemView.messageAllCount.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
         holder.itemView.messageAllCount.text = "${if (item.count > 99) {
             "99+"
         } else {

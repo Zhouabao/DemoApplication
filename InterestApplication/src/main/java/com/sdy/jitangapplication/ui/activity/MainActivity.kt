@@ -155,7 +155,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         initFragment()
         //进入页面弹消息提醒
         showMsgDot(
-            UserManager.getCommentCount() > 0 || UserManager.getThumbsUpCount() > 0 || UserManager.getHiCount() > 0
+            UserManager.getCommentCount() > 0 || UserManager.getLikesCount() > 0 || UserManager.getThumbsUpCount() > 0 || UserManager.getHiCount() > 0
                     || NIMClient.getService(MsgService::class.java).totalUnreadCount > 0
         )
 
@@ -448,9 +448,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
      */
     override fun onMsgListResult(allMsgCount: AllMsgCount?) {
         if (allMsgCount != null) {
-            UserManager.saveHiCount(allMsgCount.greetcount)
-            UserManager.saveThumbsUpCount(allMsgCount.likecount)
-            UserManager.saveCommentCount(allMsgCount.square_count)
             //未读消息个数
             val msgCount = NIMClient.getService(MsgService::class.java).totalUnreadCount
             var totalMsgUnread = 0
@@ -549,7 +546,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (unreadNum == 0) {
             UserManager.saveHiCount(0)
         }
-        showMsgDot(UserManager.getThumbsUpCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getCommentCount() > 0 || unreadNum > 0)
+        showMsgDot(UserManager.getThumbsUpCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getLikesCount() > 0 || UserManager.getCommentCount() > 0 || unreadNum > 0)
     }
 
 

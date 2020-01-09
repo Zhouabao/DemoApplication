@@ -20,6 +20,16 @@ class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.lay
         helper.itemView.matchUserName.text = item.nickname
         helper.itemView.matchUserConstellation.text = item.constellation
         helper.itemView.matchUserAge.text = "${item.age}"
+        val left = mContext.resources.getDrawable(
+            if (item.gender == 1) {
+                R.drawable.icon_gender_man_gray
+            } else {
+                R.drawable.icon_gender_woman_gray
+            }
+        )
+        helper.itemView.matchUserAge.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
+
+
         helper.itemView.matchUserDistance.text = "${item.distance}"
         helper.itemView.ivVip.isVisible = item.isvip == 1
         helper.itemView.ivVerify.isVisible = item.isfaced == 1

@@ -15,14 +15,14 @@
             android:id="@+id/stateGreet"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:msv_emptyView="@layout/empty_layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:msv_viewState="loading"
             app:layout_constraintTop_toBottomOf="@+id/llTitle"
+            app:msv_emptyView="@layout/empty_friend_layout"
             app:msv_errorView="@layout/error_layout"
-            app:msv_loadingView="@layout/loading_layout_match_lottie">
+            app:msv_loadingView="@layout/loading_layout_match_lottie"
+            app:msv_viewState="loading">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

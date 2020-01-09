@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kennyc.view.MultiStateView
@@ -81,7 +80,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "对我感兴趣的"
+        hotT1.text = "全部喜欢"
 
         mPresenter = MessageLikeMeOneDayPresenter()
         mPresenter.mView = this
@@ -127,9 +126,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
                 }
             }
         }
-        adapter.headerLayout.likeCount.text = "${intent.getIntExtra("count", 0)} 人对你感兴趣"
         adapter.headerLayout.likeDate.text = "${intent.getStringExtra("date")}"
-        adapter.headerLayout.likeNew.isVisible = intent.getBooleanExtra("hasread", false)
     }
 
     private fun initHeadView(): View {

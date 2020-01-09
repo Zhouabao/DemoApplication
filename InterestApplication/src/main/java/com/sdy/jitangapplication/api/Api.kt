@@ -498,6 +498,7 @@ interface Api {
     @POST("tidings/myGreetList${Constants.END_BASE_URL}")
     fun myGreetList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<GreetedListBean>?>>
 
+
     /**
      * 删除过时消息
      */
@@ -542,6 +543,23 @@ interface Api {
     @FormUrlEncoded
     @POST("relationship/likeLists${Constants.END_BASE_URL}")
     fun likeLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LikeMeListBean?>>
+
+
+    /**
+     * 喜欢我的有效列表
+     */
+    @FormUrlEncoded
+    @POST("Relationship/likeListsV2${Constants.END_BASE_URL}")
+    fun likeListsV2(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NewLikeMeBean?>>
+
+
+    /**
+     * 右滑喜欢
+     */
+    @FormUrlEncoded
+    @POST("Relationship/bindMemberHandle${Constants.END_BASE_URL}")
+    fun bindMemberHandle(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
 
     /**
      * 标记喜欢列表为已读

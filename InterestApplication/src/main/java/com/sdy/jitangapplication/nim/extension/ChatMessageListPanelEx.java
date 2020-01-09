@@ -1401,7 +1401,12 @@ public class ChatMessageListPanelEx {
         //头像
         GlideUtil.loadAvatorImg(container.activity, nimBean.getAvatar(), targetUserAvator);
         GlideUtil.loadAvatorImg(container.activity, UserManager.INSTANCE.getAvator(), myAvator);
-        targetBothInterest.setText(nimBean.getMatching_content());
+        if (nimBean.getMatching_content().isEmpty()) {
+            targetBothInterest.setVisibility(View.GONE);
+        } else {
+            targetBothInterest.setVisibility(View.VISIBLE);
+            targetBothInterest.setText(nimBean.getMatching_content());
+        }
         //用户广场
         targetSquareAdapter.setDataSize(nimBean.getSquare().size());
         if (nimBean.getSquare().size() > ChatTaregetSquareAdapter.MAX_SHOW_COUNT) {

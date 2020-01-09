@@ -559,6 +559,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("slideCount")
         SPUtils.getInstance(Constants.SPNAME).remove("hiCount")
         SPUtils.getInstance(Constants.SPNAME).remove("likeCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("likeUnreadCount")
         SPUtils.getInstance(Constants.SPNAME).remove("squareCount")
         SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
         SPUtils.getInstance(Constants.SPNAME).remove("newCheckedLabels")
@@ -688,7 +689,7 @@ object UserManager {
     }
 
     /**
-     * 保存点赞的数量
+     * 保存点赞未读的数量
      */
     fun saveThumbsUpCount(likeCount: Int) {
         SPUtils.getInstance(Constants.SPNAME).put("likeCount", likeCount)
@@ -696,6 +697,17 @@ object UserManager {
 
     fun getThumbsUpCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("likeCount", 0)
+    }
+
+    /**
+     * 保存喜欢我的未读
+     */
+    fun saveLikesCount(likeCount: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("likeUnreadCount", likeCount)
+    }
+
+    fun getLikesCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("likeUnreadCount", 0)
     }
 
     /**

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="?attr/selectableItemBackground"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:descendantFocusability="beforeDescendants"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="15dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="0dp">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="match_parent">
+
+        <com.sdy.jitangapplication.widgets.NoScrollViewPager
+                android:id="@+id/vpPhotos"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+
+        <TextView
+                android:id="@+id/lastImgBtn"
+                android:layout_width="150dp"
+                android:layout_marginBottom="193dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/nextImgBtn"
+                android:layout_width="150dp"
+                android:layout_gravity="right"
+                android:layout_marginBottom="193dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/v1"
+                android:layout_width="match_parent"
+                android:background="@drawable/gradient_match_user_bg"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+
+            <TextView
+                    android:id="@+id/matchUserName"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24sp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Username"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                    android:id="@+id/ivVip"
+                    android:visibility="visible"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/icon_vip"
+                    android:layout_width="25dp"
+                    android:scaleType="centerInside"
+                    android:layout_height="25dp"
+                    app:layout_constraintBottom_toBottomOf="@id/matchUserName"
+                    app:layout_constraintLeft_toRightOf="@id/matchUserName"
+                    app:layout_constraintTop_toTopOf="@id/matchUserName"
+                    />
+
+            <ImageView
+                    android:id="@+id/ivVerify"
+                    android:visibility="visible"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/icon_verify_pass"
+                    android:layout_width="25dp"
+                    android:scaleType="centerInside"
+                    android:layout_height="25dp"
+                    app:layout_constraintBottom_toBottomOf="@id/matchUserName"
+                    app:layout_constraintLeft_toRightOf="@id/ivVip"
+                    app:layout_constraintTop_toTopOf="@id/matchUserName"
+                    />
+
+
+            <TextView
+                    android:id="@+id/matchUserAge"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:drawablePadding="3dp"
+                    android:textColor="#FFEEEEEE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@drawable/icon_gender_woman_gray"
+                    android:text="23"
+                    app:layout_constraintLeft_toLeftOf="@id/matchUserName"
+                    app:layout_constraintTop_toBottomOf="@id/matchUserName"/>
+
+            <TextView
+                    android:id="@+id/matchUserConstellation"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textColor="#FFEEEEEE"
+                    android:drawableLeft="@drawable/icon_collapstation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="3dp"
+                    android:text="金牛座"
+                    app:layout_constraintLeft_toRightOf="@id/matchUserAge"
+                    app:layout_constraintTop_toTopOf="@id/matchUserAge"/>
+
+            <TextView
+                    android:id="@+id/matchUserDistance"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textColor="#FFEEEEEE"
+                    android:drawablePadding="3dp"
+                    android:drawableLeft="@drawable/icon_map_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10KM"
+                    app:layout_constraintLeft_toRightOf="@id/matchUserConstellation"
+                    app:layout_constraintTop_toTopOf="@id/matchUserAge"/>
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/matchUserAge1"
+                    android:layout_width="0dp"
+                    android:background="@drawable/rectangle_white_15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/matchUserAge">
+
+                <TextView
+                        android:id="@+id/likeTag"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="她通过「玩乐」标签找到你\n她通过「玩乐」标签找到你"
+                        android:textColor="#ff191919"
+                        android:textSize="14sp"
+                        android:lineSpacingMultiplier="1.2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/likeBtn"
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
+
+                <ImageView
+                        android:id="@+id/likeBtn"
+                        android:src="@drawable/icon_like_shadow"
+                        android:layout_width="69dp"
+                        android:layout_height="69dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <LinearLayout
+                    android:id="@+id/vpIndicator"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/matchUserAge"
+                    />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

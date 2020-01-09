@@ -375,7 +375,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 if (userInfoBean?.userinfo?.isvip != 1) {
                     vipDialog.show()
                 } else {
-                    startActivity<VipPowerActivity>("nickname" to userInfoBean?.userinfo?.nickname)
+                    startActivity<VipPowerActivity>(
+                        "nickname" to userInfoBean?.userinfo?.nickname,
+                        "outtime" to userInfoBean?.userinfo?.vip_express
+                    )
                 }
             }
             //我的标签

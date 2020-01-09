@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.adapter
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -30,25 +31,32 @@ class LikeMeOneDayAdapter(var freeShow: Boolean) :
 
 //        val params = itemView.layoutParams as ConstraintLayout.LayoutParams
         val params = itemView.layoutParams as RecyclerView.LayoutParams
-        params.width = SizeUtils.dp2px(180F)
+        params.width = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15 * 3F)) / 8F * 3).toInt()
         params.height = (16 / 9F * params.width).toInt()
+        if (holder.layoutPosition == 0) {
+            params.leftMargin = SizeUtils.dp2px(15F)
+        } else {
+            params.leftMargin = 0
+        }
+        params.rightMargin = SizeUtils.dp2px(15F)
+
         itemView.layoutParams = params
-        itemView.likeMeTag.isVisible = !item.tag_title.isNullOrEmpty()
-        itemView.likeMeTag.text = "${item.tag_title}"
-        itemView.likeMeNickname.text = "${item.nickname}"
-        itemView.likeMeInfo.text = "${item.age} / ${if (item.gender == 1) {
+        itemView.likeMeNickname.text ="${item.nickname}"
+        itemView.likeMeNickname.isSelected = true
+//        23岁·处女座·21.8km备份 2
+        itemView.likeMeInfo.text = "${item.age}·${if (item.gender == 1) {
             "男"
         } else {
             "女"
-        }} / ${item.constellation} / ${item.distance}  ${if (!item.job.isNullOrEmpty()) {
-            "/${item.job}"
+        }}·${item.constellation}·${item.distance}  ${if (!item.job.isNullOrEmpty()) {
+            "·${item.job}"
         } else {
             ""
         }}"
+        itemView.likeMeInfo.isSelected = true
 
         itemView.view.isVisible = !(item.is_read ?: true)
         if (freeShow) {
-            itemView.likeMeTagCover.visibility = View.GONE
             itemView.likeMeInfoCover.visibility = View.GONE
             itemView.likeMeNicknameCover.visibility = View.GONE
             itemView.likeMeType.visibility = View.VISIBLE
@@ -61,7 +69,6 @@ class LikeMeOneDayAdapter(var freeShow: Boolean) :
                 itemView.likeMeType.setImageResource(R.drawable.icon_like_with_circle)
         } else {
             itemView.likeMeType.visibility = View.INVISIBLE
-            itemView.likeMeTagCover.visibility = View.VISIBLE
             itemView.likeMeInfoCover.visibility = View.VISIBLE
             itemView.likeMeNicknameCover.visibility = View.VISIBLE
             val transformation = MultiTransformation(

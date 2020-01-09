@@ -49,7 +49,7 @@ data class CustomerMsgBean(
  * 所有消息的集合
  */
 data class AllMsgCount(
-    val greetcount: Int = 0,
-    val likecount: Int = 0,
-    val square_count: Int = 0
+    val greetcount: Int = 0, //招呼未读
+    val likecount: Int = 0,//点赞未读
+    val square_count: Int = 0//
 )

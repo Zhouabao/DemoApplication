@@ -475,16 +475,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
                     EventBus.getDefault().post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
                 }
-                if (data.data!!.residue == 0) {
-                    card_stack_view.rewind()
-                    if (!UserManager.isUserVip()) {
-                        if (my_percent_complete <= normal_percent_complete)
-                            RightSlideOutdDialog(activity!!, myCount, maxCount).show()
-                        else
-                            ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
-                    }
-                    return
-                }
+
                 if (data.data!!.status == 2) {//status :1.喜欢成功  2.匹配成功
                     sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH, matchBean)
                 }
@@ -494,11 +485,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             }
 
         } else if (data.code == 201) {
-            if (data.data!!.residue == 0) {
-                card_stack_view.rewind()
+            card_stack_view.rewind()
+            if (my_percent_complete <= normal_percent_complete)
+                RightSlideOutdDialog(activity!!, myCount, maxCount).show()
+            else
                 ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
-                return
-            }
+
         } else if (data.code == 405) {
             CommonFunction.toast(data.msg)
             card_stack_view.rewind()
@@ -747,8 +739,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
             if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
                 params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
-            //todo 释放注释
-//            mPresenter.dislikeUser(params)
+            mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             UserManager.saveSlideCount(UserManager.getSlideCount() + 1)
             //保存剩余滑动次数
@@ -767,9 +758,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
                 if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
                     params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
-                //todo 释放注释
-
-//                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
+                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
             } else {
                 card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
                 card_stack_view.isEnabled = false

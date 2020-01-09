@@ -60,6 +60,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
     }
 
     private fun initData() {
+        vipOutTime.text = "${intent.getStringExtra("outtime")?:""}到期"
         GlideUtil.loadCircleImg(this, UserManager.getAvator(), vipPowerAvator)
         vipPowerNickname.text = intent.getStringExtra("nickname") ?: ""
     }

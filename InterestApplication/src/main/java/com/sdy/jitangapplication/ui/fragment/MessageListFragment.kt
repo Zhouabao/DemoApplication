@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -13,8 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.SizeUtils
-import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
@@ -31,12 +28,9 @@ import com.netease.nim.uikit.common.util.sys.TimeUtil
 import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
-import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.MessageReceipt
 import com.netease.nimlib.sdk.msg.model.RecentContact
@@ -48,7 +42,6 @@ import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
-import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
@@ -58,14 +51,8 @@ import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.MessageCenterAllAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
-import com.sdy.jitangapplication.ui.adapter.MessageListLikeMeAdapter
-import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
-import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import com.umeng.commonsdk.stateless.UMSLEnvelopeBuild
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_message_list.*
 import kotlinx.android.synthetic.main.headerview_like_me.view.*
@@ -73,7 +60,6 @@ import kotlinx.android.synthetic.main.headview_message_all.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.startActivity
 import java.util.*
 import kotlin.Comparator
@@ -83,8 +69,6 @@ import kotlin.Comparator
  * 消息中心
  */
 class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), MessageListView {
-
-
     override fun loadData() {
         initView()
         registerObservers(true)
@@ -133,10 +117,8 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         messageListRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         messageListRv.adapter = adapter
         adapter.bindToRecyclerView(messageListRv)
-//        adapter.setEmptyView(R.layout.empty_layout, messageListRv)
         adapter.addHeaderView(initMessageAllHeader(), 0)
-        adapter.addHeaderView(initLikeMesView(), 1)
-        adapter.addHeaderView(initHeadsView(), 2)
+        adapter.addHeaderView(initAssistHeadsView(), 1)
         adapter.setHeaderAndEmpty(true)
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -181,11 +163,12 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     private val allMessageTypeAdapter by lazy { MessageCenterAllAdapter() }
 
     private fun initMessageAllHeader(): View {
-        allMessageTypeAdapter.addData(MessageListBean(title = "点赞", icon = R.drawable.icon_message_like))
+        allMessageTypeAdapter.addData(MessageListBean(title = "点赞", icon = R.drawable.icon_message_thumbs_up))
         allMessageTypeAdapter.addData(MessageListBean(title = "评论", icon = R.drawable.icon_message_comment))
+        allMessageTypeAdapter.addData(MessageListBean(title = "喜欢我", icon = R.drawable.icon_message_like))
         allMessageTypeAdapter.addData(MessageListBean(title = "招呼", icon = R.drawable.icon_message_greet))
         val friendsView = layoutInflater.inflate(R.layout.headview_message_all, messageListRv, false)
-        friendsView.messageCenterRv.layoutManager = GridLayoutManager(activity!!, 3)
+        friendsView.messageCenterRv.layoutManager = GridLayoutManager(activity!!, 4)
         friendsView.messageCenterRv.adapter = allMessageTypeAdapter
         allMessageTypeAdapter.setOnItemClickListener { _, _, position ->
             when (position) {
@@ -194,6 +177,13 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                 }
                 1 -> {//评论
                     startActivity<MessageSquareActivity>("type" to 2)
+                }
+                2 -> {//喜欢我
+                    if (like_free_show) {
+                        startActivity<LikeMeReceivedActivity>()
+                    } else {
+                        startActivity<MessageLikeMeActivity>()
+                    }
                 }
                 else -> {//招呼
                     startActivity<GreetReceivedActivity>()
@@ -205,53 +195,12 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         return friendsView
     }
 
-
-    //创建打招呼好友布局
-    private val likeMeAdapter by lazy { MessageListLikeMeAdapter() }
-
-    private fun initLikeMesView(): View {
-        val friendsView = layoutInflater.inflate(R.layout.headerview_like_me, messageListRv, false)
-        val linearLayoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        friendsView.headRv.layoutManager = linearLayoutManager
-        friendsView.headRv.adapter = likeMeAdapter
-        friendsView.headRv.addItemDecoration(
-            DividerItemDecoration(
-                activity!!,
-                DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(20f),
-                resources.getColor(R.color.colorWhite)
-            )
-        )
-        friendsView.friendTv.onClick {
-            startActivity<MessageLikeMeActivity>()
-        }
-
-        likeMeAdapter.setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-                R.id.likeMeAvator -> {
-                    if (msgBean?.like_free_show == true) {
-                        MatchDetailActivity.start(activity!!, likeMeAdapter.data[position].accid)
-                    }
-                }
-                R.id.likeMeAvatorBtn -> {
-                    if (likeMeAdapter.data[position].isfriend) {
-                        ChatActivity.start(activity!!, likeMeAdapter.data[position].accid ?: "")
-                    } else {
-                        mPresenter.likeUser(likeMeAdapter.data[position].accid, position)
-                    }
-                }
-            }
-        }
-        return friendsView
-    }
-
-
     /**
      * 创建小助手布局
      */
     private val headAdapter by lazy { MessageListHeadAdapter() }
 
-    private fun initHeadsView(): View {
+    private fun initAssistHeadsView(): View {
         val headView = LayoutInflater.from(activity!!).inflate(R.layout.headerview_like_me, messageListRv, false)
         headView.rlFriend.visibility = View.GONE
         val linearLayoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
@@ -279,16 +228,20 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
      * 获取消息中心的顶部数据
      */
     private var msgBean: MessageListBean1? = null
+    private var like_free_show: Boolean = false
 
     override fun onMessageCensusResult(data: MessageListBean1?) {
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
         UserManager.saveCommentCount((data?.comment_count ?: 0))
         UserManager.saveThumbsUpCount(data?.thumbs_up_count ?: 0)
+        UserManager.saveLikesCount(data?.liked_unread_cnt ?: 0)
         allMessageTypeAdapter.data[0].count = data?.thumbs_up_count ?: 0
         allMessageTypeAdapter.data[1].count = data?.comment_count ?: 0
-        allMessageTypeAdapter.data[2].count = data?.greet_count ?: 0
+        allMessageTypeAdapter.data[2].count = data?.liked_unread_cnt ?: 0
+        allMessageTypeAdapter.data[3].count = data?.greet_count ?: 0
         allMessageTypeAdapter.notifyDataSetChanged()
-        if (UserManager.getThumbsUpCount() > 0 || UserManager.getCommentCount() > 0)
+        like_free_show = data?.like_free_show ?: false
+        if (UserManager.getThumbsUpCount() > 0 || UserManager.getCommentCount() > 0 || UserManager.getLikesCount() > 0)
             EventBus.getDefault().post(NewMsgEvent())
 
         //如果满足招呼认证提醒，就开启认证提醒
@@ -304,74 +257,8 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         }
         headAdapter.data[0] = ass
         headAdapter.notifyItemChanged(0)
-        likeMeAdapter.data.clear()
-        likeMeAdapter.freeShow = data?.like_free_show ?: false
-        if (data?.likelist != null && data?.likelist.isNotEmpty()) {
-            if ((data.liked_unread_cnt ?: 0) > 0) {
-                adapter.headerLayout.likedCount.text = "${data.liked_unread_cnt ?: 0}"
-                adapter.headerLayout.likedCount.isVisible = true
-            } else {
-                adapter.headerLayout.likedCount.isVisible = false
-            }
-            adapter.headerLayout.rlFriend.visibility = View.VISIBLE
-            likeMeAdapter.setNewData(data.likelist)
-        } else {
-            adapter.headerLayout.rlFriend.visibility = View.GONE
-            likeMeAdapter.notifyDataSetChanged()
-        }
-
         //获取最近联系人列表
         mPresenter.getRecentContacts()
-    }
-
-    /**
-     * 喜欢他人~
-     */
-    override fun onLikeUserResult(t: BaseResp<StatusBean?>, position: Int) {
-        if (t.code == 200) {
-            if (t.data != null) {
-                if (t.data!!.status == 2) {//匹配成功
-                    likeMeAdapter.data[position].isfriend = true
-                    likeMeAdapter.notifyItemChanged(position)
-                    val chatHiAttachment = ChatHiAttachment(
-                        UserManager.getGlobalLabelName(),
-                        ChatHiAttachment.CHATHI_MATCH
-                    )
-                    val message = MessageBuilder.createCustomMessage(
-                        likeMeAdapter.data[position].accid,
-                        SessionTypeEnum.P2P,
-                        "",
-                        chatHiAttachment,
-                        CustomMessageConfig()
-                    )
-
-                    NIMClient.getService(MsgService::class.java).sendMessage(message, false)
-                        .setCallback(object :
-                            RequestCallback<Void?> {
-                            override fun onSuccess(param: Void?) {
-                                (UMSLEnvelopeBuild.mContext as Activity).startActivity<MatchSucceedActivity>(
-                                    "avator" to likeMeAdapter.data[position].avatar,
-                                    "nickname" to likeMeAdapter.data[position].nickname,
-                                    "accid" to likeMeAdapter.data[position].accid
-                                )
-                            }
-
-                            override fun onFailed(code: Int) {
-                            }
-
-                            override fun onException(exception: Throwable) {
-                            }
-                        })
-                }
-            }
-        } else if (t.code == 201) {
-            if (msgBean?.my_percent_complete ?: 0 <= msgBean?.normal_percent_complete ?: 0)
-                RightSlideOutdDialog(activity!!, msgBean?.my_like_times ?: 0, msgBean?.total_like_times ?: 0).show()
-            else
-                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, UMSLEnvelopeBuild.mContext).show()
-        } else {
-            CommonFunction.toast(t.msg)
-        }
     }
 
 

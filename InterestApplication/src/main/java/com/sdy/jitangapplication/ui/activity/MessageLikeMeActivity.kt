@@ -26,7 +26,6 @@ import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_like_me.*
 import kotlinx.android.synthetic.main.empty_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.error_layout.view.emptyImg
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -65,7 +64,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         btnBack.onClick {
             onBackPressed()
         }
-        hotT1.text = "对我感兴趣的"
+        hotT1.text = "全部喜欢"
 
         lockToSee.setOnClickListener(this)
         lockToSee.isVisible = !adapter.freeShow
