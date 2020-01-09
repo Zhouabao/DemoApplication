@@ -20,7 +20,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.NewMsgEvent
+import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.HiMessageBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -96,9 +96,9 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
         adapter.isUseEmpty(false)
 
         adapter.setOnItemClickListener { _, view, position ->
-            //发送通知告诉剩余时间，并且开始倒计时
+            //发送通知已读消息
             NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
-            EventBus.getDefault().post(NewMsgEvent())
+            EventBus.getDefault().post(GetNewMsgEvent())
             // 通知中的 RecentContact 对象的未读数为0
             ChatActivity.start(this, adapter.data[position].accid ?: "")
         }

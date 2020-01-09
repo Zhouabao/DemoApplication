@@ -24,7 +24,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.NewMsgEvent
+import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.GreetedListBean
 import com.sdy.jitangapplication.presenter.GreetReceivedPresenter
@@ -235,7 +235,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         if (UserManager.getHiCount() > 0) {
             UserManager.saveHiCount(UserManager.getHiCount() - 1)
         }
-        EventBus.getDefault().post(NewMsgEvent())
+        EventBus.getDefault().post(GetNewMsgEvent())
         //1 右滑招呼 2坐滑招呼
         mPresenter.likeOrGreetState(
             adapter.data[manager.topPosition - 1].greet_id, if (direction == Direction.Left) {

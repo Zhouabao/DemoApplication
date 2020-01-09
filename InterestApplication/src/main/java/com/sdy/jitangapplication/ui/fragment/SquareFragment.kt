@@ -48,10 +48,7 @@ import com.sdy.jitangapplication.presenter.SquarePresenter
 import com.sdy.jitangapplication.presenter.view.SquareView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
-import com.sdy.jitangapplication.ui.activity.AddLabelActivity
-import com.sdy.jitangapplication.ui.activity.AllTitleActivity
-import com.sdy.jitangapplication.ui.activity.PublishActivity
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
+import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.AllTitleAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.adapter.TagAdapter
@@ -884,7 +881,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
                     UserManager.clearPublishParams()
 
-                    startActivity<PublishActivity>()
+                    startActivity<ChooseLabelActivity>()
                     UserManager.publishState = 0
                     uploadFl.isVisible = false
                     if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
@@ -952,22 +949,23 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                         UserManager.clearPublishParams()
                         if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
                             if (event.context == UserCenterFragment::class.java.simpleName) {
-                                startActivity<PublishActivity>("from" to 2)
+                                startActivity<ChooseLabelActivity>("from" to 2)
                             } else {
-                                startActivity<PublishActivity>()
+                                startActivity<ChooseLabelActivity>()
                             }
                     }
                 })
                 .create()
                 .show()
         } else if (UserManager.publishState == -1) { //400
+            //TODO 思考问题如何处理违规内容
             SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
             UserManager.clearPublishParams()
             if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
                 if (event.context == UserCenterFragment::class.java.simpleName) {
-                    startActivity<PublishActivity>("from" to 2)
+                    startActivity<ChooseLabelActivity>("from" to 2)
                 } else {
-                    startActivity<PublishActivity>()
+                    startActivity<ChooseLabelActivity>()
                 }
             uploadFl.isVisible = false
             if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
@@ -977,9 +975,9 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             }
         } else if (UserManager.publishState == 0) {
             if (event.context == UserCenterFragment::class.java.simpleName) {
-                startActivity<PublishActivity>("from" to 2)
+                startActivity<ChooseLabelActivity>("from" to 2)
             } else {
-                activity!!.intent.setClass(activity!!, PublishActivity::class.java)
+                activity!!.intent.setClass(activity!!, ChooseLabelActivity::class.java)
                 startActivity(activity!!.intent)
             }
         }

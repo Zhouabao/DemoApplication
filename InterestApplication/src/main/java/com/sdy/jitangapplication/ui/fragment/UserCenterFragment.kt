@@ -324,7 +324,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     override fun onCheckBlockResult(b: Boolean) {
         if (b) {
             if (UserManager.publishState == 0) {
-                startActivity<PublishActivity>("from" to 2)
+                startActivity<ChooseLabelActivity>("from" to 2)
             } else
                 EventBus.getDefault().post(RePublishEvent(true, UserCenterFragment::class.java.simpleName))
         }

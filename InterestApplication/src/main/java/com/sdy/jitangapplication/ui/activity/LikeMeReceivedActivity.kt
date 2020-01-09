@@ -76,7 +76,8 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_like_me_received)
         initView()
-        mPresenter.greatLists(params)
+        mPresenter.likeListsV2(params)
+
     }
 
 
@@ -112,7 +113,7 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
 
         stateLikeReceived.retryBtn.onClick {
             stateLikeReceived.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.greatLists(params)
+            mPresenter.likeListsV2(params)
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -144,6 +145,9 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
             adapter.addData(t.data!!.list)
             if (page == 1 && t.data!!.list.isNullOrEmpty()) {
                 stateLikeReceived.viewState = MultiStateView.VIEW_STATE_EMPTY
+            }
+            if (page == 1) {
+                mPresenter.markLikeRead()
             }
 
             my_percent_complete = t.data!!.my_percent_complete
@@ -221,7 +225,7 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
         hasMore = true
         adapter.data.clear()
         stateLikeReceived.viewState = MultiStateView.VIEW_STATE_LOADING
-        mPresenter.greatLists(params)
+        mPresenter.likeListsV2(params)
     }
 
 
@@ -352,7 +356,7 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
 
         if (hasMore && manager.topPosition == adapter.itemCount - 5) {
             page++
-            mPresenter.greatLists(params)
+            mPresenter.likeListsV2(params)
         }
     }
 

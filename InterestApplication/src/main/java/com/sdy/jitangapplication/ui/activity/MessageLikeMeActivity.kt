@@ -55,6 +55,8 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         initView()
         //获取喜欢我的列表
         mPresenter.likeLists(params)
+
+
     }
 
     private val adapter by lazy { LikeMeAdapter() }
@@ -128,6 +130,10 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         adapter.normal_percent_complete = data.normal_percent_complete
         adapter.addData(data.list ?: mutableListOf())
         lockToSee.isVisible = !adapter.freeShow && adapter.data.size > 0
+        if (page == 1) {
+            //标记已读
+            mPresenter.markLikeRead(params)
+        }
         if (adapter.data.size < Constants.PAGESIZE * page) {
             refreshLayout.finishLoadMoreWithNoMoreData()
         } else {

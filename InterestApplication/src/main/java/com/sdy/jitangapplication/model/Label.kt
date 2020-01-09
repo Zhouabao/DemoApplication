@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.model
 
+import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.contrarywind.interfaces.IPickerViewData
 import java.io.Serializable
 
@@ -55,11 +56,42 @@ data class LabelQualityBean(
 }
 
 
+/**
+ * 广场发布标签
+ */
+data class SquareLabelsBean(
+    var all_list: MutableList<SquareLabelBean> = mutableListOf(),
+    var used_list: MutableList<SquareLabelBean> = mutableListOf()
+)
+
+
+data class SquareLabelBean(
+    var cnt: Int = 0,
+    var cover_url: String = "",
+    var icon: String = "",
+    var id: Int = 0,
+    var title: String = "",
+    var type: Int = 0,
+    var checked: Boolean = false
+
+) : Serializable, MultiItemEntity {
+    override fun getItemType(): Int {
+        return type
+    }
+
+    companion object {
+        const val TITLE = 0
+        const val CONTENT = 1
+    }
+}
+
+
 data class MyLabelsBean(
     var is_using: MutableList<MyLabelBean> = mutableListOf(),
     var is_removed: MutableList<MyLabelBean> = mutableListOf(),
     var limit_count: Int = 0
 )
+
 
 /**
  * 我的标签
@@ -81,7 +113,7 @@ data class MyLabelBean(
     var msg: String = "",
     var checked: Boolean = false,
     var animated: Boolean = false
-) : Serializable
+):Serializable
 
 
 /**

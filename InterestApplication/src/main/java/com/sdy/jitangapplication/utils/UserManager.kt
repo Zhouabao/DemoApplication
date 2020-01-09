@@ -689,39 +689,6 @@ object UserManager {
     }
 
     /**
-     * 保存点赞未读的数量
-     */
-    fun saveThumbsUpCount(likeCount: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("likeCount", likeCount)
-    }
-
-    fun getThumbsUpCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("likeCount", 0)
-    }
-
-    /**
-     * 保存喜欢我的未读
-     */
-    fun saveLikesCount(likeCount: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("likeUnreadCount", likeCount)
-    }
-
-    fun getLikesCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("likeUnreadCount", 0)
-    }
-
-    /**
-     * 广场评论数量
-     */
-    fun saveCommentCount(squareCount: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("squareCount", squareCount)
-    }
-
-    fun getCommentCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("squareCount", 0)
-    }
-
-    /**
      * 保存招呼个数
      */
     fun saveHiCount(greetCount: Int = 0) {

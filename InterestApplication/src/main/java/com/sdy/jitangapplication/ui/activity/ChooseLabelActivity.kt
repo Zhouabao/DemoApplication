@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.activity
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -11,83 +10,83 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.UpdateMyLabelEvent
-import com.sdy.jitangapplication.model.MyLabelBean
-import com.sdy.jitangapplication.model.MyLabelsBean
-import com.sdy.jitangapplication.model.TagBean
-import com.sdy.jitangapplication.presenter.MyLabelPresenter
-import com.sdy.jitangapplication.presenter.view.MyLabelView
+import com.sdy.jitangapplication.model.SquareLabelBean
+import com.sdy.jitangapplication.model.SquareLabelsBean
+import com.sdy.jitangapplication.presenter.ChooseLabelPresenter
+import com.sdy.jitangapplication.presenter.view.ChooseLabelView
 import com.sdy.jitangapplication.ui.adapter.ChooseLabelAdapter
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_choose_label.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import java.io.Serializable
 
 /**
  * 发布选择标签
  */
-class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.OnClickListener {
-    private val removedLabel = mutableListOf<MyLabelBean>()
+class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabelView, View.OnClickListener {
     private val adapter by lazy { ChooseLabelAdapter() }
-    private var mylabelBean: MyLabelBean? = null
+    private var mylabelBean: SquareLabelBean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_label)
 
         initView()
-        mPresenter.getMyTagsList()
+        mPresenter.getSquareTag()
     }
 
     private fun initView() {
-        EventBus.getDefault().register(this)
-
-        mPresenter = MyLabelPresenter()
+        mPresenter = ChooseLabelPresenter()
         mPresenter.mView = this
         mPresenter.context = this
 
         btnBack.setOnClickListener(this)
         rightBtn1.setOnClickListener(this)
-        addMoreLabelBtn.setOnClickListener(this)
-        hotT1.text = "选择标签"
+        hotT1.text = "发布到哪个标签"
         rightBtn1.isVisible = true
-        rightBtn1.text = "完成"
-        rightBtn1.isEnabled = true
+        rightBtn1.text = "下一步"
+        rightBtn1.isEnabled = false
 
         stateChooseLabel.retryBtn.onClick {
             stateChooseLabel.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.getMyTagsList()
+            mPresenter.getSquareTag()
         }
 
         rvMyLabels.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvMyLabels.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
             for (label in adapter.data) {
-                label.checked = label == adapter.data[position]
+                label.checked = label.id == adapter.data[position].id
             }
             mylabelBean = adapter.data[position]
+            rightBtn1.isEnabled = true
             adapter.notifyDataSetChanged()
         }
     }
 
-    override fun getMyTagsListResult(result: Boolean, datas: MyLabelsBean?) {
+    override fun getSquareTagListResult(result: Boolean, datas: SquareLabelsBean?) {
         if (result) {
             stateChooseLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
-            adapter.setNewData(datas?.is_using ?: mutableListOf())
-            removedLabel.addAll(datas?.is_removed ?: mutableListOf())
+
+            if (datas != null) {
+                if (datas.all_list.isNullOrEmpty() && datas.used_list.isNullOrEmpty()) {
+                    stateChooseLabel.viewState = MultiStateView.VIEW_STATE_EMPTY
+                } else {
+                    adapter.addData(SquareLabelBean(title = "常用标签", type = SquareLabelBean.TITLE))
+                    for (data in datas.used_list) {
+                        data.type = SquareLabelBean.CONTENT
+                    }
+                    adapter.addData(datas.used_list)
+                    adapter.addData(SquareLabelBean(title = "全部标签", type = SquareLabelBean.TITLE))
+                    for (data in datas.all_list) {
+                        data.type = SquareLabelBean.CONTENT
+                    }
+                    adapter.addData(datas.all_list)
+                }
+            }
         } else {
             stateChooseLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }
-
-    override fun delTagResult(result: Boolean, position: Int, data: MutableList<TagBean>?) {
-
-    }
-
 
     override fun onClick(v: View) {
         when (v) {
@@ -100,21 +99,8 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
                     CommonFunction.toast("标签为必选项")
                     return
                 }
-
                 intent.putExtra("label", mylabelBean)
-                setResult(Activity.RESULT_OK, intent)
-                finish()
-            }
-            addMoreLabelBtn -> {
-                if (adapter.data.size == 5) {
-                    CommonFunction.toast("至多能拥有${UserManager.getMaxInterestLabelCount()}个标签")
-                    return
-                }
-
-                intent.putExtra("from", AddLabelActivity.FROM_PUBLISH)
-                intent.putExtra("is_using", adapter.data as Serializable)
-                intent.putExtra("is_removed", removedLabel as Serializable)
-                intent.setClass(this, AddLabelActivity::class.java)
+                intent.setClass(this, PublishActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -123,12 +109,7 @@ class ChooseLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, Vi
 
     override fun onDestroy() {
         super.onDestroy()
-        EventBus.getDefault().unregister(this)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateMyLabelEvent(event: UpdateMyLabelEvent) {
-        mPresenter.getMyTagsList()
-    }
 
 }

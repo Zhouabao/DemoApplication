@@ -23,7 +23,7 @@ class MainPresenter : BasePresenter<MainView>() {
     /**
      * 更新条件筛选
      */
-    fun msgList(token: String, accid: String) {
+    fun msgList() {
         RetrofitFactory.instance.create(Api::class.java)
             .msgList(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<AllMsgCount?>>(mView) {

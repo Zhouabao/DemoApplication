@@ -252,12 +252,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     "${matchBean!!.base_info.height}"
                 )
             )
-        if (!matchBean!!.base_info.emotion_state.isNullOrEmpty())
+        if (!matchBean!!.base_info.emotion.isNullOrEmpty())
             detailUserInformationAdapter.addData(
                 DetailUserInfoBean(
                     R.drawable.icon_detail_emotion,
                     "感情状态",
-                    "${matchBean!!.base_info.emotion_state}"
+                    "${matchBean!!.base_info.emotion}"
                 )
             )
         if (!matchBean!!.base_info.hometown.isNullOrEmpty())

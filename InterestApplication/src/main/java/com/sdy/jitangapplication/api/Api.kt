@@ -802,6 +802,12 @@ interface Api {
     @FormUrlEncoded
     @POST("Tags/getMyTagsList${Constants.END_BASE_URL}")
     fun getMyTagsList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyLabelsBean?>>
+    /**
+     * 获取发布标签
+     */
+    @FormUrlEncoded
+    @POST("Tags/getSquareTag${Constants.END_BASE_URL}")
+    fun getSquareTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareLabelsBean?>>
 
     /**
      * 删除我的标签

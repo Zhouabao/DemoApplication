@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/labelTitle"
+        android:text="所有评论"
+        android:textColor="#FF959A9E"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@color/colorDivider"
+        android:paddingLeft="15dp"
+        android:gravity="center_vertical"
+        />

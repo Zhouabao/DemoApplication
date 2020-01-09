@@ -643,7 +643,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             if (nimBeanBaseResp.getCode() == 211) {
                                 CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
                             }
-                            sendMsgS(content, content.getMsgType() != MsgTypeEnum.text);
+                            if (content.getMsgType() == MsgTypeEnum.text)
+                                sendMsgS(content, false);
                         } else if (nimBeanBaseResp.getCode() == 410) {
                             sendAlready3Msgs();
                         } else {

@@ -154,11 +154,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         mPresenter.context = this
         initFragment()
         //进入页面弹消息提醒
-        showMsgDot(
-            UserManager.getCommentCount() > 0 || UserManager.getLikesCount() > 0 || UserManager.getThumbsUpCount() > 0 || UserManager.getHiCount() > 0
-                    || NIMClient.getService(MsgService::class.java).totalUnreadCount > 0
-        )
-
+        mPresenter.msgList()
     }
 
 
@@ -503,7 +499,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
      * 消息接收观察者
      */
     private var incomingMessageObserver: Observer<List<IMMessage>> = Observer {
-        mPresenter.msgList(UserManager.getToken(), UserManager.getAccid())
+        mPresenter.msgList()
     }
 
     companion object {
@@ -537,16 +533,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onGetMSGEvent(event: GetNewMsgEvent) {
-        mPresenter.msgList(UserManager.getToken(), UserManager.getAccid())
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNewMsgEvent(event: NewMsgEvent) {
-        val unreadNum = NIMClient.getService(MsgService::class.java).totalUnreadCount
-        if (unreadNum == 0) {
-            UserManager.saveHiCount(0)
-        }
-        showMsgDot(UserManager.getThumbsUpCount() > 0 || UserManager.getHiCount() > 0 || UserManager.getLikesCount() > 0 || UserManager.getCommentCount() > 0 || unreadNum > 0)
+        mPresenter.msgList()
     }
 
 

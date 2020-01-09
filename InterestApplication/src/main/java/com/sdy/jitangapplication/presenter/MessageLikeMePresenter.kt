@@ -9,10 +9,12 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.LikeMeListBean
 import com.sdy.jitangapplication.presenter.view.MessageLikeMeView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -56,6 +58,7 @@ class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
+                        EventBus.getDefault().post(UpdateHiEvent())
                     }
                 }
 

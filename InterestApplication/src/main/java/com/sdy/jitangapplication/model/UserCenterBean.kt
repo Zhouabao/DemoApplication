@@ -129,7 +129,7 @@ data class UserInfoSettingBean(
 data class BaseInfo(
     val height: Int = 0,
     val emotion_list: MutableList<String> = mutableListOf(),
-    val emotion_state: String? = "",
+    val emotion: String? = "",
     val hometown: String? = "",
     val present_address: String? = "",
     val personal_job: String? = "",

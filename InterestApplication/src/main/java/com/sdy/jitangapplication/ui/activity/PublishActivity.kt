@@ -223,18 +223,19 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     private var titleBean: TopicBean? = null
     private fun initData() {
+        //从其他地方进入发布,自主选择的标签
+        if (intent.getSerializableExtra("label") != null) {
+            checkTags.clear()
+            checkTags.add((intent.getSerializableExtra("label") as SquareLabelBean))
+            chooseTitleBtn.text = ""
+        }
+
+        //从广场标题引导进入发布，默认选中标签
         if (intent.getSerializableExtra("titleBean") != null) {
             titleBean = intent.getSerializableExtra("titleBean") as TopicBean
-            chooseLabelBtn.text = titleBean!!.tag_title
-            checkTags.add(NewLabel(id = titleBean!!.tag_id, title = titleBean!!.tag_title))
+            checkTags.add(SquareLabelBean(id = titleBean!!.tag_id, title = titleBean!!.tag_title))
 
             chooseTitleBtn.text = titleBean!!.title
-            chooseTitleBtn.setCompoundDrawablesWithIntrinsicBounds(
-                resources.getDrawable(R.drawable.icon_publish_title_enable),
-                null,
-                null,
-                null
-            )
             chooseTitleBtn.ellipsize = TextUtils.TruncateAt.MARQUEE
             chooseTitleBtn.isSingleLine = true
             chooseTitleBtn.isSelected = true
@@ -308,7 +309,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         publishContent.addTextChangedListener(this)
         locationCity.setOnClickListener(this)
         chooseTitleBtn.setOnClickListener(this)
-        chooseLabelBtn.setOnClickListener(this)
         btn_emo.setOnClickListener(this)
         rightBtn1.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
@@ -457,7 +457,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
 
     /***************设置选中的标签******************/
-    private var checkTags = mutableListOf<NewLabel>()
+    private var checkTags = mutableListOf<SquareLabelBean>()
 
 
     /*****************设置相册和视频信息********************/
@@ -1239,9 +1239,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 }
                 startActivityForResult<ChooseTitleActivity>(REQUEST_CODE_TITILE, "tag_id" to checkTags[0].id)
             }
-            R.id.chooseLabelBtn -> {
-                startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL)
-            }
         }
     }
 
@@ -1346,31 +1343,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     }
                 }
             }
-            //标签返回
-            else if (requestCode == REQUEST_CODE_LABEL) {
-//                checkedLabel
-                if ((data!!.getSerializableExtra("label") as MyLabelBean) != null) {
-                    val myLabelBean = data!!.getSerializableExtra("label") as MyLabelBean
-                    //这里要更新选中的标签
-                    checkTags.clear()
-                    checkTags.add(
-                        NewLabel(
-                            icon = myLabelBean.icon,
-                            id = myLabelBean.tag_id,
-                            title = myLabelBean.title
-                        )
-                    )
-                    chooseLabelBtn.text = checkTags[0].title
-                    chooseTitleBtn.text = ""
-                    checkCompleteBtnEnable()
-                    chooseTitleBtn.setCompoundDrawablesWithIntrinsicBounds(
-                        resources.getDrawable(R.drawable.icon_publish_title_enable),
-                        null,
-                        null,
-                        null
-                    )
-                }
-            }
             //地图返回
             else if (requestCode == REQUEST_CODE_MAP) {
                 if (data?.getParcelableExtra<PoiItem>("poiItem") != null) {
@@ -1434,7 +1406,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             "accid" to UserManager.getAccid(),
             "descr" to "${publishContent.text}",
             "tag_id" to checkTags[0].id,
-            "title" to "${chooseTitleBtn.text.toString()}",
+            "title" to "${chooseTitleBtn.text}",
             "lat" to if (positionItem == null) {
                 UserManager.getlatitude()
             } else {

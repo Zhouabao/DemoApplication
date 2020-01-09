@@ -37,7 +37,7 @@ import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.NewMsgEvent
+import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.MessageListBean
@@ -148,7 +148,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     NIMClient.getService(MsgService::class.java)
                         .clearUnreadCount(adapter.data[position].contactId, SessionTypeEnum.P2P)
                     ChatActivity.start(activity!!, adapter.data[position].contactId)
-                    EventBus.getDefault().post(NewMsgEvent())
+                    EventBus.getDefault().post(GetNewMsgEvent())
 
                 }
             }
@@ -214,7 +214,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     NIMClient.getService(MsgService::class.java)
                         .clearUnreadCount(Constants.ASSISTANT_ACCID, SessionTypeEnum.P2P)
                     ChatActivity.start(activity!!, Constants.ASSISTANT_ACCID)
-                    EventBus.getDefault().post(NewMsgEvent())
+                    EventBus.getDefault().post(GetNewMsgEvent())
                     headAdapter.data[0].count = 0
                     headAdapter.notifyItemChanged(0)
                 }
@@ -232,17 +232,14 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     override fun onMessageCensusResult(data: MessageListBean1?) {
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
-        UserManager.saveCommentCount((data?.comment_count ?: 0))
-        UserManager.saveThumbsUpCount(data?.thumbs_up_count ?: 0)
-        UserManager.saveLikesCount(data?.liked_unread_cnt ?: 0)
         allMessageTypeAdapter.data[0].count = data?.thumbs_up_count ?: 0
         allMessageTypeAdapter.data[1].count = data?.comment_count ?: 0
         allMessageTypeAdapter.data[2].count = data?.liked_unread_cnt ?: 0
         allMessageTypeAdapter.data[3].count = data?.greet_count ?: 0
         allMessageTypeAdapter.notifyDataSetChanged()
         like_free_show = data?.like_free_show ?: false
-        if (UserManager.getThumbsUpCount() > 0 || UserManager.getCommentCount() > 0 || UserManager.getLikesCount() > 0)
-            EventBus.getDefault().post(NewMsgEvent())
+        if ((data?.comment_count ?: 0 > 0) || (data?.thumbs_up_count ?: 0) > 0 || (data?.liked_unread_cnt ?: 0) > 0)
+            EventBus.getDefault().post(GetNewMsgEvent())
 
         //如果满足招呼认证提醒，就开启认证提醒
         if (data?.greet_toast == true && !SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowHarassment", false)) {

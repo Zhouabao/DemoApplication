@@ -20,6 +20,8 @@ class MatchDetailInfoAdapter : BaseQuickAdapter<DetailUserInfoBean, BaseViewHold
         helper.itemView.infoIv.setImageResource(item.icon)
         helper.itemView.infoTitle.text = item.title
         helper.itemView.infoContent.text = item.content
+        helper.itemView.infoContent.isSelected = true
+
         val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
         if (helper.layoutPosition == 0) {
             params.topMargin = SizeUtils.dp2px(9F)

@@ -22,7 +22,7 @@
             app:layout_constraintTop_toBottomOf="@id/llTitle">
 
         <TextView
-                android:text="选择标签"
+                android:text="选择标题"
                 android:textColor="#ff191919"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"
@@ -31,12 +31,14 @@
                 />
 
         <TextView
-                android:id="@+id/chooseLabelBtn"
+                android:id="@+id/chooseTitleBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="请选择标签"
+                android:hint=""
                 android:gravity="center"
+                android:minWidth="100dp"
                 android:drawablePadding="10dp"
+                android:layout_marginLeft="75dp"
                 android:drawableRight="@drawable/icon_more_right"
                 android:layout_alignParentRight="true"
                 android:textColor="#ff9b9b9b"
@@ -106,44 +108,16 @@
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
 
-        <TextView
-                android:id="@+id/chooseTitleBtn"
-                android:layout_height="30dp"
-                android:background="@drawable/shape_rectangle_light_gray_15dp"
-                android:layout_width="130dp"
-                android:paddingRight="12dp"
-                android:drawablePadding="7dp"
-                android:drawableLeft="@drawable/icon_publish_title_unable"
-                android:textColor="#ff191919"
-                android:textColorHint="#ff191919"
-                android:textSize="14sp"
-                android:maxWidth="130dp"
-                android:singleLine="true"
-                android:maxLength="12"
-                android:paddingTop="6dp"
-                android:ellipsize="marquee"
-                android:gravity="center"
-                android:paddingBottom="6dp"
-                android:layout_marginRight="15dp"
-                android:hint="选择标题"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                app:layout_constraintBottom_toBottomOf="@id/locationCityLl"
-                app:layout_constraintLeft_toLeftOf="@id/publishContent"
-                app:layout_constraintTop_toTopOf="@id/locationCityLl"
-                />
-
         <LinearLayout
                 android:id="@+id/locationCityLl"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
-                android:layout_marginRight="72dp"
+                android:layout_marginRight="63dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="15dp"
                 app:layout_constraintBottom_toTopOf="@id/divide"
-                app:layout_constraintLeft_toRightOf="@id/chooseTitleBtn"
+                app:layout_constraintLeft_toLeftOf="@id/publishContent"
                 app:layout_constraintRight_toRightOf="parent">
 
             <TextView

@@ -1,18 +1,59 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.graphics.Color
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
-import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.MyLabelBean
+import com.sdy.jitangapplication.model.SquareLabelBean
 import kotlinx.android.synthetic.main.item_choose_label.view.*
+import kotlinx.android.synthetic.main.item_choose_label_title.view.*
 
-class ChooseLabelAdapter : BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.item_choose_label) {
-    override fun convert(helper: BaseViewHolder, item: MyLabelBean) {
+class ChooseLabelAdapter : BaseMultiItemQuickAdapter<SquareLabelBean, BaseViewHolder>(mutableListOf()) {
 
-        helper.itemView.labelName.text = item.title
-        GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon, SizeUtils.dp2px(8F))
-        helper.itemView.labelChecked.isChecked = item.checked
+    init {
+        addItemType(SquareLabelBean.TITLE, R.layout.item_choose_label_title)
+        addItemType(SquareLabelBean.CONTENT, R.layout.item_choose_label)
+    }
+
+    override fun convert(helper: BaseViewHolder, item: SquareLabelBean) {
+
+        when (helper.itemViewType) {
+            SquareLabelBean.TITLE -> {
+                helper.itemView.labelTitle.text = item.title
+            }
+            SquareLabelBean.CONTENT -> {
+                helper.itemView.divider.isVisible = helper.layoutPosition != mData.size - 1
+                helper.itemView.labelName.text = item.title
+                GlideUtil.loadRoundImgCenterCrop(mContext, item.icon, helper.itemView.labelIcon, SizeUtils.dp2px(6F))
+
+                if (item.checked) {
+                    helper.itemView.setBackgroundColor(Color.parseColor("#FFFFEFE7"))
+                } else {
+                    helper.itemView.setBackgroundColor(mContext.resources.getColor(R.color.colorWhite))
+                }
+                if (item.cnt > 0) {
+                    helper.itemView.labelUsedCount.isVisible = true
+                    helper.itemView.labelUsedCount.text = "发布过${item.cnt}条动态"
+                } else {
+                    helper.itemView.labelUsedCount.isVisible = false
+                }
+
+                if (!item.cover_url.isNullOrEmpty()) {
+                    helper.itemView.labelUsedCover.isVisible = true
+                    GlideUtil.loadRoundImgCenterCrop(
+                        mContext,
+                        item.icon,
+                        helper.itemView.labelUsedCover,
+                        SizeUtils.dp2px(6F)
+                    )
+                } else
+                    helper.itemView.labelUsedCover.isVisible = false
+            }
+        }
+
+
     }
 }

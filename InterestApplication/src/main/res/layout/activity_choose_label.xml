@@ -14,44 +14,21 @@
             android:id="@+id/stateChooseLabel"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:msv_loadingView="@layout/loading_layout"
-            app:msv_errorView="@layout/error_layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/llTitle"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
             app:msv_viewState="loading"
             tools:context=".ui.activity.ChooseLabelActivity">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMyLabels"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvMyLabels"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginBottom="20dp"
-                    app:layout_constraintBottom_toTopOf="@id/addMoreLabelBtn"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-            <TextView
-                    android:id="@+id/addMoreLabelBtn"
-                    android:text="添加其他标签"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:background="@drawable/selector_confirm_btn_25dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="46dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.kennyc.view.MultiStateView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
