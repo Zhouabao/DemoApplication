@@ -94,7 +94,7 @@ class MyApplication : BaseApplication() {
                         initNotificationManager(customerMsgBean.msg)
                     }
                     2 -> {//对方删除自己,本地不删除会话列表
-                        CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "",true)
+                        CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "", true)
                     }
                     3 -> { //新的招呼刷新界面
                         EventBus.getDefault().postSticky(UpdateHiEvent())
@@ -110,7 +110,7 @@ class MyApplication : BaseApplication() {
                             EventBus.getDefault().postSticky(RefreshEvent(true))
                         }
                         //如果账号存在异常，就发送认证不通过弹窗
-                        if (UserManager.getAccountDanger()) {
+                        if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
                             EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
                         } else {
                             EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
@@ -120,16 +120,28 @@ class MyApplication : BaseApplication() {
                     7 -> {
                         EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
                         UserManager.saveChangeAvator(customerMsgBean.msg)
+                        UserManager.saveChangeAvatorType(1)
                     }
+                    //11真人头像不通过弹窗
+                    11 -> {
+                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                        UserManager.saveChangeAvator(customerMsgBean.msg)
+                        UserManager.saveChangeAvatorType(2)
+                    }
+
                     //8账号异常提示去变更账号
                     8 -> {
                         UserManager.saveAccountDanger(true)
-                        EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOTE))
+                        EventBus.getDefault()
+                            .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_ACCOUNT_DANGER))
                     }
                     //9人脸认证通过的通知
                     9 -> {
                         if (UserManager.getAccountDanger()) {
                             UserManager.saveAccountDanger(false)
+                        }
+                        if (UserManager.getAccountDangerAvatorNotPass()) {
+                            UserManager.saveAccountDangerAvatorNotPass(false)
                         }
                         UserManager.saveUserVerify(1)
                         if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
@@ -139,6 +151,12 @@ class MyApplication : BaseApplication() {
                             EventBus.getDefault().postSticky(UserCenterEvent(true))
                         }
                         EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
+                    }
+                    //10头像未通过审核去进行人脸认证
+                    10 -> {
+                        UserManager.saveAccountDangerAvatorNotPass(true)
+                        EventBus.getDefault()
+                            .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
                     }
 
                 }
@@ -320,7 +338,8 @@ class MyApplication : BaseApplication() {
             //初始化消息提醒
             NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
             //自定义通知监听
-            NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, true)
+            NIMClient.getService(MsgServiceObserve::class.java)
+                .observeCustomNotification(customNotificationObserver, true)
             //云信相关业务初始化
             NIMInitManager.getInstance().init(true)
 

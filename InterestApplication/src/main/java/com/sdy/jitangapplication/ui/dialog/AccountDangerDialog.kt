@@ -8,10 +8,17 @@ import android.view.KeyEvent
 import android.view.WindowManager
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ActivityUtils
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_account_danger.*
 import org.jetbrains.anko.startActivity
 
@@ -21,7 +28,8 @@ import org.jetbrains.anko.startActivity
  *    desc   :账号异常弹窗
  *    version: 1.0
  */
-class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) : Dialog(context1, R.style.MyDialog) {
+class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_ACCOUNT_DANGER) :
+    Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +40,8 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) 
 
 
     companion object {
-        const val VERIFY_NOTE = 0 //去认证提示
+        const val VERIFY_NEED_AVATOR_INVALID = -1 //头像审核不通过去认证
+        const val VERIFY_NEED_ACCOUNT_DANGER = 0 //账号异常去认证
         const val VERIFY_ING = 1//认证中
         const val VERIFY_NOT_PASS = 2//未通过
         const val VERIFY_PASS = 3//通过
@@ -41,7 +50,24 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) 
 
     fun changeVerifyStatus(status: Int) {
         when (status) {
-            VERIFY_NOTE -> {
+            VERIFY_NEED_AVATOR_INVALID -> {
+                accountDangerLogo.isVisible = false
+                accountDangerImgAlert.isVisible = true
+                humanVerify.isVisible = false
+                accountDangerVerifyStatuLogo.isVisible = true
+                GlideUtil.loadImg(context1, UserManager.getAvator(), accountDangerVerifyStatuLogo)
+                accountDangerTitle.text = "人脸认证"
+                accountDangerContent.text = "请进行人脸认证\n以确保头像为真人"
+                accountDangerBtn.text = "去认证"
+                accountDangerLoading.isVisible = false
+                accountDangerBtn.isEnabled = true
+                accountDangerBtn.onClick {
+                    context1.startActivity<IDVerifyActivity>()
+                }
+            }
+            VERIFY_NEED_ACCOUNT_DANGER -> {
+                accountDangerImgAlert.isVisible = false
+                humanVerify.isVisible = false
                 accountDangerLogo.isVisible = true
                 accountDangerVerifyStatuLogo.isVisible = false
                 accountDangerTitle.text = "账号异常"
@@ -54,6 +80,8 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) 
                 }
             }
             VERIFY_ING -> {
+                accountDangerImgAlert.isVisible = false
+                humanVerify.isVisible = false
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
                 accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_ing)
@@ -65,6 +93,8 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) 
 
             }
             VERIFY_NOT_PASS -> {
+                accountDangerImgAlert.isVisible = false
+                humanVerify.isVisible = false
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
                 accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_not_pass)
@@ -77,8 +107,13 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) 
                     if (ActivityUtils.getTopActivity() != NewUserInfoSettingsActivity::class.java)
                         context1.startActivity<NewUserInfoSettingsActivity>()
                 }
+                humanVerify.onClick {
+                    humanVerify(1)
+                }
             }
             VERIFY_PASS -> {
+                accountDangerImgAlert.isVisible = false
+                humanVerify.isVisible = false
                 accountDangerLogo.isVisible = false
                 accountDangerVerifyStatuLogo.isVisible = true
                 accountDangerVerifyStatuLogo.setImageResource(R.drawable.icon_verify_account_pass)
@@ -108,4 +143,26 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NOTE) 
             keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0
         }
     }
+
+    /**
+     * 人工审核
+     * 1 人工认证 2重传头像或则取消
+     */
+    fun humanVerify(type: Int) {
+        val params = UserManager.getBaseParams()
+        params["type"] = type
+        RetrofitFactory.instance.create(Api::class.java)
+            .humanAduit(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
+                override fun onNext(t: BaseResp<Any?>) {
+
+                }
+
+                override fun onError(e: Throwable?) {
+
+                }
+            })
+
+    }
+
 }

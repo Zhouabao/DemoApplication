@@ -27,8 +27,9 @@ data class MatchListBean(
     var mytags: MutableList<Newtag>? = null,
     val intention: LabelQualityBean? = null,
     var myinterest_count: Int = 0,
-    var interest_times: Int = 0
-)
+    var interest_times: Int = 0,
+    var is_human: Boolean = false
+    )
 
 /**
  * 匹配用户

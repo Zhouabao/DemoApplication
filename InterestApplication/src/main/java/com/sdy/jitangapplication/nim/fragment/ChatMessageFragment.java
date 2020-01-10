@@ -373,7 +373,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             if (!sendTip) {
                 inputPanel.collapse(true);
                 IMMessage msg = MessageBuilder.createTipMessage(sessionId, sessionType);
-                msg.setContent("你已发送一条消息，请等待对方回复");
+                msg.setContent("你已向对方打了招呼，对方回复后即可继续聊天");
                 msg.setStatus(MsgStatusEnum.success);
                 CustomMessageConfig config = new CustomMessageConfig();
                 config.enablePush = false;//不推送

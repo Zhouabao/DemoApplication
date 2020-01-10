@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
               xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="wrap_content"
               android:layout_gravity="center"
               android:gravity="center"
               android:background="@color/colorTransparent"
@@ -28,13 +28,36 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-                android:id="@+id/accountDangerVerifyStatuLogo"
-                android:layout_marginTop="30dp"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_gravity="center"
-                android:src="@drawable/icon_verify_account_ing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/accountDangerVerifyStatuLogo"
+                    android:layout_marginBottom="15dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_verify_account_ing"
+                    android:layout_width="86dp"
+                    android:layout_height="86dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/accountDangerImgAlert"
+                    android:layout_marginTop="70dp"
+                    android:src="@drawable/icon_warning"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <TextView
@@ -73,7 +96,6 @@
 
             <TextView
                     android:id="@+id/accountDangerBtn"
-                    tools:text="去认证"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -82,17 +104,31 @@
                     android:background="@drawable/shape_rectangle_orange_25dp"
                     android:layout_width="232dp"
                     android:layout_height="40dp"
+                    tools:text="去认证"
                     />
 
             <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/accountDangerLoading"
                     android:layout_gravity="center"
-                    app:lottie_fileName="data_verify_ing.json"
-                    app:lottie_autoPlay="true"
-                    app:lottie_loop="true"
                     android:layout_width="123px"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    app:lottie_autoPlay="true"
+                    app:lottie_fileName="data_verify_ing.json"
+                    app:lottie_loop="true"/>
         </FrameLayout>
+
+        <TextView
+                android:id="@+id/humanVerify"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="人工审核"
+                android:layout_marginBottom="25dp"
+                android:textColor="#ffc5c6c8"
+                android:textSize="14sp"
+                />
 
     </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="wrap_content"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:background="@color/colorTransparent"
+              android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical"
+            android:layout_width="300dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
+            android:layout_height="wrap_content">
+
+
+        <ImageView
+                android:id="@+id/close"
+                android:src="@drawable/icon_close_transparent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_gravity="right"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/accountImg"
+                android:layout_marginBottom="15dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_verify_account_ing"
+                android:layout_width="86dp"
+                android:layout_height="86dp"
+                android:layout_marginTop="30dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+                android:id="@+id/accountDangerImgAlert"
+                android:layout_marginTop="70dp"
+                android:src="@drawable/icon_warning"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/accountImg"/>
+
+
+        <TextView
+                android:id="@+id/accountDangerTitle"
+                android:layout_marginTop="18dp"
+                android:text="请更换真人头像"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="#131415"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/accountDangerImgAlert"
+                />
+
+        <TextView
+                android:id="@+id/accountDangerContent"
+                android:textSize="14sp"
+                android:layout_marginTop="15dp"
+                android:text="由于未使用真人头像\n真实头像用户对您暂不可见"
+                android:textColor="#B6BABF"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/accountDangerTitle"
+                />
+
+        <TextView
+                android:id="@+id/accountDangerBtn"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="25dp"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp"
+                android:background="@drawable/shape_rectangle_orange_25dp"
+                android:layout_width="232dp"
+                android:layout_height="40dp"
+                android:text="立即变更"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/accountDangerContent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

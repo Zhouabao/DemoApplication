@@ -130,8 +130,8 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
                     activity!!.intent.setClass(activity!!, AddLabelActivity::class.java)
                     startActivity(activity!!.intent)
                 }
-                adapter.emptyView.emptyLabelTip.isVisible = false
-                adapter.emptyView.emptyTip.isVisible = false
+                adapter.emptyView.emptyLabelTip.isVisible = true
+                adapter.emptyView.emptyTip.isVisible = true
                 adapter.emptyView.addLabelBtn.text = "添加标签"
             } else {
                 addLabelBtn.isVisible = true

@@ -91,7 +91,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 }
                 tagAdapter.notifyDataSetChanged()
 
-                //todo 请求数据
                 checkedId = tagAdapter.data[position].id
                 matchParams["tag_id"] = checkedId
                 mPresenter.getMatchList(matchParams)
@@ -142,6 +141,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     private var normal_percent_complete: Int = 0//（标准完整度）
     private var myCount: Int = 0//当前滑动次数
     private var maxCount: Int = 0//最大滑动次数
+    private var is_human: Boolean = false
 
     companion object {
         private const val LOADING = 0
@@ -395,6 +395,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             normal_percent_complete = matchBeans.normal_percent_complete
             myCount = matchBeans.my_like_times
             maxCount = matchBeans.total_like_times
+            is_human = matchBeans.is_human
             when (matchBeans.motion) {
                 GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
                     EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
@@ -537,11 +538,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     emptyLayout.emptyFriendTip.text = "一会儿再回来看看吧"
                 } else {
                     emptyLayout.emptyFriendTitle.isVisible = true
-                    emptyLayout.emptyFriendGoBtn.isVisible = true
                     emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_label)
                     emptyLayout.emptyFriendTitle.text = "标签未完善"
-                    emptyLayout.emptyFriendGoBtn.text = "去看看"
                     emptyLayout.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
+                    emptyLayout.emptyFriendGoBtn.isVisible = true
+                    emptyLayout.emptyFriendGoBtn.text = "去看看"
                     emptyLayout.emptyFriendGoBtn.onClick {
                         startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_INTERSERT_LABEL)
                     }
@@ -732,6 +733,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
                 UserManager.slide_times = 0
             }
+        }
+
+        //非真人头像提示去修改头像
+        if (is_human && manager.topPosition - 1 == 0 && !UserManager.getAlertChangeRealMan()) {
+            ChangeAvatarRealManDialog(activity!!).show()
         }
 
         resetAnimation()

@@ -61,6 +61,15 @@ object UserManager {
     }
 
 
+    fun saveAccountDangerAvatorNotPass(danger: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("AccountDangerAvatorNotPass", danger)
+    }
+
+    fun getAccountDangerAvatorNotPass(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AccountDangerAvatorNotPass", false)
+    }
+
+
     /**
      * 保存当前需要弹去完善标签弹窗的次数
      */
@@ -180,6 +189,15 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isNeedChangeAvator", false)
     }
 
+    //是否需要强制替换头像  1头像不通过强制替换   2真人头像不通过 强制替换
+    fun saveChangeAvatorType(changeType: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("ChangeAvatorType", changeType)
+    }
+
+    fun getChangeAvatorType(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("ChangeAvatorType",0)
+    }
+
     //是否需要强制替换头像
     fun saveChangeAvator(isNeedChangeAvator: String) {
         SPUtils.getInstance(Constants.SPNAME).put("ChangeAvator", isNeedChangeAvator)
@@ -205,6 +223,15 @@ object UserManager {
 
     fun getAlertChangeAlbum(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAlbum", false)
+    }
+
+    //是否提示过引导替换相册
+    fun saveAlertChangeRealMan(isNeedChangeAvator: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("AlertChangeRealMan", isNeedChangeAvator)
+    }
+
+    fun getAlertChangeRealMan(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeRealMan", false)
     }
 
     //是否提示过用户协议
@@ -319,7 +346,8 @@ object UserManager {
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0 ||
                 SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce").isNullOrEmpty() ||
-                SPUtils.getInstance(Constants.SPNAME).getBoolean("isInterestLabel", false) == false
+                SPUtils.getInstance(Constants.SPNAME).getBoolean("isInterestLabel", false) == false ||
+                getSpLabels().isNullOrEmpty()
                 )
 
     }
@@ -596,6 +624,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
         cleanVerifyData()
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvatorType")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
         SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
@@ -617,6 +646,8 @@ object UserManager {
 
         //账号异常记录清除
         SPUtils.getInstance(Constants.SPNAME).remove("accountDanger")
+        SPUtils.getInstance(Constants.SPNAME).remove("AccountDangerAvatorNotPass")
+        SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeRealMan")
 
 
         /**

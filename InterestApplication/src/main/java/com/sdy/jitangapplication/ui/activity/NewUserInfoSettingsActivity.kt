@@ -989,7 +989,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
 
         //如果已经换了头像,并且要求强制替换头像
-        if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(adapter.data[0].url) && UserManager.isNeedChangeAvator()) {
+        Log.d("OKhttp", "${UserManager.getAvator().contains(adapter.data[0].url)}")
+        if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(Constants.DEFAULT_EMPTY_AVATAR)
+            && !UserManager.getAvator().contains(adapter.data[0].url) && UserManager.isNeedChangeAvator()
+        ) {
             UserManager.saveForceChangeAvator(true)
         }
 
@@ -1024,7 +1027,10 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         } else {
             setResult(Activity.RESULT_OK)
             finish()
-            if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(adapter.data[0].url) && UserManager.getAccountDanger()) { //账号异常
+            if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(Constants.DEFAULT_EMPTY_AVATAR)
+                && !UserManager.getAvator().contains(adapter.data[0].url)
+                && (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass())
+            ) { //账号异常
                 UserManager.saveUserVerify(2)
                 EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
             }

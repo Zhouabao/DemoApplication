@@ -98,10 +98,15 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (!UserManager.getAlertProtocol())
             PrivacyDialog(this).show()
 
-        if (UserManager.getAccountDanger()) {
+//        onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
+//        UserManager.saveUserVerify(0)
+        if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
             //0未认证/认证不成功     1认证通过     2认证中
             if (UserManager.isUserVerify() == 0) {
-                onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NOTE))
+                if (UserManager.getAccountDanger())
+                    onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_ACCOUNT_DANGER))
+                else
+                    onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
             } else if (UserManager.isUserVerify() == 2) {
                 onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
             }
@@ -396,7 +401,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         Log.d("OKhttp", "${UserManager.isNeedChangeAvator()},${UserManager.isForceChangeAvator()}}")
         if (UserManager.isNeedChangeAvator())
             if (!UserManager.isForceChangeAvator()) {
-                showGotoVerifyDialog(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS, UserManager.getChangeAvator())
+                if (UserManager.getChangeAvatorType() == 1)
+                    showGotoVerifyDialog(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS, UserManager.getChangeAvator())
+                else
+                    ChangeAvatarRealManDialog(this, ChangeAvatarRealManDialog.VERIFY_NEED_VALID_REAL_MAN,UserManager.getChangeAvator()).show()
             } else {
                 UserManager.saveNeedChangeAvator(false)
                 UserManager.saveForceChangeAvator(true)
@@ -550,11 +558,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     /**
      * 重新认证事件总线
      */
-
 //    const val TYPE_VERIFY = 4//认证失败去认证
-//    const val TYPE_CHANGE_AVATOR_NOT_PASS = 5//头像违规替换
-//    const val TYPE_CHANGE_AVATOR_PASS = 6//头像通过,但是不是真人
-//    const val TYPE_CHANGE_ABLUM = 7//完善相册
+//    const val TYPE_CHANGE_AVATOR_NOT_PASS = 7//头像违规替换
+//    const val TYPE_CHANGE_AVATOR_PASS = 2//头像通过,但是不是真人
+//    const val TYPE_CHANGE_ABLUM = 3//完善相册
     private var gotoVerifyDialog: GotoVerifyDialog? = null
 
     private fun showGotoVerifyDialog(type: Int, avator: String = UserManager.getAvator()) {
@@ -563,20 +570,18 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         var confirmText = ""
         when (type) {
             GotoVerifyDialog.TYPE_VERIFY -> { //认证不通过
-                content = "尊敬的用户，您当前头像无法通过人脸比对，请变更头像或进入人工审核流程。"
+                content = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
                 title = "认证审核不通过"
             }
             GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//头像违规
                 content = "尊敬的用户，您上传的头像未使用真实照片或涉及违规，替换真实照片前您将持续对其他不可见"
                 title = "请替换头像"
                 confirmText = "修改头像"
-
             }
             GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//完善相册
                 content = "完善相册会使你的信息更多在匹配页展示\n现在就去完善你的相册吧！"
                 title = "完善相册"
                 confirmText = "完善相册"
-
             }
             GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> { //真实头像替换
                 content = "当前的匹配率偏低，替换真实头像会使匹配率提高一倍，获得更多的用户好感。"
@@ -604,15 +609,27 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onReVerifyEvent(event: ReVerifyEvent) {
-        if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS) {
+        if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_REAL_NOT_VALID) {
             UserManager.saveNeedChangeAvator(true)//需要换头像
             UserManager.saveForceChangeAvator(false)//是否强制替换过头像
-        } else if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS)
-            UserManager.saveAlertChangeAvator(true)
-        else if (event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM)
-            UserManager.saveAlertChangeAlbum(true)
-
-        showGotoVerifyDialog(event.type, event.avator)
+            UserManager.saveChangeAvatorType(2)//真人不合规
+            ChangeAvatarRealManDialog(
+                ActivityUtils.getTopActivity(),
+                ChangeAvatarRealManDialog.VERIFY_NEED_VALID_REAL_MAN,
+                event.avator
+            ).show()
+        } else {
+            when {
+                event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
+                    UserManager.saveNeedChangeAvator(true)//需要换头像
+                    UserManager.saveForceChangeAvator(false)//是否强制替换过头像
+                    UserManager.saveChangeAvatorType(1)//头像不合规
+                }
+                event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> UserManager.saveAlertChangeAvator(true)
+                event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> UserManager.saveAlertChangeAlbum(true)
+            }
+            showGotoVerifyDialog(event.type, event.avator)
+        }
     }
 
 

@@ -45,7 +45,7 @@ class ChooseLabelAdapter : BaseMultiItemQuickAdapter<SquareLabelBean, BaseViewHo
                     helper.itemView.labelUsedCover.isVisible = true
                     GlideUtil.loadRoundImgCenterCrop(
                         mContext,
-                        item.icon,
+                        item.cover_url,
                         helper.itemView.labelUsedCover,
                         SizeUtils.dp2px(6F)
                     )
