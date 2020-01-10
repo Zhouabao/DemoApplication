@@ -24,4 +24,6 @@ public interface SessionEventListener {
 
     // 用户是否是VIP
     boolean isUserVip();
+
+    String robotAccount();
 }

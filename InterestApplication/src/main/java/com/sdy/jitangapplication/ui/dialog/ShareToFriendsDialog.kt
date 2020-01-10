@@ -26,6 +26,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -111,8 +112,12 @@ class ShareToFriendsDialog constructor(
         }
 
         send.onClick {
-            //发送消息
-            sendShareMsg()
+            object : CustomClickListener() {
+                override fun onSingleClick(view: View) {
+                    //发送消息
+                    sendShareMsg()
+                }
+            }
         }
 
     }
@@ -161,7 +166,7 @@ class ShareToFriendsDialog constructor(
 
     /*-------------------------分享成功回调----------------------------*/
     private fun addShare() {
-        val params = hashMapOf<String,Any>()
+        val params = hashMapOf<String, Any>()
         params["square_id"] = squareBean?.id ?: 0
         RetrofitFactory.instance.create(Api::class.java)
             .addShare(UserManager.getSignParams(params))
@@ -227,7 +232,8 @@ class ShareToFriendsDialog constructor(
             }
 
             override fun onFailed(code: Int) {
-
+                CommonFunction.toast("转发失败！")
+                dismiss()
             }
 
             override fun onException(exception: Throwable) {

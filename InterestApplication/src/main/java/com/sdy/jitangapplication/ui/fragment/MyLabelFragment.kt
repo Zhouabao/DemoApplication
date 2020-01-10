@@ -14,9 +14,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.UpdateEditModeEvent
-import com.sdy.jitangapplication.event.UpdateMyLabelEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.MyLabelsBean
 import com.sdy.jitangapplication.model.TagBean
@@ -133,12 +131,17 @@ class MyLabelFragment : BaseMvpLazyLoadFragment<MyLabelPresenter>(), MyLabelView
                 adapter.emptyView.emptyLabelTip.isVisible = true
                 adapter.emptyView.emptyTip.isVisible = true
                 adapter.emptyView.addLabelBtn.text = "添加标签"
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, false))
+                EventBus.getDefault().post(ShowDeleteMyLabelEvent(false))
             } else {
+                EventBus.getDefault().post(ShowDeleteMyLabelEvent(true))
                 addLabelBtn.isVisible = true
+                EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, true))
                 adapter.setNewData(datas?.is_using ?: mutableListOf())
             }
             removedLabel.addAll(datas?.is_removed ?: mutableListOf())
         } else {
+            EventBus.getDefault().post(UpdateEditShowEvent(MyLabelActivity.MY_LABEL, false))
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }

@@ -9,6 +9,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.NewLikeMeBean
 import com.sdy.jitangapplication.model.StatusBean
@@ -116,10 +117,11 @@ class LikeMeReceivedPresenter : BasePresenter<LikeMeReceivedView>() {
      */
     fun markLikeRead() {
         RetrofitFactory.instance.create(Api::class.java)
-            .markLikeRead(UserManager.getBaseParams())
+            .markLikeRead(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
+                        EventBus.getDefault().post(GetNewMsgEvent())
                         EventBus.getDefault().post(UpdateHiEvent())
                     }
                 }

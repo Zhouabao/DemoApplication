@@ -1,16 +1,19 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
@@ -95,6 +98,14 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     private val adapter by lazy { MessageListAdapter() }
     private fun initView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val param = customStatusBar.layoutParams as LinearLayout.LayoutParams
+            param.height = BarUtils.getStatusBarHeight()
+        } else {
+            customStatusBar.isVisible = false
+        }
+
+
         mPresenter = MessageListPresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!

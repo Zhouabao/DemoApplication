@@ -457,7 +457,6 @@ class MultiListSquareAdapter(
     private fun showTranspondDialog(squareBean: SquareBean) {
         val transpondDialog = TranspondDialog(mContext, squareBean)
         transpondDialog.show()
-//        transpondDialog.squareBean = squareBean
     }
 
 

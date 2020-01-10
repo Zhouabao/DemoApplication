@@ -40,7 +40,7 @@
         <TextView
                 android:id="@+id/harassmentTitle"
                 android:layout_marginTop="40dp"
-                android:text="兴趣标签未完善"
+                android:text="标签未完善"
                 android:textColor="#ff191919"
                 android:textStyle="bold"
                 android:textSize="18sp"
@@ -53,7 +53,7 @@
         <TextView
                 android:id="@+id/harassmentContent"
                 android:layout_marginTop="15dp"
-                android:text="你的兴趣标签未完善，完善后其他用户会根据你所选的兴趣标签找到你"
+                android:text="请添加你的标签\n添加标签后才能让更多人看到你"
                 android:textColor="#ffb5b7b9"
                 android:textSize="14sp"
                 android:layout_marginLeft="31dp"
@@ -68,7 +68,7 @@
 
         <TextView
                 android:id="@+id/completeLabelBtn"
-                android:text="完善我的兴趣"
+                android:text="完善我的标签"
                 android:textStyle="bold"
                 android:layout_marginTop="30dp"
                 android:gravity="center"

@@ -37,6 +37,7 @@ import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.ui.adapter.VipBannerAdapter
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
@@ -46,6 +47,7 @@ import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.dialog_charge_vip.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -59,12 +61,12 @@ class ChargeVipDialog(
 ) :
     Dialog(context1, R.style.MyDialog) {
     companion object {
-        const val INFINITE_SLIDE = 0//无限滑动
-        const val VIP_LOGO = 1//会员logo
-        const val FILTER = 2//独享筛选
-        const val LOOKED_ME = 3//看过我的
+        const val VIP_LOGO = 0//会员logo
+        const val INFINITE_SLIDE = 1//无限滑动
+        const val LOOKED_ME = 2//看过我的
+        const val FILTER = 3//已读功能
         const val LIKED_ME = 4//喜欢我的
-        const val DOUBLE_HI = 5//双倍招呼
+        const val DOUBLE_HI = 5//筛选同城
 
         //购买类型
         const val PURCHASE_VIP = 100//VIP购买
@@ -153,6 +155,8 @@ class ChargeVipDialog(
             override fun onPageSelected(position: Int) {
                 for (child in 0 until bannerIndicator.childCount)
                     (bannerIndicator.getChildAt(child) as RadioButton).isChecked = position == child
+
+                completeInfoBtn.isVisible = position == INFINITE_SLIDE
             }
         })
         if (banners.size > currentPos)
@@ -161,6 +165,11 @@ class ChargeVipDialog(
 
 
     private fun initView() {
+        //完善资料
+        completeInfoBtn.onClick {
+            context1.startActivity<NewUserInfoSettingsActivity>()
+        }
+
         //支付价格
         vipChargeRv.layoutManager = LinearLayoutManager(context1, RecyclerView.HORIZONTAL, false)
 
@@ -199,7 +208,7 @@ class ChargeVipDialog(
         for (data in vipChargeAdapter.data) {
             if (data.is_promote) {
                 zhiPayPrice.text = "以${if ((data.discount_price ?: 0F) == 0F) {
-                    data.original_price?:0F
+                    data.original_price ?: 0F
                 } else {
                     data.discount_price ?: 0F
                 }}元购买"

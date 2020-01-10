@@ -3,11 +3,9 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
@@ -141,13 +139,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
     private fun initView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val param = customStatusBar.layoutParams as LinearLayout.LayoutParams
-            param.height = BarUtils.getStatusBarHeight()
-        } else {
-            customStatusBar.isVisible = false
-        }
-
         EventBus.getDefault().register(this)
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
 
@@ -192,12 +183,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
 
             override fun onPageSelected(position: Int) {
-//                tabHeaderCl.isVisible = (position == 0 || position == 1)
-                if (position != 3) {
-                    customStatusBar.setBackgroundResource(R.color.colorTransparent)
-                } else if (initializeUserMe) {
+                if (position == 3) {
                     EventBus.getDefault().postSticky(UserCenterEvent(true))
-                    onChangeStatusEvent(ChangeStatusColorEvent())
                 }
                 switchTab(position)
             }
@@ -404,7 +391,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 if (UserManager.getChangeAvatorType() == 1)
                     showGotoVerifyDialog(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS, UserManager.getChangeAvator())
                 else
-                    ChangeAvatarRealManDialog(this, ChangeAvatarRealManDialog.VERIFY_NEED_VALID_REAL_MAN,UserManager.getChangeAvator()).show()
+                    ChangeAvatarRealManDialog(
+                        this,
+                        ChangeAvatarRealManDialog.VERIFY_NEED_VALID_REAL_MAN,
+                        UserManager.getChangeAvator()
+                    ).show()
             } else {
                 UserManager.saveNeedChangeAvator(false)
                 UserManager.saveForceChangeAvator(true)
@@ -454,12 +445,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (allMsgCount != null) {
             //未读消息个数
             val msgCount = NIMClient.getService(MsgService::class.java).totalUnreadCount
-            var totalMsgUnread = 0
-            if (msgCount == 0)
-                UserManager.saveHiCount(0)
-            else if (msgCount > allMsgCount.greetcount)
-                totalMsgUnread = msgCount - allMsgCount.greetcount
-            showMsgDot((allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || totalMsgUnread > 0))
+            Log.d(
+                "msgcount", "msgcount = ${msgCount},likecount = ${allMsgCount.likecount}" +
+                        ",greetcount = ${allMsgCount.greetcount},square_count = ${allMsgCount.square_count}"
+            )
+
+            showMsgDot((allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || msgCount > 0))
         }
     }
 
@@ -539,19 +530,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onGetMSGEvent(event: GetNewMsgEvent) {
         mPresenter.msgList()
-    }
-
-
-    private var initializeUserMe = false
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onChangeStatusEvent(event: ChangeStatusColorEvent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            customStatusBar.setBackgroundResource(R.drawable.gradient_orange)
-        }
-        initializeUserMe = true
     }
 
 

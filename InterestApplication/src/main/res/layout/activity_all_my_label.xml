@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:layout_height="match_parent"
+              android:background="@color/colorWhite"
+              android:fitsSystemWindows="true"
+              tools:context=".ui.activity.MyLabelActivity">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+        <ImageView
+                android:id="@+id/btnBack"
+                style="@style/BckBtnStyle"
+                />
+
+        <com.flyco.tablayout.CommonTabLayout
+                android:id="@+id/tabTopLabel"
+                android:background="@color/colorWhite"
+                android:layout_width="160dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                app:tl_iconVisible="false"
+                app:tl_indicator_color="@color/colorOrange"
+                app:tl_indicator_corner_radius="2dp"
+                app:tl_indicator_height="4dp"
+                app:tl_indicator_width="25dp"
+                app:tl_textBold="SELECT"
+                app:tl_textSelectColor="#FF191919"
+                app:tl_textUnselectColor="@color/colorGrayCCC"
+                app:tl_textsize="18sp"/>
+
+        <TextView
+                android:id="@+id/rightBtn"
+                android:layout_centerVertical="true"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:gravity="center"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:text="删除"
+                android:textColor="#ff191919"
+                android:textSize="17sp"
+                android:layout_height="55dp"/>
+    </RelativeLayout>
+
+    <com.sdy.jitangapplication.widgets.NoScrollViewPager
+            android:id="@+id/vpLabel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+</LinearLayout>

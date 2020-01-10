@@ -116,7 +116,8 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
 
     // 是否显示已读，默认为显示
     protected boolean shouldDisplayReceipt() {
-        return true;
+        return false;
+//        return !getMsgAdapter().getContainer().account.equals(NimUIKitImpl.getSessionListener().robotAccount());
     }
 
     /// -- 以下接口可由子类调用

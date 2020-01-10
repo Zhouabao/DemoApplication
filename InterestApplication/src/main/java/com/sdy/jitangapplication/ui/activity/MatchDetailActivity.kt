@@ -524,7 +524,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 NIMClient.getService(FriendService::class.java).addToBlackList(matchBean!!.accid)
                 NIMClient.getService(MsgService::class.java)
                     .deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
-                NIMClient.getService(MsgService::class.java).clearServerHistory(matchBean!!.accid, SessionTypeEnum.P2P)
+                NIMClient.getService(MsgService::class.java).clearChattingHistory(matchBean!!.accid, SessionTypeEnum.P2P)
                 matchBean!!.isblock = 2
                 updateBlockStatus()
 //                EventBus.getDefault().post(UpdateLabelEvent(NewLabel(id = UserManager.getGlobalLabelId())))

@@ -84,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toTopOf="@id/chooseTitleBtn"
+                app:layout_constraintBottom_toTopOf="@id/locationCityLl"
                 app:layout_constraintLeft_toLeftOf="parent"
                 />
 
@@ -94,7 +94,7 @@
                 android:layout_height="83dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="12dp"
-                app:layout_constraintBottom_toTopOf="@id/chooseTitleBtn"
+                app:layout_constraintBottom_toTopOf="@id/locationCityLl"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
 
@@ -104,7 +104,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_width="302dp"
                 android:layout_height="50dp"
-                app:layout_constraintBottom_toTopOf="@id/chooseTitleBtn"
+                app:layout_constraintBottom_toTopOf="@id/locationCityLl"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
 

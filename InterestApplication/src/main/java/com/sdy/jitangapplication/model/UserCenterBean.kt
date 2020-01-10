@@ -51,6 +51,7 @@ data class VipDescr(
     val rule: String? = "",
     val title: String? = "",
     val url: String? = "",
+    val icon_vip: String? = "",
     var countdown: Int = 0,
     val title_pay:  String = ""
 )

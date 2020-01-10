@@ -129,27 +129,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         //清空聊天记录
         friendHistoryClean.onClick {
             showDeleteDialog(1)
-
-//            val title1 = resources.getString(R.string.message_p2p_clear_tips)
-//            val alertDialog = CustomAlertDialog(this)
-//            alertDialog.setTitle1(title1)
-//            alertDialog.addItem("确定") {
-//                NIMClient.getService(MsgService::class.java)
-//                    .clearServerHistory(account ?: "", SessionTypeEnum.P2P, true)
-//                MessageListPanelHelper.getInstance().notifyClearMessages(account ?: "")
-//            }
-            //漫游
-//            val itemText = resources.getString(R.string.sure_keep_roam)
-//            alertDialog.addItem(itemText) {
-//                NIMClient.getService(MsgService::class.java).clearServerHistory(
-//                    account ?: "", SessionTypeEnum.P2P, false
-//                )
-//                MessageListPanelHelper.getInstance().notifyClearMessages(account)
-//            }
-//            alertDialog.addItem(
-//                "取消"
-//            ) { }
-//            alertDialog.show()
         }
 
         //消息免打扰
@@ -169,8 +148,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 dialog.tip.text = resources.getString(R.string.message_p2p_clear_tips)
                 dialog.cancel.onClick { dialog.dismiss() }
                 dialog.confirm.onClick {
-                    NIMClient.getService(MsgService::class.java)
-                        .clearServerHistory(account ?: "", SessionTypeEnum.P2P, true)
+                    NIMClient.getService(MsgService::class.java).clearChattingHistory(account, SessionTypeEnum.P2P)
                     MessageListPanelHelper.getInstance().notifyClearMessages(account ?: "")
                     dialog.dismiss()
                 }
@@ -399,7 +377,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         NIMClient.getService(MsgService::class.java).deleteRecentContact2(account, SessionTypeEnum.P2P)
-                        NIMClient.getService(MsgService::class.java).clearServerHistory(account, SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java).clearChattingHistory(account, SessionTypeEnum.P2P)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))

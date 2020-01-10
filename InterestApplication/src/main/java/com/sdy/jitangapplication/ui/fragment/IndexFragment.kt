@@ -2,16 +2,20 @@ package com.sdy.jitangapplication.ui.fragment
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.BarUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseFragment
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.event.ShowDeleteMyLabelEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.ui.activity.MyIntentionActivity
@@ -19,6 +23,8 @@ import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import kotlinx.android.synthetic.main.fragment_index.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivityForResult
 import java.util.*
 
@@ -46,6 +52,14 @@ class IndexFragment : BaseFragment() {
 
     private var editModes = false
     private fun initView() {
+        EventBus.getDefault().register(this)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val param = customStatusBar.layoutParams as ConstraintLayout.LayoutParams
+            param.height = BarUtils.getStatusBarHeight()
+        } else {
+            customStatusBar.isVisible = false
+        }
 
         findToTalkIv.onClick {
             startActivityForResult<MyIntentionActivity>(100, "id" to -1, "from" to MyIntentionActivity.FROM_USERCENTER)
@@ -58,7 +72,7 @@ class IndexFragment : BaseFragment() {
                     FilterUserDialog(activity!!).show()
                 }
                 TAB_TAG -> {//删除标签
-                    editModes= !editModes
+                    editModes = !editModes
                     rightOperationBtn.text = if (editModes) {
                         "取消"
                     } else {
@@ -88,13 +102,14 @@ class IndexFragment : BaseFragment() {
             override fun onPageSelected(position: Int) {
                 when (position) {
                     TAB_MATCH -> {
+                        rightOperationBtn.isVisible = true
                         rightOperationBtn.setBackgroundResource(R.drawable.icon_filter)
                         rightOperationBtn.text = ""
                         rgIndexTab.check(R.id.tabMatch)
-//                        findToTalkIv.isVisible = true
                         findToTalkIv.isVisible = false
                     }
                     else -> {
+                        rightOperationBtn.isVisible = false
                         rightOperationBtn.background = null
                         rightOperationBtn.text = if (editModes) {
                             "取消"
@@ -103,7 +118,6 @@ class IndexFragment : BaseFragment() {
                         }
                         rgIndexTab.check(R.id.tabTag)
                         findToTalkIv.isVisible = false
-
                     }
                 }
 
@@ -144,6 +158,11 @@ class IndexFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onShowDeleteMyLabelEvent(event: ShowDeleteMyLabelEvent) {
+        rightOperationBtn.isVisible = event.show
+    }
 }

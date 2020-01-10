@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -16,10 +17,7 @@ import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.*
 import com.google.gson.Gson
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -61,7 +59,6 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_ERROR
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
-import kotlinx.android.synthetic.main.empty_layout.view.emptyImg
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_square.*
 import kotlinx.android.synthetic.main.headerview_square_recommend_title.view.*
@@ -247,7 +244,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     private fun setTagData() {
         tags.clear()
         tags.addAll(UserManager.getSpLabels())
-        tags.add(TagBean(-1))
         //初始化选中的tag
         if (checkedId == 0) {
             if (tags.isNotEmpty()) {
@@ -275,24 +271,27 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     }
 
     private fun initTagsView() {
-        squareTagRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        squareTagRv.adapter = tagAdapter
-        setTagData()
-        tagAdapter.setOnItemClickListener { _, view, position ->
-            if (tagAdapter.data[position].id == -1) {
+        addTagBtn.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
                 val intent = Intent()
                 intent.putExtra("from", AddLabelActivity.FROM_INTERSERT_LABEL)
                 intent.setClass(activity!!, AddLabelActivity::class.java)
                 startActivity(intent)
-            } else {
-                for (tag in tagAdapter.data) {
-                    tag.cheked = tag == tagAdapter.data[position]
-                }
-                tagAdapter.notifyDataSetChanged()
-                checkedId = tagAdapter.data[position].id
-                listParams["tag_id"] = checkedId
-                updateChooseTitle()
             }
+
+        })
+
+        squareTagRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        squareTagRv.adapter = tagAdapter
+        setTagData()
+        tagAdapter.setOnItemClickListener { _, view, position ->
+            for (tag in tagAdapter.data) {
+                tag.cheked = tag == tagAdapter.data[position]
+            }
+            tagAdapter.notifyDataSetChanged()
+            checkedId = tagAdapter.data[position].id
+            listParams["tag_id"] = checkedId
+            updateChooseTitle()
         }
 
     }
@@ -354,6 +353,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
      */
     private fun updateChooseTitle() {
         setViewState(LOADING)
+        setTagData()
         listParams["type"] = when (rgSquare.checkedRadioButtonId) {
             R.id.tabSquare -> {
                 1
@@ -367,6 +367,14 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
 
     private fun initView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val param = customStatusBar.layoutParams as ConstraintLayout.LayoutParams
+            param.height = BarUtils.getStatusBarHeight()
+        } else {
+            customStatusBar.isVisible = false
+        }
+
+
         EventBus.getDefault().register(this)
         mPresenter = SquarePresenter()
         mPresenter.mView = this
@@ -637,9 +645,9 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 if (adapter.headerLayout != null)
                     adapter.headerLayout.isVisible = false
                 if (rgSquare.checkedRadioButtonId == R.id.tabSquare) {
-                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_square)
                     adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
                     adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_square)
                     adapter.emptyView.emptyFriendGoBtn.isVisible = false
                 } else {
                     adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)

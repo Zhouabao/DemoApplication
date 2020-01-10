@@ -12,7 +12,7 @@
             android:text="推荐标题"
             android:textColor="#ff191919"
             android:textSize="18sp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
             android:paddingRight="8dp"
             android:textStyle="bold"

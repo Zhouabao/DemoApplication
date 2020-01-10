@@ -102,11 +102,15 @@
         </activity>
         <activity android:name=".ui.activity.MyIntentionActivity">
         </activity>
+        <activity android:name=".ui.activity.MyIntentionActivity1">
+        </activity>
         <activity android:name=".ui.activity.ChooseLabelActivity">
         </activity>
         <activity android:name=".ui.activity.ChooseTitleActivity">
         </activity>
         <activity android:name=".ui.activity.MyLabelActivity">
+        </activity>
+        <activity android:name=".ui.activity.AllMyLabelActivity">
         </activity>
         <activity android:name=".ui.activity.AddLabelSuccessActivity">
         </activity>

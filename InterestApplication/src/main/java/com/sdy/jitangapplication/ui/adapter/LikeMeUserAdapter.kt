@@ -40,7 +40,7 @@ class LikeMeUserAdapter : BaseQuickAdapter<PositiveLikeBean, BaseViewHolder>(R.l
                     "${if (item.gender == 1) {
                         "他"
                     } else {
-                        "女"
+                        "她"
                     }}通过"
                 } else {
                     ""
@@ -68,7 +68,7 @@ class LikeMeUserAdapter : BaseQuickAdapter<PositiveLikeBean, BaseViewHolder>(R.l
                     "${if (item.gender == 1) {
                         "他"
                     } else {
-                        "女"
+                        "她"
                     }}有你喜欢的"
                 } else {
                     ""

@@ -73,12 +73,12 @@ class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQua
         if (from == REGISTER) {
             btnBack.isVisible = false
             t1.isVisible = true
-            labelPurposeCl.isVisible = true
+//            labelPurposeCl.isVisible = true
             hotT1.visibility = View.INVISIBLE
         } else {
             btnBack.isVisible = true
             t1.isVisible = false
-            labelPurposeCl.isVisible = false
+//            labelPurposeCl.isVisible = false
             hotT1.visibility = View.VISIBLE
             hotT1.text = "关于我"
         }

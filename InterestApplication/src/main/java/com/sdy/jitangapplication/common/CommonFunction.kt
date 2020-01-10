@@ -21,6 +21,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.GreetEvent
+import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
@@ -142,12 +143,15 @@ object CommonFunction {
     fun dissolveRelationship(target_accid: String, negative: Boolean = false) {
         NIMClient.getService(MsgService::class.java).deleteRecentContact2(target_accid, SessionTypeEnum.P2P)
         // 删除与某个聊天对象的全部消息记录
-        if (!negative)
+        //如果不是被动删除，就删除会话
+        if (!negative) {
             NIMClient.getService(MsgService::class.java).clearChattingHistory(target_accid, SessionTypeEnum.P2P)
-        ActivityUtils.finishAllActivities()
-        ActivityUtils.startActivity(MainActivity::class.java)
+            ActivityUtils.finishAllActivities()
+            ActivityUtils.startActivity(MainActivity::class.java)
+        } else {
+            EventBus.getDefault().postSticky(UpdateHiEvent())
+        }
 //        EventBus.getDefault().post(UpdateContactBookEvent())
-//        EventBus.getDefault().post(UpdateHiEvent())
 //        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
 //            ActivityUtils.finishActivity(MessageInfoActivity::class.java)
 //        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))

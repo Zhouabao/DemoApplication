@@ -36,6 +36,7 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -76,27 +77,29 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     private val tagAdapter by lazy { TagAdapter() }
     private var checkedId = 0
     private fun initTagsView() {
-        matchTagRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        matchTagRv.adapter = tagAdapter
-        setTagData()
-        tagAdapter.setOnItemClickListener { _, view, position ->
-            if (tagAdapter.data[position].id == -1) {
+        addTagBtn.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
                 val intent = Intent()
                 intent.putExtra("from", AddLabelActivity.FROM_INTERSERT_LABEL)
                 intent.setClass(activity!!, AddLabelActivity::class.java)
                 startActivity(intent)
-            } else {
-                for (tag in tagAdapter.data) {
-                    tag.cheked = tag == tagAdapter.data[position]
-                }
-                tagAdapter.notifyDataSetChanged()
-
-                checkedId = tagAdapter.data[position].id
-                matchParams["tag_id"] = checkedId
-                mPresenter.getMatchList(matchParams)
-                matchUserAdapter.data.clear()
-                setViewState(LOADING)
             }
+        })
+
+        matchTagRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        matchTagRv.adapter = tagAdapter
+        setTagData()
+        tagAdapter.setOnItemClickListener { _, view, position ->
+            for (tag in tagAdapter.data) {
+                tag.cheked = tag == tagAdapter.data[position]
+            }
+            tagAdapter.notifyDataSetChanged()
+
+            checkedId = tagAdapter.data[position].id
+            matchParams["tag_id"] = checkedId
+            mPresenter.getMatchList(matchParams)
+            matchUserAdapter.data.clear()
+            setViewState(LOADING)
         }
 
     }
@@ -104,7 +107,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     private fun setTagData() {
         tags.clear()
         tags.addAll(UserManager.getSpLabels())
-        tags.add(TagBean(-1))
+//        tags.add(TagBean(-1))
         //初始化选中的tag
         if (checkedId == 0) {
             if (tags.isNotEmpty()) {

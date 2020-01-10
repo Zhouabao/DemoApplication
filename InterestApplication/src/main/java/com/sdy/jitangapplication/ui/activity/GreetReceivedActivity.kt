@@ -6,12 +6,9 @@ import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.blankj.utilcode.util.BarUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -109,7 +106,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
     private var hasMore = true
     override fun onGreatListResult(t: BaseResp<MutableList<GreetedListBean>?>) {
         if (t != null && t.code == 200) {
-            if (t.data.isNullOrEmpty()) {
+            if (t.data.isNullOrEmpty() || (page == 1 && (t.data ?: mutableListOf()).size < Constants.PAGESIZE)) {
                 hasMore = false
             }
             stateGreet.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -130,12 +127,8 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         if (!result) {
             greetRv.rewind()
         } else {
-            if (manager.topPosition == adapter.itemCount && !hasMore) {
-                stateGreet.viewState = MultiStateView.VIEW_STATE_EMPTY
-            }
-            if (type == 1) {
-                EventBus.getDefault().post(UpdateHiEvent())
-            }
+            EventBus.getDefault().postSticky(UpdateHiEvent())
+            EventBus.getDefault().post(GetNewMsgEvent())
         }
     }
 
@@ -192,35 +185,35 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
             //左滑时加载动画
             Direction.Left -> {
                 //重置右边、上边的距离
-                animation_like.alpha = 0F
-                val paramsLike = animation_like.layoutParams as ConstraintLayout.LayoutParams
-                paramsLike.width = 0
-                paramsLike.height = 0
-                animation_like.layoutParams = paramsLike
-
-                animation_dislike.alpha = ratio
-                val params = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
-                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.leftMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
-                animation_dislike.layoutParams = params
+//                animation_like.alpha = 0F
+//                val paramsLike = animation_like.layoutParams as ConstraintLayout.LayoutParams
+//                paramsLike.width = 0
+//                paramsLike.height = 0
+//                animation_like.layoutParams = paramsLike
+//
+//                animation_dislike.alpha = ratio
+//                val params = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
+//                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+//                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+//                params.leftMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+//                animation_dislike.layoutParams = params
 
             }
             //右滑时加载动画
             Direction.Right -> {
                 //重置左边、上边的距离
-                val paramsLike = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
-                paramsLike.width = 0
-                paramsLike.height = 0
-                animation_dislike.layoutParams = paramsLike
-                animation_dislike.alpha = 0F
-
-                animation_like.alpha = ratio
-                val params = animation_like.layoutParams as ConstraintLayout.LayoutParams
-                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
-                animation_like.layoutParams = params
+//                val paramsLike = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
+//                paramsLike.width = 0
+//                paramsLike.height = 0
+//                animation_dislike.layoutParams = paramsLike
+//                animation_dislike.alpha = 0F
+//
+//                animation_like.alpha = ratio
+//                val params = animation_like.layoutParams as ConstraintLayout.LayoutParams
+//                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+//                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+//                params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+//                animation_like.layoutParams = params
             }
         }
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
@@ -232,11 +225,8 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         NIMClient.getService(MsgService::class.java)
             .clearUnreadCount(adapter.data[manager.topPosition - 1].accid, SessionTypeEnum.P2P)
         //做招呼的已读状态更新
-        if (UserManager.getHiCount() > 0) {
-            UserManager.saveHiCount(UserManager.getHiCount() - 1)
-        }
         EventBus.getDefault().post(GetNewMsgEvent())
-        //1 右滑招呼 2坐滑招呼
+        //1 右滑接受 2左滑失效
         mPresenter.likeOrGreetState(
             adapter.data[manager.topPosition - 1].greet_id, if (direction == Direction.Left) {
                 2
@@ -247,22 +237,24 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         if (hasMore && manager.topPosition == adapter.itemCount - 5) {
             page++
             mPresenter.greatLists(params)
+        } else if (!hasMore && manager.topPosition == adapter.itemCount) {
+            stateGreet.viewState = MultiStateView.VIEW_STATE_EMPTY
         }
 
     }
 
     private fun resetAnimation() {
-        val params1 = animation_like.layoutParams
-        params1.width = 0
-        params1.height = 0
-        animation_like.alpha = 0F
-        animation_like.layoutParams = params1
-
-        val params2 = animation_dislike.layoutParams
-        params2.width = 0
-        params2.height = 0
-        animation_dislike.alpha = 0F
-        animation_dislike.layoutParams = params2
+//        val params1 = animation_like.layoutParams
+//        params1.width = 0
+//        params1.height = 0
+//        animation_like.alpha = 0F
+//        animation_like.layoutParams = params1
+//
+//        val params2 = animation_dislike.layoutParams
+//        params2.width = 0
+//        params2.height = 0
+//        animation_dislike.alpha = 0F
+//        animation_dislike.layoutParams = params2
     }
 
     override fun onCardCanceled() {

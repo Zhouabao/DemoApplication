@@ -408,12 +408,15 @@ class SayHiDialog(
             UserManager.getGlobalLabelName(),
             ChatHiAttachment.CHATHI_HI
         )
+        val config = CustomMessageConfig()
+        config.enableUnreadCount = false
+        config.enablePush = false
         val message = MessageBuilder.createCustomMessage(
             target_accid,
             SessionTypeEnum.P2P,
             "",
             chatHiAttachment,
-            CustomMessageConfig()
+            config
         )
         container.proxy.sendMessage(message)
     }
@@ -426,6 +429,10 @@ class SayHiDialog(
             SessionTypeEnum.P2P,
             sayHiContent.text.trim().toString()
         )
+        val config = CustomMessageConfig()
+        config.enableUnreadCount = false
+        config.enablePush = false
+        message.config = config
         container.proxy.sendMessage(message)
     }
 

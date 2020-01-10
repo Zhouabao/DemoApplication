@@ -12,7 +12,9 @@ import android.view.WindowManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -36,8 +38,8 @@ import kotlinx.android.synthetic.main.dialog_transpond.*
  *    desc   : 转发动态对话框
  *    version: 1.0
  */
-class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null) : Dialog(myContext, R.style.MyDialog),
-    View.OnClickListener {
+class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null) :
+    Dialog(myContext, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,44 +63,46 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
 
     private var position: Int = -1
     private fun initView() {
-        transpondFriend.setOnClickListener(this)
-        transpondWechat.setOnClickListener(this)
-        transpondWechatZone.setOnClickListener(this)
-        transpondWebo.setOnClickListener(this)
-        transpondQQ.setOnClickListener(this)
-        transpondQQZone.setOnClickListener(this)
-    }
-
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.transpondFriend -> {//转发到好友
+        transpondFriend.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
                 if (squareBean != null) {
                     ContactBookActivity.start(context, squareBean!!)
                     dismiss()
                 }
             }
-            R.id.transpondWebo -> {//微博
-                shareToThirdParty(SHARE_MEDIA.SINA)
+        })
+        transpondWechat.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                shareToThirdParty(SHARE_MEDIA.WEIXIN)
 
             }
-            R.id.transpondWechat -> {//微信
-                shareToThirdParty(SHARE_MEDIA.WEIXIN)
-            }
-            R.id.transpondWechatZone -> {//朋友圈
+        })
+        transpondWechatZone.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
                 shareToThirdParty(SHARE_MEDIA.WEIXIN_CIRCLE)
 
             }
-            R.id.transpondQQ -> {//QQ
+        })
+        transpondWebo.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                shareToThirdParty(SHARE_MEDIA.SINA)
+
+            }
+        })
+        transpondQQ.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
                 shareToThirdParty(SHARE_MEDIA.QQ)
 
             }
-            R.id.transpondQQZone -> {//QQ空间
+        })
+        transpondQQZone.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
                 shareToThirdParty(SHARE_MEDIA.QZONE)
+
             }
-        }
+        })
 
     }
-
 
     /**
      * 分享动态
@@ -233,7 +237,7 @@ class TranspondDialog(val myContext: Context, var squareBean: SquareBean? = null
 
     /*-------------------------分享成功回调----------------------------*/
     private fun addShare() {
-        val params = hashMapOf<String,Any>()
+        val params = hashMapOf<String, Any>()
         params["square_id"] = squareBean?.id ?: 0
         RetrofitFactory.instance.create(Api::class.java)
             .addShare(UserManager.getSignParams(params))

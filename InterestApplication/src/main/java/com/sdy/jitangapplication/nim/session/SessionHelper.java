@@ -311,6 +311,11 @@ public class SessionHelper {
             public boolean isUserVip() {
                 return UserManager.INSTANCE.isUserVip();
             }
+
+            @Override
+            public String robotAccount() {
+                return Constants.ASSISTANT_ACCID;
+            }
         };
         NimUIKit.setSessionListener(listener);
     }
@@ -344,10 +349,7 @@ public class SessionHelper {
 
             @Override
             public boolean shouldIgnore(IMMessage message) {
-                if (message.getAttachment() != null) {
-                    // 视频通话消息和白板消息，红包消息 不允许撤回
-                    return true;
-                } else if (DemoCache.getAccount().equals(message.getSessionId())) {
+                if (DemoCache.getAccount().equals(message.getSessionId())) {
                     // 发给我的电脑 不允许撤回
                     return true;
                 }
@@ -415,7 +417,7 @@ public class SessionHelper {
 
                         @Override
                         public void onClick() {
-                            NIMClient.getService(MsgService.class).clearServerHistory(item.getSessionId(),
+                            NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(),
                                     item.getSessionTypeEnum());
                             MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
                         }
@@ -425,8 +427,7 @@ public class SessionHelper {
 
                         @Override
                         public void onClick() {
-                            NIMClient.getService(MsgService.class).clearServerHistory(item.getSessionId(),
-                                    item.getSessionTypeEnum(), false);
+                            NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(), item.getSessionTypeEnum());
                             MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
                         }
                     });

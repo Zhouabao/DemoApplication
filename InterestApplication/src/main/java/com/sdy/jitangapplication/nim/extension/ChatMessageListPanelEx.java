@@ -963,9 +963,28 @@ public class ChatMessageListPanelEx {
         private void onResendMessageItem(IMMessage message) {
             int index = getItemIndex(message.getUuid());
             if (index >= 0) {
-                showResendConfirm(message); // 重发确认
+                showResendAlert(message);
             }
         }
+
+
+
+        private void showResendAlert(IMMessage item) {
+            new CommonAlertDialog.Builder(container.activity)
+                    .setContent("确认重新发送该条消息")
+                    .setTitle("重新发送")
+                    .setCancelText("取消")
+                    .setConfirmText("重新发送")
+                    .setCancelIconIsVisibility(true)
+                    .setOnConfirmListener(dialog -> {
+                        showResendConfirm(item); // 重发确认
+                        dialog.dismiss();
+                    })
+                    .setOnCancelListener(dialog -> dialog.dismiss())
+                    .create()
+                    .show();
+        }
+
 
         private void showResendConfirm(final IMMessage message) {
             EasyAlertDialogHelper.OnDialogActionListener listener = new EasyAlertDialogHelper.OnDialogActionListener() {

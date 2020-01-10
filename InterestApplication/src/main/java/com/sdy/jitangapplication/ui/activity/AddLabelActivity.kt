@@ -16,6 +16,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.ShowCompleteLabelEvent
 import com.sdy.jitangapplication.event.UpdateEditModeEvent
+import com.sdy.jitangapplication.event.UpdateMyInterestLabelEvent
 import com.sdy.jitangapplication.model.AddLabelBean
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.TagBean
@@ -85,7 +86,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         setSwipeBackEnable(from != FROM_REGISTER)
         btnBack.isVisible = from != FROM_REGISTER
         hotT1.text = if (from == FROM_REGISTER || from == FROM_INTERSERT_LABEL) {
-            "想认识的人"
+            "感兴趣的标签"
         } else {
             "添加你的标签"
         }
@@ -243,11 +244,15 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         if (result) {
             if (from == FROM_REGISTER) {
                 startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
+                //保存标签
+                UserManager.saveLabels(data ?: mutableListOf())
+                EventBus.getDefault().post(RefreshEvent(true))
             } else if (from == FROM_INTERSERT_LABEL) {
                 //todo 更新全局的感兴趣标签
                 //保存标签
                 UserManager.saveLabels(data ?: mutableListOf())
                 EventBus.getDefault().post(RefreshEvent(true))
+                EventBus.getDefault().post(UpdateMyInterestLabelEvent())
             } else {
                 EventBus.getDefault().post(UpdateEditModeEvent(MyLabelActivity.MY_LABEL))
                 EventBus.getDefault().post(ShowCompleteLabelEvent(false))

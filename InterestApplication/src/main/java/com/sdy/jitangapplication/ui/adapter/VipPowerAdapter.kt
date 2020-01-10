@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_vip_power.view.*
  */
 class VipPowerAdapter : BaseQuickAdapter<VipDescr, BaseViewHolder>(R.layout.item_vip_power) {
     override fun convert(helper: BaseViewHolder, item: VipDescr) {
-        GlideUtil.loadCircleImg(mContext, item.url, helper.itemView.powerImg)
+        GlideUtil.loadCircleImg(mContext, item.icon_vip, helper.itemView.powerImg)
         helper.itemView.powerContent.text = item.title ?: ""
     }
 }

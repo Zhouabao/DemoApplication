@@ -9,13 +9,6 @@
               android:orientation="vertical"
               tools:context=".ui.activity.MainActivity">
 
-    <View
-            android:id="@+id/customStatusBar"
-            android:visibility="visible"
-            android:background="@color/transparent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
             android:visibility="gone"
             android:layout_width="match_parent"

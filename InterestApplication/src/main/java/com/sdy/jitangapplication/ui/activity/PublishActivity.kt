@@ -424,6 +424,9 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                         )}"
                     mPresenter.uploadFile(1, 1, pickedPhotos[0].filePath, videoQnPath, 2)
                 }
+                if (ActivityUtils.isActivityAlive(ChooseLabelActivity::class.java.newInstance())) {
+                    ActivityUtils.finishActivity(ChooseLabelActivity::class.java)
+                }
                 finish()
             }
 
