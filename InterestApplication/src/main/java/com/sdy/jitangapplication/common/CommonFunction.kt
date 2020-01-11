@@ -200,7 +200,7 @@ object CommonFunction {
                     PictureConfig.SINGLE
                 }
             )
-            .isAndroidQTransform(false)//是否需要处理Android Q 拷贝至应用沙盒的操作
+            .isAndroidQTransform(true)//是否需要处理Android Q 拷贝至应用沙盒的操作
             .previewImage(true)
             .previewVideo(true)
             .isCamera(showCamera)
@@ -225,7 +225,7 @@ object CommonFunction {
         PictureSelector.create(context as Activity)
             .openCamera(chooseMode)
             .enableCrop(false)
-            .isAndroidQTransform(false)//是否需要处理Android Q 拷贝至应用沙盒的操作
+            .isAndroidQTransform(true)//是否需要处理Android Q 拷贝至应用沙盒的操作
             .compressSavePath(UriUtils.getCacheDir(context))
             .compress(compress)
             .loadImageEngine(GlideEngine.createGlideEngine())// 自定义图片加载引擎

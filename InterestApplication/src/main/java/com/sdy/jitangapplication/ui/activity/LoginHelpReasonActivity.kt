@@ -188,7 +188,7 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
             if (data != null) {
                 if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {
                     for (tdata in PictureSelector.obtainMultipleResult(data)) {
-                        if (SdkVersionUtils.checkedAndroid_Q())
+                        if (SdkVersionUtils.checkedAndroid_Q() && !tdata.androidQToPath.isNullOrEmpty())
                             reportPicAdapter.addData(0, tdata.androidQToPath)
                         else
                             reportPicAdapter.addData(0, tdata.path)

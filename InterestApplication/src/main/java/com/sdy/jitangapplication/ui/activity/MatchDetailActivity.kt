@@ -380,13 +380,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //更新打招呼次数和状态
         updateLightCount(matchBean!!.lightningcnt ?: 0, matchBean!!.countdown)
 
-//        用户动态封面图片
-        if (matchBean!!.square == null || matchBean!!.square!!.size == 0) {
+//        用户动态封面图片（暂不展示）
             detailThumbRv.visibility = View.GONE
-        } else {
-            detailThumbRv.adapter = thumbAdapter
-            thumbAdapter.setNewData(matchBean!!.square ?: mutableListOf())
-        }
+//        if (matchBean!!.square == null || matchBean!!.square!!.size == 0) {
+//            detailThumbRv.visibility = View.GONE
+//        } else {
+//            detailThumbRv.adapter = thumbAdapter
+//            thumbAdapter.setNewData(matchBean!!.square ?: mutableListOf())
+//        }
 
         //用户照片
         detailPhotosVp.adapter = photosAdapter

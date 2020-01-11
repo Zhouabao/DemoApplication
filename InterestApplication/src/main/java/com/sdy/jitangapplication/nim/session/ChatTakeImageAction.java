@@ -54,12 +54,18 @@ public class ChatTakeImageAction extends ChatBaseAction {
                     LocalMedia media = selectList.get(i);
                     if (PictureMimeType.eqImage(media.getMimeType())) {//发送图片
                         if (SdkVersionUtils.checkedAndroid_Q())
-                            sendImageAfterSelfImagePicker(new File(media.getAndroidQToPath()));
+                            if (media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
+                                sendImageAfterSelfImagePicker(new File(media.getAndroidQToPath()));
+                            else
+                                sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
                         else
                             sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
                     } else if (PictureMimeType.eqVideo(media.getMimeType())) {//发送视频
                         if (SdkVersionUtils.checkedAndroid_Q())
-                            sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getAndroidQToPath()));
+                            if (media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
+                                sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getAndroidQToPath()));
+                            else
+                                sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getPath()));
                         else
                             sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getPath()));
                     }

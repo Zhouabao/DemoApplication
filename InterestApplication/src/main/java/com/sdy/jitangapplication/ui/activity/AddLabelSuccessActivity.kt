@@ -222,7 +222,11 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
                     )}"
                 mPresenter.uploadFile(
                     if (SdkVersionUtils.checkedAndroid_Q()) {
-                        mediaBean!!.androidQToPath
+                        if (mediaBean!!.androidQToPath.isNullOrEmpty()) {
+                            mediaBean!!.path
+                        } else {
+                            mediaBean!!.androidQToPath
+                        }
                     } else {
                         mediaBean!!.compressPath
                     }, qnPath
@@ -246,7 +250,11 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
 
                     GlideUtil.loadRoundImgCenterCrop(
                         this, if (SdkVersionUtils.checkedAndroid_Q()) {
-                            mediaBean!!.androidQToPath
+                            if (mediaBean!!.androidQToPath.isNullOrEmpty()) {
+                                mediaBean!!.path
+                            } else {
+                                mediaBean!!.androidQToPath
+                            }
                         } else {
                             mediaBean!!.compressPath
                         }, publishImage, SizeUtils.dp2px(12F)

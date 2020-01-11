@@ -188,7 +188,10 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                 if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {
                     for (tdata in PictureSelector.obtainMultipleResult(data)) {
                         if (SdkVersionUtils.checkedAndroid_Q())
-                            reportPicAdapter.addData(0, tdata.androidQToPath)
+                            if (tdata.androidQToPath.isNullOrEmpty())
+                                reportPicAdapter.addData(0, tdata.path)
+                            else
+                                reportPicAdapter.addData(0, tdata.androidQToPath)
                         else
                             reportPicAdapter.addData(0, tdata.path)
                     }

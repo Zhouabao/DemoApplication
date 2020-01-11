@@ -804,7 +804,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                             loading.show()
                             uploadPicture(
                                 requestCode == REPLACE_REQUEST, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                    PictureSelector.obtainMultipleResult(data)[0].androidQToPath
+                                    if (PictureSelector.obtainMultipleResult(data)[0].androidQToPath.isNullOrEmpty()) {
+                                        PictureSelector.obtainMultipleResult(data)[0].path
+                                    } else {
+                                        PictureSelector.obtainMultipleResult(data)[0].androidQToPath
+                                    }
                                 } else {
                                     PictureSelector.obtainMultipleResult(data)[0].path
                                 }
