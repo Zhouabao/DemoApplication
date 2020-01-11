@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.android.material.appbar.AppBarLayout
@@ -141,13 +142,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         clPhotos.layoutParams = layoutParams
 
         //设置个人信息距离顶部的距离
+//        val paramsClUserInfo = clUserInfo.layoutParams as LinearLayout.LayoutParams
         val paramsClUserInfo = clUserInfo.layoutParams as FrameLayout.LayoutParams
         paramsClUserInfo.topMargin = ScreenUtils.getScreenHeight() - SizeUtils.dp2px(197F) - SizeUtils.dp2px(26F)
-        paramsClUserInfo.height = FrameLayout.LayoutParams.WRAP_CONTENT
+        paramsClUserInfo.height = LinearLayout.LayoutParams.WRAP_CONTENT
         clUserInfo.layoutParams = paramsClUserInfo
 
         vpUserDetail.setScrollable(false)
-        detailPhotosVp.setScrollable(false)
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
@@ -187,6 +188,21 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailInterestRvTag.adapter = userInterestAdapter
 
 
+//        userAppbar.onScrollChange { _, scrollX, scrollY, oldScrollX, oldScrollY ->
+//            Log.d("matchdetailScroll", "${scrollY} ,${clUserInfo.marginTop}")
+//            detailActionbar.alpha = (Math.abs(scrollY) - clUserInfo.marginTop - SizeUtils.dp2px(56F)) * 1F / SizeUtils.dp2px(56F)
+//            if (Math.abs(scrollY) >= clUserInfo.marginTop - SizeUtils.dp2px(56F)) {
+//                detailActionbar.isVisible = true
+//                if (ScreenUtils.isFullScreen(this)) {
+//                    ScreenUtils.setNonFullScreen(this)
+//                }
+//            } else {
+//                detailActionbar.isVisible = false
+//                if (!ScreenUtils.isFullScreen(this)) {
+//                    ScreenUtils.setFullScreen(this)
+//                }
+//            }
+//        }
 
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
             if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
@@ -215,7 +231,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 vpUserDetail.currentItem = 1
             }
         }
-        detailSquareSwitchRg.check(R.id.rbList)
+        detailSquareSwitchRg.check(R.id.rbBlock)
     }
 
 
@@ -225,6 +241,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
+
     /*
       初始化Fragment栈管理
    */
@@ -234,7 +251,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 //        mStack.add(MatchDetailLabelFragment(targetAccid))
         vpUserDetail.offscreenPageLimit = 3
         vpUserDetail.adapter = MainPagerAdapter(supportFragmentManager, mStack)
-        vpUserDetail.currentItem = 0
+        vpUserDetail.currentItem = 1
     }
 
 
@@ -334,7 +351,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         initUserInfomationData()//初始化个人信息数据
         detailUserInformationRv.adapter = detailUserInformationAdapter
 //        EventBus.getDefault().post(UpdateSquareEvent())
-        squareCount.text = "动态 ${matchBean!!.square_cnt?:0}"
+        squareCount.text = "动态 ${matchBean!!.square_cnt ?: 0}"
         detailUserName.text = matchBean!!.nickname
         titleUsername.text = matchBean!!.nickname
         val left = resources.getDrawable(
@@ -373,6 +390,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         //用户照片
         detailPhotosVp.adapter = photosAdapter
+        detailPhotosVp.setScrollable(true)
 
         if (matchBean!!.photos == null || matchBean!!.photos!!.isEmpty())
             photos.add(matchBean!!.avatar ?: "")
@@ -387,7 +405,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      * 设置竖直滑动的vp2以及其滑动的indicator
      */
     private fun setViewpagerAndIndicator() {
-        detailPhotosVp.setScrollable(false)
         detailPhotosVp.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
@@ -524,7 +541,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 NIMClient.getService(FriendService::class.java).addToBlackList(matchBean!!.accid)
                 NIMClient.getService(MsgService::class.java)
                     .deleteRecentContact2(matchBean!!.accid, SessionTypeEnum.P2P)
-                NIMClient.getService(MsgService::class.java).clearChattingHistory(matchBean!!.accid, SessionTypeEnum.P2P)
+                NIMClient.getService(MsgService::class.java)
+                    .clearChattingHistory(matchBean!!.accid, SessionTypeEnum.P2P)
                 matchBean!!.isblock = 2
                 updateBlockStatus()
 //                EventBus.getDefault().post(UpdateLabelEvent(NewLabel(id = UserManager.getGlobalLabelId())))
@@ -540,6 +558,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (islike) {
             if (statusBean != null)
                 if (statusBean.code == 200) {
+                    if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
+                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
+                    }
+
                     if (statusBean.data?.residue == 0) {
                         ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
                     } else {
@@ -571,6 +593,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         } else {
             if (statusBean != null)
                 if (statusBean.code == 200) {
+                    if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
+                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
+                    }
+
                     if (statusBean.data != null) {
                         EventBus.getDefault().post(RefreshEvent(true))
                         finish()
@@ -603,6 +629,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.moreBtn,
             R.id.moreBtn1 -> {//更多
                 showMoreActionDialog()
+            }
+            R.id.detailUserDislikeBtn->{//不感兴趣
+                mPresenter.dislikeUser(params)
             }
             R.id.detailUserLikeBtn -> {//感兴趣
                 mPresenter.likeUser(params)
@@ -723,11 +752,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             detailUserChatBtn.isVisible = true
             detailUserGreetBtn.isVisible = false
         } else {
-            detailUserChatBtn.visibility = View.INVISIBLE
+            detailUserChatBtn.isVisible = false
             detailUserGreetBtn.isVisible = true
             detailUserLikeBtn.isVisible = matchBean!!.isliked != 1//喜欢过就不显示“感兴趣”
             if (!matchBean!!.greet_switch) {//招呼未开启不显示打招呼
-                detailUserChatBtn.visibility = View.INVISIBLE
+                detailUserChatBtn.isVisible = false
                 detailUserGreetBtn.isVisible = false
             } else {//招呼开启,   招呼有效 与 招呼无效
                 if (matchBean!!.isgreeted) {
@@ -736,7 +765,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     detailUserChatBtn.text = "继续聊天"
                 } else {
                     detailUserGreetBtn.isVisible = true
-                    detailUserChatBtn.visibility = View.INVISIBLE
+                    detailUserChatBtn.isVisible = false
                 }
             }
 

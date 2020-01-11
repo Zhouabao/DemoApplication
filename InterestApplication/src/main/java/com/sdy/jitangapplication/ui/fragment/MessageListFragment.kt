@@ -195,6 +195,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                     } else {
                         startActivity<MessageLikeMeActivity>()
                     }
+
                 }
                 else -> {//招呼
                     startActivity<GreetReceivedActivity>()
@@ -202,6 +203,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             }
             allMessageTypeAdapter.data[position].count = 0
             allMessageTypeAdapter.notifyItemChanged(position)
+
         }
         return friendsView
     }

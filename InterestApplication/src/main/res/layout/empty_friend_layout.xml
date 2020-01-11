@@ -10,6 +10,7 @@
 
     <ImageView
             android:id="@+id/emptyImg"
+            android:layout_marginTop="100dp"
             android:src="@drawable/icon_empty_friend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

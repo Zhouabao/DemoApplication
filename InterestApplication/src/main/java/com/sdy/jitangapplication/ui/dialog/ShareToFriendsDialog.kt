@@ -111,14 +111,12 @@ class ShareToFriendsDialog constructor(
             dismiss()
         }
 
-        send.onClick {
-            object : CustomClickListener() {
-                override fun onSingleClick(view: View) {
-                    //发送消息
-                    sendShareMsg()
-                }
+        send.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                //发送消息
+                sendShareMsg()
             }
-        }
+        })
 
     }
 

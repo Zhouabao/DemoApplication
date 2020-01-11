@@ -55,7 +55,7 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
         rvMyLabels.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
             for (label in adapter.data) {
-                label.checked = label.id == adapter.data[position].id
+                label.checked = label == adapter.data[position]
             }
             mylabelBean = adapter.data[position]
             rightBtn1.isEnabled = true

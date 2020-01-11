@@ -97,12 +97,8 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         rightBtn1.setOnClickListener(this)
         hotT1.visibility = View.INVISIBLE
         rightBtn1.isVisible = true
-        rightBtn1.text =
-            if (mode == MODE_NEW || from == AddLabelActivity.FROM_ADD_NEW || from == AddLabelActivity.FROM_REGISTER) {
-                "保存并继续"
-            } else {
-                "保存"
-            }
+        rightBtn1.text = "再选${MIN_QUALITY}个"
+
         rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_25dp)
         rightBtn1.isEnabled = false
 
@@ -214,6 +210,16 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
      * 检查保存按钮是否可用
      */
     private fun checkConfirmEnable() {
+        rightBtn1.text = if (choosedQualityAdapter.data.size in 3..5) {
+            if (mode == MODE_NEW || from == AddLabelActivity.FROM_ADD_NEW || from == AddLabelActivity.FROM_REGISTER) {
+                "保存并继续"
+            } else {
+                "保存"
+            }
+        } else {
+            "再选${MIN_QUALITY - choosedQualityAdapter.data.size}个"
+        }
+
         t2.isVisible = choosedQualityAdapter.data.size <= 0
         labelQualityChoosedRv.isVisible = choosedQualityAdapter.data.size > 0
         rightBtn1.isEnabled = choosedQualityAdapter.data.size in 3..5
@@ -305,6 +311,20 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     CommonFunction.toast("最多能填写5个标签特质")
                     return
                 }
+
+                var hasDuplicate = false
+                for (data in choosedQualityAdapter.data) {
+                    if (data.content == labelQualityAddEt.text.toString().trim()) {
+                        hasDuplicate = true
+                        break
+                    }
+                }
+                if (hasDuplicate) {
+                    CommonFunction.toast("不能添加重复的标签特质")
+                    return
+                }
+
+
                 if (labelQualityAddEt.text.trim().isNotEmpty() && !TextUtils.isDigitsOnly(labelQualityAddEt.text.trim())) {
                     customQuality.add(labelQualityAddEt.text.trim().toString())
                     choosedQualityAdapter.addData(LabelQualityBean(content = labelQualityAddEt.text.trim().toString()))

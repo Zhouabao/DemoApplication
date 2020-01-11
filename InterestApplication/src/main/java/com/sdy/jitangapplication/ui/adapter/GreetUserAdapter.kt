@@ -33,7 +33,8 @@ class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.lay
         helper.itemView.matchUserDistance.text = "${item.distance}"
         helper.itemView.ivVip.isVisible = item.isvip == 1
         helper.itemView.ivVerify.isVisible = item.isfaced == 1
-        helper.itemView.matchAim.isVisible = !item.intention_title.isNullOrEmpty()
+        helper.itemView.matchAim.isVisible = false
+//        helper.itemView.matchAim.isVisible = !item.intention_title.isNullOrEmpty()
         helper.itemView.matchAimTv.text = item.intention_title
         GlideUtil.loadCircleImg(mContext, item.intention_icon, helper.itemView.matchAimIv)
 

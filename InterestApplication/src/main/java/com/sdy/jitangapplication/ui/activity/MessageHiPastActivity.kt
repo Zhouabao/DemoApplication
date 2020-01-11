@@ -32,7 +32,6 @@ import com.sdy.jitangapplication.ui.adapter.MessageHiListAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_hi_past.*
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
-import kotlinx.android.synthetic.main.empty_friend_layout.view.emptyImg
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -91,8 +90,8 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
         adapter.bindToRecyclerView(messageHiRv)
         adapter.setEmptyView(R.layout.empty_friend_layout, messageHiRv)
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_hi_received_bg)
-        adapter.emptyView.emptyFriendTitle.text = "暂时没有招呼"
-        adapter.emptyView.emptyFriendTip.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
+        adapter.emptyView.emptyFriendTitle.text = "这里暂时没有人"
+        adapter.emptyView.emptyFriendTip.text = "左滑过的用户会在这里记录"
         adapter.isUseEmpty(false)
 
         adapter.setOnItemClickListener { _, view, position ->

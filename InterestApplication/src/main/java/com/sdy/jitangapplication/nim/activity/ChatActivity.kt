@@ -107,7 +107,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                     if (t.code == 200) {
                         if (t.data != null)
                             intent.putExtra("nimBean", t.data)
-                    } else if (t.code == 400) {
+                    } else if (t.code == 409) {
                         CommonAlertDialog.Builder(this@ChatActivity)
                             .setTitle("提示")
                             .setContent(t.msg)
@@ -296,8 +296,9 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         val detailContent =
             NimUIKitImpl.getOnlineStateContentProvider()
                 .getDetailDisplay(sessionId)
-        setSubTitle(detailContent)
+//        setSubTitle(detailContent)
 //        chatName.text = "${UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)}-$detailContent"
+        chatName.text = "${UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)}"
     }
 
     private fun registerObservers(register: Boolean) {

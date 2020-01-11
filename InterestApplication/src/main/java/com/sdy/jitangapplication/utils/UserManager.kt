@@ -102,6 +102,7 @@ object UserManager {
     fun getInterestLabelCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("interestLabelCount", -1)
     }
+
     /**
      * 感兴趣的标签个数
      */
@@ -195,7 +196,7 @@ object UserManager {
     }
 
     fun getChangeAvatorType(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("ChangeAvatorType",0)
+        return SPUtils.getInstance(Constants.SPNAME).getInt("ChangeAvatorType", 0)
     }
 
     //是否需要强制替换头像
@@ -731,12 +732,38 @@ object UserManager {
     }
 
 
-    fun isShowGuide(): Boolean {
+    /**
+     * 是否展示首页的引导使用
+     */
+    fun isShowGuideIndex(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuide", false)
     }
 
-    fun saveShowGuide(isShow: Boolean) {
+    fun saveShowGuideIndex(isShow: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuide", isShow)
+    }
+
+    /**
+     * 是否展示引导喜欢我的
+     */
+    fun isShowGuideLike(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideLike", false)
+    }
+
+    fun saveShowGuideLike(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideLike", isShow)
+    }
+
+
+    /**
+     * 是否展示引导招呼
+     */
+    fun isShowGuideGreet(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideGreet", false)
+    }
+
+    fun saveShowGuideGreet(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideGreet", isShow)
     }
 
 

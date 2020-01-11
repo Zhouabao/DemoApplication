@@ -74,9 +74,9 @@ class IndexFragment : BaseFragment() {
                 TAB_TAG -> {//删除标签
                     editModes = !editModes
                     rightOperationBtn.text = if (editModes) {
-                        "取消"
+                        "完成"
                     } else {
-                        "删除"
+                        "编辑"
                     }
                     EventBus.getDefault().post(UpdateEditModeEvent(0))
                 }
@@ -112,9 +112,9 @@ class IndexFragment : BaseFragment() {
                         rightOperationBtn.isVisible = false
                         rightOperationBtn.background = null
                         rightOperationBtn.text = if (editModes) {
-                            "取消"
+                            "完成"
                         } else {
-                            "删除"
+                            "编辑"
                         }
                         rgIndexTab.check(R.id.tabTag)
                         findToTalkIv.isVisible = false
@@ -137,6 +137,7 @@ class IndexFragment : BaseFragment() {
                 }
                 R.id.tabTag -> {
                     vpIndex.currentItem = TAB_TAG
+                    rightOperationBtn.isVisible = showLabelEdit
                 }
             }
         }
@@ -161,8 +162,10 @@ class IndexFragment : BaseFragment() {
         EventBus.getDefault().unregister(this)
     }
 
+    private var showLabelEdit = false
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onShowDeleteMyLabelEvent(event: ShowDeleteMyLabelEvent) {
-        rightOperationBtn.isVisible = event.show
+        showLabelEdit = event.show
+        rightOperationBtn.isVisible = showLabelEdit
     }
 }

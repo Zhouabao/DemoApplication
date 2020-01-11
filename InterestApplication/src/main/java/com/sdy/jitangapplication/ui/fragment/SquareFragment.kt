@@ -301,6 +301,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
         rgSquare.setOnCheckedChangeListener { _, checkedId ->
             squareTagRv.isVisible = checkedId == R.id.tabSquare
+            addTagBg.isVisible = checkedId == R.id.tabSquare
             updateChooseTitle()
         }
         rgSquare.check(R.id.tabSquare)
@@ -647,7 +648,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 if (rgSquare.checkedRadioButtonId == R.id.tabSquare) {
                     adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
                     adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
-                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_square)
+                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
                     adapter.emptyView.emptyFriendGoBtn.isVisible = false
                 } else {
                     adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)

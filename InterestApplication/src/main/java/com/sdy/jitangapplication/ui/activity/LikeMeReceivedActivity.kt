@@ -7,9 +7,12 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.blankj.utilcode.util.BarUtils
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
@@ -37,6 +40,7 @@ import com.sdy.jitangapplication.presenter.view.LikeMeReceivedView
 import com.sdy.jitangapplication.ui.adapter.LikeMeUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.dialog.GuideLikeDialog
 import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
@@ -124,6 +128,9 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
                     manager.setSwipeAnimationSetting(setting)
                     greetRv.swipe()
                 }
+                R.id.v1 -> {
+                    MatchDetailActivity.start(this, adapter.data[position].accid)
+                }
             }
         }
 
@@ -133,46 +140,62 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
     }
 
     private var hasMore = true
-    override fun onGreatListResult(t: BaseResp<NewLikeMeBean?>) {
-        if (t.data != null && t.code == 200) {
-            if (t.data!!.list.isNullOrEmpty()) {
-                hasMore = false
-            }
-            stateLikeReceived.viewState = MultiStateView.VIEW_STATE_CONTENT
-            adapter.addData(t.data!!.list)
-            if (page == 1 && t.data!!.list.isNullOrEmpty()) {
-                stateLikeReceived.viewState = MultiStateView.VIEW_STATE_EMPTY
-            }
-            if (page == 1) {
-                mPresenter.markLikeRead()
-            }
-
-            my_percent_complete = t.data!!.my_percent_complete
-            normal_percent_complete = t.data!!.normal_percent_complete
-            myCount = t.data!!.my_like_times
-            maxCount = t.data!!.total_like_times
-
-            if (t.data!!.count > 0) {
-                likeLeftCount.isVisible = true
-                likeLeftCount.text = SpanUtils.with(likeLeftCount)
-                    .append("还有")
-                    .append(" ${t.data!!.count} ")
-                    .setForegroundColor(resources.getColor(R.color.colorOrange))
-                    .setBold()
-                    .append("个人喜欢你")
-                    .setForegroundColor(Color.parseColor("#FFC5C6C8"))
-                    .create()
-            } else {
-                likeLeftCount.isVisible = false
-            }
-        } else {
-            stateLikeReceived.viewState = MultiStateView.VIEW_STATE_ERROR
+    private var likeCount = 0
+    override fun onGreatListResult(t: BaseResp<NewLikeMeBean?>) = if (t.data != null && t.code == 200) {
+        if (t.data!!.list.isNullOrEmpty()) {
+            hasMore = false
         }
+        stateLikeReceived.viewState = MultiStateView.VIEW_STATE_CONTENT
+        adapter.addData(t.data!!.list)
+        if (page == 1 && t.data!!.list.isNullOrEmpty()) {
+            stateLikeReceived.viewState = MultiStateView.VIEW_STATE_EMPTY
+        } else {
+            if (!UserManager.isShowGuideLike()) {
+                GuideLikeDialog(this).show()
+            }
+        }
+        if (page == 1) {
+            mPresenter.markLikeRead()
+        }
+
+        my_percent_complete = t.data!!.my_percent_complete
+        normal_percent_complete = t.data!!.normal_percent_complete
+        myCount = t.data!!.my_like_times
+        maxCount = t.data!!.total_like_times
+
+        likeCount = t.data!!.count
+        if (t.data!!.count > 0) {
+            likeLeftCount.isVisible = true
+            likeLeftCount.text = SpanUtils.with(likeLeftCount)
+                .append("还有")
+                .append(" ${t.data!!.count} ")
+                .setForegroundColor(resources.getColor(R.color.colorOrange))
+                .setBold()
+                .append("个人喜欢你")
+                .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                .create()
+        } else {
+            likeLeftCount.isVisible = false
+        }
+    } else {
+        stateLikeReceived.viewState = MultiStateView.VIEW_STATE_ERROR
     }
 
 
     override fun onLikeOrGreetStateResult(data: BaseResp<StatusBean?>, type: Int) {
         if (data.code == 200) {
+            if (likeCount > 0 && likeLeftCount.isVisible) {
+                likeCount -= 1
+                likeLeftCount.text = SpanUtils.with(likeLeftCount)
+                    .append("还有")
+                    .append(" $likeCount ")
+                    .setForegroundColor(resources.getColor(R.color.colorOrange))
+                    .setBold()
+                    .append("个人喜欢你")
+                    .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                    .create()
+            }
+
             if (data.data != null) {
                 if (data.data!!.status == 2) {//status :1.喜欢成功  2.匹配成功
                     sendChatHiMessage(
@@ -288,35 +311,35 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
             //左滑时加载动画
             Direction.Left -> {
                 //重置右边、上边的距离
-//                animation_like.alpha = 0F
-//                val paramsLike = animation_like.layoutParams as ConstraintLayout.LayoutParams
-//                paramsLike.width = 0
-//                paramsLike.height = 0
-//                animation_like.layoutParams = paramsLike
-//
-//                animation_dislike.alpha = ratio
-//                val params = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
-//                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-//                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-//                params.leftMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
-//                animation_dislike.layoutParams = params
+                animation_like.alpha = 0F
+                val paramsLike = animation_like.layoutParams as ConstraintLayout.LayoutParams
+                paramsLike.width = 0
+                paramsLike.height = 0
+                animation_like.layoutParams = paramsLike
+
+                animation_dislike.alpha = ratio
+                val params = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
+                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.leftMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                animation_dislike.layoutParams = params
 
             }
             //右滑时加载动画
             Direction.Right -> {
                 //重置左边、上边的距离
-//                val paramsLike = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
-//                paramsLike.width = 0
-//                paramsLike.height = 0
-//                animation_dislike.layoutParams = paramsLike
-//                animation_dislike.alpha = 0F
-//
-//                animation_like.alpha = ratio
-//                val params = animation_like.layoutParams as ConstraintLayout.LayoutParams
-//                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-//                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-//                params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
-//                animation_like.layoutParams = params
+                val paramsLike = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
+                paramsLike.width = 0
+                paramsLike.height = 0
+                animation_dislike.layoutParams = paramsLike
+                animation_dislike.alpha = 0F
+
+                animation_like.alpha = ratio
+                val params = animation_like.layoutParams as ConstraintLayout.LayoutParams
+                params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
+                params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                animation_like.layoutParams = params
             }
         }
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
@@ -358,17 +381,17 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
     }
 
     private fun resetAnimation() {
-//        val params1 = animation_like.layoutParams
-//        params1.width = 0
-//        params1.height = 0
-//        animation_like.alpha = 0F
-//        animation_like.layoutParams = params1
-//
-//        val params2 = animation_dislike.layoutParams
-//        params2.width = 0
-//        params2.height = 0
-//        animation_dislike.alpha = 0F
-//        animation_dislike.layoutParams = params2
+        val params1 = animation_like.layoutParams
+        params1.width = 0
+        params1.height = 0
+        animation_like.alpha = 0F
+        animation_like.layoutParams = params1
+
+        val params2 = animation_dislike.layoutParams
+        params2.width = 0
+        params2.height = 0
+        animation_dislike.alpha = 0F
+        animation_dislike.layoutParams = params2
     }
 
     override fun onCardCanceled() {

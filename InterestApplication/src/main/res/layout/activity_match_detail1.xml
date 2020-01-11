@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.activity.MatchDetailActivity">
+
+    <com.kennyc.view.MultiStateView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/stateview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:msv_animateViewChanges="false"
+            app:msv_emptyView="@layout/empty_layout"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="loading"
+            tools:context=".ui.activity.MatchDetailActivity">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/userContent"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_height="match_parent">
+
+
+            <!--照片系列布局固定不滑动-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clPhotos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/detailPhotosVp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                        android:id="@+id/btnLast"
+                        android:layout_width="100dp"
+                        android:layout_height="0dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@id/detailPhotosVp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/detailPhotosVp"/>
+
+                <TextView
+                        android:visibility="gone"
+                        android:id="@+id/btnNext"
+                        android:layout_width="100dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="@id/detailPhotosVp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/detailPhotosVp"/>
+
+                <LinearLayout
+                        android:id="@+id/detailPhotosIndicator"
+                        android:layout_marginBottom="37dp"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        />
+
+
+                <ImageView
+                        android:id="@+id/backBtn"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="15dp"
+                        android:scaleType="center"
+                        android:src="@drawable/icon_return_oval"
+                        android:visibility="visible"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageView
+                        android:id="@+id/moreBtn"
+                        android:src="@drawable/icon_more_oval"
+                        android:layout_width="26dp"
+                        android:scaleType="centerInside"
+                        android:elevation="1dp"
+                        android:layout_height="26dp"
+                        android:layout_marginRight="15dp"
+                        app:layout_constraintBottom_toBottomOf="@id/backBtn"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/backBtn"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/detailThumbRv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="44dp"
+                        android:padding="3dp"
+                        android:layout_marginLeft="15dp"
+                        android:orientation="horizontal"
+                        android:background="@drawable/shape_rectangle_transparent"
+                        app:layout_constraintBottom_toBottomOf="@id/detailPhotosVp"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <RelativeLayout
+                    android:id="@+id/detailActionbar"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:minHeight="?attr/actionBarSize"
+                    android:layout_height="56dp"
+                    android:background="@color/colorWhite"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    >
+
+                <ImageView
+                        android:id="@+id/btnBack2"
+                        android:src="@drawable/icon_return"
+                        android:layout_width="wrap_content"
+                        android:paddingLeft="15dp"
+                        android:layout_alignParentLeft="true"
+                        android:paddingRight="15dp"
+                        android:layout_height="match_parent"/>
+
+                <TextView
+                        android:id="@+id/titleUsername"
+                        android:text="用户名"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="17sp"
+                        android:layout_weight="1"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
+
+                <ImageView
+                        android:id="@+id/moreBtn1"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/icon_more_black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
+
+                <View
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/colorDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+            </RelativeLayout>
+
+
+            <androidx.core.widget.NestedScrollView
+                    android:id="@+id/userAppbar"
+                    android:fillViewport="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detailActionbar">
+
+                <LinearLayout
+                        android:layout_marginBottom="49dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/clUserInfo"
+                            android:background="@drawable/shape_retangele_top_16_white"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <View
+                                android:id="@+id/clUserInfoTop"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/rectangle_gray_3dp"
+                                android:layout_width="45dp"
+                                android:layout_height="5dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                                android:id="@+id/detailUserName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:textColor="@color/colorBlackTitle"
+                                android:textSize="25sp"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginLeft="15dp"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/clUserInfoTop"
+                                tools:text="用户名最大长度十个字"
+                                />
+
+                        <ImageView
+                                android:id="@+id/detailUserVip"
+                                android:src="@drawable/icon_vip"
+                                android:layout_width="24dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_height="24dp"
+                                android:visibility="gone"
+                                app:layout_constraintBottom_toBottomOf="@id/detailUserName"
+                                app:layout_constraintLeft_toRightOf="@id/detailUserName"
+                                app:layout_constraintTop_toTopOf="@id/detailUserName"/>
+
+                        <ImageView
+                                android:id="@+id/detailUserVerify"
+                                android:src="@drawable/icon_verify_pass"
+                                android:layout_width="25dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_height="25dp"
+                                android:visibility="gone"
+                                app:layout_constraintBottom_toBottomOf="@id/detailUserVip"
+                                app:layout_constraintLeft_toRightOf="@id/detailUserVip"
+                                app:layout_constraintTop_toTopOf="@id/detailUserVip"/>
+
+
+                        <TextView
+                                android:id="@+id/detailUserInfoAge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="22dp"
+                                android:gravity="center"
+                                android:drawablePadding="3dp"
+                                android:textColor="#FF696E73"
+                                android:textSize="13sp"
+                                android:layout_marginTop="15dp"
+                                android:drawableLeft="@drawable/icon_gender_woman_gray_userdetail"
+                                app:layout_constraintStart_toStartOf="@id/detailUserName"
+                                app:layout_constraintTop_toBottomOf="@id/detailUserName"
+                                tools:text="女"/>
+
+
+                        <TextView
+                                android:id="@+id/detailUserConstellation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="22dp"
+                                android:gravity="center"
+                                android:drawablePadding="3dp"
+                                android:textColor="#FF696E73"
+                                android:textSize="13sp"
+                                android:layout_marginLeft="10dp"
+                                android:drawableLeft="@drawable/icon_collapstation_userdetail"
+                                android:layout_marginTop="15dp"
+                                app:layout_constraintLeft_toRightOf="@id/detailUserInfoAge"
+                                app:layout_constraintTop_toBottomOf="@id/detailUserName"
+                                tools:text="天秤座"/>
+
+                        <TextView
+                                android:id="@+id/detailUserDistance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="22dp"
+                                android:gravity="center"
+                                android:drawablePadding="3dp"
+                                android:textColor="#FF696E73"
+                                android:textSize="13sp"
+                                android:layout_marginLeft="10dp"
+                                android:drawableLeft="@drawable/icon_map_gray_userdetail"
+                                android:layout_marginTop="15dp"
+                                app:layout_constraintLeft_toRightOf="@id/detailUserConstellation"
+                                app:layout_constraintTop_toBottomOf="@id/detailUserName"
+                                tools:text="10KM"/>
+
+                        <com.ctetin.expandabletextviewlibrary.ExpandableTextView
+                                android:id="@+id/detailUserSign"
+                                android:layout_marginTop="20dp"
+                                android:layout_width="0dp"
+                                android:layout_marginRight="15dp"
+                                android:layout_height="wrap_content"
+                                android:textColor="#FF696E73"
+                                android:textSize="15sp"
+                                android:ellipsize="end"
+                                android:lineSpacingMultiplier="1.4"
+                                app:ep_contract_color="@color/colorBlueSky1"
+                                app:ep_contract_text="收起"
+                                app:ep_expand_color="@color/colorBlueSky1"
+                                app:ep_expand_text="   展开"
+                                app:ep_max_line="3"
+                                app:ep_need_always_showright="true"
+                                app:ep_need_animation="true"
+                                app:ep_need_contract="true"
+                                app:ep_need_expand="true"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="@id/detailUserName"
+                                app:layout_constraintTop_toBottomOf="@id/detailUserInfoAge"
+                                tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。"
+                                />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/detailUserInformationRv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:overScrollMode="never"
+                                android:background="@color/colorWhite"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/detailUserSign"/>
+
+                        <TextView
+                                android:id="@+id/tag1"
+                                android:text="标签"
+                                android:textColor="#ff191919"
+                                android:textSize="20sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:layout_marginTop="20dp"
+                                app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                                app:layout_constraintTop_toBottomOf="@id/detailUserInformationRv"/>
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/detailRvTag"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="15dp"
+                                android:overScrollMode="never"
+                                app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tag1"
+                                />
+
+
+                        <LinearLayout
+                                android:id="@+id/detailInterestRvTagBg"
+                                android:orientation="vertical"
+                                android:layout_width="0dp"
+                                android:layout_marginTop="30dp"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                                app:layout_constraintRight_toRightOf="@id/detailRvTag"
+                                app:layout_constraintTop_toBottomOf="@id/detailRvTag">
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="感兴趣"
+                                    android:textStyle="bold"
+                                    android:textColor="#ff2d2f30"
+                                    android:textSize="20sp"
+                                    />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/detailInterestRvTag"
+                                    android:layout_marginTop="20dp"
+                                    android:overScrollMode="never"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    />
+                        </LinearLayout>
+
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/t2"
+                                android:layout_width="0dp"
+                                android:layout_marginTop="30dp"
+                                android:orientation="horizontal"
+                                android:background="@color/colorWhite"
+                                android:layout_gravity="center_vertical"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/detailInterestRvTagBg">
+
+                            <TextView
+                                    android:id="@+id/squareCount"
+                                    android:gravity="center_vertical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="动态"
+                                    android:textStyle="bold"
+                                    android:textColor="#ff191919"
+                                    android:textSize="20sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintLeft_toLeftOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    />
+
+                            <RadioGroup
+                                    android:id="@+id/detailSquareSwitchRg"
+                                    android:layout_marginRight="15dp"
+                                    android:layout_width="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_height="24dp"
+                                    android:visibility="visible"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintRight_toRightOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                <RadioButton
+                                        android:id="@+id/rbBlock"
+                                        android:background="@drawable/selector_block"
+                                        android:button="@null"
+                                        android:layout_width="24dp"
+                                        android:layout_marginRight="10dp"
+                                        android:layout_height="24dp"/>
+
+                                <RadioButton
+                                        android:id="@+id/rbList"
+                                        android:background="@drawable/selector_list"
+                                        android:button="@null"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"/>
+                            </RadioGroup>
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <com.sdy.jitangapplication.widgets.WrapContentHeightViewPager
+                                android:id="@+id/vpUserDetail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="true"
+                                android:background="@color/colorWhite"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/t2"
+                                />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </LinearLayout>
+
+
+            </androidx.core.widget.NestedScrollView>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_height="110dp"
+                    android:layout_gravity="bottom"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent">
+
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:background="@drawable/icon_detail_bg1"
+                        app:layout_constraintBottom_toTopOf="@id/view"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                <View
+                        android:id="@+id/view"
+                        android:background="@drawable/icon_detail_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="49dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                <ImageView
+                        android:id="@+id/detailUserDislikeBtn"
+                        android:layout_marginBottom="5dp"
+                        android:layout_width="wrap_content"
+                        android:visibility="visible"
+                        android:src="@drawable/icon_dislike_shadow"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/detailUserChatBtn"/>
+
+                <ImageView
+                        android:id="@+id/detailUserGreetBtn"
+                        android:layout_marginBottom="5dp"
+                        android:layout_width="wrap_content"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_hi_shadow"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginLeft="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/detailUserChatBtn"
+                        app:layout_constraintRight_toLeftOf="@id/detailUserChatBtn"
+                        />
+
+
+                <TextView
+                        android:id="@+id/detailUserChatBtn"
+                        android:background="@drawable/icon_orange_shadow"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="40dp"
+                        android:paddingTop="6dp"
+                        android:drawableLeft="@drawable/icon_chat_white"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:textColor="#ffffffff"
+                        android:textSize="15sp"
+                        android:text="聊  天"
+                        android:drawablePadding="15dp"
+                        android:gravity="center_vertical"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="parent"
+                        app:layout_constraintRight_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/detailUserDislikeBtn">
+                </TextView>
+
+                <ImageView
+                        android:id="@+id/detailUserLikeBtn"
+                        android:layout_marginBottom="5dp"
+                        android:layout_width="wrap_content"
+                        android:visibility="visible"
+                        android:src="@drawable/icon_like_shadow"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/detailUserChatBtn"
+                        app:layout_constraintRight_toRightOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.kennyc.view.MultiStateView>
+
+    <LinearLayout
+            android:id="@+id/llBlackContent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:fitsSystemWindows="true"
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageView
+                android:id="@+id/backBtn1"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:scaleType="center"
+                android:src="@drawable/icon_return"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+                android:layout_marginTop="140dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_sad_blacklist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/blackContent"
+                android:layout_marginLeft="33dp"
+                android:layout_marginRight="33dp"
+                android:layout_marginTop="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:lineSpacingMultiplier="1.2"
+                android:gravity="center"
+                android:text="你已将对方拉黑，拉黑状态下，双方均不可查看对方主页，取消拉黑可恢复好友权益"
+                android:textColor="#ff999999"
+                android:textSize="16sp"
+                />
+
+        <Button
+                android:id="@+id/cancelBlack"
+                android:text="取消拉黑"
+                android:layout_marginTop="80dp"
+                android:layout_marginLeft="72dp"
+                android:layout_marginRight="72dp"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@drawable/shape_rectangle_orange_25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -40,14 +40,14 @@ class AllMyLabelActivity : BaseActivity(), View.OnClickListener {
     }
 
 
-    private val titles = arrayOf("我的标签", "想认识")
+    private val titles = arrayOf("我的标签", "感兴趣")
     private val fragments by lazy { mutableListOf<Fragment>(MyLabelFragment(), MyInterestLabelFragment()) }
     private fun initView() {
         EventBus.getDefault().register(this)
 
         btnBack.setOnClickListener(this)
         rightBtn.setOnClickListener(this)
-        rightBtn.text = "删除"
+        rightBtn.text = "编辑"
         rightBtn.setTextColor(Color.parseColor("#FF191919"))
 
         vpLabel.setScrollable(false)
@@ -72,9 +72,9 @@ class AllMyLabelActivity : BaseActivity(), View.OnClickListener {
             override fun onPageSelected(position: Int) {
                 tabTopLabel.currentTab = position
                 rightBtn.text = if (editModes[vpLabel.currentItem]) {
-                    "取消"
+                    "完成"
                 } else {
-                    "删除"
+                    "编辑"
                 }
                 rightBtn.isVisible = editModesShow[vpLabel.currentItem]
             }
@@ -106,9 +106,9 @@ class AllMyLabelActivity : BaseActivity(), View.OnClickListener {
             rightBtn -> {
                 editModes[vpLabel.currentItem] = !editModes[vpLabel.currentItem]
                 rightBtn.text = if (editModes[vpLabel.currentItem]) {
-                    "取消"
+                    "完成"
                 } else {
-                    "删除"
+                    "编辑"
                 }
                 EventBus.getDefault().post(UpdateEditModeEvent(vpLabel.currentItem))
             }

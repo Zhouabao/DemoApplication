@@ -19,7 +19,6 @@
         <ImageView
                 android:id="@+id/samePersonBg"
                 android:scaleType="centerCrop"
-                android:src="@drawable/icon_gender_woman"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"/>
 
@@ -70,10 +69,12 @@
                             android:id="@+id/ll1"
                             android:layout_marginTop="129dp"
                             android:orientation="horizontal"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
                             app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
@@ -95,7 +96,6 @@
                                 android:layout_gravity="right"
                                 android:gravity="center"
                                 android:textStyle="bold"
-                                android:layout_marginRight="15dp"
                                 android:background="@drawable/shape_rectangle_orange_25dp"
                                 android:layout_width="62dp"
                                 android:layout_height="30dp"/>
@@ -106,11 +106,11 @@
                             android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            tools:text="508人参与·391条动态"
                             android:textColor="#ffffffff"
                             android:textSize="12sp"
                             app:layout_constraintLeft_toLeftOf="@id/ll1"
                             app:layout_constraintTop_toBottomOf="@id/ll1"
+                            tools:text="508人参与·391条动态"
                             />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

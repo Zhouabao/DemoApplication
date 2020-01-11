@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
-import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kennyc.view.MultiStateView
@@ -37,7 +36,6 @@ import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.item_like_me_one_day_header.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -80,7 +78,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         btnBack.onClick {
             finish()
         }
-        hotT1.text = "全部喜欢"
+        hotT1.text = "${intent.getStringExtra("date")}"
 
         mPresenter = MessageLikeMeOneDayPresenter()
         mPresenter.mView = this
@@ -100,8 +98,6 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         adapter.bindToRecyclerView(likeRv)
 
         adapter.setEmptyView(R.layout.empty_layout, likeRv)
-        adapter.addHeaderView(initHeadView())
-        adapter.setHeaderAndEmpty(true)
 
         adapter.setOnItemClickListener { _, view, position ->
             if (adapter.freeShow)
@@ -126,12 +122,8 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
                 }
             }
         }
-        adapter.headerLayout.likeDate.text = "${intent.getStringExtra("date")}"
     }
 
-    private fun initHeadView(): View {
-        return layoutInflater.inflate(R.layout.item_like_me_one_day_header, likeRv, false)
-    }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++

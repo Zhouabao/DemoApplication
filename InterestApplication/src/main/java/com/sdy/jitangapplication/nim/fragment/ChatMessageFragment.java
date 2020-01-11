@@ -372,16 +372,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (!sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsfriend() && nimBean.getIslimit() && leftGreetCount == 0) {
             if (!sendTip) {
                 inputPanel.collapse(true);
-                IMMessage msg = MessageBuilder.createTipMessage(sessionId, sessionType);
-                msg.setContent("你已向对方打了招呼，对方回复后即可继续聊天");
-                msg.setStatus(MsgStatusEnum.success);
-                CustomMessageConfig config = new CustomMessageConfig();
-                config.enablePush = false;//不推送
-                config.enableUnreadCount = false;
-                msg.setConfig(config);
-                NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
+                sendTipMessage("你已向对方打了招呼，对方回复后即可继续聊天");
                 sendTip = true;
-                messageListPanel.onMsgSend(msg);
             }
             return false;
         } else
@@ -552,7 +544,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                         if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
                             nimBean = nimBeanBaseResp.getData();
                             setTargetInfoData();
-                        } else if (nimBeanBaseResp.getCode() == 400) {
+                        } else if (nimBeanBaseResp.getCode() == 409) {
                             new CommonAlertDialog.Builder(getActivity())
                                     .setTitle("提示")
                                     .setContent(nimBeanBaseResp.getMsg())
@@ -641,10 +633,24 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                         if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
                             leftGreetCount = nimBeanBaseResp.getData().getResidue_msg_cnt();
                             if (nimBeanBaseResp.getCode() == 211) {
-                                CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
+                                sendTipMessage(nimBeanBaseResp.getMsg());
                             }
                             if (content.getMsgType() == MsgTypeEnum.text)
                                 sendMsgS(content, false);
+                        } else if (nimBeanBaseResp.getCode() == 409) {//用户被封禁
+                            new CommonAlertDialog.Builder(getActivity())
+                                    .setTitle("提示")
+                                    .setContent(nimBeanBaseResp.getMsg())
+                                    .setCancelIconIsVisibility(false)
+                                    .setConfirmText("知道了")
+                                    .setCancelAble(false)
+                                    .setOnConfirmListener(dialog -> {
+                                        dialog.cancel();
+                                        NIMClient.getService(MsgService.class).deleteRecentContact2(sessionId, SessionTypeEnum.P2P);
+                                        getActivity().finish();
+                                    })
+                                    .create()
+                                    .show();
                         } else if (nimBeanBaseResp.getCode() == 410) {
                             sendAlready3Msgs();
                         } else {
@@ -653,6 +659,19 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     }
 
                 });
+    }
+
+    private void sendTipMessage(String msg) {
+        // 同时，本地插入被对方拒收的tip消息
+        IMMessage tip = MessageBuilder.createTipMessage(sessionId, SessionTypeEnum.P2P);
+        tip.setContent(msg);
+        tip.setStatus(MsgStatusEnum.success);
+        CustomMessageConfig config = new CustomMessageConfig();
+        config.enableUnreadCount = false;
+        config.enablePush = false;
+        tip.setConfig(config);
+        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, true);
+//        messageListPanel.onMsgSend(tip);
     }
 
     private void sendMsgS(IMMessage content, boolean requestMsg) {

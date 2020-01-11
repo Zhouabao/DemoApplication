@@ -22,6 +22,7 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_marginLeft="15dp"
+                android:src="@drawable/icon_default_avator"
                 app:civ_border_color="@color/colorDivider"
                 app:civ_border_width="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -32,11 +33,12 @@
                 android:id="@+id/msgOnLineState"
                 android:layout_width="11dp"
                 android:layout_height="11dp"
-                android:layout_marginLeft="34dp"
+                android:visibility="gone"
+                android:layout_marginRight="3dp"
                 android:layout_marginTop="37dp"
-                android:background="@drawable/shape_rectangle_green_vip"
-                app:layout_constraintLeft_toLeftOf="@id/msgIcon"
-                app:layout_constraintTop_toTopOf="@id/msgIcon"/>
+                android:background="@drawable/shape_rectangle_green_online"
+                app:layout_constraintRight_toRightOf="@id/msgIcon"
+                app:layout_constraintBottom_toBottomOf="@id/msgIcon"/>
 
         <TextView
                 android:id="@+id/msgTitle"

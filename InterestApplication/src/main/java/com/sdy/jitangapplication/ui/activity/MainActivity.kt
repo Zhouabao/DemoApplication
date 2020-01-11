@@ -89,7 +89,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 //        IntentionMatchingDialog(this).show()
 
-        if (!UserManager.isShowGuide()) {
+        if (!UserManager.isShowGuideIndex()) {
             guideDialog.show()
         }
 

@@ -977,7 +977,7 @@ public class ChatMessageListPanelEx {
                     .setConfirmText("重新发送")
                     .setCancelIconIsVisibility(true)
                     .setOnConfirmListener(dialog -> {
-                        showResendConfirm(item); // 重发确认
+                        resendMessage(item); // 重发确认
                         dialog.dismiss();
                     })
                     .setOnCancelListener(dialog -> dialog.dismiss())

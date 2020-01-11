@@ -46,7 +46,7 @@
                     android:layout_width="0dp"
                     android:layout_height="3dp"
                     android:layerType="software"
-                    android:layout_marginBottom="220dp"
+                    android:layout_marginBottom="180dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -246,7 +246,7 @@
             <View
                     android:id="@+id/view1"
                     android:alpha="0.3"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="13dp"
                     android:layout_marginLeft="10dp"
                     android:background="#D8D8D8"
                     android:layout_width="134dp"
@@ -268,20 +268,16 @@
                     android:id="@+id/view3"
                     android:alpha="0.3"
                     android:background="#D8D8D8"
-                    android:layout_width="241dp"
-                    android:layout_height="70dp"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="94dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_height="0dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="26dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="@id/view1"
                     app:layout_constraintTop_toBottomOf="@id/view2"/>
 
-            <View
-                    android:alpha="0.3"
-                    android:background="#D8D8D8"
-                    android:layout_width="184dp"
-                    android:layout_height="23dp"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintLeft_toLeftOf="@id/view1"
-                    app:layout_constraintTop_toBottomOf="@id/view3"/>
 
             <View
                     android:id="@+id/dash_vertical_bottom"
@@ -307,8 +303,8 @@
 
 
             <TextView
-                    android:visibility="gone"
                     android:id="@+id/chatTv"
+                    android:visibility="gone"
                     android:text="打招呼"
                     android:textColor="#ffffffff"
                     android:textSize="18sp"
@@ -319,89 +315,25 @@
                     android:drawablePadding="9dp"
                     android:layout_marginRight="5dp"
                     android:drawableRight="@drawable/icon_guide_arrow"
-                    app:layout_constraintBottom_toTopOf="@id/likeTv"
-                    app:layout_constraintRight_toLeftOf="@id/guideHi"
-                    app:layout_constraintTop_toTopOf="@id/guideHi"
+                    app:layout_constraintBottom_toBottomOf="@id/btnChat"
+                    app:layout_constraintRight_toLeftOf="@id/btnChat"
+                    app:layout_constraintTop_toTopOf="@id/btnChat"
                     />
 
-            <TextView
-                    android:visibility="gone"
-                    android:id="@+id/likeTv"
-                    android:text="表示好感"
-                    android:textColor="#ffffffff"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="9dp"
-                    android:layout_marginRight="5dp"
-                    android:drawableRight="@drawable/icon_guide_arrow"
-                    app:layout_constraintBottom_toTopOf="@id/dislikeTv"
-                    app:layout_constraintRight_toLeftOf="@id/guideHi"
-                    app:layout_constraintTop_toBottomOf="@id/chatTv"/>
 
-            <TextView
+            <ImageView
+                    android:id="@+id/btnChat"
+                    android:src="@drawable/icon_flash"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
                     android:visibility="gone"
-                    android:id="@+id/dislikeTv"
-                    android:text="表示无好感"
-                    android:textColor="#ffffffff"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="9dp"
-                    android:layout_marginRight="5dp"
-                    android:gravity="center"
-                    android:drawableRight="@drawable/icon_guide_arrow"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/guideHi"
-                    app:layout_constraintTop_toBottomOf="@id/likeTv"/>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/guideHi"
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="@id/view_guide_bottom"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dash_horizontal">
+                    app:layout_constraintTop_toBottomOf="@id/dash_horizontal"
+                    />
 
 
-                <ImageView
-                        android:id="@+id/btnChat"
-                        android:src="@drawable/icon_flash"
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
-                        app:layout_constraintBottom_toTopOf="@id/btnLike"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
-
-                <ImageView
-                        android:id="@+id/btnLike"
-                        android:src="@drawable/icon_like_match"
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
-                        app:layout_constraintBottom_toTopOf="@id/btnDislike"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/btnChat"
-                        />
-
-                <ImageView
-                        android:id="@+id/btnDislike"
-                        android:src="@drawable/icon_dislike_match"
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/btnLike"
-                        />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -541,68 +473,6 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/guideChathi"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <View
-                    android:background="@drawable/gradient_guide_hi_bg"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    />
-
-            <ImageView
-                    android:layout_marginBottom="20dp"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/icon_flash"
-                    android:layout_width="100dp"
-                    android:layout_centerVertical="true"
-                    android:layout_height="100dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"/>
-
-
-            <ImageView
-                    android:src="@drawable/icon_guide_arrow_top"
-                    android:layout_marginBottom="30dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@id/guide_hi_hand_top"
-                    app:layout_constraintLeft_toLeftOf="@id/guide_hi_hand_top"
-                    app:layout_constraintRight_toRightOf="@id/guide_hi_hand_top"/>
-
-            <ImageView
-                    android:id="@+id/guide_hi_hand_top"
-                    android:layout_marginBottom="32dp"
-                    android:src="@drawable/icon_guide_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@id/t3"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"/>
-
-            <TextView
-                    android:id="@+id/t3"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="向上滑动表示打招呼"
-                    android:textColor="#ffffffff"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/useCl"
                 android:visibility="gone"
                 android:layout_width="match_parent"
@@ -664,44 +534,45 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/intentionMatchingCl"
             android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
                 android:layout_marginRight="56dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 android:src="@drawable/icon_matching_default_black"
                 android:layout_width="wrap_content"
-                android:layout_height="44dp"/>
+                android:layout_height="44dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
                 android:id="@+id/iv1"
                 android:layout_marginRight="77dp"
                 android:layout_marginTop="44dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 android:src="@drawable/icon_guide_arrow_top"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
                 android:gravity="center"
                 android:lineSpacingMultiplier="1.2"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="33dp"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv1"
                 android:layout_width="144dp"
                 android:layout_height="wrap_content"
                 android:text="选择后将持续匹配跟你意向相同的用户"
                 android:textColor="#ffffffff"
                 android:textSize="16sp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv1"
                 />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

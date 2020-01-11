@@ -108,11 +108,6 @@ class ChargeVipDialog(
      * 设置支付价格的数据
      */
     private fun setChargeWayData(chargeWays: MutableList<ChargeWayBean>, purchaseType: Int) {
-        if (chargeWays.size > 2) {
-            chargeWays[1].is_promote = true
-        } else {
-            chargeWays[0].is_promote = true
-        }
         vipChargeAdapter.purchaseType = purchaseType
         vipChargeAdapter.setNewData(chargeWays)
         setUpPrice()

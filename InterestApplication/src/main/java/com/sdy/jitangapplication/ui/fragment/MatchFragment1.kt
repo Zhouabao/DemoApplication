@@ -14,6 +14,7 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
+import com.blankj.utilcode.util.FragmentUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -234,6 +236,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     if ((matchUserAdapter.data[manager.topPosition].accid ?: "") != UserManager.getAccid())
                         MatchDetailActivity.start(activity!!, matchUserAdapter.data[manager.topPosition].accid)
                     (itemView.findViewById<ConstraintLayout>(R.id.v1)).isEnabled = true
+
+//                    startActivity<MatchSucceedActivity>(
+//                        "avator" to matchUserAdapter.data[position].avatar,
+//                        "nickname" to matchUserAdapter.data[position].nickname,
+//                        "accid" to matchUserAdapter.data[position].accid
+//                    )
                 }
                 R.id.btnHiLottieView,
                 R.id.btnHi -> {
@@ -620,12 +628,15 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         if (UserManager.getLightingCount() < 0) {
             UserManager.saveLightingCount(0)
         }
-        tvLeftChatTime.text = "${UserManager.getLightingCount()}"
+//        tvLeftChatTime.text = "${UserManager.getLightingCount()}"
+//        matchUserAdapter.notifyDataSetChanged()
+        if (manager.topView != null)
+            (manager.topView.findViewById<TextView>(R.id.btnHiLeftTime)).text = "${UserManager.getLightingCount()}"
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateCardEvent(event: GreetEvent) {
-        if (event.success) {
+        if (event.success && FragmentUtils.getTopShowInStack(fragmentManager!!) == MatchFragment1::class.java) {
             val setting = SwipeAnimationSetting.Builder()
                 .setDirection(Direction.Top)
                 .setDuration(Duration.Normal.duration)
@@ -739,7 +750,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         }
 
         //非真人头像提示去修改头像
-        if (is_human && manager.topPosition - 1 == 0 && !UserManager.getAlertChangeRealMan()) {
+        if (!is_human && manager.topPosition - 1 == 0 && !UserManager.getAlertChangeRealMan()) {
             ChangeAvatarRealManDialog(activity!!).show()
         }
 
@@ -770,6 +781,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
             } else {
                 card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
+                card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
                 card_stack_view.isEnabled = false
                 if (my_percent_complete <= normal_percent_complete)
                     RightSlideOutdDialog(activity!!, myCount, maxCount).show()
@@ -798,9 +810,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     override fun onCardAppeared(view: View?, position: Int) {
         Log.d("CardStackView", "onCardAppeared: ($position)")
         if (view != null) {
+
             if (matchUserAdapter.data[manager.topPosition].greet_switch) {
                 (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
                 (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible = true
+                (view.findViewById<TextView>(R.id.btnHiLeftTime)).text = "${UserManager.getLightingCount()}"
 
                 (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).addAnimatorListener(object :
                     Animator.AnimatorListener {
@@ -813,12 +827,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                         val animator =
                             ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiIv), "alpha", 1f, 0f)
                         val animator1 =
-                            ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiLeftTime), "alpha", 0f, 1f)
+                            ObjectAnimator.ofFloat(view.findViewById<TextView>(R.id.btnHiLeftTime), "alpha", 0f, 1f)
                         val animator2 =
                             ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiIv), "alpha", 0f, 1f)
                         val animator3 =
-                            ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiLeftTime), "alpha", 1f, 0f)
-                        animator.duration = 300//时间1s
+                            ObjectAnimator.ofFloat(view.findViewById<TextView>(R.id.btnHiLeftTime), "alpha", 1f, 0f)
                         animator1.duration = animator.duration//时间1s
                         animator2.duration = animator.duration//时间1s
                         animator3.duration = animator.duration//时间1s
@@ -848,6 +861,26 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                                     animator2.start()
                                     animator3.start()
                                 }, 1000L)
+                            }
+
+                            override fun onAnimationCancel(animation: Animator?) {
+
+                            }
+
+                            override fun onAnimationStart(animation: Animator?) {
+                            }
+
+                        })
+                        animator2.addListener(object : Animator.AnimatorListener {
+                            override fun onAnimationRepeat(animation: Animator?) {
+
+                            }
+
+                            override fun onAnimationEnd(animation: Animator?) {
+                                (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
+                                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible = true
+
+                                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).playAnimation()
                             }
 
                             override fun onAnimationCancel(animation: Animator?) {

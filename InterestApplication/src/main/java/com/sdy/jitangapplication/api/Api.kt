@@ -865,7 +865,7 @@ interface Api {
      *V2获取广场标题菜单栏目
      */
     @FormUrlEncoded
-    @POST("Tags/getTitleMenuList${Constants.END_BASE_URL}")
+    @POST("Tags/getTitleMenuListV2${Constants.END_BASE_URL}")
     fun getTitleMenuList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
     /**
@@ -879,7 +879,7 @@ interface Api {
      *V2获取更多标题详情
      */
     @FormUrlEncoded
-    @POST("Tags/getTitleLists${Constants.END_BASE_URL}")
+    @POST("Tags/getTitleListsV2${Constants.END_BASE_URL}")
     fun getTitleLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TopicBean>?>>
 
     /**

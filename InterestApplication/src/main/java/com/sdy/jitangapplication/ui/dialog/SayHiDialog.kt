@@ -14,10 +14,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.NetworkUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.*
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -39,9 +36,11 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.GreetEvent
 import com.sdy.jitangapplication.event.UpdateHiCountEvent
+import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.Rotate3dAnimation
 import kotlinx.android.synthetic.main.dialog_say_hi.*
@@ -447,6 +446,9 @@ class SayHiDialog(
                     UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
                     EventBus.getDefault().postSticky(UpdateHiCountEvent())
                     EventBus.getDefault().post(GreetEvent(context1, true))
+                    if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
+                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
+                    }
                 } else {
                     sendTextMessage()
                 }

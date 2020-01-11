@@ -14,3 +14,5 @@ class UpdateLikemeOnePosEvent(var parPos: Int,var  childPos: Int)
 
 
 class UpdateLikeMeReceivedEvent()
+
+class UpdateLGreetReceivedEvent

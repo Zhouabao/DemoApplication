@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.item_like_me_user.view.*
 class LikeMeUserAdapter : BaseQuickAdapter<PositiveLikeBean, BaseViewHolder>(R.layout.item_like_me_user) {
     override fun convert(helper: BaseViewHolder, item: PositiveLikeBean) {
         helper.addOnClickListener(R.id.likeBtn)
+        helper.addOnClickListener(R.id.v1)
         helper.itemView.matchUserName.text = item.nickname
         helper.itemView.matchUserConstellation.text = item.constellation
         helper.itemView.matchUserDistance.text = "${item.distance}"
@@ -57,7 +58,7 @@ class LikeMeUserAdapter : BaseQuickAdapter<PositiveLikeBean, BaseViewHolder>(R.l
             .setBold()
             .append(
                 "${if (!item.title.isNullOrEmpty()) {
-                    "标签找到你\n\n"
+                    "标签找到你\n"
                 } else {
                     ""
                 }}"

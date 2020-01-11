@@ -16,6 +16,7 @@ import com.alipay.sdk.app.PayTask
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SnackbarUtils.dismiss
 import com.google.android.flexbox.*
+import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -43,6 +44,7 @@ import com.sdy.jitangapplication.wxapi.PayResult
 import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.activity_vip_power.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 
@@ -60,7 +62,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
     }
 
     private fun initData() {
-        vipOutTime.text = "${intent.getStringExtra("outtime")?:""}到期"
+        vipOutTime.text = "${intent.getStringExtra("outtime") ?: ""}到期"
         GlideUtil.loadCircleImg(this, UserManager.getAvator(), vipPowerAvator)
         vipPowerNickname.text = intent.getStringExtra("nickname") ?: ""
     }
@@ -85,6 +87,11 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
         btnBack.onClick { finish() }
         zhiPayBtn.setOnClickListener(this)
         wechatPayBtn.setOnClickListener(this)
+
+        statePower.retryBtn.onClick {
+            statePower.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.getChargeData()
+        }
 
 
         //支付价格
@@ -123,8 +130,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
 
     override fun getChargeDataResult(data: ChargeWayBeans?) {
         if (data != null) {
-            if (!data.list.isNullOrEmpty())
-                data.list[0].is_promote = true
+            statePower.viewState = MultiStateView.VIEW_STATE_CONTENT
             vipChargeAdapter.setNewData(data.list)
             setupPrice()
 
@@ -132,6 +138,8 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
 
             payways.addAll(data!!.paylist ?: mutableListOf())
             initPayWay()
+        } else {
+            statePower.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }
 

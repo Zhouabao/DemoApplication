@@ -44,7 +44,7 @@
             <ImageView
                     android:id="@+id/animation_like"
                     android:alpha="0"
-                    android:src="@drawable/icon_like_match"
+                    android:src="@drawable/icon_greet_like"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -54,7 +54,7 @@
             <ImageView
                     android:id="@+id/animation_dislike"
                     android:alpha="0"
-                    android:src="@drawable/icon_dislike_match"
+                    android:src="@drawable/icon_greet_dislike"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"

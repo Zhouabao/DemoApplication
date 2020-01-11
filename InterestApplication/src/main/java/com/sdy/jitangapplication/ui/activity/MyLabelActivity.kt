@@ -39,7 +39,7 @@ class MyLabelActivity : BaseActivity(), View.OnClickListener {
         rightBtn.setOnClickListener(this)
         hotT1.text = "我的标签"
         rightBtn.isVisible = true
-        rightBtn.text = "删除"
+        rightBtn.text = "编辑"
         divider.isVisible = false
         rightBtn.setTextColor(Color.parseColor("#FF191919"))
         vpLabel.setScrollable(false)
@@ -53,9 +53,9 @@ class MyLabelActivity : BaseActivity(), View.OnClickListener {
 
             override fun onPageSelected(position: Int) {
                 rightBtn.text = if (editModes) {
-                    "取消"
+                    "完成"
                 } else {
-                    "删除"
+                    "编辑"
                 }
             }
 
@@ -74,9 +74,9 @@ class MyLabelActivity : BaseActivity(), View.OnClickListener {
             rightBtn -> {
                 editModes = !editModes
                 rightBtn.text = if (editModes) {
-                    "取消"
+                    "完成"
                 } else {
-                    "删除"
+                    "编辑"
                 }
                 EventBus.getDefault().post(UpdateEditModeEvent(vpLabel.currentItem))
             }

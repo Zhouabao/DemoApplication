@@ -38,6 +38,7 @@
                     android:paddingRight="12dp"
                     android:paddingTop="3dp"
                     android:paddingBottom="3dp"
+                    android:textSize="14sp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     app:layout_constraintLeft_toLeftOf="parent"

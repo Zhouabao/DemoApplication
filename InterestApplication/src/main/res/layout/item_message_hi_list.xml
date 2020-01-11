@@ -24,14 +24,13 @@
 
     <View
             android:id="@+id/msgOnlineState"
-            android:layout_marginLeft="34dp"
-            android:layout_marginTop="37dp"
+            android:layout_marginRight="3dp"
             android:layout_width="11dp"
             android:layout_height="11dp"
             android:visibility="gone"
-            android:background="@drawable/shape_rectangle_green_vip"
-            app:layout_constraintLeft_toLeftOf="@id/msgIcon"
-            app:layout_constraintTop_toTopOf="@id/msgIcon"
+            android:background="@drawable/shape_rectangle_green_online"
+            app:layout_constraintRight_toRightOf="@id/msgIcon"
+            app:layout_constraintBottom_toBottomOf="@id/msgIcon"
             />
 
 
