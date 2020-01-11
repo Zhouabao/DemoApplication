@@ -24,14 +24,24 @@ class AllTitleAdapter(var spancount: Int = 5) :
     override fun convert(helper: BaseViewHolder, item: TopicBean) {
         if (spancount == 3) {
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = SizeUtils.dp2px(180F)
-            (helper.itemView.layoutParams as RecyclerView.LayoutParams).leftMargin =0
-            (helper.itemView.layoutParams as RecyclerView.LayoutParams).rightMargin = 0
+            (helper.itemView.layoutParams as RecyclerView.LayoutParams).leftMargin = if (helper.layoutPosition == 0) {
+                SizeUtils.dp2px(10F)
+            } else {
+                SizeUtils.dp2px(5F)
+            }
+            (helper.itemView.layoutParams as RecyclerView.LayoutParams).rightMargin =
+                if (helper.layoutPosition == mData.size - 1) {
+                    SizeUtils.dp2px(10F)
+                } else {
+                    SizeUtils.dp2px(0F)
+                }
 
             (helper.itemView.titlePicRv.layoutParams as ConstraintLayout.LayoutParams).height = SizeUtils.dp2px(48F)
 
         } else {
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = RecyclerView.LayoutParams.MATCH_PARENT
-            (helper.itemView.titlePicRv.layoutParams as ConstraintLayout.LayoutParams).height = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F)) / 5f).toInt()
+            (helper.itemView.titlePicRv.layoutParams as ConstraintLayout.LayoutParams).height =
+                ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F)) / 5f).toInt()
         }
         helper.itemView.titleTv.text = item.title
         val adapter = AllTitlePicAdapter(spancount)
