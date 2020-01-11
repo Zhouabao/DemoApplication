@@ -73,8 +73,8 @@ class LikeMeOneDayAdapter(var freeShow: Boolean) :
             itemView.likeMeNicknameCover.visibility = View.VISIBLE
             val transformation = MultiTransformation(
                 CenterCrop(),
-                BlurTransformation(SizeUtils.dp2px(25F)),
-                RoundedCornersTransformation(SizeUtils.dp2px(5F), 0)
+                RoundedCornersTransformation(SizeUtils.dp2px(5F), 0),
+                BlurTransformation(25)
             )
             Glide.with(mContext)
                 .load(item.avatar ?: "")

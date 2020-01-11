@@ -99,7 +99,7 @@
             android:layout_width="0dp"
             android:layout_height="17dp"
             app:layout_constraintBottom_toBottomOf="@id/likeMeNickname"
-            app:layout_constraintLeft_toLeftOf="@id/view"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeInfo"
             app:layout_constraintRight_toRightOf="@id/likeMeNickname"
             app:layout_constraintTop_toTopOf="@id/likeMeNickname"/>
 

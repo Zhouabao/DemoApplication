@@ -11,6 +11,8 @@ import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.google.android.material.appbar.AppBarLayout
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -112,10 +114,14 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
 
     private fun initData() {
         GlideUtil.loadImgCenterCrop(this, topicBean.icon, samePersonBg)
+        val transformation = MultiTransformation(
+            CenterCrop(),
+            BlurTransformation(14)
+        )
         Glide.with(this)
             .load(topicBean.icon)
             .priority(Priority.LOW)
-            .transform(BlurTransformation(14,3))
+            .transform(transformation)
             .into(samePersonBgBlur)
         samePersonTitle.text = topicBean.title
         hotT1.text = topicBean.title
