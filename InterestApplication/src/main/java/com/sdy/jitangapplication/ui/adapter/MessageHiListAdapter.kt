@@ -8,11 +8,6 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.HiMessageBean
 import kotlinx.android.synthetic.main.item_message_hi_list.view.*
-import kotlinx.android.synthetic.main.item_message_hi_list.view.latelyTime
-import kotlinx.android.synthetic.main.item_message_hi_list.view.msgIcon
-import kotlinx.android.synthetic.main.item_message_hi_list.view.msgTitle
-import kotlinx.android.synthetic.main.item_message_hi_list.view.text
-import kotlinx.android.synthetic.main.item_message_list.view.*
 
 /**
  *    author : ZFM
@@ -42,7 +37,7 @@ class MessageHiListAdapter :
         }}.${item.age}岁.${item.distance}"
 
 
-        holder.itemView.msgOnLineState.isVisible =
+        holder.itemView.msgOnlineState.isVisible =
             NimUIKitImpl.enableOnlineState()
                     && !NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid).isNullOrEmpty()
                     && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid).contains("在线")
