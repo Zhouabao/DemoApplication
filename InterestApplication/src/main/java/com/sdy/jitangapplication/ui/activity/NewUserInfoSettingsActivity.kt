@@ -269,7 +269,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             } else
                 userScoreAboutMe.isVisible = true
 
-            updateScoreStatus(userScoreAboutMe, data.score_rule?.about ?: 0, !data.sign.isNullOrEmpty())
+            updateScoreStatus(
+                userScoreAboutMe,
+                data.score_rule?.about ?: 0,
+                !data.sign.isNullOrEmpty() && data.sign.trim().isNotEmpty()
+            )
 
             if (data.emotion_state > 0 && data.emotion_list.size > data.emotion_state - 1) {
                 userLoveStatus.text = data.emotion_list[data.emotion_state - 1]
