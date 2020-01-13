@@ -1,11 +1,11 @@
 package com.sdy.jitangapplication.presenter
 
 import android.util.Log
-import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nimlib.sdk.RequestCallback
@@ -14,6 +14,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.presenter.view.VerifyCodeView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
 class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
@@ -32,8 +33,7 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
             "type" to type,
             "password" to "",
             "code" to verifyCode,
-            "wxcode" to wxcode,
-            "device_id" to SmAntiFraud.getDeviceId()
+            "wxcode" to wxcode
         )
         RetrofitFactory.instance.create(Api::class.java)
             .loginOrAlloc(UserManager.getSignParams(params))
@@ -49,9 +49,53 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                    mView.onConfirmVerifyCode(null, false)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
 
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                        mView.onConfirmVerifyCode(null, false)
+                    }
+
+                }
+            })
+    }
+
+
+    //accid
+    //[string]	是
+    //token
+    //[string]	是
+    //uni_account
+    //[string]	是	手机号
+    //code
+    //[string]	是	短信验证码
+    //descr
+    fun cancelAccount(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .cancelAccount(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
+                override fun onNext(t: BaseResp<Any>) {
+                    mView.onConfirmVerifyCode(null, t.code == 200)
+                    if (t.code == 403) {
+                        TickDialog(context).show()
+                    } else if (t.code != 200) {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onStart() {
+
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.onConfirmVerifyCode(null, false)
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    }
                 }
             })
     }
@@ -71,14 +115,17 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
         )
         RetrofitFactory.instance
             .create(Api::class.java)
-            .getVerifyCode(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
+            .sendSms(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
+                override fun onNext(t: BaseResp<Any>) {
                     mView.onGetVerifyCode(t)
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onGetVerifyCode(null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onGetVerifyCode(null)
                 }
             })
 

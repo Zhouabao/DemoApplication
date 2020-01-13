@@ -1,6 +1,8 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -19,12 +21,16 @@ class UserCenterCoverAdapter :
     BaseQuickAdapter<CoverSquare, BaseViewHolder>(R.layout.item_block_square) {
 
     override fun convert(holder: BaseViewHolder, item: CoverSquare) {
-        if (item.type == 2) { //1图 2 视频
-            holder.itemView.squareVideoType.visibility = View.VISIBLE
-        } else {
-            holder.itemView.squareVideoType.visibility = View.GONE
-        }
-        GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", holder.itemView.ivSquare,  SizeUtils.dp2px(5F))
+        val params = holder.itemView.ivSquare.layoutParams as ConstraintLayout.LayoutParams
+        params.width =
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.height =
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        holder.itemView.ivSquare.layoutParams = params
+
+        holder.itemView.squareForMore.isVisible = (holder.layoutPosition == data.size && data.size > 2)
+        holder.itemView.squareVideoType.isVisible = (item.type == 2 && holder.layoutPosition != data.size)//1图 2 视频
+        GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", holder.itemView.ivSquare, SizeUtils.dp2px(5F))
     }
 
 }

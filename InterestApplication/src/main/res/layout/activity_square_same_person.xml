@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kennyc.view.MultiStateView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stateSamePerson"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading"
+        tools:context=".ui.activity.SquareSamePersonActivity">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageView
+                android:id="@+id/samePersonBg"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"/>
+
+        <ImageView
+                android:id="@+id/samePersonBgBlur"
+                android:visibility="invisible"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"/>
+
+        <ImageView
+                android:id="@+id/btnBack"
+                android:paddingLeft="15dp"
+                android:paddingRight="10dp"
+                android:layout_marginTop="24dp"
+                android:src="@drawable/icon_back_white"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                />
+
+        <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/sameAppbar"
+                android:background="@color/colorTransparent"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:elevation="0dp">
+
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minHeight="79dp"
+                    app:contentScrim="@null"
+                    app:expandedTitleGravity="center"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:statusBarScrim="@null">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/llSame"
+                        android:paddingBottom="20dp"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+
+
+                    <LinearLayout
+                            android:id="@+id/ll1"
+                            android:layout_marginTop="129dp"
+                            android:orientation="horizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                                android:id="@+id/samePersonTitle"
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="33dp"
+                                android:text="#我看过最棒的演出"
+                                android:textColor="#ffffffff"
+                                android:textStyle="bold"
+                                android:textSize="24sp"
+                                />
+
+                        <TextView
+                                android:id="@+id/publish"
+                                android:textColor="@color/colorWhite"
+                                android:text="发布"
+                                android:textSize="15sp"
+                                android:layout_gravity="right"
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:background="@drawable/shape_rectangle_orange_25dp"
+                                android:layout_width="62dp"
+                                android:layout_height="30dp"/>
+                    </LinearLayout>
+
+                    <TextView
+                            android:id="@+id/samePersonCount"
+                            android:layout_marginTop="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#ffffffff"
+                            android:textSize="12sp"
+                            app:layout_constraintLeft_toLeftOf="@id/ll1"
+                            app:layout_constraintTop_toBottomOf="@id/ll1"
+                            tools:text="508人参与·391条动态"
+                            />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <RelativeLayout
+                        android:id="@+id/llTitle"
+                        android:visibility="visible"
+                        android:layout_width="match_parent"
+                        android:background="@color/colorTransparent"
+                        android:layout_height="wrap_content"
+                        app:layout_collapseMode="pin">
+
+                    <View
+                            android:id="@+id/statusView"
+                            android:background="@color/colorTransparent"
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"/>
+
+                    <TextView
+                            android:id="@+id/hotT1"
+                            android:layout_below="@id/statusView"
+                            android:layout_centerHorizontal="true"
+                            android:textColor="@color/colorBlackTitle"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="55dp"
+                            tools:text="黑名单"
+                            />
+
+
+                    <TextView
+                            android:id="@+id/rightBtn1"
+                            android:text="发布"
+                            android:layout_below="@id/statusView"
+                            android:background="@drawable/shape_rectangle_orange_25dp"
+                            android:layout_marginRight="15dp"
+                            android:gravity="center"
+                            android:layout_marginTop="13dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_width="62dp"
+                            android:textSize="15sp"
+                            android:enabled="false"
+                            android:textColor="@color/colorWhite"
+                            android:layout_height="30dp"/>
+                </RelativeLayout>
+
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refreshSamePerson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:srlDisableContentWhenLoading="true"
+                app:srlDisableContentWhenRefresh="true"
+                app:srlEnableLoadMore="true"
+                app:srlEnableLoadMoreWhenContentNotFull="false"
+                app:srlEnableRefresh="false">
+
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srlFinishDuration="200"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/samePersonRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
+            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srlFinishDuration="200"/>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</com.kennyc.view.MultiStateView>

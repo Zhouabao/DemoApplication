@@ -16,9 +16,6 @@ import android.widget.*;
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.PermissionUtils;
-import com.kotlin.base.data.net.RetrofitFactory;
-import com.kotlin.base.data.protocol.BaseResp;
-import com.kotlin.base.utils.NetWorkUtils;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.UIKitOptions;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -39,26 +36,18 @@ import com.netease.nimlib.sdk.media.record.RecordType;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
-import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.CustomNotification;
 import com.netease.nimlib.sdk.msg.model.CustomNotificationConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
-import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.event.EnablePicEvent;
-import com.sdy.jitangapplication.model.CheckGreetSendBean;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
-import com.sdy.jitangapplication.utils.UserManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -80,13 +69,14 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
     protected EditText messageEditText;// 文本消息编辑框
 
 
-//    protected FrameLayout textAudioSwitchLayout; // 切换文本，语音按钮布局
+    //    protected FrameLayout textAudioSwitchLayout; // 切换文本，语音按钮布局
 //    protected View switchToTextButtonInInputBar;// 文本消息选择按钮
-//    protected View switchToAudioButtonInInputBar;// 语音消息选择按钮
-//    protected View emojiButtonInInputBar;// 发送消息按钮
+    protected ImageView switchToAudioButtonInInputBar;// 语音消息选择按钮
+    protected ImageView emojiButtonInInputBar;// 表情按钮
 
 
-    protected Button sendMessageButtonInInputBar;// 发送消息按钮
+    protected ImageView sendMessageButtonInInputBar;// 发送消息按钮
+    protected ImageView moreFuntionButtonInInputBar;// 更多消息选择按钮
     protected View messageInputBar;
 
     private SessionCustomization customization;
@@ -167,7 +157,8 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
      */
     public boolean collapse(boolean immediately) {
         boolean respond = (emoticonPickerView != null && emoticonPickerView.getVisibility() == View.VISIBLE
-                || audioAnimLayout != null && audioAnimLayout.getVisibility() == View.VISIBLE);
+                || audioAnimLayout != null && audioAnimLayout.getVisibility() == View.VISIBLE
+                || actionPanelBottomLayout != null && actionPanelBottomLayout.getVisibility() == View.VISIBLE);
 
         hideAllInputLayout(immediately);
 
@@ -212,6 +203,9 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         messageActivityBottomLayout = view.findViewById(R.id.messageActivityBottomLayout);
         messageInputBar = view.findViewById(R.id.textMessageLayout);
         sendMessageButtonInInputBar = view.findViewById(R.id.buttonSendMessage);
+        moreFuntionButtonInInputBar = view.findViewById(R.id.buttonMoreFuntionInText);
+        switchToAudioButtonInInputBar = view.findViewById(R.id.buttonAudioMessage);
+        emojiButtonInInputBar = view.findViewById(R.id.emoji_button);
         messageEditText = view.findViewById(R.id.editTextMessage);
 
         // 语音
@@ -228,6 +222,9 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     private void initInputBarListener() {
         sendMessageButtonInInputBar.setOnClickListener(clickListener);
+        moreFuntionButtonInInputBar.setOnClickListener(clickListener);
+        switchToAudioButtonInInputBar.setOnClickListener(clickListener);
+        emojiButtonInInputBar.setOnClickListener(clickListener);
     }
 
     private void initTextEdit() {
@@ -336,15 +333,47 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
             if (v == sendMessageButtonInInputBar) {
                 //检测是否可以发消息
                 if (checkSendButtonEnable(messageEditText)) {
-                    if (disable) {
-                        checkGreetSendMsg(1);
-                    } else {
-                        onTextMessageSendButtonPressed();
-                    }
+                    onTextMessageSendButtonPressed();
                     sendMessageButtonInInputBar.setEnabled(false);
                 }
-
+            } else if (v == moreFuntionButtonInInputBar) {
+                toggleActionPanelLayout();
+            } else if (v == switchToAudioButtonInInputBar) {
+                if (audioAnimLayout.getVisibility() == View.GONE)
+                    switchToAudioLayout();
+                else
+                    hideAudioLayout();
+            } else if (v == emojiButtonInInputBar) {
+                toggleEmojiLayout();
             }
+        }
+    };
+
+
+    // 点击“+”号按钮，切换更多布局和键盘
+    private void toggleActionPanelLayout() {
+        if (actionPanelBottomLayout == null || actionPanelBottomLayout.getVisibility() == View.GONE) {
+            showActionPanelLayout();
+        } else {
+            hideActionPanelLayout();
+        }
+    }
+
+
+    // 隐藏更多布局
+    private void hideActionPanelLayout() {
+        moreFuntionButtonInInputBar.setImageResource(R.drawable.nim_message_input_more_clickopen);
+
+        uiHandler.removeCallbacks(showMoreFuncRunnable);
+        if (actionPanelBottomLayout != null) {
+            actionPanelBottomLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private Runnable showMoreFuncRunnable = new Runnable() {
+        @Override
+        public void run() {
+            actionPanelBottomLayout.setVisibility(View.VISIBLE);
         }
     };
 
@@ -352,7 +381,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
     private void switchToTextLayout(boolean needShowInput) {
         hideEmojiLayout();
         hideAudioLayout();
-        resetActions();
+        hideActionPanelLayout();
 
         messageInputBar.setVisibility(View.VISIBLE);
 
@@ -363,14 +392,14 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         }
     }
 
-    private void resetActions() {
-        if (adapter != null) {
-            for (int i = 0; i < actions.size(); i++) {
-                actions.get(i).setCheck(false);
-            }
-            adapter.notifyDataSetChanged();
-        }
-    }
+//    public void resetActions() {
+//        if (adapter != null) {
+//            for (int i = 0; i < actions.size(); i++) {
+//                actions.get(i).setCheck(false);
+//            }
+//            adapter.notifyDataSetChanged();
+//        }
+//    }
 
     /**
      * 发送文本消息
@@ -378,10 +407,11 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
     private void onTextMessageSendButtonPressed() {
 //        String text = messageEditText.getText().toString();
         String text = messageEditText.getText().toString().trim();
-        IMMessage textMessage = createTextMessage(text);
-
-        if (container.proxy.sendMessage(textMessage)) {
-            restoreText(true);
+        if (!text.isEmpty()) {
+            IMMessage textMessage = createTextMessage(text);
+            if (container.proxy.sendMessage(textMessage)) {
+                restoreText(true);
+            }
         }
     }
 
@@ -391,9 +421,52 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     // 切换成音频，收起键盘，按钮切换成键盘
     private void switchToAudioLayout() {
-        audioAnimLayout.setVisibility(View.VISIBLE);
-        hideInputMethod();
-        hideEmojiLayout();
+        //获取权限后录语音
+        if (!PermissionUtils.isGranted(PermissionConstants.MICROPHONE) || !PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
+            PermissionUtils.permission(PermissionConstants.MICROPHONE)
+                    .callback(new PermissionUtils.SimpleCallback() {
+                        @Override
+                        public void onGranted() {
+                            if (!PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
+                                PermissionUtils.permission(PermissionConstants.STORAGE)
+                                        .callback(new PermissionUtils.SimpleCallback() {
+                                            @Override
+                                            public void onGranted() {
+                                                audioAnimLayout.setVisibility(View.VISIBLE);
+                                                hideInputMethod();
+                                                hideEmojiLayout();
+                                                hideActionPanelLayout();
+                                            }
+
+                                            @Override
+                                            public void onDenied() {
+                                                CommonFunction.INSTANCE.toast("请开启文件权限后再发送语音.");
+                                                switchToTextLayout(false);
+                                            }
+                                        })
+                                        .request();
+                            } else {
+                                audioAnimLayout.setVisibility(View.VISIBLE);
+                                hideInputMethod();
+                                hideEmojiLayout();
+                                hideActionPanelLayout();
+                            }
+                        }
+
+                        @Override
+                        public void onDenied() {
+                            CommonFunction.INSTANCE.toast("请开启录音权限后再发送语音.");
+                            switchToTextLayout(false);
+                        }
+                    })
+                    .request();
+        } else {
+            audioAnimLayout.setVisibility(View.VISIBLE);
+            hideInputMethod();
+            hideEmojiLayout();
+            hideActionPanelLayout();
+        }
+
     }
 
     // 点击表情，切换到表情布局
@@ -448,6 +521,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
     private void showEmojiLayout() {
         hideInputMethod();
         hideAudioLayout();
+        hideActionPanelLayout();
 
         messageEditText.requestFocus();
         uiHandler.postDelayed(showEmojiRunnable, 200);
@@ -467,6 +541,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         if (actionPanelBottomLayoutHasSetup) {
             return;
         }
+
         //初始化底部面板
         initBottomActionPanel(view, actions);
         actionPanelBottomLayoutHasSetup = true;
@@ -474,10 +549,12 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     // 显示更多布局
     private void showActionPanelLayout() {
+        moreFuntionButtonInInputBar.setImageResource(R.drawable.nim_message_input_more_clickclose);
         addActionPanelLayout();
         hideEmojiLayout();
         hideInputMethod();
 
+        uiHandler.postDelayed(showMoreFuncRunnable, SHOW_LAYOUT_DELAY);
         container.proxy.onInputPanelExpand();
     }
 
@@ -516,9 +593,13 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         String textMessage = editText.getText().toString();
         if (!TextUtils.isEmpty(StringUtil.removeBlanks(textMessage))) {
             sendMessageButtonInInputBar.setEnabled(true);
+            moreFuntionButtonInInputBar.setVisibility(View.GONE);
+            sendMessageButtonInInputBar.setVisibility(View.VISIBLE);
             return true;
         } else {
             sendMessageButtonInInputBar.setEnabled(false);
+            moreFuntionButtonInInputBar.setVisibility(View.VISIBLE);
+            sendMessageButtonInInputBar.setVisibility(View.GONE);
             return false;
         }
     }
@@ -592,7 +673,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
                     hideInputMethod();
                     hideEmojiLayout();
                     hideAudioLayout();
-                    resetActions();
+                    hideActionPanelLayout();
                 }
             };
         }
@@ -745,22 +826,13 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         playAudioRecordAnim();
     }
 
-    private long audioLength;
-    private File audioFile;
-
     @Override
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
         Log.d("OkHttp", "..........onRecordSuccess");
         //检测是否可以发消息
-        if (disable) {
-            this.audioFile = audioFile;
-            this.audioLength = audioLength;
-            checkGreetSendMsg(2);
-        } else {
-            IMMessage audioMessage = MessageBuilder.createAudioMessage(container.account, container.sessionType, audioFile, audioLength);
-            container.proxy.sendMessage(audioMessage);
-            resetActions();
-        }
+        IMMessage audioMessage = MessageBuilder.createAudioMessage(container.account, container.sessionType, audioFile, audioLength);
+        container.proxy.sendMessage(audioMessage);
+
     }
 
     @Override
@@ -769,13 +841,11 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
         if (started) {
             ToastHelper.showToast(container.activity, R.string.recording_error);
-            resetActions();
         }
     }
 
     @Override
     public void onRecordCancel() {
-        resetActions();
     }
 
     @Override
@@ -819,8 +889,12 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         isRobotSession = isRobot;
         if (isRobot) {
             sendMessageButtonInInputBar.setEnabled(true);
+            sendMessageButtonInInputBar.setVisibility(View.VISIBLE);
+            moreFuntionButtonInInputBar.setVisibility(View.GONE);
         } else {
             sendMessageButtonInInputBar.setEnabled(false);
+            sendMessageButtonInInputBar.setVisibility(View.GONE);
+            moreFuntionButtonInInputBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -835,85 +909,22 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         GridView gridView = view.findViewById(R.id.viewPager);
         adapter = new ChatActionsGridviewAdapter(view.getContext(), actions);
         gridView.setAdapter(adapter);
-        gridView.setNumColumns(5);
-        gridView.setSelector(com.netease.nim.uikit.R.color.transparent);
+        gridView.setNumColumns(4);
+        gridView.setSelector(R.color.transparent);
         gridView.setHorizontalSpacing(0);
         gridView.setVerticalSpacing(0);
         gridView.setGravity(Gravity.CENTER);
+        //图片、拍照、位置
         gridView.setOnItemClickListener(new GridView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (disable) {
-                    if (position != 0 && position != 1) {
-                        CommonFunction.INSTANCE.toast("打招呼仅限语音,文本,表情");
-                        return;
-                    }
+                    CommonFunction.INSTANCE.toast("打招呼仅限语音,文本,表情");
+                    return;
                 }
-                for (int i = 0; i < actions.size(); i++) {
-                    if (i == position) {
-                        actions.get(i).setCheck(!actions.get(i).isCheck());
-                    } else {
-                        actions.get(i).setCheck(false);
-                    }
-                }
-                if (actions.get(position).isCheck()) {
-                    if (position == 0) {//表情
-                        toggleEmojiLayout();
-//                        hideAudioLayout();
-                    } else if (position == 1) {
-                        //获取权限后录语音
-                        if (!PermissionUtils.isGranted(PermissionConstants.MICROPHONE) || !PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
-                            PermissionUtils.permission(PermissionConstants.MICROPHONE)
-                                    .callback(new PermissionUtils.SimpleCallback() {
-                                        @Override
-                                        public void onGranted() {
-                                            if (!PermissionUtils.isGranted(PermissionConstants.STORAGE)) {
-                                                PermissionUtils.permission(PermissionConstants.STORAGE)
-                                                        .callback(new PermissionUtils.SimpleCallback() {
-                                                            @Override
-                                                            public void onGranted() {
-                                                                switchToAudioLayout();
-                                                            }
-
-                                                            @Override
-                                                            public void onDenied() {
-                                                                CommonFunction.INSTANCE.toast("请开启文件权限后再发送语音.");
-                                                                switchToTextLayout(false);
-                                                            }
-                                                        })
-                                                        .request();
-                                            } else {
-                                                switchToAudioLayout();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onDenied() {
-                                            CommonFunction.INSTANCE.toast("请开启录音权限后再发送语音.");
-                                            switchToTextLayout(false);
-                                        }
-                                    })
-                                    .request();
-                        } else {
-                            switchToAudioLayout();
-                        }
-
-//                        hideEmojiLayout();
-                    } else {//定位
-                        actions.get(position).onClick();
-                        actions.get(position).setCheck(false);
-                        hideEmojiLayout();
-                        hideAudioLayout();
-                    }
-                } else {
-                    if (position == 0) {//表情
-                        hideEmojiLayout();
-                    } else if (position == 1) {
-                        hideAudioLayout();
-                    }
-                }
-
-                adapter.notifyDataSetChanged();
+                actions.get(position).onClick();
+//                hideEmojiLayout();
+//                hideAudioLayout();
             }
         });
     }
@@ -924,131 +935,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
     @Subscribe
     public void EnablePicEvent(EnablePicEvent event) {
         //是好友就不禁用,如果不是好友就禁用
-        updateActionsState(event.getEnable());
+        disable = !event.getEnable();
     }
-
-
-    //是好友就不禁用,如果不是好友就禁用
-    private void updateActionsState(boolean enable) {
-        if (enable) {
-            disable = false;
-            actions.get(2).setEnable(true);
-            actions.get(3).setEnable(true);
-            actions.get(4).setEnable(true);
-
-            if (adapter != null) {
-                adapter.notifyDataSetChanged();
-            }
-        } else {
-            disable = true;
-            actions.get(2).setEnable(false);
-            actions.get(2).setIconResIdDisable(R.drawable.send_location_disable);
-            actions.get(3).setEnable(false);
-            actions.get(3).setIconResIdDisable(R.drawable.icon_send_phone_disable);
-            actions.get(4).setEnable(false);
-            actions.get(4).setIconResIdDisable(R.drawable.icon_send_pic_disable);
-
-            if (adapter != null) {
-                adapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-
-    /**
-     * 判断剩余打招呼次数
-     *
-     * @param type 1-文本  2-录音
-     */
-
-    private boolean sendTip = false;
-
-    private void checkGreetSendMsg(final int type) {
-        if (!NetWorkUtils.INSTANCE.isNetWorkAvailable(container.activity)) {
-            CommonFunction.INSTANCE.toast("请打开网络");
-            return;
-        }
-        HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
-        params.put("target_accid", container.account);
-        RetrofitFactory.Companion.getInstance().create(Api.class)
-                .checkGreetSendMsg(UserManager.INSTANCE.getSignParams(params))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new rx.Observer<BaseResp<CheckGreetSendBean>>() {
-
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(BaseResp<CheckGreetSendBean> checkGreetSendBeanBaseResp) {
-                        if (checkGreetSendBeanBaseResp != null)
-                            if (checkGreetSendBeanBaseResp.getCode() == 200 && checkGreetSendBeanBaseResp.getData() != null) {
-                                CheckGreetSendBean checkGreetSendBean = checkGreetSendBeanBaseResp.getData();
-                                if (checkGreetSendBean.getIsfriend()) {//是好友，发送好友通知
-                                    //todo 发送成为好友通知
-                                    //发送通知
-                                    updateActionsState(true);
-                                    view.findViewById(com.sdy.jitangapplication.R.id.btnMakeFriends).setVisibility(View.GONE);
-                                } else {
-                                    if (checkGreetSendBean.getResidue_msg_cnt() > 0 || checkGreetSendBean.getIslimit() == false) {//次数大于0就发送消息
-                                        if (type == 1) {
-                                            onTextMessageSendButtonPressed();
-                                        } else if (type == 2) {
-                                            if (audioFile != null && audioLength > 0) {
-                                                IMMessage audioMessage = MessageBuilder.createAudioMessage(container.account, container.sessionType, audioFile, audioLength);
-                                                container.proxy.sendMessage(audioMessage);
-                                                audioFile = null;
-                                                audioLength = 0;
-                                                resetActions();
-                                            }
-                                        }
-                                        if (checkGreetSendBean.getIslimit() && checkGreetSendBean.getResidue_msg_cnt() == 3 && !UserManager.INSTANCE.getHeRead()) {
-                                            IMMessage tipMessage = MessageBuilder.createTipMessage(container.account, container.sessionType);
-                                            tipMessage.setContent("在收到对方回复前只能发送三条消息");
-                                            tipMessage.setStatus(MsgStatusEnum.success);
-                                            CustomMessageConfig config = new CustomMessageConfig();
-                                            config.enablePush = false;//不推送
-                                            config.enableUnreadCount = false;
-                                            tipMessage.setConfig(config);
-//                                        container.proxy.sendMessage(tipMessage);
-                                            NIMClient.getService(MsgService.class).saveMessageToLocal(tipMessage, true);
-                                        }
-                                    } else if (checkGreetSendBean.getResidue_msg_cnt() == 0) {//次数用尽不能再发消息
-                                        if (!sendTip && !UserManager.INSTANCE.getHeRead()) {
-                                            resetActions();
-                                            IMMessage msg = MessageBuilder.createTipMessage(container.account, container.sessionType);
-                                            msg.setContent("你已发送三条消息，请等待对方回复");
-                                            msg.setStatus(MsgStatusEnum.success);
-                                            CustomMessageConfig config = new CustomMessageConfig();
-                                            config.enablePush = false;//不推送
-                                            config.enableUnreadCount = false;
-                                            msg.setConfig(config);
-//                                        container.proxy.sendMessage(msg);
-
-                                            NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
-                                            sendTip = true;
-                                        }
-//                                    CustomMessageConfig config = new CustomMessageConfig();
-//                                    config.enablePush = false; // 不推送
-//                                    msg.setConfig(config);
-//                                    container.proxy.sendMessage(msg);
-//                                    ToastUtils.showShort("消息次数已用完！");
-                                    }
-                                }
-
-                            } else {
-                                CommonFunction.INSTANCE.toast(checkGreetSendBeanBaseResp.getMsg());
-                            }
-                    }
-                });
-    }
-
 
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.MyFootPrintActivity">
+
+    <include layout="@layout/layout_actionbar"/>
+
+
+    <net.lucode.hackware.magicindicator.MagicIndicator
+            android:id="@+id/tabMyFootprint"
+            android:layout_width="match_parent"
+            android:background="@color/colorWhite"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_height="32dp"
+            />
+
+    <View
+            android:layout_marginTop="5dp"
+            android:background="@color/colorDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vpMyFootPrint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+</LinearLayout>

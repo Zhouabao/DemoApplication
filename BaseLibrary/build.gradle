@@ -99,7 +99,7 @@ dependencies {
     //图片选择器
 //    api 'com.github.labmem005.PictureSelector:picture_library:v2.2.9'
 
-    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.9'
+    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.4.3'
 
     //事件总线eventbus
     api 'org.greenrobot:eventbus:3.1.1'
@@ -151,4 +151,7 @@ dependencies {
     api  'com.umeng.umsdk:share-qq:6.9.4'
     api  'com.umeng.umsdk:share-wx:6.9.4'
     api  'com.umeng.umsdk:share-sina:6.9.4'
+
+    //多渠道打包
+    api 'com.leon.channel:helper:2.0.3'
 }

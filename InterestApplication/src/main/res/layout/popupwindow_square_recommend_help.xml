@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+    <TextView
+            android:id="@+id/t1"
+            android:gravity="center"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:text="根据您选择的标签推荐"
+            android:textColor="#ffffffff"
+            android:textSize="13sp"
+            android:background="@drawable/shape_rectangle_gray_494d_4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+            android:background="@drawable/icon_arrow_down_gray"
+            android:layout_width="10dp"
+            android:layout_height="5dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/t1"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

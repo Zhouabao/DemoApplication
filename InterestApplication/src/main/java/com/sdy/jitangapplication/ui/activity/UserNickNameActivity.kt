@@ -29,6 +29,7 @@ class UserNickNameActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
     }
 
     private fun initView() {
+        setSwipeBackEnable(false)
         mPresenter = UserNickNamePresenter()
         mPresenter.context = this
         mPresenter.mView = this

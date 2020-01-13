@@ -1,11 +1,16 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
+import android.app.Dialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -14,6 +19,7 @@ import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 
 /**
  *    author : ZFM
@@ -37,6 +43,22 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
                 override fun onNext(t: BaseResp<MatchBean?>) {
                     if (t.code == 200) {
                         mView.onGetMatchDetailResult(true, t.data)
+                    } else if (t.code == 409) {//用户被封禁
+                        CommonAlertDialog.Builder(context)
+                            .setTitle("提示")
+                            .setContent(t.msg)
+                            .setCancelIconIsVisibility(false)
+                            .setConfirmText("知道了")
+                            .setCancelAble(false)
+                            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                                override fun onClick(dialog: Dialog) {
+                                    dialog.cancel()
+                                    NIMClient.getService(MsgService::class.java).deleteRecentContact2(params["target_accid"].toString(), SessionTypeEnum.P2P)
+                                    (context as Activity).finish()
+                                }
+                            })
+                            .create()
+                            .show()
                     } else {
                         mView.onGetMatchDetailResult(false, null)
                     }
@@ -51,6 +73,7 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
             })
 
     }
+
 
     /**
      * 拉黑用户
@@ -179,4 +202,30 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
     }
 
 
+    /**
+     * 不喜欢
+     */
+    fun dislikeUser(params: HashMap<String, Any>) {
+        if (!checkNetWork()) {
+            return
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .dontLike(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
+                    if (t.code == 200) {
+                        mView.onGetLikeResult(true, t, false)
+                    } else {
+                        mView.onGetLikeResult(false, t, false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError(context.getString(R.string.service_error))
+                }
+            })
+    }
 }

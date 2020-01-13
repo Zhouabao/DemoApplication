@@ -99,6 +99,13 @@ public class GlideUtil {
                 .into(targetImg);
     }
 
+    public static void loadCircleImg(Context context, int url, ImageView targetImg) {
+        Glide.with(context)
+                .load(url)
+                .apply(getOptions().circleCrop().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
+                .into(targetImg);
+    }
+
 
     /**
      * 加载圆角图片内部居中
@@ -108,7 +115,7 @@ public class GlideUtil {
      * @param tartgetImg
      * @param scale      是否缩放 0.0-1.0F
      */
-    public static void loadRoundImgCenterinside(Context context, String url, ImageView tartgetImg, float scale, int radius) {
+    public static void loadRoundImgCenterinside(Context context, Object url, ImageView tartgetImg, float scale, int radius) {
         MultiTransformation multiTransformation = new MultiTransformation(new CenterInside(), new RoundedCornersTransformation(radius, 0));
         Glide.with(context)
                 .load(url)
@@ -160,9 +167,9 @@ public class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .priority(Priority.NORMAL)
-                .placeholder(R.drawable.default_image)
+                .placeholder(R.drawable.default_image_5dp)
                 .override(width, height)
-                .error(R.drawable.default_image)
+                .error(R.drawable.default_image_5dp)
                 .thumbnail(0.5F)
                 .transform(multiTransformation)
                 .into(tartgetImg);

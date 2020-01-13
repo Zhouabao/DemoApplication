@@ -381,7 +381,7 @@ public class EasySwipeMenuLayout extends ViewGroup {
      * @param result
      */
 
-    private void handlerSwipeMenu(State result) {
+    public void handlerSwipeMenu(State result) {
         if (result == State.LEFTOPEN) {
             mScroller.startScroll(getScrollX(), 0, mLeftView.getLeft() - getScrollX(), 0);
             mViewCache = this;

@@ -44,7 +44,7 @@ import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatHi;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderShareSquare;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderTip;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
-import com.sdy.jitangapplication.ui.activity.UserCenterActivity;
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 
 import java.util.ArrayList;
@@ -248,7 +248,7 @@ public class SessionHelper {
                         if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_HI) {
                             return "『招呼消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_MATCH) {
-                            return "通过『" + ((ChatHiAttachment) recent.getAttachment()).getTag() + "』匹配";
+                            return "『匹配消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_RFIEND) {
                             return "『好友消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_OUTTIME) {
@@ -285,11 +285,9 @@ public class SessionHelper {
             public void onAvatarClicked(Context context, IMMessage message) {
                 // 一般用于打开用户资料页面
                 if (message.getFromAccount().equals(UserManager.INSTANCE.loginInfo().getAccount())) {
-                    context.startActivity(new Intent(context, UserCenterActivity.class));
+                    //context.startActivity(new Intent(context, UserCenterActivity.class));
                 } else if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID))
                     MatchDetailActivity.start(context, message.getFromAccount(), -1, -1);
-
-
             }
 
             @Override
@@ -300,6 +298,23 @@ public class SessionHelper {
             @Override
             public void onAckMsgClicked(Context context, IMMessage message) {
                 // 已读回执事件处理，用于群组的已读回执事件的响应，弹出消息已读详情
+            }
+
+            @Override
+            public void onGetReceivcedMsgClicked(Context context, IMMessage message) {
+                //获取已读回执，用于弹出会员详情
+//                if (!UserManager.INSTANCE.isUserVip())
+                new ChargeVipDialog(ChargeVipDialog.VIP_LOGO, context, ChargeVipDialog.PURCHASE_VIP).show();
+            }
+
+            @Override
+            public boolean isUserVip() {
+                return UserManager.INSTANCE.isUserVip();
+            }
+
+            @Override
+            public String robotAccount() {
+                return Constants.ASSISTANT_ACCID;
             }
         };
         NimUIKit.setSessionListener(listener);
@@ -334,10 +349,7 @@ public class SessionHelper {
 
             @Override
             public boolean shouldIgnore(IMMessage message) {
-                if (message.getAttachment() != null) {
-                    // 视频通话消息和白板消息，红包消息 不允许撤回
-                    return true;
-                } else if (DemoCache.getAccount().equals(message.getSessionId())) {
+                if (DemoCache.getAccount().equals(message.getSessionId())) {
                     // 发给我的电脑 不允许撤回
                     return true;
                 }
@@ -405,7 +417,7 @@ public class SessionHelper {
 
                         @Override
                         public void onClick() {
-                            NIMClient.getService(MsgService.class).clearServerHistory(item.getSessionId(),
+                            NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(),
                                     item.getSessionTypeEnum());
                             MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
                         }
@@ -415,8 +427,7 @@ public class SessionHelper {
 
                         @Override
                         public void onClick() {
-                            NIMClient.getService(MsgService.class).clearServerHistory(item.getSessionId(),
-                                    item.getSessionTypeEnum(), false);
+                            NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(), item.getSessionTypeEnum());
                             MessageListPanelHelper.getInstance().notifyClearMessages(item.getSessionId());
                         }
                     });

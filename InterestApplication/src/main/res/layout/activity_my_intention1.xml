@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.MyIntentionActivity">
+
+
+    <com.kennyc.view.MultiStateView
+            android:id="@+id/stateIntention"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="loading">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <ImageView
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_intention_matching_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <include
+                    android:id="@+id/titleView"
+                    layout="@layout/layout_actionbar"
+                    android:layout_height="56dp"
+                    android:layout_width="match_parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+
+            <TextView
+                    android:id="@+id/t1"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="43dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="意向匹配"
+                    android:textStyle="bold"
+                    android:textColor="#ffffffff"
+                    android:textSize="22sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleView"
+                    />
+
+            <Switch
+                    android:id="@+id/switchDistance"
+                    android:layout_width="81dp"
+                    android:layout_height="wrap_content"
+                    android:showText="false"
+                    android:checked="true"
+                    android:switchMinWidth="81dp"
+                    android:thumb="@drawable/switch_intention_thumb"
+                    android:layout_marginLeft="10dp"
+                    android:track="@drawable/selector_switch_intention_track"
+                    app:layout_constraintBottom_toBottomOf="@id/t1"
+                    app:layout_constraintLeft_toRightOf="@id/t1"
+                    app:layout_constraintTop_toTopOf="@id/t1"
+                    />
+
+            <TextView
+                    android:id="@+id/switchDistanceContentClose"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    android:text="开启位置"
+                    android:visibility="gone"
+                    android:layout_marginRight="6dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/switchDistance"
+                    app:layout_constraintRight_toRightOf="@id/switchDistance"
+                    app:layout_constraintTop_toTopOf="@id/switchDistance"/>
+
+            <TextView
+                    android:id="@+id/switchDistanceContentOpen"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    android:text="关闭位置"
+                    android:layout_marginLeft="6dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/switchDistance"
+                    app:layout_constraintLeft_toLeftOf="@id/switchDistance"
+                    app:layout_constraintTop_toTopOf="@id/switchDistance"/>
+
+            <TextView
+                    android:id="@+id/t2"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="227dp"
+                    android:layout_height="20dp"
+                    android:text="选择后会实时匹配跟你意向一致的Ta"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="@id/t1"
+                    app:layout_constraintTop_toBottomOf="@id/t1"
+                    />
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userAvator"
+                    android:layout_width="75dp"
+                    android:layout_marginTop="6dp"
+                    android:src="@drawable/icon_default_avator"
+                    android:layout_marginRight="24dp"
+                    android:layout_height="75dp"
+                    app:civ_border_color="@color/colorWhite"
+                    app:civ_border_width="2dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/intentionIcon"/>
+
+            <ImageView
+                    android:id="@+id/intentionIcon"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="27dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/icon_matching_default"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleView"/>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/intentionRv"
+                    android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
+                    android:nestedScrollingEnabled="true"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="145dp"
+                    android:layout_height="0dp"
+                    android:padding="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleView"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.kennyc.view.MultiStateView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

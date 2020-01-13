@@ -2,154 +2,201 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/mainRoot"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/colorWhite"
+              android:background="@color/colorTransparent"
               android:orientation="vertical"
               tools:context=".ui.activity.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_gravity="center"
+            android:layout_height="44dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorTransparent"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
-        <net.lucode.hackware.magicindicator.MagicIndicator
-                android:id="@+id/tabMain"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-
-
-
-        <ImageView
-                android:id="@+id/filterBtn"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/icon_filter"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/ivUserFace"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-
-        <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivUserFace"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginRight="14dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-        <View
-                android:id="@+id/ivNewMsg"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:background="@drawable/shape_oval_orange"
-                android:visibility="gone"
-                android:layout_marginLeft="168dp"
-                android:layout_marginTop="12dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-
-        <LinearLayout
-                android:id="@+id/llMsgCount"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/icon_notification_left"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp"
-                android:paddingRight="10dp"
-                android:layout_marginLeft="172dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                    android:id="@+id/msgHi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:drawableLeft="@drawable/icon_flash_white"
-                    android:drawablePadding="5dp"
-                    android:gravity="center_vertical"
-                    android:text="3"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"/>
-
-
-            <TextView
-                    android:id="@+id/msgLike"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:drawableLeft="@drawable/icon_like_white"
-                    android:drawablePadding="5dp"
-                    android:text="3"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"/>
-
-
-            <TextView
-                    android:id="@+id/msgSquare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:drawableLeft="@drawable/icon_time_white"
-                    android:drawablePadding="5dp"
-                    android:text="3"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"/>
-
-
-            <TextView
-                    android:id="@+id/msgChat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"
-                    android:drawableLeft="@drawable/icon_msg_white"
-                    android:drawablePadding="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="3"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="14sp"/>
-
-
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/headRvLabels"
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"/>
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginRight="105dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.sdy.jitangapplication.widgets.NoScrollViewPager
-                android:id="@+id/vpMain"
-                android:layout_marginTop="40dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <LinearLayout
+                android:background="@drawable/icon_gradient_white"
+                android:layout_width="135dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </com.sdy.jitangapplication.widgets.NoScrollViewPager>
-    </FrameLayout>
+            <ImageView
+                    android:id="@+id/labelAddBtn"
+                    android:scaleType="center"
+                    android:src="@drawable/icon_add_label"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="51dp"
+                    android:padding="5dp"
+                    android:layout_height="match_parent"/>
+
+            <ImageView
+                    android:id="@+id/filterBtn"
+                    android:layout_marginRight="1dp"
+                    android:scaleType="center"
+                    android:layout_width="wrap_content"
+                    android:padding="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right|center_vertical"
+                    android:src="@drawable/icon_filter"/>
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.sdy.jitangapplication.widgets.NoScrollViewPager
+            android:id="@+id/vpMain"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+
+    </com.sdy.jitangapplication.widgets.NoScrollViewPager>
+
+    <com.flyco.tablayout.CommonTabLayout
+            android:paddingTop="6dp"
+            android:visibility="gone"
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            app:tl_iconGravity="TOP"
+            app:tl_iconHeight="24dp"
+            app:tl_iconMargin="5dp"
+            app:tl_iconWidth="24dp"
+            app:tl_indicator_bounce_enable="false"
+            app:tl_indicator_color="#2C97DE"
+            app:tl_indicator_height="0dp"
+            app:tl_textBold="BOTH"
+            app:tl_textSelectColor="@color/colorOrange"
+            app:tl_textUnselectColor="@color/colorGrayCCC"
+            app:tl_textsize="11sp"
+            app:tl_underline_color="@color/colorDivider"
+            app:tl_underline_gravity="TOP"
+            app:tl_underline_height="1dp"/>
+
+
+    <View
+            android:background="@color/colorDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="49dp">
+
+        <ImageView
+                android:id="@+id/tabMatch"
+                android:src="@drawable/icon_tab_match_checked1"
+                android:layout_width="0dp"
+                android:visibility="visible"
+                android:layout_height="41dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tabSquare"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/tabMatchCount"
+                android:textColor="@color/colorWhite"
+                android:drawableTop="@drawable/icon_tab_match_checked"
+                android:gravity="center_horizontal|bottom"
+                android:layout_width="0dp"
+                android:textSize="12sp"
+                android:layout_height="41dp"
+                android:paddingBottom="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tabSquare"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="32"
+                />
+
+        <TextView
+                android:id="@+id/tabSquare"
+                android:textColor="@color/colorGrayCCC"
+                android:text="发现"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:drawableTop="@drawable/icon_tab_square"
+                android:layout_width="0dp"
+                android:textSize="12sp"
+                android:layout_height="41dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabMatchCount"
+                app:layout_constraintRight_toLeftOf="@id/tabMessage"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+        <TextView
+                android:id="@+id/tabMessage"
+                android:textColor="@color/colorGrayCCC"
+                android:text="消息"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:drawableTop="@drawable/icon_tab_message"
+                android:layout_width="0dp"
+                android:textSize="12sp"
+                android:layout_height="41dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabSquare"
+                app:layout_constraintRight_toLeftOf="@id/tabMe"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        <ImageView
+                android:id="@+id/ivNewMsg"
+                android:background="@drawable/shape_oval_orange"
+                android:layout_width="8dp"
+                android:layout_marginLeft="28dp"
+                android:layout_height="8dp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="@id/tabMessage"
+                app:layout_constraintRight_toRightOf="@id/tabMessage"
+                app:layout_constraintTop_toTopOf="@id/tabMessage"/>
+
+
+        <TextView
+                android:id="@+id/tabMe"
+                android:textColor="@color/colorGrayCCC"
+                android:text="我的"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:drawableTop="@drawable/icon_tab_me"
+                android:layout_width="0dp"
+                android:textSize="12sp"
+                android:layout_height="41dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/tabMessage"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

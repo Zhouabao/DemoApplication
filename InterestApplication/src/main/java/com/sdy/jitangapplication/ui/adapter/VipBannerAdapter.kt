@@ -1,8 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
@@ -22,11 +20,7 @@ class VipBannerAdapter(var type: Int = 1) : BaseQuickAdapter<VipDescr, BaseViewH
     override fun convert(holder: BaseViewHolder, data: VipDescr) {
         holder.itemView.banner_name.text = "${data.title}"
         holder.itemView.banner_content.text = "${data.rule}"
-        val params = holder.itemView.banner_img.layoutParams
-        params.height = SizeUtils.dp2px(130F)
-        params.width = LinearLayout.LayoutParams.WRAP_CONTENT
-        holder.itemView.banner_img.layoutParams = params
-        GlideUtil.loadRoundImgCenterinside(mContext, data.url ?: "", holder.itemView.banner_img, 0.1F, 0)
+        GlideUtil.loadImgCenterCrop(mContext, data.url ?: "", holder.itemView.banner_img)
 
         if (type == ChargeVipDialog.PURCHASE_GREET_COUNT) {
             if (data.countdown > 0) {

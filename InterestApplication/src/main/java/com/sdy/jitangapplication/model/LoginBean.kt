@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.model
 
+import java.io.Serializable
+
 data class LoginBean(
     val accid: String?,
     val phone_check: Boolean?,
@@ -11,10 +13,17 @@ data class LoginBean(
     val register: Boolean?,
     val info_check: Boolean?,
     val qn_prefix: List<String>?,
-    val extra_data: IMBean?
+    val extra_data: ExtraBean?
 )
 
-data class IMBean(val im_token: String = "", val code: Int = 0, val msg: String = "")
+data class ExtraBean(
+    val im_token: String = "",
+    val code: Int = 0,
+    val msg: String = "",
+    val taglist: MutableList<TagBean>,
+    val myinterest: Boolean = false,
+    val aboutme: String = ""
+)
 
 
 data class Userinfo(
@@ -30,14 +39,15 @@ data class Userinfo(
     val vip_express: String = "",
     var isfaced: Int = -1,//   0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     var identification: Int = 0,// int（认证分数）
-    var percent_complete: Int = 0// float（百分比例如 80.99）
+    var percent_complete: Int = 0,// float（百分比例如 80.99）
+    var intention: LabelQualityBean? = null //意向
 )
 
 data class TagBean(
-    var id: Int?,
-    var title: String?,
-    var path: String?
-)
+    var id: Int = 0,
+    var title: String = "",
+    var cheked: Boolean = false
+) : Serializable
 
 data class UserBean(
     var taglist: MutableList<TagBean?>?,
@@ -46,4 +56,25 @@ data class UserBean(
 
 
 data class VersionBean(val version: String)
+
+/**
+ * 账户信息
+ */
+data class AccountBean(
+    var phone: String = "",
+    var wechat: String = ""
+)
+
+data class WechatNameBean(
+    var nickname: String = ""
+)
+
+
+/**
+ * 注销原因
+ */
+data class loginOffCauseBean(
+    var descr: String = "",
+    var list: MutableList<String> = mutableListOf()
+)
 

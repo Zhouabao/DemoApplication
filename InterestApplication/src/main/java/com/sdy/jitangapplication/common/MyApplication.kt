@@ -14,6 +14,8 @@ import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.google.gson.Gson
+import com.growingio.android.sdk.collection.Configuration
+import com.growingio.android.sdk.collection.GrowingIO
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
 import com.leon.channel.helper.ChannelReaderUtil
@@ -29,24 +31,23 @@ import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
-import com.sdy.jitangapplication.event.GetNewMsgEvent
-import com.sdy.jitangapplication.event.ReVerifyEvent
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
 import com.sdy.jitangapplication.nim.NimSDKOptionConfig
+import com.sdy.jitangapplication.nim.event.DemoOnlineStateContentProvider
 import com.sdy.jitangapplication.nim.mixpush.DemoMixPushMessageHandler
 import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
 import com.sdy.jitangapplication.nim.session.NimDemoLocationProvider
 import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
+import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
-import com.shuyu.gsyvideoplayer.player.SystemPlayerManager
 import com.tencent.bugly.Bugly
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
@@ -92,11 +93,10 @@ class MyApplication : BaseApplication() {
                         EventBus.getDefault().postSticky(UpdateHiEvent())
                         initNotificationManager(customerMsgBean.msg)
                     }
-                    2 -> {//对方删除自己,本地删除会话列表
-                        CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "")
+                    2 -> {//对方删除自己,本地不删除会话列表
+                        CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "", true)
                     }
-                    3 -> {
-                        //新的招呼刷新界面
+                    3 -> { //新的招呼刷新界面
                         EventBus.getDefault().postSticky(UpdateHiEvent())
                     }
                     //4人脸认证不通过
@@ -109,14 +109,55 @@ class MyApplication : BaseApplication() {
                             //发送通知更新内容
                             EventBus.getDefault().postSticky(RefreshEvent(true))
                         }
-                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                        //如果账号存在异常，就发送认证不通过弹窗
+                        if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
+                            EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
+                        } else {
+                            EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                        }
                     }
                     //7强制替换头像
                     7 -> {
                         EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
                         UserManager.saveChangeAvator(customerMsgBean.msg)
+                        UserManager.saveChangeAvatorType(1)
+                    }
+                    //11真人头像不通过弹窗
+                    11 -> {
+                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                        UserManager.saveChangeAvator(customerMsgBean.msg)
+                        UserManager.saveChangeAvatorType(2)
                     }
 
+                    //8账号异常提示去变更账号
+                    8 -> {
+                        UserManager.saveAccountDanger(true)
+                        EventBus.getDefault()
+                            .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_ACCOUNT_DANGER))
+                    }
+                    //9人脸认证通过的通知
+                    9 -> {
+                        if (UserManager.getAccountDanger()) {
+                            UserManager.saveAccountDanger(false)
+                        }
+                        if (UserManager.getAccountDangerAvatorNotPass()) {
+                            UserManager.saveAccountDangerAvatorNotPass(false)
+                        }
+                        UserManager.saveUserVerify(1)
+                        if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
+                            SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
+                            //发送通知更新内容
+                            EventBus.getDefault().postSticky(RefreshEvent(true))
+                            EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        }
+                        EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
+                    }
+                    //10头像未通过审核去进行人脸认证
+                    10 -> {
+                        UserManager.saveAccountDangerAvatorNotPass(true)
+                        EventBus.getDefault()
+                            .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
+                    }
 
                 }
 
@@ -193,6 +234,20 @@ class MyApplication : BaseApplication() {
 
         //数美黑产
         initSM()
+
+        initGrowingIO()
+    }
+
+    private fun initGrowingIO() {
+        if (ThreadUtils.isMainThread()) {
+            GrowingIO.startWithConfiguration(
+                this, Configuration()
+                    .trackAllFragments()
+                    .setTestMode(true)
+                    .setDebugMode(true)
+                    .setChannel(ChannelReaderUtil.getChannel(this) ?: "")
+            )
+        }
     }
 
     private fun initUmeng() {
@@ -246,7 +301,9 @@ class MyApplication : BaseApplication() {
 
     private fun configPlayer() {
         //系统内核模式
-        PlayerFactory.setPlayManager(SystemPlayerManager::class.java)
+//        PlayerFactory.setPlayManager(SystemPlayerManager::class.java)
+        PlayerFactory.setPlayManager(IjkPlayerManager::class.java)
+//        PlayerFactory.setPlayManager(Exo2PlayerManager::class.java)
 //        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_4_3)
     }
 
@@ -266,7 +323,6 @@ class MyApplication : BaseApplication() {
         NIMClient.init(this, UserManager.loginInfo(), NimSDKOptionConfig.getSDKOptions(this))
 
         if (NIMUtil.isMainProcess(this)) {
-
             // 注册自定义推送消息处理，这个是可选项
             NIMPushClient.registerMixPushMessageHandler(DemoMixPushMessageHandler())
 
@@ -275,19 +331,17 @@ class MyApplication : BaseApplication() {
             NimUIKit.setLocationProvider(NimDemoLocationProvider())
             // IM 会话窗口的定制初始化。
             SessionHelper.init()
-            //初始化消息提醒
-            NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
-            //云信相关业务初始化
-            NIMInitManager.getInstance().init(true)
-
             // 添加自定义推送文案以及选项，请开发者在各端（Android、IOS、PC、Web）消息发送时保持一致，以免出现通知不一致的情况
             NimUIKit.setCustomPushContentProvider(DemoPushContentProvider())
-
-
             //在线状态内容提供者
-//            NimUIKit.setOnlineStateContentProvider(DemoOnlineStateContentProvider())
+            NimUIKit.setOnlineStateContentProvider(DemoOnlineStateContentProvider())
+            //初始化消息提醒
+            NIMClient.toggleNotification(UserPreferences.getNotificationToggle())
+            //自定义通知监听
             NIMClient.getService(MsgServiceObserve::class.java)
                 .observeCustomNotification(customNotificationObserver, true)
+            //云信相关业务初始化
+            NIMInitManager.getInstance().init(true)
 
         }
     }

@@ -1,11 +1,12 @@
 package com.sdy.jitangapplication.ui.chat
 
-import android.animation.AnimatorSet
+import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import com.blankj.utilcode.util.KeyboardUtils
@@ -23,7 +24,6 @@ import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_match_succeed.*
 
 /**
@@ -40,16 +40,19 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
     private fun initData() {
         GlideUtil.loadRoundImgCenterCrop(this, avator, iconOther, SizeUtils.dp2px(10F))
-        GlideUtil.loadRoundImgCenterCrop(this, UserManager.getAvator(), iconMine, SizeUtils.dp2px(10F))
 
-        matchTip.text = "你和 $nickname 都彼此欣赏 \n不如就说先点什么吧"
+        matchTip.text = "你与$nickname\n于千万人中彼此欣赏，终于相遇！"
     }
 
     private lateinit var accid: String
     private lateinit var avator: String
     private lateinit var nickname: String
+
     private fun initView() {
-//        setSwipeBackEnable(false)
+        setSwipeBackEnable(true)
+//        accid = ""
+//        avator = UserManager.getAvator()
+//        nickname = "nickname"
 
         accid = intent.getStringExtra("accid") ?: ""
         avator = intent.getStringExtra("avator") ?: ""
@@ -57,10 +60,105 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
 
         btnBack.onClick { onBackPressed() }
 
+//        KeyboardUtils.registerSoftInputChangedListener(this) {
+//            Log.d("registerSoftInputChangedListener", "$it")
+//            val ani = ObjectAnimator.ofFloat(clMsg, "translationY", -it.toFloat())
+//            ani.duration = 50L
+//            ani.start()
+//        }
+
+
+        val objAnim = ObjectAnimator.ofFloat(ivSmallLove, "rotation", 0.0f, 360.0f)
+        //设定动画的旋转周期
+        objAnim.duration = 5 * 1000L
+        //设置动画的插值器，这个为匀速旋转
+        objAnim.interpolator = LinearInterpolator()
+        //设置动画为无限重复
+        objAnim.repeatCount = 0
+        objAnim.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator) {
+                ivSmallLove.postDelayed({
+                    animation.pause()
+//                    animation.cancel()
+                }, 2000L)
+            }
+        })
+        objAnim.start()
+
+
+        val objAnimMiddle = ObjectAnimator.ofFloat(ivMiddleLove, "rotation", 0.0f, -360.0f)
+        //设定动画的旋转周期
+        objAnimMiddle.duration = objAnim.duration
+        //设置动画的插值器，这个为匀速旋转
+        objAnimMiddle.interpolator = objAnim.interpolator
+        //设置动画为无限重复
+        objAnimMiddle.repeatCount = objAnim.repeatCount
+        objAnimMiddle.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator) {
+                ivMiddleLove.postDelayed({
+                    animation.pause()
+//                    animation.cancel()
+                }, 2000L)
+            }
+
+        })
+        objAnimMiddle.start()
+
+
+        val objAnimBig = ObjectAnimator.ofFloat(ivBigLove, "rotation", 0.0f, 360.0f)
+        //设定动画的旋转周期
+        objAnimBig.duration = objAnim.duration
+        //设置动画的插值器，这个为匀速旋转
+        objAnimBig.interpolator = objAnim.interpolator
+        //设置动画为无限重复
+        objAnimBig.repeatCount = objAnim.repeatCount
+        objAnimBig.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                Log.d("objAnimBig", "onAnimationEnd")
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator) {
+                ivBigLove.postDelayed({
+                    animation.pause()
+//                    animation.cancel()
+                }, 2000L)
+            }
+
+        })
+        //设置动画的插值器，这个为匀速旋转
+        objAnimBig.start()
+
         //主动弹起键盘
-        etMsg.postDelayed({
-            KeyboardUtils.showSoftInput(etMsg)
-        }, 200L)
+//        etMsg.postDelayed({
+//            KeyboardUtils.showSoftInput(etMsg)
+//        }, 200L)
 
         //编辑框
         etMsg.addTextChangedListener(object : TextWatcher {
@@ -80,32 +178,6 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         //发送消息
         sendMsg.setOnClickListener(this)
 
-        //我的头像动画集合
-        val animator = AnimatorSet()
-        animator.duration = 500L
-        animator.interpolator = LinearInterpolator()
-        animator.playTogether(
-            ObjectAnimator.ofFloat(iconMine, "scaleX", 0.25f, 1f),
-            ObjectAnimator.ofFloat(iconMine, "scaleY", 0.25f, 1f),
-            ObjectAnimator.ofFloat(iconMine, "alpha", 0f, 1f)
-        )
-        animator.start()
-
-        //对方的头像动画集合
-        val animator1 = AnimatorSet()
-        animator1.duration = 500L
-        animator1.interpolator = LinearInterpolator()
-        animator1.playTogether(
-            ObjectAnimator.ofFloat(iconOther, "scaleX", 0.25f, 1f),
-            ObjectAnimator.ofFloat(iconOther, "scaleY", 0.25f, 1f),
-            ObjectAnimator.ofFloat(iconOther, "alpha", 0f, 1f)
-        )
-        animator1.start()
-
-        //笑脸动画
-//        YoYo.with(Techniques.RubberBand)
-//            .duration(2000)
-//            .playOn(iconLike)
     }
 
 
@@ -146,11 +218,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
     //发送匹配成功第一次对话
     private fun sendMatchHiMessage() {
         val container = Container(this, accid, SessionTypeEnum.P2P, this, true)
-        val message = MessageBuilder.createTextMessage(
-            accid,
-            SessionTypeEnum.P2P,
-            etMsg.text.toString()
-        )
+        val message = MessageBuilder.createTextMessage(accid, SessionTypeEnum.P2P, etMsg.text.toString())
         container.proxy.sendMessage(message)
     }
 

@@ -16,11 +16,16 @@ class GetNewMsgEvent
 class ReVerifyEvent(val type: Int, var avator: String = UserManager.getAvator())
 
 
-class UpdateAvatorEvent(val update: Boolean)
+//账号异常认证事件通知
+class AccountDangerEvent(val type: Int)
 
-
-class EnableLabelEvent(val enable: Boolean)
+//更新首页滑动次数
+class UpdateSlideCountEvent
 
 
 //展示调研弹窗的event
 class ShowSurveyDialogEvent(val slideCount: Int)
+
+
+//修改主页的状态栏颜色
+class ChangeStatusColorEvent

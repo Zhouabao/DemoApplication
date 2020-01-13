@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
 
@@ -58,6 +59,7 @@ public class ChatActionsGridviewAdapter extends BaseAdapter {
         } else {
             ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdDisable());
         }
+        ((TextView) itemlayout.findViewById(R.id.textView)).setText(context.getString(viewHolder.getTitleId()));
         return itemlayout;
     }
 }

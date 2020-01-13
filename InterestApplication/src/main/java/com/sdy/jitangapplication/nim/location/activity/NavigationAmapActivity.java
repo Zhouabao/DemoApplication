@@ -11,29 +11,26 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import com.amap.api.maps2d.*;
-import com.amap.api.maps2d.AMap.InfoWindowAdapter;
-import com.amap.api.maps2d.AMap.OnInfoWindowClickListener;
-import com.amap.api.maps2d.AMap.OnMarkerClickListener;
-import com.amap.api.maps2d.model.*;
-import com.sdy.jitangapplication.R;
-import com.sdy.jitangapplication.nim.location.adapter.IconListAdapter;
-import com.sdy.jitangapplication.nim.location.helper.MapHelper;
-import com.sdy.jitangapplication.nim.location.helper.NimLocationManager;
-import com.sdy.jitangapplication.nim.location.model.NimLocation;
+import com.amap.api.maps.*;
+import com.amap.api.maps.model.*;
 import com.netease.nim.uikit.api.wrapper.NimToolBarOptions;
 import com.netease.nim.uikit.common.ToastHelper;
 import com.netease.nim.uikit.common.activity.ToolBarOptions;
 import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nim.uikit.common.ui.dialog.CustomAlertDialog;
 import com.netease.nim.uikit.common.util.string.StringUtil;
+import com.sdy.jitangapplication.R;
+import com.sdy.jitangapplication.nim.location.adapter.IconListAdapter;
+import com.sdy.jitangapplication.nim.location.helper.MapHelper;
+import com.sdy.jitangapplication.nim.location.helper.NimLocationManager;
+import com.sdy.jitangapplication.nim.location.model.NimLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NavigationAmapActivity extends UI implements
         OnClickListener, LocationExtras, NimLocationManager.NimLocationListener,
-        OnMarkerClickListener, OnInfoWindowClickListener, InfoWindowAdapter {
+        AMap.OnMarkerClickListener, AMap.OnInfoWindowClickListener, AMap.InfoWindowAdapter {
 
     private TextView sendButton;
     private MapView mapView;
@@ -247,6 +244,7 @@ public class NavigationAmapActivity extends UI implements
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map));
+        markerOptions.position(desLatLng);
         return markerOptions;
     }
 

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".ui.activity.UserIntroduceActivity">
+
+    <include layout="@layout/layout_actionbar"/>
+
+
+    <TextView
+            android:id="@+id/t1"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="个人介绍"
+            android:layout_marginLeft="15dp"
+            android:textStyle="bold"
+            android:textColor="#ff191919"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llTitle"
+            />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/labelPurposeCl"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_marginTop="15dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/t1">
+
+        <TextView
+                android:text="我的意向"
+                android:textColor="#ff191919"
+                android:textSize="16sp"
+                android:drawableLeft="@drawable/icon_heart_blue"
+                android:layout_marginLeft="15dp"
+                android:drawablePadding="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/labelPurposeBtn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/labelPurposeBtn"/>
+
+        <TextView
+                android:id="@+id/labelPurposeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="54dp"
+                android:hint="请选择您的意向"
+                android:textColor="#ff9b9b9b"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/icon_more_right"
+                android:layout_marginRight="15dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llTitle"/>
+
+        <View
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:background="@color/colorDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/labelPurposeBtn"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelPurposeCl"
+            >
+
+
+        <EditText
+                android:layout_marginTop="21dp"
+                android:id="@+id/labelIntroduceContent"
+                android:background="@null"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:maxLength="300"
+                android:lineSpacingMultiplier="1.2"
+                android:hint="此处高能预警！！！看过来\n你的愿望是什么？\n也介绍下自己能为他人实现的愿望吧？\n在这里写下你关于「许愿福利社」的等等等等\n研究表明，介绍写的越详细越能无限提升被翻牌几率\n就现在，开始吧"
+                android:textColorHint="#FFC1C2C8"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:minHeight="255dp"
+                android:maxHeight="255dp"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintBottom_toTopOf="@id/labelIntroduceModel"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+    </ScrollView>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:background="#FFF5F6F8"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+        <TextView
+                android:id="@+id/labelIntroduceModel"
+                android:drawableLeft="@drawable/icon_eye"
+                android:drawablePadding="4dp"
+                android:text="看看别人怎么写"
+                android:textColor="#FF000000"
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="43dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+                android:id="@+id/labelIntroduceInputLength"
+                android:text="0/300"
+                android:textColor="#ffb5b7ba"
+                android:textSize="11sp"
+                android:layout_marginRight="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

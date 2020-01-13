@@ -20,6 +20,7 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.LikeMeBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -31,6 +32,7 @@ import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_like_me.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -49,13 +51,14 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
         holder.addOnClickListener(R.id.likeMeCount)
         val itemView = holder.itemView
         itemView.likeMeDate.text = item.date ?: ""
-        itemView.likeMeCount.text = "${item.count} 人对你感兴趣"
+        itemView.likeMeCount.text = "${item.count} 人喜欢你"
         itemView.likeMeNew.isVisible = item.hasread ?: false
+        itemView.divider.isVisible = holder.layoutPosition != mData.size - 1
 
         itemView.likeOneDayRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
         val adapter = LikeMeOneDayAdapter(freeShow)
         itemView.likeOneDayRv.adapter = adapter
-        adapter.setNewData(item.list ?: mutableListOf())
+        adapter.addData(item.list ?: mutableListOf())
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.likeMeType -> {
@@ -106,6 +109,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                                                     })
                                             }
                                         }
+                                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
                                     } else if (t.code == 201) {
                                         if (my_percent_complete <= normal_percent_complete)
                                             RightSlideOutdDialog(mContext, myCount, maxCount).show()

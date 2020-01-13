@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.view.View
-import androidx.core.view.isVisible
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseViewHolder
@@ -51,7 +50,11 @@ class UserPhotoAdapter(datas: MutableList<MyPhotoBean>) :
             }
             MyPhotoBean.COVER -> {
                 holder.itemView.tvAddScoreSmile.text = "+${item.photoScore}"
-                holder.itemView.tvAddScoreSmile.isVisible = data.size < 10
+                holder.itemView.llAddScoreSmile.visibility = if (data.size < 10) {
+                    View.VISIBLE
+                } else {
+                    View.INVISIBLE
+                }
             }
         }
 

@@ -12,7 +12,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.event.ReminderScoreEvent
 import kotlinx.android.synthetic.main.dialog_reminder_score.*
 import org.greenrobot.eventbus.EventBus
 
@@ -97,7 +96,6 @@ class ReminderScoreDialog(val context1: Context, var score: Int) : Dialog(contex
 //        }
 
         llRoot.onClick {
-            EventBus.getDefault().post(ReminderScoreEvent(score))
             dismiss()
         }
     }

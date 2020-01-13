@@ -28,9 +28,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
      * 屏蔽通讯录
      */
     fun blockedAddressBook(accid: String, token: String, content: MutableList<String?> = mutableListOf()) {
-        val params = hashMapOf<String,Any>("content" to Gson().toJson(content))
+        val params = hashMapOf<String, Any>("content" to Gson().toJson(content))
         RetrofitFactory.instance.create(Api::class.java)
-            .blockedAddressBook( UserManager.getSignParams(params))
+            .blockedAddressBook(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
@@ -103,6 +103,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     CommonFunction.toast(t.msg)
                     mView.onGreetApproveResult(t.code == 200)
                 }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    }
+                }
             })
     }
 
@@ -117,6 +123,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     CommonFunction.toast(t.msg)
                     mView.onGreetSwitchResult(t.code == 200)
                 }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    }
+                }
             })
     }
 
@@ -130,13 +142,21 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             .excute(object : BaseSubscriber<BaseResp<SettingsBean?>>(mView) {
                 override fun onNext(t: BaseResp<SettingsBean?>) {
                     mView.onSettingsBeanResult(t.code == 200, t.data)
-                    if (t.code != 200)
+                    if (t.code == 403) {
+                        TickDialog(context).show()
+                    } else if (t.code != 200) {
                         CommonFunction.toast(t.msg)
+                    }
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onSettingsBeanResult(false, null)
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.onSettingsBeanResult(false, null)
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    }
 
                 }
             })

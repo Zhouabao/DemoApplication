@@ -1,10 +1,15 @@
 package com.sdy.jitangapplication.nim.activity
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.alibaba.fastjson.JSON
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.google.gson.Gson
 import com.kotlin.base.common.AppManager
@@ -42,7 +47,9 @@ import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.model.NimBean
 import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.greenrobot.eventbus.EventBus
 
@@ -52,8 +59,6 @@ import org.greenrobot.eventbus.EventBus
  *
  */
 class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
-
-
     private var isResume = false
 
     companion object {
@@ -63,55 +68,86 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
             customization: SessionCustomization = DefaultP2PSessionCustomization(),
             anchor: IMMessage? = null
         ) {
-            if (contactId == Constants.ASSISTANT_ACCID) {
-                val intent = Intent()
-                intent.putExtra(Extras.EXTRA_ACCOUNT, contactId)
-                intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
-                if (anchor != null) {
-                    intent.putExtra(Extras.EXTRA_ANCHOR, anchor)
-                }
-                intent.setClass(context, ChatActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-
-                context.startActivity(intent)
-            } else {
-                val params = UserManager.getBaseParams()
-                params["target_accid"] = contactId
-                RetrofitFactory.instance.create(Api::class.java)
-                    .getTargetInfo(UserManager.getSignParams(params))
-                    .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
-                        override fun onNext(t: BaseResp<NimBean?>) {
-                            super.onNext(t)
-                            if (t.code == 200) {
-                                val intent = Intent()
-                                intent.putExtra(Extras.EXTRA_ACCOUNT, contactId)
-                                intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
-                                if (anchor != null) {
-                                    intent.putExtra(Extras.EXTRA_ANCHOR, anchor)
-                                }
-                                intent.setClass(context, ChatActivity::class.java)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-
-                                context.startActivity(intent)
-                            } else if (t.code == 400) {
-                                CommonFunction.toast(t.msg)
-                            }
-                        }
-                    })
+            val intent = Intent()
+            intent.putExtra(Extras.EXTRA_ACCOUNT, contactId)
+            intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
+            if (anchor != null) {
+                intent.putExtra(Extras.EXTRA_ANCHOR, anchor)
             }
+            intent.setClass(context, ChatActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+            context.startActivity(intent)
 
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (sessionId != Constants.ASSISTANT_ACCID)
+            getTargetInfo()
+    }
+
+    private fun getTargetInfo() {
+        val loadingDialog = LoadingDialog(this)
+        val params = UserManager.getBaseParams()
+        params["target_accid"] = sessionId
+        RetrofitFactory.instance.create(Api::class.java)
+            .getTargetInfo(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
+                override fun onStart() {
+                    if (!loadingDialog.isShowing) {
+                        loadingDialog.show()
+                    }
+                }
+
+                override fun onNext(t: BaseResp<NimBean?>) {
+                    super.onNext(t)
+                    loadingDialog.dismiss()
+                    if (t.code == 200) {
+                        if (t.data != null)
+                            intent.putExtra("nimBean", t.data)
+                    } else if (t.code == 409) {
+                        CommonAlertDialog.Builder(this@ChatActivity)
+                            .setTitle("提示")
+                            .setContent(t.msg)
+                            .setCancelIconIsVisibility(false)
+                            .setConfirmText("知道了")
+                            .setCancelAble(false)
+                            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                                override fun onClick(dialog: Dialog) {
+                                    dialog.cancel()
+                                    NIMClient.getService(MsgService::class.java)
+                                        .deleteRecentContact2(sessionId, SessionTypeEnum.P2P)
+                                    finish()
+                                }
+
+                            })
+                            .create()
+                            .show()
+                    }
+
+                }
+
+                override fun onError(e: Throwable?) {
+                    loadingDialog.dismiss()
+                    CommonFunction.toast(CommonFunction.getErrorMsg(this@ChatActivity))
+                }
+            })
+    }
 
     /**
      * 系统通知监听
      */
-    private var customNotificationObserver: Observer<CustomNotification> =
+    private
+    var customNotificationObserver: Observer<CustomNotification> =
         Observer { customNotification ->
             if (customNotification.content != null) {
                 val customerMsgBean =
-                    Gson().fromJson<CustomerMsgBean>(customNotification.content, CustomerMsgBean::class.java)
+                    Gson().fromJson<CustomerMsgBean>(
+                        customNotification.content,
+                        CustomerMsgBean::class.java
+                    )
                 when (customerMsgBean.type) {
                     2 -> {//对方删除自己,本地删除会话列表
                         NIMClient.getService(MsgService::class.java)
@@ -124,7 +160,10 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
                         startActivity(intent)
                     }
                 }
-                Log.d("OkHttp", "${customerMsgBean.type}=================${customerMsgBean.msg}=================")
+                Log.d(
+                    "OkHttp",
+                    "${customerMsgBean.type}=================${customerMsgBean.msg}================="
+                )
             }
         }
 
@@ -132,7 +171,8 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     /**
      * 命令消息接收观察者
      */
-    private val commandObserver = Observer<CustomNotification> { message ->
+    private
+    val commandObserver = Observer<CustomNotification> { message ->
         if (sessionId != message.sessionId || message.sessionType != SessionTypeEnum.P2P) {
             return@Observer
         }
@@ -142,7 +182,8 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     /**
      * 用户信息变更观察者
      */
-    private val userInfoObserver = UserInfoObserver { accounts ->
+    private
+    val userInfoObserver = UserInfoObserver { accounts ->
         if (!accounts.contains(sessionId)) {
             return@UserInfoObserver
         }
@@ -153,38 +194,58 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     /**
      * 好友资料变更（eg:关系）
      */
-    private val friendDataChangedObserver = object : ContactChangedObserver {
+    private
+    val friendDataChangedObserver = object : ContactChangedObserver {
         override fun onAddedOrUpdatedFriends(accounts: List<String>) {
-            chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)
+            chatName.text = UserInfoHelper.getUserTitleName(
+                sessionId,
+                SessionTypeEnum.P2P
+            )
         }
 
         override fun onDeletedFriends(accounts: List<String>) {
-            chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)
+            chatName.text = UserInfoHelper.getUserTitleName(
+                sessionId,
+                SessionTypeEnum.P2P
+            )
         }
 
         override fun onAddUserToBlackList(account: List<String>) {
-            chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)
+            chatName.text = UserInfoHelper.getUserTitleName(
+                sessionId,
+                SessionTypeEnum.P2P
+            )
         }
 
         override fun onRemoveUserFromBlackList(account: List<String>) {
-            chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)
+            chatName.text = UserInfoHelper.getUserTitleName(
+                sessionId,
+                SessionTypeEnum.P2P
+            )
         }
     }
 
     /**
      * 好友在线状态观察者
      */
-    private val onlineStateChangeObserver = OnlineStateChangeObserver { accounts ->
-        if (!accounts.contains(sessionId)) {
-            return@OnlineStateChangeObserver
+    private
+    val onlineStateChangeObserver =
+        OnlineStateChangeObserver { accounts ->
+            if (!accounts.contains(sessionId)) {
+                return@OnlineStateChangeObserver
+            }
+            // 按照交互来展示
+            displayOnlineState()
         }
-        // 按照交互来展示
-        displayOnlineState()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+            BarUtils.setStatusBarLightMode(this, true)
+        }
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
@@ -218,29 +279,43 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     private fun requestBuddyInfo() {
         if (sessionId == Constants.ASSISTANT_ACCID) {
-            chatMore.setVisible(false)
+            chatMore.visibility = View.INVISIBLE
         } else {
             chatMore.setVisible(true)
         }
-        chatName.text = UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)
+        chatName.text = UserInfoHelper.getUserTitleName(
+            sessionId,
+            SessionTypeEnum.P2P
+        )
     }
 
     private fun displayOnlineState() {
         if (!NimUIKitImpl.enableOnlineState()) {
             return
         }
-        val detailContent = NimUIKitImpl.getOnlineStateContentProvider().getDetailDisplay(sessionId)
-        setSubTitle(detailContent)
+        val detailContent =
+            NimUIKitImpl.getOnlineStateContentProvider()
+                .getDetailDisplay(sessionId)
+//        setSubTitle(detailContent)
+//        chatName.text = "${UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)}-$detailContent"
+        chatName.text = "${UserInfoHelper.getUserTitleName(sessionId, SessionTypeEnum.P2P)}"
     }
 
     private fun registerObservers(register: Boolean) {
 //        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(commandObserver, register)
-        NimUIKit.getUserInfoObservable().registerObserver(userInfoObserver, register)
+        NimUIKit.getUserInfoObservable()
+            .registerObserver(userInfoObserver, register)
 //        NIMClient.getService(MsgServiceObserve::class.java).observeCustomNotification(customNotificationObserver, register)
-        NimUIKit.getContactChangedObservable().registerObserver(friendDataChangedObserver, register)
+        NimUIKit.getContactChangedObservable().registerObserver(
+            friendDataChangedObserver,
+            register
+        )
         if (NimUIKit.enableOnlineState()) {
             NimUIKit.getOnlineStateChangeObservable()
-                .registerOnlineStateChangeListeners(onlineStateChangeObserver, register)
+                .registerOnlineStateChangeListeners(
+                    onlineStateChangeObserver,
+                    register
+                )
         }
     }
 
@@ -267,7 +342,10 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
 
     override fun fragment(): ChatMessageFragment {
         val arguments = intent.extras
-        arguments!!.putSerializable(Extras.EXTRA_TYPE, SessionTypeEnum.P2P)
+        arguments!!.putSerializable(
+            Extras.EXTRA_TYPE,
+            SessionTypeEnum.P2P
+        )
         val fragment = ChatMessageFragment()
         fragment.arguments = arguments
         fragment.containerId = R.id.message_fragment_container

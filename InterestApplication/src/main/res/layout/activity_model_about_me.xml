@@ -7,14 +7,22 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
         tools:context=".ui.activity.ModelAboutMeActivity">
 
-    <include layout="@layout/layout_actionbar"/>
+    <TextView
+            android:id="@+id/btnBack"
+            android:drawableLeft="@drawable/icon_return"
+            android:layout_width="wrap_content"
+            android:text="继续编辑"
+            android:paddingLeft="15dp"
+            android:drawablePadding="5dp"
+            android:textColor="#ff191919"
+            android:textSize="17sp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:layout_height="56dp"/>
 
-    <View
-            android:background="@color/colorDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
 
     <com.kennyc.view.MultiStateView
             android:id="@+id/modelStateView"
@@ -32,11 +40,32 @@
                 app:srlEnableLoadMoreWhenContentNotFull="false"
                 app:srlEnableRefresh="true">
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/modelMeRv"
-                    android:overScrollMode="never"
+            <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:orientation="vertical"
+                    android:layout_height="match_parent">
+
+                <TextView
+                        android:id="@+id/t1"
+                        android:layout_marginTop="15dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="看看别人怎么写"
+                        android:drawablePadding="4dp"
+                        android:drawableLeft="@drawable/icon_eye"
+                        android:textStyle="bold"
+                        android:textColor="#ff191919"
+                        android:layout_marginLeft="15dp"
+                        android:textSize="24sp"
+                        android:layout_marginBottom="30dp"
+                        />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/modelMeRv"
+                        android:overScrollMode="never"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 

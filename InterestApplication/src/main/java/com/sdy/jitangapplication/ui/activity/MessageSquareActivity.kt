@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
  * 发现消息列表
+ * /ppsns/tidings/squareListsV3/v1.json  type=1  点赞的  type=2 评论的
  */
 class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), MessageSquareView, OnRefreshListener,
     OnLoadMoreListener {
@@ -38,7 +39,8 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "page" to page,
-            "pagesize" to Constants.PAGESIZE
+            "pagesize" to Constants.PAGESIZE,
+            "type" to intent.getIntExtra("type", 1)
         )
     }
     private val adapter by lazy { MessageSquareAdapter() }

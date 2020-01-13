@@ -1,15 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:fitsSystemWindows="true"
+             android:background="@color/colorWhite"
              tools:context=".ui.fragment.MessageListFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/messageListRv"
+    <LinearLayout
+            android:id="@+id/messageContentLl"
             android:visibility="gone"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+        <View
+                android:id="@+id/customStatusBar"
+                android:visibility="visible"
+                android:background="@color/colorTransparent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+        <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="51dp"
+                android:gravity="center_vertical">
+
+
+            <TextView
+                    android:text="消息"
+                    android:textColor="#FF191919"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_height="match_parent"
+                    />
+
+            <ImageView
+                    android:id="@+id/contactBookBtn"
+                    android:paddingRight="15dp"
+                    android:paddingLeft="15dp"
+                    android:src="@drawable/icon_contact_book"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_height="match_parent"/>
+        </RelativeLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:id="@+id/blackLl"
+                      android:orientation="horizontal"
+                      android:background="#FFF5F6F8"
+                      android:layout_width="match_parent"
+                      android:layout_height="41dp">
+
+            <TextView
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="主动加微信/QQ的可能是骗子，请及时举报！"
+                    android:textColor="#ff191919"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    />
+
+
+            <TextView
+                    android:id="@+id/knowBtn"
+                    android:layout_marginRight="15dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:background="@drawable/shape_rectangle_gary_white_12dp"
+                    android:textStyle="bold"
+                    android:textSize="11sp"
+                    android:gravity="center"
+                    android:textColor="#191919"
+                    android:text="知道了"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"/>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/messageListRv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
 
 
     <include

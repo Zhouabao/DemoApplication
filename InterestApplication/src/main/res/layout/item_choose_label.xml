@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="70dp"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent">
+
+    <ImageView
+            android:id="@+id/labelIcon"
+            android:layout_height="40dp"
+            android:layout_width="40dp"
+            android:scaleType="centerCrop"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:src="@drawable/default_image_10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+            android:id="@+id/labelName"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:layout_width="wrap_content"
+            android:text="篮球"
+            android:layout_marginLeft="12dp"
+            android:textColor="#ff191919"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/labelUsedCount"
+            app:layout_constraintLeft_toRightOf="@id/labelIcon"
+            app:layout_constraintTop_toTopOf="@id/labelIcon"
+            />
+
+    <TextView
+            android:id="@+id/labelUsedCount"
+            android:layout_width="81dp"
+            android:layout_height="17dp"
+            android:text="发布过1条动态"
+            android:textColor="#ffc5c6c8"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/labelIcon"
+            app:layout_constraintLeft_toLeftOf="@id/labelName"
+            app:layout_constraintTop_toBottomOf="@id/labelName"
+            />
+
+    <ImageView
+            android:visibility="gone"
+            android:id="@+id/labelUsedCover"
+            android:layout_height="34dp"
+            android:layout_width="34dp"
+            android:scaleType="centerCrop"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/default_image_10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+            android:id="@+id/divider"
+            android:layout_marginRight="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/labelIcon"
+            android:background="@color/colorDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_gravity="center_horizontal"
-              android:gravity="center_horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <com.sdy.jitangapplication.widgets.TimeRunTextView
+            android:id="@+id/banner_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#E6FFFFFF"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:background="@drawable/rectangle_cover_bg_7dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="24:00:00"/>
+
+    <ImageView
+            android:id="@+id/banner_img"
+            android:layout_marginTop="6dp"
+            android:layout_width="141dp"
+            android:src="@drawable/icon_power"
+            android:scaleType="centerInside"
+            android:layout_height="141dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
 
     <TextView
             android:id="@+id/banner_name"
@@ -14,33 +46,21 @@
             android:layout_height="wrap_content"
             android:text="无限滑动次数"
             android:textColor="#ffffffff"
-            android:layout_marginTop="10dp"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-
-    <com.sdy.jitangapplication.widgets.TimeRunTextView
-            android:id="@+id/banner_time"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:textColor="#ffffffff"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            android:visibility="gone"
-            tools:text="24:00:00"/>
-
-    <ImageView
-            android:id="@+id/banner_img"
-            android:layout_marginTop="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="134dp"/>
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/banner_img"/>
 
     <TextView
             android:id="@+id/banner_content"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="滑动次数不再设限，散播更多你更多的爱"
             android:textColor="#ffffffff"
             android:textSize="14sp"
-            android:layout_marginBottom="10dp"/>
-</LinearLayout>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/banner_name"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

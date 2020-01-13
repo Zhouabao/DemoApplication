@@ -23,13 +23,24 @@ data class MatchListBean(
     val my_percent_complete: Int,//（我的资料完整度）
     val normal_percent_complete: Int,//（标准完整度）
     val my_like_times: Int,//（我的次数）
-    val total_like_times: Int//  total_like_times（最高次数）
-)
+    val total_like_times: Int,//  total_like_times（最高次数）
+    var mytags: MutableList<Newtag>? = null,
+    val intention: LabelQualityBean? = null,
+    var myinterest_count: Int = 0,
+    var interest_times: Int = 0,
+    var is_human: Boolean = false
+    )
 
 /**
  * 匹配用户
  */
 data class MatchBean(
+    var matching_content: String = "",
+    var matching_icon: String = "",
+    var face_auditing_state: Int = 0,
+    var intention: String = "",
+    var intention_icon: String = "",
+    var label_quality: MutableList<LabelQualityBean> = mutableListOf(),
     var isvip: Int = 0,    //是否会员 true是 false不是
     var isfaced: Int = 0,  //0未认证/认证不成功     1认证通过     2认证中
     var accid: String = "",
@@ -37,10 +48,8 @@ data class MatchBean(
     var avatar: String? = null,
     var distance: String? = null,
     var gender: Int? = 0,
-    var id: Int? = 0,
     var isdislike: Int? = 0,
     var isliked: Int? = 0,
-    var lightning: Int? = 0,
     var member_level: Int? = 0,
     var nickname: String? = null,
     var photos: MutableList<String>? = null,
@@ -48,11 +57,8 @@ data class MatchBean(
     var job: String? = null,
     var constellation: String? = null,
     var square: MutableList<Square>? = null,
-    var square_count: Int? = 0,
-    var tagcount: Int? = 0,
-    var birth: Int?,
-    var tags: MutableList<Tag>?,
-    var jobname: String?,
+    var square_cnt: Int? = 0,
+    var tags: MutableList<TagBean>?,
     var lightningcnt: Int?,
     var countdown: Int = 0,
     var isfriend: Int?,
@@ -65,11 +71,19 @@ data class MatchBean(
     val my_percent_complete: Int,//（我的资料完整度）
     val normal_percent_complete: Int,//（标准完整度）
     val my_like_times: Int,//（我的次数）
-    val total_like_times: Int//  total_like_times（最高次数）
-
-
+    val total_like_times: Int,//  total_like_times（最高次数）
+    var interesttags: MutableList<TagBean>? = null,
+    var newtags: MutableList<Newtag>? = null,
+    var other_tags: MutableList<MyLabelBean> = mutableListOf(),
+    var other_interest: MutableList<LabelQualityBean> = mutableListOf()
 ) : Serializable
 
+
+data class Newtag(
+    var id: Int = 0,
+    var label_quality: MutableList<String> = mutableListOf(),
+    var title: String = ""
+)
 
 /**
  * 广场封面

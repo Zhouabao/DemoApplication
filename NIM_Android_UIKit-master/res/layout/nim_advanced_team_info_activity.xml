@@ -95,8 +95,7 @@
                     android:textSize="@dimen/text_size_13" />
 
                 <TextView
-                    android:id="@+id/temp_text_create"
-                    android:layout_width="wrap_content"
+                        android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/team_create_time"
                     android:layout_toRightOf="@id/team_create_time"

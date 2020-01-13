@@ -26,7 +26,6 @@ import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_like_me.*
 import kotlinx.android.synthetic.main.empty_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.error_layout.view.emptyImg
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -56,10 +55,8 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         initView()
         //获取喜欢我的列表
         mPresenter.likeLists(params)
-        stateview.postDelayed({
-            //标记已读
-            mPresenter.markLikeRead(params)
-        }, 100)
+
+
     }
 
     private val adapter by lazy { LikeMeAdapter() }
@@ -69,7 +66,7 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         btnBack.onClick {
             onBackPressed()
         }
-        hotT1.text = "对我感兴趣的"
+        hotT1.text = "全部喜欢"
 
         lockToSee.setOnClickListener(this)
         lockToSee.isVisible = !adapter.freeShow
@@ -96,17 +93,16 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.likeMeCount -> {
-                    if (adapter.freeShow)
-                        startActivity<MessageLikeMeOneDayActivity>(
-                            "date" to "${adapter.data[position].date}",
-                            "count" to adapter.data[position].count,
-                            "hasread" to adapter.data[position].hasread,
-                            "freeShow" to adapter.freeShow,
-                            "my_percent_complete" to adapter.my_percent_complete,
-                            "normal_percent_complete" to adapter.normal_percent_complete,
-                            "myCount" to adapter.myCount,
-                            "maxCount" to adapter.maxCount
-                        )
+                    startActivity<MessageLikeMeOneDayActivity>(
+                        "date" to "${adapter.data[position].date}",
+                        "count" to adapter.data[position].count,
+                        "hasread" to adapter.data[position].hasread,
+                        "freeShow" to adapter.freeShow,
+                        "my_percent_complete" to adapter.my_percent_complete,
+                        "normal_percent_complete" to adapter.normal_percent_complete,
+                        "myCount" to adapter.myCount,
+                        "maxCount" to adapter.maxCount
+                    )
                 }
             }
         }
@@ -134,6 +130,10 @@ class MessageLikeMeActivity : BaseMvpActivity<MessageLikeMePresenter>(), Message
         adapter.normal_percent_complete = data.normal_percent_complete
         adapter.addData(data.list ?: mutableListOf())
         lockToSee.isVisible = !adapter.freeShow && adapter.data.size > 0
+        if (page == 1) {
+            //标记已读
+            mPresenter.markLikeRead(params)
+        }
         if (adapter.data.size < Constants.PAGESIZE * page) {
             refreshLayout.finishLoadMoreWithNoMoreData()
         } else {

@@ -1,8 +1,8 @@
 package com.sdy.jitangapplication.presenter.view
 
-import com.sdy.jitangapplication.model.MessageListBean1
 import com.kotlin.base.presenter.view.BaseView
 import com.netease.nimlib.sdk.msg.model.RecentContact
+import com.sdy.jitangapplication.model.MessageListBean1
 
 /**
  *    author : ZFM
@@ -10,7 +10,7 @@ import com.netease.nimlib.sdk.msg.model.RecentContact
  *    desc   :
  *    version: 1.0
  */
-interface MessageListView:BaseView {
+interface MessageListView : BaseView {
     fun onMessageCensusResult(data: MessageListBean1?)
 
     fun updateOfflineContactAited(recentAited: MutableList<RecentContact>)

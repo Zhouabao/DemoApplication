@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -32,6 +31,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshCommentEvent
 import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.AllCommentBean
 import com.sdy.jitangapplication.model.CommentBean
 import com.sdy.jitangapplication.model.SquareBean
@@ -43,14 +43,14 @@ import com.sdy.jitangapplication.presenter.view.SquareDetailView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.adapter.ListSquareImgsAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListCommentAdapter
-import com.sdy.jitangapplication.ui.adapter.SquareTagAdapter
 import com.sdy.jitangapplication.ui.dialog.CommentActionDialog
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
+import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
+import com.sdy.jitangapplication.widgets.GalleryOnScrollListener
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
@@ -82,12 +82,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     private val adapter: MultiListCommentAdapter by lazy { MultiListCommentAdapter(this, commentDatas) }
 
     private var squareBean: SquareBean? = null
-
-    //是否改变了点赞的状态
-    private var isChangeLike = false
-
-    //通过标志进入的入口来决定是否弹起键盘
-    private val enterPosition: String? by lazy { intent.getStringExtra("enterPosition") }
 
     private var page = 1
 
@@ -173,8 +167,15 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
         GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv1)
+        if (!squareBean!!.tags.isNullOrEmpty()) {
+            squareTagName.text = squareBean!!.tags ?: ""
+            squareTagName.isVisible = true
+        } else {
+            squareTagName.isVisible = false
+        }
 
-
+        squareTitleLl.isVisible = !squareBean!!.title.isNullOrEmpty()
+        squareTitle.text = squareBean!!.title ?: ""
         squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
             resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
             null,
@@ -188,7 +189,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             squareBean!!.like_cnt
         }}"
         squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
-        squareContent1.setContent("${squareBean!!.descr}")
+        squareContent1.isVisible = !squareBean!!.descr.isNullOrEmpty()
+        if (!squareBean!!.descr.isNullOrEmpty()) {
+            squareContent1.setContent("${squareBean!!.descr}")
+        }
+
+
         squareZhuanfaBtn1.text = "${squareBean!!.share_cnt}"
         squareUserName1.text = "${squareBean!!.nickname}"
         squareUserVipIv1.isVisible = squareBean!!.isvip == 1
@@ -196,8 +202,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (squareBean!!.isfriend)
             squareChatBtn1.isVisible = true
         else
-            squareChatBtn1.isVisible =
-                !(UserManager.getAccid() == squareBean!!.accid || !squareBean!!.greet_switch)
+            squareChatBtn1.visibility =
+                if (!(UserManager.getAccid() == squareBean!!.accid || !squareBean!!.greet_switch)) {
+                    View.VISIBLE
+                } else {
+                    View.INVISIBLE
+                }
+
         squareChatBtn1.onClick {
             CommonFunction.commonGreet(
                 this,
@@ -215,27 +226,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 MatchDetailActivity.start(this, squareBean?.accid ?: "")
         }
 
-        squareLocationAndTime1.text =
-            "${squareBean!!.province_name}${if (!squareBean!!.province_name.isNullOrEmpty() && squareBean!!.city_name.isNotEmpty() && squareBean!!.city_name != squareBean!!.province_name) {
-                "\t${squareBean!!.city_name}"
-            } else {
-                ""
-            }}".plus("\t\t${squareBean!!.out_time}")
+        squareLocationAndTime1.text = "${squareBean!!.puber_address}" +
+                "${if (!squareBean!!.puber_address.isNullOrEmpty()) {
+                    "·"
+                } else {
+                    ""
+                }}${squareBean!!.out_time}"
 
-
-        squareTime.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        squareTime.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(6F),
-                resources.getColor(R.color.colorWhite)
-            )
-        )
-        val squareAdapter = SquareTagAdapter()
-        squareTime.adapter = squareAdapter
-        squareAdapter.setNewData(squareBean!!.tags ?: mutableListOf())
-//        squareTime.text = "\t\t${squareBean!!.out_time}"
 
     }
 
@@ -484,6 +481,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (squareBean!!.photo_json != null && squareBean!!.photo_json!!.size > 0) {
             squareUserPics.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
             squareUserPics.adapter = imgsAdapter
+
+            //分页滑动效果
+            squareUserPics.onFlingListener = null
+            CustomPagerSnapHelper().attachToRecyclerView(squareUserPics)
+            //滑动动画
+            squareUserPics.addOnScrollListener(GalleryOnScrollListener())
             imgsAdapter.setOnItemClickListener { _, view, position ->
                 startActivity<BigImageActivity>(
                     BigImageActivity.IMG_KEY to squareBean!!,
@@ -509,8 +512,15 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
     override fun onGetSquareInfoResults(data: SquareBean?) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (data != null) {
+            if (data.id == null) {
+                CommonFunction.toast("该动态已被删除")
+                finish()
+                return
+            }
+
+
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             data.type = when {
                 !data.video_json.isNullOrEmpty() -> SquareBean.VIDEO
                 !data.audio_json.isNullOrEmpty() -> SquareBean.AUDIO
@@ -523,7 +533,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             commentParams["square_id"] = "${squareBean!!.id}"
             mPresenter.getCommentList(commentParams, true)
         } else {
-            CommonFunction.toast("该动态已经被删除了")
+            CommonFunction.toast("该动态已被删除")
             finish()
         }
     }
@@ -533,16 +543,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             refreshLayout.setNoMoreData(false)
             if (allCommentBean != null) {
                 if (allCommentBean.hotlist != null && allCommentBean.hotlist!!.size > 0) {
-                    adapter.addData(CommentBean(content = "热门评论", type = 0))
+                    adapter.addData(CommentBean(content = "热门评论", type = CommentBean.TITLE))
                     for (i in 0 until allCommentBean.hotlist!!.size) {
-                        allCommentBean.hotlist!![i]!!.type = 1
+                        allCommentBean.hotlist!![i]!!.type = CommentBean.CONTENT
                     }
                     adapter.addData(allCommentBean.hotlist!!)
                 }
                 if (allCommentBean.list != null && allCommentBean.list!!.size > 0) {
-                    adapter.addData(CommentBean(content = "所有评论", type = 0))
+                    adapter.addData(CommentBean(content = "所有评论", type = CommentBean.TITLE))
                     for (i in 0 until allCommentBean.list!!.size) {
-                        allCommentBean.list!![i]!!.type = 1
+                        allCommentBean.list!![i]!!.type = CommentBean.CONTENT
                     }
                     adapter.addData(allCommentBean.list!!)
                 }
@@ -603,8 +613,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 null
             )
 
-            EventBus.getDefault()
-                .post(RefreshLikeEvent(squareBean?.isliked ?: 0, intent.getIntExtra("position", -1)))
+            if (intent.getIntExtra("position", -1) != -1)
+                EventBus.getDefault().post(
+                    RefreshLikeEvent(
+                        squareBean?.isliked ?: 0,
+                        intent.getIntExtra("position", -1)
+                    )
+                )
 //            EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
         }
     }
@@ -709,82 +724,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
 
-//    var moreActionDialog: MoreActionDialog? = null
-//    /**
-//     * 展示更多操作对话框
-//     */
-//    private fun showMoreDialog() {
-//        if (moreActionDialog == null)
-//            moreActionDialog = MoreActionDialog(this!!, "square")
-//        moreActionDialog!!.show()
-//
-//        if (squareBean!!.iscollected == 0) {
-//            moreActionDialog!!.collect.text = "收藏"
-//            moreActionDialog!!.collectBtn.setImageResource(R.drawable.icon_collect_no)
-//        } else {
-//            moreActionDialog!!.collect.text = "取消收藏"
-//            moreActionDialog!!.collectBtn.setImageResource(R.drawable.icon_collectt)
-//        }
-//
-//        if (squareBean!!.accid == UserManager.getAccid()) {
-//            moreActionDialog!!.llDelete.visibility = View.VISIBLE
-//            moreActionDialog!!.llJubao.visibility = View.GONE
-//            moreActionDialog!!.llCollect.visibility = View.GONE
-//        } else {
-//            moreActionDialog!!.llDelete.visibility = View.GONE
-//            moreActionDialog!!.llJubao.visibility = View.VISIBLE
-//            moreActionDialog!!.llCollect.visibility = View.VISIBLE
-//        }
-//        moreActionDialog!!.llDelete.onClick {
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "square_id" to squareBean!!.id!!
-//            )
-//            mPresenter.removeMySquare(params)
-//            moreActionDialog!!.dismiss()
-//
-//        }
-//
-//        moreActionDialog!!.llCollect.onClick {
-//            //发起收藏请求
-//            val params = hashMapOf(
-//                "accid" to UserManager.getAccid(),
-//                "token" to UserManager.getToken(),
-//                "type" to if (squareBean!!.iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to squareBean!!.id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareCollect(params)
-//            moreActionDialog!!.dismiss()
-//        }
-//        moreActionDialog!!.llJubao.onClick {
-//            //发起举报请求
-//            mPresenter.getSquareReport(
-//                hashMapOf(
-//                    "accid" to UserManager.getAccid(),
-//                    "token" to UserManager.getToken(),
-//                    "square_id" to squareBean!!.id!!,
-//                    "_timestamp" to System.currentTimeMillis()
-//                )
-//            )
-//            moreActionDialog!!.dismiss()
-//
-//        }
-//        moreActionDialog!!.cancel.onClick {
-//            moreActionDialog!!.dismiss()
-//        }
-//        moreActionDialog!!.setOnDismissListener {
-//            moreActionDialog = null
-//        }
-//
-//    }
-
-
     lateinit var moreActionDialog: MoreActionNewDialog
     /**
      * 展示更多操作对话框
@@ -843,6 +782,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             val dialog = DeleteDialog(this)
             dialog.show()
             dialog.tip.text = getString(R.string.report_square)
+            dialog.title.text = "动态举报"
             dialog.confirm.text = "举报"
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
@@ -869,6 +809,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (result) {
             CommonFunction.toast("动态删除成功!")
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            EventBus.getDefault().postSticky(UserCenterEvent(true))
             finish()
         } else {
             CommonFunction.toast("动态删除失败！")
@@ -905,7 +846,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
 
         commentActionDialog!!.jubaoComment.onClick {
-            //todo 举报
+            //举报
             mPresenter.commentReport(
                 hashMapOf(
                     "token" to UserManager.getToken(),

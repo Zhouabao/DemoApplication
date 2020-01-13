@@ -20,6 +20,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshSquareEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.presenter.SquarePlayDetaiPresenter
 import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
@@ -27,6 +28,7 @@ import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
+import com.sdy.jitangapplication.ui.fragment.MySquareFragment
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -54,10 +56,17 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     companion object {
         public val OPTION_VIEW = "VIEW"
         public val REQUEST_CODE = 1002
-        fun startActivity(activity: Activity, transactionView: View, data: SquareBean, position: Int) {
+        fun startActivity(
+            activity: Activity,
+            transactionView: View,
+            data: SquareBean,
+            position: Int,
+            type: Int = MySquareFragment.TYPE_SQUARE
+        ) {
             val intent = Intent(activity, SquarePlayDetailActivity::class.java)
             intent.putExtra("squareBean", data)
             intent.putExtra("position", position)
+            intent.putExtra("type", type)
             //这里指定了共享的视图元素
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transactionView, OPTION_VIEW)
             ActivityCompat.startActivityForResult(activity, intent, REQUEST_CODE, options.toBundle())
@@ -136,25 +145,13 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     private fun initData() {
         GlideUtil.loadAvatorImg(this, squareBean.avatar, detailPlayUserAvatar)
-        detailPlayUserLocationAndTime.text =
-            if (squareBean.puber_address.isNullOrEmpty()) {
-                squareBean.province_name.plus(
-                    if (squareBean.city_name != squareBean.province_name) {
-                        squareBean.city_name
-                    } else {
-                        ""
-                    }
-                ).plus(
-                    if (!squareBean.province_name.isNullOrEmpty() || !squareBean.city_name.isEmpty()) {
-                        "\t\t"
-                    } else {
-                        ""
-                    }
-                )
-            } else {
-                squareBean.puber_address.plus("\t\t")
-            }
-                .plus(squareBean.out_time)
+        detailPlayUserLocationAndTime.text =  "${squareBean!!.puber_address}" +
+                "${if (!squareBean!!.puber_address.isNullOrEmpty()) {
+                    "·"
+                } else {
+                    ""
+                }}${squareBean!!.out_time}"
+
 
 
 
@@ -174,95 +171,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         detailPlayUserVipIv.isVisible = squareBean.isvip == 1
 
     }
-
-
-//    lateinit var moreActionDialog: MoreActionDialog
-//
-//    /**
-//     * 展示更多操作对话框
-//     */
-//    private fun showMoreDialog(position: Int) {
-//        moreActionDialog = MoreActionDialog(this, "square_detail")
-//        moreActionDialog.show()
-//
-//        if (squareBean?.iscollected == 0) {
-//            moreActionDialog.collect.text = "收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
-//        } else {
-//            moreActionDialog.collect.text = "取消收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
-//        }
-//
-//        if (squareBean.accid == UserManager.getAccid()) {
-//            moreActionDialog.llDelete.visibility = View.VISIBLE
-//            moreActionDialog.llJubao.visibility = View.GONE
-//            moreActionDialog.llCollect.visibility = View.GONE
-//        } else {
-//            moreActionDialog.llDelete.visibility = View.GONE
-//            moreActionDialog.llJubao.visibility = View.VISIBLE
-//            moreActionDialog.llCollect.visibility = View.VISIBLE
-//        }
-//        moreActionDialog.llDelete.onClick {
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "square_id" to squareBean.id!!
-//            )
-//            mPresenter.removeMySquare(params, position)
-//            moreActionDialog.dismiss()
-//
-//        }
-//
-//        moreActionDialog.llShare.onClick {
-//            showTranspondDialog()
-//        }
-//        moreActionDialog.llCollect.onClick {
-//
-//            //发起收藏请求
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "type" to if (squareBean.iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to squareBean.id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareCollect(params, position)
-//        }
-//        moreActionDialog.llJubao.onClick {
-//            CommonAlertDialog.Builder(this)
-//                .setTitle("举报")
-//                .setContent("是否确认举报该动态？")
-//                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-//                    override fun onClick(dialog: Dialog) {
-//                        mPresenter.getSquareReport(
-//                            hashMapOf(
-//                                "accid" to UserManager.getAccid(),
-//                                "token" to UserManager.getToken(),
-//                                "square_id" to squareBean.id!!,
-//                                "_timestamp" to System.currentTimeMillis()
-//                            )
-//                        )
-//                    }
-//
-//                })
-//                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
-//                    override fun onClick(dialog: Dialog) {
-//                        dialog.cancel()
-//                    }
-//
-//                })
-//                .create()
-//                .show()
-//        }
-//        moreActionDialog.cancel.onClick {
-//            moreActionDialog.dismiss()
-//        }
-//
-//    }
 
 
     lateinit var moreActionDialog: MoreActionNewDialog
@@ -323,6 +231,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             val dialog = DeleteDialog(this)
             dialog.show()
             dialog.tip.text = getString(R.string.report_square)
+            dialog.title.text = "动态举报"
             dialog.confirm.text = "举报"
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
@@ -355,6 +264,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             CommonFunction.toast("删除动态成功！")
             finish()
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            EventBus.getDefault().postSticky(UserCenterEvent(true))
         } else {
             CommonFunction.toast("删除动态失败！")
         }

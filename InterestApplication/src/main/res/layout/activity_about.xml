@@ -7,13 +7,13 @@
         android:orientation="vertical"
         android:background="@color/colorWhite"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         tools:context=".ui.activity.AboutActivity">
 
     <include
             layout="@layout/layout_actionbar"/>
 
     <ImageView
-            android:id="@+id/iconLogin"
             android:layout_marginTop="40dp"
             android:src="@drawable/logo"
             android:layout_gravity="center_horizontal"
@@ -47,7 +47,6 @@
                 android:layout_height="wrap_content"/>
 
         <TextView
-                android:id="@+id/newVersionTip"
                 android:text="有版本更新"
                 android:textColor="@color/colorOrange"
                 android:textSize="16sp"
@@ -57,7 +56,6 @@
                 android:layout_height="wrap_content"/>
 
         <ImageView
-                android:id="@+id/newVersion"
                 android:layout_gravity="center_vertical"
                 android:scaleType="centerInside"
                 android:padding="15dp"

@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -23,7 +24,7 @@ import kotlinx.android.synthetic.main.item_like_me_one_day_all.view.*
  *    desc   :
  *    version: 1.0
  */
-class LikeMeOneDayGirdAdapter(public var freeShow: Boolean = false) :
+class LikeMeOneDayGirdAdapter(var freeShow: Boolean = false) :
     BaseQuickAdapter<LikeMeOneDayBean, BaseViewHolder>(R.layout.item_like_me_one_day_all) {
 
     private val SPAN_COUNT = 3
@@ -31,7 +32,7 @@ class LikeMeOneDayGirdAdapter(public var freeShow: Boolean = false) :
         val itemView = holder.itemView
         val params = itemView.layoutParams as RecyclerView.LayoutParams
         params.width =
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - (SPAN_COUNT - 1) * SizeUtils.dp2px(10F)) * 1.0F / SPAN_COUNT).toInt()
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - (SPAN_COUNT - 1) * SizeUtils.dp2px(12F)) * 1.0F / SPAN_COUNT).toInt()
         params.height = (16 / 9F * params.width).toInt()
         //左上右下
         params.setMargins(
@@ -39,26 +40,45 @@ class LikeMeOneDayGirdAdapter(public var freeShow: Boolean = false) :
             , if ((holder.layoutPosition - headerLayoutCount) / 3 == 0) {
                 SizeUtils.dp2px(15F)
             } else {
-                SizeUtils.dp2px(10F)
+                SizeUtils.dp2px(12F)
             }, 0, 0
         )
         itemView.layoutParams = params
+
+        itemView.likeMeNickname.text ="${item.nickname}"
+        itemView.likeMeNickname.isSelected = true
+//        23岁·处女座·21.8km备份 2
+        itemView.likeMeInfo.text = "${item.age}·${if (item.gender == 1) {
+            "男"
+        } else {
+            "女"
+        }}·${item.constellation}·${item.distance}  ${if (!item.job.isNullOrEmpty()) {
+            "·${item.job}"
+        } else {
+            ""
+        }}"
+        itemView.likeMeInfo.isSelected = true
+
+        itemView.view.isVisible = !(item.is_read ?: true)
         if (freeShow) {
+            itemView.likeMeInfoCover.visibility = View.GONE
+            itemView.likeMeNicknameCover.visibility = View.GONE
             itemView.likeMeOneDayType.visibility = View.VISIBLE
             GlideUtil.loadRoundImgCenterCrop(mContext, item.avatar, itemView.likeMeOneDayAvator, SizeUtils.dp2px(5F))
 
             holder.addOnClickListener(R.id.likeMeOneDayType)
-            if (item.isfriend == 1) {
+            if (item.isfriend == 1)
                 itemView.likeMeOneDayType.setImageResource(R.drawable.icon_chat_with_circle)
-            } else {
+            else
                 itemView.likeMeOneDayType.setImageResource(R.drawable.icon_like_with_circle)
-            }
         } else {
             itemView.likeMeOneDayType.visibility = View.INVISIBLE
+            itemView.likeMeInfoCover.visibility = View.VISIBLE
+            itemView.likeMeNicknameCover.visibility = View.VISIBLE
             val transformation = MultiTransformation(
                 CenterCrop(),
-                BlurTransformation(SizeUtils.dp2px(25F)),
-                RoundedCornersTransformation(SizeUtils.dp2px(5F), 0)
+                RoundedCornersTransformation(SizeUtils.dp2px(5F), 0),
+                BlurTransformation(25)
             )
             Glide.with(mContext)
                 .load(item.avatar ?: "")
@@ -66,7 +86,6 @@ class LikeMeOneDayGirdAdapter(public var freeShow: Boolean = false) :
                 .thumbnail(0.5F)
                 .transform(transformation)
                 .into(itemView.likeMeOneDayAvator)
-
         }
 
 

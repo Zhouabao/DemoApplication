@@ -7,6 +7,7 @@
         android:orientation="vertical"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
         tools:context=".ui.activity.ReportReasonActivity">
 
     <include layout="@layout/layout_actionbar"/>
@@ -103,6 +104,7 @@
                 android:gravity="center_vertical"
                 android:paddingTop="10dp"
                 android:paddingLeft="10dp"
+                android:maxLength="11"
                 android:paddingRight="10dp"
                 android:paddingBottom="10dp"
                 android:layout_marginLeft="15dp"

@@ -14,7 +14,6 @@ import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.mixpush.MixPushConfig;
 import com.netease.nimlib.sdk.msg.MessageNotifierCustomization;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
-import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.sp.UserPreferences;
@@ -141,7 +140,7 @@ public class NimSDKOptionConfig {
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
         // 点击通知需要跳转到的界面
         config.notificationEntrance = MainActivity.class;
-        config.notificationSmallIconId = R.drawable.icon_logo;
+//        config.notificationSmallIconId = R.drawable.icon_logo;
 //        config.notificationColor = DemoCache.getContext().getResources().getColor(R.color.color_blue_3a9efb);
         // 通知铃声的uri字符串
         config.notificationSound = "android.resource://com.netease.nim.demo/raw/msg";
@@ -170,7 +169,7 @@ public class NimSDKOptionConfig {
     public static int CHATHI_OUTTIME = 4;*/
                 switch (((ChatHiAttachment) message.getAttachment()).getShowType()) {
                     case 1:
-                        return "通过『"+((ChatHiAttachment) message.getAttachment()).getTag()+"』匹配";
+                        return "『匹配消息』";
                     case 2:
                         return "『招呼消息』";
                     case 3:

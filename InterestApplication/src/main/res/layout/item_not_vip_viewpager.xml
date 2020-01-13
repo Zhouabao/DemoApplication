@@ -7,22 +7,24 @@
     <TextView
             android:id="@+id/vpTitle"
             android:layout_width="wrap_content"
-            android:layout_height="23dp"
+            android:layout_height="wrap_content"
             android:text="打招呼次数翻倍🙋‍♂️"
             android:ellipsize="end"
             android:singleLine="true"
+            android:textStyle="bold"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp"
+            android:textSize="16sp"
             />
 
     <TextView
             android:id="@+id/vpMsg"
+            android:layout_marginTop="2dp"
             android:layout_width="wrap_content"
-            android:layout_height="17dp"
+            android:layout_height="wrap_content"
             android:text="营造更多机会，配对更容易"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/colorWhite"
+            android:textColor="#ffb8baba"
             android:textSize="12sp"
             />
 </LinearLayout>

@@ -5,153 +5,59 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:background="@drawable/shape_filter_dialog_gray_white_9dp">
 
+
     <TextView
-            android:id="@+id/tv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="20dp"
-            android:text="年龄筛选"
-            android:textColor="@color/colorBlack26"
-            android:textSize="18sp"
+            android:text="筛选"
+            android:textColor="#ff000000"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-            android:id="@+id/filterAge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:text="18-20岁"
-            android:textColor="@color/colorOrange"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv1"/>
-
-    <TextView
-            android:id="@+id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
-            android:layout_marginTop="18dp"
-            android:text="18"
-            android:textColor="@color/colorBlackTitle"
-            android:textSize="12sp"
-            app:layout_constraintLeft_toLeftOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/tv1"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginRight="3dp"
-            android:text="35+"
-            android:textColor="@color/colorBlackTitle"
-            android:textSize="12sp"
-            app:layout_constraintRight_toRightOf="@id/filterAge"
-            app:layout_constraintTop_toBottomOf="@id/tv1"/>
-
-    <com.jaygoo.widget.RangeSeekBar
-            android:id="@+id/seekBarAge"
+            android:textSize="18sp"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/btnCompleteFilter"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btnCompleteFilter"/>
+
+
+    <Button
+            android:id="@+id/btnCompleteFilter"
+            android:layout_width="90dp"
+            android:layout_height="33dp"
             android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="@id/filterAge"
-            app:layout_constraintStart_toStartOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/tv2"
-            app:rsb_gravity="center"
-            app:rsb_max="35"
-            app:rsb_min="18"
-            app:rsb_min_interval="3"
-            app:rsb_mode="range"
-            app:rsb_progress_drawable="@drawable/color_progress_age"
-            app:rsb_progress_drawable_default="@drawable/color_progress_age_background"
-            app:rsb_progress_height="8dp"
-            app:rsb_thumb_drawable="@drawable/seekbar_thumb"
-            />
-
-
-    <TextView
-            android:id="@+id/tv3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="距离筛选"
-            android:textColor="@color/colorBlack26"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/seekBarAge"/>
-
-
-    <TextView
-            android:id="@+id/tv4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:drawableLeft="@drawable/icon_vip"
-            android:drawablePadding="5dp"
-            android:text="仅同城"
-            android:textColor="@color/colorBlack"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/tv3"/>
-
-    <!--android:track="":设置开关的轨迹图片
-    android:thumb="":设置开关的图片
-     android:thumb="@drawable/selector_switch_thumb"
-            android:track="@drawable/selector_switch_track"
-    -->
-    <Switch
-            android:id="@+id/switchSameCity"
-            android:layout_width="48dp"
-            android:layout_height="24dp"
-            android:checked="false"
-            android:showText="false"
-            android:thumb="@drawable/switch_ios_thumb"
-            android:track="@drawable/selector_switch_ios_track"
-            app:layout_constraintEnd_toEndOf="@id/filterAge"
-            app:layout_constraintTop_toTopOf="@id/tv4"/>
-    <TextView
-            android:id="@+id/btnGoVip"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:text="开通会员"
-            android:gravity="center_vertical"
-            android:background="@color/colorWhite"
-            android:textColor="@color/colorOrange"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/filterAge"
-            app:layout_constraintTop_toTopOf="@id/tv4"/>
-
+            android:background="@drawable/selector_confirm_btn_25dp"
+            android:text="探索灵魂"
+            android:textColor="@color/colorWhite"
+            android:textSize="15sp"
+            android:visibility="visible"
+            android:layout_marginRight="15dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
             android:id="@+id/tv5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="25dp"
             android:text="向我展示"
-            android:textColor="@color/colorBlack26"
-            android:textSize="18sp"
+            android:textColor="#ff191919"
+            android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/tv4"/>
+            app:layout_constraintTop_toBottomOf="@id/btnCompleteFilter"
+            />
 
     <RadioGroup
             android:id="@+id/rbSexAll"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal"
             android:layout_width="0dp"
             android:background="@drawable/shape_radio_sex_btn"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
+            android:padding="3dp"
+            android:gravity="center_vertical"
             app:layout_constraintLeft_toLeftOf="@id/tv1"
             app:layout_constraintRight_toRightOf="@id/filterAge"
             app:layout_constraintTop_toBottomOf="@id/tv5">
@@ -160,68 +66,143 @@
                 android:id="@+id/switchSexMan"
                 android:background="@drawable/selector_filter_sex_rb"
                 android:button="@null"
-                android:drawableLeft="@drawable/selector_filter_man_btn"
                 android:text="男性"
-                android:paddingLeft="20dp"
-                android:drawablePadding="10dp"
-                android:gravity="left|center_vertical"
+                android:gravity="center"
                 android:checked="false"
                 android:textColor="@color/sex_color_selector"
                 android:layout_weight="1"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_width="105dp"
-                android:layout_height="40dp"/>
+                android:layout_height="match_parent"/>
 
 
         <RadioButton
                 android:id="@+id/switchSexWoman"
                 android:background="@drawable/selector_filter_sex_rb"
                 android:button="@null"
-                android:drawableLeft="@drawable/selector_filter_woman_btn"
                 android:text="女性"
-                android:paddingLeft="20dp"
-                android:drawablePadding="10dp"
-                android:gravity="left|center_vertical"
+                android:gravity="center"
                 android:checked="false"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/sex_color_selector"
                 android:layout_weight="1"
                 android:layout_width="105dp"
-                android:layout_height="40dp"/>
+                android:layout_height="match_parent"/>
 
 
         <RadioButton
                 android:id="@+id/switchSexAll"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:background="@drawable/selector_filter_sex_rb"
                 android:button="@null"
-                android:drawableLeft="@drawable/selector_filter_sexall_btn"
                 android:text="不限"
-                android:drawablePadding="10dp"
-                android:paddingLeft="20dp"
-                android:gravity="left|center_vertical"
+                android:gravity="center"
                 android:checked="true"
                 android:textColor="@color/sex_color_selector"
                 android:layout_weight="1"
                 android:layout_width="105dp"
-                android:layout_height="40dp"/>
+                android:layout_height="match_parent"/>
 
 
     </RadioGroup>
 
 
     <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:text="年龄"
+            android:textColor="#ff191919"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rbSexAll"
+            />
+
+    <TextView
+            android:id="@+id/filterAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:text="18-20"
+            android:textColor="#ff191919"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv1"/>
+
+    <TextView
+            android:id="@+id/tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="18"
+            android:textColor="#ffc5c6c8"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="@id/tv1"
+            app:layout_constraintTop_toBottomOf="@id/seekBarAge"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="3dp"
+            android:text="35+"
+            android:textColor="#ffc5c6c8"
+            android:textSize="12sp"
+            app:layout_constraintRight_toRightOf="@id/filterAge"
+            app:layout_constraintTop_toBottomOf="@id/tv2"
+            app:layout_constraintTop_toTopOf="@id/tv2"/>
+
+    <com.jaygoo.widget.RangeSeekBar
+            android:id="@+id/seekBarAge"
+            android:layout_width="0dp"
+            android:layout_height="26dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="@id/filterAge"
+            app:layout_constraintStart_toStartOf="@id/tv1"
+            app:layout_constraintTop_toBottomOf="@id/tv1"
+            app:rsb_gravity="center"
+            app:rsb_max="35"
+            app:rsb_min="18"
+            app:rsb_min_interval="3"
+            app:rsb_mode="range"
+            app:rsb_progress_drawable="@drawable/color_progress_age"
+            app:rsb_progress_drawable_default="@drawable/color_progress_age_background"
+            app:rsb_progress_height="2dp"
+            app:rsb_thumb_drawable="@drawable/icon_filter_age"
+            />
+
+
+    <TextView
+            android:id="@+id/tv6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="仅显示认证用户"
+            android:textColor="#ff191919"
+            android:textSize="17sp"
+            android:drawableRight="@drawable/icon_verify_pass"
+            android:drawablePadding="5dp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="@id/tv1"
+            app:layout_constraintTop_toBottomOf="@id/tv2"/>
+
+
+    <TextView
             android:id="@+id/tv8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:drawableLeft="@drawable/icon_verify"
-            android:drawablePadding="5dp"
-            android:text="仅展示认证用户"
-            android:textColor="#ff000000"
-            android:textSize="16sp"
+            android:layout_marginTop="7dp"
+            android:text="通过认证后可开启该筛选"
+            android:textColor="#ffc5c6c8"
+            android:textSize="13sp"
+            android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="@id/tv1"
-            app:layout_constraintTop_toBottomOf="@id/rbSexAll"/>
+            app:layout_constraintTop_toBottomOf="@id/tv6"/>
 
 
     <TextView
@@ -237,8 +218,8 @@
 
     <Switch
             android:id="@+id/switchShowVerify"
-            android:layout_width="48dp"
-            android:layout_height="24dp"
+            android:layout_width="44dp"
+            android:layout_height="26dp"
             android:visibility="gone"
             android:checked="false"
             android:showText="false"
@@ -247,19 +228,103 @@
             app:layout_constraintEnd_toEndOf="@id/filterAge"
             app:layout_constraintTop_toTopOf="@id/tv8"/>
 
-    <Button
-            android:id="@+id/btnCompleteFilter"
-            android:layout_width="0dp"
-            android:layout_height="46dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/selector_confirm_btn"
-            android:text="确认"
-            android:textColor="@color/colorWhite"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/filterAge"
+
+    <TextView
+            android:id="@+id/tv3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="同城"
+            android:drawableRight="@drawable/icon_vip"
+            android:textColor="#ff191919"
+            android:textSize="17sp"
+            android:drawablePadding="5dp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv1"
             app:layout_constraintTop_toBottomOf="@id/tv8"/>
+
+
+    <TextView
+            android:id="@+id/tv4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:drawablePadding="5dp"
+            android:text="开启后仅显示同城用户"
+            android:textColor="#ffc5c6c8"
+            android:textSize="13sp"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="@id/tv1"
+            app:layout_constraintTop_toBottomOf="@id/tv3"/>
+
+    <Switch
+            android:id="@+id/switchSameCity"
+            android:layout_width="44dp"
+            android:layout_height="26dp"
+            android:checked="false"
+            android:showText="false"
+            android:thumb="@drawable/switch_ios_thumb"
+            android:track="@drawable/selector_switch_ios_track"
+            app:layout_constraintEnd_toEndOf="@id/filterAge"
+            app:layout_constraintTop_toTopOf="@id/tv4"/>
+
+
+    <TextView
+            android:id="@+id/btnGoVip"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:text="开通会员"
+            android:gravity="center_vertical"
+            android:background="@color/colorWhite"
+            android:textColor="@color/colorOrange"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/filterAge"
+            app:layout_constraintTop_toTopOf="@id/tv4"/>
+
+
+    <TextView
+            android:id="@+id/tvHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
+            android:drawableRight="@drawable/icon_vip"
+            android:drawablePadding="5dp"
+            android:text="仅显示在线用户"
+            android:textColor="#ff191919"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv1"
+            app:layout_constraintTop_toBottomOf="@id/tv4"/>
+
+    <Switch
+            android:id="@+id/switchOnLine"
+            android:layout_width="44dp"
+            android:layout_height="26dp"
+            android:checked="false"
+            android:showText="false"
+            android:thumb="@drawable/switch_ios_thumb"
+            android:track="@drawable/selector_switch_ios_track"
+            app:layout_constraintEnd_toEndOf="@id/filterAge"
+            app:layout_constraintTop_toTopOf="@id/tvHigh"/>
+
+
+    <TextView
+            android:id="@+id/btnGoVip1"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:text="开通会员"
+            android:gravity="center_vertical"
+            android:background="@color/colorWhite"
+            android:textColor="@color/colorOrange"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/filterAge"
+            app:layout_constraintTop_toTopOf="@id/tvHigh"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

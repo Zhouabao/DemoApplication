@@ -39,7 +39,6 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
         mPresenter = LoginPresenter()
         mPresenter.mView = this
         mPresenter.context = this

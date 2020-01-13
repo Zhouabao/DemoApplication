@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.app.Dialog
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,7 +13,9 @@ import com.baidu.idl.face.platform.FaceStatusEnum
 import com.baidu.idl.face.platform.LivenessTypeEnum
 import com.baidu.idl.face.platform.ui.FaceLivenessActivity
 import com.baidu.idl.face.platform.utils.Base64Utils
+import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
 import com.google.gson.Gson
 import com.kotlin.base.common.AppManager
@@ -32,8 +35,10 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.MyApplication
+import com.sdy.jitangapplication.event.AccountDangerEvent
 import com.sdy.jitangapplication.model.AccessTokenBean
 import com.sdy.jitangapplication.model.MatchFaceBean
+import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
@@ -43,6 +48,7 @@ import com.zhy.http.okhttp.callback.Callback
 import okhttp3.Call
 import okhttp3.Request
 import okhttp3.Response
+import org.greenrobot.eventbus.EventBus
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -76,23 +82,58 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setFaceConfig()
-
         super.onCreate(savedInstanceState)
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
-        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
 
-        mImageLayout.visibility = View.VISIBLE
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            (!PermissionUtils.isGranted(PermissionConstants.CAMERA) ||
+                    !PermissionUtils.isGranted(PermissionConstants.STORAGE))
+        ) {
+            PermissionUtils.permission(PermissionConstants.CAMERA)
+                .callback(object : PermissionUtils.SimpleCallback {
+                    override fun onGranted() {
+                        if (!PermissionUtils.isGranted(PermissionConstants.STORAGE))
+                            PermissionUtils.permission(PermissionConstants.STORAGE)
+                                .callback(object : PermissionUtils.SimpleCallback {
+                                    override fun onGranted() {
+                                        initVerify()
+                                    }
+
+                                    override fun onDenied() {
+                                        CommonFunction.toast("文件存储权限被拒,请允许权限后再进行认证.")
+                                        finish()
+                                    }
+
+                                })
+                                .request()
+                    }
+
+                    override fun onDenied() {
+                        CommonFunction.toast("相机权限被拒,请允许权限后再进行认证.")
+                        finish()
+                    }
+                })
+                .request()
+        } else {
+            initVerify()
+        }
+    }
+
+    private fun initVerify() {
+        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
+        mImageLayout.visibility = View.GONE
         // 根据需求添加活体动作
         MyApplication.livenessList.clear()
         MyApplication.livenessList.add(LivenessTypeEnum.Eye)
-//        MyApplication.livenessList.add(LivenessTypeEnum.HeadDown)
+        //        MyApplication.livenessList.add(LivenessTypeEnum.HeadDown)
         MyApplication.livenessList.add(LivenessTypeEnum.HeadLeft)
         MyApplication.livenessList.add(LivenessTypeEnum.HeadRight)
-//        MyApplication.livenessList.add(LivenessTypeEnum.Mouth)
-//        MyApplication.livenessList.add(LivenessTypeEnum.HeadUp)
-//        MyApplication.livenessList.add(LivenessTypeEnum.HeadLeftOrRight)
+        //        MyApplication.livenessList.add(LivenessTypeEnum.Mouth)
+        //        MyApplication.livenessList.add(LivenessTypeEnum.HeadUp)
+        //        MyApplication.livenessList.add(LivenessTypeEnum.HeadLeftOrRight)
 
         // 为了android和ios 区分授权，appId=appname_face_android ,其中appname为申请sdk时的应用名
         // 应用上下文
@@ -103,22 +144,29 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
         CommonAlertDialog.Builder(this)
             .setIconVisible(false)
-            .setCancelIconIsVisibility(false)
+            .setCancelIconIsVisibility(true)
             .setTitle("认证提醒")
             .setContent("审核将与用户头像做比对，请确认头像为本人")
             .setConfirmText("确定")
-            .setOnConfirmListener(object :CommonAlertDialog.OnConfirmListener{
+            .setCancelText("取消")
+            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                 override fun onClick(dialog: Dialog) {
                     dialog.dismiss()
                 }
+            })
+            .setOnCancelListener(object : CommonAlertDialog.OnConfirmListener, CommonAlertDialog.OnCancelListener {
+                override fun onClick(dialog: Dialog) {
+                    finish()
+                }
+
             })
             .create()
             .show()
 
         //获取accesstoken
-//        getAccessToken()
+        //        getAccessToken()
         //获取图片的base64
-//        Thread(runnable).start()
+        //        Thread(runnable).start()
     }
 
     private fun setFaceConfig() {
@@ -232,11 +280,12 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                             CommonFunction.toast("审核提交成功")
                             UserManager.saveUserVerify(2)
                             setResult(Activity.RESULT_OK)
-//                            finish()
+                            finish()
+                            EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
                         }
                         t.code == 403 -> UserManager.startToLogin(context as Activity)
                         else -> {
-                            CommonFunction.toast("认证审核提交失败，请重新进入认证")
+                            CommonFunction.toast(t.msg)
                         }
                     }
                 }

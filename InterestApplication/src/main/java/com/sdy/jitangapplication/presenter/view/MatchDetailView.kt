@@ -18,7 +18,10 @@ interface MatchDetailView : BaseView {
     fun onGetUserActionResult(success: Boolean, result: String?)
 
 
-    fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?)
+    fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?, islike: Boolean = true)
 
     fun onRemoveBlockResult(success: Boolean)
+
+
+
 }

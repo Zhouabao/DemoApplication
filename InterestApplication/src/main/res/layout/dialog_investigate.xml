@@ -15,7 +15,7 @@
             android:layout_marginLeft="44dp"
             android:layout_marginRight="44dp"
             android:layout_gravity="center"
-            android:background="@drawable/shape_rectangle_gray_white_9dp"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
             android:layout_height="wrap_content">
 
 
@@ -68,7 +68,6 @@
                 />
 
         <LinearLayout
-                android:id="@+id/wayEditLl"
                 android:visibility="gone"
                 android:layout_marginTop="28dp"
                 android:orientation="vertical"
@@ -86,7 +85,6 @@
                     android:layout_height="3dp"/>
 
             <EditText
-                    android:id="@+id/wayEt"
                     android:background="@null"
                     android:layout_width="match_parent"
                     android:layout_height="90dp"/>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:animateLayoutChanges="true"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorWhite"
+        tools:context=".ui.activity.LabelQualityActivity">
+
+    <include layout="@layout/layout_actionbar"/>
+
+    <com.kennyc.view.MultiStateView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/stateLabelQuality"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTitle"
+            app:msv_errorView="@layout/error_layout"
+            app:msv_loadingView="@layout/loading_layout"
+            app:msv_viewState="loading"
+            tools:context=".ui.activity.LabelQualityActivity">
+
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/t1"
+                        android:layout_marginTop="15dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="我的标签特质"
+                        android:textStyle="bold"
+                        android:textColor="#ff191919"
+                        android:textSize="24sp"
+                        />
+
+
+                <TextView
+                        android:id="@+id/t2"
+                        android:layout_marginTop="30dp"
+                        android:layout_width="wrap_content"
+                        android:layout_marginBottom="48dp"
+                        android:layout_height="wrap_content"
+                        android:text="请选择或创建标签特质"
+                        android:textColor="#FFE5E5E5"
+                        android:textSize="17sp"
+                        android:visibility="gone"
+                        />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/labelQualityChoosedRv"
+                        android:overScrollMode="never"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="20dp"
+                        />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <EditText
+                            android:id="@+id/labelQualityAddEt"
+                            android:gravity="center_vertical"
+                            android:paddingRight="15dp"
+                            android:paddingLeft="15dp"
+                            android:background="@drawable/shape_rectangle_gray_white_25dp"
+                            android:hint="创建贴合你的标签特质"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:textSize="15sp"
+                            android:maxLength="10"
+                            android:textColor="@color/colorBlack"
+                            android:layout_marginRight="10dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toLeftOf="@id/labelQualityAddBtn"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    <TextView
+                            android:id="@+id/labelQualityAddBtn"
+                            android:layout_width="88dp"
+                            android:layout_height="40dp"
+                            android:text="添加"
+                            android:textColor="#ffffffff"
+                            android:textSize="15sp"
+                            android:gravity="center"
+                            android:enabled="false"
+                            android:background="@drawable/selector_confirm_btn_25dp"
+                            app:layout_constraintBottom_toBottomOf="@id/labelQualityAddEt"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/labelQualityAddEt"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <TextView
+                        android:id="@+id/t3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="懒人直选"
+                        android:layout_marginTop="30dp"
+                        android:textColor="#ff525556"
+                        android:textSize="15sp"
+                        />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/labelQualityRv"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="@id/t1"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/t3"/>
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </com.kennyc.view.MultiStateView>
+</androidx.constraintlayout.widget.ConstraintLayout>

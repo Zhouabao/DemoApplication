@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.wxapi
 
 import android.os.Bundle
 import android.util.Log
-import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.ext.excute
 import com.kotlin.base.rx.BaseSubscriber
@@ -12,20 +11,29 @@ import com.netease.nimlib.sdk.auth.LoginInfo
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.UpdateAccountEvent
 import com.sdy.jitangapplication.model.LoginBean
+import com.sdy.jitangapplication.model.WechatNameBean
 import com.sdy.jitangapplication.ui.activity.PhoneActivity
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.mm.opensdk.constants.ConstantsAPI.COMMAND_SENDAUTH
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.umeng.socialize.weixin.view.WXCallbackActivity
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
  * 微信回调界面
  */
 class WXEntryActivity : WXCallbackActivity() {
+    companion object {
+        const val WECHAT_LOGIN = "wechat_login"
+        const val WECHAT_AUTH = "wechat_auth"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wxentry)
@@ -35,9 +43,11 @@ class WXEntryActivity : WXCallbackActivity() {
     override fun onResp(resp: BaseResp) {
         if (resp.type == COMMAND_SENDAUTH) {
             if (resp.errCode == BaseResp.ErrCode.ERR_OK) {
-                val code = (resp as SendAuth.Resp).code
-                Log.d("OkHttp", code)
-                loginWithWechat(code)
+                if ((resp as SendAuth.Resp).state == WECHAT_LOGIN) {
+                    loginWithWechat(resp.code)
+                } else if (resp.state == WECHAT_AUTH) {
+                    bundWeChat(resp.code)
+                }
             } else {
                 finish()
             }
@@ -48,10 +58,42 @@ class WXEntryActivity : WXCallbackActivity() {
 
 
     /**
+     *微信绑定
+     */
+    private fun bundWeChat(wxcode: String) {
+        val params = hashMapOf<String, Any>("wxcode" to wxcode)
+        RetrofitFactory.instance.create(Api::class.java)
+            .bundWeChat(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<WechatNameBean>>(null) {
+                override fun onStart() {
+                    loading.show()
+                }
+
+                override fun onNext(t: com.kotlin.base.data.protocol.BaseResp<WechatNameBean>) {
+                    loading.dismiss()
+                    if (t.code == 200) {//已经微信登录过
+                        EventBus.getDefault().post(UpdateAccountEvent(t.data))
+                    } else if (t.code == 400) {
+                        CommonFunction.toast(t.msg)
+                    } else if (t.code == 403) {
+                        TickDialog(this@WXEntryActivity).show()
+                    }
+                    finish()
+                }
+
+                override fun onError(e: Throwable?) {
+                    loading.dismiss()
+                    finish()
+                }
+            })
+
+    }
+
+    /**
      * 微信登录
      */
     private fun loginWithWechat(code: String) {
-        val params = hashMapOf<String, Any>("type" to "3", "wxcode" to code, "device_id" to SmAntiFraud.getDeviceId())
+        val params = hashMapOf<String, Any>("type" to "3", "wxcode" to code)
         RetrofitFactory.instance.create(Api::class.java)
             .loginOWithWechat(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<com.kotlin.base.data.protocol.BaseResp<LoginBean?>>(null) {
@@ -60,10 +102,10 @@ class WXEntryActivity : WXCallbackActivity() {
                 }
 
                 override fun onNext(t: com.kotlin.base.data.protocol.BaseResp<LoginBean?>) {
-                    if (t.code == 202) {
+                    if (t.code == 202) { //首次微信登录
                         startActivity<PhoneActivity>("wxcode" to code, "type" to "3")
                         finish()
-                    } else if (t.code == 200) {
+                    } else if (t.code == 200) {//已经微信登录过
                         data = t.data
                         loginIM(LoginInfo(data?.accid, data?.extra_data?.im_token))
                     } else if (t.code == 400) {

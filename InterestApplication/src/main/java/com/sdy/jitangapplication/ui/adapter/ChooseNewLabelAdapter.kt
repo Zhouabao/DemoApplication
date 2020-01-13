@@ -5,7 +5,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.kotlin.base.ext.setVisible
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.NewLabel
-import kotlinx.android.synthetic.main.item_label_tab.view.labelName
 import kotlinx.android.synthetic.main.item_new_choose_label.view.*
 
 /**

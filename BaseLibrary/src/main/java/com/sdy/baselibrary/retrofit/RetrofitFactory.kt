@@ -2,7 +2,9 @@ package com.kotlin.base.data.net
 
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
+import com.kotlin.base.common.BaseApplication.Companion.context
 import com.kotlin.base.common.BaseConstant
+import com.leon.channel.helper.ChannelReaderUtil
 import com.sdy.baselibrary.retrofit.MyGsonConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -36,8 +38,15 @@ class RetrofitFactory private constructor() {
                 .addHeader("charset", "UTF-8")
                 .addHeader("os", "android")
                 .addHeader("mac", DeviceUtils.getAndroidID())
-                .addHeader("chnl",DeviceUtils.getManufacturer()+","+DeviceUtils.getModel())
-                .addHeader("app-vrn",AppUtils.getAppVersionName())
+                .addHeader("machine",  "${DeviceUtils.getManufacturer()},${DeviceUtils.getModel()}"  )
+                .addHeader(
+                    "chnl", if (ChannelReaderUtil.getChannel(context) != null) {
+                        ChannelReaderUtil.getChannel(context)
+                    } else {
+                        "debug"
+                    }
+                )
+                .addHeader("app-vrn", AppUtils.getAppVersionName())
                 .build()
 
             chain.proceed(request)

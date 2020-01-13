@@ -17,3 +17,15 @@ class UpdateChooseAllLabelEvent(var label: NewLabel)
 
 
 class ChooseLabelCountEvent(var count: Int)
+
+class UpdateMyLabelEvent
+
+
+class UpdateEditModeEvent(val position: Int = 0)
+
+class UpdateEditShowEvent(val position: Int, val show: Boolean)
+
+class UpdateMyInterestLabelEvent
+
+class ShowDeleteMyLabelEvent(val show: Boolean)
+

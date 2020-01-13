@@ -19,7 +19,6 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/hiAvatorMask"
             android:layout_width="57dp"
             android:layout_height="57dp"
             android:visibility="visible"

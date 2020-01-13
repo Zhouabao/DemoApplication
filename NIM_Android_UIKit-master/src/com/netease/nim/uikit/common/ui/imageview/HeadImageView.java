@@ -32,7 +32,7 @@ public class HeadImageView extends CircleImageView {
                                                                                   .getDimension(
                                                                                           R.dimen.avatar_notification_size);
 
-    private static final int DEFAULT_AVATAR_RES_ID = R.drawable.nim_avatar_default;
+    private static final int DEFAULT_AVATAR_RES_ID = R.drawable.icon_default_avator;
 
     public HeadImageView(Context context) {
         super(context);

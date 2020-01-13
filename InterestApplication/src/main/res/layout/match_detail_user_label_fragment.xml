@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kennyc.view.MultiStateView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/stateLabel"
+        app:msv_emptyView="@layout/empty_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_viewState="loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:background="@color/colorWhite"
+            android:layout_height="match_parent"
+            app:srlEnableNestedScrolling="true"
+            app:srlEnableLoadMore="true"
+            app:srlEnableRefresh="false">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvLabel"
+                android:layout_width="match_parent"
+                android:overScrollMode="never"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</com.kennyc.view.MultiStateView>
+
+
+

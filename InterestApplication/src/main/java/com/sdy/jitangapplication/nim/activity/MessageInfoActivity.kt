@@ -1,10 +1,13 @@
 package com.sdy.jitangapplication.nim.activity
 
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.BarUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -24,6 +27,7 @@ import com.netease.nimlib.sdk.friend.FriendService
 import com.netease.nimlib.sdk.friend.model.MuteListChangedNotify
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.widgets.swipeback.SwipeBackLayout
 import com.sdy.baselibrary.widgets.swipeback.Utils
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
@@ -36,7 +40,7 @@ import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.ui.activity.MessageHiActivity
+import com.sdy.jitangapplication.ui.activity.MessageHiPastActivity
 import com.sdy.jitangapplication.ui.activity.ReportReasonActivity
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -79,8 +83,10 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_info)
         EventBus.getDefault().register(this)
-
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            BarUtils.setStatusBarColor(this, Color.TRANSPARENT)
+            BarUtils.setStatusBarLightMode(this, true)
+        }
         AppManager.instance.addActivity(this)
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
@@ -97,18 +103,20 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
     private fun initView() {
         btnBack.onClick { finish() }
 
-
+        GlideUtil.loadCircleImg(this, UserInfoHelper.getAvatar(account), civAvator)
         //TA的主页
         chatDetailBtn.onClick { MatchDetailActivity.start(this, account ?: "") }
         //删除好友
-
         friendDelete.onClick {
             showDeleteDialog(3)
         }
 
         //投诉举报
         friendReport.onClick {
-            startActivity<ReportReasonActivity>("target_accid" to account,"nickname" to UserInfoHelper.getUserName(account))
+            startActivity<ReportReasonActivity>(
+                "target_accid" to account,
+                "nickname" to UserInfoHelper.getUserName(account)
+            )
         }
 
         //查找聊天记录
@@ -121,27 +129,6 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         //清空聊天记录
         friendHistoryClean.onClick {
             showDeleteDialog(1)
-
-//            val title = resources.getString(R.string.message_p2p_clear_tips)
-//            val alertDialog = CustomAlertDialog(this)
-//            alertDialog.setTitle(title)
-//            alertDialog.addItem("确定") {
-//                NIMClient.getService(MsgService::class.java)
-//                    .clearServerHistory(account ?: "", SessionTypeEnum.P2P, true)
-//                MessageListPanelHelper.getInstance().notifyClearMessages(account ?: "")
-//            }
-            //漫游
-//            val itemText = resources.getString(R.string.sure_keep_roam)
-//            alertDialog.addItem(itemText) {
-//                NIMClient.getService(MsgService::class.java).clearServerHistory(
-//                    account ?: "", SessionTypeEnum.P2P, false
-//                )
-//                MessageListPanelHelper.getInstance().notifyClearMessages(account)
-//            }
-//            alertDialog.addItem(
-//                "取消"
-//            ) { }
-//            alertDialog.show()
         }
 
         //消息免打扰
@@ -157,17 +144,18 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
         dialog.show()
         when (type) {
             1 -> {
+                dialog.title.text = "清空消息"
                 dialog.tip.text = resources.getString(R.string.message_p2p_clear_tips)
                 dialog.cancel.onClick { dialog.dismiss() }
                 dialog.confirm.onClick {
-                    NIMClient.getService(MsgService::class.java)
-                        .clearServerHistory(account ?: "", SessionTypeEnum.P2P, true)
+                    NIMClient.getService(MsgService::class.java).clearChattingHistory(account, SessionTypeEnum.P2P)
                     MessageListPanelHelper.getInstance().notifyClearMessages(account ?: "")
                     dialog.dismiss()
                 }
             }
-            3 -> {//todo 此处差一个删除好友的接口
+            3 -> {
                 if (isfriend) {
+                    dialog.title.text = "删除好友"
                     dialog.tip.text = "确定删除该好友?"
                     dialog.cancel.onClick { dialog.dismiss() }
                     dialog.confirm.onClick {
@@ -175,6 +163,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         dialog.dismiss()
                     }
                 } else {
+                    dialog.title.text = "删除招呼"
                     dialog.tip.text = "确定删除该招呼?"
                     dialog.cancel.onClick { dialog.dismiss() }
                     dialog.confirm.onClick {
@@ -388,13 +377,13 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         NIMClient.getService(MsgService::class.java).deleteRecentContact2(account, SessionTypeEnum.P2P)
-                        NIMClient.getService(MsgService::class.java).clearServerHistory(account, SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java).clearChattingHistory(account, SessionTypeEnum.P2P)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(ChatActivity::class.java)
-                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(MessageHiActivity::class.java)
+                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiPastActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(MessageHiPastActivity::class.java)
                         EventBus.getDefault().post(UpdateHiEvent())
                     } else {
                         CommonFunction.toast(t.msg)
@@ -421,7 +410,7 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
-                        CommonFunction.dissolveRelationship(account?:"")
+                        CommonFunction.dissolveRelationship(account ?: "")
                     } else {
                         CommonFunction.toast(t.msg)
                     }

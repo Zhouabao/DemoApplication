@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/labelRoot"
+        android:layout_width="107dp"
+        android:layout_height="107dp"
+        android:animateLayoutChanges="true"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/default_image_15dp"
+        android:orientation="vertical">
+
+    <ImageView
+            android:id="@+id/labelImg"
+            android:src="@drawable/icon_logo"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+            android:background="@drawable/icon_cover_label"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <ImageView
+            android:id="@+id/labelAdded"
+            android:visibility="visible"
+            android:src="@drawable/icon_label_added"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+            android:id="@+id/labelName"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="5dp"
+            android:text="游戏主区"
+            app:layout_constraintBottom_toTopOf="@id/labelPersonNum"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
+
+    <TextView
+            android:id="@+id/labelPersonNum"
+            android:text="56231"
+            android:alpha="0.7"
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp"
+            android:drawablePadding="4dp"
+            android:layout_marginBottom="8dp"
+            android:drawableLeft="@drawable/icon_person_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/labelName"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

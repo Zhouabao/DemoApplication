@@ -11,9 +11,9 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.LabelBean
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.*
@@ -50,6 +50,91 @@ object UserManager {
     var mediaBeans: MutableList<MediaParamBean> = mutableListOf()
     //发布的对象keylist
     var keyList: MutableList<String> = mutableListOf()
+
+
+    fun saveAccountDanger(danger: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("accountDanger", danger)
+    }
+
+    fun getAccountDanger(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("accountDanger", false)
+    }
+
+
+    fun saveAccountDangerAvatorNotPass(danger: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("AccountDangerAvatorNotPass", danger)
+    }
+
+    fun getAccountDangerAvatorNotPass(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AccountDangerAvatorNotPass", false)
+    }
+
+
+    /**
+     * 保存当前需要弹去完善标签弹窗的次数
+     */
+    fun saveCompleteLabelCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("completeLabelCount", count)
+    }
+
+    fun getCompleteLabelCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("completeLabelCount", -1)
+    }
+
+    /**
+     * 保存滑动次数
+     */
+    fun saveSlideCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("SlideCount", count)
+    }
+
+    fun getSlideCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("SlideCount", -1)
+    }
+
+    /**
+     * 感兴趣的标签个数
+     */
+    fun saveInterestLabelCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("interestLabelCount", count)
+    }
+
+    fun getInterestLabelCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("interestLabelCount", -1)
+    }
+
+    /**
+     * 感兴趣的标签个数
+     */
+    fun saveMaxInterestLabelCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("maxInterestLabelCount", count)
+    }
+
+    fun getMaxInterestLabelCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("maxInterestLabelCount", 0)
+    }
+
+    /**
+     * 我的兴趣的标签个数
+     */
+    fun saveMaxMyLabelCount(count: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("maxMyLabelCount", count)
+    }
+
+    fun getMaxMyLabelCount(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("maxMyLabelCount", -1)
+    }
+
+    /**
+     * 是否弹窗过，弹过窗就直接浮窗
+     */
+    fun saveIsShowCompleteLabelDialog(show: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("IsShowCompleteLabelDialog", show)
+    }
+
+    fun isShowCompleteLabelDialog(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("IsShowCompleteLabelDialog", false)
+    }
 
 
     /**
@@ -105,6 +190,15 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isNeedChangeAvator", false)
     }
 
+    //是否需要强制替换头像  1头像不通过强制替换   2真人头像不通过 强制替换
+    fun saveChangeAvatorType(changeType: Int) {
+        SPUtils.getInstance(Constants.SPNAME).put("ChangeAvatorType", changeType)
+    }
+
+    fun getChangeAvatorType(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("ChangeAvatorType", 0)
+    }
+
     //是否需要强制替换头像
     fun saveChangeAvator(isNeedChangeAvator: String) {
         SPUtils.getInstance(Constants.SPNAME).put("ChangeAvator", isNeedChangeAvator)
@@ -130,6 +224,15 @@ object UserManager {
 
     fun getAlertChangeAlbum(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAlbum", false)
+    }
+
+    //是否提示过引导替换相册
+    fun saveAlertChangeRealMan(isNeedChangeAvator: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("AlertChangeRealMan", isNeedChangeAvator)
+    }
+
+    fun getAlertChangeRealMan(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeRealMan", false)
     }
 
     //是否提示过用户协议
@@ -168,81 +271,6 @@ object UserManager {
     }
 
     /**
-     * 保存发送tip消息
-     * 打招呼方-送出招呼消息
-     * 点击打招呼/聊天icon时显示「在收到对方回复前只能发送三条消息」
-     */
-    fun saveTipSend(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("TipSend", isTip)
-    }
-
-    fun getTipSend(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("TipSend", false)
-    }
-
-    /**
-     * 保存是否提示过三次机会
-     * 打招呼方-发送3条后
-     * 你已发送三条消息，请等待对方回复
-     */
-    fun saveTipThreeTimes(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("threetimes", isTip)
-    }
-
-    fun getTipThreeTimes(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("threetimes", false)
-    }
-
-    /**
-     * 打招呼方-被读消息后
-     * 对方已读你的消息，10分钟内对方未回复消息将过期
-     */
-    fun saveHeRead(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("heread", isTip)
-    }
-
-    fun getHeRead(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("heread", false)
-    }
-
-    /**
-     * 收消息方-已读消息后
-     * 已读对方招呼，如不回复10分钟后招呼将过期
-     */
-    fun saveReadHe(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("readhe", isTip)
-    }
-
-    fun getReadHe(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("readhe", false)
-    }
-
-    /**
-     * 收消息方-回复消息后
-     * 已停止倒数k
-     */
-    fun saveStopTime(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("StopTime", isTip)
-    }
-
-    fun getStopTime(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("StopTime", false)
-    }
-
-    /**
-     * 收消息方-第二轮回复
-     * 聊得来就与他/她（根据性别）成为好友吧（此时成为好友最好有点动效果UI）
-     */
-    fun saveSecondReply(isTip: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("secondReply", isTip)
-    }
-
-    fun getSecondReply(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("secondReply", false)
-    }
-
-
-    /**
      * 清除打招呼轻提示
      */
     fun cleanHiTime() {
@@ -268,33 +296,31 @@ object UserManager {
      * 登录成功保存用户信息
      */
     fun saveUserInfo(data: LoginBean) {
-        val savaLabels = mutableSetOf<String>()
-        for (label in data!!.taglist ?: mutableListOf()) {
-            if (label != null)
-                savaLabels.add(
-                    SharedPreferenceUtil.Object2String(
-                        LabelBean(
-                            title = label.title ?: "",
-                            id = label.id ?: -1
-                        )
-                    )
-                )
-        }
-        SPUtils.getInstance(Constants.SPNAME).put("checkedLabels", savaLabels)
         if (data.userinfo != null) {
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo.nickname)
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
             SPUtils.getInstance(Constants.SPNAME).put("birth", data.userinfo.birth)
-
-
             if (data.userinfo.isvip != -1) {
                 saveUserVip(data.userinfo.isvip)
             }
 
             if (data.userinfo.isfaced != -1)
                 saveUserVerify(data.userinfo.isfaced)
+            SPUtils.getInstance(Constants.SPNAME).put("isInterestLabel", data.extra_data?.myinterest ?: false)
+            SPUtils.getInstance(Constants.SPNAME).put("userIntroduce", data.extra_data?.aboutme ?: "")
+            if (!data.extra_data?.taglist.isNullOrEmpty()) {
+                saveLabels(data.extra_data?.taglist ?: mutableListOf())
+            }
         }
+    }
+
+    fun saveLabels(data: MutableList<TagBean>) {
+        val savaLabels = mutableSetOf<String>()
+        for (label in data) {
+            savaLabels.add(SharedPreferenceUtil.Object2String(label))
+        }
+        SPUtils.getInstance(Constants.SPNAME).put("newCheckedLabels", savaLabels)
     }
 
     /**
@@ -319,9 +345,12 @@ object UserManager {
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").contains(Constants.DEFAULT_AVATAR) ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
-                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0)
-//                SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty() ||
-//                SPUtils.getInstance(Constants.SPNAME).getString("birth").toLong() == 0L )
+                SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0 ||
+                SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce").isNullOrEmpty() ||
+                SPUtils.getInstance(Constants.SPNAME).getBoolean("isInterestLabel", false) == false ||
+                getSpLabels().isNullOrEmpty()
+                )
+
     }
 
 
@@ -407,6 +436,16 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getString("avatar")
     }
 
+    fun getUserIntroduce(): String {
+        return SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce")
+    }
+
+
+    fun saveIsInterestLabel(isInterest: Boolean) {
+        return SPUtils.getInstance(Constants.SPNAME).put("isInterestLabel", isInterest)
+    }
+
+
     /**
      * 判断用户是否是vip
      */
@@ -460,6 +499,9 @@ object UserManager {
         if (sp.getInt("audit_only", -1) != -1) {
             parmas["audit_only"] = sp.getInt("audit_only", -1)
         }
+        if (sp.getInt("online_only", -1) != -1) {
+            parmas["online_only"] = sp.getInt("online_only", -1)
+        }
         if (sp.getInt("filter_gender", -1) != -1) {
             parmas["gender"] = sp.getInt("filter_gender", -1)
         }
@@ -471,11 +513,11 @@ object UserManager {
     /**
      * 获取本地存放的标签
      */
-    fun getSpLabels(): MutableList<LabelBean> {
-        val tempLabels = mutableListOf<LabelBean>()
-        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNotEmpty()) {
-            (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels")).forEach {
-                tempLabels.add(SharedPreferenceUtil.String2Object(it) as LabelBean)
+    fun getSpLabels(): MutableList<TagBean> {
+        val tempLabels = mutableListOf<TagBean>()
+        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels").isNotEmpty()) {
+            (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels")).forEach {
+                tempLabels.add(SharedPreferenceUtil.String2Object(it) as TagBean)
             }
         }
         tempLabels.sortWith(Comparator { p0, p1 -> p0.id.compareTo(p1.id) })
@@ -483,8 +525,13 @@ object UserManager {
     }
 
     fun getGlobalLabelId(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId", 1)
+        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId", 0)
     }
+
+    fun saveGlobalLabelId(id: Int) {
+        return SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", id)
+    }
+
 
     fun getGlobalLabelName(): String {
         val labels = getSpLabels()
@@ -531,6 +578,8 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("isvip")
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
         SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
+        SPUtils.getInstance(Constants.SPNAME).remove("isInterestLabel")
+        SPUtils.getInstance(Constants.SPNAME).remove("userIntroduce")
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
         SPUtils.getInstance(Constants.SPNAME).remove("countdowntime")
         SPUtils.getInstance(Constants.SPNAME).remove("lightingCount")
@@ -539,8 +588,11 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("slideCount")
         SPUtils.getInstance(Constants.SPNAME).remove("hiCount")
         SPUtils.getInstance(Constants.SPNAME).remove("likeCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("likeUnreadCount")
         SPUtils.getInstance(Constants.SPNAME).remove("squareCount")
         SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("newCheckedLabels")
+        SPUtils.getInstance(Constants.SPNAME).remove("maxInterestLabelCount")
 
 
         //位置信息
@@ -553,9 +605,11 @@ object UserManager {
 
         //筛选信息
         SPUtils.getInstance(Constants.SPNAME).remove("filter_gender")
+        SPUtils.getInstance(Constants.SPNAME).remove("filter_square_gender")
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_high")
         SPUtils.getInstance(Constants.SPNAME).remove("limit_age_low")
         SPUtils.getInstance(Constants.SPNAME).remove("local_only")
+        SPUtils.getInstance(Constants.SPNAME).remove("online_only")
         SPUtils.getInstance(Constants.SPNAME).remove("city_code")
         SPUtils.getInstance(Constants.SPNAME).remove("audit_only")
 
@@ -571,6 +625,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
         cleanVerifyData()
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
+        SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvatorType")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
         SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
@@ -584,6 +639,16 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("currentVersion")
         SPUtils.getInstance(Constants.SPNAME).remove("showcard_cnt")
         SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("completeLabelCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("IsShowCompleteLabelDialog")
+        SPUtils.getInstance(Constants.SPNAME).remove("interestLabelCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("maxMyLabelCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("SlideCount")
+
+        //账号异常记录清除
+        SPUtils.getInstance(Constants.SPNAME).remove("accountDanger")
+        SPUtils.getInstance(Constants.SPNAME).remove("AccountDangerAvatorNotPass")
+        SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeRealMan")
 
 
         /**
@@ -614,14 +679,14 @@ object UserManager {
     /**
      * 保存剩余滑动次数
      */
-    fun saveSlideCount(slideTimes: Int) {
+    fun saveLeftSlideCount(slideTimes: Int) {
         SPUtils.getInstance(Constants.SPNAME).put("leftSlideCount", slideTimes)
     }
 
     /**
      * 获取剩余滑动次数
      */
-    fun getSlideCount(): Int {
+    fun getLeftSlideCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("leftSlideCount", 0)
     }
 
@@ -655,37 +720,50 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("countdowntime", 0)
     }
 
-    fun saveLikeCount(likeCount: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("likeCount", likeCount)
-    }
-
-    fun saveSquareCount(squareCount: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("squareCount", squareCount)
-    }
-
+    /**
+     * 保存招呼个数
+     */
     fun saveHiCount(greetCount: Int = 0) {
         SPUtils.getInstance(Constants.SPNAME).put("hiCount", greetCount)
-    }
-
-    fun getLikeCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("likeCount", 0)
     }
 
     fun getHiCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("hiCount", 0)
     }
 
-    fun getSquareCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("squareCount", 0)
-    }
 
-
-    fun isShowGuide(): Boolean {
+    /**
+     * 是否展示首页的引导使用
+     */
+    fun isShowGuideIndex(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuide", false)
     }
 
-    fun saveShowGuide(isShow: Boolean) {
+    fun saveShowGuideIndex(isShow: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuide", isShow)
+    }
+
+    /**
+     * 是否展示引导喜欢我的
+     */
+    fun isShowGuideLike(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideLike", false)
+    }
+
+    fun saveShowGuideLike(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideLike", isShow)
+    }
+
+
+    /**
+     * 是否展示引导招呼
+     */
+    fun isShowGuideGreet(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideGreet", false)
+    }
+
+    fun saveShowGuideGreet(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideGreet", isShow)
     }
 
 
@@ -741,26 +819,27 @@ object UserManager {
         if (data == null || data.userinfo == null || data.userinfo.nickname.isNullOrEmpty()) {
             context.startActivity<UserNickNameActivity>()
             return
-        } else if (data.userinfo.birth == 0) {
+        } else if (data.userinfo.birth == 0) {//生日没填写
             context.startActivity<UserBirthActivity>()
             return
-        } else if (data.userinfo.gender == 0) {
+        } else if (data.userinfo.gender == 0) {//性别没选择
             context.startActivity<UserGenderActivity>()
             return
-        } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {
+        } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {//头像未选择
             context.startActivity<UserAvatorActivity>()
             return
-        } else {
+        } else if (data.extra_data?.myinterest ?: false == false) {//感兴趣标签没有选择
+            context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
+            return
+        } else if (data.extra_data?.aboutme.isNullOrEmpty()) {//个人介绍未填写
+            context.startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
+            return
+        } else {//跳到主页
+
             saveUserInfo(data)
-            if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels") == null || SPUtils.getInstance(
-                    Constants.SPNAME
-                ).getStringSet("checkedLabels").isEmpty()
-            ) {//标签没有选择
-                context.startActivity<LabelsActivity>()
-            } else {//跳到主页
-                AppManager.instance.finishAllActivity()
-                context.startActivity<MainActivity>()
-            }
+            AppManager.instance.finishAllActivity()
+            context.startActivity<MainActivity>()
+
         }
     }
 

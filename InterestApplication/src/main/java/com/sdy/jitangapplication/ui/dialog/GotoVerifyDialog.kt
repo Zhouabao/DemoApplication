@@ -34,6 +34,7 @@ class GotoVerifyDialog : Dialog {
     companion object {
         const val TYPE_VERIFY = 4//认证失败去认证
         const val TYPE_CHANGE_AVATOR_NOT_PASS = 7//头像违规替换
+        const val TYPE_CHANGE_AVATOR_REAL_NOT_VALID = 11//真人头像不合规
         const val TYPE_CHANGE_AVATOR_PASS = 2//头像通过,但是不是真人
         const val TYPE_CHANGE_ABLUM = 3//完善相册
     }
@@ -184,13 +185,13 @@ class GotoVerifyDialog : Dialog {
                     dialog.cancel()
                 }
                 dialog.verifyHuman?.onClick {
-                    //todo 人工审核
+                    // 人工审核
                     humanVerify(1)
                     if (this.cancelable)
                         dialog.cancel()
                 }
                 dialog.verifyChange?.onClick {
-                    //TODO 替换头像
+                    // 替换头像
                     humanVerify(2)
                     if (ActivityUtils.getTopActivity() != NewUserInfoSettingsActivity::class.java)
                         context.startActivity<NewUserInfoSettingsActivity>()

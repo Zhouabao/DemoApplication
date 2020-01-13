@@ -8,7 +8,7 @@ object SwitchUtil {
         //是否根据视频尺寸，自动选择竖屏全屏或者横屏全屏
         gsyVideoPlayer.isAutoFullWithSize = false
         //音频焦点冲突时是否释放
-        gsyVideoPlayer.isReleaseWhenLossAudio = false
+        gsyVideoPlayer.isReleaseWhenLossAudio = true
         //全屏动画
         gsyVideoPlayer.isShowFullAnimation = true
         //小屏时不触摸滑动
@@ -23,7 +23,7 @@ object SwitchUtil {
 
         gsyVideoPlayer.setSwitchUrl(url)
 
-        gsyVideoPlayer.setSwitchCache(cache)
+        gsyVideoPlayer.setSwitchCache(false)
 
     }
 

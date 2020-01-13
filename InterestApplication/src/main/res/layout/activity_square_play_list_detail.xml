@@ -8,6 +8,7 @@
         android:layout_height="match_parent"
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
+        android:fitsSystemWindows="true"
         app:msv_loadingView="@layout/loading_layout"
         app:msv_viewState="loading">
 

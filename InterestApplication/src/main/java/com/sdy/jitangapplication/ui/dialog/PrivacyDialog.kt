@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.style.ClickableSpan
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import com.blankj.utilcode.util.SpanUtils
@@ -38,7 +39,7 @@ class PrivacyDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
         val clickSpanPrivacy = object : ClickableSpan() {
             override fun onClick(p0: View) {
                 val intent = Intent(context1, ProtocolActivity::class.java)
-                intent.putExtra("type", 1)
+                intent.putExtra("type", ProtocolActivity.TYPE_PRIVACY_PROTOCOL)
                 context1.startActivity(intent)
             }
 
@@ -47,7 +48,7 @@ class PrivacyDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
         val clickSpanProtocol = object : ClickableSpan() {
             override fun onClick(p0: View) {
                 val intent = Intent(context1, ProtocolActivity::class.java)
-                intent.putExtra("type", 2)
+                intent.putExtra("type", ProtocolActivity.TYPE_USER_PROTOCOL)
                 context1.startActivity(intent)
             }
 
@@ -55,7 +56,7 @@ class PrivacyDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
         val clickSpanPrivacy1 = object : ClickableSpan() {
             override fun onClick(p0: View) {
                 val intent = Intent(context1, ProtocolActivity::class.java)
-                intent.putExtra("type", 1)
+                intent.putExtra("type", ProtocolActivity.TYPE_PRIVACY_PROTOCOL)
                 context1.startActivity(intent)
             }
 
@@ -64,7 +65,7 @@ class PrivacyDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
         val clickSpanProtocol1 = object : ClickableSpan() {
             override fun onClick(p0: View) {
                 val intent = Intent(context1, ProtocolActivity::class.java)
-                intent.putExtra("type", 2)
+                intent.putExtra("type", ProtocolActivity.TYPE_USER_PROTOCOL)
                 context1.startActivity(intent)
             }
 
@@ -118,5 +119,8 @@ class PrivacyDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
         window?.attributes = params
         setCanceledOnTouchOutside(false)
+        setOnKeyListener { dialogInterface, keyCode, event ->
+            keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0
+        }
     }
 }

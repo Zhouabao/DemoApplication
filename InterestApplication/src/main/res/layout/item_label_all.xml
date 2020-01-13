@@ -7,7 +7,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:animateLayoutChanges="true"
         android:layout_marginBottom="15dp"
-        android:background="@drawable/shape_rectangle_gray_5dp"
+        android:background="@drawable/default_image_5dp"
         android:orientation="vertical">
 
     <ImageView

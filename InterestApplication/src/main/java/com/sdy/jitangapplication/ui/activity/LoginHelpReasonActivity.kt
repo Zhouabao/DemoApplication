@@ -31,7 +31,6 @@ import com.sdy.jitangapplication.presenter.view.LoginHelpResonView
 import com.sdy.jitangapplication.ui.adapter.ReportPicAdapter
 import com.sdy.jitangapplication.ui.adapter.ReportResonAdapter
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_login_help_reason.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -93,7 +92,12 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
                                     PermissionUtils.permission(PermissionConstants.STORAGE)
                                         .callback(object : PermissionUtils.SimpleCallback {
                                             override fun onGranted() {
-                                                onTakePhoto()
+                                                CommonFunction.onTakePhoto(
+                                                    this@LoginHelpReasonActivity,
+                                                    3 - (reportPicAdapter.data.size - 1),
+                                                    PictureConfig.CHOOSE_REQUEST,
+                                                    PictureMimeType.ofImage()
+                                                )
                                             }
 
                                             override fun onDenied() {
@@ -110,7 +114,12 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
                         })
                         .request()
                 } else {
-                    onTakePhoto()
+                    CommonFunction.onTakePhoto(
+                        this@LoginHelpReasonActivity,
+                        3 - (reportPicAdapter.data.size - 1),
+                        PictureConfig.CHOOSE_REQUEST,
+                        PictureMimeType.ofImage()
+                    )
                 }
             } else {
                 reportPicAdapter.remove(position)
@@ -173,38 +182,13 @@ class LoginHelpReasonActivity : BaseMvpActivity<LoginHelpResonPresenter>(), Logi
     }
 
 
-    /**
-     * 拍照或者选取照片
-     */
-    private fun onTakePhoto() {
-        PictureSelector.create(this)
-            .openGallery(PictureMimeType.ofImage())
-            .maxSelectNum(3 - (reportPicAdapter.data.size - 1))
-            .minSelectNum(0)
-            .imageSpanCount(4)
-            .selectionMode(PictureConfig.MULTIPLE)
-            .previewImage(true)
-            .isCamera(true)
-            .enableCrop(false)
-            .compressSavePath(UriUtils.getCacheDir(this))
-            .compress(false)
-            .scaleEnabled(true)
-            .showCropFrame(true)
-            .rotateEnabled(false)
-            .withAspectRatio(9, 16)
-            .compressSavePath(UriUtils.getCacheDir(this))
-            .openClickSound(false)
-            .forResult(CHOOSE_REQUEST)
-    }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CHOOSE_REQUEST) {
             if (data != null) {
                 if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {
                     for (tdata in PictureSelector.obtainMultipleResult(data)) {
-                        if (SdkVersionUtils.checkedAndroid_Q())
+                        if (SdkVersionUtils.checkedAndroid_Q() && !tdata.androidQToPath.isNullOrEmpty())
                             reportPicAdapter.addData(0, tdata.androidQToPath)
                         else
                             reportPicAdapter.addData(0, tdata.path)

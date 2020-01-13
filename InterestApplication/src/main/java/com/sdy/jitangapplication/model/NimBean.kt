@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.model
 
+import java.io.Serializable
+
 /**
  *    author : ZFM
  *    date   : 2019/8/1715:06
@@ -8,19 +10,22 @@ package com.sdy.jitangapplication.model
  */
 
 data class NimBean(
-    val avatar: String? = "",
-    val isfriend: Boolean = false,//	是否好友 true 是  false 不是
-    val stared: Boolean = false,//	是否是星标好友 true 是  false 不是
-    val isinitiated: Boolean = false,//是否自己发起的 true自己发起的 false 他人发起
-    val taglist: ArrayList<Tag>? = arrayListOf(),
-    var type: Int = 0,//类型1，新消息 2，倒计时 3，普通样式 4 过期
-    val timeout_time: String = "",//过期时间
-    val countdown_total: Int = 0,//总倒计时
-    val countdown: Int = 0,//剩余时间
-    val residue_msg_cnt: Int = 0,//	该条招呼的剩余发起消息次数
-    val isread: Boolean = false
+    var isgreet: Boolean = true,//招呼是否有效
+    var avatar: String = "",
+    var isblocked: Boolean = false,
+    var isfriend: Boolean = false,
+    var isinitiated: Boolean = false,
+    var islimit: Boolean = false,
+    var matching_content: String = "",
+    var matching_icon: String = "",
+    var residue_msg_cnt: Int = 0,//剩余可发送的招呼消息次数
+    var square: MutableList<Square> = mutableListOf(),
+    var square_cnt: Int = 0,
+    var stared: Boolean = false
+) : Serializable
 
-
+data class ResidueCountBean(
+    var residue_msg_cnt: Int = 0//剩余可发送的招呼消息次数
 )
 
 
@@ -44,7 +49,7 @@ data class CustomerMsgBean(
  * 所有消息的集合
  */
 data class AllMsgCount(
-    val greetcount: Int = 0,
-    val likecount: Int = 0,
-    val square_count: Int = 0
+    val greetcount: Int = 0, //招呼未读
+    val likecount: Int = 0,//点赞未读
+    val square_count: Int = 0//
 )

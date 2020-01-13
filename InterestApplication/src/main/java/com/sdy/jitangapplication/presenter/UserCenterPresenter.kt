@@ -18,6 +18,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UploadEvent
 import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.presenter.view.UserCenterView
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
@@ -41,7 +42,7 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
             .myInfo(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<UserInfoBean?>>(mView) {
                 override fun onNext(t: BaseResp<UserInfoBean?>) {
-                        mView.onGetMyInfoResult(t.data)
+                    mView.onGetMyInfoResult(t.data)
                 }
 
                 override fun onError(e: Throwable?) {
@@ -53,19 +54,23 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
             })
     }
 
+    private val loading by lazy { LoadingDialog(context) }
     /**
-     * 获取广场列表
+     *验证是否被封禁
      */
-    fun checkBlock(token: String, accid: String) {
+    fun checkBlock() {
         RetrofitFactory.instance.create(Api::class.java)
             .checkBlock(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onStart() {
-                    super.onStart()
+                    if (!loading.isShowing)
+                        loading.show()
                 }
 
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
+                    if (loading.isShowing)
+                        loading.dismiss()
                     if (t.code == 200)
                         mView.onCheckBlockResult(true)
                     else if (t.code == 403) {
@@ -77,6 +82,8 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
                 }
 
                 override fun onError(e: Throwable?) {
+                    if (loading.isShowing)
+                        loading.dismiss()
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {
@@ -88,13 +95,16 @@ class UserCenterPresenter : BasePresenter<UserCenterView>() {
     }
 
 
-
-
     /**
      * 广场发布
      */
-    fun publishContent(type: Int, params: HashMap<String, Any>, checkIds: MutableList<Int>, keyList: MutableList<String> = mutableListOf()) {
-        params["tags"] = Gson().toJson(checkIds)
+    fun publishContent(
+        type: Int,
+        params: HashMap<String, Any>,
+        checkIds: MutableList<Int>,
+        keyList: MutableList<String> = mutableListOf()
+    ) {
+        params["tag_id"] = checkIds[0]
         params["comment"] = Gson().toJson(keyList)
         RetrofitFactory.instance.create(Api::class.java)
             .squareAnnounce(UserManager.getSignParams(params))

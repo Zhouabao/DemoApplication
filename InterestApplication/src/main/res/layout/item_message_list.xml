@@ -2,13 +2,12 @@
 <com.sdy.jitangapplication.widgets.swipemenu.EasySwipeMenuLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/msgSwipeMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
         app:canRightSwipe="false"
-        app:fraction="0.1"
         app:contentView="@id/content"
+        app:fraction="0.1"
         app:rightMenuView="@id/right">
 
 
@@ -23,9 +22,23 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_marginLeft="15dp"
+                android:src="@drawable/icon_default_avator"
+                app:civ_border_color="@color/colorDivider"
+                app:civ_border_width="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+                android:id="@+id/msgOnLineState"
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:visibility="gone"
+                android:layout_marginRight="3dp"
+                android:layout_marginTop="37dp"
+                android:background="@drawable/shape_rectangle_green_online"
+                app:layout_constraintRight_toRightOf="@id/msgIcon"
+                app:layout_constraintBottom_toBottomOf="@id/msgIcon"/>
 
         <TextView
                 android:id="@+id/msgTitle"
@@ -35,13 +48,29 @@
                 android:textSize="16sp"
                 android:layout_marginRight="6dp"
                 android:layout_marginTop="15dp"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toRightOf="@id/msgIcon"
-                app:layout_constraintRight_toLeftOf="@id/latelyTime"
                 app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/msgTag"
+                android:paddingBottom="1dp"
+                android:paddingTop="1dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp"
+                android:text="招呼"
+                android:textColor="@color/colorOrange"
+                android:textSize="11sp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/shape_rectangle_lightorange_5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/msgTitle"
+                app:layout_constraintLeft_toRightOf="@id/msgTitle"
+                app:layout_constraintTop_toTopOf="@id/msgTitle"/>
 
         <TextView
                 android:id="@+id/latelyTime"

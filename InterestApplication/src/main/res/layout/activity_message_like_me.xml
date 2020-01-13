@@ -6,7 +6,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
-        tools:context=".ui.activity.MessageHiActivity">
+        android:fitsSystemWindows="true"
+        tools:context=".ui.activity.MessageHiPastActivity">
 
     <include layout="@layout/layout_actionbar"/>
 
@@ -40,6 +41,7 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/likeMeRv"
+                            android:overScrollMode="never"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                 </androidx.core.widget.NestedScrollView>

@@ -15,7 +15,6 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureConfig.CHOOSE_REQUEST
-import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.tools.SdkVersionUtils
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
@@ -27,7 +26,6 @@ import com.sdy.jitangapplication.presenter.view.ReportResonView
 import com.sdy.jitangapplication.ui.adapter.ReportPicAdapter
 import com.sdy.jitangapplication.ui.adapter.ReportResonAdapter
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_report_reason.*
@@ -126,7 +124,11 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                                     PermissionUtils.permission(PermissionConstants.STORAGE)
                                         .callback(object : PermissionUtils.SimpleCallback {
                                             override fun onGranted() {
-                                                onTakePhoto()
+                                                CommonFunction.onTakePhoto(
+                                                    this@ReportReasonActivity,
+                                                    3 - (reportPicAdapter.data.size - 1),
+                                                    PictureConfig.CHOOSE_REQUEST
+                                                )
                                             }
 
                                             override fun onDenied() {
@@ -143,7 +145,11 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                         })
                         .request()
                 } else {
-                    onTakePhoto()
+                    CommonFunction.onTakePhoto(
+                        this@ReportReasonActivity,
+                        3 - (reportPicAdapter.data.size - 1),
+                        PictureConfig.CHOOSE_REQUEST
+                    )
                 }
             }
         }
@@ -154,6 +160,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                     if (!reportPicAdapter.data.contains("")) {
                         reportPicAdapter.addData(reportPicAdapter.data.size, "")
                     }
+                    checkConfirm()
                 }
             }
         }
@@ -170,32 +177,7 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                 check = false
             }
         }
-        reportConfirm.isEnabled = check
-    }
-
-
-    /**
-     * 拍照或者选取照片
-     */
-    private fun onTakePhoto() {
-        PictureSelector.create(this)
-            .openGallery(PictureMimeType.ofImage())
-            .maxSelectNum(3 - (reportPicAdapter.data.size - 1))
-            .minSelectNum(0)
-            .imageSpanCount(4)
-            .selectionMode(PictureConfig.MULTIPLE)
-            .previewImage(true)
-            .isCamera(true)
-            .enableCrop(false)
-            .compressSavePath(UriUtils.getCacheDir(this))
-            .compress(false)
-            .scaleEnabled(true)
-            .showCropFrame(true)
-            .rotateEnabled(false)
-            .withAspectRatio(9, 16)
-            .compressSavePath(UriUtils.getCacheDir(this))
-            .openClickSound(false)
-            .forResult(CHOOSE_REQUEST)
+        reportConfirm.isEnabled = check && (reportPicAdapter.data.size - 1) > 0
     }
 
 
@@ -206,13 +188,17 @@ class ReportReasonActivity : BaseMvpActivity<ReportReasonPresenter>(), ReportRes
                 if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {
                     for (tdata in PictureSelector.obtainMultipleResult(data)) {
                         if (SdkVersionUtils.checkedAndroid_Q())
-                            reportPicAdapter.addData(0, tdata.androidQToPath)
+                            if (tdata.androidQToPath.isNullOrEmpty())
+                                reportPicAdapter.addData(0, tdata.path)
+                            else
+                                reportPicAdapter.addData(0, tdata.androidQToPath)
                         else
                             reportPicAdapter.addData(0, tdata.path)
                     }
                     if (reportPicAdapter.data.size == 4) {
                         reportPicAdapter.remove(reportPicAdapter.data.size - 1)
                     }
+                    checkConfirm()
                 }
             }
         }

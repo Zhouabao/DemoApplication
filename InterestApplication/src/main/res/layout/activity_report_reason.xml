@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:background="@color/colorWhite"
         tools:context=".ui.activity.ReportReasonActivity">
 
@@ -22,124 +23,132 @@
             app:msv_loadingView="@layout/loading_layout"
             app:msv_viewState="loading">
 
-        <ScrollView
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none"
-                android:overScrollMode="always"
-                >
+                android:orientation="vertical"
+                android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:scrollbars="none"
+                    android:overScrollMode="always"
+                    android:layout_marginBottom="20dp"
+                    >
 
-                <TextView
-                        android:id="@+id/reportUserName"
-                        android:background="#FFF3F3F6"
-                        android:text="请选择对「用户名」的举报理由 "
-                        android:textColor="#ff000000"
-                        android:textSize="14sp"
-                        android:alpha="0.7"
+                <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:paddingLeft="15dp"
-                        android:gravity="center_vertical"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
+                        android:layout_height="wrap_content">
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/reportReasonRv"
-                        android:layout_width="0dp"
-                        android:overScrollMode="never"
-                        android:scrollbars="none"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/reportUserName"/>
+                    <TextView
+                            android:id="@+id/reportUserName"
+                            android:background="#FFF3F3F6"
+                            android:text="请选择对「用户名」的举报理由 "
+                            android:textColor="#ff000000"
+                            android:textSize="14sp"
+                            android:alpha="0.7"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:paddingLeft="15dp"
+                            android:gravity="center_vertical"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
 
-                <TextView
-                        android:id="@+id/t1"
-                        android:text="补充说明或其他（选填）"
-                        android:textColor="#ff000000"
-                        android:textSize="14sp"
-                        android:layout_width="match_parent"
-                        android:alpha="0.7"
-                        android:layout_height="36dp"
-                        android:background="#FFF3F3F6"
-                        android:paddingLeft="15dp"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center_vertical"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/reportReasonRv"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/reportReasonRv"
+                            android:layout_width="0dp"
+                            android:overScrollMode="never"
+                            android:scrollbars="none"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/reportUserName"/>
 
-                <EditText
-                        android:id="@+id/reportReasonEt"
-                        android:layout_width="0dp"
-                        android:layout_height="110dp"
-                        android:hint="请详细填写举报该用户的具体原因，我们会第一时间认真核实并处理"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="15sp"
-                        android:gravity="start"
-                        android:paddingTop="10dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingBottom="10dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="15dp"
-                        android:lineSpacingMultiplier="1.2"
-                        android:background="@drawable/shape_rectangle_gray_9dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/t1"/>
+                    <TextView
+                            android:id="@+id/t1"
+                            android:text="补充说明或其他（选填）"
+                            android:textColor="#ff000000"
+                            android:textSize="14sp"
+                            android:layout_width="match_parent"
+                            android:alpha="0.7"
+                            android:layout_height="36dp"
+                            android:background="#FFF3F3F6"
+                            android:paddingLeft="15dp"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_vertical"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/reportReasonRv"/>
 
-                <TextView
-                        android:id="@+id/t2"
-                        android:layout_marginLeft="15dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
-                        android:text="上传截图"
-                        android:textColor="#ff000000"
-                        android:textSize="14sp"
-                        android:alpha="0.7"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/reportReasonEt"/>
+                    <EditText
+                            android:id="@+id/reportReasonEt"
+                            android:layout_width="0dp"
+                            android:layout_height="110dp"
+                            android:hint="请详细填写举报该用户的具体原因，我们会第一时间认真核实并处理"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            android:gravity="start"
+                            android:paddingTop="10dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginTop="15dp"
+                            android:lineSpacingMultiplier="1.2"
+                            android:background="@drawable/shape_rectangle_gray_9dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/t1"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/reportPicRv"
-                        android:layout_marginLeft="15dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        android:overScrollMode="never"
-                        android:scrollbars="none"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/t2"/>
+                    <TextView
+                            android:id="@+id/t2"
+                            android:layout_marginLeft="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:text="上传截图"
+                            android:textColor="#ff000000"
+                            android:textSize="14sp"
+                            android:alpha="0.7"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/reportReasonEt"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/reportPicRv"
+                            android:layout_marginLeft="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            android:overScrollMode="never"
+                            android:scrollbars="none"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/t2"/>
 
 
-                <Button
-                        android:id="@+id/reportConfirm"
-                        android:layout_marginTop="56dp"
-                        android:layout_width="344dp"
-                        android:layout_height="46dp"
-                        android:text="提交举报"
-                        android:gravity="center"
-                        android:textSize="16sp"
-                        android:enabled="false"
-                        android:textColor="@color/colorWhite"
-                        android:background="@drawable/selector_confirm_btn"
-                        android:layout_marginBottom="20dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/reportPicRv"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+
+
+            <Button
+                    android:id="@+id/reportConfirm"
+                    android:layout_width="344dp"
+                    android:layout_height="46dp"
+                    android:text="提交举报"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:enabled="false"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/colorWhite"
+                    android:background="@drawable/selector_confirm_btn"
+                    android:layout_marginBottom="20dp"
+                    />
+        </LinearLayout>
+
 
     </com.kennyc.view.MultiStateView>
 

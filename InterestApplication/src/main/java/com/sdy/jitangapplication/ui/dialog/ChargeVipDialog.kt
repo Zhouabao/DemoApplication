@@ -34,8 +34,10 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.ui.adapter.VipBannerAdapter
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.utils.UserManager
@@ -45,6 +47,7 @@ import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.dialog_charge_vip.*
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -53,21 +56,22 @@ import org.greenrobot.eventbus.EventBus
  *    version: 1.0
  */
 class ChargeVipDialog(
-    public var currentPos: Int, val context1: Context,
-    public var purchaseType: Int = PURCHASE_VIP
+    private var currentPos: Int, val context1: Context,
+    private var purchaseType: Int = PURCHASE_VIP
 ) :
     Dialog(context1, R.style.MyDialog) {
     companion object {
-        const val VIP_LOGO = 1//会员logo
-        const val INFINITE_SLIDE = 0//无限滑动
-        const val FILTER = 2//独享筛选
-        const val LOOKED_ME = 3//看过我的
+        const val VIP_LOGO = 0//会员logo
+        const val INFINITE_SLIDE = 1//无限滑动
+        const val LOOKED_ME = 2//看过我的
+        const val FILTER = 3//已读功能
         const val LIKED_ME = 4//喜欢我的
-        const val DOUBLE_HI = 5//双倍招呼
+        const val DOUBLE_HI = 5//筛选同城
 
         //购买类型
         const val PURCHASE_VIP = 100//VIP购买
         const val PURCHASE_GREET_COUNT = 200//招呼次数购买
+        const val PURCHASE_RENEW_VIP = 300//vip续费
 
     }
 
@@ -88,11 +92,11 @@ class ChargeVipDialog(
 
     private fun initWindow() {
         val window = this.window
-        window?.setGravity(Gravity.BOTTOM)
+        window?.setGravity(Gravity.CENTER)
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT
-        params?.windowAnimations = R.style.MyDialogBottomAnimation
+        params?.windowAnimations = R.style.MyDialogCenterAnimation
 //        params?.y = SizeUtils.dp2px(20F)
 
         window?.attributes = params
@@ -103,13 +107,10 @@ class ChargeVipDialog(
     /**
      * 设置支付价格的数据
      */
-    private fun setChargeWayData(chargeWays: MutableList<ChargeWayBean>) {
-        if (chargeWays.size > 2) {
-            chargeWays[1].check = true
-        } else {
-            chargeWays[0].check = true
-        }
+    private fun setChargeWayData(chargeWays: MutableList<ChargeWayBean>, purchaseType: Int) {
+        vipChargeAdapter.purchaseType = purchaseType
         vipChargeAdapter.setNewData(chargeWays)
+        setUpPrice()
     }
 
 
@@ -149,6 +150,8 @@ class ChargeVipDialog(
             override fun onPageSelected(position: Int) {
                 for (child in 0 until bannerIndicator.childCount)
                     (bannerIndicator.getChildAt(child) as RadioButton).isChecked = position == child
+
+                completeInfoBtn.isVisible = position == INFINITE_SLIDE
             }
         })
         if (banners.size > currentPos)
@@ -157,14 +160,20 @@ class ChargeVipDialog(
 
 
     private fun initView() {
+        //完善资料
+        completeInfoBtn.onClick {
+            context1.startActivity<NewUserInfoSettingsActivity>()
+        }
+
         //支付价格
         vipChargeRv.layoutManager = LinearLayoutManager(context1, RecyclerView.HORIZONTAL, false)
 
         vipChargeRv.adapter = vipChargeAdapter
         vipChargeAdapter.setOnItemClickListener { _, _, position ->
             for (data in vipChargeAdapter.data.withIndex()) {
-                data.value.check = data.index == position
+                data.value.is_promote = data.index == position
             }
+            setUpPrice()
             vipChargeAdapter.notifyDataSetChanged()
         }
 
@@ -183,6 +192,26 @@ class ChargeVipDialog(
             createOrder(3)
         }
 
+        //取消支付
+        refuseBtn.onClick {
+            dismiss()
+        }
+
+    }
+
+    private fun setUpPrice() {
+        for (data in vipChargeAdapter.data) {
+            if (data.is_promote) {
+                zhiPayPrice.text = "以${if ((data.discount_price ?: 0F) == 0F) {
+                    data.original_price ?: 0F
+                } else {
+                    data.discount_price ?: 0F
+                }}元购买"
+                wechatPayPrice.text = zhiPayPrice.text
+                break
+            }
+        }
+
     }
 
     /**
@@ -193,18 +222,19 @@ class ChargeVipDialog(
             if (purchaseType == PURCHASE_VIP) {
                 purchaseType = PURCHASE_GREET_COUNT
                 vipBannerAdapter.type = purchaseType
-
                 bannerIndicator.isVisible = false
+                purchaseBg.setImageResource(R.drawable.icon_gradient_greet_charge_bg)
                 if (chargeWayBeans != null) {
-                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf())
+                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf(), PURCHASE_GREET_COUNT)
                     initVipPowerData(chargeWayBeans!!.greet_icon_list ?: mutableListOf())
                 }
             } else {
                 purchaseType = PURCHASE_VIP
                 vipBannerAdapter.type = purchaseType
                 bannerIndicator.isVisible = true
+                purchaseBg.setImageResource(R.drawable.icon_gradient_vip_charge_bg)
                 if (chargeWayBeans != null) {
-                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf())
+                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf(), PURCHASE_VIP)
                     initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
                 }
 
@@ -214,15 +244,17 @@ class ChargeVipDialog(
             if (purchaseType == PURCHASE_VIP) {
                 vipBannerAdapter.type = purchaseType
                 bannerIndicator.isVisible = true
+                purchaseBg.setImageResource(R.drawable.icon_gradient_vip_charge_bg)
                 if (chargeWayBeans != null) {
-                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf())
+                    setChargeWayData(chargeWayBeans!!.list ?: mutableListOf(), purchaseType)
                     initVipPowerData(chargeWayBeans!!.icon_list ?: mutableListOf())
                 }
             } else {
                 vipBannerAdapter.type = purchaseType
                 bannerIndicator.isVisible = false
+                purchaseBg.setImageResource(R.drawable.icon_gradient_greet_charge_bg)
                 if (chargeWayBeans != null) {
-                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf())
+                    setChargeWayData(chargeWayBeans!!.greet_list ?: mutableListOf(), purchaseType)
                     initVipPowerData(chargeWayBeans!!.greet_icon_list ?: mutableListOf())
                 }
             }
@@ -244,7 +276,7 @@ class ChargeVipDialog(
             }
         }
         for (charge in vipChargeAdapter.data) {
-            if (charge.check) {
+            if (charge.is_promote) {
                 params["product_id"] = charge.id
                 break
             }
@@ -277,24 +309,21 @@ class ChargeVipDialog(
                         /**
                          * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
                          */
-                        /**
-                         * 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-                         */
                         val resultInfo = payResult.result// 同步返回需要验证的信息
                         val resultStatus = payResult.resultStatus
                         // 判断resultStatus 为9000则代表支付成功
                         if (TextUtils.equals(resultStatus, "9000")) {
                             // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付成功！")
+                            showAlert(context1, "支付成功！", true)
                         } else if (TextUtils.equals(resultStatus, "8000")) {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付结果确认中！")
+                            showAlert(context1, "支付结果确认中！", false)
                         } else if (TextUtils.equals(resultStatus, "6001")) {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付取消！")
+                            showAlert(context1, "支付取消！", false)
                         } else {
                             // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            showAlert(context1, "支付失败！")
+                            showAlert(context1, "支付失败！", false)
                         }
 
                     }
@@ -364,7 +393,7 @@ class ChargeVipDialog(
 
                         payways.addAll(chargeWayBeans!!.paylist ?: mutableListOf())
                         initPayWay()
-                        loading.visibility = View.GONE
+                        loading.isVisible = false
                         dialogView.visibility = View.VISIBLE
                     }
                 }
@@ -399,7 +428,7 @@ class ChargeVipDialog(
     }
 
 
-    private fun showAlert(ctx: Context, info: String) {
+    private fun showAlert(ctx: Context, info: String, result: Boolean) {
         CommonAlertDialog.Builder(ctx)
             .setTitle("支付结果")
             .setContent(info)
@@ -407,10 +436,14 @@ class ChargeVipDialog(
             .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
-                    dismiss()
-                    if (ActivityUtils.getTopActivity() != MainActivity::class.java)
-                        MainActivity.start(context1, Intent())
-                    EventBus.getDefault().postSticky(RefreshEvent(true))
+                    if (result) {
+                        if (ActivityUtils.getTopActivity() != MainActivity::class.java) {
+                            MainActivity.start(context1, Intent())
+                        }
+                        EventBus.getDefault().postSticky(RefreshEvent(true))
+                        EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        dismiss()
+                    }
                 }
 
             })

@@ -14,10 +14,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.NetworkUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.*
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -39,9 +36,11 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.GreetEvent
 import com.sdy.jitangapplication.event.UpdateHiCountEvent
+import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.Rotate3dAnimation
 import kotlinx.android.synthetic.main.dialog_say_hi.*
@@ -264,7 +263,7 @@ class SayHiDialog(
 
 
     /*----------------------------打招呼请求逻辑--------------------------------*/
-//todo  这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
+// 这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
     //1.首先判断是否有次数，
     // 若有 就打招呼
     // 若无 就弹充值
@@ -335,7 +334,7 @@ class SayHiDialog(
             })
     }
 
-    /** todo
+    /**
      *  点击聊天
      *  1. 好友 直接聊天 已经匹配过了 ×
      *
@@ -363,6 +362,7 @@ class SayHiDialog(
         val params = UserManager.getBaseParams()
         params["tag_id"] = UserManager.getGlobalLabelId()
         params["target_accid"] = target_accid
+        params["content"] = sayHiContent.text.trim().toString()
         RetrofitFactory.instance.create(Api::class.java)
             .greet(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
@@ -407,12 +407,15 @@ class SayHiDialog(
             UserManager.getGlobalLabelName(),
             ChatHiAttachment.CHATHI_HI
         )
+        val config = CustomMessageConfig()
+        config.enableUnreadCount = false
+        config.enablePush = false
         val message = MessageBuilder.createCustomMessage(
             target_accid,
             SessionTypeEnum.P2P,
             "",
             chatHiAttachment,
-            CustomMessageConfig()
+            config
         )
         container.proxy.sendMessage(message)
     }
@@ -425,6 +428,10 @@ class SayHiDialog(
             SessionTypeEnum.P2P,
             sayHiContent.text.trim().toString()
         )
+        val config = CustomMessageConfig()
+        config.enableUnreadCount = false
+        config.enablePush = false
+        message.config = config
         container.proxy.sendMessage(message)
     }
 
@@ -439,6 +446,9 @@ class SayHiDialog(
                     UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
                     EventBus.getDefault().postSticky(UpdateHiCountEvent())
                     EventBus.getDefault().post(GreetEvent(context1, true))
+                    if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
+                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
+                    }
                 } else {
                     sendTextMessage()
                 }

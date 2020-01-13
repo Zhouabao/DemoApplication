@@ -7,7 +7,7 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.event.NewMsgEvent
+import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.model.SquareMsgBean
 import com.sdy.jitangapplication.presenter.view.MessageSquareView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -53,9 +53,9 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
             .markSquareRead(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
+                    //  type=1  点赞的  type=2 评论的
                     if (t.code == 200) {
-                        UserManager.saveSquareCount(0)
-                        EventBus.getDefault().post(NewMsgEvent())
+                        EventBus.getDefault().post(GetNewMsgEvent())
                     }
                 }
 

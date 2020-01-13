@@ -23,6 +23,7 @@ class UserGenderActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     }
 
     private fun initView() {
+        setSwipeBackEnable(false)
         mPresenter = UserNickNamePresenter()
         mPresenter.mView = this
         mPresenter.context = this

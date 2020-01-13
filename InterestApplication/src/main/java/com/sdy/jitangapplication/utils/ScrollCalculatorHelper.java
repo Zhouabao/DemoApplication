@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
@@ -30,7 +30,7 @@ public class ScrollCalculatorHelper {
 
     private Handler playHandler = new Handler();
 
-    public ScrollCalculatorHelper(int layoutId,int playId, int rangeTop, int rangeBottom) {
+    public ScrollCalculatorHelper(int layoutId, int playId, int rangeTop, int rangeBottom) {
         this.playId = playId;
         this.layoutId = layoutId;
         this.rangeTop = rangeTop;
@@ -69,8 +69,8 @@ public class ScrollCalculatorHelper {
 
         for (int i = 0; i < visibleCount; i++) {
             if (layoutManager.getChildAt(i) != null && layoutManager.getChildAt(i).findViewById(playId) != null) {
-                LinearLayout linearLayout = (LinearLayout) layoutManager.getChildAt(i).findViewById(layoutId);
-                GSYBaseVideoPlayer player = (GSYBaseVideoPlayer) layoutManager.getChildAt(i).findViewById(playId);
+                RelativeLayout linearLayout = layoutManager.getChildAt(i).findViewById(layoutId);
+                GSYBaseVideoPlayer player = layoutManager.getChildAt(i).findViewById(playId);
                 Rect rect = new Rect();
                 linearLayout.getLocalVisibleRect(rect);
                 int height = linearLayout.getHeight();
@@ -119,6 +119,7 @@ public class ScrollCalculatorHelper {
             if (gsyBaseVideoPlayer != null) {
                 int[] screenPosition = new int[2];
                 gsyBaseVideoPlayer.getLocationOnScreen(screenPosition);
+//                int halfHeight = 0;
                 int halfHeight = gsyBaseVideoPlayer.getHeight() / 2;
                 int rangePosition = screenPosition[1] + halfHeight;
                 //中心点在播放区域内
@@ -126,8 +127,8 @@ public class ScrollCalculatorHelper {
                     inPosition = true;
                 }
                 if (inPosition) {
-//                    startPlayLogic(gsyBaseVideoPlayer, gsyBaseVideoPlayer.getContext());
-                    gsyBaseVideoPlayer.startPlayLogic();
+                    startPlayLogic(gsyBaseVideoPlayer, gsyBaseVideoPlayer.getContext());
+//                    gsyBaseVideoPlayer.startPlayLogic();
                 }
             }
         }

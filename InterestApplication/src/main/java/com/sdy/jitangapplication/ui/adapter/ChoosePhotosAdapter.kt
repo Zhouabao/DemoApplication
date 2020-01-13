@@ -3,7 +3,7 @@ package com.sdy.jitangapplication.ui.adapter
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
-import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseItemDraggableAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
@@ -19,9 +19,17 @@ import kotlinx.android.synthetic.main.item_choose_photo.view.*
  *    type 0:全部相册  1:选中的    2:全部视频封面
  */
 class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<MediaBean> = mutableListOf()) :
-    BaseQuickAdapter<MediaBean, BaseViewHolder>(R.layout.item_choose_photo) {
+    BaseItemDraggableAdapter<MediaBean, BaseViewHolder>(R.layout.item_choose_photo, mutableListOf()) {
 
     override fun convert(helper: BaseViewHolder, item: MediaBean) {
+        if (type == 1) {
+            val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
+            params.width = SizeUtils.dp2px(58F)
+            params.height = SizeUtils.dp2px(58F)
+            helper.itemView.layoutParams = params
+        }
+
+
         if (helper.layoutPosition == 0 && type == 1) {
             val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
             params.leftMargin = SizeUtils.dp2px(15F)
@@ -39,30 +47,19 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
             helper.itemView.chooseVideoDuration.visibility = View.GONE
             if (helper.layoutPosition == 0) {
                 helper.itemView.choosePhotoDel.visibility = View.GONE
-                helper.itemView.choosePhotoIndex.visibility = View.GONE
                 helper.itemView.chooseCamera.visibility = View.VISIBLE
                 helper.itemView.choosePhoto.visibility = View.GONE
                 helper.itemView.choosePhoto.setImageResource(R.drawable.icon_way_camera)
             } else {
-                helper.addOnClickListener(R.id.choosePhotoIndex)
+                helper.itemView.choosePhotoDel.visibility = View.VISIBLE
+                if (item.ischecked) {
+                    helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_checked_video)
+                } else {
+                    helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_choose)
+                }
                 helper.itemView.chooseCamera.visibility = View.GONE
                 helper.itemView.choosePhoto.visibility = View.VISIBLE
-                helper.itemView.choosePhotoDel.visibility = if (!item.ischecked) {
-                    helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_choose)
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                helper.itemView.choosePhotoIndex.visibility = if (item.ischecked) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-                for (index in 0 until pickedPhotos.size) {
-                    if (pickedPhotos[index] == item) {
-                        helper.itemView.choosePhotoIndex.text = "${index + 1}"
-                    }
-                }
+                helper.itemView.choosePhotoDel.visibility = View.VISIBLE
                 GlideUtil.loadRoundImgCenterCropNoHolder(
                     mContext,
                     item.filePath,
@@ -73,16 +70,19 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
             }
         } else if (type == 1) {//1:选中的相册
             helper.itemView.chooseVideoDuration.visibility = View.GONE
-            helper.itemView.choosePhotoIndex.visibility = View.GONE
-            GlideUtil.loadRoundImgCenterCropNoHolder(mContext, item.filePath, helper.itemView.choosePhoto, SizeUtils.dp2px(5F))
+            GlideUtil.loadRoundImgCenterCropNoHolder(
+                mContext,
+                item.filePath,
+                helper.itemView.choosePhoto,
+                SizeUtils.dp2px(5F)
+            )
             helper.itemView.choosePhotoDel.visibility = if (item.ischecked) {
-                helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_delete)
+                helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_delete_gray)
                 View.VISIBLE
             } else {
                 View.GONE
             }
         } else if (type == 2) {
-            helper.itemView.choosePhotoIndex.visibility = View.GONE
             if (helper.layoutPosition == 0) {
                 helper.itemView.choosePhotoDel.visibility = View.GONE
                 helper.itemView.chooseCamera.visibility = View.VISIBLE
@@ -95,11 +95,6 @@ class ChoosePhotosAdapter(val type: Int = 0, var pickedPhotos: MutableList<Media
                     helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_checked_video)
                 } else {
                     helper.itemView.choosePhotoDel.setImageResource(R.drawable.icon_choose)
-                }
-                for (index in 0 until pickedPhotos.size) {
-                    if (pickedPhotos[index] == item) {
-                        helper.itemView.choosePhotoIndex.text = "${index + 1}"
-                    }
                 }
                 GlideUtil.loadRoundImgCenterCropNoHolder(
                     mContext,

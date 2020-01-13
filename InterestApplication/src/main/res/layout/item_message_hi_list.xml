@@ -8,154 +8,95 @@
         android:background="@color/colorWhite"
         android:layout_height="wrap_content">
 
-    <RelativeLayout
-            android:id="@+id/iconLl"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/msgIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            app:civ_border_color="@color/colorDivider"
+            app:civ_border_width="1dp"
             android:layout_marginLeft="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/msgIcon"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
-                android:layout_centerInParent="true"
-                />
-
-        <com.sdy.jitangapplication.widgets.MsgTimerProgress
-                android:id="@+id/msgCountDown"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:visibility="visible"
-                android:layout_height="wrap_content"
-                app:bitmapWidth="10"
-                app:timerWidth="56"/>
-
-        <com.sdy.jitangapplication.widgets.WaterRippleView
-                android:id="@+id/msgNofitySensor"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:visibility="gone"
-                app:rippleAutoRunning="true"
-                app:rippleCenterIcon="@drawable/shape_rectangle_gray_46dp"
-                app:rippleColor="@color/colorGradientRed"
-                app:rippleCount="2"
-                app:rippleSpacing="2dp"/>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/msgIconMask"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:background="@drawable/shape_oval_gray_3300"
-                android:layout_alignTop="@id/msgIcon"
-                android:layout_alignBottom="@id/msgIcon"
-                android:layout_alignLeft="@id/msgIcon"
-                android:layout_alignRight="@id/msgIcon"
-                />
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
 
-    </RelativeLayout>
+    <View
+            android:id="@+id/msgOnlineState"
+            android:layout_marginRight="3dp"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:visibility="gone"
+            android:background="@drawable/shape_rectangle_green_online"
+            app:layout_constraintRight_toRightOf="@id/msgIcon"
+            app:layout_constraintBottom_toBottomOf="@id/msgIcon"
+            />
 
 
     <TextView
             android:id="@+id/msgTitle"
-            android:layout_marginLeft="7dp"
-            tools:text="13477测试账号"
-            android:textColor="#ff222222"
+            android:layout_marginLeft="10dp"
+            android:textColor="#FF191919"
             android:textSize="16sp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/iconLl"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-    <com.sdy.jitangapplication.widgets.TimeRunTextView
-            android:id="@+id/msgTextTimer"
-            android:layout_marginLeft="15dp"
-            tools:text="24:00:00"
-            android:textColor="@color/colorWhite"
-            android:textSize="8sp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:background="@drawable/gradient_message_hi_time_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/msgTitle"
-            app:layout_constraintLeft_toRightOf="@id/msgTitle"
-            app:layout_constraintTop_toTopOf="@id/msgTitle"/>
+            app:layout_constraintLeft_toRightOf="@id/msgIcon"
+            app:layout_constraintRight_toLeftOf="@id/msgUserInfo"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="13477测试账号"/>
 
     <TextView
-            android:id="@+id/msgOuttimeTip"
-            android:visibility="gone"
-            android:layout_marginLeft="15dp"
-            tools:text="未回复"
-            android:textColor="@color/colorBlack4a"
-            android:textSize="8sp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:background="@drawable/shape_rectangle_solid_gray"
-            android:layout_width="wrap_content"
+            android:id="@+id/msgUserInfo"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="男·24岁·3km"
+            android:textColor="#ffc5c6c8"
+            android:textSize="13sp"
+            android:layout_marginLeft="5dp"
             app:layout_constraintBottom_toBottomOf="@id/msgTitle"
             app:layout_constraintLeft_toRightOf="@id/msgTitle"
-            app:layout_constraintTop_toTopOf="@id/msgTitle"/>
+            app:layout_constraintRight_toLeftOf="@id/latelyTime"
+            app:layout_constraintTop_toTopOf="@id/msgTitle"
+            />
+
+
 
     <TextView
             android:id="@+id/latelyTime"
-            tools:text="2018-12-31 12:00:00"
             android:textColor="#ff999999"
             android:textSize="12sp"
             android:layout_marginRight="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toRightOf="@id/msgUserInfo"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/msgTitle"/>
+            app:layout_constraintTop_toTopOf="@id/msgTitle"
+            app:layout_constraintBottom_toBottomOf="@id/msgTitle"
+            tools:text="2018-12-31 12:00:00"/>
 
     <TextView
             android:id="@+id/text"
             android:layout_marginTop="6dp"
             android:layout_width="0dp"
             android:layout_height="20dp"
-            android:singleLine="true"
             android:ellipsize="end"
-            tools:text="对方向您打了一个招呼"
-            android:textColor="#ff999999"
+            android:textColor="#FFC5C6C8"
             android:textSize="14sp"
-            android:layout_marginRight="30dp"
-            app:layout_constraintLeft_toLeftOf="@id/msgTitle"
-            app:layout_constraintRight_toLeftOf="@id/newCount"
-            app:layout_constraintTop_toBottomOf="@id/msgTitle"
-            />
-
-    <TextView
-            android:id="@+id/newCount"
-            android:text="2"
-            android:textColor="@color/colorWhite"
-            android:textSize="12sp"
             android:layout_marginRight="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="1dp"
-            android:paddingBottom="1dp"
-            android:textStyle="bold"
-            android:background="@drawable/orange_bg_rectangle"
+            android:maxLines="1"
+            app:layout_constraintLeft_toLeftOf="@id/msgTitle"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/text"/>
+            app:layout_constraintTop_toBottomOf="@id/msgTitle"
+            tools:text="对方向您打了一个招呼"
+            />
 
 
     <View
             android:id="@+id/msgDivider"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="17dp"
             android:background="@color/colorDivider"
             android:layout_width="0dp"
             android:layout_height="1dp"

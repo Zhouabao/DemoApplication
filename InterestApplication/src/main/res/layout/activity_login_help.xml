@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:background="@color/colorWhite"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         tools:context=".ui.activity.LoginHelpActivity">
 
     <include layout="@layout/layout_actionbar"/>

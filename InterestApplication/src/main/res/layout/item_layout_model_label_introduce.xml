@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="15dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/avatorCiv"
+                android:layout_width="44dp"
+                android:src="@drawable/default_avator_image"
+                android:layout_height="44dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/nameTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Herbert Ford"
+                android:textColor="#ff000000"
+                android:textSize="17sp"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/avatorCiv"
+                app:layout_constraintLeft_toRightOf="@id/avatorCiv"
+                app:layout_constraintTop_toTopOf="@id/avatorCiv"/>
+
+        <View
+                android:id="@+id/view1"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintLeft_toLeftOf="@id/avatorCiv"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/avatorCiv"/>
+
+        <TextView
+                android:id="@+id/introduceTv"
+                android:layout_marginTop="15dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="坐标广东，双鱼小女生（处女 狮子请绕道）爱旅行 爱拍照 爱笑也是累计旅行800多天的老玩家喜欢天蝎男 巨蟹男 180+ 宠溺 其他距离什么的都不是问题，可以一起去旅行"
+                android:textColor="#ff696e73"
+                android:textSize="15sp"
+                android:lineSpacingMultiplier="1.2"
+                app:layout_constraintLeft_toLeftOf="@id/view1"
+                app:layout_constraintRight_toRightOf="@id/view1"
+                app:layout_constraintTop_toBottomOf="@id/view1"
+                />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

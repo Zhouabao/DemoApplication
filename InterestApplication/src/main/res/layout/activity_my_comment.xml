@@ -1,40 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stateview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
-        tools:context=".ui.activity.MyCommentActivity">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:msv_errorView="@layout/error_layout"
+        android:fitsSystemWindows="true"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading">
 
-    <include layout="@layout/layout_actionbar"/>
-
-    <com.kennyc.view.MultiStateView
-            android:id="@+id/stateview"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llTitle"
-            app:msv_errorView="@layout/error_layout"
-            app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            android:layout_height="match_parent"
+            app:srlDisableContentWhenLoading="false"
+            app:srlDisableContentWhenRefresh="false">
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                android:id="@+id/refreshLayout"
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/commentRv"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:srlDisableContentWhenLoading="false"
-                app:srlDisableContentWhenRefresh="false">
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/commentRv"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-    </com.kennyc.view.MultiStateView>
+                android:layout_height="match_parent"/>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</com.kennyc.view.MultiStateView>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>

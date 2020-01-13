@@ -10,17 +10,12 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.utils.UserManager
-import com.tencent.mm.opensdk.modelmsg.SendAuth
-import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import com.sdy.jitangapplication.wxapi.WXEntryActivity
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.startActivity
 
-/**
- * 欢迎页
- */
-
-//todo(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
+//(判断用户是否登录过，如果登录过，就直接跳主页面，否则就进入登录页面)
 class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,14 +27,13 @@ class LoginActivity : BaseActivity() {
 
 
         //判断是否有登录
+        //移除老用户的标签
+        if (!SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isNullOrEmpty())
+            SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
+
         if (UserManager.getToken().isNotEmpty()) {//token不为空说明登录过
             if (UserManager.isUserInfoMade()) {//是否填写过用户信息
-                if (SPUtils.getInstance(Constants.SPNAME).getStringSet("checkedLabels").isEmpty()) {//是否选择过标签
-                    UserManager.clearLoginData()
-//                    startActivity<LabelsActivity>()
-                } else {
-                    startActivity<MainActivity>()
-                }
+                startActivity<MainActivity>()
                 finish()
             } else {
                 UserManager.clearLoginData()
@@ -55,35 +49,19 @@ class LoginActivity : BaseActivity() {
 
         //微信登录
         wechatLoginBtn.onClick {
-            wechatLogin()
+            CommonFunction.wechatLogin(this, WXEntryActivity.WECHAT_LOGIN)
         }
 
         //隐私协议
         privacyPolicy.onClick {
-            startActivity<ProtocolActivity>("type" to 1)
+            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_PRIVACY_PROTOCOL)
         }
         //用户协议
         userAgreement.onClick {
-            startActivity<ProtocolActivity>("type" to 2)
+            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
         }
 
     }
-
-    private fun wechatLogin() {
-        val wxapi = WXAPIFactory.createWXAPI(this, null)
-        wxapi.registerApp(Constants.WECHAT_APP_ID)
-        if (!wxapi.isWXAppInstalled) {
-            CommonFunction.toast("你没有安装微信")
-            return
-        }
-        val req = SendAuth.Req()
-        req.scope = "snsapi_userinfo"
-        req.state = "wechat_sdk_demo_test"
-        wxapi.sendReq(req)
-//        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, umAuthListener)
-    }
-
-
 
     override fun onDestroy() {
         super.onDestroy()

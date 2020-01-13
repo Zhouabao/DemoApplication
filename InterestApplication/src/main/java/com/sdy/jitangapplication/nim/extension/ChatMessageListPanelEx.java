@@ -12,11 +12,11 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.SizeUtils;
-import com.google.android.flexbox.*;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
@@ -60,13 +60,15 @@ import com.netease.nimlib.sdk.robot.model.RobotMsgType;
 import com.netease.nimlib.sdk.team.constant.TeamMemberType;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.sdy.baselibrary.glide.GlideUtil;
-import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.event.NimHeadEvent;
-import com.sdy.jitangapplication.model.LabelBean;
-import com.sdy.jitangapplication.model.Tag;
+import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
-import com.sdy.jitangapplication.ui.adapter.ChatHiLabelAdapter;
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity;
+import com.sdy.jitangapplication.ui.adapter.ChatTaregetSquareAdapter;
+import com.sdy.jitangapplication.ui.dialog.ReportChatContentDialog;
 import com.sdy.jitangapplication.utils.UserManager;
+import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 import com.sdy.jitangapplication.widgets.DividerItemDecoration;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -128,11 +130,14 @@ public class ChatMessageListPanelEx {
     private boolean mIsInitFetchingLocal;
 
     //頭部數據
-    private ImageView chatHiAvator;
-    private RecyclerView chatHiTags;
+    private TextView targetUserDetail;
+    private ImageView targetUserAvator;
+    private ImageView myAvator;
+    private RecyclerView targetSquare;
+    private TextView targetBothInterest;
     private ConstraintLayout targetCl;
     private View headView;
-    private ChatHiLabelAdapter hiLabelAdapter;
+    private ChatTaregetSquareAdapter targetSquareAdapter;
 
     public ChatMessageListPanelEx(Container container, View rootView, boolean recordOnly, boolean remote) {
         this(container, rootView, null, recordOnly, remote);
@@ -898,19 +903,23 @@ public class ChatMessageListPanelEx {
             MsgTypeEnum msgType = selectedItem.getMsgType();
 
             MessageAudioControl.getInstance(container.activity).stopAudio();
-
-            // 0 EarPhoneMode 扬声器
-            longClickItemEarPhoneMode(alertDialog, msgType);
-            // 1 resend 重新发送
-            longClickItemResend(selectedItem, alertDialog);
-            // 2 copy 复制文本
-            longClickItemCopy(selectedItem, alertDialog, msgType);
-            // 3 revoke 撤回
-//            if (enableRevokeButton(selectedItem)) {
-//                longClickRevokeMsg(selectedItem, alertDialog);
-//            }
-            // 4 delete 删除
+            // 0 delete 删除
             longClickItemDelete(selectedItem, alertDialog);
+            // 1 copy 复制文本
+            longClickItemCopy(selectedItem, alertDialog, msgType);
+            // 2 EarPhoneMode 扬声器
+            longClickItemEarPhoneMode(alertDialog, msgType);
+            // 3 resend 重新发送
+            longClickItemResend(selectedItem, alertDialog);
+            // 4 revoke 撤回
+            if (enableRevokeButton(selectedItem)) {
+                longClickRevokeMsg(selectedItem, alertDialog);
+            }
+            //5 举报 (文本、图片、视频、音频)
+            if (selectedItem.getDirect() == MsgDirectionEnum.In
+                    && (selectedItem.getMsgType() == MsgTypeEnum.audio || selectedItem.getMsgType() == MsgTypeEnum.video
+                    || selectedItem.getMsgType() == MsgTypeEnum.image || selectedItem.getMsgType() == MsgTypeEnum.text))
+                longClickReportContent(selectedItem, alertDialog);
             // 5 trans 语音转文字
 //            longClickItemVoidToText(selectedItem, alertDialog, msgType);
 
@@ -954,9 +963,28 @@ public class ChatMessageListPanelEx {
         private void onResendMessageItem(IMMessage message) {
             int index = getItemIndex(message.getUuid());
             if (index >= 0) {
-                showResendConfirm(message); // 重发确认
+                showResendAlert(message);
             }
         }
+
+
+
+        private void showResendAlert(IMMessage item) {
+            new CommonAlertDialog.Builder(container.activity)
+                    .setContent("确认重新发送该条消息")
+                    .setTitle("重新发送")
+                    .setCancelText("取消")
+                    .setConfirmText("重新发送")
+                    .setCancelIconIsVisibility(true)
+                    .setOnConfirmListener(dialog -> {
+                        resendMessage(item); // 重发确认
+                        dialog.dismiss();
+                    })
+                    .setOnCancelListener(dialog -> dialog.dismiss())
+                    .create()
+                    .show();
+        }
+
 
         private void showResendConfirm(final IMMessage message) {
             EasyAlertDialogHelper.OnDialogActionListener listener = new EasyAlertDialogHelper.OnDialogActionListener() {
@@ -1092,41 +1120,56 @@ public class ChatMessageListPanelEx {
             alertDialog.addItem(container.activity.getString(R.string.withdrawn_msg), new CustomAlertDialog.onSeparateItemClickListener() {
                 @Override
                 public void onClick() {
-                    if (!NetworkUtil.isNetAvailable(container.activity)) {
-                        ToastHelper.showToast(container.activity, R.string.network_is_not_available);
-                        return;
-                    }
-                    Map<String, Object> payload = null;
-
-                    CustomPushContentProvider customConfig = NimUIKitImpl.getCustomPushContentProvider();
-                    if (customConfig != null) {
-                        payload = customConfig.getPushPayload(item);
-                    }
-//                    NIMClient.getService(MsgService.class).revokeMessage(item).setCallback(new RequestCallback<Void>() {
-                    NIMClient.getService(MsgService.class).revokeMessageEx(item, "撤回一条消息", payload).setCallback(new RequestCallback<Void>() {
-                        @Override
-                        public void onSuccess(Void param) {
-                            deleteItem(item, false);
-                            MessageHelper.getInstance().onRevokeMessage(item, NimUIKit.getAccount());
-                        }
-
-                        @Override
-                        public void onFailed(int code) {
-                            if (code == ResponseCode.RES_OVERDUE) {
-                                ToastHelper.showToast(container.activity, R.string.revoke_failed);
-                            } else {
-                                ToastHelper.showToast(container.activity, "revoke msg failed, code:" + code);
-                            }
-                        }
-
-                        @Override
-                        public void onException(Throwable exception) {
-
-                        }
-                    });
+                    showRevokeAlert(item);
                 }
             });
         }
+
+
+        private void showRevokeAlert(IMMessage item) {
+            new CommonAlertDialog.Builder(container.activity)
+                    .setContent("是否撤回此条消息")
+                    .setTitle("撤回")
+                    .setCancelIconIsVisibility(true)
+                    .setOnConfirmListener(dialog -> {
+                        if (!NetworkUtil.isNetAvailable(container.activity)) {
+                            ToastHelper.showToast(container.activity, R.string.network_is_not_available);
+                            return;
+                        }
+                        Map<String, Object> payload = null;
+
+                        CustomPushContentProvider customConfig = NimUIKitImpl.getCustomPushContentProvider();
+                        if (customConfig != null) {
+                            payload = customConfig.getPushPayload(item);
+                        }
+                        NIMClient.getService(MsgService.class).revokeMessageEx(item, "撤回一条消息", payload).setCallback(new RequestCallback<Void>() {
+                            @Override
+                            public void onSuccess(Void param) {
+                                deleteItem(item, false);
+                                MessageHelper.getInstance().onRevokeMessage(item, NimUIKit.getAccount());
+                            }
+
+                            @Override
+                            public void onFailed(int code) {
+                                if (code == ResponseCode.RES_OVERDUE) {
+                                    ToastHelper.showToast(container.activity, R.string.revoke_failed);
+                                } else {
+                                    ToastHelper.showToast(container.activity, "revoke msg failed, code:" + code);
+                                }
+                            }
+
+                            @Override
+                            public void onException(Throwable exception) {
+
+                            }
+                        });
+                        dialog.dismiss();
+                    })
+                    .setOnCancelListener(dialog -> dialog.dismiss())
+                    .create()
+                    .show();
+        }
+
 
         // 长按-取消上传附件
         private void longClickItemCancelUpload(final IMMessage selectedItem, CustomAlertDialog alertDialog) {
@@ -1145,6 +1188,17 @@ public class ChatMessageListPanelEx {
                 @Override
                 public void onClick() {
                     NIMClient.getService(MsgService.class).cancelUploadAttachment(selectedItem);
+                }
+            });
+        }
+
+        //长按-举报聊天内容
+        private void longClickReportContent(final IMMessage selectedItem, CustomAlertDialog alertDialog) {
+            alertDialog.addItem("举报", new CustomAlertDialog.onSeparateItemClickListener() {
+                @Override
+                public void onClick() {
+                    //举报聊天内容
+                    new ReportChatContentDialog(container.activity, selectedItem).show();
                 }
             });
         }
@@ -1207,7 +1261,7 @@ public class ChatMessageListPanelEx {
         return msg != null
                 && msg.getSessionType() == SessionTypeEnum.P2P
                 && msg.getDirect() == MsgDirectionEnum.Out
-                //&& msg.getMsgType() != MsgTypeEnum.tip
+                && msg.getMsgType() != MsgTypeEnum.tip
                 && msg.getMsgType() != MsgTypeEnum.notification
                 && msg.isRemoteRead();
 
@@ -1335,54 +1389,49 @@ public class ChatMessageListPanelEx {
         if (headView == null) {
             headView = initHeadView();
             adapter.addHeaderView(headView);
-            setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
+            setHeadData(event.getNimBean());
         }
-        //else {
-        //   setHeadData(event.getNimBean().getAvatar(), event.getNimBean().getTaglist());
-//        }
     }
 
 
     private View initHeadView() {
         headView = LayoutInflater.from(container.activity).inflate(com.sdy.jitangapplication.R.layout.item_chat_head, messageListView, false);
         //初始化数据
-        chatHiAvator = headView.findViewById(com.sdy.jitangapplication.R.id.targetAvator);
-        chatHiTags = headView.findViewById(com.sdy.jitangapplication.R.id.targetLabels);
+        targetUserDetail = headView.findViewById(com.sdy.jitangapplication.R.id.targetUserDetail);
+        targetBothInterest = headView.findViewById(com.sdy.jitangapplication.R.id.targetBothInterest);
+        targetUserAvator = headView.findViewById(com.sdy.jitangapplication.R.id.targetAvator);
+        myAvator = headView.findViewById(com.sdy.jitangapplication.R.id.myAvator);
+        targetSquare = headView.findViewById(com.sdy.jitangapplication.R.id.targetSquare);
         targetCl = headView.findViewById(com.sdy.jitangapplication.R.id.targetCl);
-//        chatHiAvator.setOnClickListener(view -> MatchDetailActivity.start(container.activity, container.account, -1, -1));
+        targetUserDetail.setOnClickListener(view -> MatchDetailActivity.start(container.activity, container.account, -1, -1));
 
-        FlexboxLayoutManager manager = new FlexboxLayoutManager(container.activity, FlexDirection.ROW, FlexWrap.WRAP);
-        manager.setAlignItems(AlignItems.STRETCH);
-        manager.setJustifyContent(JustifyContent.CENTER);
-
-        chatHiTags.setLayoutManager(manager);
-        chatHiTags.addItemDecoration(new DividerItemDecoration(container.activity, DividerItemDecoration.BOTH_SET, SizeUtils.dp2px(8F), container.activity.getResources().getColor(R.color.white)));
-        hiLabelAdapter = new ChatHiLabelAdapter(container.activity);
-        chatHiTags.setAdapter(hiLabelAdapter);
+        LinearLayoutManager manager = new LinearLayoutManager(container.activity, RecyclerView.HORIZONTAL, false);
+        targetSquare.setLayoutManager(manager);
+        targetSquare.addItemDecoration(new DividerItemDecoration(container.activity, DividerItemDecoration.VERTICAL_LIST, SizeUtils.dp2px(5F), container.activity.getResources().getColor(R.color.white)));
+        targetSquareAdapter = new ChatTaregetSquareAdapter();
+        targetSquare.setAdapter(targetSquareAdapter);
+        targetSquareAdapter.setOnItemClickListener((adapter, view, position) ->
+                SquareCommentDetailActivity.Companion.start(container.activity, null, targetSquareAdapter.getData().get(position).getId(), "", -1));
         return headView;
     }
 
 
-    public void setHeadData(String avator, ArrayList<Tag> tags) {
+    public void setHeadData(NimBean nimBean) {
         //头像
-        GlideUtil.loadAvatorImg(container.activity, avator, chatHiAvator);
-        //用户标签
-//        MatchDetailLabelAdapter adapter = new MatchDetailLabelAdapter(container.activity);
-        ArrayList<LabelBean> mytags = (ArrayList<LabelBean>) UserManager.INSTANCE.getSpLabels();
-
-        if (tags != null && tags.size() > 0) {
-            if (mytags.size() > 0)
-                for (int i = 0; i < tags.size(); i++) {
-                    for (int j = 0; j < mytags.size(); j++) {
-                        if (mytags.get(j).getId() == tags.get(i).getId() && tags.get(i).getId() != Constants.RECOMMEND_TAG_ID) {
-                            tags.get(i).setSameLabel(true);
-                            break;
-                        } else {
-                            tags.get(i).setSameLabel(false);
-                        }
-                    }
-                }
-            hiLabelAdapter.setData(tags);
+        GlideUtil.loadAvatorImg(container.activity, nimBean.getAvatar(), targetUserAvator);
+        GlideUtil.loadAvatorImg(container.activity, UserManager.INSTANCE.getAvator(), myAvator);
+        if (nimBean.getMatching_content().isEmpty()) {
+            targetBothInterest.setVisibility(View.GONE);
+        } else {
+            targetBothInterest.setVisibility(View.VISIBLE);
+            targetBothInterest.setText(nimBean.getMatching_content());
+        }
+        //用户广场
+        targetSquareAdapter.setDataSize(nimBean.getSquare().size());
+        if (nimBean.getSquare().size() > ChatTaregetSquareAdapter.MAX_SHOW_COUNT) {
+            targetSquareAdapter.setNewData(nimBean.getSquare().subList(0, ChatTaregetSquareAdapter.MAX_SHOW_COUNT));
+        } else {
+            targetSquareAdapter.setNewData(nimBean.getSquare());
         }
     }
 

@@ -39,7 +39,7 @@ public class MsgViewHolderMatch extends MsgViewHolderBase {
     protected void inflateContentView() {
         //初始化数据
         chatHiAvator = findViewById(R.id.targetAvator);
-        chatHiTags = findViewById(R.id.targetLabels);
+        chatHiTags = findViewById(R.id.targetSquare);
         targetCl = findViewById(R.id.targetCl);
         setLayoutParams(ScreenUtil.screenWidth, FrameLayout.LayoutParams.WRAP_CONTENT, targetCl);
         setGravity(targetCl, Gravity.CENTER);

@@ -9,13 +9,18 @@ import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.google.android.flexbox.*
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.Newtag
+import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.item_match_user.view.*
+
 
 /**
  *    author : ZFM
@@ -26,9 +31,18 @@ import kotlinx.android.synthetic.main.item_match_user.view.*
  */
 class MatchUserAdapter(data: MutableList<MatchBean>) :
     BaseQuickAdapter<MatchBean, BaseViewHolder>(R.layout.item_match_user, data) {
+    var my_tags_quality: MutableList<Newtag> = mutableListOf()
     override fun convert(holder: BaseViewHolder, item: MatchBean) {
-        //为了防止indicator重复 每次先给他remove了
+        //点击切换上一张图片
+        holder.addOnClickListener(R.id.lastImgBtn)
+        //点击切换下一张图片
+        holder.addOnClickListener(R.id.nextImgBtn)
         holder.addOnClickListener(R.id.v1)
+        holder.addOnClickListener(R.id.btnHi)
+        holder.addOnClickListener(R.id.btnHiLottieView)
+        holder.itemView.btnHiIv.alpha = 1F
+        holder.itemView.btnHiLeftTime.alpha = 0F
+        //为了防止indicator重复 每次先给他remove了
         holder.itemView.vpIndicator.removeAllViews()
         holder.itemView.vpPhotos.setScrollable(false)
         holder.itemView.vpPhotos.tag = holder.layoutPosition
@@ -36,7 +50,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             mContext,
             if (item.photos.isNullOrEmpty()) mutableListOf(item.avatar ?: "") else item.photos!!
         )
-        holder.itemView.vpPhotos.currentItem = 0
+
+
         holder.itemView.vpPhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             }
@@ -48,42 +63,94 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 for (i in 0 until holder.itemView.vpIndicator.size) {
                     (holder.itemView.vpIndicator[i] as RadioButton).isChecked = i == position
                 }
+
+                //首张内容  用户在该标签下的特质
+                //次张内容  用户的「关于我」描述文本。如用用户填写过则呈现，没有则保留至最后一张显示状态
+                //三张内容  用户在发布过的内容（所有标签），参考设计内容，如用户没发布过则跳转至第三张内容
                 when (position) {
-                    0 -> {  //0显示广场
-                        holder.itemView.matchUserDynamicLl.isVisible = !item.square.isNullOrEmpty()
-                        holder.itemView.matchUserIntroduce.visibility = View.GONE
-                        holder.itemView.matchUserInfoCl.isVisible = item.square.isNullOrEmpty()
-                    }
-                    1 -> {//如果广场动态有，就显示个人信息
-                        //如果广场动态没有,就判断有没有签名,    如果有签名显示签名 ,如果没有就显示个人信息
-                        // 如果有个人信息显示个人信息
-                        holder.itemView.matchUserDynamicLl.visibility = View.GONE
-                        if (item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
-                            holder.itemView.matchUserInfoCl.isVisible = item.sign.isNullOrBlank()
+                    0 -> {  //0显示用户在该标签下的特质
+                        if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else if (!item.sign.isNullOrBlank()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserLocalTagContent.isVisible = true
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else if (!item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
                         } else {
-                            holder.itemView.matchUserIntroduce.isVisible = false
-                            holder.itemView.matchUserInfoCl.isVisible = true
+                            holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
+                        }
+
+                    }
+                    1 -> {
+                        if (!item.sign.isNullOrBlank()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                            holder.itemView.matchUserLocalTagContent.isVisible = true
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else if (!item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                        } else if (!item.newtags.isNullOrEmpty() && !item.newtags!![0].label_quality.isEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else {
+
+                            holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
                         }
                     }
                     else -> {
-                        holder.itemView.matchUserDynamicLl.isVisible = false
-                        holder.itemView.matchUserIntroduce.isVisible = !item.sign.isNullOrBlank()
-                        holder.itemView.matchUserInfoCl.isVisible = item.sign.isNullOrBlank()
+                        if (!item.square.isNullOrEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                        } else if (!item.sign.isNullOrBlank()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserLocalTagContent.isVisible = true
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else if (!item.newtags.isNullOrEmpty() && !item.newtags!![0].label_quality.isEmpty()) {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+
+                            holder.itemView.matchUserLocalTagCharacter.isVisible = true
+                            holder.itemView.matchUserLocalTagContent.isVisible = false
+                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        } else {
+                            holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
+                        }
                     }
                 }
             }
 
         })
+        holder.itemView.vpPhotos.currentItem = 0
 
         /*生成indicator*/
         if ((item.photos ?: mutableListOf<MatchBean>()).size > 1) {
+            holder.itemView.vpIndicator.isVisible = true
             val size = (item.photos ?: mutableListOf<MatchBean>()).size
             for (i in 0 until size) {
-                val width = ((ScreenUtils.getScreenWidth()
-                        - SizeUtils.dp2px(15F) * 4
-                        - (SizeUtils.dp2px(6F) * (size - 1))) * 1F / size).toInt()
-                val height = SizeUtils.dp2px(5F)
+//                val width = ((ScreenUtils.getScreenWidth()
+//                        - SizeUtils.dp2px(15F) * 4
+//                        - (SizeUtils.dp2px(6F) * (size - 1))) * 1F / size).toInt()
+                val width = SizeUtils.dp2px(6F)
+                val height = SizeUtils.dp2px(6F)
                 val indicator = RadioButton(mContext)
                 indicator.buttonDrawable = null
                 indicator.background = mContext.resources.getDrawable(R.drawable.selector_round_indicator)
@@ -106,85 +173,105 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 indicator.isChecked = i == 0
                 holder.itemView.vpIndicator.addView(indicator)
             }
+        } else {
+            holder.itemView.vpIndicator.isVisible = false
         }
 
         /*设置封面图片recyclerview*/
-        if (item.square.isNullOrEmpty()) {
-            holder.itemView.matchUserDynamicLl.visibility = View.GONE
-            holder.itemView.matchUserIntroduce.visibility = View.GONE
-            holder.itemView.matchUserInfoCl.visibility = View.VISIBLE
-        } else {
-            holder.itemView.matchUserDynamicLl.visibility = View.VISIBLE
+        val itemDecoration = DividerItemDecoration(
+            mContext,
+            DividerItemDecoration.VERTICAL_LIST,
+            SizeUtils.dp2px(3F),
+            mContext.resources.getColor(R.color.colorTransparent)
+        )
+        if (!item.square.isNullOrEmpty()) {
             holder.itemView.matchUserDynamicThumbRv.layoutManager =
                 LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-            val adapter = DetailThumbAdapter(mContext)
-            adapter.setData(item.square ?: mutableListOf())
+            for (decoration in 0 until holder.itemView.matchUserDynamicThumbRv.itemDecorationCount) {
+                holder.itemView.matchUserDynamicThumbRv.removeItemDecorationAt(decoration)
+            }
+            holder.itemView.matchUserDynamicThumbRv.addItemDecoration(itemDecoration)
+
+            val adapter = DetailThumbAdapter(dataSize = (item.square ?: mutableListOf()).size)
+            if ((item.square ?: mutableListOf()).size > DetailThumbAdapter.MAX_MATCH_COUNT) {
+                adapter.setNewData(item.square!!.subList(0, DetailThumbAdapter.MAX_MATCH_COUNT))
+            } else {
+                adapter.setNewData(item.square ?: mutableListOf())
+            }
             holder.itemView.matchUserDynamicThumbRv.adapter = adapter
-            holder.itemView.matchUserIntroduce.visibility = View.GONE
-            holder.itemView.matchUserInfoCl.visibility = View.GONE
         }
 
-        //点击切换上一张图片
-        holder.addOnClickListener(R.id.lastImgBtn)
-        //点击切换下一张图片
-        holder.addOnClickListener(R.id.nextImgBtn)
 
-        //点击切换上一张图片
-//        holder.itemView.lastImgBtn.onClick {
-//            if (holder.itemView.vpPhotos.currentItem > 0) {
-//                val index = holder.itemView.vpPhotos.currentItem
-//                holder.itemView.vpPhotos.setCurrentItem(index - 1, true)
-//            } else {
-//                EventBus.getDefault().post(ShakeEvent(true))
-//            }
-//        }
-
-        //点击切换下一张图片
-//        holder.itemView.nextImgBtn.onClick {
-//            if (holder.itemView.vpPhotos.currentItem < (item.photos ?: mutableListOf<MatchBean>()).size - 1) {
-//                val index = holder.itemView.vpPhotos.currentItem
-//                holder.itemView.vpPhotos.setCurrentItem(index + 1, true)
-//            } else {
-//                EventBus.getDefault().post(ShakeEvent(false))
-//            }
-//        }
-
-        holder.itemView.ivVip.visibility = if (item.isvip == 1) {
-            View.VISIBLE
+        holder.itemView.ivVip.isVisible = item.isvip == 1
+        holder.itemView.ivVerify.isVisible = item.isfaced == 1
+        holder.itemView.btnHi.isVisible = item.greet_switch
+        holder.itemView.btnHiView.isVisible = item.greet_switch
+        if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
+            holder.itemView.matchUserLocalTagCl.isVisible = true
+            holder.itemView.matchUserLocalTagCharacter.isVisible = true
+            holder.itemView.matchUserLocalTagContent.isVisible = false
+            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+        } else if (!item.sign.isNullOrBlank()) {
+            holder.itemView.matchUserLocalTagCl.isVisible = true
+            holder.itemView.matchUserLocalTagContent.isVisible = true
+            holder.itemView.matchUserLocalTagCharacter.isVisible = false
+            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+        } else if (!item.square.isNullOrEmpty()) {
+            holder.itemView.matchUserLocalTagCl.isVisible = true
+            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+            holder.itemView.matchUserLocalTagContent.isVisible = false
+            holder.itemView.matchUserLocalTagCharacter.isVisible = false
         } else {
-            View.GONE
-        }
-
-        holder.itemView.ivVerify.visibility = if (item.isfaced == 1) {
-            View.VISIBLE
-        } else {
-            View.GONE
+            holder.itemView.matchUserLocalTagCl.visibility = View.GONE
         }
 
 
-        holder.itemView.matchUserIntroduce.text = item.sign ?: ""
+//        holder.itemView.matchUserLocalTagContent.isVisible = !item.sign.isNullOrBlank()
+//        holder.itemView.matchUserLocalTagCharacter.isVisible = !item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()
+//        holder.itemView.matchUserDynamicThumbRv.isVisible = !item.square.isNullOrEmpty()
 
+//        holder.itemView.matchUserIntroduce.text = item.sign ?: "" //关于自己
+        holder.itemView.matchAim.isVisible = item.intention.isNotEmpty()//标签意向
+        holder.itemView.matchAimTv.text = item.intention
+        holder.itemView.btnHiLeftTime.text = "${UserManager.getLightingCount()}"
+        GlideUtil.loadCircleImg(mContext, item.intention_icon, holder.itemView.matchAimIv)
+        holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""
+        holder.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty() //撮合标签
+        holder.itemView.matchBothIntersetContent.text = "${item.matching_content}"
+        GlideUtil.loadImg(mContext, item.matching_icon, holder.itemView.matchBothIntersetIv)
 
-
-        holder.itemView.matchUserLabelsLikeCount.visibility = if (item.tagcount == null || item.tagcount == 0) {
-            View.GONE
-        } else {
-            holder.itemView.matchUserLabelsLikeCount.text = "${item.tagcount}个标签重合"
-            View.VISIBLE
+        if (!item.newtags.isNullOrEmpty()) {
+            val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
+            manager.alignItems = AlignItems.STRETCH
+            manager.justifyContent = JustifyContent.FLEX_START
+//            holder.itemView.matchUserLocalTagCharacter.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
+            holder.itemView.matchUserLocalTagCharacter.layoutManager = manager
+            val adapter1 = MatchDetailLabelQualityAdapter()
+            outFor@ for (quality in my_tags_quality) {
+                for (quality1 in item.newtags ?: mutableListOf()) {
+                    if (quality1.id == quality.id) {
+                        adapter1.myTags = quality.label_quality
+                        break@outFor
+                    }
+                }
+            }
+            adapter1.setNewData(item.newtags!![0].label_quality)
+            holder.itemView.matchUserLocalTagCharacter.adapter = adapter1
         }
-        holder.itemView.matchUserJob.visibility = if (item.job.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            holder.itemView.matchUserJob.text = item.job ?: ""
-            View.VISIBLE
-        }
+
         holder.itemView.matchUserName.text = item.nickname ?: ""
-        holder.itemView.matchUserAge.text = "${item.age}\t" + "/\t${if (item.gender == 1) {
-            "男"
-        } else {
-            "女"
-        }}\t" + "/\t${item.constellation ?: ""}\t" + "/\t${item.distance ?: ""}"
+        holder.itemView.matchUserAge.text = "${item.age}"
+        val left = mContext.resources.getDrawable(
+            if (item.gender == 1) {
+                R.drawable.icon_gender_man_gray
+            } else {
+                R.drawable.icon_gender_woman_gray
+            }
+        )
+        holder.itemView.matchUserAge.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
 
+        holder.itemView.matchUserConstellation.text = "${item.constellation}"
+        holder.itemView.matchUserDistance.text = "${item.distance}"
     }
 
 }

@@ -81,14 +81,52 @@
             android:allowBackup="true"
             android:icon="@drawable/icon_logo"
             android:label="@string/app_name"
-            android:usesCleartextTraffic="true"
             android:networkSecurityConfig="@xml/network_security_config"
-            android:resizeableActivity="false"
             android:requestLegacyExternalStorage="true"
+            android:resizeableActivity="false"
             android:roundIcon="@drawable/icon_logo"
             android:supportsRtl="true"
             android:theme="@style/MyAppTheme"
+            android:usesCleartextTraffic="true"
             tools:replace="android:name,android:theme,android:icon">
+
+        <activity android:name=".ui.activity.LikeMeReceivedActivity">
+        </activity>
+        <activity android:name=".ui.activity.GreetReceivedActivity">
+        </activity>
+        <activity android:name=".ui.activity.VipPowerActivity">
+        </activity>
+        <activity android:name=".ui.activity.AllTitleActivity">
+        </activity>
+        <activity android:name=".ui.activity.SquareSamePersonActivity">
+        </activity>
+        <activity android:name=".ui.activity.MyIntentionActivity">
+        </activity>
+        <activity android:name=".ui.activity.MyIntentionActivity1">
+        </activity>
+        <activity android:name=".ui.activity.ChooseLabelActivity">
+        </activity>
+        <activity android:name=".ui.activity.ChooseTitleActivity">
+        </activity>
+        <activity android:name=".ui.activity.MyLabelActivity">
+        </activity>
+        <activity android:name=".ui.activity.AllMyLabelActivity">
+        </activity>
+        <activity android:name=".ui.activity.AddLabelSuccessActivity">
+        </activity>
+        <activity android:name=".ui.activity.UserIntroduceActivity"/>
+        <activity android:name=".ui.activity.LabelQualityActivity">
+        </activity>
+        <activity android:name=".ui.activity.AddLabelActivity">
+        </activity>
+        <activity android:name=".ui.activity.MyFootPrintActivity">
+        </activity>
+        <activity android:name=".ui.activity.LoginOffActivity">
+        </activity>
+        <activity android:name=".ui.activity.ChangeAccountActivity">
+        </activity>
+        <activity android:name=".ui.activity.AccountAboutActivity">
+        </activity>
         <activity android:name=".ui.activity.LoginHelpDetailActivity">
         </activity>
         <activity android:name=".ui.activity.LoginHelpActivity">
@@ -99,17 +137,11 @@
         </activity>
         <activity android:name=".ui.activity.UserNickNameActivity">
         </activity>
-        <activity android:name=".ui.activity.ModelAboutMeDetailActivity">
-        </activity>
         <activity android:name=".ui.activity.ModelAboutMeActivity">
         </activity>
         <activity
                 android:name=".ui.activity.LoginHelpReasonActivity"
                 android:windowSoftInputMode="adjustPan"/>
-        <activity
-                android:name=".ui.activity.AboutMeActivity"
-                android:windowSoftInputMode="adjustResize">
-        </activity>
         <activity android:name=".ui.activity.ChooseSchoolActivity">
         </activity>
         <activity android:name=".ui.activity.ReportReasonActivity">
@@ -117,16 +149,21 @@
         <activity android:name=".ui.activity.NewUserInfoSettingsActivity">
         </activity>
         <activity
-                android:name=".ui.activity.LabelsActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
                 android:name=".ui.activity.SplashActivity"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="growing.fb176594ca56d270"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
         </activity>
         <activity
@@ -195,15 +232,11 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.MessageHiActivity"
+                android:name=".ui.activity.MessageHiPastActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".ui.activity.MessageSquareActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
-                android:name=".ui.activity.MessageListActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
@@ -212,14 +245,6 @@
         </activity>
         <activity
                 android:name=".ui.activity.NickNameActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
-                android:name=".ui.activity.UserInfoSettingsActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
-                android:name=".ui.activity.MyCommentActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
@@ -239,10 +264,6 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.activity.UserCenterActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
                 android:name=".ui.activity.LocationActivity"
                 android:screenOrientation="portrait">
         </activity>
@@ -255,9 +276,6 @@
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="adjustNothing">
         </activity>
-        <activity
-                android:name=".ui.activity.PublishChooseLabelsActivity"
-                android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.SquarePlayListDetailActivity"
                 android:screenOrientation="portrait"
@@ -274,18 +292,20 @@
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustResize"/>
         <activity
+                android:name=".ui.activity.SquareCommentDetailActivity1"
+                android:screenOrientation="portrait"
+                android:theme="@style/Theme.AppCompat.Transitions"
+                android:windowSoftInputMode="adjustResize"/>
+        <activity
                 android:name=".ui.chat.MatchSucceedActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize|stateHidden"/>
+                android:windowSoftInputMode="adjustPan|stateHidden">
+        </activity>
         <activity
                 android:name=".ui.activity.MatchDetailActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ui.activity.UserBirthActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
-                android:name=".ui.activity.SetInfoActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
@@ -303,7 +323,6 @@
         <activity
                 android:name=".ui.activity.MainActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:launchMode="singleTop"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustNothing|stateAlwaysHidden">

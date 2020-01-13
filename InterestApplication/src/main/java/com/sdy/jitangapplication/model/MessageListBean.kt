@@ -20,21 +20,15 @@ data class MessageListBean(
 /**
  * 给我打招呼的人
  */
-
 data class HiMessageBean(
-    var count: Int = 0,
     var content: String = "",
     var accid: String = "",
     var avatar: String = "",
-    var create_time: String = "",
     var nickname: String = "",
+    var distance: String = "",
+    var age: Int = 0,
+    var gender: Int = 1,
     var out_time: String = "",
-    var timeout_time: Int = 0,
-    var countdown: Int = 0,//	倒计时秒剩余时长（秒）
-    var id: Int = 0,
-    var read_time: String = "",
-    var countdown_total: Int = 0,//	倒计时 总时长（秒）
-    var timer: Int = 0,
     var type: Int = 0//	1，新消息 2，倒计时 3，普通样式 4 过期
 ) : MultiItemEntity {
     override fun getItemType(): Int {
@@ -45,6 +39,32 @@ data class HiMessageBean(
 
 }
 
+/**
+ * 给我打招呼的人
+ */
+data class GreetedListBean(
+    var greet_id: String = "",
+    var accid: String = "",
+    var age: Int = 0,
+    var avatar: String = "",
+    var constellation: String = "",
+    var distance: String = "",
+    var face_auditing_state: Int = 0,
+    var gender: Int = 0,
+    var hb_city: String = "",
+    var intention_icon: String = "",
+    var intention_title: String = "",
+    var isfaced: Int = 0,
+    var isvip: Int = 0,
+    var matching_content: String = "",
+    var matching_icon: String = "",
+    var member_level: Int = 0,
+    var nickname: String = "",
+    var photos: MutableList<String> = mutableListOf(),
+    var sign: String = "",
+    var send_msg: String = ""//该用户发出来的招呼消息
+)
+
 
 /**
  * 被删除的超时的accid
@@ -54,30 +74,29 @@ data class OuttimeBean(
 )
 
 /*************消息列表**************/
-
-
 data class MessageListBean1(
-    val greet: MutableList<HiMessageBean>? = mutableListOf(),
-    val greet_cnt: Int = 0,//招呼总数
-    val liked_cnt: Int? = 0,//感兴趣的数量
+    var thumbs_up_count: Int = 0,//点赞未读数
+    var comment_count: Int = 0,//评论未读数
+    val greet_count: Int = 0,//招呼总数
+    val likelist: MutableList<Likelist>? = mutableListOf(),
     val liked_unread_cnt: Int? = 0,//	未读感兴趣总数
-    val liked_time: String? = "",//	感兴趣最后一条时间
-    val square_nickname: String? = "",//广场消息的用户昵称
-    val square_type: Int? = 0,//广场消息的内容1广场点赞 2评论我的 3为我评论点赞的
-    val square_time: String? = "",//最新一条广场消息
-    val square_cnt: Int? = 0,//广场消息总数
-    val greet_toast: Boolean = false //是否弹起开启招呼认证弹窗
+    val liked_cnt: Int? = 0,//	感兴趣总数
+    val like_free_show: Boolean,//	是否展示
+    val greet_toast: Boolean = false, //是否弹起开启招呼认证弹窗
+    var my_like_times: Int = 0,
+    var my_percent_complete: Int = 0,
+    var effective_greet: MutableList<Likelist> = mutableListOf(),
+    var no_effective_greet: MutableList<Likelist> = mutableListOf(),
+    var normal_percent_complete: Int = 0,
+    var total_like_times: Int = 0
 )
 
-data class SquareMsg(
-    val accid: String? = "",
-    val avatar: String? = "",
-    val content: String? = "",
-    val create_time: String? = "",
-    val descr: String? = "",//显示的内容（type==2有人评论是限制的评论内容）
-    val id: Int? = 0,
-    val nickname: String? = "",
-    val type: Int? = 0//1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
+data class Likelist(
+    var accid: String = "",
+    var avatar: String = "",
+    var is_read: Boolean = false,
+    var isfriend: Boolean = false,
+    var nickname: String = ""
 )
 
 /***********************对我感兴趣的**************************/
@@ -103,6 +122,33 @@ data class LikeMeBean(
     val list: MutableList<LikeMeOneDayBean>? = mutableListOf()
 )
 
+data class NewLikeMeBean(
+    var list: MutableList<PositiveLikeBean> = mutableListOf(),
+    var count: Int = 0,
+    var my_like_times: Int = 0,
+    var normal_percent_complete: Int = 0,
+    var my_percent_complete: Int = 0,
+    var total_like_times: Int = 0
+)
+
+
+data class PositiveLikeBean(
+    var accid: String = "",
+    var age: Int = 0,
+    var avatar: String = "",
+    var constellation: String = "",
+    var distance: String = "",
+    var gender: Int = 0,
+    var isfaced: Boolean = false,
+    var isvip: Boolean = false,
+    var nickname: String = "",
+    var tag_id: Int = 0,
+    var photo: MutableList<String> = mutableListOf(),
+    var sametag: MutableList<String> = mutableListOf(),
+    var title: String = ""
+)
+
+
 data class LikeMeOneDayBean(
     val age: Int? = 0,
     val avatar: String? = "",
@@ -112,6 +158,7 @@ data class LikeMeOneDayBean(
     val distance: String? = "",
     val gender: Int? = 0,
     var isfriend: Int = 0,
+    var isfaced: Int = 0,
     val isvip: Int? = 0,
     val job: String? = "",
     val nickname: String? = "",

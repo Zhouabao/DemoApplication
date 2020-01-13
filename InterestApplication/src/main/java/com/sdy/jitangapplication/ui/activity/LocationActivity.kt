@@ -1,41 +1,47 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
-import com.amap.api.maps2d.AMap
-import com.amap.api.maps2d.CameraUpdateFactory
-import com.amap.api.maps2d.model.BitmapDescriptorFactory
-import com.amap.api.maps2d.model.LatLng
-import com.amap.api.maps2d.model.Marker
-import com.amap.api.maps2d.model.MarkerOptions
+import com.amap.api.maps.AMap
+import com.amap.api.maps.CameraUpdateFactory
+import com.amap.api.maps.model.BitmapDescriptorFactory
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.Marker
+import com.amap.api.maps.model.MarkerOptions
 import com.amap.api.services.core.LatLonPoint
 import com.amap.api.services.core.PoiItem
 import com.amap.api.services.poisearch.PoiResult
 import com.amap.api.services.poisearch.PoiSearch
 import com.blankj.utilcode.util.SizeUtils
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.ui.adapter.LocationAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_location.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
+import kotlinx.android.synthetic.main.layout_marker_bg.view.*
 
 /**
  * 选择定位页面
  */
-class LocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener, View.OnClickListener {
+class LocationActivity : BaseActivity(), PoiSearch.OnPoiSearchListener, View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.locationBtn -> {
+            R.id.rightBtn1 -> {
                 setResult(Activity.RESULT_OK, intent.putExtra("poiItem", adapter.data[adapter.checkPosition]))
                 finish()
             }
@@ -67,8 +73,12 @@ class LocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener, Vie
         btnBack.onClick {
             finish()
         }
+        hotT1.text = "选择地址"
+        rightBtn1.text = "确定"
+        rightBtn1.isVisible = true
+        rightBtn1.setOnClickListener(this)
 
-        locationBtn.setOnClickListener(this)
+
 
         locationRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         locationRv.addItemDecoration(
@@ -82,6 +92,7 @@ class LocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener, Vie
         adapter.setOnItemClickListener { _, view, position ->
             adapter.checkPosition = position
             adapter.notifyDataSetChanged()
+            aMap.clear()
             moveMapCamera(adapter.data[position].latLonPoint.latitude, adapter.data[position].latLonPoint.longitude)
         }
     }
@@ -140,28 +151,51 @@ class LocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener, Vie
             aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), zoom))
         }
         if (marker == null) {
-            marker = aMap.addMarker(
-                MarkerOptions()
-                    .icon(
-                        BitmapDescriptorFactory.fromBitmap(
-                            BitmapFactory.decodeResource(
-                                resources,
-                                R.drawable.icon_map
-                            )
-                        )
-                    )
-                    .draggable(false)
-            )
-        }
+//            marker = aMap.addMarker(
+//                MarkerOptions()
+//                    .icon(
+//                        BitmapDescriptorFactory.fromBitmap(
+//                            BitmapFactory.decodeResource(
+//                                resources,
+//                                R.drawable.icon_map
+//                            )
+//                        )
+//                    )
+//                    .draggable(false)
+//                    .anchor(0.5F, 0.5F)
+//            )
 
-        marker!!.position = LatLng(latitude, longitude)
-        aMap.invalidate()
+
+            Glide.with(this)
+                .asBitmap()
+                .load(UserManager.getAvator())
+                .thumbnail(0.2f)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .centerCrop()
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        val markerBg = View.inflate(this@LocationActivity, R.layout.layout_marker_bg, null)
+                        markerBg.userAvator.setImageBitmap(resource)
+                        val bitmap = convertViewToBitmap(markerBg)
+                        marker = aMap.addMarker(
+                            MarkerOptions()
+                                .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                                .draggable(false)
+                                .position(LatLng(latitude,longitude))
+                                .anchor(0.5F, 0.5F)
+                        )
+                    }
+                })
+        }
+        if (marker != null)
+            marker!!.position = LatLng(latitude, longitude)
     }
 
 
     private fun doWhenLocationSuccess() {
         //120200楼宇 190107街道
-        mQuery = PoiSearch.Query("", "", UserManager.getCity())
+//        地名地址信息|道路附属设施|公共设施
+        mQuery = PoiSearch.Query("地名地址信息|道路附属设施|公共设施", "", UserManager.getCity())
         mQuery!!.pageSize = 100
         mQuery!!.pageNum = 0//设置查询第一页
         mPoiSearch = PoiSearch(this, mQuery)
@@ -218,8 +252,23 @@ class LocationActivity : AppCompatActivity(), PoiSearch.OnPoiSearchListener, Vie
                         ""
                     )
                 )
-                locationBtn.isEnabled = true
+                rightBtn1.isEnabled = true
             }
         }
+    }
+
+    fun convertViewToBitmap(view: View): Bitmap {
+
+        view.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+
+        view.buildDrawingCache()
+
+        return view.drawingCache
+
     }
 }

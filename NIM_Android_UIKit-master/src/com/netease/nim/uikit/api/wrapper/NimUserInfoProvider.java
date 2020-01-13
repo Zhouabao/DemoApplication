@@ -41,7 +41,7 @@ public class NimUserInfoProvider implements UserInfoProvider {
          * 注意：这里最好从缓存里拿，如果加载时间过长会导致通知栏延迟弹出！该函数在后台线程执行！
          */
         Bitmap bm = null;
-        int defResId = R.drawable.nim_avatar_default;
+        int defResId = R.drawable.icon_default_avator;
 
         if (SessionTypeEnum.P2P == sessionType) {
             UserInfo user = getUserInfo(sessionId);

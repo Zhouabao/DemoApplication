@@ -51,6 +51,7 @@ data class VipDescr(
     val rule: String? = "",
     val title: String? = "",
     val url: String? = "",
+    val icon_vip: String? = "",
     var countdown: Int = 0,
     val title_pay:  String = ""
 )
@@ -129,7 +130,7 @@ data class UserInfoSettingBean(
 data class BaseInfo(
     val height: Int = 0,
     val emotion_list: MutableList<String> = mutableListOf(),
-    val emotion_state: String? = "",
+    val emotion: String? = "",
     val hometown: String? = "",
     val present_address: String? = "",
     val personal_job: String? = "",
@@ -206,6 +207,7 @@ data class City(
 
 //范本关于我
 data class ModelAboutBean(
+    val id: Int = 0,
     val title: String = "",
     val content: String = ""
 ) : Serializable

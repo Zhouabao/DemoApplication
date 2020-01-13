@@ -3,15 +3,18 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
+        android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
 
     <TextView
             android:id="@+id/likeMeDate"
+            android:layout_marginTop="15dp"
             android:text="2019.08.01"
-            android:textColor="#ff333333"
-            android:textSize="18sp"
+            android:textColor="@color/colorBlack19"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:layout_marginLeft="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,14 +25,16 @@
             android:id="@+id/likeMeCount"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="0dp"
             android:text="3 人对你感兴趣"
-            android:textColor="#ff9b9b9b"
+            android:textColor="#FFA5A5A5"
             android:textSize="14sp"
             android:drawablePadding="6dp"
-            android:drawableRight="@drawable/icon_more_right"
-            app:layout_constraintLeft_toLeftOf="@id/likeMeDate"
-            app:layout_constraintTop_toBottomOf="@id/likeMeDate"
+            android:layout_marginRight="15dp"
+            android:drawableRight="@drawable/picture_icon_more"
+            app:layout_constraintBottom_toBottomOf="@id/likeMeDate"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/likeMeDate"
             />
 
     <View
@@ -43,11 +48,21 @@
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/likeOneDayRv"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/likeMeCount"
+            android:overScrollMode="never"
             android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/likeMeCount"/>
+
+    <View
+            android:id="@+id/divider"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorDivider1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintLeft_toLeftOf="@id/likeMeDate"
+            app:layout_constraintRight_toRightOf="@id/likeMeCount"
+            app:layout_constraintTop_toBottomOf="@id/likeOneDayRv"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

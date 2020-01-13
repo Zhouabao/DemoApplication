@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/titleClassTv"
+          android:orientation="vertical"
+          android:paddingLeft="9dp"
+          android:paddingRight="9dp"
+          android:paddingTop="4dp"
+          android:paddingBottom="4dp"
+          android:text="气质非凡"
+          android:textSize="14sp"
+          android:textColor="#FF191919"
+          android:layout_marginLeft="15dp"
+          android:background="@drawable/shape_rectangle_gray_14dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+
+</TextView>

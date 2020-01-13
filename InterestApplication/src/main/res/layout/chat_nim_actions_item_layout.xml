@@ -8,9 +8,16 @@
     <ImageView
             android:id="@+id/imageView"
             android:layout_gravity="center"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
             android:contentDescription="@string/empty"/>
 
+    <TextView
+            android:id="@+id/textView"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ff696e73"
+            android:textSize="12sp"/>
 
 </LinearLayout>

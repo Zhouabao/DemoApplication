@@ -21,6 +21,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshSquareEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
@@ -218,7 +219,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 R.id.detailPlayBtn -> {
                     if (mediaPlayer == null || currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
                         initAudio(position)
-                        //todo  还原播放器
+                        //还原播放器
                         mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
                         currPlayIndex = position
                     }
@@ -334,92 +335,6 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         }
     }
 
-//    lateinit var moreActionDialog: MoreActionDialog
-//
-//    /**
-//     * 展示更多操作对话框
-//     */
-//    private fun showMoreDialog(position: Int) {
-//        moreActionDialog = MoreActionDialog(this, "square_detail")
-//        moreActionDialog.show()
-//
-//        if (adapter.data[position]?.iscollected == 0) {
-//            moreActionDialog.collect.text = "收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
-//        } else {
-//            moreActionDialog.collect.text = "取消收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
-//        }
-//
-//        if (adapter.data[position].accid == UserManager.getAccid()) {
-//            moreActionDialog.llDelete.visibility = View.VISIBLE
-//            moreActionDialog.llJubao.visibility = View.GONE
-//            moreActionDialog.llCollect.visibility = View.GONE
-//        } else {
-//            moreActionDialog.llDelete.visibility = View.GONE
-//            moreActionDialog.llJubao.visibility = View.VISIBLE
-//            moreActionDialog.llCollect.visibility = View.VISIBLE
-//        }
-//        moreActionDialog.llDelete.onClick {
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "square_id" to adapter.data[position].id!!
-//            )
-//            mPresenter.removeMySquare(params, position)
-//            moreActionDialog.dismiss()
-//        }
-//
-//
-//        moreActionDialog.llShare.onClick {
-//            showTranspondDialog(adapter.data[position])
-//        }
-//        moreActionDialog.llCollect.onClick {
-//            //发起收藏请求
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "type" to if (adapter.data[position].iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to adapter.data[position].id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareCollect(params, position)
-//        }
-//        moreActionDialog.llJubao.onClick {
-//            CommonAlertDialog.Builder(this)
-//                .setTitle("举报")
-//                .setContent("是否确认举报该动态？")
-//                .setOnCancelListener(object : CommonAlertDialog.OnCancelListener {
-//                    override fun onClick(dialog: Dialog) {
-//                        dialog.cancel()
-//                    }
-//                })
-//                .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-//                    override fun onClick(dialog: Dialog) {
-//                        mPresenter.getSquareReport(
-//                            hashMapOf(
-//                                "accid" to UserManager.getAccid(),
-//                                "token" to UserManager.getToken(),
-//                                "square_id" to adapter.data[position].id!!,
-//                                "_timestamp" to System.currentTimeMillis()
-//                            )
-//                        )
-//                    }
-//
-//                })
-//                .create()
-//                .show()
-//        }
-//        moreActionDialog.cancel.onClick {
-//            moreActionDialog.dismiss()
-//        }
-//
-//    }
-
 
     lateinit var moreActionDialog: MoreActionNewDialog
     /**
@@ -479,6 +394,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             val dialog = DeleteDialog(this)
             dialog.show()
             dialog.tip.text = getString(R.string.report_square)
+            dialog.title.text = "动态举报"
             dialog.confirm.text = "举报"
             dialog.cancel.onClick { dialog.dismiss() }
             dialog.confirm.onClick {
@@ -522,6 +438,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
                 adapter.remove(position)
             }
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
+            EventBus.getDefault().postSticky(UserCenterEvent(true))
 
         } else {
             toast("删除动态失败！")
@@ -541,6 +458,12 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
     override fun onGetSquareInfoResults(mutableList: SquareBean?) {
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (mutableList != null) {
+            if (mutableList.id == null) {
+                CommonFunction.toast("该动态已经被删除了")
+                finish()
+                return
+            }
+
             mutableList.type = when {
                 !mutableList.video_json.isNullOrEmpty() -> SquareBean.VIDEO
                 !mutableList.audio_json.isNullOrEmpty() -> SquareBean.AUDIO
@@ -646,7 +569,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
 
     override fun finish() {
-        setResult(Activity.RESULT_OK)
+        setResult(Activity.RESULT_OK,intent)
         //释放所有
         GSYVideoManager.releaseAllVideos()
         if (mediaPlayer != null) {

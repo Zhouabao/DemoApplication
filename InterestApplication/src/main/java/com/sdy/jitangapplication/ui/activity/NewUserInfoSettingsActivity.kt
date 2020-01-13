@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +40,8 @@ import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.AccountDangerEvent
 import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.ReminderScoreEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.model.NewJobBean
@@ -48,10 +50,7 @@ import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.adapter.UserPhotoAdapter
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import com.sdy.jitangapplication.ui.dialog.ReminderScoreDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GetJsonDataUtil
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -63,8 +62,6 @@ import kotlinx.android.synthetic.main.dialog_delete_photo.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_add_score.view.*
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivityForResult
 import org.json.JSONArray
 import top.zibin.luban.OnCompressListener
@@ -72,6 +69,9 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * 用户信息界面
+ */
 class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>(), UserInfoSettingsView,
     OnItemDragListener, View.OnClickListener {
     companion object {
@@ -103,8 +103,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
 
     private fun initView() {
-        EventBus.getDefault().register(this)
-
         mPresenter = UserInfoSettingsPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -175,7 +173,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                                         PermissionUtils.permission(PermissionConstants.STORAGE)
                                             .callback(object : PermissionUtils.SimpleCallback {
                                                 override fun onGranted() {
-                                                    onTakePhoto(1)
+                                                    CommonFunction.onTakePhoto(
+                                                        this@NewUserInfoSettingsActivity,
+                                                        1,
+                                                        PictureConfig.CHOOSE_REQUEST,
+                                                        PictureMimeType.ofImage()
+                                                    )
+
                                                 }
 
                                                 override fun onDenied() {
@@ -192,7 +196,12 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                             })
                             .request()
                     } else {
-                        onTakePhoto(1)
+                        CommonFunction.onTakePhoto(
+                            this@NewUserInfoSettingsActivity,
+                            1,
+                            PictureConfig.CHOOSE_REQUEST,
+                            PictureMimeType.ofImage()
+                        )
                     }
 
                 } else {
@@ -260,7 +269,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             } else
                 userScoreAboutMe.isVisible = true
 
-            updateScoreStatus(userScoreAboutMe, data.score_rule?.about ?: 0, !data.sign.isNullOrEmpty())
+            updateScoreStatus(
+                userScoreAboutMe,
+                data.score_rule?.about ?: 0,
+                !data.sign.isNullOrEmpty() && data.sign.trim().isNotEmpty()
+            )
 
             if (data.emotion_state > 0 && data.emotion_list.size > data.emotion_state - 1) {
                 userLoveStatus.text = data.emotion_list[data.emotion_state - 1]
@@ -428,7 +441,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                                 PermissionUtils.permission(PermissionConstants.STORAGE)
                                     .callback(object : PermissionUtils.SimpleCallback {
                                         override fun onGranted() {
-                                            onTakePhoto(1, true)
+                                            CommonFunction.onTakePhoto(
+                                                this@NewUserInfoSettingsActivity,
+                                                1,
+                                                REPLACE_REQUEST,
+                                                PictureMimeType.ofImage()
+                                            )
+
                                         }
 
                                         override fun onDenied() {
@@ -445,7 +464,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                         })
                         .request()
                 } else {
-                    onTakePhoto(1, true)
+                    CommonFunction.onTakePhoto(this, 1, REPLACE_REQUEST, PictureMimeType.ofImage())
                 }
                 dialog.dismiss()
             }
@@ -553,7 +572,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     photosId.add(data.value?.id)
                 }
             }
-            mPresenter.addPhotoV2(savePersonalParams, UserManager.getToken(), UserManager.getAccid(), photosId, type)
+            mPresenter.addPhotoV2(savePersonalParams, UserManager.getToken(), UserManager.getAccid(), photosId, 2)
         } else {
             mPresenter.addPhotoV2(
                 savePersonalParams,
@@ -607,36 +626,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         mPresenter.savePersonal(params)
     }
 
-
-    /**
-     * 拍照或者选取照片
-     */
-    private fun onTakePhoto(count: Int, replaceAvator: Boolean = false) {
-        PictureSelector.create(this)
-            .openGallery(PictureMimeType.ofImage())
-            .maxSelectNum(count)
-            .minSelectNum(0)
-            .imageSpanCount(4)
-            .selectionMode(PictureConfig.SINGLE)
-            .previewImage(true)
-            .isCamera(true)
-            .enableCrop(false)
-            .compressSavePath(UriUtils.getCacheDir(this))
-            .compress(false)
-            .scaleEnabled(true)
-            .showCropFrame(true)
-            .rotateEnabled(false)
-            .withAspectRatio(9, 16)
-            .compressSavePath(UriUtils.getCacheDir(this))
-            .openClickSound(false)
-            .forResult(
-                if (replaceAvator) {
-                    REPLACE_REQUEST
-                } else {
-                    PictureConfig.CHOOSE_REQUEST
-                }
-            )
-    }
 
     private val loading by lazy { LoadingDialog(this) }
     override fun uploadImgResult(b: Boolean, key: String, replaceAvator: Boolean) {
@@ -808,14 +797,18 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                     checkSaveEnable()
                 }
                 REPLACE_REQUEST,//替换头像
-                PictureConfig.CHOOSE_REQUEST//选中
+                PictureConfig.CHOOSE_REQUEST//icon_verify_account_not_pass
                 -> {
                     if (data != null) {
                         if (!PictureSelector.obtainMultipleResult(data).isNullOrEmpty()) {
                             loading.show()
                             uploadPicture(
                                 requestCode == REPLACE_REQUEST, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                    PictureSelector.obtainMultipleResult(data)[0].androidQToPath
+                                    if (PictureSelector.obtainMultipleResult(data)[0].androidQToPath.isNullOrEmpty()) {
+                                        PictureSelector.obtainMultipleResult(data)[0].path
+                                    } else {
+                                        PictureSelector.obtainMultipleResult(data)[0].androidQToPath
+                                    }
                                 } else {
                                     PictureSelector.obtainMultipleResult(data)[0].path
                                 }
@@ -878,8 +871,11 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 )
             }
             R.id.userNickSign -> {//关于我
-                startActivityForResult<AboutMeActivity>(105, "content" to data?.sign)
-
+                startActivityForResult<UserIntroduceActivity>(
+                    105,
+                    "content" to "${userNickSign.text}",
+                    "from" to UserIntroduceActivity.USERCENTER
+                )
             }
             R.id.userLoveStatus -> {//情感状态
                 showConditionPicker(
@@ -985,10 +981,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         checkIsForceChangeAvator()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
-    }
 
     override fun scrollToFinishActivity() {
         checkIsForceChangeAvator()
@@ -1004,10 +996,14 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         }
 
 
-        //强制替换头像下,如果已经换了头像
-        if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(adapter.data[0].url) && !isChange && UserManager.isNeedChangeAvator()) {
+        //如果已经换了头像,并且要求强制替换头像
+        Log.d("OKhttp", "${UserManager.getAvator().contains(adapter.data[0].url)}")
+        if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(Constants.DEFAULT_EMPTY_AVATAR)
+            && !UserManager.getAvator().contains(adapter.data[0].url) && UserManager.isNeedChangeAvator()
+        ) {
             UserManager.saveForceChangeAvator(true)
         }
+
 
         //如果修改了信息 更新本地筛选信息
         if (SPUtils.getInstance(Constants.SPNAME).getInt("audit_only", -1) != -1) {
@@ -1022,6 +1018,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         //如果更改过相册信息并且没有是强制替换头像,就新增
         if (isChange && !UserManager.isNeedChangeAvator()) {
             dialog.show()
+            dialog.title.text = "保存内容"
             dialog.tip.text = "是否保存此次编辑的内容？"
             dialog.cancel.text = "放弃"
             dialog.confirm.text = "保存"
@@ -1038,21 +1035,16 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         } else {
             setResult(Activity.RESULT_OK)
             finish()
-        }
-
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onResetScoreEvent(dialogEvent: ReminderScoreEvent) {
-        when (dialogEvent.score) {
-            20 -> {
-//                userScore20.setImageResource(R.drawable.icon_twenty_unclick)
-            }
-            80 -> {
-//                userScore80.setImageResource(R.drawable.icon_eighty_unclick)
+            if (adapter.data.isNotEmpty() && !UserManager.getAvator().contains(Constants.DEFAULT_EMPTY_AVATAR)
+                && !UserManager.getAvator().contains(adapter.data[0].url)
+                && (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass())
+            ) { //账号异常
+                UserManager.saveUserVerify(2)
+                EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
             }
         }
+
+
     }
 
 
@@ -1158,21 +1150,18 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             userFinishProgress.progress = progress
         }
 
-        val layoutmanager20 = userScore20.layoutParams as RelativeLayout.LayoutParams
-        layoutmanager20.leftMargin = if (UserManager.isUserVip() && userFinishProgress.progress == 100) {
-            ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) - SizeUtils.dp2px(50F)
-        } else  //左边距+进度条宽度-自身宽度
-            SizeUtils.dp2px(70F) +
-                    ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15))
-                            * userFinishProgress.progress * 1.0f / 100).toInt() - if (progress >= 80 * 0.8F) {
-                SizeUtils.dp2px(60F * 0.9F)
-            } else {
-                0
-            }
-        userScore20.layoutParams = layoutmanager20
+        Log.d("setScroeProgress", "${userFinishProgress.progress}")
 
-        if (!UserManager.isUserVip())
-            userScore80.isVisible = (progress != 80)
+        val translate = ObjectAnimator.ofFloat(
+            userScore20, "translationX",
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15) - SizeUtils.dp2px(45F)) * userFinishProgress.progress * 1.0f / 100)
+        )
+        translate.duration = 100
+        translate.start()
+
+        if (!UserManager.isUserVip()) {
+            userScore80.isVisible = (progress < 80)
+        }
 
     }
 
@@ -1187,41 +1176,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 //        userScore80.layoutParams = layoutmanager80
 
 
-    }
-
-    private fun showUploadMorePhotos() {
-        //使用AnimationUtils类的静态方法loadAnimation()来加载XML中的动画XML文件
-        val animation = AnimationUtils.loadAnimation(this, R.anim.dialog_center_in)
-        val animationOut = AnimationUtils.loadAnimation(this, R.anim.dialog_center_exit)
-        animation.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationRepeat(p0: Animation?) {
-
-            }
-
-            override fun onAnimationEnd(p0: Animation?) {
-                addPhotoTip.isVisible = true
-                Thread.sleep(200L)
-                addPhotoTip.startAnimation(animationOut)
-            }
-
-            override fun onAnimationStart(p0: Animation?) {
-            }
-
-        })
-        animationOut.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationRepeat(p0: Animation?) {
-
-            }
-
-            override fun onAnimationEnd(p0: Animation?) {
-                addPhotoTip.isVisible = false
-            }
-
-            override fun onAnimationStart(p0: Animation?) {
-            }
-
-        })
-        addPhotoTip.startAnimation(animation)
     }
 
 
@@ -1376,6 +1330,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             .setSubmitColor(resources.getColor(R.color.colorBlueSky1))
             .build<T>()
 
+        //身高默认选中，男170 女160
+        if (param == "height")
+            if (data?.gender == 1) //男
+                pvOptions.setSelectOptions(170 - 60)
+            else if (data?.gender == 2)//女
+                pvOptions.setSelectOptions(160 - 60)
+
         if (optionsItems2.isNullOrEmpty()) {
             pvOptions.setPicker(optionsItems1)
         } else if (optionsItems3.isNullOrEmpty()) {
@@ -1390,16 +1351,19 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
     /**
      * 展示日历
      */
+    //错误使用案例： startDate.set(2013,1,1);  endDate.set(2020,12,1);
+    //正确使用案例： startDate.set(2013,0,1);  endDate.set(2020,11,1);
     private fun showCalender(userBirth: TextView) {
         val startDate = Calendar.getInstance()
         val endDate = Calendar.getInstance()
-        startDate.set(endDate.get(Calendar.YEAR) - 50, 1, 1)
+        startDate.set(endDate.get(Calendar.YEAR) - 50, 0, 1)
         endDate.set(endDate.get(Calendar.YEAR) - 18, endDate.get(Calendar.MONTH), endDate.get(Calendar.DATE))
         val clOptions = TimePickerBuilder(this, OnTimeSelectListener { date, v ->
             //            getZodiac
             userBirth.text =
                 "${TimeUtils.date2String(date, SimpleDateFormat("yyyy-MM-dd"))}/${TimeUtils.getZodiac(date)}"
-            savePersonalParams["birth"] = TimeUtils.date2Millis(date)
+            savePersonalParams["birth"] = TimeUtils.date2Millis(date) / 1000L
+//            savePersonalParams["birth"] = TimeUtils.date2Millis(date)
             isChange = true
             checkSaveEnable()
         })

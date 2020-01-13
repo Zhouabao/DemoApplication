@@ -12,30 +12,25 @@ import java.io.Serializable
 
 
 data class SquareListBean(
-    var data: MutableList<SquareBean>?,
     var list: MutableList<SquareBean>?,
-    var current_page: String?,
-    var last_page: Int?,
-    var per_page: Int?,
-    var total: Int?
+    var banner_title: MutableList<TopicBean>? = mutableListOf(),//标题
+    var friend_list: MutableList<FriendBean>?,
+    var myinterest_count: Int = 0
 )
 
 /**
  * 广场列表数据
  */
 data class SquareBean(
-    var isPlayAudio: Int = 0, //0未播放  1 播放中 2暂停  3 停止
+
     var isvip: Int = 0,//是否会员 1是 0 不是
-    var icon: String = "",
     var accid: String = "",
     var audio_json: MutableList<VideoJson>?,
     var avatar: String = "",
     var city_name: String = "",
     var comment_cnt: Int = 0,
-    var comment: String = "",
     var create_time: String = "",
-    var descr: String = "",
-    val distance: String = "",
+    var descr: String? = "",
     var id: Int?,
     var isliked: Int = 0,
     var iscollected: Int?,//0没收藏 1收藏
@@ -50,20 +45,25 @@ data class SquareBean(
     var tag_id: Int?,
     var title: String?,
     var cover_url: String?,
-    var tags: MutableList<String>?,
+    var tags: String?,
     var video_json: MutableList<VideoJson>?,
+    var isfriend: Boolean = true,
+    var greet_switch: Boolean = true,//接收招呼开关   true  接收招呼      false   不接受招呼
+    var greet_state: Boolean = true,// 认证招呼开关   true  开启认证      flase   不开启认证
+    var icon: String = "",
+    var isPlayAudio: Int = 0, //0未播放  1 播放中 2暂停  3 停止
+    var comment: String = "",
+    val distance: String = "",
+    var link_url: String?,
     var type: Int = 1,
+    var category_type: Int = 1,
     var duration: Long = 0L,
     var clickTime: Int = 0,
     var originalLike: Int = 0,
     var originalLikeCount: Int = 0,
-    var isfriend: Boolean = true,
-    var greet_switch: Boolean = true,//接收招呼开关   true  接收招呼      false   不接受招呼
-    var greet_state: Boolean = true,// 认证招呼开关   true  开启认证      flase   不开启认证
-    var isgreeted: Boolean = true//招呼是否仍然有效
+    var isgreeted: Boolean = true,//招呼是否仍然有效
 
-
-
+    var member_id: Int? = null
 ) :
     Serializable, MultiItemEntity {
 
@@ -76,8 +76,26 @@ data class SquareBean(
         const val PIC = 1
         const val VIDEO = 2
         const val AUDIO = 3
+        const val OFFICIAL_NOTICE = 4
     }
 }
+
+
+data class TopicBean(
+    var icon: String = "",
+    var id: Int = 0,
+    var son: MutableList<SquarePicBean> = mutableListOf(),
+    var tag_id: Int = 0,
+    var tag_title: String = "",
+    var title: String = "",
+    var used_cnt: Int = 0
+) : Serializable
+
+data class SquarePicBean(
+    var cover_url: String = "",
+    var square_id: Int = 0
+) : Serializable
+
 
 data class VideoJson(
     val duration: Int = 0,

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kennyc.view.MultiStateView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stateTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading"
+        tools:context=".ui.activity.ChooseTitleActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <include layout="@layout/layout_actionbar"/>
+
+        <EditText
+                android:id="@+id/titleEt"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:singleLine="true"
+                android:background="@null"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="请输入标题文本"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llTitle"/>
+
+        <TextView
+                android:id="@+id/t1"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="15dp"
+                android:gravity="center_vertical"
+                android:text="热门标题"
+                android:textColor="#ff959a9e"
+                android:textSize="14sp"
+                android:background="@color/colorDivider"
+                android:layout_height="38dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleEt"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/titleRv"
+                android:layout_width="match_parent"
+                android:overScrollMode="never"
+                android:layout_height="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/t1"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.kennyc.view.MultiStateView>

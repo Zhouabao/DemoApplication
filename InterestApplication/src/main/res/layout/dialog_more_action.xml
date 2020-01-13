@@ -5,7 +5,7 @@
         android:orientation="vertical"
         android:layout_width="345dp"
         android:layout_gravity="center"
-        android:background="@drawable/shape_rectangle_gray_white_9dp"
+        android:background="@drawable/shape_rectangle_gray_white_10dp"
         android:layout_height="wrap_content">
 
 
@@ -17,7 +17,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-                android:id="@+id/collectBtn"
                 android:src="@drawable/icon_collect_no"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
@@ -61,7 +60,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-                android:id="@+id/shareBtn"
                 android:src="@drawable/icon_zhuanfa"
                 android:layout_width="16dp"
                 android:layout_height="16dp"

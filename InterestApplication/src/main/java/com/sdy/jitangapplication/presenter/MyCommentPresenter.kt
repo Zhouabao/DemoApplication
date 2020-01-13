@@ -20,8 +20,6 @@ import com.sdy.jitangapplication.utils.UserManager
  *    version: 1.0
  */
 class MyCommentPresenter : BasePresenter<MyCommentView>() {
-
-
     /**
      * 获取评论列表
      */
@@ -46,9 +44,7 @@ class MyCommentPresenter : BasePresenter<MyCommentView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {
-
                         mView.onError(context.getString(R.string.service_error))
-                        mView.onGetCommentListResult(null, refresh)
                     }
                 }
             })

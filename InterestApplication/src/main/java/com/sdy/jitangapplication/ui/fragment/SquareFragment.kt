@@ -1,17 +1,19 @@
 package com.sdy.jitangapplication.ui.fragment
 
-
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.PopupWindow
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,30 +30,26 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.FriendBean
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.SquareListBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.model.TagBean
+import com.sdy.jitangapplication.model.TopicBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
 import com.sdy.jitangapplication.presenter.SquarePresenter
 import com.sdy.jitangapplication.presenter.view.SquareView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.switchplay.SwitchVideo
-import com.sdy.jitangapplication.ui.activity.PublishActivity
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
-import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity
-import com.sdy.jitangapplication.ui.activity.UserCenterActivity
+import com.sdy.jitangapplication.ui.activity.*
+import com.sdy.jitangapplication.ui.adapter.AllTitleAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
-import com.sdy.jitangapplication.ui.adapter.SquareFriendsAdapter
-import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
-import com.sdy.jitangapplication.ui.dialog.TranspondDialog
+import com.sdy.jitangapplication.ui.adapter.TagAdapter
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -60,30 +58,27 @@ import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_ERROR
-import kotlinx.android.synthetic.main.delete_dialog_layout.*
-import kotlinx.android.synthetic.main.dialog_more_action_new.*
+import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_square.*
-import kotlinx.android.synthetic.main.headerview_label.view.*
+import kotlinx.android.synthetic.main.headerview_square_recommend_title.view.*
+import kotlinx.android.synthetic.main.popupwindow_square_filter_gender.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.startActivityForResult
 
 
 /**
  * 广场列表
  */
 class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
-    View.OnClickListener, MultiListSquareAdapter.ResetAudioListener {
-
+    MultiListSquareAdapter.ResetAudioListener {
+    private var checkedId = 0
     override fun loadData() {
         initView()
 
     }
-
 
     override fun resetAudioState() {
         if (mediaPlayer != null) {
@@ -95,12 +90,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
     //广场列表内容适配器
     private val adapter by lazy { MultiListSquareAdapter(mutableListOf(), resetAudioListener = this) }
-
-    //广场好友适配器
-    private val friendsAdapter: SquareFriendsAdapter by lazy { SquareFriendsAdapter(userList) }
-    //好友信息用户数据源
-    var userList: MutableList<FriendBean> = mutableListOf()
-
 
     private lateinit var scrollCalculatorHelper: ScrollCalculatorHelper
 
@@ -115,92 +104,313 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "page" to page,
+            "tag_id" to checkedId,
             "pagesize" to Constants.PAGESIZE,
-            "_timestamp" to System.currentTimeMillis(),
-            "tagid" to SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId")
+            "gender" to sp.getInt("filter_square_gender", 3),
+            "type" to when (rgSquare.checkedRadioButtonId) {
+                R.id.tabSquare -> {
+                    1
+                }
+                else -> {
+                    3
+                }
+            }
         )
     }
 
-    //好友的params
-    private val friendsParams = hashMapOf(
-        "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-        "token" to SPUtils.getInstance(Constants.SPNAME).getString("token")
-    )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_square, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
+    /**
+     * 推荐标题帮助
+     */
+    private val helpPop by lazy {
+        PopupWindow(activity!!).apply {
+            contentView =
+                LayoutInflater.from(activity!!).inflate(R.layout.popupwindow_square_recommend_help, null, false)
+            width = ViewGroup.LayoutParams.WRAP_CONTENT
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            setBackgroundDrawable(null)
+            isOutsideTouchable = true
+            setOnDismissListener {
+                adapter.headerLayout.recommendHelpBtn.setImageResource(R.drawable.icon_square_recommend_help_normal)
+            }
+
+        }
     }
 
+    //推荐话题适配器
+    private val topicAdapter: AllTitleAdapter by lazy { AllTitleAdapter(3) }
 
-    //创建好友布局
-    private fun initFriendsView(): View {
-        val friendsView = LayoutInflater.from(activity!!).inflate(R.layout.headerview_label, squareDynamicRv, false)
-        val linearLayoutManager =
-            LinearLayoutManager(activity?.applicationContext, LinearLayoutManager.HORIZONTAL, false)
-        friendsView.headRv.layoutManager = linearLayoutManager
-        friendsView.headRv.adapter = friendsAdapter
-        friendsAdapter.addData(userList)
-        friendsAdapter.setOnItemClickListener { adapter, view, position ->
-            resetAudio()
-            startActivityForResult<SquarePlayListDetailActivity>(
-                200,
-                "target_accid" to (friendsAdapter.data[position].accid ?: 0)
-            )
+    //创建推荐话题头布局
+    private fun initRecommendTopicHeader(): View {
+        val recommendTopicView =
+            LayoutInflater.from(activity!!).inflate(R.layout.headerview_square_recommend_title, squareDynamicRv, false)
+        val linearLayoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        recommendTopicView.headRv.layoutManager = linearLayoutManager
+        recommendTopicView.headRv.adapter = topicAdapter
+
+        recommendTopicView.recommendMoreBtn.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                startActivity<AllTitleActivity>()
+            }
+        })
+
+        recommendTopicView.recommendTitle.onClick {
+            if (helpPop.isShowing) {
+                helpPop.dismiss()
+                recommendTopicView.recommendHelpBtn.setImageResource(R.drawable.icon_square_recommend_help_normal)
+            } else {
+                recommendTopicView.recommendHelpBtn.setImageResource(R.drawable.icon_square_recommend_help_choosed)
+                helpPop.showAsDropDown(
+                    adapter.headerLayout.recommendTitle,
+                    SizeUtils.dp2px(15F),
+                    SizeUtils.dp2px(-65F),
+                    Gravity.TOP
+                )
+            }
+        }
+        recommendTopicView.recommendHelpBtn.onClick {
+            if (helpPop.isShowing) {
+                helpPop.dismiss()
+                recommendTopicView.recommendHelpBtn.setImageResource(R.drawable.icon_square_recommend_help_normal)
+            } else {
+                recommendTopicView.recommendHelpBtn.setImageResource(R.drawable.icon_square_recommend_help_choosed)
+                helpPop.showAsDropDown(
+                    adapter.headerLayout.recommendTitle,
+                    SizeUtils.dp2px(15F),
+                    SizeUtils.dp2px(-65F),
+                    Gravity.TOP
+                )
+            }
         }
 
-        return friendsView
+        return recommendTopicView
     }
 
 
     private var currPlayIndex = -1
 
+    private val filterPopupWindow by lazy {
+        PopupWindow(activity!!).apply {
+            contentView =
+                LayoutInflater.from(activity!!).inflate(R.layout.popupwindow_square_filter_gender, null, false)
+            width = ViewGroup.LayoutParams.WRAP_CONTENT
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            setBackgroundDrawable(null)
+            isOutsideTouchable = true
+
+
+            contentView.genderAll.onClick {
+                contentView.genderAll.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                contentView.genderMan.setTextColor(Color.parseColor("#191919"))
+                contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
+                filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
+                sp.put("filter_square_gender", 3)
+                refreshLayout.autoRefresh()
+                dismiss()
+            }
+            contentView.genderMan.onClick {
+                contentView.genderMan.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                contentView.genderAll.setTextColor(Color.parseColor("#191919"))
+                contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
+                filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
+                sp.put("filter_square_gender", 1)
+                refreshLayout.autoRefresh()
+                dismiss()
+
+            }
+            contentView.genderWoman.onClick {
+                contentView.genderWoman.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                contentView.genderAll.setTextColor(Color.parseColor("#191919"))
+                contentView.genderMan.setTextColor(Color.parseColor("#191919"))
+                filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
+                sp.put("filter_square_gender", 2)
+                refreshLayout.autoRefresh()
+                dismiss()
+            }
+        }
+    }
+
+    private val sp by lazy { SPUtils.getInstance(Constants.SPNAME) }
+
+
+    private val tags by lazy { mutableListOf<TagBean>() }
+    private val tagAdapter by lazy { TagAdapter() }
+
+    private fun setTagData() {
+        tags.clear()
+        tags.addAll(UserManager.getSpLabels())
+        //初始化选中的tag
+        if (checkedId == 0) {
+            if (tags.isNotEmpty()) {
+                tags[0].cheked = true
+                listParams["tag_id"] = tags[0].id
+                checkedId = tags[0].id
+            }
+        } else {
+            var hasCheck = false
+            for (tag in tags) {
+                if (tag.id == checkedId) {
+                    tag.cheked = true
+                    listParams["tag_id"] = tag.id
+                    hasCheck = true
+                    break
+                }
+            }
+            if (!hasCheck) {
+                tags[0].cheked = true
+                listParams["tag_id"] = tags[0].id
+                checkedId = tags[0].id
+            }
+        }
+        tagAdapter.setNewData(tags)
+    }
+
+    private fun initTagsView() {
+        addTagBtn.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                val intent = Intent()
+                intent.putExtra("from", AddLabelActivity.FROM_INTERSERT_LABEL)
+                intent.setClass(activity!!, AddLabelActivity::class.java)
+                startActivity(intent)
+            }
+
+        })
+
+        squareTagRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        squareTagRv.adapter = tagAdapter
+        setTagData()
+        tagAdapter.setOnItemClickListener { _, view, position ->
+            for (tag in tagAdapter.data) {
+                tag.cheked = tag == tagAdapter.data[position]
+            }
+            tagAdapter.notifyDataSetChanged()
+            checkedId = tagAdapter.data[position].id
+            listParams["tag_id"] = checkedId
+            updateChooseTitle()
+        }
+
+    }
+
+    private fun initHeadView() {
+        initTagsView()
+
+        rgSquare.setOnCheckedChangeListener { _, checkedId ->
+            squareTagRv.isVisible = checkedId == R.id.tabSquare
+            addTagBg.isVisible = checkedId == R.id.tabSquare
+            updateChooseTitle()
+        }
+        rgSquare.check(R.id.tabSquare)
+
+
+        /**
+         *性别筛选
+         */
+        if (sp.getInt("filter_square_gender", 3) == 3) {
+            filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
+        } else if (sp.getInt("filter_square_gender", 3) == 1) {
+            filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
+        } else if (sp.getInt("filter_square_gender", 3) == 2) {
+            filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
+        }
+        filterGenderBtn.onClick {
+            if (filterPopupWindow.isShowing) {
+                filterPopupWindow.dismiss()
+            } else {
+                filterPopupWindow.showAsDropDown(filterGenderBtn, 0, SizeUtils.dp2px(-15F))
+                if (sp.getInt("filter_square_gender", 3) == 3) {
+                    filterPopupWindow.contentView.genderAll.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                    filterPopupWindow.contentView.genderMan.setTextColor(Color.parseColor("#191919"))
+                    filterPopupWindow.contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
+                    filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
+
+                } else if (sp.getInt("filter_square_gender", 3) == 1) {
+                    filterPopupWindow.contentView.genderMan.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                    filterPopupWindow.contentView.genderAll.setTextColor(Color.parseColor("#191919"))
+                    filterPopupWindow.contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
+                    filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
+
+                } else if (sp.getInt("filter_square_gender", 3) == 2) {
+                    filterPopupWindow.contentView.genderWoman.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                    filterPopupWindow.contentView.genderAll.setTextColor(Color.parseColor("#191919"))
+                    filterPopupWindow.contentView.genderMan.setTextColor(Color.parseColor("#191919"))
+                    filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
+
+                }
+
+            }
+        }
+
+    }
+
+    /**
+     * 更新选中的广场类型
+     * 0-想认识 1-找同好 2-好友
+     *
+     */
+    private fun updateChooseTitle() {
+        setViewState(LOADING)
+        setTagData()
+        listParams["type"] = when (rgSquare.checkedRadioButtonId) {
+            R.id.tabSquare -> {
+                1
+            }
+            else -> {
+                3
+            }
+        }
+        refreshLayout.autoRefresh()
+    }
+
+
     private fun initView() {
-//        GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_4_3)
-        //注册eventbus
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val param = customStatusBar.layoutParams as ConstraintLayout.LayoutParams
+            param.height = BarUtils.getStatusBarHeight()
+        } else {
+            customStatusBar.isVisible = false
+        }
+
+
         EventBus.getDefault().register(this)
         mPresenter = SquarePresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!
+
+        initHeadView()
+
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
-        squareEdit.setOnClickListener(this)
+        squareEdit.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                mPresenter.checkBlock()
+            }
+        })
 
 
         retryBtn.onClick {
             setViewState(LOADING)
 //            这个地方还要默认设置选中第一个标签来更新数据
             mPresenter.getSquareList(listParams, true, true)
-            mPresenter.getFrinedsList(friendsParams)
+            //mPresenter.getFrinedsList(friendsParams)
         }
 
-        squareDynamicRv.addItemDecoration(
-            com.sdy.jitangapplication.widgets.DividerItemDecoration(
-                activity!!,
-                com.sdy.jitangapplication.widgets.DividerItemDecoration.HORIZONTAL_LIST,
-                SizeUtils.dp2px(8F),
-                Color.parseColor("#FFF1F2F6")
-            )
-        )
-
-        adapter.setHeaderAndEmpty(true)
         squareDynamicRv.layoutManager = layoutManager
         squareDynamicRv.adapter = adapter
+        adapter.setHeaderAndEmpty(false)
+        adapter.setEmptyView(R.layout.empty_friend_layout, squareDynamicRv)
+        adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(squareDynamicRv)
-        adapter.addHeaderView(initFriendsView())
-        adapter.setEmptyView(R.layout.empty_layout, squareDynamicRv)
         //取消动画，主要是闪烁
 //        (squareDynamicRv.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         squareDynamicRv.itemAnimator?.changeDuration = 0
-
         //限定范围为屏幕一半的上下偏移180
-        val playTop = ScreenUtils.getScreenHeight() / 2 - SizeUtils.dp2px(126F)
-        val playBottom = ScreenUtils.getScreenHeight() / 2 + SizeUtils.dp2px(126F)
+        val playTop = ScreenUtils.getScreenHeight() / 2 - ScreenUtils.getScreenHeight() / 4
+        val playBottom = ScreenUtils.getScreenHeight() / 2 + ScreenUtils.getScreenHeight() / 4
         scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
         squareDynamicRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
@@ -228,35 +438,15 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         })
 
         adapter.setOnItemClickListener { _, view, position ->
+            view.isEnabled = false
             resetAudio()
             SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
+            view.postDelayed({ view.isEnabled = true }, 1000L)
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
             val squareBean = adapter.data[position]
             when (view.id) {
-                R.id.squareChatBtn1 -> {
-                    resetAudio()
-                    ChatActivity.start(activity!!, adapter.data[position].accid ?: "")
-                }
-                R.id.squareCommentBtn1 -> {
-                    resetAudio()
-                    SquareCommentDetailActivity.start(
-                        activity!!,
-                        adapter.data[position],
-                        enterPosition = "comment",
-                        position = position
-                    )
-                }
-                R.id.squareDianzanBtn1 -> {
-                    clickZan(position)
-                }
-                R.id.squareZhuanfaBtn1 -> {
-                    showTranspondDialog(adapter.data[position])
-                }
-                R.id.squareMoreBtn1 -> {
-                    showMoreDialog(position)
-                }
                 //播放音频
                 R.id.audioPlayBtn -> {
                     if (currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
@@ -282,48 +472,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         }
 
 
-        //这个地方还要默认设置选中第一个标签来更新数据
-        val params = UserManager.getFilterConditions()
-        params.forEach {
-            listParams[it.key] = it.value
-        }
-
         mPresenter.getSquareList(listParams, true, true)
-        mPresenter.getFrinedsList(friendsParams)
-
-    }
-
-
-    /**
-     * 点赞按钮
-     */
-    private fun clickZan(position: Int) {
-        if (adapter.data[position].isliked == 1) {
-            adapter.data[position].isliked = 0
-            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.minus(1)
-        } else {
-            adapter.data[position].isliked = 1
-            adapter.data[position].like_cnt = adapter.data[position].like_cnt!!.plus(1)
-        }
-        adapter.refreshNotifyItemChanged(position)
-//        adapter.notifyDataSetChanged()
-        Handler().postDelayed({
-            if (adapter.data[position].originalLike == adapter.data[position].isliked) {
-                return@postDelayed
-            }
-            val params = hashMapOf(
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "type" to if (adapter.data[position].isliked == 0) {
-                    2
-                } else {
-                    1
-                },
-                "square_id" to adapter.data[position].id!!,
-                "_timestamp" to System.currentTimeMillis()
-            )
-            mPresenter.getSquareLike(params, position)
-        }, 2000L)
 
     }
 
@@ -385,177 +534,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     }
 
 
-    /**
-     * 展示转发动态对话框
-     */
-    private fun showTranspondDialog(squareBean: SquareBean) {
-        val transpondDialog = TranspondDialog(activity!!, squareBean)
-        transpondDialog.show()
-//        transpondDialog.squareBean = squareBean
-    }
-
-
-//    lateinit var moreActionDialog: MoreActionDialog
-//    /**
-//     * 展示更多操作对话框
-//     */
-//    private fun showMoreDialog(position: Int) {
-//        moreActionDialog = MoreActionDialog(activity!!, "square")
-//        moreActionDialog.show()
-//
-//        if (adapter.data[position]?.iscollected == 0) {
-//            moreActionDialog.collect.text = "收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collect_no)
-//        } else {
-//            moreActionDialog.collect.text = "取消收藏"
-//            moreActionDialog.collectBtn.setImageResource(R.drawable.icon_collectt)
-//        }
-//
-//
-//        if (adapter.data[position].accid == UserManager.getAccid()) {
-//            moreActionDialog.llDelete.visibility = View.VISIBLE
-//            moreActionDialog.llJubao.visibility = View.GONE
-//            moreActionDialog.llCollect.visibility = View.GONE
-//        } else {
-//            moreActionDialog.llDelete.visibility = View.GONE
-//            moreActionDialog.llJubao.visibility = View.VISIBLE
-//            moreActionDialog.llCollect.visibility = View.VISIBLE
-//        }
-//        moreActionDialog.llDelete.onClick {
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "square_id" to adapter.data[position].id!!
-//            )
-//            mPresenter.removeMySquare(params, position)
-//            moreActionDialog.dismiss()
-//
-//        }
-//
-//
-//        moreActionDialog.llCollect.onClick {
-//
-//            //发起收藏请求
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "type" to if (adapter.data[position].iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to adapter.data[position].id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareCollect(params, position)
-//        }
-//        moreActionDialog.llJubao.onClick {
-//            //发起举报请求
-//            val params = hashMapOf(
-//                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-//                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-//                "type" to if (adapter.data[position].iscollected == 0) {
-//                    1
-//                } else {
-//                    2
-//                },
-//                "square_id" to adapter.data[position].id!!,
-//                "_timestamp" to System.currentTimeMillis()
-//            )
-//            mPresenter.getSquareReport(params, position)
-//        }
-//        moreActionDialog.cancel.onClick {
-//            moreActionDialog.dismiss()
-//        }
-//
-//    }
-
-    lateinit var moreActionDialog: MoreActionNewDialog
-    /**
-     * 展示更多操作对话框
-     */
-    private fun showMoreDialog(position: Int) {
-        moreActionDialog = MoreActionNewDialog(activity!!, adapter.data[position])
-        moreActionDialog.show()
-
-        if (adapter.data[position]?.iscollected == 0) {
-            moreActionDialog.collect.text = "收藏"
-            val top = resources.getDrawable(R.drawable.icon_collect1)
-            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
-        } else {
-            moreActionDialog.collect.text = "取消收藏"
-            val top = resources.getDrawable(R.drawable.icon_collected1)
-            moreActionDialog.collect.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
-        }
-        if (adapter.data[position].accid == UserManager.getAccid()) {
-            moreActionDialog.delete.visibility = View.VISIBLE
-            moreActionDialog.report.visibility = View.GONE
-            moreActionDialog.collect.visibility = View.GONE
-        } else {
-            moreActionDialog.delete.visibility = View.GONE
-            moreActionDialog.report.visibility = View.VISIBLE
-            moreActionDialog.collect.visibility = View.VISIBLE
-        }
-        moreActionDialog.delete.onClick {
-            val params = hashMapOf(
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "square_id" to adapter.data[position].id!!
-            )
-            mPresenter.removeMySquare(params, position)
-            moreActionDialog.dismiss()
-
-        }
-
-
-        moreActionDialog.collect.onClick {
-
-            //发起收藏请求
-            val params = hashMapOf(
-                "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                "type" to if (adapter.data[position].iscollected == 0) {
-                    1
-                } else {
-                    2
-                },
-                "square_id" to adapter.data[position].id!!,
-                "_timestamp" to System.currentTimeMillis()
-            )
-            mPresenter.getSquareCollect(params, position)
-        }
-        moreActionDialog.report.onClick {
-            val dialog = DeleteDialog(activity!!)
-            dialog.show()
-            dialog.tip.text = getString(R.string.report_square)
-            dialog.confirm.text = "举报"
-            dialog.cancel.onClick { dialog.dismiss() }
-            dialog.confirm.onClick {
-                dialog.dismiss()
-                //发起举报请求
-                val params = hashMapOf(
-                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-                    "type" to if (adapter.data[position].iscollected == 0) {
-                        1
-                    } else {
-                        2
-                    },
-                    "square_id" to adapter.data[position].id!!,
-                    "_timestamp" to System.currentTimeMillis()
-                )
-                mPresenter.getSquareReport(params, position)
-            }
-            moreActionDialog.dismiss()
-
-
-        }
-//        moreActionDialog.cancel.onClick {
-//            moreActionDialog.dismiss()
-//        }
-
-    }
-
     override fun onRemoveMySquareResult(result: Boolean, position: Int) {
         if (result) {
             if (adapter.data[position].type == SquareBean.AUDIO) {
@@ -575,12 +553,19 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 //        GSYVideoManager.onPause()
     }
 
+
+    override fun onStop() {
+        super.onStop()
+        resetAudio()
+        Log.d("SquareFragment", "onStop")
+//        GSYVideoManager.onPause()
+    }
+
     override fun onResume() {
         super.onResume()
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
         GSYVideoManager.onResume(false)
         Log.d("SquareFragment", "onResume")
-
     }
 
 
@@ -598,15 +583,12 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
         listParams["page"] = page
+        listParams["gender"] = sp.getInt("filter_square_gender", 3)
 
         resetAudio()
 
-//        friendsAdapter.data.clear()
-//        friendsAdapter.notifyDataSetChanged()
-
         refreshLayout.setNoMoreData(false)
         mPresenter.getSquareList(listParams, true)
-        mPresenter.getFrinedsList(friendsParams)
 
     }
 
@@ -621,42 +603,29 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     }
 
 
-    override fun onGetFriendsListResult(friends: MutableList<FriendBean?>) {
-//        if (friends.size == 0) {
-//            if (adapter.headerLayout != null)
-//                adapter.removeAllHeaderView()
-//        } else {
-//            if (adapter.headerLayout == null) {
-//                adapter.addHeaderView(initFriendsView(friends))
-//            } else {
-//                friendsAdapter.setNewData(friends)
-//            }
-//        }
-
-
-        if (friends.size == 0) {
-//            adapter.headerLayout.setVisible(false)
-            adapter.headerLayout.friendTv.visibility = View.GONE
-            adapter.headerLayout.headRv.visibility = View.GONE
-        } else {
-//            adapter.headerLayout.setVisible(true)
-            adapter.headerLayout.friendTv.visibility = View.VISIBLE
-            adapter.headerLayout.headRv.visibility = View.VISIBLE
-            friendsAdapter.setNewData(friends)
-
-        }
-    }
-
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {
         if (result) {
+            adapter.removeAllHeaderView()
+            if ((data?.banner_title ?: mutableListOf()).size > 0) {
+                adapter.addHeaderView(initRecommendTopicHeader())
+                topicAdapter.setNewData(data?.banner_title ?: mutableListOf<TopicBean>())
+                adapter.headerLayout.isVisible = true
+            } else {
+                if (adapter.headerLayout != null)
+                    adapter.headerLayout.isVisible = false
+            }
+
             if (isRefresh) {
                 adapter.data.clear()
                 adapter.notifyDataSetChanged()
                 squareDynamicRv.scrollToPosition(0)
             }
-
             setViewState(CONTENT)
+            //更新标题显示内容数据
+            if (data != null && rgSquare.checkedRadioButtonId == R.id.tabSquare)
+                UserManager.saveInterestLabelCount(data?.myinterest_count)
             if (data!!.list != null && data!!.list!!.size > 0) {
+                adapter.isUseEmpty(false)
                 for (tempData in 0 until data!!.list!!.size) {
                     data!!.list!![tempData].type = when {
                         !data!!.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
@@ -665,21 +634,33 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                                 data!!.list!![tempData].audio_json?.get(0)?.duration ?: 0
                             SquareBean.AUDIO
                         }
-                        !data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty()) -> SquareBean.PIC
-                        else -> SquareBean.PIC
+                        data!!.list!![tempData].category_type != 2 && (!data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty())) -> SquareBean.PIC
+                        else -> SquareBean.OFFICIAL_NOTICE
                     }
                     data!!.list!![tempData].originalLike = data!!.list!![tempData].isliked
                     data!!.list!![tempData].originalLikeCount = data!!.list!![tempData].like_cnt
                 }
                 adapter.addData(data!!.list!!)
+            } else {
+                adapter.isUseEmpty(true)
+                if (adapter.headerLayout != null)
+                    adapter.headerLayout.isVisible = false
+                if (rgSquare.checkedRadioButtonId == R.id.tabSquare) {
+                    adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
+                    adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
+                    adapter.emptyView.emptyFriendGoBtn.isVisible = false
+                } else {
+                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
+                    adapter.emptyView.emptyFriendTitle.text = "暂时没有动态"
+                    adapter.emptyView.emptyFriendTip.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
+                    adapter.emptyView.emptyFriendGoBtn.isVisible = false
+                }
             }
 
             refreshLayout.finishRefresh(result)
             refreshLayout.finishLoadMore(result)
             refreshLayout.setEnableLoadMoreWhenContentNotFull(false)
-            if (fragmentManager?.let { FragmentUtils.getTopShow(it) } == this)
-//            EventBus.getDefault().postSticky(EnableLabelEvent(true))
-                refreshLayout.postDelayed({ EventBus.getDefault().postSticky(EnableLabelEvent(true)) }, 1000L)
         } else {
             setViewState(ERROR)
             errorMsg.text = if (mPresenter.checkNetWork()) {
@@ -691,13 +672,13 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             refreshLayout.finishLoadMore(result)
             refreshLayout.setEnableLoadMoreWhenContentNotFull(false)
             adapter.notifyDataSetChanged()
-            if (fragmentManager?.let { FragmentUtils.getTopShow(it) } == this)
-                EventBus.getDefault().postSticky(EnableLabelEvent(true))
+
 
         }
 
 
     }
+
 
     override fun onGetSquareLikeResult(position: Int, result: Boolean) {
         if (result) {
@@ -721,27 +702,14 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 adapter.refreshNotifyItemChanged(position)
             }
         }
-        if (moreActionDialog != null && moreActionDialog.isShowing) {
-            moreActionDialog.dismiss()
-        }
     }
 
     override fun onGetSquareReport(baseResp: BaseResp<Any?>?, position: Int) {
         if (baseResp != null)
             CommonFunction.toast(baseResp.msg)
-        if (moreActionDialog != null && moreActionDialog.isShowing) {
-            moreActionDialog.dismiss()
-        }
+
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.squareEdit -> {
-                mPresenter.checkBlock(UserManager.getToken(), UserManager.getAccid())
-                squareEdit.isEnabled = false
-            }
-        }
-    }
 
     override fun showLoading() {
         setViewState(LOADING)
@@ -786,28 +754,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
-//        squareDynamicRv.scrollToPosition(0)
-        Log.d("SquareFragment", event.label.title)
-        listParams["tagid"] = event.label.id
         //这个地方还要默认设置选中第一个标签来更新数据
         if (refreshLayout.state == RefreshState.Refreshing) {
             refreshLayout.finishRefresh()
         }
         refreshLayout.autoRefresh()
-
-//        refreshLayout.autoRefreshAnimationOnly()
-//        page = 1
-//        listParams["page"] = page
-//
-//        resetAudio()
-//
-//        friendsAdapter.data.clear()
-//        friendsAdapter.notifyDataSetChanged()
-//
-//        refreshLayout.setNoMoreData(false)
-//        mPresenter.getSquareList(listParams, true)
-//        mPresenter.getFrinedsList(friendsParams)
-
     }
 
     /**
@@ -815,17 +766,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRefreshEvent(event: RefreshEvent) {
-//        squareDynamicRv.scrollToPosition(0)
-        if (listParams["audit_only"] != null)
-            listParams.remove("audit_only")
-        if (listParams["local_only"] != null)
-            listParams.remove("local_only")
-        //这个地方还要默认设置选中第一个标签来更新数据
-        val params = UserManager.getFilterConditions()
-        params.forEach {
-            listParams[it.key] = it.value
-        }
-        refreshLayout.autoRefresh()
+        squareDynamicRv.scrollToPosition(0)
+        updateChooseTitle()
     }
 
     /**
@@ -844,7 +786,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onNotifyEvent(event: NotifyEvent) {
         val pos = event.position
-        GSYVideoManager.releaseAllVideos()
+//        GSYVideoManager.releaseAllVideos()
 
 //        adapter.notifyDataSetChanged()
         //静音
@@ -900,10 +842,10 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     (((event.currentFileIndex - 1) * 1.0F / event.totalFileCount + (1.0F / event.totalFileCount * event.progress)) * 100).toInt()
                 uploadProgressTv.text = "正在发布    ${uploadProgressBar.progress}%"
                 uploadFl.isVisible = true
-                if (!changeMarTop) {
-                    val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
+                if (!changeMarTop && adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                    val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
                     params.topMargin = SizeUtils.dp2px(45F)
-                    adapter.headerLayout.friendTv.layoutParams = params
+                    adapter.headerLayout.recommendTitle.layoutParams = params
                     changeMarTop = true
                 }
             } else {
@@ -921,16 +863,20 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             uploadProgressTv.text = "动态发布成功!"
             uploadFl.postDelayed({
                 uploadFl.isVisible = false
-                val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
-                params.topMargin = SizeUtils.dp2px(10F)
-                adapter.headerLayout.friendTv.layoutParams = params
+                if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                    val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                    params.topMargin = SizeUtils.dp2px(10F)
+                    adapter.headerLayout.recommendTitle.layoutParams = params
+                }
             }, 500)
         } else {
             UserManager.cancelUpload = true
             uploadFl.isVisible = true
-            val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
-            params.topMargin = SizeUtils.dp2px(45F)
-            adapter.headerLayout.friendTv.layoutParams = params
+            if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                params.topMargin = SizeUtils.dp2px(45F)
+                adapter.headerLayout.recommendTitle.layoutParams = params
+            }
             uploadProgressBar.progress = 0
             llRetry.isVisible = true
             btnClose.isVisible = true
@@ -944,12 +890,14 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
                     UserManager.clearPublishParams()
 
-                    startActivity<PublishActivity>()
+                    startActivity<ChooseLabelActivity>()
                     UserManager.publishState = 0
                     uploadFl.isVisible = false
-                    val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
-                    params.topMargin = SizeUtils.dp2px(10F)
-                    adapter.headerLayout.friendTv.layoutParams = params
+                    if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                        val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                        params.topMargin = SizeUtils.dp2px(10F)
+                        adapter.headerLayout.recommendTitle.layoutParams = params
+                    }
                 }
             } else { //发布失败重新发布
                 UserManager.publishState = -2
@@ -960,12 +908,14 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     retryPublish()
                 }
             }
-            //TODO 取消重新发布，清除本地所存下的发布的数据
+            //取消重新发布，清除本地所存下的发布的数据
             btnClose.onClick {
                 uploadFl.isVisible = false
-                val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
-                params.topMargin = SizeUtils.dp2px(10F)
-                adapter.headerLayout.friendTv.layoutParams = params
+                if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                    val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                    params.topMargin = SizeUtils.dp2px(10F)
+                    adapter.headerLayout.recommendTitle.layoutParams = params
+                }
                 UserManager.clearPublishParams()
             }
         }
@@ -975,7 +925,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     private var from = 1
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRePublishEvent(event: RePublishEvent) {
-        if (event.context is UserCenterActivity) {
+        if (event.context == UserCenterFragment::class.java.simpleName) {
             from = 2
         } else {
             from = 1
@@ -984,7 +934,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             CommonFunction.toast("还有动态正在发布哦~请稍候")
             return
         } else if (UserManager.publishState == -2) {//发布失败
-            CommonAlertDialog.Builder(event.context)
+            CommonAlertDialog.Builder(activity!!)
                 .setTitle("发布提示")
                 .setContent("您有一条内容未成功发布，是否重新发布？")
                 .setConfirmText("重新上传")
@@ -999,38 +949,45 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     override fun onClick(dialog: Dialog) {
                         dialog.cancel()
                         uploadFl.isVisible = false
-                        val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
-                        params.topMargin = SizeUtils.dp2px(10F)
-                        adapter.headerLayout.friendTv.layoutParams = params
+                        if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                            val params =
+                                adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                            params.topMargin = SizeUtils.dp2px(10F)
+                            adapter.headerLayout.recommendTitle.layoutParams = params
+                        }
                         UserManager.clearPublishParams()
                         if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-                            if (event.context is UserCenterActivity) {
-                                event.context.startActivity<PublishActivity>("from" to 2)
+                            if (event.context == UserCenterFragment::class.java.simpleName) {
+                                startActivity<ChooseLabelActivity>("from" to 2)
                             } else {
-                                event.context.startActivity<PublishActivity>()
+                                startActivity<ChooseLabelActivity>()
                             }
                     }
                 })
                 .create()
                 .show()
         } else if (UserManager.publishState == -1) { //400
+            //TODO 思考问题如何处理违规内容
             SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
             UserManager.clearPublishParams()
             if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-                if (event.context is UserCenterActivity) {
-                    event.context.startActivity<PublishActivity>("from" to 2)
+                if (event.context == UserCenterFragment::class.java.simpleName) {
+                    startActivity<ChooseLabelActivity>("from" to 2)
                 } else {
-                    event.context.startActivity<PublishActivity>()
+                    startActivity<ChooseLabelActivity>()
                 }
             uploadFl.isVisible = false
-            val params = adapter.headerLayout.friendTv.layoutParams as LinearLayout.LayoutParams
-            params.topMargin = SizeUtils.dp2px(10F)
-            adapter.headerLayout.friendTv.layoutParams = params
+            if (adapter.headerLayout != null && adapter.headerLayout.isNotEmpty()) {
+                val params = adapter.headerLayout.recommendTitle.layoutParams as ConstraintLayout.LayoutParams
+                params.topMargin = SizeUtils.dp2px(10F)
+                adapter.headerLayout.recommendTitle.layoutParams = params
+            }
         } else if (UserManager.publishState == 0) {
-            if (event.context is UserCenterActivity) {
-                event.context.startActivity<PublishActivity>("from" to 2)
+            if (event.context == UserCenterFragment::class.java.simpleName) {
+                startActivity<ChooseLabelActivity>("from" to 2)
             } else {
-                event.context.startActivity<PublishActivity>()
+                activity!!.intent.setClass(activity!!, ChooseLabelActivity::class.java)
+                startActivity(activity!!.intent)
             }
         }
     }
@@ -1155,7 +1112,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
     //验证用户是否被封禁结果
     override fun onCheckBlockResult(result: Boolean) {
         if (result) {
-            onRePublishEvent(RePublishEvent(true, activity!!))
+            onRePublishEvent(RePublishEvent(true, SquareFragment::class.java.simpleName))
         }
         squareEdit.isEnabled = true
     }
@@ -1191,7 +1148,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         super.onActivityResult(requestCode, resultCode, data)
         //查看好友的，出来请求
         if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
-            mPresenter.getFrinedsList(friendsParams)
+            if (data != null)
+                if (data.getIntExtra("position", -1) != -1) {
+                    topicAdapter.remove(data.getIntExtra("position", -1))
+                }
+//            mPresenter.getFrinedsList(friendsParams)
         }
     }
 

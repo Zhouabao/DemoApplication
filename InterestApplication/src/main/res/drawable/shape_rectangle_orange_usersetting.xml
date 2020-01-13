@@ -4,11 +4,15 @@
     <gradient
             android:type="linear"
             android:useLevel="true"
-            android:startColor="@color/colorOrange"
-            android:endColor="#ffff9c35"
+            android:startColor="#ff1f2123"
+            android:endColor="#ff313438"
             android:angle="90"/>
-    <corners android:radius="5dp"/>
-    <item android:name="android:shadowColor">#ffffeac8</item>
-    <item android:name="android:shadowDx">0</item>
-    <item android:name="android:shadowDy">0</item>
+
+
+
+    <corners
+            android:topLeftRadius="15dp"
+            android:topRightRadius="15dp"
+            android:bottomLeftRadius="0dp"
+            android:bottomRightRadius="0dp"/>
 </shape>

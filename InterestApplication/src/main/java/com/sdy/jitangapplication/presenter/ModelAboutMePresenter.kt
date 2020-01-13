@@ -7,7 +7,7 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.ModelAboutBean
+import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.presenter.view.ModelAboutMeView
 
 /**
@@ -23,21 +23,22 @@ class ModelAboutMePresenter : BasePresenter<ModelAboutMeView>() {
     fun getSignTemplate(page: Int) {
         RetrofitFactory.instance.create(Api::class.java)
             .getSignTemplate(page)
-            .excute(object : BaseSubscriber<BaseResp<MutableList<ModelAboutBean>?>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<ModelAboutBean>?>) {
+            .excute(object : BaseSubscriber<BaseResp<MutableList<LabelQualityBean>?>>(mView) {
+                override fun onNext(t: BaseResp<MutableList<LabelQualityBean>?>) {
                     if (t.code == 200) {
-                        mView.getSignTemplateResult(t.code, t.data)
+                        mView.getTagTraitInfoResult(true, t.data)
                     } else {
                         CommonFunction.toast(t.msg)
-                        mView.getSignTemplateResult(t.code, null)
+                        mView.getTagTraitInfoResult(false, null)
                     }
                 }
 
                 override fun onError(e: Throwable?) {
                     CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                    mView.getSignTemplateResult(-1, null)
+                    mView.getTagTraitInfoResult(false, null)
                 }
 
             })
     }
+
 }

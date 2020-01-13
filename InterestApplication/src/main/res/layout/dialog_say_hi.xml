@@ -41,7 +41,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contentHi"
             android:visibility="visible"
-            android:background="@drawable/shape_rectangle_gray_white_9dp"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
             android:layout_width="300dp"
             android:layout_height="350dp"
             app:layout_constraintBottom_toBottomOf="parent"

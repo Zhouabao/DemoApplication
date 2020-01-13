@@ -124,13 +124,13 @@ class InvestigateDialog(private val contex1t: Context, private val investigateBe
         adapter.setOnItemClickListener { _, view, position ->
             for (data in adapter.data.withIndex()) {
 //                if (data.index != position) {
-//                    if (data.value.check) {
-//                        data.value.check = false
+//                    if (data.value.is_promote) {
+//                        data.value.is_promote = false
 //                        adapter.notifyItemChanged(data.index)
 //                    }
 //                } else {
-//                    data.value.check = !data.value.check
-//                    data.value.check=  data.index == position
+//                    data.value.is_promote = !data.value.is_promote
+//                    data.value.is_promote=  data.index == position
 //                    adapter.notifyItemChanged(data.index)
 //                }
                 data.value.check = data.index == position

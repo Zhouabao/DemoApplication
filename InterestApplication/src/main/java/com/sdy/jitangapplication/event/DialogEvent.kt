@@ -6,4 +6,3 @@ package com.sdy.jitangapplication.event
  *    desc   :
  *    version: 1.0
  */
-class ReminderScoreEvent(val score:Int)

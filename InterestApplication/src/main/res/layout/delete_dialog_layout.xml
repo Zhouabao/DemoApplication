@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:background="@drawable/shape_rectangle_gray_white_9dp"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:layout_width="300dp"
@@ -18,25 +18,38 @@
             android:layout_marginRight="15dp"
             android:orientation="vertical">
 
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="20dp"
+                android:text="确认删除标签？"
+                android:textColor="#ff191919"
+                android:textSize="18sp"
+                />
+
 
         <TextView
                 android:id="@+id/tip"
                 android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:text="确定清空历史记录？"
-                android:textColor="@color/colorBlack22"
-                android:textSize="18sp"
+                android:textColor="#ff888d92"
+                android:textSize="15sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/title"/>
 
         <View
                 android:id="@+id/view"
                 android:background="@color/colorDivider"
                 android:layout_height="1dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 app:layout_constraintTop_toBottomOf="@id/tip"/>
 
@@ -47,8 +60,9 @@
                 android:layout_height="50dp"
                 android:layout_width="0dp"
                 android:text="取消"
-                android:textSize="18sp"
-                android:textColor="@color/colorGrayText"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                android:textColor="#ffc5c6c8"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/view1"
                 app:layout_constraintTop_toBottomOf="@id/view"/>
@@ -71,7 +85,8 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:text="确定"
-                android:textSize="18sp"
+                android:textSize="17sp"
+                android:textStyle="bold"
                 android:textColor="@color/colorOrange"
                 app:layout_constraintLeft_toRightOf="@id/view1"
                 app:layout_constraintRight_toRightOf="parent"

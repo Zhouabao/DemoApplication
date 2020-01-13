@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
 apply plugin: 'channel'
+apply plugin: 'com.growingio.android'
 android {
     signingConfigs {
 
@@ -34,8 +35,8 @@ android {
         applicationId "com.sdy.jitangapplication"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 8
+        versionName "1.1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
@@ -54,6 +55,8 @@ android {
 //            abiFilters 'armeabi', 'armeabi-v7a', 'x86'
             abiFilters "armeabi", "arm64-v8a", "armeabi-v7a", "x86", "x86_64"
         }
+        resValue("string", "growingio_project_id", "9e7076438fd6471a")
+        resValue("string", "growingio_url_scheme", "growing.fb176594ca56d270")
 
     }
     compileOptions {
@@ -113,7 +116,7 @@ android {
         Yingyonghui {}//投放应用汇市场
         Smartisan {}//投放锤子市场
         Samsung {}//投放三星市场
-        Advertisement {}//投放三星市场
+        Advertisement {}//运营投放渠道
 
         //manifestPlaceholders 使用相关的值替换了UMENG_CHANNEL_VALUE
         productFlavors.all {
@@ -171,7 +174,8 @@ dependencies {
     implementation project(path: ':BaseLibrary')
     //高德地图
     //3D地图so及jar
-    implementation 'com.amap.api:map2d:latest.integration'
+    implementation 'com.amap.api:3dmap:latest.integration'
+//    implementation 'com.amap.api:map2d:latest.integration'
     //定位功能
     implementation 'com.amap.api:location:latest.integration'
     //搜索功能
@@ -224,6 +228,9 @@ dependencies {
     implementation 'com.leon.channel:helper:2.0.3'
     //联动选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    //growing增长
+    implementation 'com.growingio.android:vds-android-agent:autotrack-2.8.7'
+
     //微信支付
 //    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 //    implementation project(path: ':faceplatform')
