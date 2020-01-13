@@ -69,7 +69,10 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onSavePersonalResult(false, 1)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onSavePersonalResult(false, 1)
                 }
             })
     }
@@ -99,7 +102,13 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
     /**
      * 保存相册
      */
-    fun addPhotoV2(params: HashMap<String, Any?> = hashMapOf(), token: String, accid: String, photos: MutableList<Int?>, type: Int) {
+    fun addPhotoV2(
+        params: HashMap<String, Any?> = hashMapOf(),
+        token: String,
+        accid: String,
+        photos: MutableList<Int?>,
+        type: Int
+    ) {
 
         params["photos"] = Gson().toJson(photos)
         RetrofitFactory.instance.create(Api::class.java)
@@ -115,7 +124,10 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onSavePersonalResult(false, 2, type)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onSavePersonalResult(false, 2, type)
                 }
             })
     }
@@ -139,7 +151,10 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
                 }
             })
     }

@@ -5,6 +5,7 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nimlib.sdk.RequestCallback
@@ -48,8 +49,13 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                    mView.onConfirmVerifyCode(null, false)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                        mView.onConfirmVerifyCode(null, false)
+                    }
 
                 }
             })
@@ -70,7 +76,7 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
             .cancelAccount(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any>>(mView) {
                 override fun onNext(t: BaseResp<Any>) {
-                    mView.onConfirmVerifyCode(null,t.code == 200)
+                    mView.onConfirmVerifyCode(null, t.code == 200)
                     if (t.code == 403) {
                         TickDialog(context).show()
                     } else if (t.code != 200) {
@@ -83,8 +89,13 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onConfirmVerifyCode(null,false)
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.onConfirmVerifyCode(null, false)
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    }
                 }
             })
     }
@@ -111,7 +122,10 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onGetVerifyCode(null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onGetVerifyCode(null)
                 }
             })
 

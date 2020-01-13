@@ -4,12 +4,12 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
-import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.view.MyLabelQualityView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -48,8 +48,13 @@ class MyLabelQualityPresenter : BasePresenter<MyLabelQualityView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.hideLoading()
-                    mView.getTagTraitInfoResult(type, false, null)
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.getTagTraitInfoResult(type, false, null)
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    }
                 }
             })
     }
@@ -82,8 +87,12 @@ class MyLabelQualityPresenter : BasePresenter<MyLabelQualityView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.hideLoading()
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                    mView.addTagResult(false, null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                        mView.addTagResult(false, null)
+                    }
                 }
             })
     }

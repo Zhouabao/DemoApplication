@@ -4,6 +4,7 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -33,8 +34,12 @@ class ChooseLabelPresenter : BasePresenter<ChooseLabelView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                    mView.getSquareTagListResult(false, null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                        mView.getSquareTagListResult(false, null)
+                    }
                 }
             })
     }

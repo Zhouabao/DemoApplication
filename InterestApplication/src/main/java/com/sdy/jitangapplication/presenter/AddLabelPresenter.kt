@@ -4,6 +4,7 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -42,8 +43,12 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
-                    mView.onTagClassifyListResult(false, null)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                        mView.onTagClassifyListResult(false, null)
+                    }
                 }
 
             })
@@ -64,7 +69,7 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
                 override fun onNext(t: BaseResp<MutableList<TagBean>?>) {
                     mView.hideLoading()
                     if (t.code == 200) {
-                        mView.saveInterestTagResult(true,t.data)
+                        mView.saveInterestTagResult(true, t.data)
                     } else if (t.code == 403) {
                         TickDialog(context).show()
                     }
@@ -73,7 +78,11 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
 
                 override fun onError(e: Throwable?) {
                     mView.hideLoading()
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    }
                 }
             })
     }

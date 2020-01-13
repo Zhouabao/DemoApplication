@@ -42,8 +42,13 @@ class SquareSamePersonPresenter : BasePresenter<SquareSamePersonView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onGetTitleInfoResult(false, null)
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.onGetTitleInfoResult(false, null)
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    }
                 }
             })
     }

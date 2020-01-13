@@ -103,6 +103,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     CommonFunction.toast(t.msg)
                     mView.onGreetApproveResult(t.code == 200)
                 }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    }
+                }
             })
     }
 
@@ -116,6 +122,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     CommonFunction.toast(t.msg)
                     mView.onGreetSwitchResult(t.code == 200)
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    }
                 }
             })
     }
@@ -138,8 +150,13 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onSettingsBeanResult(false, null)
-                    CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+
+                        mView.onSettingsBeanResult(false, null)
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    }
 
                 }
             })

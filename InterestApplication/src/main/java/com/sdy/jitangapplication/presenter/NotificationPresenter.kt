@@ -4,10 +4,12 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.presenter.view.NotificationView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
 /**
@@ -26,7 +28,13 @@ class NotificationPresenter : BasePresenter<NotificationView>() {
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     CommonFunction.toast(t.msg)
-                    mView.onGreetApproveResult(type,t.code == 200)
+                    mView.onGreetApproveResult(type, t.code == 200)
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    }
                 }
             })
     }
