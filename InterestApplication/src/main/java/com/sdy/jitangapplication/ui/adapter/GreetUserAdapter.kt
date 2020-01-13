@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.item_greet_user.view.*
 
 class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.layout.item_greet_user) {
     override fun convert(helper: BaseViewHolder, item: GreetedListBean) {
+//        helper.addOnClickListener(R.id.v1)
         helper.itemView.matchUserName.text = item.nickname
         helper.itemView.matchUserConstellation.text = item.constellation
         helper.itemView.matchUserAge.text = "${item.age}"
@@ -40,7 +41,11 @@ class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.lay
 
         helper.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty()
         helper.itemView.matchBothIntersetContent.text = item.matching_content
-        helper.itemView.chatContentMsg.text = item.send_msg
+        helper.itemView.chatContentMsg.text = if (item.send_msg.isNullOrEmpty()) {
+            ""
+        } else {
+            item.send_msg
+        }
 
 
         helper.itemView.vpIndicator.removeAllViews()

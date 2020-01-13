@@ -152,6 +152,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
+        detailUserDislikeBtn.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
         detailUserGreetBtn.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)

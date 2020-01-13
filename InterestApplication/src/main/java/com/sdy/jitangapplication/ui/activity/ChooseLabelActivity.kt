@@ -71,11 +71,13 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
                 if (datas.all_list.isNullOrEmpty() && datas.used_list.isNullOrEmpty()) {
                     stateChooseLabel.viewState = MultiStateView.VIEW_STATE_EMPTY
                 } else {
-                    adapter.addData(SquareLabelBean(title = "常用标签", type = SquareLabelBean.TITLE))
-                    for (data in datas.used_list) {
-                        data.type = SquareLabelBean.CONTENT
+                    if (!datas.used_list.isNullOrEmpty()) {
+                        adapter.addData(SquareLabelBean(title = "常用标签", type = SquareLabelBean.TITLE))
+                        for (data in datas.used_list) {
+                            data.type = SquareLabelBean.CONTENT
+                        }
+                        adapter.addData(datas.used_list)
                     }
-                    adapter.addData(datas.used_list)
                     adapter.addData(SquareLabelBean(title = "全部标签", type = SquareLabelBean.TITLE))
                     for (data in datas.all_list) {
                         data.type = SquareLabelBean.CONTENT

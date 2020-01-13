@@ -79,11 +79,22 @@ class GuideGreetDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideCl.isVisible = true
             guideLast.isVisible = false
             guideNext.isVisible = false
-            guideDetail.isVisible = true
+            guideDetail.isVisible = false
+            guideGreetContent.isVisible = true
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            guideGreetContent.isVisible = false
             intentionMatchingCl.isVisible = false
+
+
+
+//            guideCl.isVisible = true
+//            guideLast.isVisible = false
+//            guideNext.isVisible = false
+//            guideDetail.isVisible = true
+//            guideLike.isVisible = false
+//            guideDislike.isVisible = false
+//            guideGreetContent.isVisible = false
+//            intentionMatchingCl.isVisible = false
         }
 
         guideDetail.onClick {

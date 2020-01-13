@@ -373,11 +373,12 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 }
             }
             if (matchBeans.mytags.isNullOrEmpty() || noQuality) {
-                if (UserManager.isShowCompleteLabelDialog()) {
-                    completeLabelBtn.isVisible = true
-                } else {
+                completeLabelBtn.isVisible = true
+                if (!UserManager.isShowCompleteLabelDialog()) {
+//                    completeLabelBtn.isVisible = true
+//                } else {
                     UserManager.saveCompleteLabelCount(matchBeans.interest_times)
-                    completeLabelBtn.isVisible = false
+//                    completeLabelBtn.isVisible = false
                 }
             } else {
                 completeLabelBtn.isVisible = false

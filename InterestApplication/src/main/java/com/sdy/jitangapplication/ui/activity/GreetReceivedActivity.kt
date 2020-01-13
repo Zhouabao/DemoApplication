@@ -22,6 +22,7 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.GetNewMsgEvent
@@ -52,6 +53,7 @@ import org.jetbrains.anko.startActivity
  * 收到的招呼列表
  */
 class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetReceivedView, CardStackListener {
+
     private var page = 1
     private val params by lazy {
         hashMapOf(
@@ -67,7 +69,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         setContentView(R.layout.activity_greet_received)
         initView()
         registerObservers(true)
-        mPresenter.greatLists(params)
+        mPresenter.getRecentContacts()
     }
 
     override fun onDestroy() {
@@ -145,7 +147,24 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                     GuideGreetDialog(this).show()
                 }
             }
+
+            for (data in t.data ?: mutableListOf()) {
+                for (contact in recentContacts) {
+                    if (data.accid == contact.fromAccount) {
+                        if (data.send_msg.isNullOrEmpty()) {
+                            if (!contact.content.isNullOrEmpty()) {
+                                data.send_msg = contact.content
+                            } else {
+                                data.send_msg = "对方向你打了个招呼"
+                            }
+                        }
+                        break
+                    }
+                }
+            }
+
             adapter.addData(t.data ?: mutableListOf())
+
         } else {
             stateGreet.viewState = MultiStateView.VIEW_STATE_ERROR
         }
@@ -164,6 +183,13 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                 finish()
             }
         }
+    }
+
+
+    private var recentContacts = mutableListOf<RecentContact>()
+    override fun onGetRecentContactResults(result: MutableList<RecentContact>) {
+        recentContacts.addAll(result)
+        mPresenter.greatLists(params)
     }
 
 
@@ -266,7 +292,8 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
     override fun onCardSwiped(direction: Direction) {
         resetAnimation()
         //清空此人的未读消息数量
-        NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[manager.topPosition - 1].accid, SessionTypeEnum.P2P)
+        NIMClient.getService(MsgService::class.java)
+            .clearUnreadCount(adapter.data[manager.topPosition - 1].accid, SessionTypeEnum.P2P)
         //1 右滑接受 2左滑失效
         mPresenter.likeOrGreetState(
             adapter.data[manager.topPosition - 1].greet_id, if (direction == Direction.Left) {
