@@ -167,7 +167,7 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
         if (t.data!!.count > 0) {
             likeLeftCount.isVisible = true
             likeLeftCount.text = SpanUtils.with(likeLeftCount)
-                .append("还有")
+                .append("有")
                 .append(" ${t.data!!.count} ")
                 .setForegroundColor(resources.getColor(R.color.colorOrange))
                 .setBold()
@@ -187,7 +187,7 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
             if (likeCount > 0 && likeLeftCount.isVisible) {
                 likeCount -= 1
                 likeLeftCount.text = SpanUtils.with(likeLeftCount)
-                    .append("还有")
+                    .append("有")
                     .append(" $likeCount ")
                     .setForegroundColor(resources.getColor(R.color.colorOrange))
                     .setBold()

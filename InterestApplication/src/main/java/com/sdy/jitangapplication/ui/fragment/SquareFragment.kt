@@ -36,10 +36,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.SquareBean
-import com.sdy.jitangapplication.model.SquareListBean
-import com.sdy.jitangapplication.model.TagBean
-import com.sdy.jitangapplication.model.TopicBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
 import com.sdy.jitangapplication.player.OnPlayingListener
 import com.sdy.jitangapplication.presenter.SquarePresenter
@@ -49,6 +46,7 @@ import com.sdy.jitangapplication.switchplay.SwitchVideo
 import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.AllTitleAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
+import com.sdy.jitangapplication.ui.adapter.SquareSwitchAdapter
 import com.sdy.jitangapplication.ui.adapter.TagAdapter
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
@@ -75,6 +73,7 @@ import org.jetbrains.anko.support.v4.startActivity
 class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
     MultiListSquareAdapter.ResetAudioListener {
     private var checkedId = 0
+    private var checkedTitleId = 0
     override fun loadData() {
         initView()
 
@@ -104,11 +103,10 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "page" to page,
-            "tag_id" to checkedId,
             "pagesize" to Constants.PAGESIZE,
             "gender" to sp.getInt("filter_square_gender", 3),
-            "type" to when (rgSquare.checkedRadioButtonId) {
-                R.id.tabSquare -> {
+            "type" to when (checkedTitleId) {
+                SQUARE_TAG -> {
                     1
                 }
                 else -> {
@@ -274,7 +272,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         addTagBtn.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
                 val intent = Intent()
-                intent.putExtra("from", AddLabelActivity.FROM_INTERSERT_LABEL)
+                intent.putExtra("from", AddLabelActivity.FROM_ADD_NEW)
                 intent.setClass(activity!!, AddLabelActivity::class.java)
                 startActivity(intent)
             }
@@ -296,16 +294,36 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
     }
 
+
+    companion object {
+        const val SQUARE_TAG = 0
+        const val SQUARE_FRIEND = 1
+    }
+
+    val titleAdapter by lazy { SquareSwitchAdapter() }
     private fun initHeadView() {
         initTagsView()
 
-        rgSquare.setOnCheckedChangeListener { _, checkedId ->
-            squareTagRv.isVisible = checkedId == R.id.tabSquare
-            addTagBg.isVisible = checkedId == R.id.tabSquare
+        rgSquare.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        titleAdapter.addData(SquareTitleBean("广场", true))
+        titleAdapter.addData(SquareTitleBean("好友", false))
+        rgSquare.adapter = titleAdapter
+
+        titleAdapter.setOnItemClickListener { _, view, position ->
+            for (data in titleAdapter.data) {
+                data.checked = data == titleAdapter.data[position]
+            }
+            titleAdapter.notifyDataSetChanged()
+
+            checkedTitleId = if (position == 0) {
+                SQUARE_TAG
+            } else {
+                SQUARE_FRIEND
+            }
+            squareTagRv.isVisible = checkedTitleId == SQUARE_TAG
+            addTagBg.isVisible = checkedTitleId == SQUARE_TAG
             updateChooseTitle()
         }
-        rgSquare.check(R.id.tabSquare)
-
 
         /**
          *性别筛选
@@ -353,10 +371,10 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
      *
      */
     private fun updateChooseTitle() {
-        setViewState(LOADING)
+//        setViewState(LOADING)
         setTagData()
-        listParams["type"] = when (rgSquare.checkedRadioButtonId) {
-            R.id.tabSquare -> {
+        listParams["type"] = when (checkedTitleId) {
+            SQUARE_TAG -> {
                 1
             }
             else -> {
@@ -380,6 +398,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         mPresenter = SquarePresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!
+
 
         initHeadView()
 
@@ -622,41 +641,42 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             }
             setViewState(CONTENT)
             //更新标题显示内容数据
-            if (data != null && rgSquare.checkedRadioButtonId == R.id.tabSquare)
-                UserManager.saveInterestLabelCount(data?.myinterest_count)
-            if (data!!.list != null && data!!.list!!.size > 0) {
-                adapter.isUseEmpty(false)
-                for (tempData in 0 until data!!.list!!.size) {
-                    data!!.list!![tempData].type = when {
-                        !data!!.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
-                        !data!!.list!![tempData].audio_json.isNullOrEmpty() -> {
-                            data!!.list!![tempData].audio_json?.get(0)?.leftTime =
-                                data!!.list!![tempData].audio_json?.get(0)?.duration ?: 0
-                            SquareBean.AUDIO
+            if (data != null && checkedTitleId == SQUARE_TAG)
+                UserManager.saveMaxMyLabelCount(data?.myinterest_count)
+            if (data != null)
+                if (data!!.list != null && data!!.list!!.size > 0) {
+                    adapter.isUseEmpty(false)
+                    for (tempData in 0 until data!!.list!!.size) {
+                        data!!.list!![tempData].type = when {
+                            !data!!.list!![tempData].video_json.isNullOrEmpty() -> SquareBean.VIDEO
+                            !data!!.list!![tempData].audio_json.isNullOrEmpty() -> {
+                                data!!.list!![tempData].audio_json?.get(0)?.leftTime =
+                                    data!!.list!![tempData].audio_json?.get(0)?.duration ?: 0
+                                SquareBean.AUDIO
+                            }
+                            data!!.list!![tempData].category_type != 2 && (!data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty())) -> SquareBean.PIC
+                            else -> SquareBean.OFFICIAL_NOTICE
                         }
-                        data!!.list!![tempData].category_type != 2 && (!data!!.list!![tempData].photo_json.isNullOrEmpty() || (data!!.list!![tempData].photo_json.isNullOrEmpty() && data!!.list!![tempData].audio_json.isNullOrEmpty() && data!!.list!![tempData].video_json.isNullOrEmpty())) -> SquareBean.PIC
-                        else -> SquareBean.OFFICIAL_NOTICE
+                        data!!.list!![tempData].originalLike = data!!.list!![tempData].isliked
+                        data!!.list!![tempData].originalLikeCount = data!!.list!![tempData].like_cnt
                     }
-                    data!!.list!![tempData].originalLike = data!!.list!![tempData].isliked
-                    data!!.list!![tempData].originalLikeCount = data!!.list!![tempData].like_cnt
-                }
-                adapter.addData(data!!.list!!)
-            } else {
-                adapter.isUseEmpty(true)
-                if (adapter.headerLayout != null)
-                    adapter.headerLayout.isVisible = false
-                if (rgSquare.checkedRadioButtonId == R.id.tabSquare) {
-                    adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
-                    adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
-                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
-                    adapter.emptyView.emptyFriendGoBtn.isVisible = false
+                    adapter.addData(data!!.list!!)
                 } else {
-                    adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
-                    adapter.emptyView.emptyFriendTitle.text = "暂时没有动态"
-                    adapter.emptyView.emptyFriendTip.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
-                    adapter.emptyView.emptyFriendGoBtn.isVisible = false
+                    adapter.isUseEmpty(true)
+                    if (adapter.headerLayout != null)
+                        adapter.headerLayout.isVisible = false
+                    if (checkedTitleId == SQUARE_TAG) {
+                        adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
+                        adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+                        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
+                        adapter.emptyView.emptyFriendGoBtn.isVisible = false
+                    } else {
+                        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
+                        adapter.emptyView.emptyFriendTitle.text = "暂时没有动态"
+                        adapter.emptyView.emptyFriendTip.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
+                        adapter.emptyView.emptyFriendGoBtn.isVisible = false
+                    }
                 }
-            }
 
             refreshLayout.finishRefresh(result)
             refreshLayout.finishLoadMore(result)

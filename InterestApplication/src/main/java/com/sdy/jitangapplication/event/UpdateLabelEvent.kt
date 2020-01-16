@@ -30,9 +30,6 @@ class RefreshCommentEvent(val commentNum: Int, val position: Int)
 //刷新事件  local 是否是本地
 class RefreshSquareEvent(val refresh: Boolean, var from: String = "")
 
-//根据条件筛选请求的params
-class FilterEvent(val params: HashMap<String, Any>)
-
 
 //上传进度事件 from 1广场 2用户中心
 class UploadEvent(
@@ -58,9 +55,6 @@ class RePublishEvent(var republish: Boolean, val context: String)
 
 //更新用户中心信息
 class UserCenterEvent(var refresh: Boolean)
-
-//更新用户中心的标签信息
-class UserCenterLabelEvent()
 
 
 //更新用户详情状态视图

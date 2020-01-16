@@ -92,27 +92,6 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("SlideCount", -1)
     }
 
-    /**
-     * 感兴趣的标签个数
-     */
-    fun saveInterestLabelCount(count: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("interestLabelCount", count)
-    }
-
-    fun getInterestLabelCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("interestLabelCount", -1)
-    }
-
-    /**
-     * 感兴趣的标签个数
-     */
-    fun saveMaxInterestLabelCount(count: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("maxInterestLabelCount", count)
-    }
-
-    fun getMaxInterestLabelCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("maxInterestLabelCount", 0)
-    }
 
     /**
      * 我的兴趣的标签个数
@@ -309,8 +288,8 @@ object UserManager {
                 saveUserVerify(data.userinfo.isfaced)
             SPUtils.getInstance(Constants.SPNAME).put("isInterestLabel", data.extra_data?.myinterest ?: false)
             SPUtils.getInstance(Constants.SPNAME).put("userIntroduce", data.extra_data?.aboutme ?: "")
-            if (!data.extra_data?.taglist.isNullOrEmpty()) {
-                saveLabels(data.extra_data?.taglist ?: mutableListOf())
+            if (!data.extra_data?.mytaglist.isNullOrEmpty()) {
+                saveLabels(data.extra_data?.mytaglist ?: mutableListOf())
             }
         }
     }
@@ -320,7 +299,7 @@ object UserManager {
         for (label in data) {
             savaLabels.add(SharedPreferenceUtil.Object2String(label))
         }
-        SPUtils.getInstance(Constants.SPNAME).put("newCheckedLabels", savaLabels)
+        SPUtils.getInstance(Constants.SPNAME).put("myLabels", savaLabels)
     }
 
     /**
@@ -515,8 +494,8 @@ object UserManager {
      */
     fun getSpLabels(): MutableList<TagBean> {
         val tempLabels = mutableListOf<TagBean>()
-        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels").isNotEmpty()) {
-            (SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels")).forEach {
+        if (SPUtils.getInstance(Constants.SPNAME).getStringSet("myLabels").isNotEmpty()) {
+            (SPUtils.getInstance(Constants.SPNAME).getStringSet("myLabels")).forEach {
                 tempLabels.add(SharedPreferenceUtil.String2Object(it) as TagBean)
             }
         }
@@ -591,7 +570,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("likeUnreadCount")
         SPUtils.getInstance(Constants.SPNAME).remove("squareCount")
         SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
-        SPUtils.getInstance(Constants.SPNAME).remove("newCheckedLabels")
+        SPUtils.getInstance(Constants.SPNAME).remove("myLabels")
         SPUtils.getInstance(Constants.SPNAME).remove("maxInterestLabelCount")
 
 
@@ -641,7 +620,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
         SPUtils.getInstance(Constants.SPNAME).remove("completeLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("IsShowCompleteLabelDialog")
-        SPUtils.getInstance(Constants.SPNAME).remove("interestLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("maxMyLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("SlideCount")
 

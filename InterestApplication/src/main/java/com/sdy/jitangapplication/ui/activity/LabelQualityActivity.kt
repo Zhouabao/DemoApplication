@@ -6,20 +6,20 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ActivityUtils
 import com.google.android.flexbox.*
 import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MyLabelBean
-import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.presenter.LabelQualityPresenter
 import com.sdy.jitangapplication.presenter.view.LabelQualityView
 import com.sdy.jitangapplication.ui.adapter.LabelQualityAdapter
@@ -29,6 +29,7 @@ import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_label_quality.*
 import kotlinx.android.synthetic.main.correct_dialog_layout.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.item_marquee_tag.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
@@ -46,18 +47,12 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         const val MODE_NEW = 1
         const val MODE_EDIT = 2
 
-
         //获取标签的  1介绍模板 2.标签特质 3.标签意向   4.标签标题
-        const val TYPE_MODEL = 1
         const val TYPE_QUALITY = 2
-        const val TYPE_AIM = 3
         const val TYPE_TITLE = 4
-
-        const val REQUEST_INTRODUCE = 100
-        const val REQUEST_QUALITY = 101
     }
 
-    private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel? }
+    //    private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel? }
     private val myLabelBean by lazy { intent.getSerializableExtra("aimData") as MyLabelBean? }
     //所有特质适配器
     private val adapter by lazy { LabelQualityAdapter(false) }
@@ -67,10 +62,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     private val choosedFromAllQuality = mutableListOf<LabelQualityBean>()
     //用户自拟标签特质
     private val customQuality = mutableListOf<String>()
-
-    private val from by lazy { intent.getIntExtra("from", AddLabelActivity.FROM_ADD_NEW) }
-
-    private val mode by lazy { intent.getIntExtra("mode", LabelQualityActivity.MODE_NEW) }
+    private val mode by lazy { intent.getIntExtra("mode", MODE_NEW) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,16 +70,14 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         initView()
         mPresenter.getTagTraitInfo(
             hashMapOf(
-                "tag_id" to if (mode == MODE_EDIT) {
-                    myLabelBean!!.tag_id
-                } else {
-                    labelBean!!.id
-                }, "type" to LabelQualityActivity.TYPE_QUALITY
+                "tag_id" to myLabelBean!!.tag_id
+                , "type" to TYPE_QUALITY
             )
         )
 
     }
 
+    private val marqueeLabels by lazy { mutableListOf<LabelQualityBean>() }
     private fun initView() {
         mPresenter = LabelQualityPresenter()
         mPresenter.context = this
@@ -95,7 +85,8 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
 
         btnBack.setOnClickListener(this)
         rightBtn1.setOnClickListener(this)
-        hotT1.visibility = View.INVISIBLE
+        switchOne.setOnClickListener(this)
+        hotT1.text = "完善标签特质"
         rightBtn1.isVisible = true
         rightBtn1.text = "再选${MIN_QUALITY}个"
 
@@ -105,27 +96,40 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         stateLabelQuality.retryBtn.onClick {
             stateLabelQuality.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getTagTraitInfo(
-                hashMapOf(
-                    "tag_id" to if (from == AddLabelActivity.FROM_EDIT) {
-                        myLabelBean!!.tag_id
-                    } else {
-                        labelBean!!.id
-                    }, "type" to LabelQualityActivity.TYPE_QUALITY
-                )
+                hashMapOf("tag_id" to myLabelBean!!.tag_id, "type" to TYPE_QUALITY)
             )
         }
+
+        val decoration = FlexboxItemDecoration(this)
+        decoration.setDrawable(resources.getDrawable(R.drawable.flex_divide_10dp))
 
         labelQualityAddBtn.setOnClickListener(this)
         val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
         manager.alignItems = AlignItems.STRETCH
         manager.justifyContent = JustifyContent.FLEX_START
         labelQualityRv.layoutManager = manager
+        labelQualityRv.addItemDecoration(decoration)
         labelQualityRv.adapter = adapter
+        adapter.setOnItemClickListener { _, view, position ->
+            val tempData = adapter.data[position]
+            if (!tempData.isfuse && choosedQualityAdapter.data.size == MAX_QUALITY) {
+                showWarningDialog(MAX_QUALITY)
+                return@setOnItemClickListener
+            } else {
+                choosedFromAllQuality.add(tempData)
+                adapter.remove(position)
+//                adapter.notifyItemChanged(position)
+                choosedQualityAdapter.addData(tempData)
+                checkConfirmEnable()
+            }
+
+        }
 
         val manager1 = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
         manager1.alignItems = AlignItems.STRETCH
         manager1.justifyContent = JustifyContent.FLEX_START
         labelQualityChoosedRv.layoutManager = manager1
+        labelQualityChoosedRv.addItemDecoration(decoration)
         labelQualityChoosedRv.adapter = choosedQualityAdapter
         choosedQualityAdapter.setOnItemClickListener { _, view, position ->
             val data = choosedQualityAdapter.data[position]
@@ -146,23 +150,6 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
             checkConfirmEnable()
         }
 
-
-        adapter.setOnItemClickListener { _, view, position ->
-            val tempData = adapter.data[position]
-            if (!tempData.isfuse && choosedQualityAdapter.data.size == MAX_QUALITY) {
-                showWarningDialog(MAX_QUALITY)
-                return@setOnItemClickListener
-            } else {
-                choosedFromAllQuality.add(tempData)
-                adapter.remove(position)
-//                    adapter.notifyItemChanged(position)
-                choosedQualityAdapter.addData(tempData)
-                checkConfirmEnable()
-            }
-
-        }
-
-
         labelQualityAddEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -178,6 +165,13 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         })
     }
 
+    private fun getMarqueeView(content: LabelQualityBean): View {
+        val view = layoutInflater.inflate(R.layout.item_marquee_tag, null, false)
+        view.marqueeTagName.text = content.content
+        GlideUtil.loadCircleImg(this, content.icon, view.marqueeTagIcon)
+        return view
+    }
+
     override fun getTagTraitInfoResult(result: Boolean, data: MutableList<LabelQualityBean>?) {
         if (result) {
             stateLabelQuality.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -185,6 +179,12 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
 
             if (myLabelBean != null) {
                 choosedQualityAdapter.addData(myLabelBean!!.label_quality)
+            }
+
+
+            marqueeLabels.addAll(data ?: mutableListOf())
+            for (marqueeLabel in marqueeLabels) {
+                marqueeOtherTags.addView(getMarqueeView(marqueeLabel))
             }
 
             for (data in choosedQualityAdapter.data) {
@@ -210,12 +210,9 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
      * 检查保存按钮是否可用
      */
     private fun checkConfirmEnable() {
+        rightBtn1.isVisible = true
         rightBtn1.text = if (choosedQualityAdapter.data.size in 3..5) {
-            if (mode == MODE_NEW || from == AddLabelActivity.FROM_ADD_NEW || from == AddLabelActivity.FROM_REGISTER) {
-                "保存并继续"
-            } else {
-                "保存"
-            }
+            "保存"
         } else {
             "再选${MIN_QUALITY - choosedQualityAdapter.data.size}个"
         }
@@ -230,26 +227,15 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         if (result) {
             if (data != null) {
                 UserManager.saveIsShowCompleteLabelDialog(true)
-                if (from == AddLabelActivity.FROM_REGISTER) {
-                    if (UserManager.getUserIntroduce().isNullOrEmpty()) {
-                        startActivity<UserIntroduceActivity>(("from" to UserIntroduceActivity.REGISTER))
-                    } else {
-                        ActivityUtils.finishAllActivities()
-                        startActivity<MainActivity>()
-                    }
+                // 这里标签是来自于发布或者已经在该标签下发布过内容，就不走发布流程
+                if (mode != MODE_EDIT && !data!!.is_published) {
+                    startActivity<AddLabelSuccessActivity>("data" to myLabelBean)
                 } else {
-                    // 这里标签是来自于发布或者已经在该标签下发布过内容，就不走发布流程
-                    if (mode != MODE_EDIT && from != AddLabelActivity.FROM_PUBLISH && !data!!.is_published) {
-                        finish()
-                        startActivity<AddLabelSuccessActivity>("data" to labelBean)
-                    } else {
-                        EventBus.getDefault().post(UpdateMyLabelEvent())
-                        EventBus.getDefault().post(RefreshEvent(true))
-                        if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance()))
-                            ActivityUtils.finishActivity(AddLabelActivity::class.java)
-                        finish()
-                    }
+                    EventBus.getDefault().post(UpdateMyLabelEvent())
+                    EventBus.getDefault().post(RefreshEvent(true))
+                    EventBus.getDefault().post(UserCenterEvent(true))
                 }
+                finish()
             }
         }
     }
@@ -276,8 +262,6 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     showWarningDialog(MIN_QUALITY)
                     return
                 }
-
-
                 val tagIds = mutableListOf<Any>()
                 for (label in choosedQualityAdapter.data) {
                     if (label.id != 0)
@@ -285,18 +269,30 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                 }
                 tagIds.addAll(customQuality)
 
-                params["tag_id"] = if (labelBean == null) {
-                    myLabelBean!!.tag_id
-                } else {
-                    labelBean!!.id
-                }
+                params["id"] = myLabelBean!!.id
                 params["label_quality"] = Gson().toJson(tagIds)
                 params["type"] = 1
-                mPresenter.addClassifyTag(params)
+                mPresenter.saveMyQuality(params)
 
             }
             btnBack -> {
                 finish()
+            }
+
+            switchOne -> {
+                //TODO 此处请求换一批特质，并删除现有的特质
+                val iterator = choosedQualityAdapter.data.iterator()
+                while (iterator.hasNext()) {
+                    val next = iterator.next()
+                    for (data in choosedFromAllQuality) {
+                        if (next == data) {
+                            iterator.remove()
+                            break
+                        }
+                    }
+                }
+                choosedQualityAdapter.notifyDataSetChanged()
+
             }
             labelQualityAddBtn -> {
                 if (labelQualityAddEt.text.trim().isNullOrEmpty()) {

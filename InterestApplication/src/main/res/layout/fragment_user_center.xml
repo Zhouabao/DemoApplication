@@ -45,14 +45,15 @@
                         android:id="@+id/userAvator"
                         android:src="@drawable/icon_default_avator"
                         android:layout_marginLeft="15dp"
-                        android:layout_width="67dp"
+                        android:layout_width="64dp"
                         android:layout_marginTop="20dp"
-                        android:layout_height="67dp"
-                        app:civ_border_color="@color/colorWhite"
+                        android:layout_height="64dp"
+                        app:civ_border_color="#99FFFFFF"
                         app:civ_border_width="2dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/customStatusBar"
                         />
+
 
                 <TextView
                         android:id="@+id/userName"
@@ -266,11 +267,9 @@
 
             <TextView
                     android:id="@+id/userTagsBtn"
-                    android:text="我的标签"
+                    android:text="标签管理 10"
                     android:textColor="#ff19191a"
                     android:textSize="16sp"
-                    android:drawablePadding="12dp"
-                    android:drawableLeft="@drawable/icon_my_label"
                     android:gravity="center_vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -284,23 +283,32 @@
                     app:layout_constraintTop_toBottomOf="@id/userInfoCl"
                     />
 
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/userTagRv"
+                    android:layout_width="0dp"
+                    android:orientation="horizontal"
+                    android:overScrollMode="never"
+                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
+                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
+                    app:layout_constraintTop_toBottomOf="@id/userTagsBtn"/>
+
 
             <TextView
                     android:id="@+id/userSquareCount"
                     android:textColor="#ff19191a"
                     android:textSize="16sp"
-                    android:drawablePadding="12dp"
-                    android:drawableLeft="@drawable/icon_my_square"
                     android:gravity="center_vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
                     android:textStyle="bold"
-                    android:text="我的动态 35"
+                    android:text="我的动态"
                     android:drawableRight="@drawable/icon_more_right"
                     app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
                     app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/userTagsBtn"/>
+                    app:layout_constraintTop_toBottomOf="@id/userTagRv"/>
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -335,10 +343,8 @@
                     android:id="@+id/userFoot"
                     android:textColor="#ff19191a"
                     android:textSize="16sp"
-                    android:drawablePadding="12dp"
                     android:textStyle="bold"
                     android:layout_marginTop="25dp"
-                    android:drawableLeft="@drawable/icon_my_foot"
                     android:text="我的足迹"
                     android:layout_width="0dp"
                     android:gravity="center_vertical"
@@ -365,9 +371,7 @@
                     android:id="@+id/userVisit"
                     android:textColor="#ff19191a"
                     android:textSize="16sp"
-                    android:drawablePadding="12dp"
                     android:textStyle="bold"
-                    android:drawableLeft="@drawable/icon_my_visit"
                     android:layout_width="0dp"
                     android:gravity="center_vertical"
                     android:text="看过我的"

@@ -2,7 +2,6 @@ package com.sdy.jitangapplication.ui.adapter
 
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -22,10 +21,8 @@ class UserCenterCoverAdapter :
 
     override fun convert(holder: BaseViewHolder, item: CoverSquare) {
         val params = holder.itemView.ivSquare.layoutParams as ConstraintLayout.LayoutParams
-        params.width =
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
-        params.height =
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.width = SizeUtils.dp2px(98F)
+        params.height =SizeUtils.dp2px(98F)
         holder.itemView.ivSquare.layoutParams = params
 
         holder.itemView.squareForMore.isVisible = (holder.layoutPosition == data.size && data.size > 2)

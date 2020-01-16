@@ -70,6 +70,8 @@ class BlockSquareFragment(var targetAccid: String) : BaseMvpLazyLoadFragment<Blo
                 resources.getColor(R.color.colorWhite)
             )
         )
+        blockAdapter.setEmptyView(R.layout.empty_layout_block,blockRv)
+        blockAdapter.isUseEmpty(false)
         blockRv.adapter = blockAdapter
 
         blockAdapter.setOnItemClickListener { _, view, position ->
@@ -101,15 +103,14 @@ class BlockSquareFragment(var targetAccid: String) : BaseMvpLazyLoadFragment<Blo
             stateBlock.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data.isNullOrEmpty()) {
                 if (blockAdapter.data.isNullOrEmpty()) {
-                    blockAdapter.setEmptyView(R.layout.empty_layout_block, blockRv)
-                    stateBlock.viewState = MultiStateView.VIEW_STATE_EMPTY
-
+                    blockAdapter.isUseEmpty(true)
                 }
                 refreshBlock.finishLoadMoreWithNoMoreData()
             } else {
                 refreshBlock.finishLoadMore(true)
             }
             blockAdapter.addData(data ?: mutableListOf())
+
         } else {
             if (page == 1)
                 stateBlock.viewState = MultiStateView.VIEW_STATE_ERROR

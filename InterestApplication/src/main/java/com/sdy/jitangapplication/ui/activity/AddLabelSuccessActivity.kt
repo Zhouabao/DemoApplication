@@ -11,6 +11,8 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
+import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
@@ -26,12 +28,13 @@ import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.MediaParamBean
-import com.sdy.jitangapplication.model.NewLabel
+import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.presenter.AddLabelSuccessPresenter
 import com.sdy.jitangapplication.presenter.view.AddLabelSuccessView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_add_label_success.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
@@ -40,7 +43,7 @@ import org.jetbrains.anko.startActivity
  */
 class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), AddLabelSuccessView, View.OnClickListener {
 
-    private val labelBean by lazy { intent.getSerializableExtra("data") as NewLabel }
+    private val labelBean by lazy { intent.getSerializableExtra("data") as MyLabelBean }
     private var currTitleIndex = -1
     private val labelTitles = mutableListOf<LabelQualityBean>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +64,11 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
         changeLabel.setOnClickListener(this)
         publishImage.setOnClickListener(this)
         publish.setOnClickListener(this)
+
+        stateAddLabelSuccess.retryBtn.onClick {
+            stateAddLabelSuccess.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.id))
+        }
 
 
         lottieView.addAnimatorListener(object : Animator.AnimatorListener {
@@ -86,14 +94,20 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
     }
 
     override fun getTagTraitInfoResult(b: Boolean, mutableList: MutableList<LabelQualityBean>?) {
-        if (!mutableList.isNullOrEmpty()) {
-            labelTitles.clear()
-            labelTitles.addAll(mutableList)
-            currTitleIndex = 0
-            setTitleBean()
+
+        if (b) {
+            stateAddLabelSuccess.viewState = MultiStateView.VIEW_STATE_CONTENT
+            if (!mutableList.isNullOrEmpty()) {
+                labelTitles.clear()
+                labelTitles.addAll(mutableList)
+                currTitleIndex = 0
+                setTitleBean()
+            } else {
+                successLabelGuide.isVisible = false
+                changeLabel.isVisible = false
+            }
         } else {
-            successLabelGuide.isVisible = false
-            changeLabel.isVisible = false
+            stateAddLabelSuccess.viewState = MultiStateView.VIEW_STATE_ERROR
         }
     }
 
@@ -195,9 +209,6 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
             startJitangBtn -> {
                 EventBus.getDefault().post(UpdateMyLabelEvent())
                 EventBus.getDefault().post(RefreshEvent(true))
-                if (ActivityUtils.isActivityAlive(AddLabelActivity::class.java.newInstance())) {
-                    ActivityUtils.finishActivity(AddLabelActivity::class.java)
-                }
                 finish()
             }
             //换一个标题

@@ -9,10 +9,10 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/ivSquare"
-            android:layout_width="108dp"
+            android:layout_width="98dp"
             android:src="@drawable/icon_logo"
             android:background="@drawable/default_image_5dp"
-            android:layout_height="108dp"
+            android:layout_height="98dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 

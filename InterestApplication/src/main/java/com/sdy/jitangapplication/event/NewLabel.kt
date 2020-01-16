@@ -1,31 +1,14 @@
 package com.sdy.jitangapplication.event
 
-import com.sdy.jitangapplication.model.NewLabel
-
 /**
  *    author : ZFM
  *    date   : 2019/10/159:38
  *    desc   :
  *    version: 1.0
  */
-class UpdateAllNewLabelEvent(var labels: MutableList<NewLabel> = mutableListOf())
-
-
-class UpdateChooseLabelEvent(var label: NewLabel)
-
-class UpdateChooseAllLabelEvent(var label: NewLabel)
-
-
-class ChooseLabelCountEvent(var count: Int)
 
 class UpdateMyLabelEvent
 
-
-class UpdateEditModeEvent(val position: Int = 0)
-
-class UpdateEditShowEvent(val position: Int, val show: Boolean)
-
-class UpdateMyInterestLabelEvent
-
-class ShowDeleteMyLabelEvent(val show: Boolean)
+//标签支付结果
+class PayLabelResultEvent(val success: Boolean)
 

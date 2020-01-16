@@ -9,7 +9,7 @@ package com.sdy.jitangapplication.event
 class BlockDataEvent(val targetAccid: String, val refresh: Boolean)
 
 
-class UpdateBlackEvent()
+class UpdateBlackEvent
 
 
-class UpdateSquareEvent()
+class UpdateSquareEvent

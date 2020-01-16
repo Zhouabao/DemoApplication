@@ -119,48 +119,7 @@ interface Api {
     @POST("MemberInfo/checkAvatar${Constants.END_BASE_URL}")
     fun checkAvatar(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
-
-    /**
-     * 上传个人信息
-     */
-    @FormUrlEncoded
-    @POST("member_info/SetProfile${Constants.END_BASE_URL}")
-    fun setProfile(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
-
-
-    /**
-     * 获取标签列表
-     */
-    @FormUrlEncoded
-    @POST("tags/TagsLists${Constants.END_BASE_URL}")
-    fun getTagLists(@FieldMap params: Map<String, String>): Observable<BaseResp<Labels>>
-
-
-    /**
-     * 获取新的标签列表
-     */
-    @FormUrlEncoded
-    @POST("tags/tagListv2${Constants.END_BASE_URL}")
-    fun tagListv2(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<MutableList<NewLabel>?>>
-
-
-    /**
-     * 上传标签列表
-     */
-    @FormUrlEncoded
-    @POST("tags/addTag${Constants.END_BASE_URL}")
-    fun uploadTagLists(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<LoginBean?>>
-
-
     /************************广场列表*****************************/
-
-    /**
-     * 获取广场好友列表
-     */
-    @FormUrlEncoded
-    @POST("square/squareFriends${Constants.END_BASE_URL}")
-    fun getSquareFriends(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<FriendListBean?>>
-
 
     /**
      * 获取广场列表
@@ -381,7 +340,7 @@ interface Api {
      * 个人中心
      */
     @FormUrlEncoded
-    @POST("member_info/myInfoV2${Constants.END_BASE_URL}")
+    @POST("member_info/myInfoV12${Constants.END_BASE_URL}")
     fun myInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
 
     /**
@@ -718,6 +677,22 @@ interface Api {
     fun createOrder(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PayBean>>
 
 
+    /**
+     * 获取标签的支付方式
+     */
+    @FormUrlEncoded
+    @POST("Tags/getTagsPrice${Constants.END_BASE_URL}")
+    fun getTagsPrice(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LabelChargeWayBean?>>
+
+
+    /**
+     * 获取标签订单信息
+     */
+    @FormUrlEncoded
+    @POST("pay_order/createTagsOrder${Constants.END_BASE_URL}")
+    fun createTagsOrder(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PayBean>>
+
+
     /*--------------------------------账号相关---------------------------------*/
 
     /**
@@ -778,7 +753,7 @@ interface Api {
      * 标签接口
      */
     @FormUrlEncoded
-    @POST("Tags/tagClassifyList${Constants.END_BASE_URL}")
+    @POST("Tags/tagClassifyListV12${Constants.END_BASE_URL}")
     fun tagClassifyList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddLabelBean>>
 
 
@@ -790,18 +765,19 @@ interface Api {
     fun getTagTraitInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
     /**
-     * 添加标签
+     * 修改或者新增标签的特质
      */
     @FormUrlEncoded
-    @POST("Tags/addClassifyTag${Constants.END_BASE_URL}")
-    fun addClassifyTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddLabelResultBean?>>
+    @POST("Tags/saveMyQualityV12${Constants.END_BASE_URL}")
+    fun saveMyQuality(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddLabelResultBean?>>
 
     /**
      * 获取我的标签
      */
     @FormUrlEncoded
-    @POST("Tags/getMyTagsList${Constants.END_BASE_URL}")
+    @POST("Tags/getMyTagsListV12${Constants.END_BASE_URL}")
     fun getMyTagsList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyLabelsBean?>>
+
     /**
      * 获取发布标签
      */
@@ -858,8 +834,8 @@ interface Api {
      * 保存我的感兴趣的列表
      */
     @FormUrlEncoded
-    @POST("Tags/saveInterestTag${Constants.END_BASE_URL}")
-    fun saveInterestTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TagBean>?>>
+    @POST("Tags/addMyTagsV12${Constants.END_BASE_URL}")
+    fun addMyTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TagBean>?>>
 
     /**
      *V2获取广场标题菜单栏目

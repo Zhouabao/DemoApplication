@@ -10,26 +10,22 @@ import java.io.Serializable
  *    desc   :
  *    version: 1.0
  */
-data class Labels(
-    var data: MutableList<NewLabel>,
-    var version: Int
-)
-
 
 //-----------------新的标签-----------------
+//免费：1已加入 2未加入  付费：3已购买 4付费进入
 data class NewLabel(
-    var icon: String = "",
     var id: Int = -1,
-    var level: Int = 1,
-    var parent_id: Int = -1,
+    var android_price: Float = 0F, //android的付费价格
+    var icon: String = "",
     var son: MutableList<NewLabel> = mutableListOf(),
     var title: String = "",
     var checked: Boolean = false,
-    var removed: Boolean = false,
-    var intro_descr: String = "",
-    var publish_descr: String = "",
     var used_cnt: Int = 0,
-    var state: Int = 0//0 没有使用过 1正在使用中 2使用过的
+    var ishot: Boolean = false,
+    var ismine: Boolean = false,
+    var state: Int = 0//1.无需付费.未添加 2无需付费.已经添加  3.无需付费.已删除 4需要付费.付费进入
+    //5.无需要.男性付费 6.无需付费.女性付费  7.需要付费.已过期 8.需要付费.已删除.未过期限
+    //9.需要付费.已删除.过期 10.需要付费.已经添加
 ) : Serializable
 
 
@@ -48,7 +44,8 @@ data class LabelQualityBean(
     var icon: String = "",
     var id: Int = 0,
     var title: String = "",
-    var isfuse: Boolean = false
+    var isfuse: Boolean = false,
+    var outtime: Boolean = false//过期标志
 ) : Serializable, IPickerViewData {
     override fun getPickerViewText(): String {
         return content
@@ -112,8 +109,9 @@ data class MyLabelBean(
     var publish_descr: String = "",
     var msg: String = "",
     var checked: Boolean = false,
-    var animated: Boolean = false
-):Serializable
+    var isfull: Boolean = false,
+    var is_expire: Boolean = false//是否过期  true过期 false未过期
+) : Serializable
 
 
 /**

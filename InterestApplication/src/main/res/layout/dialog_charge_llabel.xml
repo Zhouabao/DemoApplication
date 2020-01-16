@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dialogView"
+            android:visibility="invisible"
+            android:orientation="vertical"
+            android:background="@drawable/gradient_vip_charge_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <com.sdy.jitangapplication.widgets.RoundTopImageView
+                android:id="@+id/purchaseBg"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_gradient_label_charge_bg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:topRadius="10dp"/>
+
+
+        <LinearLayout
+                android:id="@+id/purchaseLl"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                    android:layout_marginTop="6dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/icon_charge_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/purchaseType"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="标签购买"
+                    android:textColor="#ffffffff"
+                    android:textSize="18sp"
+                    />
+
+            <TextView
+                    android:id="@+id/purchaseContent"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="该标签需要付费进入，付费后即可加入标签"
+                    android:textColor="#ffffffff"
+                    android:textSize="14sp"
+                    />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/labelPriceCl"
+                android:layout_marginTop="35dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"
+                android:background="@drawable/rectangle_red_10dp"
+                android:layout_width="match_parent"
+                android:layout_height="74dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/purchaseLl">
+
+            <ImageView
+                    android:id="@+id/labelIcon"
+                    android:layout_width="68dp"
+                    android:layout_height="68dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginLeft="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                    android:id="@+id/labelPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¥15/月"
+                    android:textColor="#ffff4230"
+                    android:textSize="15sp"
+                    android:layout_marginLeft="15dp"
+                    app:layout_constraintBottom_toTopOf="@id/labelName"
+                    app:layout_constraintLeft_toRightOf="@id/labelIcon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+            <ImageView
+                    android:src="@drawable/icon_label_checked"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                    android:id="@+id/labelName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="标签「极限运动」1个月"
+                    android:textColor="#ffff4230"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@id/labelPrice"
+                    app:layout_constraintTop_toBottomOf="@id/labelPrice"
+                    />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <RelativeLayout
+                android:id="@+id/zhiPayBtn"
+                android:layout_width="match_parent"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/shape_rectangle_blue_vip"
+                android:layout_height="47dp"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/labelPriceCl">
+
+            <TextView
+                    android:id="@+id/zhiPayPrice"
+                    android:text="支付宝支付"
+                    android:textColor="#ffffffff"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:drawablePadding="9dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    android:drawableLeft="@drawable/icon_pay_ali"
+                    />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/wechatPayBtn"
+                android:layout_width="match_parent"
+                android:layout_marginRight="15dp"
+                android:visibility="visible"
+                android:layout_marginTop="13dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/shape_rectangle_green_vip"
+                android:layout_height="47dp"
+                android:layout_marginBottom="13dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/zhiPayBtn">
+
+            <TextView
+                    android:id="@+id/wechatPayPrice"
+                    android:text="微信支付"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="#ffffffff"
+                    android:layout_centerInParent="true"
+                    android:textSize="16sp"
+                    android:drawablePadding="9dp"
+                    android:drawableLeft="@drawable/icon_pay_wechat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/balancePayBtn"
+                android:layout_width="match_parent"
+                android:layout_marginRight="15dp"
+                android:visibility="gone"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/shape_rectangle_green_vip"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/wechatPayBtn">
+
+            <TextView
+                    android:text="余额支付"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="#ffffffff"
+                    android:layout_centerInParent="true"
+                    android:textSize="16sp"
+                    android:drawablePadding="9dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    />
+
+        </RelativeLayout>
+
+        <TextView
+                android:id="@+id/refuseBtn"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="不，谢谢"
+                android:textColor="#FFCBCDD3"
+                android:textSize="15sp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/balancePayBtn"
+                />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+            android:id="@+id/loading"
+            layout="@layout/loading_layout"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/dialogView"
+            app:layout_constraintTop_toTopOf="@id/dialogView"
+            app:layout_constraintRight_toRightOf="@id/dialogView"
+            app:layout_constraintLeft_toLeftOf="@id/dialogView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

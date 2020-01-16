@@ -20,7 +20,7 @@ data class ExtraBean(
     val im_token: String = "",
     val code: Int = 0,
     val msg: String = "",
-    val taglist: MutableList<TagBean>,
+    val mytaglist: MutableList<TagBean>,
     val myinterest: Boolean = false,
     val aboutme: String = ""
 )
@@ -46,7 +46,8 @@ data class Userinfo(
 data class TagBean(
     var id: Int = 0,
     var title: String = "",
-    var cheked: Boolean = false
+    var cheked: Boolean = false,
+    var is_expire: Boolean = false
 ) : Serializable
 
 data class UserBean(

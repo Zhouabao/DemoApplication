@@ -421,8 +421,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     override fun onUploadUserInfoResult(uploadResult: Boolean, msg: String?) {
         mPresenter.loadingDialg.dismiss()
         if (uploadResult) {
-            // startActivity<LabelsActivity>()
-            startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
+            startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
             finish()
         } else {
             btnNextStep.isEnabled = true

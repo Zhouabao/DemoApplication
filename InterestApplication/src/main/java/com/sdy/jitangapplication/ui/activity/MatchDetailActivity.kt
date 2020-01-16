@@ -14,7 +14,6 @@ import androidx.core.view.isVisible
 import androidx.core.view.marginTop
 import androidx.core.view.size
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -125,8 +124,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-    private val userTagAdapter by lazy { MatchDetailUserLabelAdapter() }
-    private val userInterestAdapter by lazy { MatchDetailUserInterestLabelAdapter() }
+    private val userTagAdapter by lazy { MyLabelAdapter(false) }
+
     private fun initView() {
         EventBus.getDefault().register(this)
 
@@ -176,34 +175,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailRvTag.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         detailRvTag.adapter = userTagAdapter
 
-        val manager = GridLayoutManager(this, 2, RecyclerView.VERTICAL, false)
-        detailInterestRvTag.layoutManager = manager
-        detailInterestRvTag.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.BOTH_SET,
-                SizeUtils.dp2px(10F),
-                resources.getColor(R.color.colorWhite)
-            )
-        )
-        detailInterestRvTag.adapter = userInterestAdapter
-
-
-//        userAppbar.onScrollChange { _, scrollX, scrollY, oldScrollX, oldScrollY ->
-//            Log.d("matchdetailScroll", "${scrollY} ,${clUserInfo.marginTop}")
-//            detailActionbar.alpha = (Math.abs(scrollY) - clUserInfo.marginTop - SizeUtils.dp2px(56F)) * 1F / SizeUtils.dp2px(56F)
-//            if (Math.abs(scrollY) >= clUserInfo.marginTop - SizeUtils.dp2px(56F)) {
-//                detailActionbar.isVisible = true
-//                if (ScreenUtils.isFullScreen(this)) {
-//                    ScreenUtils.setNonFullScreen(this)
-//                }
-//            } else {
-//                detailActionbar.isVisible = false
-//                if (!ScreenUtils.isFullScreen(this)) {
-//                    ScreenUtils.setFullScreen(this)
-//                }
-//            }
-//        }
 
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
             if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
@@ -346,7 +317,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     private fun initData() {
         userTagAdapter.setNewData(matchBean!!.other_tags)
-        userInterestAdapter.setNewData(matchBean!!.other_interest)
 
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
@@ -382,7 +352,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         updateLightCount(matchBean!!.lightningcnt ?: 0, matchBean!!.countdown)
 
 //        用户动态封面图片（暂不展示）
-            detailThumbRv.visibility = View.GONE
+        detailThumbRv.visibility = View.GONE
 //        if (matchBean!!.square == null || matchBean!!.square!!.size == 0) {
 //            detailThumbRv.visibility = View.GONE
 //        } else {
@@ -632,7 +602,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.moreBtn1 -> {//更多
                 showMoreActionDialog()
             }
-            R.id.detailUserDislikeBtn->{//不感兴趣
+            R.id.detailUserDislikeBtn -> {//不感兴趣
                 mPresenter.dislikeUser(params)
             }
             R.id.detailUserLikeBtn -> {//感兴趣

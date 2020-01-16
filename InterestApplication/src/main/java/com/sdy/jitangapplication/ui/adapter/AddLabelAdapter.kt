@@ -1,27 +1,22 @@
 package com.sdy.jitangapplication.ui.adapter
 
-import android.app.Activity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.kotlin.base.ext.onClick
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
-import com.sdy.jitangapplication.ui.activity.LabelQualityActivity
-import com.sdy.jitangapplication.ui.dialog.DeleteDialog
+import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.item_add_label.view.*
-import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -30,27 +25,22 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_add_label) {
-    public var from: Int = AddLabelActivity.FROM_EDIT
-    public var removedLabels: MutableList<MyLabelBean> = mutableListOf()
+    var from: Int = AddLabelActivity.FROM_ADD_NEW
+    var parentPosition = -1  //购买标签的位置
+    var childPosition = -1 //购买标签的子位置
+    var purchaseId = -1 //购买标签的id
 
     override fun convert(helper: BaseViewHolder, item: NewLabel) {
+        helper.addOnClickListener(R.id.labelManagerBtn)
         helper.itemView.labelTypeName.text = item.title
         GlideUtil.loadImg(mContext, item.icon, helper.itemView.labelTypeNameIv)
-
-        val labelAdapter = AllNewLabelAdapter1(from = from)
-        if (helper.layoutPosition == 0) {
+        helper.itemView.labelManagerBtn.isVisible = item.ismine
+        val labelAdapter = AllNewLabelAdapter1(from = from, isCross = item.ismine || item.ishot)
+        if (item.ismine || item.ishot) {
             for (decoration in 0 until helper.itemView.labelTypeRv.itemDecorationCount) {
                 helper.itemView.labelTypeRv.removeItemDecorationAt(decoration)
             }
             helper.itemView.labelTypeRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-            helper.itemView.labelTypeRv.addItemDecoration(
-                DividerItemDecoration(
-                    mContext,
-                    DividerItemDecoration.VERTICAL_LIST,
-                    SizeUtils.dp2px(8F),
-                    mContext.resources.getColor(R.color.colorWhite)
-                )
-            )
             labelAdapter.index = 0
         } else {
             helper.itemView.labelTypeRv.layoutManager = GridLayoutManager(mContext, 3, RecyclerView.VERTICAL, false)
@@ -59,68 +49,77 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
         helper.itemView.labelTypeRv.adapter = labelAdapter
         labelAdapter.setNewData(item.son)
         labelAdapter.setOnItemClickListener { _, view, position ->
-            if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
-                val data = labelAdapter.data[position]
-                var checkedCount = 0
-                for (index in 1 until mData.size) {
+            //ChargeLabelDialog(mContext, labelAdapter.data[position]).show()
+            val data = labelAdapter.data[position]
+            //1.无需付费.未添加  3.无需付费.已删除
+            //5.无需付费.男性付费
+            //6.无需付费.女性付费
+            //8.需要付费.(已删除,未加入).未过期限
+            //2无需付费.已经添加  10.需要付费.已经添加
+            //4需要付费.付费进入   9.需要付费.已删除.过期   7.需要付费.已过期
+            if (data.state == 2 || data.state == 10) {
+                YoYo.with(Techniques.Shake)
+                    .duration(100)
+                    .repeat(0)
+                    .playOn(view)
+                //付费和免费已添加
+                return@setOnItemClickListener
+            }
+
+
+            var checkedCount = 0
+            for (index in 0 until mData.size) {
+                if (!(mData[index].ishot || mData[index].ismine))
                     for (tdata1 in mData[index].son) {
-                        if (tdata1.checked) {
+                        if (tdata1.checked || tdata1.state == 2 || tdata1.state == 10) {
                             checkedCount += 1
                         }
                     }
-                }
-                if (checkedCount == if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
-                        UserManager.getMaxInterestLabelCount()
-                    } else {
-                        UserManager.getMaxMyLabelCount()
-                    } && !data.checked
-                ) {
-                    CommonFunction.toast("至多选择${if (from == AddLabelActivity.FROM_REGISTER || from == AddLabelActivity.FROM_INTERSERT_LABEL) {
-                        UserManager.getMaxInterestLabelCount()
-                    } else {
-                        UserManager.getMaxMyLabelCount()
-                    }}个标签标签")
-                    return@setOnItemClickListener
-                }
+            }
+            if (checkedCount >= UserManager.getMaxMyLabelCount() && !data.checked) {
+                CommonFunction.toast("至多选择${UserManager.getMaxMyLabelCount()}个标签标签")
+                return@setOnItemClickListener
+            }
 
+            if (data.state == 4 || data.state == 7 || data.state == 9) {
+                parentPosition = helper.layoutPosition
+                childPosition = position
+                purchaseId = labelAdapter.data[position].id
+                ChargeLabelDialog(mContext, labelAdapter.data[position].id).show()
+            } else {//1 3 5 6 8
                 labelAdapter.data[position].checked = !labelAdapter.data[position].checked
-                val hotLabels = mData[0]
-                if (helper.layoutPosition != 0) {
-
-                    for (data in hotLabels.son) {
-                        if (data.id == labelAdapter.data[position].id) {
-                            data.checked = labelAdapter.data[position].checked
+//                if (!(item.ismine || item.ishot)) {
+//                    for (data in mData) {
+//                        if (data.ishot)
+//                            for (data1 in data.son) {
+//                                if (data1.id == labelAdapter.data[position].id) {
+//                                    data1.checked = labelAdapter.data[position].checked
+//                                }
+//                            }
+//                        if (data.ismine)
+//                            for (data1 in data.son) {
+//                                if (data1.id == labelAdapter.data[position].id) {
+//                                    data1.checked = labelAdapter.data[position].checked
+//                                }
+//                            }
+//                    }
+//                    notifyDataSetChanged()
+//                } else {
+//                }
+                for (index in 0 until mData.size) {
+                    for (tdata1 in mData[index].son) {
+                        if (tdata1.id == labelAdapter.data[position].id) {
+                            tdata1.checked = labelAdapter.data[position].checked
                         }
                     }
                     notifyDataSetChanged()
-                } else {
-                    for (index in 1 until mData.size) {
-                        for (tdata1 in mData[index].son) {
-                            if (tdata1.id == labelAdapter.data[position].id) {
-                                tdata1.checked = labelAdapter.data[position].checked
-                            }
-                        }
-                    }
-
-                    notifyDataSetChanged()
-                }
-
-                labelAdapter.notifyItemChanged(position)
-            } else {
-                if (labelAdapter.data[position].removed) {
-                    showDeleteDialog(labelAdapter.data[position])
-                } else if (!labelAdapter.data[position].checked) {
-                    (mContext as Activity).startActivity<LabelQualityActivity>(
-                        "data" to labelAdapter.data[position],
-                        "from" to from,
-                        "mode" to LabelQualityActivity.MODE_NEW
-                    )
                 }
             }
         }
     }
 
 
+    /*
     private val deleteDialog by lazy { DeleteDialog(mContext) }
     private fun showDeleteDialog(position: NewLabel) {
         deleteDialog.show()
@@ -153,5 +152,6 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
             deleteDialog.dismiss()
         }
 
-    }
+    }*/
+
 }

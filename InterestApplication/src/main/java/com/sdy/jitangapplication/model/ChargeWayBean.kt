@@ -37,6 +37,23 @@ data class ChargeWayBean(
     var unit_price: Double = 0.0//单价(显示)
 )
 
+data class LabelChargeWayBean(
+    var paylist: MutableList<PaywayBean> = mutableListOf(),
+    var duration: Int = 0,
+    var icon: String = "",
+    var id: Int = 0,
+    var ios_product_id: String = "",
+    var is_new: Boolean = false,
+    var price: String = "0",
+    var title: String = ""
+)
+
+
+data class Paylist(
+    var comments: String = "",
+    var id: Int = 0,
+    var payment_type: Int = 0
+)
 
 data class PayBean(
     val order_id: String? = "",

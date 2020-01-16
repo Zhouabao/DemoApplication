@@ -31,7 +31,7 @@
             <TextView
                     android:id="@+id/likeLeftCount"
                     android:background="@drawable/shape_rectangle_gray_black3a_15dp"
-                    android:text="还有 7 个人喜欢了你"
+                    android:text="有 7 个人喜欢了你"
                     android:layout_width="wrap_content"
                     android:textColor="#FFC5C6C8"
                     android:paddingLeft="12dp"

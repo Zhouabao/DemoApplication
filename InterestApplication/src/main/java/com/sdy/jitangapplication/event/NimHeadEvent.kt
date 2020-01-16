@@ -20,11 +20,6 @@ class EnablePicEvent(val enable: Boolean)
 
 
 /**
- * 倒计时数据
- */
-class NimCountDownEvent(var totalTime: Int = 0, var leftTime: Int = 0)
-
-/**
  * 星标好友事件
  */
 class StarEvent(var stared: Boolean = false,var isfriend: Boolean = false)

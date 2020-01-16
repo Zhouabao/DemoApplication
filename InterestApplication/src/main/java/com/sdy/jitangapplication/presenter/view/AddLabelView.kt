@@ -14,9 +14,6 @@ interface AddLabelView : BaseView {
 
     fun onTagClassifyListResult(result: Boolean, data: AddLabelBean?)
 
-    fun saveInterestTagResult(
-        result: Boolean,
-        data: MutableList<TagBean>?
-    )
+    fun saveMyTagResult(result: Boolean, data: MutableList<TagBean>?)
 
 }

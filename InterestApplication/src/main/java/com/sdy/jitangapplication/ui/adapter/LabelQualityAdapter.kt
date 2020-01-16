@@ -25,7 +25,7 @@ class LabelQualityAdapter(var myChoosed: Boolean = false) :
                 mContext.resources.getDrawable(R.drawable.icon_delete_label),
                 null
             )
-            holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_choose_12dp)
+            holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_choose_8dp)
             holder.itemView.qualityTv.setTextColor(mContext.resources.getColor(R.color.colorOrange))
         } else {
             holder.itemView.qualityTv.setCompoundDrawablesWithIntrinsicBounds(
@@ -34,15 +34,18 @@ class LabelQualityAdapter(var myChoosed: Boolean = false) :
                 null,
                 null
             )
-            if (model.isfuse) {
-                holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_choose_12dp)
-                holder.itemView.qualityTv.setTextColor(mContext.resources.getColor(R.color.colorOrange))
-            } else {
-                holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_normal_12dp)
-                holder.itemView.qualityTv.setTextColor(Color.parseColor("#FF787C7F"))
-            }
+            if (model.outtime) {
+                holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_fafafa_8dp)
+                holder.itemView.qualityTv.setTextColor(Color.parseColor("#FFC5C6C8"))
+            } else
+                if (model.isfuse) {
+                    holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_choose_8dp)
+                    holder.itemView.qualityTv.setTextColor(mContext.resources.getColor(R.color.colorOrange))
+                } else {
+                    holder.itemView.qualityTv.setBackgroundResource(R.drawable.shape_rectangle_label_normal_8dp)
+                    holder.itemView.qualityTv.setTextColor(Color.parseColor("#FF787C7F"))
+                }
         }
-
 
 
         holder.itemView.qualityTv.text = if (model.title.trim().isNullOrEmpty()) {

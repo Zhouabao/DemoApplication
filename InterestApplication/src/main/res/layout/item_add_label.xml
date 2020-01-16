@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginTop="25dp"
+              android:layout_marginTop="20dp"
               android:orientation="vertical">
 
     <LinearLayout
@@ -19,8 +19,9 @@
         <TextView
                 android:id="@+id/labelTypeName"
                 android:textStyle="bold"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:text="我的生活"
+                android:layout_weight="1"
                 android:textColor="#ff191919"
                 android:textSize="17sp"
                 android:layout_gravity="center_vertical"
@@ -28,11 +29,26 @@
                 android:layout_height="wrap_content">
         </TextView>
 
+        <TextView
+                android:id="@+id/labelManagerBtn"
+                android:visibility="visible"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="管理标签"
+                android:textColor="#ffa5a5a5"
+                android:textSize="14sp"
+                android:drawablePadding="5dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/picture_icon_more"
+                />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/labelTypeRv"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal"
             android:overScrollMode="never"
             android:layout_width="match_parent"

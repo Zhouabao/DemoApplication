@@ -11,6 +11,8 @@ import java.io.Serializable
  *    version: 1.0
  */
 data class UserInfoBean(
+    val mytags_count: Int = 0,//标签个数
+    val mytags_list: MutableList<MyLabelBean> = mutableListOf(),//展示的标签
     val squarelist: Squarelist? = Squarelist(),//展示的广场
     val userinfo: Userinfo? = null,
     val hide_distance: Boolean = false,//（true开启隐藏  false  关闭隐藏）
@@ -31,6 +33,10 @@ data class SettingsBean(
     val notify_square_like_state: Boolean = true,//true 开启招呼认证 false关闭招呼认证
     val notify_square_comment_state: Boolean = true//true 开启招呼认证 false关闭招呼认证
 )
+
+
+
+
 
 //个人中心展示封面
 data class Squarelist(
@@ -53,7 +59,7 @@ data class VipDescr(
     val url: String? = "",
     val icon_vip: String? = "",
     var countdown: Int = 0,
-    val title_pay:  String = ""
+    val title_pay: String = ""
 )
 
 

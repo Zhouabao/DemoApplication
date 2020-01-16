@@ -8,7 +8,6 @@
         android:background="@color/colorWhite">
 
 
-
     <View
             android:id="@+id/view"
             android:background="@color/colorWhite"
@@ -77,24 +76,18 @@
                 app:layout_constraintTop_toTopOf="@id/squareUserIv1"
                 />
 
-        <TextView
-                android:id="@+id/squareTagName"
-                android:layout_marginRight="15dp"
-                android:paddingBottom="3dp"
-                android:paddingTop="3dp"
-                android:paddingRight="15dp"
-                android:paddingLeft="15dp"
+
+        <LinearLayout
+                android:id="@+id/squareChatBtn1"
+                android:background="@drawable/icon_square_chat"
                 android:layout_width="wrap_content"
+                android:orientation="horizontal"
                 android:layout_height="wrap_content"
-                tools:text="游戏"
-                android:textColor="#ff2d2f30"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:background="@drawable/shape_rectangle_light_gray_15dp"
+                android:layout_marginRight="15dp"
                 app:layout_constraintBottom_toBottomOf="@id/squareUserIv1"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/squareUserIv1"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -12,7 +12,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textStyle="bold"
-            android:textColor="@color/colorWhite"
+            android:textColor="#FFFAC66F"
             android:textSize="16sp"
             />
 
@@ -24,7 +24,7 @@
             android:text="营造更多机会，配对更容易"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="#ffb8baba"
+            android:textColor="#FFB88F4A"
             android:textSize="12sp"
             />
 </LinearLayout>

@@ -4,6 +4,7 @@ package com.sdy.jitangapplication.ui.fragment
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,10 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
-import com.blankj.utilcode.util.FragmentUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.*
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
@@ -82,7 +80,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         addTagBtn.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
                 val intent = Intent()
-                intent.putExtra("from", AddLabelActivity.FROM_INTERSERT_LABEL)
+                intent.putExtra("from", AddLabelActivity.FROM_ADD_NEW)
                 intent.setClass(activity!!, AddLabelActivity::class.java)
                 startActivity(intent)
             }
@@ -214,8 +212,17 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         mPresenter.mView = this
         mPresenter.context = activity!!
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val param = customStatusBar.layoutParams as ConstraintLayout.LayoutParams
+            param.height = BarUtils.getStatusBarHeight()
+        } else {
+            customStatusBar.isVisible = false
+        }
+
         retryBtn.setOnClickListener(this)
         greetBtn.setOnClickListener(this)
+        filterBtn.setOnClickListener(this)
         completeLabelBtn.setOnClickListener(this)
         dislikeBtn.setOnClickListener(this)
         likeBtn.setOnClickListener(this)
@@ -342,6 +349,9 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 updateLocation()
                 mPresenter.getMatchList(matchParams)
             }
+            R.id.filterBtn -> {
+                FilterUserDialog(activity!!).show()
+            }
         }
     }
 
@@ -358,75 +368,72 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
-            hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
+            if (matchBeans != null) {
+                hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
 
-            matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
-            matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
-            paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
+                matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
+                matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
+                paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
 
-            //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容
-            var noQuality = false//某个标签没有特质
-            for (mytag in matchBeans.mytags ?: mutableListOf()) {
-                if (mytag.label_quality.isNullOrEmpty()) {
-                    noQuality = true
-                    break
+                //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容
+                var noQuality = false//某个标签没有特质
+                for (mytag in matchBeans.mytags ?: mutableListOf()) {
+                    if (mytag.label_quality.isNullOrEmpty()) {
+                        noQuality = true
+                        break
+                    }
                 }
+                if (matchBeans.mytags.isNullOrEmpty() || noQuality) {
+                    completeLabelBtn.isVisible = true
+                    if (!UserManager.isShowCompleteLabelDialog()) {
+                        UserManager.saveCompleteLabelCount(matchBeans.interest_times)
+                    }
+                } else {
+                    completeLabelBtn.isVisible = false
+                    UserManager.saveIsShowCompleteLabelDialog(true)
+                }
+
+
+                //保存 VIP信息
+                UserManager.saveUserVip(matchBeans.isvip)
+                //保存认证信息
+                UserManager.saveUserVerify(matchBeans.isfaced)
+
+                //保存剩余滑动次数
+                UserManager.saveLeftSlideCount(matchBeans.like_times)
+                EventBus.getDefault().post(UpdateSlideCountEvent())
+                //保存提示剩余滑动次数
+                UserManager.saveHighlightCount(matchBeans.highlight_times)
+                //保存剩余招呼次数
+                UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
+                //保存倒计时时间
+                UserManager.saveCountDownTime(matchBeans.countdown)
+
+                //保存引导次数
+                UserManager.motion = matchBeans.motion
+                my_percent_complete = matchBeans.my_percent_complete
+                normal_percent_complete = matchBeans.normal_percent_complete
+                myCount = matchBeans.my_like_times
+                maxCount = matchBeans.total_like_times
+                is_human = matchBeans.is_human
+                when (matchBeans.motion) {
+                    GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
+                        EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
+                    }
+                    GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> {
+                        UserManager.replace_times = matchBeans.replace_times
+                    }
+                    GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
+                        UserManager.perfect_times = matchBeans.perfect_times
+                    }
+                    else -> {
+                        UserManager.cleanVerifyData()
+                    }
+                }
+                tvLeftChatTime.text = "${UserManager.getLightingCount()}"
             }
-            if (matchBeans.mytags.isNullOrEmpty() || noQuality) {
-                completeLabelBtn.isVisible = true
-                if (!UserManager.isShowCompleteLabelDialog()) {
-//                    completeLabelBtn.isVisible = true
-//                } else {
-                    UserManager.saveCompleteLabelCount(matchBeans.interest_times)
-//                    completeLabelBtn.isVisible = false
-                }
-            } else {
-                completeLabelBtn.isVisible = false
-                UserManager.saveIsShowCompleteLabelDialog(true)
-            }
 
-
-            //保存 VIP信息
-            UserManager.saveUserVip(matchBeans.isvip)
-            //保存认证信息
-            UserManager.saveUserVerify(matchBeans.isfaced)
-
-            //保存剩余滑动次数
-            UserManager.saveLeftSlideCount(matchBeans.like_times)
-            EventBus.getDefault().post(UpdateSlideCountEvent())
-            //保存提示剩余滑动次数
-            UserManager.saveHighlightCount(matchBeans.highlight_times)
-            //保存剩余招呼次数
-            UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
-            //保存倒计时时间
-            UserManager.saveCountDownTime(matchBeans.countdown)
-
-            //保存引导次数
-            UserManager.motion = matchBeans.motion
-            my_percent_complete = matchBeans.my_percent_complete
-            normal_percent_complete = matchBeans.normal_percent_complete
-            myCount = matchBeans.my_like_times
-            maxCount = matchBeans.total_like_times
-            is_human = matchBeans.is_human
-            when (matchBeans.motion) {
-                GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
-                    EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
-                }
-                GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> {
-                    UserManager.replace_times = matchBeans.replace_times
-                }
-                GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
-                    UserManager.perfect_times = matchBeans.perfect_times
-                }
-                else -> {
-                    UserManager.cleanVerifyData()
-                }
-            }
-
-
-            tvLeftChatTime.text = "${UserManager.getLightingCount()}"
-            UserManager.saveInterestLabelCount(matchBeans.myinterest_count)
-            if (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty()) {
+            if (matchBeans == null || (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty())) {
                 setViewState(EMPTY)
             } else {
                 setViewState(CONTENT)
@@ -541,24 +548,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             }
             EMPTY -> {
                 emptyLayout.isVisible = true
-
-                if (UserManager.getInterestLabelCount() > 0) {
-                    emptyLayout.emptyFriendTitle.isVisible = true
-                    emptyLayout.emptyFriendGoBtn.isVisible = false
-                    emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_match)
-                    emptyLayout.emptyFriendTitle.text = "暂时没有人了"
-                    emptyLayout.emptyFriendTip.text = "一会儿再回来看看吧"
-                } else {
-                    emptyLayout.emptyFriendTitle.isVisible = true
-                    emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_label)
-                    emptyLayout.emptyFriendTitle.text = "标签未完善"
-                    emptyLayout.emptyFriendTip.text = "请先完善自身标签\n我们将根据您的标签为您推荐同好"
-                    emptyLayout.emptyFriendGoBtn.isVisible = true
-                    emptyLayout.emptyFriendGoBtn.text = "去看看"
-                    emptyLayout.emptyFriendGoBtn.onClick {
-                        startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_INTERSERT_LABEL)
-                    }
-                }
+                emptyLayout.emptyFriendTitle.isVisible = true
+                emptyLayout.emptyFriendGoBtn.isVisible = false
+                emptyLayout.emptyImg.setImageResource(R.drawable.icon_empty_match)
+                emptyLayout.emptyFriendTitle.text = "暂时没有人了"
+                emptyLayout.emptyFriendTip.text = "一会儿再回来看看吧"
                 contentLayout.isVisible = false
                 errorLayout.isVisible = false
                 loadingLayout.isVisible = false
@@ -616,10 +610,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onShowCompleteLabelEvent(event: ShowCompleteLabelEvent) {
         if (event.show) {
-            completeLabelBtn.isVisible = true
             UserManager.saveIsShowCompleteLabelDialog(true)
-        } else {
-            completeLabelBtn.isVisible = false
         }
     }
 
@@ -629,8 +620,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         if (UserManager.getLightingCount() < 0) {
             UserManager.saveLightingCount(0)
         }
-//        tvLeftChatTime.text = "${UserManager.getLightingCount()}"
-//        matchUserAdapter.notifyDataSetChanged()
         if (manager.topView != null)
             (manager.topView.findViewById<TextView>(R.id.btnHiLeftTime)).text = "${UserManager.getLightingCount()}"
     }

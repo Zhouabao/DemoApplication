@@ -110,8 +110,6 @@
         </activity>
         <activity android:name=".ui.activity.MyLabelActivity">
         </activity>
-        <activity android:name=".ui.activity.AllMyLabelActivity">
-        </activity>
         <activity android:name=".ui.activity.AddLabelSuccessActivity">
         </activity>
         <activity android:name=".ui.activity.UserIntroduceActivity"/>

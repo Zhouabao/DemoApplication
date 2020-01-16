@@ -57,9 +57,9 @@ class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
     /**
      * 添加标签
      */
-    fun addClassifyTag(params: HashMap<String, Any>) {
+    fun saveMyQuality(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
-            .addClassifyTag(UserManager.getSignParams(params))
+            .saveMyQuality(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<AddLabelResultBean?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()

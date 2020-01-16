@@ -113,12 +113,13 @@ class MultiListSquareAdapter(
         } else {
             holder.itemView.headSquareView.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
 
-            if (!item.tags.isNullOrEmpty()) {
-                holder.itemView.squareTagName.text = item.tags
-                holder.itemView.squareTagName.isVisible = true
-            } else {
-                holder.itemView.squareTagName.isVisible = false
-            }
+//            if (!item.tags.isNullOrEmpty()) {
+//                holder.itemView.squareTagName.text = item.tags
+//                holder.itemView.squareTagName.isVisible = true
+//            } else {
+//                holder.itemView.squareTagName.visibility = View.INVISIBLE
+//            }
+            holder.itemView.squareTagName.visibility = View.INVISIBLE
 
             holder.itemView.squareTitleLl.isVisible = !item.title.isNullOrEmpty()
             holder.itemView.squareTitle.text = item.title ?: ""

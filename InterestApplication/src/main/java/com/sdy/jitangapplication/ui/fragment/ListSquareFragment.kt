@@ -109,6 +109,8 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
         adapter.type = MySquareFragment.TYPE_OTHER_DETAIL
+        adapter.setEmptyView(R.layout.empty_layout_block, listSquareRv)
+        adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(listSquareRv)
         stateList.retryBtn.onClick {
             stateList.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -200,7 +202,8 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
             stateList.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (data == null || data.list == null || data!!.list!!.size == 0) {
                 if (adapter.data.isNullOrEmpty()) {
-                    stateList.viewState = MultiStateView.VIEW_STATE_EMPTY
+//                    stateList.viewState = MultiStateView.VIEW_STATE_EMPTY
+                    adapter.isUseEmpty(true)
                 }
                 listRefresh.finishLoadMoreWithNoMoreData()
             } else {
@@ -214,10 +217,12 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
                     data.list!![tempData].originalLike = data.list!![tempData].isliked
                     data.list!![tempData].originalLikeCount = data.list!![tempData].like_cnt
                 }
-                adapter.addData(data!!.list!!)
+//                adapter.addData(data!!.list!!)
                 listRefresh.finishLoadMore(true)
 
+
             }
+            adapter.isUseEmpty(true)
         } else {
             if (listRefresh != null && page > 1)
                 listRefresh.finishLoadMore(false)

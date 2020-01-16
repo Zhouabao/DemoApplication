@@ -24,13 +24,11 @@
             app:layout_constraintTop_toBottomOf="@id/llTitle"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading"
-            tools:context=".ui.activity.LabelQualityActivity">
+            app:msv_viewState="loading">
 
         <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
             <LinearLayout
                     android:orientation="vertical"
@@ -40,22 +38,10 @@
                     android:layout_height="wrap_content">
 
                 <TextView
-                        android:id="@+id/t1"
-                        android:layout_marginTop="15dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="我的标签特质"
-                        android:textStyle="bold"
-                        android:textColor="#ff191919"
-                        android:textSize="24sp"
-                        />
-
-
-                <TextView
                         android:id="@+id/t2"
                         android:layout_marginTop="30dp"
                         android:layout_width="wrap_content"
-                        android:layout_marginBottom="48dp"
+                        android:layout_marginBottom="30dp"
                         android:layout_height="wrap_content"
                         android:text="请选择或创建标签特质"
                         android:textColor="#FFE5E5E5"
@@ -71,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:visibility="visible"
                         android:layout_marginTop="30dp"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="30dp"
                         />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -111,16 +97,45 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-                <TextView
-                        android:id="@+id/t3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="懒人直选"
-                        android:layout_marginTop="30dp"
-                        android:textColor="#ff525556"
-                        android:textSize="15sp"
-                        />
+                <ViewFlipper
+                        android:id="@+id/marqueeOtherTags"
+                        android:outAnimation="@anim/push_up_out"
+                        android:inAnimation="@anim/push_up_in"
+                        android:flipInterval="2000"
+                        android:layout_marginTop="25dp"
+                        android:autoStart="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
+
+                <LinearLayout
+                        android:layout_marginTop="30dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:id="@+id/t3"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="懒人直选"
+                            android:textColor="#ff525556"
+                            android:textSize="15sp"
+                            />
+
+                    <TextView
+                            android:id="@+id/switchOne"
+                            android:gravity="center"
+                            android:drawablePadding="4dp"
+                            android:text="换一个"
+                            android:textColor="#ff888d92"
+                            android:textSize="13sp"
+                            android:drawableLeft="@drawable/icon_switch_gray"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/labelQualityRv"

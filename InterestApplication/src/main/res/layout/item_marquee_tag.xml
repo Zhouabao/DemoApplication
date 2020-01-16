@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:background="@color/colorWhite"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/marqueeTagIcon"
+            android:layout_width="29dp"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_default_avator"
+            android:layout_height="29dp"/>
+
+    <TextView
+            android:id="@+id/marqueeTagName"
+            android:text="宿舍美食家"
+            android:textColor="#ff787c7f"
+            android:textSize="15sp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/shape_rectangle_gray_leftbottom4_other10"
+            android:layout_width="wrap_content"
+            android:layout_height="33dp"/>
+
+</LinearLayout>

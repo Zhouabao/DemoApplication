@@ -35,7 +35,6 @@
                 android:background="@color/colorWhite"
                 android:overScrollMode="never"
                 android:scrollbars="none"
-                android:layout_marginTop="30dp"
                 tools:context=".ui.fragment.BlockSquareFragment">
 
         </androidx.recyclerview.widget.RecyclerView>

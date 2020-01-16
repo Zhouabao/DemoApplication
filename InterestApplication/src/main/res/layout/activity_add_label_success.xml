@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stateAddLabelSuccess"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading"
         tools:context=".ui.activity.AddLabelSuccessActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,8 +27,8 @@
                 android:textSize="27sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="兴趣"/>
 
         <TextView
@@ -32,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="已创建成功"
+                android:text="标签添加完成"
                 android:textColor="@color/colorOrange"
                 android:textSize="27sp"
                 android:textStyle="bold"
@@ -40,18 +44,20 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/successLabelName"
                 />
+
         <TextView
                 android:id="@+id/t2"
                 android:layout_marginTop="42dp"
-                app:layout_constraintTop_toBottomOf="@id/t1"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="通过照片来完善标签吧"
+                android:text="马上发布标签动态，收获超多喜欢"
                 android:textColor="#ff696e73"
                 android:textSize="17sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/t1"
                 />
+
         <TextView
                 android:id="@+id/successLabelGuide"
                 android:layout_width="wrap_content"
@@ -89,9 +95,9 @@
                 android:layout_width="232dp"
                 android:scaleType="center"
                 android:layout_height="232dp"
+                app:layout_constraintBottom_toTopOf="@id/publish"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/publish"
                 app:layout_constraintTop_toBottomOf="@id/changeLabel"/>
 
         <TextView
@@ -124,19 +130,20 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
+
         <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/lottieView"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:lottie_autoPlay="true"
-                app:lottie_speed="1"
                 app:lottie_fileName="data_add_label_success.json"
                 app:lottie_imageAssetsFolder="images/"
-                app:lottie_loop="false"/>
+                app:lottie_loop="false"
+                app:lottie_speed="1"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</FrameLayout>
+</com.kennyc.view.MultiStateView>

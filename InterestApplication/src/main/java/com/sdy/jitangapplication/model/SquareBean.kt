@@ -118,9 +118,6 @@ data class FriendBean(
 )
 
 
-data class FriendListBean(
-    var list: MutableList<FriendBean?>?
-)
 
 
 data class SquareRecentlyListBean(
@@ -160,4 +157,8 @@ data class CommentBean(
         const val TITLE = 0
         const val CONTENT = 1
     }
+
+
 }
+
+data class SquareTitleBean(val title: String, var checked: Boolean)

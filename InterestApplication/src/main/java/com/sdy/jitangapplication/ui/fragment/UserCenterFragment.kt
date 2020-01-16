@@ -17,7 +17,6 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
@@ -37,8 +36,10 @@ import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.presenter.UserCenterPresenter
 import com.sdy.jitangapplication.presenter.view.UserCenterView
 import com.sdy.jitangapplication.ui.activity.*
+import com.sdy.jitangapplication.ui.adapter.UserCenteTagAdapter
 import com.sdy.jitangapplication.ui.adapter.UserCenterCoverAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
+import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
@@ -74,6 +75,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         const val REQUEST_INTENTION = 15
     }
 
+    private val tagAdapter by lazy { UserCenteTagAdapter() }
     //动态封面适配器
     private val coverAdapter by lazy { UserCenterCoverAdapter() }
     //我的访客adapter
@@ -104,11 +106,13 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         //更新了信息之后更新本地缓存
         SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
         coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
+        tagAdapter.setNewData(userInfoBean?.mytags_list ?: mutableListOf())
         visitsAdapter.freeShow = userInfoBean?.free_show ?: false
         visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
         GlideUtil.loadAvatorImg(activity!!, userInfoBean?.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean?.userinfo?.nickname ?: ""
-        userSquareCount.text = "我的动态 ${userInfoBean?.squarelist?.count}"
+        userTagsBtn.text = "标签管理 ${userInfoBean?.mytags_count}"
+//        userSquareCount.text = "我的动态 ${userInfoBean?.squarelist?.count}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
         userInfoSettingBtn.text = "完成度：${userInfoBean?.userinfo?.percent_complete}%"
@@ -273,6 +277,36 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             mPresenter.getMemberInfo(params)
         }
 
+        //用户标签
+        val tagManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        userTagRv.layoutManager = tagManager
+        userTagRv.addItemDecoration(
+            DividerItemDecoration(
+                activity!!,
+                DividerItemDecoration.VERTICAL_LIST,
+                SizeUtils.dp2px(10F),
+                resources.getColor(R.color.colorWhite)
+            )
+        )
+        userTagRv.adapter = tagAdapter
+        tagAdapter.setOnItemClickListener { _, view, position ->
+            if (tagAdapter.data[position].is_expire) {
+                ChargeLabelDialog(activity!!,tagAdapter.data[position].tag_id).show()
+            } else {
+                val intent = Intent()
+                intent.putExtra("aimData", tagAdapter.data[position])
+                intent.putExtra(
+                    "mode", if (tagAdapter.data[position].label_quality.isNullOrEmpty()) {
+                        LabelQualityActivity.MODE_NEW
+                    } else {
+                        LabelQualityActivity.MODE_EDIT
+                    }
+                )
+                intent.setClass(activity!!, LabelQualityActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
 
         //用户动态照片
         val squareManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
@@ -288,20 +322,14 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userSquaresRv.adapter = coverAdapter
         val headView = LayoutInflater.from(activity!!).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
         val params = headView.layoutParams as RecyclerView.LayoutParams
-        params.width =
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
-        params.height =
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.width = SizeUtils.dp2px(98F)
+        params.height = SizeUtils.dp2px(98F)
         headView.layoutParams = params
-
         coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
-
         coverAdapter.headerLayout.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
                 mPresenter.checkBlock()
             }
-
-
         })
 
         coverAdapter.setOnItemClickListener { _, view, position ->
@@ -392,7 +420,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //我的标签
             R.id.userTagsBtn -> {
-                startActivity<AllMyLabelActivity>()
+                startActivity<MyLabelActivity>()
             }
             //我的动态 1,我的所有动态 2我点过赞的 3 我收藏的
             R.id.userSquareCount -> {

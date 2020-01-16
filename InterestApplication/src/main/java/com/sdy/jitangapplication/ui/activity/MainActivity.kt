@@ -30,7 +30,7 @@ import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.*
-import com.sdy.jitangapplication.ui.fragment.IndexFragment
+import com.sdy.jitangapplication.ui.fragment.MatchFragment1
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
 import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.ui.fragment.UserCenterFragment
@@ -50,12 +50,12 @@ import java.util.*
 //路径标签个人建议写在一个类里面，方便统一管理和维护
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
-    private val titles = arrayOf("首页", "发现", "消息", "我的")
+    private val titles = arrayOf("匹配", "发现", "消息", "我的")
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     //匹配
-//    private val matchFragment by lazy { MatchFragment1() }
-    private val matchFragment by lazy { IndexFragment() }
+    private val matchFragment by lazy { MatchFragment1() }
+//    private val matchFragment by lazy { IndexFragment() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
     //消息
@@ -205,7 +205,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
                 } else {
                     tabMatch.isVisible = false
-                    tabMatchCount.text = "首页"
+                    tabMatchCount.text = "匹配"
                     tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
                     tabMatchCount.setPadding(0)
                 }
@@ -240,7 +240,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
             1 -> {
                 tabMatch.isVisible = false
-                tabMatchCount.text = "首页"
+                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -273,7 +273,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
             2 -> {
                 tabMatch.isVisible = false
-                tabMatchCount.text = "首页"
+                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -306,7 +306,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
             3 -> {
                 tabMatch.isVisible = false
-                tabMatchCount.text = "首页"
+                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -352,7 +352,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
             } else {
                 tabMatch.isVisible = false
-                tabMatchCount.text = "首页"
+                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
                 tabMatchCount.setPadding(0)
             }

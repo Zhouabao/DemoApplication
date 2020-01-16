@@ -53,14 +53,14 @@
                 android:ellipsize="end"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
-                android:text="#优先显示标题文字最多字优先显示标题文字最多字优先显示标题文字最多字"
-                android:textColor="#ff6796fa"
-                android:drawablePadding="5dp"
+                tools:text="#这是我的标题"
+                android:textColor="#FFC5C6C8"
+                android:drawablePadding="8dp"
                 android:textSize="12sp"
                 android:drawableLeft="@drawable/icon_title_blue"
-                android:paddingRight="5dp"
+                android:paddingRight="8dp"
                 android:gravity="center"
-                android:background="@drawable/shape_rectangle_gray_f6_12dp"
+                android:background="@drawable/shape_rectangle_f6f6f6_5dp"
                 />
 
     </LinearLayout>
@@ -78,16 +78,16 @@
                 android:id="@+id/squareLocationAndTime1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#27d593"
+                android:textColor="#FFC5C6C8"
                 android:textSize="12sp"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:paddingRight="5dp"
-                android:drawablePadding="5dp"
+                android:paddingRight="8dp"
+                android:drawablePadding="8dp"
                 android:drawableLeft="@drawable/icon_location_green"
-                android:background="@drawable/shape_rectangle_light_green_12dp"
-                tools:text="北京市北"
+                android:background="@drawable/shape_rectangle_f6f6f6_5dp"
+                tools:text="北京市北北京市北"
                 />
 
     </LinearLayout>
@@ -103,9 +103,9 @@
             android:gravity="center"
             android:textColor="@color/colorBlack6f"
             android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@id/squareChatBtn1"
+            app:layout_constraintBottom_toBottomOf="@id/squareTagName"
             app:layout_constraintLeft_toLeftOf="@id/squareContent1"
-            app:layout_constraintTop_toTopOf="@id/squareChatBtn1"
+            app:layout_constraintTop_toTopOf="@id/squareTagName"
             tools:text="123"/>
 
 
@@ -156,36 +156,25 @@
             app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"/>
 
 
-    <LinearLayout
-            android:id="@+id/squareChatBtn1"
-            android:background="@drawable/shape_rectangle_lightorange_15dp"
-            android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:layout_height="30dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="6dp"
+    <TextView
+            android:id="@+id/squareTagName"
             android:layout_marginRight="15dp"
-            android:paddingBottom="6dp"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ff2d2f30"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            android:textStyle="bold"
             android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:background="@drawable/shape_rectangle_light_gray_15dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/squareLocationAndTime1Ll"
-            >
+            tools:text="游戏"/>
 
-        <ImageView
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_flash"
-                android:layout_width="18dp"
-                android:layout_height="18dp"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="聊天"
-                android:layout_marginLeft="7dp"
-                android:textColor="#ffff6318"
-                android:textSize="14sp"
-                />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

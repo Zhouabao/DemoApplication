@@ -14,6 +14,7 @@ import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchView
+import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
@@ -42,9 +43,12 @@ class MatchPresenter : BasePresenter<MatchView>() {
                         if (t.data != null && t.data!!.list != null) {
                             mView.onGetMatchListResult(true, t.data)
                         }
-                    } else {
+                    } else if (t.code == 410) {
+                        ChargeLabelDialog(context, params["tag_id"] as Int).show()
+                        mView.onGetMatchListResult(true, t.data)
+
+                    } else
                         mView.onGetMatchListResult(false, t.data)
-                    }
                 }
 
                 override fun onError(e: Throwable?) {
@@ -111,8 +115,6 @@ class MatchPresenter : BasePresenter<MatchView>() {
                 }
             })
     }
-
-
 
 
 }

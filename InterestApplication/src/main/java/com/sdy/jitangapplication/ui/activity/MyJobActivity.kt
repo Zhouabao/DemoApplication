@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.error_layout.view.*
 /**
  * 职业
  */
-class MyJobActivity : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClickListener {
+class MyJobActivity   : BaseMvpActivity<MyJobPresenter>(), MyJobView, View.OnClickListener {
 
     private var checkJob: NewLabel? = null
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -145,6 +145,29 @@ public class GlideUtil {
                 .into(tartgetImg);
 
     }
+
+    /**
+     * 加载圆角图片铺满居中
+     *
+     * @param context
+     * @param url
+     * @param tartgetImg
+     * @param type       圆角的方式
+     */
+    public static void loadRoundImgCenterCrop(Context context, Object url, ImageView tartgetImg, int radius, RoundedCornersTransformation.CornerType type) {
+        MultiTransformation multiTransformation = new MultiTransformation(new CenterCrop(), new RoundedCornersTransformation(radius, 0,type));
+        Glide.with(context)
+                .load(url)
+                .priority(Priority.NORMAL)
+//                .placeholder(R.drawable.default_image)
+//                .error(R.drawable.default_image)
+                .thumbnail(0.5F)
+                .transform(multiTransformation)
+                .into(tartgetImg);
+
+    }
+
+
     /**
      * 加载圆角图片铺满居中
      *
@@ -162,6 +185,7 @@ public class GlideUtil {
                 .into(tartgetImg);
 
     }
+
     public static void loadRoundImgCenterCropWH(Context context, String url, ImageView tartgetImg, int radius, int width, int height) {
         MultiTransformation multiTransformation = new MultiTransformation(new CenterCrop(), new RoundedCornersTransformation(radius, 0));
         Glide.with(context)

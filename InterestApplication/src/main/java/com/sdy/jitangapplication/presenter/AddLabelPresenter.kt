@@ -60,7 +60,7 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
      */
     fun saveInterestTag(tag_ids: String) {
         RetrofitFactory.instance.create(Api::class.java)
-            .saveInterestTag(UserManager.getSignParams(hashMapOf("tags" to tag_ids)))
+            .addMyTags(UserManager.getSignParams(hashMapOf("tags" to tag_ids)))
             .excute(object : BaseSubscriber<BaseResp<MutableList<TagBean>?>>(mView) {
                 override fun onStart() {
                     mView.showLoading()
@@ -69,11 +69,11 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
                 override fun onNext(t: BaseResp<MutableList<TagBean>?>) {
                     mView.hideLoading()
                     if (t.code == 200) {
-                        mView.saveInterestTagResult(true, t.data)
+                        mView.saveMyTagResult(true, t.data)
                     } else if (t.code == 403) {
                         TickDialog(context).show()
-                    }
-                    CommonFunction.toast(t.msg)
+                    } else
+                        CommonFunction.toast(t.msg)
                 }
 
                 override fun onError(e: Throwable?) {

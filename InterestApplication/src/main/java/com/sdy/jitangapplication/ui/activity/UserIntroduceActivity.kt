@@ -8,7 +8,6 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -171,8 +170,8 @@ class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQua
 
     override fun onSaveRegisterInfo(success: Boolean) {
         if (success) {
-            ActivityUtils.finishAllActivities()
-            startActivity<MainActivity>()
+            startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
+            finish()
         }
     }
 

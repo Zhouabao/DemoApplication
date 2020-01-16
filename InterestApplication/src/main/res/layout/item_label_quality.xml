@@ -7,12 +7,13 @@
           android:id="@+id/qualityTv"
           android:paddingBottom="7dp"
           android:text="气质非凡"
+          android:gravity="center"
+          android:layout_gravity="center"
           android:textSize="14sp"
           android:textColor="#FF787C7F"
           android:layout_marginRight="10dp"
-          android:layout_marginBottom="10dp"
           android:drawablePadding="7dp"
-          android:background="@drawable/shape_rectangle_label_normal_12dp"
+          android:background="@drawable/shape_rectangle_label_normal_8dp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content">
 

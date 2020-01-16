@@ -8,8 +8,8 @@ import com.sdy.jitangapplication.utils.UserManager
  *    desc   :显示新消息的event
  *    version: 1.0
  */
-class NewMsgEvent
 
+//首页更新红点消息
 class GetNewMsgEvent
 
 //重新认证事件通知
@@ -26,6 +26,3 @@ class UpdateSlideCountEvent
 //展示调研弹窗的event
 class ShowSurveyDialogEvent(val slideCount: Int)
 
-
-//修改主页的状态栏颜色
-class ChangeStatusColorEvent
