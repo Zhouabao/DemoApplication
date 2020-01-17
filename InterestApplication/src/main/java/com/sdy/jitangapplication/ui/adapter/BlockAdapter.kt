@@ -20,9 +20,18 @@ class BlockAdapter : BaseQuickAdapter<Photos, BaseViewHolder>(R.layout.item_bloc
 
     override fun convert(holder: BaseViewHolder, item: Photos) {
         val params = holder.itemView.ivSquare.layoutParams as ConstraintLayout.LayoutParams
-        params.width = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
-        params.height = ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.width =
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        params.height =
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(15F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+        if (holder.layoutPosition / 3 == 0) {
+            params.topMargin = SizeUtils.dp2px(30F)
+        } else {
+            params.topMargin = SizeUtils.dp2px(0F)
+        }
         holder.itemView.ivSquare.layoutParams = params
+
+
         GlideUtil.loadRoundImgCenterCrop(mContext, item.url ?: "", holder.itemView.ivSquare, SizeUtils.dp2px(5F))
     }
 

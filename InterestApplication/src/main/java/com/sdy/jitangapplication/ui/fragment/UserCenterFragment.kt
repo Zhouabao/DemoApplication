@@ -82,7 +82,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     private val visitsAdapter by lazy { VisitUserAvatorAdater() }
 
     private var userInfoBean: UserInfoBean? = null
-    private lateinit var vipDialog: ChargeVipDialog
 
     override fun loadData() {
         EventBus.getDefault().register(this)
@@ -214,7 +213,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 view.vpTitle.text = userInfoBean?.vip_descr?.get(position)?.title ?: ""
                 view.vpMsg.text = userInfoBean?.vip_descr?.get(position)?.rule ?: ""
                 view.setOnClickListener {
-                    vipDialog.show()
+                    ChargeVipDialog(ChargeVipDialog.VIP_LOGO, activity!!).show()
                 }
                 container.addView(view)
                 return view
@@ -344,9 +343,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userVisitRv.layoutManager = visitLayoutmanager
         userVisitRv.adapter = visitsAdapter
 
-
-        //初始化vipDialog
-        vipDialog = ChargeVipDialog(ChargeVipDialog.VIP_LOGO, activity!!)
     }
 
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {
@@ -410,7 +406,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             //会员权益
             R.id.isVipPowerBtn -> {
                 if (userInfoBean?.userinfo?.isvip != 1) {
-                    vipDialog.show()
+                    ChargeVipDialog(ChargeVipDialog.VIP_LOGO, activity!!).show()
                 } else {
                     startActivity<VipPowerActivity>(
                         "nickname" to userInfoBean?.userinfo?.nickname,

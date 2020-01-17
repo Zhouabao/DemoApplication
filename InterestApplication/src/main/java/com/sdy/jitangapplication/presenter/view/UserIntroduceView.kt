@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.AddLabelResultBean
+import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.LabelQualitysBean
 
 /**
@@ -10,10 +11,6 @@ import com.sdy.jitangapplication.model.LabelQualitysBean
  *    desc   :
  *    version: 1.0
  */
-interface LabelQualityView : BaseView {
-
-    fun getQualityResult(result: Boolean, data: LabelQualitysBean?)
-
-    fun addTagResult(result: Boolean, loginBean: AddLabelResultBean?)
-
+interface UserIntroduceView : BaseView {
+    fun onSaveRegisterInfo(success: Boolean)
 }

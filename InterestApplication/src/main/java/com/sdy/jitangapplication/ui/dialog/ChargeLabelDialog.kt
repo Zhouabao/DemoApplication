@@ -28,14 +28,12 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.PayLabelResultEvent
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.UpdateMyLabelEvent
-import com.sdy.jitangapplication.event.UserCenterEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.LabelChargeWayBean
 import com.sdy.jitangapplication.model.PayBean
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -45,6 +43,8 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.dialog_charge_llabel.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *    author : ZFM
@@ -52,19 +52,28 @@ import org.greenrobot.eventbus.EventBus
  *    desc   : 充值会员底部对话框
  *    version: 1.0
  */
-class ChargeLabelDialog(val context1: Context, val tag_id: Int) :
+class ChargeLabelDialog(val context1: Context, val tag_id: Int, var from: Int = FROM_OTHER) :
     Dialog(context1, R.style.MyDialog) {
     private var payways: MutableList<PaywayBean> = mutableListOf()
     private val SDK_PAY_FLAG = 1
-
     private val PAY_WECHAT = 2//微信支付
     private val PAY_ALI = 1 //支付宝支付
+
+
+    companion object {
+        const val FROM_INDEX = 0
+        const val FROM_SQUARE = 1
+        const val FROM_OTHER = 2
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_charge_llabel)
         initWindow()
         initView()
         initChargeWay()
+        setCancelable(false)
+        setCanceledOnTouchOutside(false)
     }
 
 
@@ -84,6 +93,7 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int) :
     private fun initView() {
         //支付宝支付
         zhiPayBtn.onClick {
+            //            showAlert(context1, "支付成功！", true)
             createOrder(PAY_ALI)
         }
 
@@ -100,6 +110,9 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int) :
         //取消支付
         refuseBtn.onClick {
             dismiss()
+            if ((context1 as Activity) is MainActivity) {
+                EventBus.getDefault().post(TurnToLastLabelEvent(from))
+            }
         }
 
     }
@@ -197,6 +210,7 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int) :
 
             //发起微信支付请求
             wxapi.sendReq(request)
+//            dismiss()
         } else if (payment_type == PAY_ALI) {
             //必须异步调用
             Thread(Runnable {
@@ -300,20 +314,37 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int) :
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
                     if (result) {
-                        if (ActivityUtils.getTopActivity() == AddLabelActivity::class.java) {
+                        if (ActivityUtils.getTopActivity() is AddLabelActivity) {
                             EventBus.getDefault().post(PayLabelResultEvent(true))
-                        } else if (ActivityUtils.getTopActivity() == MyLabelActivity::class.java) {
+                        } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {
                             EventBus.getDefault().post(UpdateMyLabelEvent())
                         }
                         EventBus.getDefault().postSticky(RefreshEvent(true))
                         EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        dismiss()
                     }
                 }
-
             })
             .create()
             .show()
     }
 
 
+    override fun show() {
+        super.show()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onCloseDialogEvent(event: CloseDialogEvent) {
+        if (isShowing) {
+            dismiss()
+        }
+    }
 }

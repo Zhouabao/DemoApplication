@@ -6,12 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.MyLabelBean
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
@@ -57,14 +54,14 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
             //8.需要付费.(已删除,未加入).未过期限
             //2无需付费.已经添加  10.需要付费.已经添加
             //4需要付费.付费进入   9.需要付费.已删除.过期   7.需要付费.已过期
-            if (data.state == 2 || data.state == 10) {
-                YoYo.with(Techniques.Shake)
-                    .duration(100)
-                    .repeat(0)
-                    .playOn(view)
-                //付费和免费已添加
-                return@setOnItemClickListener
-            }
+//            if (data.state == 2 || data.state == 10) {
+//                YoYo.with(Techniques.Shake)
+//                    .duration(100)
+//                    .repeat(0)
+//                    .playOn(view)
+//                付费和免费已添加
+//                return@setOnItemClickListener
+//            }
 
 
             var checkedCount = 0
@@ -86,26 +83,8 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                 childPosition = position
                 purchaseId = labelAdapter.data[position].id
                 ChargeLabelDialog(mContext, labelAdapter.data[position].id).show()
-            } else {//1 3 5 6 8
+            } else {//1 3 5 6 8  2 10
                 labelAdapter.data[position].checked = !labelAdapter.data[position].checked
-//                if (!(item.ismine || item.ishot)) {
-//                    for (data in mData) {
-//                        if (data.ishot)
-//                            for (data1 in data.son) {
-//                                if (data1.id == labelAdapter.data[position].id) {
-//                                    data1.checked = labelAdapter.data[position].checked
-//                                }
-//                            }
-//                        if (data.ismine)
-//                            for (data1 in data.son) {
-//                                if (data1.id == labelAdapter.data[position].id) {
-//                                    data1.checked = labelAdapter.data[position].checked
-//                                }
-//                            }
-//                    }
-//                    notifyDataSetChanged()
-//                } else {
-//                }
                 for (index in 0 until mData.size) {
                     for (tdata1 in mData[index].son) {
                         if (tdata1.id == labelAdapter.data[position].id) {

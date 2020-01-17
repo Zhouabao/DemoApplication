@@ -150,7 +150,6 @@ public class SessionHelper {
 
                 @Override
                 public void onClick(Context context, View view, String sessionId) {
-                    //todo 这里可以获取到聊天记录等界面的信息跳转
                     //initPopuptWindow(context, view, sessionId, SessionTypeEnum.P2P);
                 }
             };
@@ -303,8 +302,8 @@ public class SessionHelper {
             @Override
             public void onGetReceivcedMsgClicked(Context context, IMMessage message) {
                 //获取已读回执，用于弹出会员详情
-//                if (!UserManager.INSTANCE.isUserVip())
-                new ChargeVipDialog(ChargeVipDialog.VIP_LOGO, context, ChargeVipDialog.PURCHASE_VIP).show();
+                if (!UserManager.INSTANCE.isUserVip())
+                    new ChargeVipDialog(ChargeVipDialog.FILTER, context, ChargeVipDialog.PURCHASE_VIP).show();
             }
 
             @Override

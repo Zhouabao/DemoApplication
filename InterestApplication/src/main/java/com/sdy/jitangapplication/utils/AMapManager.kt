@@ -31,7 +31,6 @@ object AMapManager {
                     }
 
                     override fun onDenied() {
-                        //todo 定位权限被拒
                     }
                 })
                 .request()

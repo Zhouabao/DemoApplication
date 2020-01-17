@@ -15,14 +15,14 @@
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/powerImg"
             android:src="@drawable/icon_default_avator_logo"
-            android:layout_width="61dp"
-            android:layout_height="61dp"/>
+            android:layout_width="51dp"
+            android:layout_height="51dp"/>
 
     <TextView
             android:id="@+id/powerContent"
             android:text="对我感兴趣的"
             android:textColor="#fffac66f"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:layout_marginTop="14dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

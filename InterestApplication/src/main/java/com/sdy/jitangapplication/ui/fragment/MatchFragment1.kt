@@ -75,7 +75,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     private val tags by lazy { mutableListOf<TagBean>() }
     private val tagAdapter by lazy { TagAdapter() }
-    private var checkedId = 0
     private fun initTagsView() {
         addTagBtn.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
@@ -90,13 +89,14 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         matchTagRv.adapter = tagAdapter
         setTagData()
         tagAdapter.setOnItemClickListener { _, view, position ->
+            preTagId = UserManager.getGlobalLabelId()
             for (tag in tagAdapter.data) {
                 tag.cheked = tag == tagAdapter.data[position]
             }
             tagAdapter.notifyDataSetChanged()
 
-            checkedId = tagAdapter.data[position].id
-            matchParams["tag_id"] = checkedId
+            UserManager.saveGlobalLabelId(tagAdapter.data[position].id)
+            matchParams["tag_id"] = tagAdapter.data[position].id
             mPresenter.getMatchList(matchParams)
             matchUserAdapter.data.clear()
             setViewState(LOADING)
@@ -109,16 +109,16 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
         tags.addAll(UserManager.getSpLabels())
 //        tags.add(TagBean(-1))
         //初始化选中的tag
-        if (checkedId == 0) {
+        if (UserManager.getGlobalLabelId() == 0) {
             if (tags.isNotEmpty()) {
                 tags[0].cheked = true
                 matchParams["tag_id"] = tags[0].id
-                checkedId = tags[0].id
+                UserManager.saveGlobalLabelId(tags[0].id)
             }
         } else {
             var hasCheck = false
             for (tag in tags) {
-                if (tag.id == checkedId) {
+                if (tag.id == UserManager.getGlobalLabelId()) {
                     tag.cheked = true
                     matchParams["tag_id"] = tag.id
                     hasCheck = true
@@ -128,10 +128,11 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             if (!hasCheck) {
                 tags[0].cheked = true
                 matchParams["tag_id"] = tags[0].id
-                checkedId = tags[0].id
+                UserManager.saveGlobalLabelId(tags[0].id)
             }
         }
         tagAdapter.setNewData(tags)
+        preTagId = UserManager.getGlobalLabelId()
     }
 
     private var hasMore = false
@@ -162,7 +163,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
             "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
             "_timestamp" to System.currentTimeMillis(),
-            "tag_id" to checkedId,
+            "tag_id" to UserManager.getGlobalLabelId(),
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat(),
             "city_code" to UserManager.getCityCode(),
@@ -243,12 +244,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     if ((matchUserAdapter.data[manager.topPosition].accid ?: "") != UserManager.getAccid())
                         MatchDetailActivity.start(activity!!, matchUserAdapter.data[manager.topPosition].accid)
                     (itemView.findViewById<ConstraintLayout>(R.id.v1)).isEnabled = true
-
-//                    startActivity<MatchSucceedActivity>(
-//                        "avator" to matchUserAdapter.data[position].avatar,
-//                        "nickname" to matchUserAdapter.data[position].nickname,
-//                        "accid" to matchUserAdapter.data[position].accid
-//                    )
                 }
                 R.id.btnHiLottieView,
                 R.id.btnHi -> {
@@ -305,7 +300,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "target_accid" to "",
-            "tag_id" to checkedId,
+            "tag_id" to UserManager.getGlobalLabelId(),
             "type" to 1
         )
     }
@@ -376,30 +371,16 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                 paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
 
                 //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容
-                var noQuality = false//某个标签没有特质
-                for (mytag in matchBeans.mytags ?: mutableListOf()) {
-                    if (mytag.label_quality.isNullOrEmpty()) {
-                        noQuality = true
-                        break
-                    }
+                completeLabelBtn.isVisible = !matchBeans.is_full
+                if (matchBeans.is_full) {
+                    UserManager.saveCompleteLabelCount(matchBeans.interest_times)
                 }
-                if (matchBeans.mytags.isNullOrEmpty() || noQuality) {
-                    completeLabelBtn.isVisible = true
-                    if (!UserManager.isShowCompleteLabelDialog()) {
-                        UserManager.saveCompleteLabelCount(matchBeans.interest_times)
-                    }
-                } else {
-                    completeLabelBtn.isVisible = false
-                    UserManager.saveIsShowCompleteLabelDialog(true)
-                }
-
 
                 //保存 VIP信息
                 UserManager.saveUserVip(matchBeans.isvip)
                 //保存认证信息
                 UserManager.saveUserVerify(matchBeans.isfaced)
 
-                //保存剩余滑动次数
                 UserManager.saveLeftSlideCount(matchBeans.like_times)
                 EventBus.getDefault().post(UpdateSlideCountEvent())
                 //保存提示剩余滑动次数
@@ -604,16 +585,6 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
             .playOn(card_stack_view)
     }
 
-    /**
-     * 是否展示完善标签
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onShowCompleteLabelEvent(event: ShowCompleteLabelEvent) {
-        if (event.show) {
-            UserManager.saveIsShowCompleteLabelDialog(true)
-        }
-    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateHiCountEvent(event: UpdateHiCountEvent) {
@@ -626,7 +597,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateCardEvent(event: GreetEvent) {
-        if (event.success && FragmentUtils.getTopShowInStack(fragmentManager!!) == MatchFragment1::class.java) {
+        if (event.success && FragmentUtils.getTopShow(fragmentManager!!) is MatchFragment1) {
             val setting = SwipeAnimationSetting.Builder()
                 .setDirection(Direction.Top)
                 .setDuration(Duration.Normal.duration)
@@ -638,8 +609,18 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 //             card_stack_view.rewind()
         }
     }
-    /*---------------------卡片参数和方法------------------------------*/
 
+    private var preTagId = 0
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun turnToLastLabelEvent(event: TurnToLastLabelEvent) {
+        if (event.from == ChargeLabelDialog.FROM_INDEX) {
+            UserManager.saveGlobalLabelId(0)
+            onRefreshEvent(RefreshEvent(true))
+        }
+    }
+
+
+    /*---------------------卡片参数和方法------------------------------*/
     private fun initialize() {
         //卡片排列方式
         manager.setStackFrom(StackFrom.Bottom)
@@ -759,18 +740,14 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
                     EventBus.getDefault().post(UpdateSlideCountEvent())
                 }
                 //如果当前弹窗的滑动剩余次数为0并且没有显示过完善标签的弹窗，就弹窗
-                if (UserManager.getCompleteLabelCount() != -1
-                    && UserManager.getCompleteLabelCount() == UserManager.getSlideCount()
-                    && !UserManager.isShowCompleteLabelDialog()
-                ) {
-                    CompleteLabelDialog(activity!!).show()
+                if (UserManager.getCompleteLabelCount() != -1 && UserManager.getCompleteLabelCount() == UserManager.getSlideCount() - 1) {
+                    CompleteLabelDialog(activity!!,UserManager.getGlobalLabelId()).show()
                 }
-                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
+                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid
                 if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
                     params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
                 mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
             } else {
-                card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
                 card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
                 card_stack_view.isEnabled = false
                 if (my_percent_complete <= normal_percent_complete)

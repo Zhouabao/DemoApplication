@@ -48,6 +48,7 @@ import com.sdy.jitangapplication.ui.adapter.AllTitleAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListSquareAdapter
 import com.sdy.jitangapplication.ui.adapter.SquareSwitchAdapter
 import com.sdy.jitangapplication.ui.adapter.TagAdapter
+import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
 import com.sdy.jitangapplication.utils.ScrollCalculatorHelper
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -72,7 +73,6 @@ import org.jetbrains.anko.support.v4.startActivity
  */
 class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
     MultiListSquareAdapter.ResetAudioListener {
-    private var checkedId = 0
     private var checkedTitleId = 0
     override fun loadData() {
         initView()
@@ -201,7 +201,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             setBackgroundDrawable(null)
             isOutsideTouchable = true
 
-
             contentView.genderAll.onClick {
                 contentView.genderAll.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
                 contentView.genderMan.setTextColor(Color.parseColor("#191919"))
@@ -243,16 +242,16 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         tags.clear()
         tags.addAll(UserManager.getSpLabels())
         //初始化选中的tag
-        if (checkedId == 0) {
+        if (UserManager.getGlobalLabelSquareId() == 0) {
             if (tags.isNotEmpty()) {
                 tags[0].cheked = true
                 listParams["tag_id"] = tags[0].id
-                checkedId = tags[0].id
+                UserManager.saveGlobalLabelSquareId(tags[0].id)
             }
         } else {
             var hasCheck = false
             for (tag in tags) {
-                if (tag.id == checkedId) {
+                if (tag.id == UserManager.getGlobalLabelSquareId()) {
                     tag.cheked = true
                     listParams["tag_id"] = tag.id
                     hasCheck = true
@@ -262,7 +261,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             if (!hasCheck) {
                 tags[0].cheked = true
                 listParams["tag_id"] = tags[0].id
-                checkedId = tags[0].id
+                UserManager.saveGlobalLabelSquareId(tags[0].id)
             }
         }
         tagAdapter.setNewData(tags)
@@ -287,8 +286,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 tag.cheked = tag == tagAdapter.data[position]
             }
             tagAdapter.notifyDataSetChanged()
-            checkedId = tagAdapter.data[position].id
-            listParams["tag_id"] = checkedId
+            UserManager.saveGlobalLabelSquareId(tagAdapter.data[position].id)
+            listParams["tag_id"] = tagAdapter.data[position].id
             updateChooseTitle()
         }
 
@@ -641,8 +640,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
             }
             setViewState(CONTENT)
             //更新标题显示内容数据
-            if (data != null && checkedTitleId == SQUARE_TAG)
-                UserManager.saveMaxMyLabelCount(data?.myinterest_count)
             if (data != null)
                 if (data!!.list != null && data!!.list!!.size > 0) {
                     adapter.isUseEmpty(false)
@@ -768,6 +765,15 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
 
     /***************************事件总线******************************/
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun turnToLastLabelEvent(event: TurnToLastLabelEvent) {
+        if (event.from == ChargeLabelDialog.FROM_SQUARE) {
+            UserManager.saveGlobalLabelSquareId(0)
+            onRefreshEvent(RefreshEvent(true))
+        }
+    }
+
 
     /**
      * 根据选择的标签切换广场内容
@@ -987,7 +993,6 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 .create()
                 .show()
         } else if (UserManager.publishState == -1) { //400
-            //TODO 思考问题如何处理违规内容
             SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
             UserManager.clearPublishParams()
             if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))

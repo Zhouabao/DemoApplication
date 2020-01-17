@@ -35,7 +35,7 @@ class AllNewLabelAdapter1(
                 helper.itemView.labelAdded.isVisible = false
             }
             2, 10 -> {//2无需付费.已经添加  10.需要付费.已经添加
-                helper.itemView.labelAdded.isVisible = true
+                helper.itemView.labelAdded.isVisible = false
                 helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_added)
             }
             8 -> {//8.需要付费.(已删除,未加入).未过期限
@@ -43,7 +43,8 @@ class AllNewLabelAdapter1(
                 helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_purchased)
             }
             7 -> {//7.需要付费.已过期
-                helper.itemView.labelAdded.isVisible = false
+                helper.itemView.labelAdded.isVisible = true
+                helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_outtime)
             }
             4, 9 -> {//4需要付费.付费进入   9.需要付费.已删除.过期
                 helper.itemView.labelAdded.isVisible = true

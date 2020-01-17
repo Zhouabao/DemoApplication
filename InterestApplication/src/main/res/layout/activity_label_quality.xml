@@ -131,6 +131,7 @@
                             android:text="换一个"
                             android:textColor="#ff888d92"
                             android:textSize="13sp"
+                            android:visibility="gone"
                             android:drawableLeft="@drawable/icon_switch_gray"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>

@@ -22,12 +22,12 @@ class MatchLabelAdapter(var context: Context, var enable: Boolean = true) :
         holder.itemView.labelTv.text = item.title
         if (item.checked) {
             holder.itemView.labelTv.setTextColor(Color.parseColor("#FF191919"))
-            holder.itemView.labelTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24F)
+            holder.itemView.labelTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18F)
             holder.itemView.labelTv.paint.isFakeBoldText = true
             holder.itemView.labelCheckIv.isVisible = true
         } else {
-            holder.itemView.labelTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17F)
-            holder.itemView.labelTv.setTextColor(Color.parseColor("#FFA1A1A1"))
+            holder.itemView.labelTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16F)
+            holder.itemView.labelTv.setTextColor(Color.parseColor("#FF888D92"))
             holder.itemView.labelTv.paint.isFakeBoldText = false
             holder.itemView.labelCheckIv.isVisible = false
         }

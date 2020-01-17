@@ -193,7 +193,7 @@ class GotoVerifyDialog : Dialog {
                 dialog.verifyChange?.onClick {
                     // 替换头像
                     humanVerify(2)
-                    if (ActivityUtils.getTopActivity() != NewUserInfoSettingsActivity::class.java)
+                    if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
                         context.startActivity<NewUserInfoSettingsActivity>()
                     if (this.cancelable)
                         dialog.cancel()
@@ -214,7 +214,7 @@ class GotoVerifyDialog : Dialog {
                         dialog.cancel()
                 }
                 dialog.btDialogConfirm?.onClick {
-                    if (ActivityUtils.getTopActivity() != NewUserInfoSettingsActivity::class.java)
+                    if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
                         context.startActivity<NewUserInfoSettingsActivity>()
                     dialog.cancel()
                 }

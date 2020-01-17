@@ -52,6 +52,14 @@ data class LabelQualityBean(
     }
 }
 
+data class LabelQualitysBean(
+    var roll_list: MutableList<LabelQualityBean> = mutableListOf(),
+    var list: MutableList<LabelQualityBean> = mutableListOf(),
+    var has_button: Boolean = false
+)
+
+
+
 
 /**
  * 广场发布标签

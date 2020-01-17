@@ -53,7 +53,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     if (t.code == 200)
                         mView.onGetSquareListResult(t.data, true, isRefresh)
                     else if (t.code == 410) {
-                        ChargeLabelDialog(context, params["tag_id"] as Int).show()
+                        ChargeLabelDialog(context, params["tag_id"] as Int, ChargeLabelDialog.FROM_SQUARE).show()
                         mView.onGetSquareListResult(t.data, true, isRefresh)
                     } else {
                         mView.onGetSquareListResult(t.data, false, isRefresh)

@@ -87,10 +87,10 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         }
 
         btnGoVip.onClick {
-            ChargeVipDialog(ChargeVipDialog.FILTER, context1).show()
+            ChargeVipDialog(ChargeVipDialog.FILTER_LOCAL_CITY, context1).show()
         }
         btnGoVip1.onClick {
-            ChargeVipDialog(ChargeVipDialog.FILTER, context1).show()
+            ChargeVipDialog(ChargeVipDialog.FILTER_ONLINE, context1).show()
         }
         btnVerify.onClick {
             if (UserManager.isUserVerify() == 2 || UserManager.isUserVerify() == 3) {

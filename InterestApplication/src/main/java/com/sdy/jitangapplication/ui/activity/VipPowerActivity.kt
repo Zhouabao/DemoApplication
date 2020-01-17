@@ -131,11 +131,23 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
     override fun getChargeDataResult(data: ChargeWayBeans?) {
         if (data != null) {
             statePower.viewState = MultiStateView.VIEW_STATE_CONTENT
+
+            if (!data.list.isNullOrEmpty()) {
+                //判断是否有选中推荐的，没有的话就默认选中第一个价格。
+                var ispromote = false
+                for (charge in data.list) {
+                    if (charge.is_promote) {
+                        ispromote = true
+                        break
+                    }
+                }
+                if (!ispromote && data.list.isNullOrEmpty()) {
+                    data.list[0].is_promote = true
+                }
+            }
             vipChargeAdapter.setNewData(data.list)
             setupPrice()
-
             vipPowerAdapter.setNewData(data.icon_list)
-
             payways.addAll(data!!.paylist ?: mutableListOf())
             initPayWay()
         } else {
@@ -293,7 +305,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
                     if (result) {
-                        if (ActivityUtils.getTopActivity() != MainActivity::class.java) {
+                        if (ActivityUtils.getTopActivity() !is MainActivity) {
                             MainActivity.start(this@VipPowerActivity, Intent())
                         }
                         EventBus.getDefault().postSticky(RefreshEvent(true))

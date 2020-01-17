@@ -31,6 +31,7 @@ import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -39,6 +40,7 @@ import com.sdy.jitangapplication.event.UpdateHiCountEvent
 import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -87,12 +89,13 @@ class SayHiDialog(
             KeyboardUtils.hideSoftInput(sayHiContent)
             dismiss()
         }
-        sayHiBtn.onClick {
-            sayHiContent.clearFocus()
-            KeyboardUtils.hideSoftInput(sayHiContent)
-//            startAnimation()
-            greetState()
-        }
+        sayHiBtn.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                sayHiContent.clearFocus()
+                KeyboardUtils.hideSoftInput(sayHiContent)
+                greet()
+            }
+        })
 
 
         sayHiContent.addTextChangedListener(object : TextWatcher {
@@ -290,7 +293,7 @@ class SayHiDialog(
                         val greetBean = t.data
                         if (greetBean != null && greetBean.lightningcnt != -1) {
                             if (greetBean.isfriend || greetBean.isgreet) {
-//                                ChatActivity.start(context1 as Activity, target_accid ?: "")
+                                ChatActivity.start(context1 as Activity, target_accid ?: "")
                                 loadingDialog.dismiss()
                                 startAnimation()
                                 //发送通知修改招呼次数
@@ -320,7 +323,7 @@ class SayHiDialog(
                         }
                     } else {
                         loadingDialog.dismiss()
-                        EventBus.getDefault().post(GreetEvent(context1, true))
+                        EventBus.getDefault().post(GreetEvent(context1, false))
                         CommonFunction.toast(t.msg)
                     }
                 }
@@ -374,11 +377,11 @@ class SayHiDialog(
                         UserManager.startToLogin(context1 as Activity)
                     } else if (t.code == 401) {
                         loadingDialog.dismiss()
-                        EventBus.getDefault().post(GreetEvent(context1, true))
+                        EventBus.getDefault().post(GreetEvent(context1, false))
                         HarassmentDialog(context1, HarassmentDialog.CHATHI).show() //开启招呼提示
                     } else {
                         loadingDialog.dismiss()
-                        EventBus.getDefault().post(GreetEvent(context1, true))
+                        EventBus.getDefault().post(GreetEvent(context1, false))
                         CommonFunction.toast(t.msg)
                     }
                 }

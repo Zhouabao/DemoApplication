@@ -28,7 +28,8 @@ data class MatchListBean(
     val intention: LabelQualityBean? = null,
     var myinterest_count: Int = 0,
     var interest_times: Int = 0,
-    var is_human: Boolean = false
+    var is_human: Boolean = false,
+    var is_full: Boolean = false //标签是否完整
     )
 
 /**
@@ -134,7 +135,9 @@ data class GreetBean(
     val isfriend: Boolean = false,//是否好友
     val isgreet: Boolean = false,//是否打过招呼
     val lightningcnt: Int = -1,//剩余招呼次数
-    var countdown: Int = 0
+    var countdown: Int = 0,
+    var free_greet: Boolean = false//true 免费   false 付费冲会员
+
 
 )
 

@@ -33,6 +33,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.*
@@ -47,6 +48,8 @@ import com.tencent.mm.opensdk.modelpay.PayReq
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.dialog_charge_vip.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -56,23 +59,25 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class ChargeVipDialog(
-    private var currentPos: Int, val context1: Context,
+    private var currentPos: Int,
+    val context1: Context,
     private var purchaseType: Int = PURCHASE_VIP
 ) :
     Dialog(context1, R.style.MyDialog) {
     companion object {
         const val VIP_LOGO = 0//会员logo
         const val INFINITE_SLIDE = 1//无限滑动
-        const val LOOKED_ME = 2//看过我的
-        const val FILTER = 3//已读功能
-        const val LIKED_ME = 4//喜欢我的
-        const val DOUBLE_HI = 5//筛选同城
+        const val FILTER_LOCAL_CITY = 2//筛选同城
+        const val FILTER_ONLINE = 3//筛选在线
+        const val DOUBLE_HI = 4//加倍招呼
+        const val LIKED_ME = 5//喜欢我的
+        const val LOOKED_ME = 6//看过我的
+        const val FILTER = 7//已读功能
 
         //购买类型
         const val PURCHASE_VIP = 100//VIP购买
         const val PURCHASE_GREET_COUNT = 200//招呼次数购买
         const val PURCHASE_RENEW_VIP = 300//vip续费
-
     }
 
 
@@ -109,6 +114,18 @@ class ChargeVipDialog(
      */
     private fun setChargeWayData(chargeWays: MutableList<ChargeWayBean>, purchaseType: Int) {
         vipChargeAdapter.purchaseType = purchaseType
+
+        //判断是否有选中推荐的，没有的话就默认选中第一个价格。
+        var ispromote = false
+        for (charge in chargeWays) {
+            if (charge.is_promote) {
+                ispromote = true
+                break
+            }
+        }
+        if (!ispromote) {
+            chargeWays[0].is_promote = true
+        }
         vipChargeAdapter.setNewData(chargeWays)
         setUpPrice()
     }
@@ -155,7 +172,7 @@ class ChargeVipDialog(
             }
         })
         if (banners.size > currentPos)
-            bannerVip.setCurrentItem(currentPos, true)
+            bannerVip.setCurrentItem(currentPos,false)
     }
 
 
@@ -281,6 +298,10 @@ class ChargeVipDialog(
                 break
             }
         }
+        //购买会员进入的位置
+        params["source_type "] = currentPos
+
+
         RetrofitFactory.instance.create(Api::class.java)
             .createOrder(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<PayBean>>(null) {
@@ -437,7 +458,7 @@ class ChargeVipDialog(
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
                     if (result) {
-                        if (ActivityUtils.getTopActivity() != MainActivity::class.java) {
+                        if (ActivityUtils.getTopActivity() !is MainActivity) {
                             MainActivity.start(context1, Intent())
                         }
                         EventBus.getDefault().postSticky(RefreshEvent(true))
@@ -451,5 +472,22 @@ class ChargeVipDialog(
             .show()
     }
 
+    override fun show() {
+        super.show()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onCloseDialogEvent(event: CloseDialogEvent) {
+        if (isShowing) {
+            dismiss()
+        }
+    }
 
 }

@@ -84,6 +84,7 @@ object CommonFunction {
             return
         }
 
+
         val params = UserManager.getBaseParams()
         params["target_accid"] = targetAccid
         RetrofitFactory.instance.create(Api::class.java)
@@ -95,34 +96,40 @@ object CommonFunction {
                 override fun onNext(t: BaseResp<GreetBean?>) {
                     if (t.code == 200) {
                         val greetBean = t.data
-                        if (greetBean != null && greetBean.lightningcnt != -1) {
+                        if (greetBean != null)
                             if (greetBean.isfriend || greetBean.isgreet) {
+                                EventBus.getDefault().post(GreetEvent(context, true))
                                 ChatActivity.start(context, targetAccid)
                             } else {
-                                if (UserManager.getLightingCount() > 0) {
-                                    if (!greet_switch) {
-                                        toast("对方已关闭招呼功能")
-                                    } else {
-                                        if (greet_state && UserManager.isUserVerify() != 1) {
-                                            HarassmentDialog(context, HarassmentDialog.CHATHI).show()
+                                UserManager.saveLightingCount(greetBean.lightningcnt)
+                                UserManager.saveCountDownTime(greetBean.countdown)
+                                if (greetBean.free_greet) {
+                                    if (greetBean.lightningcnt > 0) {
+                                        if (!greet_switch) {
+                                            toast("对方已关闭招呼功能")
                                         } else {
-                                            SayHiDialog(targetAccid, targetNickName, context).show()
+                                            if (greet_state && UserManager.isUserVerify() != 1) {
+                                                HarassmentDialog(context, HarassmentDialog.CHATHI).show()
+                                            } else {
+                                                SayHiDialog(targetAccid, targetNickName, context).show()
+                                            }
                                         }
+                                    } else {
+                                        ChargeVipDialog(
+                                            ChargeVipDialog.DOUBLE_HI,
+                                            context,
+                                            ChargeVipDialog.PURCHASE_GREET_COUNT
+                                        ).show()
                                     }
                                 } else {
                                     ChargeVipDialog(
                                         ChargeVipDialog.DOUBLE_HI,
                                         context,
-                                        ChargeVipDialog.PURCHASE_GREET_COUNT
+                                        ChargeVipDialog.PURCHASE_VIP
                                     ).show()
                                 }
                             }
-
-                        } else {
-                            toast(t.msg)
-                        }
                     } else {
-                        EventBus.getDefault().post(GreetEvent(context, true))
                         toast(t.msg)
                     }
                     view.postDelayed({ view.isEnabled = true }, 500L)

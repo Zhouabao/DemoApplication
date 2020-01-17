@@ -14,6 +14,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.MyLabelsBean
 import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.MyLabelPresenter
@@ -154,6 +155,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
             UserManager.saveLabels(data ?: mutableListOf())
             adapter.remove(position)
             EventBus.getDefault().post(RefreshEvent(true))
+            EventBus.getDefault().post(UserCenterEvent(true))
         }
     }
 

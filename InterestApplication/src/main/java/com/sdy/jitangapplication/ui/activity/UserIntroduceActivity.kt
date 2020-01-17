@@ -12,10 +12,9 @@ import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.AddLabelResultBean
 import com.sdy.jitangapplication.model.LabelQualityBean
-import com.sdy.jitangapplication.presenter.LabelQualityPresenter
-import com.sdy.jitangapplication.presenter.view.LabelQualityView
+import com.sdy.jitangapplication.presenter.UserIntroducePresenter
+import com.sdy.jitangapplication.presenter.view.UserIntroduceView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import kotlinx.android.synthetic.main.activity_user_introduce.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
@@ -25,7 +24,7 @@ import org.jetbrains.anko.startActivityForResult
 /**
  * 个人介绍
  */
-class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQualityView, View.OnClickListener {
+class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserIntroduceView, View.OnClickListener {
 
     companion object {
         const val REGISTER = 1
@@ -51,7 +50,7 @@ class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQua
     }
 
     private fun initView() {
-        mPresenter = LabelQualityPresenter()
+        mPresenter = UserIntroducePresenter()
         mPresenter.mView = this
         mPresenter.context = this
 
@@ -159,13 +158,6 @@ class UserIntroduceActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQua
 
     override fun hideLoading() {
         loading.dismiss()
-    }
-
-    override fun getTagTraitInfoResult(result: Boolean, data: MutableList<LabelQualityBean>?) {
-    }
-
-    override fun addTagResult(result: Boolean, data: AddLabelResultBean?) {
-
     }
 
     override fun onSaveRegisterInfo(success: Boolean) {

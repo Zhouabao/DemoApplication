@@ -44,7 +44,7 @@ class MatchPresenter : BasePresenter<MatchView>() {
                             mView.onGetMatchListResult(true, t.data)
                         }
                     } else if (t.code == 410) {
-                        ChargeLabelDialog(context, params["tag_id"] as Int).show()
+                        ChargeLabelDialog(context, params["tag_id"] as Int, ChargeLabelDialog.FROM_INDEX).show()
                         mView.onGetMatchListResult(true, t.data)
 
                     } else

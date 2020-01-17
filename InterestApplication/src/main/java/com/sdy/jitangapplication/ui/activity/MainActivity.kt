@@ -55,7 +55,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val mStack = Stack<Fragment>()
     //匹配
     private val matchFragment by lazy { MatchFragment1() }
-//    private val matchFragment by lazy { IndexFragment() }
+    //    private val matchFragment by lazy { IndexFragment() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
     //消息
@@ -139,6 +139,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
     private fun initView() {
+        //归零配置文件
+        UserManager.saveSlideCount(0)
+
         EventBus.getDefault().register(this)
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
 
@@ -434,7 +437,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             System.exit(0)//正常退出
 //            AppManager.instance.exitApp(this)
         }
-
     }
 
 

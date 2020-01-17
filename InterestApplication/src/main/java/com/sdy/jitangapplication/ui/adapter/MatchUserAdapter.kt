@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.adapter
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.size
@@ -72,11 +73,11 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                         if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
                             holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
                             holder.itemView.matchUserLocalTagCharacter.isVisible = true
+                            (holder.itemView.matchUserLocalTagCharacter.layoutParams as ConstraintLayout.LayoutParams).topMargin = SizeUtils.dp2px(5F)
                             holder.itemView.matchUserLocalTagContent.isVisible = false
                             holder.itemView.matchUserDynamicThumbRv.isVisible = false
                         } else if (!item.sign.isNullOrBlank()) {
                             holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
-
                             holder.itemView.matchUserLocalTagContent.isVisible = true
                             holder.itemView.matchUserLocalTagCharacter.isVisible = false
                             holder.itemView.matchUserDynamicThumbRv.isVisible = false
@@ -207,6 +208,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.itemView.btnHi.isVisible = item.greet_switch
         holder.itemView.btnHiView.isVisible = item.greet_switch
         if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
+            (holder.itemView.matchUserLocalTagCharacter.layoutParams as ConstraintLayout.LayoutParams).topMargin = SizeUtils.dp2px(5F)
             holder.itemView.matchUserLocalTagCl.isVisible = true
             holder.itemView.matchUserLocalTagCharacter.isVisible = true
             holder.itemView.matchUserLocalTagContent.isVisible = false
@@ -226,11 +228,6 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         }
 
 
-//        holder.itemView.matchUserLocalTagContent.isVisible = !item.sign.isNullOrBlank()
-//        holder.itemView.matchUserLocalTagCharacter.isVisible = !item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()
-//        holder.itemView.matchUserDynamicThumbRv.isVisible = !item.square.isNullOrEmpty()
-
-//        holder.itemView.matchUserIntroduce.text = item.sign ?: "" //关于自己
         holder.itemView.matchAim.isVisible = item.intention.isNotEmpty()//标签意向
         holder.itemView.matchAimTv.text = item.intention
         holder.itemView.btnHiLeftTime.text = "${UserManager.getLightingCount()}"
@@ -240,12 +237,15 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.itemView.matchBothIntersetContent.text = "${item.matching_content}"
         GlideUtil.loadImg(mContext, item.matching_icon, holder.itemView.matchBothIntersetIv)
 
+
         if (!item.newtags.isNullOrEmpty()) {
-            val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
-            manager.alignItems = AlignItems.STRETCH
-            manager.justifyContent = JustifyContent.FLEX_START
-//            holder.itemView.matchUserLocalTagCharacter.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)//标签下的特质标签
-            holder.itemView.matchUserLocalTagCharacter.layoutManager = manager
+            if (holder.itemView.matchUserLocalTagCharacter.layoutManager == null) {
+                val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
+                manager.alignItems = AlignItems.STRETCH
+                manager.justifyContent = JustifyContent.FLEX_START
+                holder.itemView.matchUserLocalTagCharacter.layoutManager = manager
+            }
+
             val adapter1 = MatchDetailLabelQualityAdapter()
             outFor@ for (quality in my_tags_quality) {
                 for (quality1 in item.newtags ?: mutableListOf()) {

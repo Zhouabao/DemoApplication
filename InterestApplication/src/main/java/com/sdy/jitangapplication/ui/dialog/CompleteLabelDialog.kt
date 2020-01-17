@@ -9,11 +9,9 @@ import android.view.WindowManager
 import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.event.ShowCompleteLabelEvent
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import kotlinx.android.synthetic.main.dialog_complete_label.*
 import kotlinx.android.synthetic.main.dialog_harassment.harassmentClose
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -22,7 +20,7 @@ import org.jetbrains.anko.startActivity
  *    desc   : 完善兴趣提示
  *    version: 1.0
  */
-class CompleteLabelDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
+class CompleteLabelDialog(val context1: Context, val id: Int) : Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_complete_label)
@@ -40,11 +38,14 @@ class CompleteLabelDialog(val context1: Context) : Dialog(context1, R.style.MyDi
             }
 
         })
+
+        completeLabelBtnLater.onClick {
+            dismiss()
+        }
     }
 
     override fun dismiss() {
         super.dismiss()
-        EventBus.getDefault().post(ShowCompleteLabelEvent(true))
     }
 
 

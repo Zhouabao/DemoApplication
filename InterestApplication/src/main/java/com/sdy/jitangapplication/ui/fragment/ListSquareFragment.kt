@@ -217,12 +217,11 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
                     data.list!![tempData].originalLike = data.list!![tempData].isliked
                     data.list!![tempData].originalLikeCount = data.list!![tempData].like_cnt
                 }
-//                adapter.addData(data!!.list!!)
+                adapter.addData(data!!.list!!)
                 listRefresh.finishLoadMore(true)
 
 
             }
-            adapter.isUseEmpty(true)
         } else {
             if (listRefresh != null && page > 1)
                 listRefresh.finishLoadMore(false)

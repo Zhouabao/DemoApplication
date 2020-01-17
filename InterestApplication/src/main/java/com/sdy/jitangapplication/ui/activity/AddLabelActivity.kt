@@ -13,7 +13,10 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.event.PayLabelResultEvent
+import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.UpdateMyLabelEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.AddLabelBean
 import com.sdy.jitangapplication.model.TagBean
 import com.sdy.jitangapplication.presenter.AddLabelPresenter
@@ -71,7 +74,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
 
         setSwipeBackEnable(from != FROM_REGISTER)
         btnBack.isVisible = from != FROM_REGISTER
-        hotT1.text = "添加你的标签"
+        hotT1.text = "选择标签"
 
         rightBtn1.isEnabled = true
         rightBtn1.text = "保存"
@@ -130,6 +133,11 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                 RecyclerView.State(),
                 position
             )
+            (labelClassRv.layoutManager as CenterLayoutManager).smoothScrollToPosition(
+                labelClassRv,
+                RecyclerView.State(),
+                position
+            )
         }
 
         labelsRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -146,6 +154,11 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                     for (data in labelMenuAdapter.data.withIndex()) {
                         data.value.checked = data.index == first
                     }
+                    (labelClassRv.layoutManager as CenterLayoutManager).smoothScrollToPosition(
+                        labelClassRv,
+                        RecyclerView.State(),
+                        first
+                    )
                     labelMenuAdapter.notifyDataSetChanged()
                 }
             }
@@ -160,16 +173,16 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             }
             rightBtn1 -> {
                 val tag_ids = mutableListOf<Int>()
-                for (index in 1 until labelListAdapter.data.size) {
-                    for (tdata in labelListAdapter.data[index].son) {
-                        if (tdata.checked) {
-                            tag_ids.add(tdata.id)
+                for (index in labelListAdapter.data) {
+                    if (!(index.ishot || index.ismine))
+                        for (tdata in index.son) {
+                            if (tdata.checked) {
+                                tag_ids.add(tdata.id)
+                            }
                         }
-                    }
                 }
                 if (tag_ids.isNotEmpty()) {
                     mPresenter.saveInterestTag(Gson().toJson(tag_ids))
-
                 } else {
                     CommonFunction.toast("暂无选中的标签可保存")
                 }
@@ -187,7 +200,13 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             }
             labelMenuAdapter.setNewData(data.menu)
 
-            // TODO 遍历所有，标记已选，已购买
+            for (data1 in data.list) {
+                for (data2 in data1.son) {
+                    if (data2.state == 2 || data2.state == 10) {
+                        data2.checked = true
+                    }
+                }
+            }
             labelListAdapter.setNewData(data.list)
 
         } else {
@@ -205,8 +224,6 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             if (from == FROM_REGISTER) {
                 startActivity<MainActivity>()
                 finish()
-            } else {
-                EventBus.getDefault().post(ShowCompleteLabelEvent(false))
             }
             finish()
         }

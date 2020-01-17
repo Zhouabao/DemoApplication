@@ -139,7 +139,8 @@ public class ScrollCalculatorHelper {
     private void startPlayLogic(GSYBaseVideoPlayer gsyBaseVideoPlayer, Context context) {
         if (!CommonUtil.isWifiConnected(context)) {
             //这里判断是否wifi
-            showWifiDialog(gsyBaseVideoPlayer, context);
+            if (!UserManager.INSTANCE.getNoticeWifiState())
+                showWifiDialog(gsyBaseVideoPlayer, context);
             return;
         }
         gsyBaseVideoPlayer.startPlayLogic();
@@ -157,12 +158,14 @@ public class ScrollCalculatorHelper {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 gsyBaseVideoPlayer.startPlayLogic();
+                UserManager.INSTANCE.saveNoticeWifiState(true);
             }
         });
         builder.setNegativeButton(context.getResources().getString(com.shuyu.gsyvideoplayer.R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                UserManager.INSTANCE.saveNoticeWifiState(true);
             }
         });
         builder.create().show();

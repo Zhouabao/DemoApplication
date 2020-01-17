@@ -38,7 +38,7 @@ class RightSlideOutdDialog(val myContext: Context, var myCount: Int = 0, var max
             dismiss()
         }
         gotoPurchase.onClick {
-            ChargeVipDialog(0, myContext, ChargeVipDialog.PURCHASE_VIP).show()
+            ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, myContext, ChargeVipDialog.PURCHASE_VIP).show()
         }
 
 

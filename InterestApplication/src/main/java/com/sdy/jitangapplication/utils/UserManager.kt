@@ -104,12 +104,6 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("maxMyLabelCount", -1)
     }
 
-    /**
-     * 是否弹窗过，弹过窗就直接浮窗
-     */
-    fun saveIsShowCompleteLabelDialog(show: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("IsShowCompleteLabelDialog", show)
-    }
 
     fun isShowCompleteLabelDialog(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("IsShowCompleteLabelDialog", false)
@@ -221,6 +215,15 @@ object UserManager {
 
     fun getAlertProtocol(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertProtocol", false)
+    }
+
+    //是否提示过用户协议
+    fun saveNoticeWifiState(notice: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("notice", notice)
+    }
+
+    fun getNoticeWifiState(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("notice", false)
     }
 
 
@@ -512,6 +515,15 @@ object UserManager {
     }
 
 
+    fun getGlobalLabelSquareId(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelSquareId", 0)
+    }
+
+    fun saveGlobalLabelSquareId(id: Int) {
+        return SPUtils.getInstance(Constants.SPNAME).put("globalLabelSquareId", id)
+    }
+
+
     fun getGlobalLabelName(): String {
         val labels = getSpLabels()
         val id = getGlobalLabelId()
@@ -560,6 +572,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("isInterestLabel")
         SPUtils.getInstance(Constants.SPNAME).remove("userIntroduce")
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
+        SPUtils.getInstance(Constants.SPNAME).remove("globalLabelSquareId")
         SPUtils.getInstance(Constants.SPNAME).remove("countdowntime")
         SPUtils.getInstance(Constants.SPNAME).remove("lightingCount")
         SPUtils.getInstance(Constants.SPNAME).remove("leftSlideCount")
@@ -602,6 +615,7 @@ object UserManager {
          * 认证相关缓存清空
          */
         SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
+        SPUtils.getInstance(Constants.SPNAME).remove("notice")
         cleanVerifyData()
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvatorType")
@@ -619,7 +633,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("showcard_cnt")
         SPUtils.getInstance(Constants.SPNAME).remove("SlideSurveyCount")
         SPUtils.getInstance(Constants.SPNAME).remove("completeLabelCount")
-        SPUtils.getInstance(Constants.SPNAME).remove("IsShowCompleteLabelDialog")
         SPUtils.getInstance(Constants.SPNAME).remove("maxMyLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("SlideCount")
 
@@ -794,7 +807,7 @@ object UserManager {
         initNotificationConfig()
 
         //昵称 生日 性别 头像
-        if (data == null || data.userinfo == null || data.userinfo.nickname.isNullOrEmpty()) {
+        if (data?.userinfo == null || data.userinfo.nickname.isNullOrEmpty()) {
             context.startActivity<UserNickNameActivity>()
             return
         } else if (data.userinfo.birth == 0) {//生日没填写
@@ -806,14 +819,13 @@ object UserManager {
         } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {//头像未选择
             context.startActivity<UserAvatorActivity>()
             return
-        } else if (data.extra_data?.myinterest ?: false == false) {//感兴趣标签没有选择
-            context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
-            return
-        } else if (data.extra_data?.aboutme.isNullOrEmpty()) {//个人介绍未填写
+        } else if (data.extra_data?.aboutme.isNullOrEmpty() || data.extra_data?.aboutme?.trim().isNullOrEmpty()) {//个人介绍未填写
             context.startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
             return
+        } else if (data.extra_data?.mytaglist.isNullOrEmpty()) {//标签没有选择
+            context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
+            return
         } else {//跳到主页
-
             saveUserInfo(data)
             AppManager.instance.finishAllActivity()
             context.startActivity<MainActivity>()

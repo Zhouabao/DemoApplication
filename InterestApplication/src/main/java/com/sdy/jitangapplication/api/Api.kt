@@ -125,7 +125,7 @@ interface Api {
      * 获取广场列表
      */
     @FormUrlEncoded
-    @POST("square/squareListsV2${Constants.END_BASE_URL}")
+    @POST("square/squareListsV12${Constants.END_BASE_URL}")
     fun getSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
 
 
@@ -764,6 +764,14 @@ interface Api {
     @POST("Tags/getTagTraitInfo${Constants.END_BASE_URL}")
     fun getTagTraitInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
+
+    /**
+     * 获取标签的  1介绍模板 2.标签特质 3.标签意向  4.兴趣标题
+     */
+    @FormUrlEncoded
+    @POST("Tags/getQualityList${Constants.END_BASE_URL}")
+    fun getQualityList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LabelQualitysBean?>>
+
     /**
      * 修改或者新增标签的特质
      */
@@ -789,7 +797,7 @@ interface Api {
      * 删除我的标签
      */
     @FormUrlEncoded
-    @POST("Tags/delMyTags${Constants.END_BASE_URL}")
+    @POST("Tags/delMyTagsV12${Constants.END_BASE_URL}")
     fun delMyTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TagBean>?>>
 
 
@@ -841,7 +849,7 @@ interface Api {
      *V2获取广场标题菜单栏目
      */
     @FormUrlEncoded
-    @POST("Tags/getTitleMenuListV2${Constants.END_BASE_URL}")
+    @POST("Tags/getTitleMenuListV12${Constants.END_BASE_URL}")
     fun getTitleMenuList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
 
     /**
@@ -855,7 +863,7 @@ interface Api {
      *V2获取更多标题详情
      */
     @FormUrlEncoded
-    @POST("Tags/getTitleListsV2${Constants.END_BASE_URL}")
+    @POST("Tags/getTitleListsV12${Constants.END_BASE_URL}")
     fun getTitleLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<TopicBean>?>>
 
     /**

@@ -1,19 +1,17 @@
 package com.sdy.jitangapplication.wxapi
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.PayLabelResultEvent
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.UpdateMyLabelEvent
-import com.sdy.jitangapplication.event.UserCenterEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
+import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
@@ -61,27 +59,32 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
 
 
     private fun showAlert(code: Int, ctx: Context, info: String) {
-        AlertDialog.Builder(ctx)
+        CommonAlertDialog.Builder(ctx)
             .setTitle("支付结果")
-            .setMessage(info)
-            .setPositiveButton("确定") { p0, _ ->
-                p0.cancel()
-                finish()
-                overridePendingTransition(0, 0)
-                if (code == BaseResp.ErrCode.ERR_OK) {
-                    if (ActivityUtils.getTopActivity() == AddLabelActivity::class.java) {
-                        EventBus.getDefault().post(PayLabelResultEvent(code == BaseResp.ErrCode.ERR_OK))
-                    } else if (ActivityUtils.getTopActivity() == MyLabelActivity::class.java) {
-                        EventBus.getDefault().post(UpdateMyLabelEvent())
-                    } else {
-                        if (ActivityUtils.getTopActivity() != MainActivity::class.java) {
-                            MainActivity.start(this, Intent())
+            .setContent(info)
+            .setCancelIconIsVisibility(false)
+            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
+                override fun onClick(dialog: Dialog) {
+                    dialog.cancel()
+                    finish()
+                    overridePendingTransition(0, 0)
+                    if (code == BaseResp.ErrCode.ERR_OK) {
+                        if (ActivityUtils.getTopActivity() is AddLabelActivity) {
+                            EventBus.getDefault().post(PayLabelResultEvent(code == BaseResp.ErrCode.ERR_OK))
+                        } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {
+                            EventBus.getDefault().post(UpdateMyLabelEvent())
+                        } else {
+                            if (ActivityUtils.getTopActivity() !is MainActivity) {
+                                MainActivity.start(this@WXPayEntryActivity, Intent())
+                            }
                         }
+                        EventBus.getDefault().postSticky(RefreshEvent(true))
+                        EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        EventBus.getDefault().post(CloseDialogEvent())
                     }
-                    EventBus.getDefault().postSticky(RefreshEvent(true))
-                    EventBus.getDefault().postSticky(UserCenterEvent(true))
                 }
-            }
+            })
+            .create()
             .show()
     }
 
