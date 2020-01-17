@@ -69,7 +69,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
             for (index in 0 until mData.size) {
                 if (!(mData[index].ishot || mData[index].ismine))
                     for (tdata1 in mData[index].son) {
-                        if (tdata1.checked || tdata1.state == 2 || tdata1.state == 10) {
+                        if (tdata1.checked ) {
                             checkedCount += 1
                         }
                     }

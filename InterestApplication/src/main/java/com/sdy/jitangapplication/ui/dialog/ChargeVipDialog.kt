@@ -307,7 +307,7 @@ class ChargeVipDialog(
             }
         }
         //购买会员进入的位置
-        params["source_type "] = currentPos
+        params["source_type"] = currentPos
 
 
         RetrofitFactory.instance.create(Api::class.java)
