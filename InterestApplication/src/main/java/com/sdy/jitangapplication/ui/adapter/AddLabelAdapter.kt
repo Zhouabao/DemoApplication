@@ -8,11 +8,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
+import com.sdy.jitangapplication.ui.dialog.CorrectDialog
 import com.sdy.jitangapplication.utils.UserManager
+import kotlinx.android.synthetic.main.correct_dialog_layout.*
 import kotlinx.android.synthetic.main.item_add_label.view.*
 
 /**
@@ -74,7 +75,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                     }
             }
             if (checkedCount >= UserManager.getMaxMyLabelCount() && !data.checked) {
-                CommonFunction.toast("至多选择${UserManager.getMaxMyLabelCount()}个标签标签")
+                showWarningDialog("至多选择${UserManager.getMaxMyLabelCount()}个标签")
                 return@setOnItemClickListener
             }
 
@@ -95,6 +96,14 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                 }
             }
         }
+    }
+
+    private val warningDialog by lazy { CorrectDialog(mContext) }
+    private fun showWarningDialog(content: String) {
+        warningDialog.show()
+        warningDialog.correctLogo.setImageResource(R.drawable.icon_notice)
+        warningDialog.correctTip.text = content
+        warningDialog.correctTip.postDelayed({ warningDialog.dismiss() }, 1000L)
     }
 
 

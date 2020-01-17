@@ -42,7 +42,7 @@ class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.lay
         helper.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty()
         helper.itemView.matchBothIntersetContent.text = item.matching_content
         helper.itemView.chatContentMsg.text = if (item.send_msg.isNullOrEmpty()) {
-            ""
+            "对方向你打了个招呼"
         } else {
             item.send_msg
         }

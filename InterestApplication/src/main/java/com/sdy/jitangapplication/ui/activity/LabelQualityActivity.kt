@@ -83,7 +83,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         btnBack.setOnClickListener(this)
         rightBtn1.setOnClickListener(this)
         switchOne.setOnClickListener(this)
-        hotT1.text = "完善标签特质"
+        hotT1.text = myLabelBean?.title ?: "完善标签特质"
 
         rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_25dp)
         rightBtn1.isEnabled = false

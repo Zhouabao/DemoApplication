@@ -29,6 +29,7 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
@@ -172,7 +173,7 @@ class ChargeVipDialog(
             }
         })
         if (banners.size > currentPos)
-            bannerVip.setCurrentItem(currentPos,false)
+            bannerVip.setCurrentItem(currentPos, false)
     }
 
 
@@ -195,19 +196,26 @@ class ChargeVipDialog(
         }
 
         //支付宝支付
-        zhiPayBtn.onClick {
-            createOrder(PAY_ALI)
-        }
+        zhiPayBtn.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                createOrder(PAY_ALI)
+            }
+
+        })
 
         //微信支付
-        wechatPayBtn.onClick {
-            createOrder(PAY_WECHAT)
-        }
+        wechatPayBtn.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                createOrder(PAY_WECHAT)
+            }
+        })
 
         //余额支付
-        balancePayBtn.onClick {
-            createOrder(3)
-        }
+        balancePayBtn.onClick(object : CustomClickListener() {
+            override fun onSingleClick(view: View) {
+                createOrder(3)
+            }
+        })
 
         //取消支付
         refuseBtn.onClick {

@@ -230,7 +230,7 @@ interface Api {
      * indexV2
      */
     @FormUrlEncoded
-    @POST("Index/indexV3${Constants.END_BASE_URL}")
+    @POST("Index/indexV12${Constants.END_BASE_URL}")
     fun getMatchList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchListBean?>>
 
 
