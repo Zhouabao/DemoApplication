@@ -13,7 +13,7 @@
         android:layout_marginBottom="15dp"
         android:descendantFocusability="beforeDescendants"
         android:layout_height="match_parent"
-        app:cardBackgroundColor="@color/colorWhite"
+        app:cardBackgroundColor="@color/colorBlack"
         app:cardCornerRadius="15dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"

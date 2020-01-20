@@ -27,23 +27,22 @@ class ListSquareImgsAdapter(
     override fun convert(holder: BaseViewHolder, item: VideoJson) {
         val position = holder.layoutPosition
         if (!fullScreenWidth) {
-            if (datas.size == 1) {
-                val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
-                layoutParams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)
-                layoutParams.height = layoutParams.width
-                layoutParams.leftMargin = SizeUtils.dp2px(15F)
-                layoutParams.rightMargin = SizeUtils.dp2px(15F)
-
-                holder.itemView.ivUser.layoutParams = layoutParams
-                GlideUtil.loadRoundImgCenterCrop(
-                    mContext,
-                    datas[position].url,
-                    holder.itemView.ivUser,
-                    SizeUtils.dp2px(5F)
-                )
-
-            } else {
-
+//            if (datas.size == 1) {
+//                val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
+//                layoutParams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)
+//                layoutParams.height = layoutParams.width
+//                layoutParams.leftMargin = SizeUtils.dp2px(15F)
+//                layoutParams.rightMargin = SizeUtils.dp2px(15F)
+//
+//                holder.itemView.ivUser.layoutParams = layoutParams
+//                GlideUtil.loadRoundImgCenterCrop(
+//                    mContext,
+//                    datas[position].url,
+//                    holder.itemView.ivUser,
+//                    SizeUtils.dp2px(5F)
+//                )
+//
+//            } else {
                 val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams
                 layoutParams.width = SizeUtils.dp2px(250F)
                 layoutParams.height = SizeUtils.dp2px(250F)
@@ -59,7 +58,7 @@ class ListSquareImgsAdapter(
                     SizeUtils.dp2px(5F)
                 )
 
-            }
+//            }
 
         } else {
             val layoutParams = holder.itemView.ivUser.layoutParams as RecyclerView.LayoutParams

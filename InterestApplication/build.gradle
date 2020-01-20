@@ -231,8 +231,8 @@ dependencies {
     //growing增长
     implementation 'com.growingio.android:vds-android-agent:autotrack-2.8.7'
 
-    //背景高斯模糊
-    implementation 'jp.wasabeef:blurry:3.0.0'
+    //高斯模糊背景
+    implementation 'com.github.mmin18:realtimeblurview:1.2.1'
 
     //微信支付
 //    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'

@@ -22,12 +22,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="230dp"/>
 
+
         <ImageView
                 android:id="@+id/samePersonBgBlur"
                 android:visibility="invisible"
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"/>
+
 
         <ImageView
                 android:id="@+id/btnBack"

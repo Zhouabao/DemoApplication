@@ -82,7 +82,7 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int, var from: Int = 
         window?.setGravity(Gravity.CENTER)
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
-        params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params?.height = WindowManager.LayoutParams.MATCH_PARENT
         params?.windowAnimations = R.style.MyDialogCenterAnimation
 //        params?.y = SizeUtils.dp2px(20F)
 
@@ -113,6 +113,10 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int, var from: Int = 
             if ((context1 as Activity) is MainActivity) {
                 EventBus.getDefault().post(TurnToLastLabelEvent(from))
             }
+        }
+
+        contentFl.onClick {
+            dismiss()
         }
 
     }
@@ -249,7 +253,7 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int, var from: Int = 
                             chargeWayBeans!!.icon,
                             labelIcon,
                             SizeUtils.dp2px(7F),
-                            RoundedCornersTransformation.CornerType.TOP
+                            RoundedCornersTransformation.CornerType.LEFT
                         )
 
                         //4需要付费.付费进入  7.需要付费.已过期 9.需要付费.已删除.过期

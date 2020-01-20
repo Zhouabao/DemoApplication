@@ -101,7 +101,7 @@ class ChargeVipDialog(
         window?.setGravity(Gravity.CENTER)
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
-        params?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        params?.height = WindowManager.LayoutParams.MATCH_PARENT
         params?.windowAnimations = R.style.MyDialogCenterAnimation
 //        params?.y = SizeUtils.dp2px(20F)
 
@@ -221,6 +221,8 @@ class ChargeVipDialog(
         refuseBtn.onClick {
             dismiss()
         }
+
+        contentFl.onClick { dismiss() }
 
     }
 

@@ -4,20 +4,31 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
+
+    <com.github.mmin18.widget.RealtimeBlurView
+            android:id="@+id/contentFl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:realtimeBlurRadius="10dp"
+            app:realtimeOverlayColor="#8000"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/dialogView"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:visibility="invisible"
             android:orientation="vertical"
             android:background="@drawable/gradient_vip_charge_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
         <com.sdy.jitangapplication.widgets.RoundTopImageView
@@ -236,10 +247,10 @@
             android:id="@+id/loading"
             layout="@layout/loading_layout"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@id/dialogView"
-            app:layout_constraintTop_toTopOf="@id/dialogView"
-            app:layout_constraintRight_toRightOf="@id/dialogView"
-            app:layout_constraintLeft_toLeftOf="@id/dialogView"
             android:layout_width="0dp"
-            android:layout_height="0dp"/>
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/dialogView"
+            app:layout_constraintLeft_toLeftOf="@id/dialogView"
+            app:layout_constraintRight_toRightOf="@id/dialogView"
+            app:layout_constraintTop_toTopOf="@id/dialogView"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
