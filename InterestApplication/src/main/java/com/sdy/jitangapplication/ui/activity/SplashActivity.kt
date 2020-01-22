@@ -39,11 +39,6 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mPresenter = LoginPresenter()
-        mPresenter.mView = this
-        mPresenter.context = this
-        mPresenter.checkNickName()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
             (!PermissionUtils.isGranted(PermissionConstants.LOCATION) ||
                     !PermissionUtils.isGranted(PermissionConstants.PHONE) ||

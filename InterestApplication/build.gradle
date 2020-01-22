@@ -35,8 +35,8 @@ android {
         applicationId "com.sdy.jitangapplication"
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
-        versionCode 9
-        versionName "1.2.0"
+        versionCode 10
+        versionName "1.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ////版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
@@ -233,6 +233,8 @@ dependencies {
 
     //高斯模糊背景
     implementation 'com.github.mmin18:realtimeblurview:1.2.1'
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
 
     //微信支付
 //    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'

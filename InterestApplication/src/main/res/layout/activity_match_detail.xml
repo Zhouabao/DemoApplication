@@ -250,7 +250,7 @@
                                     android:textColor="#FF696E73"
                                     android:textSize="15sp"
                                     android:ellipsize="end"
-                                    android:lineSpacingMultiplier="1.4"
+                                    android:lineSpacingMultiplier="1.1"
                                     app:ep_contract_color="@color/colorBlueSky1"
                                     app:ep_contract_text="收起"
                                     app:ep_expand_color="@color/colorBlueSky1"

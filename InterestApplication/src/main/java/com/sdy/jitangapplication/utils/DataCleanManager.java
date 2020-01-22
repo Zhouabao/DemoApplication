@@ -3,6 +3,8 @@ package com.sdy.jitangapplication.utils;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.tools.PictureFileUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -33,6 +35,10 @@ public class DataCleanManager {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             deleteDir(context.getExternalCacheDir());
         }
+        //包括裁剪和压缩后的缓存，要在上传成功后调用，type 指的是图片or视频缓存取决于你设置的ofImage或ofVideo 注意：需要系统sd卡权限
+        PictureFileUtils.deleteCacheDirFile(context, PictureMimeType.ofAll());
+        // 清除所有缓存 例如：压缩、裁剪、视频、音频所生成的临时文件
+        PictureFileUtils.deleteAllCacheDirFile(context);
 
 //        NIMClient.getService(LuceneService.class).clearCache();
     }

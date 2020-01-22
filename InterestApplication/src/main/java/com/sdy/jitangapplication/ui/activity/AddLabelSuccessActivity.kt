@@ -50,7 +50,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_label_success)
         initView()
-        mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.id))
+        mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.tag_id))
 
     }
 
@@ -67,7 +67,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
 
         stateAddLabelSuccess.retryBtn.onClick {
             stateAddLabelSuccess.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.id))
+            mPresenter.getTagTraitInfo(hashMapOf("type" to LabelQualityActivity.TYPE_TITLE, "tag_id" to labelBean.tag_id))
         }
 
 
@@ -122,7 +122,7 @@ class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), Add
                 "token" to UserManager.getToken(),
                 "accid" to UserManager.getAccid(),
                 "descr" to "",
-                "tag_id" to labelBean.id,
+                "tag_id" to labelBean.tag_id,
                 "title" to "${successLabelGuide.text}",
                 "lat" to UserManager.getlatitude(),
                 "lng" to UserManager.getlongtitude(),

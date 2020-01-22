@@ -75,14 +75,10 @@ dependencies {
     api 'jp.wasabeef:glide-transformations:4.0.1'
     //Circle ImageView
     api "de.hdodenhof:circleimageview:$circle_imageView_version"
-    //Take Photo
-    api "com.jph.takephoto:takephoto_library:$take_photo_version"
-
     //Alert View
-    api "com.bigkoo:alertview:$alert_view_version"
+//    api "com.bigkoo:alertview:$alert_view_version"
     //七牛
     api 'com.qiniu:qiniu-android-sdk:7.4.2'
-
     //Banner
     api 'com.bigkoo:convenientbanner:2.1.5'
     //MulitStateView
@@ -91,28 +87,24 @@ dependencies {
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
 //    api 'com.github.anzaizai:EasySwipeMenuLayout:1.1.4'
     //上下拉刷新
-    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-13'
-    api 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-13'
+    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
+    api 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     //FlowLayout
     //api 'com.zhy:flowlayout-lib:1.0.3'
     //图片选择器
 //    api 'com.github.labmem005.PictureSelector:picture_library:v2.2.9'
 
-    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.4.3'
+    api 'com.github.LuckSiege.PictureSelector:picture_library:v2.4.6'
 
     //事件总线eventbus
     api 'org.greenrobot:eventbus:3.1.1'
-
     //强大的工具类
     api 'com.blankj:utilcodex:1.24.2'
-
     //屏幕适配
     api 'me.jessyan:autosize:1.1.2'
-
     //GSYVideoPlayer
     api "com.shuyu:GSYVideoPlayer:$gsy_video_version"
-
 //    api "com.shuyu:gsyVideoPlayer-java:$gsy_video_version"
     //根据你的需求ijk模式的so
 //    api "com.shuyu:gsyVideoPlayer-armv5:$gsy_video_version"
@@ -122,9 +114,6 @@ dependencies {
 //    api "com.shuyu:gsyVideoPlayer-x86:$gsy_video_version"
 
 
-
-
-
 //    api "com.shuyu:gsyVideoPlayer-java:$gsy_video_version"
     //是否需要ExoPlayer模式
 //    api "com.shuyu:GSYVideoPlayer-exo2:$gsy_video_version"
@@ -132,25 +121,26 @@ dependencies {
 //    api "com.shuyu:gsyVideoPlayer-ex_so:$gsy_video_version"
 
     //TabLayout
-    api  'com.github.hackware1993:MagicIndicator:1.5.0'
+    api 'com.github.hackware1993:MagicIndicator:1.5.0'
     api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
 
     //statusBar
     api 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 
     //友盟统计
-    api  'com.umeng.umsdk:analytics:8.0.0'
+    api 'com.umeng.umsdk:analytics:8.1.4'
     //友盟基础组件库
-    api  'com.umeng.umsdk:common:2.0.0'
+    api 'com.umeng.umsdk:common:2.0.0'
     //PushSDK必须依赖utdid库，所以需要加入对应依赖
-    api 'com.umeng.umsdk:utdid:1.1.5.3'
+//    api 'com.umeng.umsdk:utdid:1.1.5.3'
     //分享核心库依赖：
-    api  'com.umeng.umsdk:share-core:6.9.4'
-    api  'com.umeng.umsdk:share-board:6.9.4'
+    api 'com.umeng.umsdk:share-core:6.9.8'
+    api 'com.umeng.umsdk:share-board:6.9.8'
     //分享平台模块
-    api  'com.umeng.umsdk:share-qq:6.9.4'
-    api  'com.umeng.umsdk:share-wx:6.9.4'
-    api  'com.umeng.umsdk:share-sina:6.9.4'
+    api 'com.umeng.umsdk:share-qq:6.9.8'
+    api 'com.umeng.umsdk:share-wx:6.9.8'
+    api 'com.umeng.umsdk:share-sina:6.9.8'
+    api 'com.sina.weibo.sdk:core:4.4.3:openDefaultRelease@aar'
 
     //多渠道打包
     api 'com.leon.channel:helper:2.0.3'

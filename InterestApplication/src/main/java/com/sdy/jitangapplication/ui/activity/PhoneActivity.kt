@@ -7,10 +7,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
-import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.presenter.LoginPresenter
-import com.sdy.jitangapplication.presenter.view.LoginView
 import kotlinx.android.synthetic.main.activity_phone.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -18,7 +16,7 @@ import org.jetbrains.anko.toast
 /**
  * 手机登录界面
  */
-class PhoneActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClickListener {
+class PhoneActivity : BaseActivity(), View.OnClickListener {
 
     private var wxcode: String = ""
     private var login_type: String = "1"
@@ -46,12 +44,6 @@ class PhoneActivity : BaseMvpActivity<LoginPresenter>(), LoginView, View.OnClick
             titleTv.text = "请输入手机号"
             tipTv.text = "快，组织需要你的手机号"
         }
-
-
-        mPresenter = LoginPresenter()
-        mPresenter.mView = this
-        mPresenter.context = this
-
 
         btnBack.setOnClickListener(this)
         btnLoginQuestion.setOnClickListener(this)

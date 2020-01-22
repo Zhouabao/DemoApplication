@@ -326,12 +326,6 @@
                 android:windowSoftInputMode="adjustNothing|stateAlwaysHidden">
         </activity>
         <activity
-                android:name="com.umeng.socialize.media.WBShareCallBackActivity"
-                android:configChanges="keyboardHidden|orientation"
-                android:exported="false"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
-        <activity
                 android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
                 android:configChanges="keyboardHidden|orientation"
                 android:exported="false"
@@ -340,7 +334,8 @@
         <activity
                 android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
                 android:launchMode="singleTask"
-                android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+                android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+                tools:replace="android:launchMode,android:theme">
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
 

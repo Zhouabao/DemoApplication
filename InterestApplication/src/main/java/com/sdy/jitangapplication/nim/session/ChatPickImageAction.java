@@ -63,8 +63,11 @@ public class ChatPickImageAction extends ChatBaseAction {
                         else
                             sendImageAfterSelfImagePicker(new File(media.getCompressPath()));
                     } else if (PictureMimeType.eqVideo(media.getMimeType())) {//发送视频
-                        if (SdkVersionUtils.checkedAndroid_Q() && media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
-                            sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getAndroidQToPath()));
+                        if (SdkVersionUtils.checkedAndroid_Q())
+                            if (media.getAndroidQToPath() != null && !media.getAndroidQToPath().isEmpty())
+                                sendVideo(new File(media.getAndroidQToPath()), MD5.getStreamMD5(media.getAndroidQToPath()));
+                            else
+                                sendVideo(new File(Uri.parse(media.getPath()).getPath()), MD5.getStreamMD5(media.getPath()));
                         else
                             sendVideo(new File(media.getPath()), MD5.getStreamMD5(media.getPath()));
                     }
