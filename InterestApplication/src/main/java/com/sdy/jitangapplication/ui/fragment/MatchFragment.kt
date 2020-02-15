@@ -56,7 +56,7 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.*
-import kotlinx.android.synthetic.main.fragment_match1.*
+import kotlinx.android.synthetic.main.fragment_match.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -65,7 +65,7 @@ import org.jetbrains.anko.support.v4.startActivity
 /**
  * 匹配页面(新版)
  */
-class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
+class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
 
 
     override fun loadData() {
@@ -179,7 +179,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     //    private val matchUserAdapter by lazy { CardAdapter() }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_match1, container, false)
+        return inflater.inflate(R.layout.fragment_match, container, false)
 
     }
 
@@ -597,7 +597,7 @@ class MatchFragment1 : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, Vie
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateCardEvent(event: GreetEvent) {
-        if (event.success && FragmentUtils.getTopShow(fragmentManager!!) is MatchFragment1) {
+        if (event.success && FragmentUtils.getTopShow(fragmentManager!!) is MatchFragment) {
             val setting = SwipeAnimationSetting.Builder()
                 .setDirection(Direction.Top)
                 .setDuration(Duration.Normal.duration)
