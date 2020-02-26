@@ -614,7 +614,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         EventBus.getDefault().postSticky(new StarEvent(nimBean.getStared(), nimBean.getIsfriend()));
         EventBus.getDefault().postSticky(new EnablePicEvent(nimBean.getIsfriend()));
         messageListPanel.refreshMessageList();
-        inputPanel.onResume();
+        inputPanel.checkIsSendMsg();
     }
 
     private int leftGreetCount = 0;
