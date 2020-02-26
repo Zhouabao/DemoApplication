@@ -191,12 +191,14 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
         val accid = adapter.data[position].accid ?: ""
         val container = Container(this, adapter.data[position].accid, SessionTypeEnum.P2P, this, true)
         val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), ChatHiAttachment.CHATHI_MATCH)
+        val config = CustomMessageConfig()
+        config.enablePush = false
         val message = MessageBuilder.createCustomMessage(
             accid,
             SessionTypeEnum.P2P,
             "",
             chatHiAttachment,
-            CustomMessageConfig()
+            config
         )
         container.proxy.sendMessage(message)
     }

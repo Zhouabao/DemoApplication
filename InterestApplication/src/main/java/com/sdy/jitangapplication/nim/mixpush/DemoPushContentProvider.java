@@ -38,6 +38,9 @@ public class DemoPushContentProvider implements CustomPushContentProvider {
         } else if (message.getSessionType() == SessionTypeEnum.P2P) {
             payload.put("sessionID", message.getFromAccount());
         }
+        HashMap<String, Object> mutableContent = new HashMap<>();
+        mutableContent.put("mutable-content", 1);
+        payload.put("apsField", mutableContent);
 
         return payload;
     }

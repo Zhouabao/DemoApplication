@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.core.view.get
@@ -13,6 +14,7 @@ import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.GreetedListBean
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_greet_user.view.*
 
 class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.layout.item_greet_user) {
@@ -41,18 +43,26 @@ class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.lay
 
         helper.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty()
         helper.itemView.matchBothIntersetContent.text = item.matching_content
-        helper.itemView.chatContentMsg.text = if (item.send_msg.isNullOrEmpty()) {
-            "对方向你打了个招呼"
-        } else {
-            item.send_msg
-        }
 
+        if (UserManager.approveBean != null && UserManager.approveBean!!.isapprove != 0) {
+            helper.itemView.greetHideCl.isVisible = true
+            helper.itemView.rvChatContent.visibility = View.INVISIBLE
+            helper.itemView.greetHideContent.text = item.send_msg_normal
+        } else {
+            helper.itemView.greetHideCl.isVisible = false
+            helper.itemView.rvChatContent.isVisible = true
+            helper.itemView.chatContentMsg.text = if (item.send_msg.isNullOrEmpty()) {
+                "对方向你打了个招呼"
+            } else {
+                item.send_msg
+            }
+        }
 
         helper.itemView.vpIndicator.removeAllViews()
         helper.itemView.vpPhotos.setScrollable(false)
         helper.itemView.vpPhotos.currentItem = 0
         helper.itemView.vpPhotos.tag = helper.layoutPosition
-        helper.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(mContext, item.photos)
+        helper.itemView.vpPhotos.adapter = MatchImgsPagerAdapter(mContext, item.photos,15)
 
         helper.itemView.vpPhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {

@@ -17,6 +17,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.Likelist
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_message_list.view.*
 
 /**
@@ -28,6 +29,8 @@ import kotlinx.android.synthetic.main.item_message_list.view.*
 class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.layout.item_message_list) {
     var greetList: MutableList<Likelist> = mutableListOf()//招呼列表
     var intentionMatchList: MutableList<String> = mutableListOf()//意向匹配列表
+    var isapprove: Int = 0  //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
+    var approveTime: Long = 1579104000L  //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
 
     override fun convert(holder: BaseViewHolder, item: RecentContact) {
         holder.addOnClickListener(R.id.menuTop)
@@ -50,18 +53,27 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
             holder.itemView.menuTop.setImageResource(R.drawable.icon_top_msg)
         }
 
-        when {
-            item.attachment is ChatHiAttachment -> holder.itemView.text.text =
-                when {
-                    (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
-                    (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
-                    (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
-                    (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
-                    else -> ""
-                }
-            item.attachment is ShareSquareAttachment -> holder.itemView.text.text = "『动态分享内容』"
-            else -> holder.itemView.text.text = item.content
+
+
+        if (item.fromAccount != UserManager.getAccid() && item.attachment !is ChatHiAttachment && UserManager.approveBean != null && UserManager.approveBean!!.isapprove != 0 && item.time / 1000 >= UserManager.approveBean!!.approve_time) {
+            holder.itemView.text.text = "有消息未查看"
+            holder.itemView.msgNew.isVisible = true
+        } else {
+            holder.itemView.msgNew.isVisible = false
+            when {
+                item.attachment is ChatHiAttachment -> holder.itemView.text.text =
+                    when {
+                        (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
+                        (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
+                        (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
+                        (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
+                        else -> ""
+                    }
+                item.attachment is ShareSquareAttachment -> holder.itemView.text.text = "『动态分享内容』"
+                else -> holder.itemView.text.text = item.content
+            }
         }
+
         holder.itemView.latelyTime.text = TimeUtil.getTimeShowString(item.time, true)
         if (item.unreadCount == 0) {
             holder.itemView.newCount.visibility = View.GONE

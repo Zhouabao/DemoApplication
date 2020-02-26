@@ -470,7 +470,8 @@ interface Api {
      * 所有的消息列表
      */
     @FormUrlEncoded
-    @POST("Tidings/messageCensusV3${Constants.END_BASE_URL}")
+    @POST("Tidings/messageCensusV13${Constants.END_BASE_URL}")
+//    @POST("Tidings/messageCensusV3${Constants.END_BASE_URL}")
     fun messageCensus(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MessageListBean1?>>
 
     /**
@@ -642,7 +643,8 @@ interface Api {
      * 聊天界面获取信息
      */
     @FormUrlEncoded
-    @POST("MemberInfo/getTargetInfoV3${Constants.END_BASE_URL}")
+    @POST("MemberInfo/getTargetInfoV13${Constants.END_BASE_URL}")
+//    @POST("MemberInfo/getTargetInfoV3${Constants.END_BASE_URL}")
     fun getTargetInfo(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<NimBean?>>
 
 
@@ -657,7 +659,7 @@ interface Api {
      * 发消息请求服务器
      */
     @FormUrlEncoded
-    @POST("Tidings/sendMsgRequestV3${Constants.END_BASE_URL}")
+    @POST("Tidings/sendMsgRequestV13${Constants.END_BASE_URL}")
     fun sendMsgRequest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ResidueCountBean?>>
     /*--------------------------------会员充值---------------------------------*/
 

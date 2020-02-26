@@ -82,12 +82,14 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                                                     UserManager.getGlobalLabelName(),
                                                     ChatHiAttachment.CHATHI_MATCH
                                                 )
+                                                val config = CustomMessageConfig()
+                                                config.enablePush = false
                                                 val message = MessageBuilder.createCustomMessage(
                                                     adapter.data[position].accid,
                                                     SessionTypeEnum.P2P,
                                                     "",
                                                     chatHiAttachment,
-                                                    CustomMessageConfig()
+                                                    config
                                                 )
 
                                                 NIMClient.getService(MsgService::class.java).sendMessage(message, false)

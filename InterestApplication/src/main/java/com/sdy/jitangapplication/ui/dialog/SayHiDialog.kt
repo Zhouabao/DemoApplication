@@ -39,6 +39,7 @@ import com.sdy.jitangapplication.event.GreetEvent
 import com.sdy.jitangapplication.event.UpdateHiCountEvent
 import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.GreetBean
+import com.sdy.jitangapplication.model.ResidueCountBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
@@ -402,6 +403,33 @@ class SayHiDialog(
         }
     }
 
+
+
+    private fun sendMsgRequest(content: IMMessage) {
+        val params = UserManager.getBaseParams()
+        params["content"] = content.content
+        params["type"] = content.msgType.value
+        params["target_accid"] = target_accid
+
+        RetrofitFactory.instance.create(Api::class.java)
+            .sendMsgRequest(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<ResidueCountBean?>>(null) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<ResidueCountBean?>) {
+                    super.onNext(t)
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                }
+            })
+
+    }
+
+
     /*--------------------------消息代理------------------------*/
 
     private fun sendChatHiMessage() {
@@ -443,6 +471,7 @@ class SayHiDialog(
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
                 if (msg.msgType == MsgTypeEnum.text) {
+//                    sendMsgRequest(msg)
                     loadingDialog.dismiss()
                     startAnimation()
                     //发送通知修改招呼次数

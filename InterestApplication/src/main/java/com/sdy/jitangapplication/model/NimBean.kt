@@ -10,6 +10,9 @@ import java.io.Serializable
  */
 
 data class NimBean(
+    var isapprove: Int = 0,
+    var issend: Boolean = true,
+    var approve_time: Long = 0L,
     var isgreet: Boolean = true,//招呼是否有效
     var avatar: String = "",
     var isblocked: Boolean = false,

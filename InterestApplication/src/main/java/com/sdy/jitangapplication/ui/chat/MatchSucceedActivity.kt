@@ -11,7 +11,11 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.base.ui.activity.BaseActivity
 import com.netease.nim.uikit.business.session.module.Container
 import com.netease.nim.uikit.business.session.module.ModuleProxy
@@ -23,7 +27,10 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.ResidueCountBean
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_match_succeed.*
 
 /**
@@ -209,6 +216,7 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
                 sendMsg.isEnabled = false
                 sendMatchHiMessage()
 
+
             }
         }
     }
@@ -227,8 +235,8 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
             RequestCallback<Void?> {
             override fun onSuccess(param: Void?) {
-                CommonFunction.toast("发送成功！")
-                finish()
+                sendMsgRequest(msg)
+
             }
 
             override fun onFailed(code: Int) {
@@ -243,6 +251,35 @@ class MatchSucceedActivity : BaseActivity(), View.OnClickListener, ModuleProxy {
         })
         return true
     }
+
+    private fun sendMsgRequest(content: IMMessage) {
+        val params = UserManager.getBaseParams()
+        params["content"] = content.content
+        params["type"] = content.msgType.value
+        params["target_accid"] = accid
+
+        RetrofitFactory.instance.create(Api::class.java)
+            .sendMsgRequest(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<ResidueCountBean?>>(null) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<ResidueCountBean?>) {
+                    super.onNext(t)
+                    CommonFunction.toast("发送成功！")
+                    finish()
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    CommonFunction.toast("发送成功！")
+                    finish()
+                }
+            })
+
+    }
+
 
     override fun onInputPanelExpand() {
 

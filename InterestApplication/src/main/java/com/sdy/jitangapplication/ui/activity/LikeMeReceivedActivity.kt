@@ -182,7 +182,10 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
     }
 
 
+    //     * type:1 dianji  2 youhua
     override fun onLikeOrGreetStateResult(data: BaseResp<StatusBean?>, type: Int) {
+        manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
+
         if (data.code == 200) {
             if (likeCount > 0 && likeLeftCount.isVisible) {
                 likeCount -= 1
@@ -363,6 +366,7 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
                         adapter.data[manager.topPosition - 1].tag_id,
                         2
                     )
+                    manager.setSwipeableMethod(SwipeableMethod.None)
                 } else {
                     greetRv.postDelayed({ greetRv.rewind() }, 100)
                     greetRv.isEnabled = false
@@ -419,12 +423,14 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
                 null
             }, type
         )
+        val config = CustomMessageConfig()
+        config.enablePush = false
         val message = MessageBuilder.createCustomMessage(
             matchBean?.accid,
             SessionTypeEnum.P2P,
             "",
             chatHiAttachment,
-            CustomMessageConfig()
+            config
         )
         sendMessage(message, matchBean)
     }

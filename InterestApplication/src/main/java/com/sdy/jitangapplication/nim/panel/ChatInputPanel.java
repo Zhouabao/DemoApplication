@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.nim.panel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Editable;
@@ -44,6 +45,9 @@ import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.event.EnablePicEvent;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog;
+import com.sdy.jitangapplication.ui.dialog.HumanVerifyDialog;
+import com.sdy.jitangapplication.utils.UserManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -77,7 +81,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
     protected ImageView sendMessageButtonInInputBar;// 发送消息按钮
     protected ImageView moreFuntionButtonInInputBar;// 更多消息选择按钮
-    protected View messageInputBar;
+    protected View messageInputBar, approveView;
 
     private SessionCustomization customization;
 
@@ -137,6 +141,26 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
 
     public void onResume() {
+
+        //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
+        if (UserManager.INSTANCE.getApproveBean() != null && UserManager.INSTANCE.getApproveBean().getIssend() == false) {
+            approveView.setVisibility(View.VISIBLE);
+            messageEditText.setBackgroundResource(R.drawable.shape_rectangle_gray_24dp);
+            messageEditText.setHintTextColor(Color.parseColor("#C0C5CB"));
+            approveView.setOnClickListener(v -> {
+                if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 2 || UserManager.INSTANCE.getApproveBean().getIsapprove() == 4) {
+                    new ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, container.activity, ChargeVipDialog.PURCHASE_VIP).show();
+                } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 1 || UserManager.INSTANCE.getApproveBean().getIsapprove() == 3) {
+                    new HumanVerifyDialog(container.activity).show();
+                }
+            });
+        } else {
+            approveView.setVisibility(View.GONE);
+            messageEditText.setBackgroundResource(R.drawable.shape_rectangle_white_24dp);
+            messageEditText.setHintTextColor(Color.parseColor("#C9C9C9"));
+        }
+
+
         switchToTextLayout(false);
     }
 
@@ -217,6 +241,9 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
         // 表情
         emoticonPickerView = view.findViewById(R.id.emoticon_picker_view);
+
+        //认证弹窗
+        approveView = view.findViewById(R.id.approveView);
 
     }
 

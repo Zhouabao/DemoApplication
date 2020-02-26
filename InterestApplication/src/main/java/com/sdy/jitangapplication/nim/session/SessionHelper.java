@@ -25,6 +25,7 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
+import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
@@ -37,6 +38,7 @@ import com.sdy.jitangapplication.nim.DemoCache;
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity;
 import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
+import com.sdy.jitangapplication.nim.attachment.ChatMatchAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.StickerAttachment;
 import com.sdy.jitangapplication.nim.extension.CustomAttachParser;
@@ -45,6 +47,7 @@ import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderShareSquare;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderTip;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog;
+import com.sdy.jitangapplication.ui.dialog.HumanVerifyDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 
 import java.util.ArrayList;
@@ -307,8 +310,58 @@ public class SessionHelper {
             }
 
             @Override
+            public void onGetShowMsgClicked(Context context, IMMessage message) {
+                //消息遮罩弹出相应弹窗
+                //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
+                if (UserManager.INSTANCE.getApproveBean() != null && UserManager.INSTANCE.getApproveBean().getIsapprove() != 0)//0 不验证
+                    if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 1) {//1去认证
+                        new HumanVerifyDialog(context).show();
+                    } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 2) {//2去开通会员
+                        new ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, context, ChargeVipDialog.PURCHASE_VIP).show();
+                    } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 3) {//3去认证+去会员
+//                        if (UserManager.INSTANCE.isUserVerify() == 0)
+                        new HumanVerifyDialog(context).show();
+//                        else if (UserManager.INSTANCE.isUserVerify() == 2)
+//                            CommonFunction.INSTANCE.toast("正在实名认证中...请稍候");
+//                        else if (!UserManager.INSTANCE.isUserVip())
+//                            new ChargeVipDialog(ChargeVipDialog.FILTER, context, ChargeVipDialog.PURCHASE_VIP).show();
+                    } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 4) {// 4去会员+去认证
+//                        if (!UserManager.INSTANCE.isUserVip())
+                        new ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, context, ChargeVipDialog.PURCHASE_VIP).show();
+//                        else if (UserManager.INSTANCE.isUserVerify() == 0)
+//                            new HumanVerifyDialog(context).show();
+//                        else if (UserManager.INSTANCE.isUserVerify() == 2)
+//                            CommonFunction.INSTANCE.toast("正在实名认证中...请稍候");
+
+                    }
+            }
+
+            @Override
             public boolean isUserVip() {
                 return UserManager.INSTANCE.isUserVip();
+            }
+
+            //聊天是否需要付费或者认证才能查看
+            @Override
+            public boolean isApprove(IMMessage message) {
+                //&& message.getMsgType() != MsgTypeEnum.tip && message.getMsgType() != MsgTypeEnum.custom
+                if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID) && message.getDirect() == MsgDirectionEnum.In) {
+                    //除开小助手的消息，除开tip消息和匹配成功的消息之外 其他都要显示
+                    if (message.getMsgType() != MsgTypeEnum.tip && !(message.getAttachment() instanceof ChatMatchAttachment) && !(message.getAttachment() instanceof ChatHiAttachment)) { //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
+                        if (UserManager.INSTANCE.getApproveBean() != null && UserManager.INSTANCE.getApproveBean().getIsapprove() != 0 && message.getTime() / 1000 >= UserManager.INSTANCE.getApproveBean().getApprove_time()) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public long approveTime() {
+                if (UserManager.INSTANCE.getApproveBean() != null) {
+                    return UserManager.INSTANCE.getApproveBean().getApprove_time();
+                }
+                return 0;
             }
 
             @Override

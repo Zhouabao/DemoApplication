@@ -43,6 +43,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.RefreshEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.model.ApproveBean
 import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
@@ -244,6 +245,9 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     private var like_free_show: Boolean = false
 
     override fun onMessageCensusResult(data: MessageListBean1?) {
+        UserManager.approveBean = ApproveBean(data?.approve_time ?: 0L, data?.isapprove ?: 0)
+
+
         ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
         allMessageTypeAdapter.data[0].count = data?.thumbs_up_count ?: 0
         allMessageTypeAdapter.data[1].count = data?.comment_count ?: 0

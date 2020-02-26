@@ -769,12 +769,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         Log.d("OkHttp", matchBean?.accid ?: "")
         val container = Container(this, matchBean?.accid, SessionTypeEnum.P2P, this, true)
         val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), type)
+        val config = CustomMessageConfig()
+        config.enablePush = false
         val message = MessageBuilder.createCustomMessage(
             matchBean?.accid,
             SessionTypeEnum.P2P,
             "",
             chatHiAttachment,
-            CustomMessageConfig()
+            config
         )
         container.proxy.sendMessage(message)
     }

@@ -27,12 +27,12 @@ data class ChargeWayBean(
     val duration: Int? = 0,
     val ename: String? = "",
     val id: Int = 0,
-    val discount_price: Float? = 0f,
+    var discount_price: Float = 0f,
     val limited_price: Float? = 0f,
-    val original_price: Float? = 0f,
+    var original_price: Float = 0f,
     val title: String? = "",
     val descr: String? = "",//限时折扣文案
-    val type: Int?,//	1 原价售卖 2折扣价售卖 3限时折扣
+    var type: Int?,//	1 原价售卖 2折扣价售卖 3限时折扣
     var save_percent: Int = 0,//节约的百分比
     var unit_price: Double = 0.0//单价(显示)
 )

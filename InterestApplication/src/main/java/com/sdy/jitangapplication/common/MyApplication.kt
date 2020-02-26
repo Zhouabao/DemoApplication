@@ -10,6 +10,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ThreadUtils
@@ -36,6 +37,7 @@ import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.NIMInitManager
 import com.sdy.jitangapplication.nim.NimSDKOptionConfig
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.event.DemoOnlineStateContentProvider
 import com.sdy.jitangapplication.nim.mixpush.DemoMixPushMessageHandler
 import com.sdy.jitangapplication.nim.mixpush.DemoPushContentProvider
@@ -149,6 +151,11 @@ class MyApplication : BaseApplication() {
                             //发送通知更新内容
                             EventBus.getDefault().postSticky(RefreshEvent(true))
                             EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        }
+                        if (UserManager.approveBean?.isapprove != 0) {
+                            EventBus.getDefault().postSticky(UpdateHiEvent())
+                            if (ActivityUtils.getTopActivity() is ChatActivity)
+                                EventBus.getDefault().postSticky(UpdateApproveEvent())
                         }
                         EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
                     }

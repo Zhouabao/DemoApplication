@@ -26,3 +26,4 @@ class UpdateSlideCountEvent
 //展示调研弹窗的event
 class ShowSurveyDialogEvent(val slideCount: Int)
 
+class UpdateApproveEvent()

@@ -87,4 +87,14 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"/>
     </FrameLayout>
+
+    <View
+            android:visibility="gone"
+            android:id="@+id/approveView"
+            android:layout_alignTop="@id/editTextMessage"
+            android:layout_alignBottom="@id/editTextMessage"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 </RelativeLayout>

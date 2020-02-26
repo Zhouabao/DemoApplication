@@ -7,6 +7,9 @@ import android.view.Gravity
 import android.view.WindowManager
 import com.sdy.jitangapplication.R
 
+/**
+ * 填写举报 内容弹窗
+ */
 class WriteReportContentDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

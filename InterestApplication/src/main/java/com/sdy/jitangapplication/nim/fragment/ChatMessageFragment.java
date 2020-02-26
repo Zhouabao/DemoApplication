@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.alibaba.fastjson.JSONObject;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.api.UIKitOptions;
@@ -51,6 +52,7 @@ import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.event.*;
+import com.sdy.jitangapplication.model.ApproveBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
@@ -63,6 +65,8 @@ import com.sdy.jitangapplication.nim.session.MyLocationAction;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -114,6 +118,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         parseIntent();
+        EventBus.getDefault().register(this);
+
     }
 
     @Override
@@ -208,6 +214,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public void onDestroy() {
         super.onDestroy();
         messageListPanel.onDestroy();
+        EventBus.getDefault().unregister(this);
         registerObservers(false);
         if (inputPanel != null) {
             inputPanel.onDestroy();
@@ -269,6 +276,12 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         }
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void updateApproveEvent(UpdateApproveEvent event) {
+        getTargetInfo(sessionId);
+    }
+
     /**
      * ************************* 消息收发 **********************************
      */
@@ -299,12 +312,14 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     private void onMessageIncoming(List<IMMessage> messages) {
         try {
+            if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
+                getTargetInfo(sessionId);
+            }
             if (CommonUtil.isEmpty(messages)) {
                 return;
             }
             //新消息来了更新消息状态
             messageListPanel.onIncomingMessage(messages);
-
             //新消息来了请求接口，更新键盘啊头布局等数据。
             if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
                 messageActivityBottomLayout.setVisibility(View.VISIBLE);
@@ -328,7 +343,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             messageListPanel.receiveReceipt();
             //收到已读回执,调用接口,改变此时招呼或者消息的状态
             Log.d("已读回执----", "对方已读你的消息，10分钟内对方未回复消息将过期");
-            if (!sessionId.equals(Constants.ASSISTANT_ACCID) && (nimBean == null || !nimBean.getIsfriend())) {
+//            if (!sessionId.equals(Constants.ASSISTANT_ACCID) && (nimBean == null || !nimBean.getIsfriend())) {
+            if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
                 getTargetInfo(sessionId);
             }
         }
@@ -458,6 +474,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (payload != null) {
             message.setPushPayload(payload);
         }
+        Log.d("OkHttp===", JSONObject.toJSONString(payload.toString()));
 
     }
 
@@ -568,6 +585,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
      * 设置消息体制内的数据
      */
     private void setTargetInfoData() {
+        UserManager.INSTANCE.setApproveBean(new ApproveBean(nimBean.getApprove_time(), nimBean.getIsapprove(), nimBean.getIssend()));
         leftGreetCount = nimBean.getResidue_msg_cnt();
         if (nimBean.getIsfriend()) { //是好友了，按钮消失
             //隐藏倒计时控件
@@ -595,6 +613,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         EventBus.getDefault().post(new NimHeadEvent(nimBean));
         EventBus.getDefault().postSticky(new StarEvent(nimBean.getStared(), nimBean.getIsfriend()));
         EventBus.getDefault().postSticky(new EnablePicEvent(nimBean.getIsfriend()));
+        messageListPanel.refreshMessageList();
+        inputPanel.onResume();
     }
 
     private int leftGreetCount = 0;

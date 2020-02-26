@@ -8,7 +8,6 @@
               android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -17,7 +16,7 @@
 
         <View
                 android:id="@+id/customStatusBar"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:background="@color/colorTransparent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

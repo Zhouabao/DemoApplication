@@ -364,6 +364,12 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
             if (matchBeans != null) {
+                if (matchBeans.people_cnt > 0) {
+                    rgIndexUse.isVisible = true
+                    matchUseCount.text = "${matchBeans!!.people_cnt}"
+                } else {
+                    rgIndexUse.isVisible = false
+                }
                 hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
 
                 matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
@@ -741,7 +747,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 }
                 //如果当前弹窗的滑动剩余次数为0并且没有显示过完善标签的弹窗，就弹窗
                 if (UserManager.getCompleteLabelCount() != -1 && UserManager.getCompleteLabelCount() == UserManager.getSlideCount() - 1) {
-                    CompleteLabelDialog(activity!!,UserManager.getGlobalLabelId()).show()
+                    CompleteLabelDialog(activity!!, UserManager.getGlobalLabelId()).show()
                 }
                 params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid
                 if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
@@ -750,7 +756,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             } else {
                 card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
                 card_stack_view.isEnabled = false
-                if (my_percent_complete <= normal_percent_complete)
+                if (my_percent_complete < normal_percent_complete)
                     RightSlideOutdDialog(activity!!, myCount, maxCount).show()
                 else
                     ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
@@ -914,12 +920,14 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 null
             }, type
         )
+        val config = CustomMessageConfig()
+        config.enablePush = false
         val message = MessageBuilder.createCustomMessage(
             matchBean?.accid,
             SessionTypeEnum.P2P,
             "",
             chatHiAttachment,
-            CustomMessageConfig()
+            config
         )
         sendMessage(message, matchBean)
     }

@@ -35,8 +35,8 @@ import com.sdy.jitangapplication.model.PayBean
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.presenter.VipPowerPresenter
 import com.sdy.jitangapplication.presenter.view.VipPowerView
-import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.ui.adapter.VipPowerAdapter
+import com.sdy.jitangapplication.ui.adapter.VipPowerChargeAdapter
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -68,7 +68,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
     }
 
     private val vipChargeAdapter by lazy {
-        VipChargeAdapter().apply {
+        VipPowerChargeAdapter().apply {
             purchaseType = ChargeVipDialog.PURCHASE_RENEW_VIP
         }
     }
@@ -102,7 +102,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
                 data.value.is_promote = data.index == position
             }
             vipChargeAdapter.notifyDataSetChanged()
-            setupPrice()
+//            setupPrice()
         }
 
         val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
@@ -146,7 +146,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
                 }
             }
             vipChargeAdapter.setNewData(data.list)
-            setupPrice()
+//            setupPrice()
             vipPowerAdapter.setNewData(data.icon_list)
             payways.addAll(data!!.paylist ?: mutableListOf())
             initPayWay()

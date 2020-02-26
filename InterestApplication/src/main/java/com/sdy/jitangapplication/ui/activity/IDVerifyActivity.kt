@@ -256,7 +256,8 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                         hashMapOf(
                             "token" to UserManager.getToken(),
                             "accid" to UserManager.getAccid(),
-                            "face" to key
+                            "face" to key,
+                            "face_source_type" to intent.getIntExtra("face_source_type",0)
                         )
                     )
                 } else {

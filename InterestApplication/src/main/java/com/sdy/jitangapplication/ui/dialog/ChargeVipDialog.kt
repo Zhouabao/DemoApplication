@@ -71,9 +71,12 @@ class ChargeVipDialog(
         const val FILTER_LOCAL_CITY = 2//筛选同城
         const val FILTER_ONLINE = 3//筛选在线
         const val DOUBLE_HI = 4//加倍招呼
-        const val LIKED_ME = 5//喜欢我的
-        const val LOOKED_ME = 6//看过我的
-        const val FILTER = 7//已读功能
+        const val INFINITE_CHAT = 5//无限畅聊
+
+
+        const val LIKED_ME = 6//喜欢我的
+        const val LOOKED_ME = 7//看过我的
+        const val FILTER = 8//已读功能
 
         //购买类型
         const val PURCHASE_VIP = 100//VIP购买
@@ -98,7 +101,7 @@ class ChargeVipDialog(
 
     private fun initWindow() {
         val window = this.window
-        window?.setGravity(Gravity.CENTER)
+        window?.setGravity(Gravity.BOTTOM)
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.MATCH_PARENT
@@ -128,7 +131,7 @@ class ChargeVipDialog(
             chargeWays[0].is_promote = true
         }
         vipChargeAdapter.setNewData(chargeWays)
-        setUpPrice()
+//        setUpPrice()
     }
 
 
@@ -191,7 +194,7 @@ class ChargeVipDialog(
             for (data in vipChargeAdapter.data.withIndex()) {
                 data.value.is_promote = data.index == position
             }
-            setUpPrice()
+//            setUpPrice()
             vipChargeAdapter.notifyDataSetChanged()
         }
 

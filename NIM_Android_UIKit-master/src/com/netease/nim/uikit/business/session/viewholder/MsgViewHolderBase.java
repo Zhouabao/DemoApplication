@@ -51,7 +51,7 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
     protected FrameLayout contentContainer;
     protected LinearLayout nameContainer;
     protected TextView readReceiptTextView;
-    protected ImageView readReceiptTextViewIv;
+    protected ImageView readReceiptTextViewIv, msgInvisibleIv;
     protected TextView readReceiptTextViewBtn;
     protected LinearLayout readReceiptTextViewLl;
     protected TextView ackMsgTextView;
@@ -193,6 +193,7 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         readReceiptTextViewIv = findViewById(R.id.textViewAlreadyReadIv);
         readReceiptTextViewBtn = findViewById(R.id.textViewAlreadyReadBtn);
         readReceiptTextViewLl = findViewById(R.id.textViewAlreadyReadLl);
+        msgInvisibleIv = findViewById(R.id.message_item_invisible);
         ackMsgTextView = findViewById(R.id.team_ack_msg);
 
         // 这里只要inflate出来后加入一次即可
@@ -212,8 +213,19 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         setContent();
         setReadReceipt();
         setAckMsg();
+        setMessageIsVisible();
 
         bindContentView();
+    }
+
+    private void setMessageIsVisible() {
+        if (NimUIKitImpl.getSessionListener().isApprove(message)) {
+            contentContainer.setVisibility(View.GONE);
+            msgInvisibleIv.setVisibility(View.VISIBLE);
+        } else {
+            contentContainer.setVisibility(View.VISIBLE);
+            msgInvisibleIv.setVisibility(View.GONE);
+        }
     }
 
     public void refreshCurrentItem() {
@@ -322,6 +334,15 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
                 @Override
                 public void onClick(View v) {
                     NimUIKitImpl.getSessionListener().onGetReceivcedMsgClicked(context, message);
+                }
+            });
+        }
+
+        if (NimUIKitImpl.getSessionListener() != null) {
+            msgInvisibleIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NimUIKitImpl.getSessionListener().onGetShowMsgClicked(context, message);
                 }
             });
         }

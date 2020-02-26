@@ -18,6 +18,7 @@ import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.sp.UserPreferences;
 import com.sdy.jitangapplication.ui.activity.MainActivity;
+import com.sdy.jitangapplication.utils.UserManager;
 
 import java.io.IOException;
 
@@ -162,7 +163,9 @@ public class NimSDKOptionConfig {
 
         @Override
         public String makeNotifyContent(String nick, IMMessage message) {
-            if (message.getAttachment() instanceof ChatHiAttachment) {
+            if (UserManager.INSTANCE.getApproveBean() != null && UserManager.INSTANCE.getApproveBean().getIsapprove() != 0) {
+                return "有消息未查看";
+            } else if (message.getAttachment() instanceof ChatHiAttachment) {
                 /* public static int CHATHI_MATCH = 1;
     public static int CHATHI_HI = 2;
     public static int CHATHI_RFIEND = 3;
@@ -177,12 +180,11 @@ public class NimSDKOptionConfig {
                     case 4:
                         return "『过期消息』";
                     default:
-                        return null;
+                        return null;// 采用SDK默认文案
                 }
-
             }
 
-            return null; // 采用SDK默认文案
+            return null;
         }
 
         @Override

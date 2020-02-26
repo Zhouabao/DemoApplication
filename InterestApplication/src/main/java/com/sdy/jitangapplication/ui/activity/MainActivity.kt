@@ -30,9 +30,9 @@ import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.*
-import com.sdy.jitangapplication.ui.fragment.ContentFragment
 import com.sdy.jitangapplication.ui.fragment.MatchFragment
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
+import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.ui.fragment.UserCenterFragment
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
@@ -57,8 +57,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val matchFragment by lazy { MatchFragment() }
     //    private val matchFragment by lazy { IndexFragment() }
     //广场
-//    private val squareFragment by lazy { SquareFragment() }
-    private val squareFragment by lazy { ContentFragment() }
+    private val squareFragment by lazy { SquareFragment() }
+    //    private val squareFragment by lazy { ContentFragment() }
     //消息
     private val messageListFragment by lazy { MessageListFragment() }
     //我
@@ -408,8 +408,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onDestroy() {
         super.onDestroy()
+        if (gotoVerifyDialog != null) {
+            gotoVerifyDialog!!.dismiss()
+            gotoVerifyDialog = null
+        }
         EventBus.getDefault().unregister(this)
-        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
+        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, false)
     }
 
 
@@ -593,6 +597,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onReVerifyEvent(event: ReVerifyEvent) {
+        if (accountDangerDialog != null) {
+            accountDangerDialog!!.dismiss()
+            accountDangerDialog = null
+        }
         if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_REAL_NOT_VALID) {
             UserManager.saveNeedChangeAvator(true)//需要换头像
             UserManager.saveForceChangeAvator(false)//是否强制替换过头像
@@ -614,8 +622,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
             showGotoVerifyDialog(event.type, event.avator)
         }
+        if (EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java) != null) {
+            // 若粘性事件存在，将其删除
+            EventBus.getDefault().removeStickyEvent(EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java))
+        }
     }
-
 
     private var accountDangerDialog: AccountDangerDialog? = null
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -627,6 +638,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         accountDangerDialog = AccountDangerDialog(ActivityUtils.getTopActivity())
         accountDangerDialog!!.show()
         accountDangerDialog!!.changeVerifyStatus(event.type)
+        if (EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java) != null) {
+            // 若粘性事件存在，将其删除
+            EventBus.getDefault().removeStickyEvent(EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java))
+        }
     }
 
 

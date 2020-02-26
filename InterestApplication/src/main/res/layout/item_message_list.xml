@@ -37,17 +37,18 @@
                 android:layout_marginRight="3dp"
                 android:layout_marginTop="37dp"
                 android:background="@drawable/shape_rectangle_green_online"
-                app:layout_constraintRight_toRightOf="@id/msgIcon"
-                app:layout_constraintBottom_toBottomOf="@id/msgIcon"/>
+                app:layout_constraintBottom_toBottomOf="@id/msgIcon"
+                app:layout_constraintRight_toRightOf="@id/msgIcon"/>
 
         <TextView
                 android:id="@+id/msgTitle"
-                android:layout_marginLeft="7dp"
+                android:layout_marginLeft="10dp"
                 android:text="发现"
-                android:textColor="#ff222222"
+                android:textColor="#FF191919"
                 android:textSize="16sp"
                 android:layout_marginRight="6dp"
                 android:layout_marginTop="15dp"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:singleLine="true"
                 android:ellipsize="end"
@@ -75,7 +76,7 @@
         <TextView
                 android:id="@+id/latelyTime"
                 android:text="2分钟前"
-                android:textColor="#ff999999"
+                android:textColor="#FFC5C6C8"
                 android:textSize="12sp"
                 android:layout_marginRight="15dp"
                 android:layout_width="wrap_content"
@@ -84,17 +85,33 @@
                 app:layout_constraintTop_toTopOf="@id/msgTitle"/>
 
         <TextView
+                android:id="@+id/msgNew"
+                android:text="新消息"
+                android:textColor="#fffd4417"
+                android:textSize="13sp"
+                android:visibility="visible"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/text"
+                app:layout_constraintLeft_toRightOf="@id/msgIcon"
+                app:layout_constraintRight_toLeftOf="@id/text"
+                app:layout_constraintTop_toTopOf="@id/text"/>
+
+        <TextView
                 android:id="@+id/text"
                 android:layout_marginTop="6dp"
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:text="有XX个人对你感兴趣，快来看看吧"
-                android:textColor="#ff999999"
+                android:layout_marginLeft="10dp"
+                android:text="有消息未开启"
+                android:textColor="#FFC5C6C8"
                 android:textSize="14sp"
                 android:layout_marginRight="30dp"
-                app:layout_constraintLeft_toLeftOf="@id/msgTitle"
+                app:layout_constraintLeft_toRightOf="@id/msgNew"
                 app:layout_constraintRight_toLeftOf="@id/newCount"
                 app:layout_constraintTop_toBottomOf="@id/msgTitle"
                 />

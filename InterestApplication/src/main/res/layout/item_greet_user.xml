@@ -1,303 +1,323 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.cardview.widget.CardView
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:background="?attr/selectableItemBackground"
-        android:foreground="?attr/selectableItemBackground"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-        android:descendantFocusability="beforeDescendants"
-        android:layout_height="match_parent"
-        app:cardBackgroundColor="@color/colorWhite"
-        app:cardCornerRadius="15dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="0dp">
+        android:background="@color/transparent"
+        android:layout_height="match_parent">
+
+    <com.sdy.jitangapplication.widgets.NoScrollViewPager
+            android:id="@+id/vpPhotos"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="140dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/rvChatContent"
+            app:layout_constraintRight_toRightOf="@id/rvChatContent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
+    <TextView
+            android:id="@+id/lastImgBtn"
+            android:layout_width="150dp"
+            android:layout_marginBottom="193dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/vpPhotos"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/nextImgBtn"
+            android:layout_width="150dp"
+            android:layout_gravity="right"
+            android:layout_marginBottom="193dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="@id/vpPhotos"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+            android:id="@+id/matchBothIntersetLl"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/rectangle_cover_bg_12dp"
+            android:padding="3dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/vpPhotos"
+            app:layout_constraintTop_toTopOf="@id/vpPhotos">
+
+        <ImageView
+                android:id="@+id/matchBothIntersetIv"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_cuohe_tag"
+                android:layout_width="18dp"
+                android:layout_height="18dp"/>
+
+        <TextView
+                android:id="@+id/matchBothIntersetContent"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:textSize="13sp"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="她也喜欢【蹦迪】"/>
+    </LinearLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_gravity="center"
-            android:layout_height="match_parent">
+            android:id="@+id/v1"
+            android:layout_width="0dp"
+            android:background="@drawable/gradient_greet_user_bg"
+            android:layout_height="150dp"
+            android:layout_marginBottom="140dp"
+            app:layout_constraintBottom_toBottomOf="@id/rvChatContent"
+            app:layout_constraintLeft_toLeftOf="@id/vpPhotos"
+            app:layout_constraintRight_toRightOf="@id/vpPhotos">
 
-        <com.sdy.jitangapplication.widgets.NoScrollViewPager
-                android:id="@+id/vpPhotos"
+        <LinearLayout
+                android:id="@+id/matchAim"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@id/rvChatContent"
+                android:paddingLeft="1dp"
+                android:paddingTop="1dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="1dp"
+                android:gravity="center"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/shape_rectangle_blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/matchUserName"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/matchAimIv"
+                    android:layout_width="23dp"
+                    android:src="@drawable/icon_match_aim"
+                    android:layout_height="23dp"/>
+
+            <TextView
+                    android:id="@+id/matchAimTv"
+                    android:text="找人一起玩"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/colorWhite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+        </LinearLayout>
+
+
+        <TextView
+                android:id="@+id/matchUserName"
+                android:layout_marginTop="57dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/matchAim"/>
+
+        <ImageView
+                android:id="@+id/ivVip"
+                android:visibility="visible"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/icon_vip"
+                android:layout_width="25dp"
+                android:scaleType="centerInside"
+                android:layout_height="25dp"
+                app:layout_constraintBottom_toBottomOf="@id/matchUserName"
+                app:layout_constraintLeft_toRightOf="@id/matchUserName"
+                app:layout_constraintTop_toTopOf="@id/matchUserName"
+                />
+
+        <ImageView
+                android:id="@+id/ivVerify"
+                android:visibility="visible"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/icon_verify_pass"
+                android:layout_width="25dp"
+                android:scaleType="centerInside"
+                android:layout_height="25dp"
+                app:layout_constraintBottom_toBottomOf="@id/matchUserName"
+                app:layout_constraintLeft_toRightOf="@id/ivVip"
+                app:layout_constraintTop_toTopOf="@id/matchUserName"
+                />
+
+
+        <TextView
+                android:id="@+id/matchUserAge"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:drawablePadding="3dp"
+                android:textColor="#FFEEEEEE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/icon_gender_woman_gray"
+                android:text="23"
+                app:layout_constraintLeft_toLeftOf="@id/matchUserName"
+                app:layout_constraintTop_toBottomOf="@id/matchUserName"/>
+
+        <TextView
+                android:id="@+id/matchUserConstellation"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColor="#FFEEEEEE"
+                android:drawableLeft="@drawable/icon_collapstation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="3dp"
+                android:text="金牛座"
+                app:layout_constraintLeft_toRightOf="@id/matchUserAge"
+                app:layout_constraintTop_toTopOf="@id/matchUserAge"/>
+
+        <TextView
+                android:id="@+id/matchUserDistance"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColor="#FFEEEEEE"
+                android:drawablePadding="3dp"
+                android:drawableLeft="@drawable/icon_map_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10KM"
+                app:layout_constraintLeft_toRightOf="@id/matchUserConstellation"
+                app:layout_constraintTop_toTopOf="@id/matchUserAge"/>
+
+
+        <LinearLayout
+                android:id="@+id/vpIndicator"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/matchUserAge"
+                />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/greetHideCl"
+            android:layout_marginBottom="15dp"
+            android:layout_width="0dp"
+            android:background="@drawable/icon_greet_receive_hide_bg"
+            android:layout_height="160dp"
+            android:visibility="invisible"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+                android:id="@+id/greetHideContent"
+                android:layout_marginTop="20dp"
+                android:drawableTop="@drawable/icon_greet_received_hide_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.1"
+                android:text="他给你发送了专属悄悄话\n右滑查看"
+                android:gravity="center"
+                android:drawablePadding="7dp"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                android:shadowColor="#ffc26200"
+                android:shadowDx="1.0"
+                android:shadowDy="2.0"
+                android:shadowRadius="3.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-                android:id="@+id/lastImgBtn"
-                android:layout_width="150dp"
-                android:layout_marginBottom="193dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/rvChatContent"
+            android:background="@drawable/icon_greet_user_bg"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:layout_marginBottom="15dp"
+            android:visibility="visible"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+        <ImageView
+                android:id="@+id/chatContentDouhao1"
+                android:src="@drawable/icon_douhao_left"
+                android:layout_width="19dp"
+                android:layout_height="17dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
+
         <TextView
-                android:id="@+id/nextImgBtn"
-                android:layout_width="150dp"
-                android:layout_gravity="right"
-                android:layout_marginBottom="193dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        <LinearLayout
-                android:id="@+id/matchBothIntersetLl"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="15dp"
-                android:background="@drawable/rectangle_cover_bg_12dp"
-                android:padding="3dp"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                    android:id="@+id/matchBothIntersetIv"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/icon_cuohe_tag"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"/>
-
-            <TextView
-                    android:id="@+id/matchBothIntersetContent"
-                    android:gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:textSize="13sp"
-                    android:textColor="@color/colorWhite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="她也喜欢【蹦迪】"/>
-        </LinearLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/v1"
-                android:layout_width="match_parent"
-                android:background="@drawable/gradient_greet_user_bg"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@id/rvChatContent">
-
-            <LinearLayout
-                    android:id="@+id/matchAim"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="1dp"
-                    android:paddingTop="1dp"
-                    android:paddingRight="6dp"
-                    android:paddingBottom="1dp"
-                    android:gravity="center"
-                    android:layout_marginLeft="15dp"
-                    android:background="@drawable/shape_rectangle_blue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@id/matchUserName"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/matchAimIv"
-                        android:layout_width="23dp"
-                        android:src="@drawable/icon_match_aim"
-                        android:layout_height="23dp"/>
-
-                <TextView
-                        android:id="@+id/matchAimTv"
-                        android:text="找人一起玩"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="@color/colorWhite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        />
-            </LinearLayout>
-
-
-            <TextView
-                    android:id="@+id/matchUserName"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="24sp"
-                    android:layout_marginLeft="15dp"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Username"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/matchAim"/>
-
-            <ImageView
-                    android:id="@+id/ivVip"
-                    android:visibility="visible"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/icon_vip"
-                    android:layout_width="25dp"
-                    android:scaleType="centerInside"
-                    android:layout_height="25dp"
-                    app:layout_constraintBottom_toBottomOf="@id/matchUserName"
-                    app:layout_constraintLeft_toRightOf="@id/matchUserName"
-                    app:layout_constraintTop_toTopOf="@id/matchUserName"
-                    />
-
-            <ImageView
-                    android:id="@+id/ivVerify"
-                    android:visibility="visible"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/icon_verify_pass"
-                    android:layout_width="25dp"
-                    android:scaleType="centerInside"
-                    android:layout_height="25dp"
-                    app:layout_constraintBottom_toBottomOf="@id/matchUserName"
-                    app:layout_constraintLeft_toRightOf="@id/ivVip"
-                    app:layout_constraintTop_toTopOf="@id/matchUserName"
-                    />
-
-
-            <TextView
-                    android:id="@+id/matchUserAge"
-                    android:gravity="center"
-                    android:textSize="14sp"
-                    android:drawablePadding="3dp"
-                    android:textColor="#FFEEEEEE"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:drawableLeft="@drawable/icon_gender_woman_gray"
-                    android:text="23"
-                    app:layout_constraintLeft_toLeftOf="@id/matchUserName"
-                    app:layout_constraintTop_toBottomOf="@id/matchUserName"/>
-
-            <TextView
-                    android:id="@+id/matchUserConstellation"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:textSize="14sp"
-                    android:textColor="#FFEEEEEE"
-                    android:drawableLeft="@drawable/icon_collapstation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="3dp"
-                    android:text="金牛座"
-                    app:layout_constraintLeft_toRightOf="@id/matchUserAge"
-                    app:layout_constraintTop_toTopOf="@id/matchUserAge"/>
-
-            <TextView
-                    android:id="@+id/matchUserDistance"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:textSize="14sp"
-                    android:textColor="#FFEEEEEE"
-                    android:drawablePadding="3dp"
-                    android:drawableLeft="@drawable/icon_map_gray"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10KM"
-                    app:layout_constraintLeft_toRightOf="@id/matchUserConstellation"
-                    app:layout_constraintTop_toTopOf="@id/matchUserAge"/>
-
-
-            <LinearLayout
-                    android:id="@+id/vpIndicator"
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/matchUserAge"
-                    />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <View
-                android:background="#cc1d1e20"
+                android:id="@+id/chatContentMsg"
+                android:textStyle="bold"
+                android:layout_marginTop="6dp"
                 android:layout_width="0dp"
-                android:layout_height="16dp"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_height="0dp"
+                android:text="说了不一定有机会，但不说一定没机会"
+                android:textColor="#ff2d2f30"
+                android:layout_marginBottom="6dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="5dp"
+                android:lineSpacingMultiplier="1.1"
+                app:autoSizeMaxTextSize="26sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="1sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toTopOf="@id/chatContentDouhao2"
+                app:layout_constraintLeft_toLeftOf="@id/chatContentDouhao1"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/rvChatContent"/>
+                app:layout_constraintTop_toBottomOf="@id/chatContentDouhao1"
+                />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/rvChatContent"
-                android:background="@drawable/icon_greet_user_bg"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
+
+        <ImageView
+                android:id="@+id/chatContentDouhao2"
+                android:src="@drawable/icon_douhao_right"
+                android:layout_width="19dp"
+                android:layout_height="17dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent">
-
-            <ImageView
-                    android:id="@+id/chatContentDouhao1"
-                    android:src="@drawable/icon_douhao_left"
-                    android:layout_width="19dp"
-                    android:layout_height="17dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginLeft="10dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-
-            <TextView
-                    android:id="@+id/chatContentMsg"
-                    android:textStyle="bold"
-                    android:layout_marginTop="6dp"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:text="说了不一定有机会，但不说一定没机会"
-                    android:textColor="#ff2d2f30"
-                    android:layout_marginBottom="6dp"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginLeft="5dp"
-                    android:lineSpacingMultiplier="1.1"
-                    app:autoSizeMaxTextSize="28sp"
-                    app:autoSizeMinTextSize="12sp"
-                    app:autoSizeStepGranularity="1sp"
-                    app:autoSizeTextType="uniform"
-                    app:layout_constraintBottom_toTopOf="@id/chatContentDouhao2"
-                    app:layout_constraintLeft_toLeftOf="@id/chatContentDouhao1"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/chatContentDouhao1"
-                    />
-
-
-            <ImageView
-                    android:id="@+id/chatContentDouhao2"
-                    android:src="@drawable/icon_douhao_right"
-                    android:layout_width="19dp"
-                    android:layout_height="17dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+                app:layout_constraintRight_toRightOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

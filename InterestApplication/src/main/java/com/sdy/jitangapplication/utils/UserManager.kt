@@ -11,6 +11,7 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.model.ApproveBean
 import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.MediaParamBean
 import com.sdy.jitangapplication.model.TagBean
@@ -28,6 +29,7 @@ import java.util.*
  *    version: 1.0
  */
 object UserManager {
+    var approveBean: ApproveBean? = null
     //认证和替换的参数
     var motion = -1//1，强制替换 2，引导替换 3，引导添加相册 其他不管
     var slide_times = 0
@@ -289,7 +291,6 @@ object UserManager {
 
             if (data.userinfo.isfaced != -1)
                 saveUserVerify(data.userinfo.isfaced)
-            SPUtils.getInstance(Constants.SPNAME).put("isInterestLabel", data.extra_data?.myinterest ?: false)
             SPUtils.getInstance(Constants.SPNAME).put("userIntroduce", data.extra_data?.aboutme ?: "")
             if (!data.extra_data?.mytaglist.isNullOrEmpty()) {
                 saveLabels(data.extra_data?.mytaglist ?: mutableListOf())
@@ -309,27 +310,12 @@ object UserManager {
      * 登录成功保存用户信息
      */
     fun isUserInfoMade(): Boolean {
-        try {
-            if (!SPUtils.getInstance(Constants.SPNAME).getString("birth").isNullOrEmpty()) {
-                SPUtils.getInstance(Constants.SPNAME)
-                    .put("birth", SPUtils.getInstance(Constants.SPNAME).getString("birth", "0").toInt())
-            }
-            if (SPUtils.getInstance(Constants.SPNAME).getLong("birth") != -1L) {
-                SPUtils.getInstance(Constants.SPNAME)
-                    .put("birth", SPUtils.getInstance(Constants.SPNAME).getLong("birth", 0L).toInt())
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-
         return !(SPUtils.getInstance(Constants.SPNAME).getString("nickname").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").isNullOrEmpty() ||
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").contains(Constants.DEFAULT_AVATAR) ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0 ||
                 SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce").isNullOrEmpty() ||
-                SPUtils.getInstance(Constants.SPNAME).getBoolean("isInterestLabel", false) == false ||
                 getSpLabels().isNullOrEmpty()
                 )
 
@@ -423,9 +409,7 @@ object UserManager {
     }
 
 
-    fun saveIsInterestLabel(isInterest: Boolean) {
-        return SPUtils.getInstance(Constants.SPNAME).put("isInterestLabel", isInterest)
-    }
+
 
 
     /**
@@ -569,7 +553,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("isvip")
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
         SPUtils.getInstance(Constants.SPNAME).remove("checkedLabels")
-        SPUtils.getInstance(Constants.SPNAME).remove("isInterestLabel")
         SPUtils.getInstance(Constants.SPNAME).remove("userIntroduce")
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelId")
         SPUtils.getInstance(Constants.SPNAME).remove("globalLabelSquareId")

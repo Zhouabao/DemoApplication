@@ -30,11 +30,11 @@
 
     <ImageView
             android:id="@+id/banner_img"
-            android:layout_marginTop="6dp"
-            android:layout_width="141dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="250dp"
             android:src="@drawable/icon_power"
             android:scaleType="centerInside"
-            android:layout_height="141dp"
+            android:layout_height="164dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>

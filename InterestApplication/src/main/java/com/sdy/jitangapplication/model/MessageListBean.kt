@@ -62,7 +62,8 @@ data class GreetedListBean(
     var nickname: String = "",
     var photos: MutableList<String> = mutableListOf(),
     var sign: String = "",
-    var send_msg: String = ""//该用户发出来的招呼消息
+    var send_msg: String = "",//该用户发出来的招呼消息
+    var send_msg_normal: String = ""//该用户发出来的招呼消息
 )
 
 
@@ -88,7 +89,9 @@ data class MessageListBean1(
     var effective_greet: MutableList<Likelist> = mutableListOf(),
     var no_effective_greet: MutableList<Likelist> = mutableListOf(),
     var normal_percent_complete: Int = 0,
-    var total_like_times: Int = 0
+    var total_like_times: Int = 0,
+    var approve_time: Long,
+    var isapprove: Int //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
 )
 
 data class Likelist(

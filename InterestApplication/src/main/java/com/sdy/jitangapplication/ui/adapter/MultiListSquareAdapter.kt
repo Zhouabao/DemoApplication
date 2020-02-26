@@ -225,11 +225,13 @@ class MultiListSquareAdapter(
                         //滑动动画
                         holder.itemView.squareUserPics1.addOnScrollListener(GalleryOnScrollListener())
                         adapter.setOnItemClickListener { adapter, view, position ->
+                            if (data[holder.layoutPosition - headerLayoutCount].isliked != 1)
+                                clickZan(holder.itemView.squareDianzanBtn1, holder.layoutPosition - headerLayoutCount)
                             if (resetAudioListener != null) {
                                 resetAudioListener!!.resetAudioState()
                             }
                             mContext.startActivity<SquarePlayListDetailActivity>(
-                                "item" to item,
+                                "item" to data[holder.layoutPosition - headerLayoutCount],
                                 "picPosition" to position
                             )
                         }

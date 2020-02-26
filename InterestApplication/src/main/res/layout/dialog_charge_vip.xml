@@ -17,23 +17,22 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/dialogView"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:visibility="gone"
             android:orientation="vertical"
             android:layout_gravity="center"
-            android:background="@drawable/gradient_vip_charge_bg"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_rectangle_20_dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
         <com.sdy.jitangapplication.widgets.RoundTopImageView
                 android:id="@+id/purchaseBg"
                 android:scaleType="fitXY"
                 android:src="@drawable/icon_gradient_vip_charge_bg"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="250dp"
                 android:visibility="visible"
-                android:layout_marginBottom="100dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -44,16 +43,18 @@
                 android:id="@+id/purchaseLl"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:background="@color/transparent"
+                app:layout_constraintBottom_toBottomOf="@id/purchaseBg"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="@id/purchaseBg">
 
             <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/bannerVip"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@id/bannerIndicator"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
@@ -63,10 +64,10 @@
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="6dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/bannerVip"/>
+                    app:layout_constraintRight_toRightOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -95,19 +96,19 @@
                 android:id="@+id/vipChargeRv"
                 android:orientation="vertical"
                 android:layout_width="0dp"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/transparent"
                 android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/purchaseLl"/>
+                app:layout_constraintTop_toBottomOf="@id/purchaseBg"/>
 
         <RelativeLayout
                 android:id="@+id/zhiPayBtn"
                 android:layout_width="match_parent"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginLeft="15dp"
                 android:background="@drawable/shape_rectangle_blue_vip"
                 android:layout_height="47dp"
@@ -118,9 +119,10 @@
 
             <TextView
                     android:id="@+id/zhiPayPrice"
-                    android:text="支付宝支付"
+                    android:text="支付宝"
                     android:textColor="#ffffffff"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
                     android:gravity="center"
                     android:layout_centerInParent="true"
                     android:layout_marginRight="15dp"
@@ -150,11 +152,12 @@
             <TextView
                     android:id="@+id/wechatPayPrice"
                     android:text="微信支付"
+                    android:textColor="#ffffffff"
+                    android:textSize="17sp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textColor="#ffffffff"
+                    android:textStyle="bold"
                     android:layout_centerInParent="true"
-                    android:textSize="16sp"
                     android:drawablePadding="9dp"
                     android:drawableLeft="@drawable/icon_pay_wechat"
                     android:layout_width="wrap_content"
@@ -206,6 +209,7 @@
                 app:layout_constraintTop_toBottomOf="@id/balancePayBtn"
                 />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <include
             android:id="@+id/loading"

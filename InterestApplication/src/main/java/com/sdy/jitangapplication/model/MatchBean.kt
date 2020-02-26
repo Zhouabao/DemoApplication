@@ -29,8 +29,9 @@ data class MatchListBean(
     var myinterest_count: Int = 0,
     var interest_times: Int = 0,
     var is_human: Boolean = false,
-    var is_full: Boolean = false //标签是否完整
-    )
+    var is_full: Boolean = false,//标签是否完整
+    var people_cnt: Int = 0//标签是否完整
+)
 
 /**
  * 匹配用户
