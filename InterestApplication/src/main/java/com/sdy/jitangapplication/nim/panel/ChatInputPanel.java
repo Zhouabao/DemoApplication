@@ -141,7 +141,13 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
 
 
     public void onResume() {
+        switchToTextLayout(false);
+    }
 
+    /**
+     * 判断是否能发送消息
+     */
+    public void checkIsSendMsg() {
         //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
         if (UserManager.INSTANCE.getApproveBean() != null && UserManager.INSTANCE.getApproveBean().getIssend() == false) {
             approveView.setVisibility(View.VISIBLE);
@@ -160,8 +166,6 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
             messageEditText.setHintTextColor(Color.parseColor("#C9C9C9"));
         }
 
-
-        switchToTextLayout(false);
     }
 
     public void onDestroy() {
