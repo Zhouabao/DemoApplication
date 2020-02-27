@@ -167,12 +167,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
         GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv1)
-        if (!squareBean!!.tags.isNullOrEmpty()) {
-            squareTagName.text = squareBean!!.tags ?: ""
-            squareTagName.isVisible = true
-        } else {
-            squareTagName.isVisible = false
-        }
+        squareTagName.visibility = View.INVISIBLE
+//        if (!squareBean!!.tags.isNullOrEmpty()) {
+//            squareTagName.text = squareBean!!.tags ?: ""
+//            squareTagName.isVisible = true
+//        } else {
+//            squareTagName.isVisible = false
+//        }
 
         squareTitleLl.isVisible = !squareBean!!.title.isNullOrEmpty()
         squareTitle.text = squareBean!!.title ?: ""
@@ -266,6 +267,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         commentList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         commentList.adapter = adapter
+//        commentList.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.HORIZONTAL_LIST,SizeUtils.dp2px(15F),Color.WHITE))
         adapter.setEmptyView(R.layout.empty_layout_comment, commentList)
 
         btnBack.onClick {

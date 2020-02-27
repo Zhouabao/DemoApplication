@@ -34,7 +34,7 @@ class MultiListCommentAdapter(var context: Context, data: MutableList<CommentBea
             }
             CommentBean.CONTENT -> {
                 if (holder.layoutPosition == mData.size - 1) {
-                    holder.itemView.commentDivider.visibility = View.GONE
+                    holder.itemView.commentDivider.visibility = View.INVISIBLE
                 } else {
                     holder.itemView.commentDivider.visibility = View.VISIBLE
                 }

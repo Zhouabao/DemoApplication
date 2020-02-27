@@ -100,29 +100,30 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
     }
 
+    /** 倒计时60秒，一次1秒 */
+    val timer =  object : CountDownTimer(60 * 1000, 1000) {
+        override fun onFinish() {
+            tvPhone.text = "$phone"
+            countVerifyCodeTime.text = SpanUtils.with(countVerifyCodeTime)
+                .append("重新获取")
+                .setBold()
+                .create()
+            countVerifyCodeTime.isEnabled = true
+        }
 
-    override fun onCountTime() {
-        /** 倒计时60秒，一次1秒 */
-        object : CountDownTimer(60 * 1000, 1000) {
-            override fun onFinish() {
-                tvPhone.text = "$phone"
-                countVerifyCodeTime.text = SpanUtils.with(countVerifyCodeTime)
-                    .append("重新获取")
+        override fun onTick(p0: Long) {
+            countVerifyCodeTime.text =
+                SpanUtils.with(countVerifyCodeTime)
+                    .append("验证码已发送")
+                    .append("  ${p0 / 1000}秒")
                     .setBold()
                     .create()
-                countVerifyCodeTime.isEnabled = true
-            }
+        }
 
-            override fun onTick(p0: Long) {
-                countVerifyCodeTime.text =
-                    SpanUtils.with(countVerifyCodeTime)
-                        .append("验证码已发送")
-                        .append("  ${p0 / 1000}秒")
-                        .setBold()
-                        .create()
-            }
-
-        }.start()
+    }
+    override fun onCountTime() {
+        timer.cancel()
+        timer.start()
     }
 
     override fun onGetPhoneNum() {
@@ -174,6 +175,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
             countVerifyCodeTime.isEnabled = false
             onCountTime()
         } else {
+            CommonFunction.toast("${data?.msg}")
             countVerifyCodeTime.isEnabled = true
         }
     }
@@ -196,5 +198,10 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
     override fun onError(text: String) {
         CommonFunction.toast(text)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timer.cancel()
     }
 }

@@ -120,7 +120,8 @@
             android:background="@color/colorLightGray"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/childView"
+            android:layout_marginTop="15dp"
             app:layout_constraintLeft_toLeftOf="@id/commentUserName"
             app:layout_constraintRight_toRightOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

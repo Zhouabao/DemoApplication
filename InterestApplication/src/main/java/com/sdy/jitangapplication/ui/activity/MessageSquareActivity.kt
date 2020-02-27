@@ -8,6 +8,7 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
@@ -82,6 +83,7 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         messageSquareNewRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout, messageSquareNewRv)
         adapter.emptyView.emptyTip.text = "暂时没有消息"
+        adapter.isUseEmpty(false)
 
         //val type: Int? = 0,//类型 1，广场点赞 2，评论我的 3。我的评论点赞的 4 @我的
         adapter.setOnItemClickListener { _, view, position ->
@@ -122,7 +124,6 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
-        adapter.data.clear()
         his = -1
         unread = -1
         page = 1
@@ -158,9 +159,15 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         if (data != null) {
             //进入页面就标记已读
             mPresenter.markSquareRead(params)
-
-            if (data.isNullOrEmpty()) {
+            if (refreshLayout.state == RefreshState.Refreshing) {
+                refreshLayout.finishRefresh(true)
+                adapter.data.clear()
+            } else {
                 refreshLayout.finishLoadMoreWithNoMoreData()
+            }
+            if (data.isNullOrEmpty()) {
+                if (refreshLayout.state == RefreshState.Refreshing)
+                    adapter.isUseEmpty(true)
             } else {
                 for (msg in data.withIndex()) {
                     if (msg.value.is_read == false && unread == -1) {
@@ -175,7 +182,6 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
                 adapter.addData(data)
                 refreshLayout.finishLoadMore(true)
             }
-            refreshLayout.finishRefresh(true)
         }
         stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
 

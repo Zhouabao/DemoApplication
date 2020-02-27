@@ -476,6 +476,6 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
             loadingDialog.dismiss()
         }
         AppManager.instance.finishActivity(this)
-
+        FaceSDKManager.release()
     }
 }

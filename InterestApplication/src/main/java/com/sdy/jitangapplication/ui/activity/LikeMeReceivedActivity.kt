@@ -142,12 +142,12 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
     private var hasMore = true
     private var likeCount = 0
     override fun onGreatListResult(t: BaseResp<NewLikeMeBean?>) = if (t.data != null && t.code == 200) {
-        if (t.data!!.list.isNullOrEmpty()) {
+        if (t.data!!.list.isNullOrEmpty() || t.data!!.list.size < Constants.PAGESIZE) {
             hasMore = false
         }
         stateLikeReceived.viewState = MultiStateView.VIEW_STATE_CONTENT
         adapter.addData(t.data!!.list)
-        if (page == 1 && t.data!!.list.isNullOrEmpty()) {
+        if ((page == 1 && t.data!!.list.isNullOrEmpty()) || (page > 1 && !hasMore)) {
             stateLikeReceived.viewState = MultiStateView.VIEW_STATE_EMPTY
         } else {
             if (!UserManager.isShowGuideLike()) {
@@ -226,6 +226,13 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
         } else if (data.code == 405) {
             CommonFunction.toast(data.msg)
             greetRv.rewind()
+        }
+
+
+        if (hasMore && manager.topPosition == adapter.itemCount) {
+            page++
+            stateLikeReceived.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.likeListsV2(params)
         }
 
     }
@@ -378,10 +385,7 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
             }
         }
 
-        if (hasMore && manager.topPosition == adapter.itemCount - 5) {
-            page++
-            mPresenter.likeListsV2(params)
-        }
+
     }
 
     private fun resetAnimation() {

@@ -22,7 +22,7 @@ class MyCommentAdapter : BaseQuickAdapter<MyCommentBean, BaseViewHolder>(R.layou
     override fun convert(holder: BaseViewHolder, item: MyCommentBean) {
 
         if (holder.layoutPosition == mData.size - 1) {
-            holder.itemView.commentDivider.visibility = View.GONE
+            holder.itemView.commentDivider.visibility = View.INVISIBLE
         } else {
             holder.itemView.commentDivider.visibility = View.VISIBLE
         }

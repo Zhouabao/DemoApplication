@@ -7,7 +7,6 @@
     <TextView
             android:id="@+id/commentReplyContent"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
             android:background="@drawable/shape_vip_charge_normal_bg"
             android:padding="10dp"
             android:text="孟敏：将内容组织后得到8个视图界面：浏览影片浏览影片浏览影片浏览影片浏览影片浏览影片浏览影片浏览影片"
