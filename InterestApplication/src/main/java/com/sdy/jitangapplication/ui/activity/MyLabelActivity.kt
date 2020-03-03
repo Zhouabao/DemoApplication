@@ -13,6 +13,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.UpdateFindByTagEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.MyLabelsBean
@@ -156,6 +157,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
             adapter.remove(position)
             EventBus.getDefault().post(RefreshEvent(true))
             EventBus.getDefault().post(UserCenterEvent(true))
+            EventBus.getDefault().post(UpdateFindByTagEvent())
         }
     }
 

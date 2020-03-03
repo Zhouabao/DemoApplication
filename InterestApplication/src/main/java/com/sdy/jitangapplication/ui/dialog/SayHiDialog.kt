@@ -36,11 +36,10 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.GreetEvent
-import com.sdy.jitangapplication.event.UpdateHiCountEvent
 import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.GreetBean
+import com.sdy.jitangapplication.model.GreetTimesBean
 import com.sdy.jitangapplication.model.ResidueCountBean
-import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
@@ -301,7 +300,6 @@ class SayHiDialog(
                                 EventBus.getDefault().post(GreetEvent(context1, true))
                             } else {
                                 UserManager.saveLightingCount(greetBean.lightningcnt)
-                                UserManager.saveCountDownTime(greetBean.countdown)
                                 if (greetBean.lightningcnt > 0) {
                                     greet()
                                 } else {
@@ -355,6 +353,10 @@ class SayHiDialog(
 
     /**
      * 打招呼
+     * code  201 次数使用完毕，请充值次数
+     * code  202  你就弹框（该用户当日免费接收次数完毕，请充值会员获取）
+     * code  203  招呼次数用完,认证获得次数
+     * code  401  发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
      */
     fun greet() {
         if (!NetworkUtils.isConnected()) {
@@ -369,17 +371,21 @@ class SayHiDialog(
         params["content"] = sayHiContent.text.trim().toString()
         RetrofitFactory.instance.create(Api::class.java)
             .greet(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
-                override fun onNext(t: BaseResp<StatusBean?>) {
+            .excute(object : BaseSubscriber<BaseResp<GreetTimesBean?>>(null) {
+                override fun onNext(t: BaseResp<GreetTimesBean?>) {
                     if (t.code == 200) {
                         onGreetSResult(true)
                     } else if (t.code == 403) {//登录异常
                         loadingDialog.dismiss()
                         UserManager.startToLogin(context1 as Activity)
-                    } else if (t.code == 401) {
+                    } else if (t.code == 401) { //弹真人认证
                         loadingDialog.dismiss()
                         EventBus.getDefault().post(GreetEvent(context1, false))
                         HarassmentDialog(context1, HarassmentDialog.CHATHI).show() //开启招呼提示
+                    } else if (t.code == 202) { //对方普通招呼收到上限
+                        loadingDialog.dismiss()
+                        GreetLimitlDialog(context1).show()
+                        EventBus.getDefault().post(GreetEvent(context1, false))
                     } else {
                         loadingDialog.dismiss()
                         EventBus.getDefault().post(GreetEvent(context1, false))
@@ -402,7 +408,6 @@ class SayHiDialog(
             sendChatHiMessage()
         }
     }
-
 
 
     private fun sendMsgRequest(content: IMMessage) {
@@ -476,7 +481,6 @@ class SayHiDialog(
                     startAnimation()
                     //发送通知修改招呼次数
                     UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
-                    EventBus.getDefault().postSticky(UpdateHiCountEvent())
                     EventBus.getDefault().post(GreetEvent(context1, true))
                     if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
                         EventBus.getDefault().post(UpdateLikeMeReceivedEvent())

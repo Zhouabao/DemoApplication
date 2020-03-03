@@ -18,19 +18,30 @@ data class MatchListBean(
     var motion: Int = -1, //		1，强制替换 2，引导替换 3，引导添加相册 其他不管
     var perfect_times: Int = 0,    //滑动x次数跳【完善相册】
     var replace_times: Int = 0, //滑动x次数跳【替换头像】
-    var like_times: Int = 0, //剩余滑动次数
-    var highlight_times: Int = 0,//提示剩余次数的节点
-    val my_percent_complete: Int,//（我的资料完整度）
-    val normal_percent_complete: Int,//（标准完整度）
-    val my_like_times: Int,//（我的次数）
-    val total_like_times: Int,//  total_like_times（最高次数）
     var mytags: MutableList<Newtag>? = null,
-    val intention: LabelQualityBean? = null,
-    var myinterest_count: Int = 0,
-    var interest_times: Int = 0,
     var is_human: Boolean = false,
-    var is_full: Boolean = false,//标签是否完整
-    var people_cnt: Int = 0//标签是否完整
+    var is_full: Boolean = false//标签是否完整
+)
+
+
+data class FindByTagBean(
+    var countdown: Int = 0,
+    var is_full: Boolean = false,
+    var is_human: Boolean = false,
+    var isfaced: Int = 0,
+    var isjoin: Boolean = false,
+    var isvip: Int = 0,
+    var lightningcnt: Int = 0,
+    var tag_icon: String = "",
+    var list: MutableList<MatchBean>?,
+    var motion: Int = 0,
+    var mytags: MutableList<Newtag>? = null,
+    var tag_info: MyLabelBean? = null
+)
+
+data class AddSinlgLabelBean(
+    var tag_list: MutableList<TagBean>,
+    var tag_info: MyLabelBean? = null
 )
 
 /**
@@ -40,7 +51,6 @@ data class MatchBean(
     var matching_content: String = "",
     var matching_icon: String = "",
     var face_auditing_state: Int = 0,
-    var intention: String = "",
     var intention_icon: String = "",
     var label_quality: MutableList<LabelQualityBean> = mutableListOf(),
     var isvip: Int = 0,    //是否会员 true是 false不是
@@ -104,6 +114,11 @@ data class Square(
  * residue:剩余滑动次数
  */
 data class StatusBean(val status: Int, val residue: Int = 0)
+
+/**
+ * 获取招呼的次数
+ */
+data class GreetTimesBean(val normal_cnt: Int, val isfaced: Int = 0, val isvip: Int = 0)
 
 /**
  * 用戶標簽

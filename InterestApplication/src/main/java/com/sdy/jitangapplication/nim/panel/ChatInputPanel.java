@@ -45,7 +45,7 @@ import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.event.EnablePicEvent;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog;
+import com.sdy.jitangapplication.ui.dialog.ChatToViplDialog;
 import com.sdy.jitangapplication.ui.dialog.HumanVerifyDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import org.greenrobot.eventbus.EventBus;
@@ -155,7 +155,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
             messageEditText.setHintTextColor(Color.parseColor("#C0C5CB"));
             approveView.setOnClickListener(v -> {
                 if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 2 || UserManager.INSTANCE.getApproveBean().getIsapprove() == 4) {
-                    new ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, container.activity, ChargeVipDialog.PURCHASE_VIP).show();
+                    new ChatToViplDialog(container.activity).show();
                 } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 1 || UserManager.INSTANCE.getApproveBean().getIsapprove() == 3) {
                     new HumanVerifyDialog(container.activity).show();
                 }

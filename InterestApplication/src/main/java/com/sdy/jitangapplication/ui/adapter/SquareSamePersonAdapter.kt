@@ -25,7 +25,8 @@ import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_same_person.view.*
 
-class SquareSamePersonAdapter : BaseQuickAdapter<SamePersonBean, BaseViewHolder>(R.layout.item_same_person) {
+class SquareSamePersonAdapter(var hasmore: Boolean = true) :
+    BaseQuickAdapter<SamePersonBean, BaseViewHolder>(R.layout.item_same_person) {
     override fun convert(helper: BaseViewHolder, item: SamePersonBean) {
         if (helper.layoutPosition % 2 == 0) {
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).leftMargin = SizeUtils.dp2px(15f)
@@ -39,9 +40,8 @@ class SquareSamePersonAdapter : BaseQuickAdapter<SamePersonBean, BaseViewHolder>
         } else {
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).topMargin = SizeUtils.dp2px(10f)
         }
-        if (helper.layoutPosition / 2 == (mData.size - 1) / 2) {
+        if (helper.layoutPosition / 2 == (mData.size - 1) / 2 && !hasmore) {
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).bottomMargin = SizeUtils.dp2px(10f)
-
         }
         GlideUtil.loadImg(mContext, item.avatar, helper.itemView.sameAvator)
         GlideUtil.loadImg(mContext, item.cover_url, helper.itemView.sameIv)
@@ -55,18 +55,17 @@ class SquareSamePersonAdapter : BaseQuickAdapter<SamePersonBean, BaseViewHolder>
                 R.drawable.icon_dianzan_white
             }
         )
-        helper.itemView.sameAvator.onClick(object :CustomClickListener(){
+        helper.itemView.sameAvator.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
-                MatchDetailActivity.start(mContext,item.accid)
+                MatchDetailActivity.start(mContext, item.accid)
             }
 
         })
 
         helper.itemView.sameLike.onClick {
-            clickZan(helper.itemView.sameLike,helper.layoutPosition)
+            clickZan(helper.itemView.sameLike, helper.layoutPosition)
         }
     }
-
 
 
     /**

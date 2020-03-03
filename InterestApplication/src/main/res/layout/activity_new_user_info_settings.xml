@@ -67,7 +67,7 @@
             app:msv_emptyView="@layout/empty_layout"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            app:msv_viewState="content">
 
         <FrameLayout
                 android:layout_width="match_parent"
@@ -250,15 +250,7 @@
                                 app:layout_constraintTop_toBottomOf="@id/userBirth"
                                 />
 
-                        <include
-                                android:id="@+id/userScoreAboutMe"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/tsign"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/tsign"/>
+
 
                         <TextView
                                 android:id="@+id/userNickSign"
@@ -329,15 +321,7 @@
                                 app:layout_constraintTop_toBottomOf="@id/tmore"
                                 />
 
-                        <include
-                                android:id="@+id/userScoreHeight"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userHeight"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userHeight"/>
+
 
                         <View
                                 android:id="@+id/dash4"
@@ -377,15 +361,6 @@
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/dash4"/>
 
-                        <include
-                                android:id="@+id/userScoreEmotion"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userLoveStatus"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userLoveStatus"/>
 
                         <View
                                 android:background="@color/colorDivider"
@@ -424,16 +399,6 @@
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/userLoveStatus"/>
 
-                        <include
-                                android:id="@+id/userScoreHomeTown"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userHomeTown"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userHomeTown"/>
-
                         <View
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
@@ -471,15 +436,6 @@
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/userHomeTown"/>
 
-                        <include
-                                android:id="@+id/userScoreLiveNow"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userLiveNow"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userLiveNow"/>
 
                         <View
                                 android:background="@color/colorDivider"
@@ -519,15 +475,6 @@
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/userLiveNow"/>
 
-                        <include
-                                android:id="@+id/userScoreJob"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userJob"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userJob"/>
 
                         <View
                                 android:background="@color/colorDivider"
@@ -567,15 +514,6 @@
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/userJob"/>
 
-                        <include
-                                android:id="@+id/userScoreFriendsAim"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userFriendsAim"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userFriendsAim"/>
 
                         <View
                                 android:background="@color/colorDivider"
@@ -613,16 +551,6 @@
                                 app:layout_constraintLeft_toRightOf="@id/t1"
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/userFriendsAim"/>
-
-                        <include
-                                android:id="@+id/userScoreSchool"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userSchool"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userSchool"/>
 
                         <View
                                 android:background="@color/colorDivider"
@@ -662,16 +590,6 @@
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/userSchool"/>
 
-                        <include
-                                android:id="@+id/userScoreDrink"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userDrink"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userDrink"/>
-
                         <View
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
@@ -710,16 +628,6 @@
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/userDrink"/>
 
-                        <include
-                                android:id="@+id/userScoreSmoke"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userSmoke"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userSmoke"/>
-
                         <View
                                 android:background="@color/colorDivider"
                                 android:layout_width="0dp"
@@ -757,16 +665,6 @@
                                 app:layout_constraintLeft_toRightOf="@id/t1"
                                 app:layout_constraintRight_toRightOf="@id/userNickName"
                                 app:layout_constraintTop_toBottomOf="@id/userSmoke"/>
-
-                        <include
-                                android:id="@+id/userScoreEat"
-                                layout="@layout/layout_add_score"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="40dp"
-                                app:layout_constraintBottom_toBottomOf="@id/userEat"
-                                app:layout_constraintRight_toRightOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/userEat"/>
 
                         <View
                                 android:background="@color/colorDivider"
@@ -816,45 +714,22 @@
                         android:textSize="13sp"
                         />
 
-
-                <include
-                        android:id="@+id/userScore80"
-                        layout="@layout/layout_add_score"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="90dp"
-                        android:layout_centerVertical="true"
-                        android:layout_height="22dp"
-                        android:src="@drawable/icon_eighty_unclick"
-                        android:layout_width="wrap_content"
-                        />
-
-
-                <ImageView
-                        android:id="@+id/userScoreVip"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15dp"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/icon_vip_score"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"/>
-
-
                 <TextView
                         android:id="@+id/userScore20"
                         android:layout_marginLeft="70dp"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="6dp"
-                        android:paddingRight="6dp"
-                        android:drawablePadding="4dp"
+                        android:paddingLeft="7dp"
+                        android:paddingRight="7dp"
                         android:gravity="center"
-                        android:drawableLeft="@drawable/icon_information_finish"
                         android:background="@drawable/shape_rectangle_orange_white_9dp"
-                        android:layout_width="60dp"
-                        android:textSize="12sp"
+                        android:layout_width="wrap_content"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:text="0%"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
                         android:textColor="@color/colorOrange"
-                        android:layout_height="18dp">
+                        android:layout_height="wrap_content">
                 </TextView>
 
             </RelativeLayout>

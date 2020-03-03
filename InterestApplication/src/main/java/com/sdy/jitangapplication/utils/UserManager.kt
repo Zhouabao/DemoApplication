@@ -73,29 +73,6 @@ object UserManager {
 
 
     /**
-     * 保存当前需要弹去完善标签弹窗的次数
-     */
-    fun saveCompleteLabelCount(count: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("completeLabelCount", count)
-    }
-
-    fun getCompleteLabelCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("completeLabelCount", -1)
-    }
-
-    /**
-     * 保存滑动次数
-     */
-    fun saveSlideCount(count: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("SlideCount", count)
-    }
-
-    fun getSlideCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("SlideCount", -1)
-    }
-
-
-    /**
      * 我的兴趣的标签个数
      */
     fun saveMaxMyLabelCount(count: Int) {
@@ -403,13 +380,13 @@ object UserManager {
     fun getAvator(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("avatar")
     }
+    fun getGender(): Int {
+        return SPUtils.getInstance(Constants.SPNAME).getInt("gender",0)
+    }
 
     fun getUserIntroduce(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce")
     }
-
-
-
 
 
     /**
@@ -636,21 +613,6 @@ object UserManager {
 
 
     /**
-     * 保存提示剩余滑动次数
-     */
-    fun saveHighlightCount(highlight_times: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("highlight_times", highlight_times)
-    }
-
-    /**
-     * 获取提示剩余滑动次数
-     */
-    fun getHighlightCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("highlight_times", 0)
-    }
-
-
-    /**
      * 保存剩余滑动次数
      */
     fun saveLeftSlideCount(slideTimes: Int) {
@@ -678,33 +640,6 @@ object UserManager {
     fun getLightingCount(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("lightingCount", 0)
     }
-
-
-    /**
-     * 保存补充招呼次数的时间
-     */
-    fun saveCountDownTime(time: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("countdowntime", time)
-    }
-
-    /**
-     * 获取补充招呼次数的时间
-     */
-    fun getCountDownTimet(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("countdowntime", 0)
-    }
-
-    /**
-     * 保存招呼个数
-     */
-    fun saveHiCount(greetCount: Int = 0) {
-        SPUtils.getInstance(Constants.SPNAME).put("hiCount", greetCount)
-    }
-
-    fun getHiCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("hiCount", 0)
-    }
-
 
     /**
      * 是否展示首页的引导使用

@@ -30,7 +30,7 @@ import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.*
-import com.sdy.jitangapplication.ui.fragment.MatchFragment
+import com.sdy.jitangapplication.ui.fragment.IndexFragment
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
 import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.ui.fragment.UserCenterFragment
@@ -54,8 +54,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     //匹配
-    private val matchFragment by lazy { MatchFragment() }
-    //    private val matchFragment by lazy { IndexFragment() }
+//    private val matchFragment by lazy { MatchFragment() }
+    private val matchFragment by lazy { IndexFragment() }
     //广场
     private val squareFragment by lazy { SquareFragment() }
     //    private val squareFragment by lazy { ContentFragment() }
@@ -87,6 +87,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         //如果定位信息没有就重新定位
         AMapManager.initLocation(this)
         filterBtn.setOnClickListener(this)
+
 
 //        IntentionMatchingDialog(this).show()
 
@@ -140,9 +141,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
 
     private fun initView() {
-        //归零配置文件
-        UserManager.saveSlideCount(0)
-
         EventBus.getDefault().register(this)
         NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
 
@@ -162,7 +160,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
       初始化Fragment栈管理
    */
     private fun initFragment() {
-        tabMatch.setOnClickListener(this)
         tabMatchCount.setOnClickListener(this)
         tabSquare.setOnClickListener(this)
         tabMe.setOnClickListener(this)
@@ -202,18 +199,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun switchTab(position: Int) {
         when (position) {
             0 -> {
-                if (!UserManager.isUserVip()) {
-                    tabMatch.isVisible = true
-                    tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
-                    tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
-                    tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
-                } else {
-                    tabMatch.isVisible = false
-                    tabMatchCount.text = "匹配"
-                    tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
-                    tabMatchCount.setPadding(0)
-                }
-
+                tabMatchCount.text = "匹配"
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     resources.getDrawable(R.drawable.icon_tab_match_checked),
@@ -243,7 +230,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             1 -> {
-                tabMatch.isVisible = false
                 tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
@@ -276,7 +262,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             2 -> {
-                tabMatch.isVisible = false
                 tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
@@ -309,7 +294,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             3 -> {
-                tabMatch.isVisible = false
                 tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
@@ -350,12 +334,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     fun onUpdateSlideCountEvent(event: UpdateSlideCountEvent) {
         if (vpMain.currentItem == 0) {
             if (!UserManager.isUserVip()) {
-                tabMatch.isVisible = true
                 tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
                 tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
             } else {
-                tabMatch.isVisible = false
                 tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
                 tabMatchCount.setPadding(0)
@@ -369,7 +351,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             R.id.labelAddBtn -> { //标签添加
                 startActivity<MyLabelActivity>()
             }
-            R.id.tabMatchCount, R.id.tabMatch -> {
+            R.id.tabMatchCount -> {
                 vpMain.currentItem = 0
             }
             R.id.tabSquare -> {
@@ -436,6 +418,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             CommonFunction.toast("再按一次退出程序")
             firstClickTime = secondTime
         } else {
+            SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeRealMan")
             SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAvator")
             SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
             AppManager.instance.finishAllActivity()
@@ -640,7 +623,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         accountDangerDialog!!.changeVerifyStatus(event.type)
         if (EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java) != null) {
             // 若粘性事件存在，将其删除
-            EventBus.getDefault().removeStickyEvent(EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java))
+            EventBus.getDefault()
+                .removeStickyEvent(EventBus.getDefault().getStickyEvent(AccountDangerEvent::class.java))
         }
     }
 

@@ -12,6 +12,7 @@
     <ImageView
             android:visibility="visible"
             android:layout_marginTop="50dp"
+            android:layout_marginBottom="77dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerInside"
             android:src="@drawable/icon_add_phot"
@@ -19,13 +20,7 @@
             android:layout_height="wrap_content"
             />
 
-    <include
-            layout="@layout/layout_add_score"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="37dp"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
+
 
 </LinearLayout>
 

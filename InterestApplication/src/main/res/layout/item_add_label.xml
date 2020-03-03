@@ -13,6 +13,7 @@
         <ImageView
                 android:id="@+id/labelTypeNameIv"
                 android:layout_width="21dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:layout_height="21dp"/>
 

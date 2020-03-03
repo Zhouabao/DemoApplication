@@ -11,24 +11,29 @@ import com.blankj.utilcode.util.ToastUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
-import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.GreetEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
-import com.sdy.jitangapplication.model.GreetBean
+import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
+import com.sdy.jitangapplication.model.GreetTimesBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.dialog.GreetLimitlDialog
+import com.sdy.jitangapplication.ui.dialog.GreetUseUpDialog
 import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
-import com.sdy.jitangapplication.ui.dialog.SayHiDialog
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.GlideEngine
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -64,86 +69,128 @@ object CommonFunction {
     /**
      * 打招呼通用逻辑
      */
-    fun commonGreet(
-        context: Context,
-        isfriend: Boolean,
-        greet_switch: Boolean,//接收招呼开关   true  接收招呼      false   不接受招呼
-        greet_state: Boolean,// 认证招呼开关   true  开启认证      flase   不开启认证
-        targetAccid: String,
-        targetNickName: String,
-        isgreeted: Boolean = false,//招呼是否有效
-        view: View
-    ) {
-        view.isEnabled = false
+    fun commonGreet(context: Context, targetAccid: String, view: View? = null) {
+        if (view != null)
+            view.isEnabled = false
         /**
          * 判断当前能否打招呼
          */
         if (!NetworkUtils.isConnected()) {
             toast("请连接网络！")
-            view.isEnabled = true
+            if (view != null)
+                view.isEnabled = true
             return
         }
 
+        greet(targetAccid, context, view)
+    }
+
+
+    /**
+     * 打招呼
+     * code  201  次数使用完毕，请充值次数
+     * code  202  你就弹框（该用户当日免费接收次数完毕，请充值会员获取）
+     * code  203  招呼次数用完,认证获得次数
+     * 204  次数使用完毕，请充值会员获取次数
+     * 205  今日次数使用完毕
+     * code  401  发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
+     * code  400  招呼次数用尽~
+     */
+    fun greet(target_accid: String, context1: Context, view: View?) {
+        if (!NetworkUtils.isConnected()) {
+            toast("请连接网络！")
+            return
+        }
 
         val params = UserManager.getBaseParams()
-        params["target_accid"] = targetAccid
+        params["tag_id"] = UserManager.getGlobalLabelId()
+        params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
-            .greetState(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(null) {
-                override fun onStart() {
-                }
-
-                override fun onNext(t: BaseResp<GreetBean?>) {
-                    if (t.code == 200) {
-                        val greetBean = t.data
-                        if (greetBean != null)
-                            if (greetBean.isfriend || greetBean.isgreet) {
-                                EventBus.getDefault().post(GreetEvent(context, true))
-                                ChatActivity.start(context, targetAccid)
-                            } else {
-                                UserManager.saveLightingCount(greetBean.lightningcnt)
-                                UserManager.saveCountDownTime(greetBean.countdown)
-                                if (greetBean.free_greet) {
-                                    if (greetBean.lightningcnt > 0) {
-                                        if (!greet_switch) {
-                                            toast("对方已关闭招呼功能")
-                                        } else {
-                                            if (greet_state && UserManager.isUserVerify() != 1) {
-                                                HarassmentDialog(context, HarassmentDialog.CHATHI).show()
-                                            } else {
-                                                SayHiDialog(targetAccid, targetNickName, context).show()
-                                            }
+            .greet(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<GreetTimesBean?>>(null) {
+                override fun onNext(t: BaseResp<GreetTimesBean?>) {
+                    when {
+                        t.code == 200 -> {//成功
+                            val chatHiAttachment = ChatHiAttachment(
+                                UserManager.getGlobalLabelName(),
+                                ChatHiAttachment.CHATHI_HI
+                            )
+                            val config = CustomMessageConfig()
+                            config.enableUnreadCount = false
+                            config.enablePush = false
+                            val message = MessageBuilder.createCustomMessage(
+                                target_accid,
+                                SessionTypeEnum.P2P,
+                                "",
+                                chatHiAttachment,
+                                config
+                            )
+                            NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+                                .setCallback(object :
+                                    RequestCallback<Void?> {
+                                    override fun onSuccess(param: Void?) {
+                                        //发送通知修改招呼次数
+                                        UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
+                                        if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
+                                            EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
                                         }
-                                    } else {
-                                        ChargeVipDialog(
-                                            ChargeVipDialog.DOUBLE_HI,
-                                            context,
-                                            ChargeVipDialog.PURCHASE_GREET_COUNT
-                                        ).show()
+                                        ChatActivity.start(context1, target_accid)
                                     }
-                                } else {
-                                    ChargeVipDialog(
-                                        ChargeVipDialog.DOUBLE_HI,
-                                        context,
-                                        ChargeVipDialog.PURCHASE_VIP
-                                    ).show()
-                                }
-                            }
-                    } else {
-                        toast(t.msg)
+
+                                    override fun onFailed(code: Int) {
+
+                                    }
+
+                                    override fun onException(exception: Throwable) {
+
+                                    }
+                                })
+                        }
+                        t.code == 201 -> {//次数使用完毕，请充值次数
+                            ChargeVipDialog(
+                                ChargeVipDialog.DOUBLE_HI,
+                                context1,
+                                ChargeVipDialog.PURCHASE_GREET_COUNT
+                            ).show()
+                            EventBus.getDefault().post(GreetEvent(context1, false))
+                        }
+                        t.code == 202 -> { //（该用户当日免费接收次数完毕，请充值会员获取）
+                            GreetLimitlDialog(context1).show()
+                            EventBus.getDefault().post(GreetEvent(context1, false))
+                        }
+                        t.code == 203 -> { //招呼次数用完,认证获得次数
+                            GreetUseUpDialog(context1, GreetUseUpDialog.GREET_USE_UP_VERIFY, t.data).show()
+                            EventBus.getDefault().post(GreetEvent(context1, false))
+                        }
+                        t.code == 204 -> { //次数使用完毕，请充值会员获取次数
+                            GreetUseUpDialog(context1, GreetUseUpDialog.GREET_USE_UP_CHARGEVIP, t.data).show()
+                            EventBus.getDefault().post(GreetEvent(context1, false))
+                        }
+                        t.code == 205 -> { //会员次数用尽，明天再来
+                            EventBus.getDefault().post(GreetEvent(context1, false))
+                            GreetUseUpDialog(context1, GreetUseUpDialog.GREET_USE_UP_TOMORROW).show()
+                        }
+                        t.code == 401 -> { // 发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
+                            EventBus.getDefault().post(GreetEvent(context1, false))
+                            HarassmentDialog(context1, HarassmentDialog.CHATHI).show() //开启招呼提示
+                        }
+                        t.code == 403 -> //登录异常
+                            UserManager.startToLogin(context1 as Activity)
+                        else -> {
+                            EventBus.getDefault().post(GreetEvent(context1, false))
+                            toast(t.msg)
+                        }
                     }
-                    view.postDelayed({ view.isEnabled = true }, 500L)
+
+                    view?.isEnabled = true
                 }
 
                 override fun onError(e: Throwable?) {
-                    view.isEnabled = true
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    }
+                    toast(context1.getString(R.string.service_error))
+                    EventBus.getDefault().post(GreetEvent(context1, false))
+
                 }
             })
-
-
     }
 
 

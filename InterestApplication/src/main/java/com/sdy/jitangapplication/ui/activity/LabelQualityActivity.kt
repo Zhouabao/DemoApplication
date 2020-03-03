@@ -15,6 +15,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshEvent
+import com.sdy.jitangapplication.event.UpdateFindByTagListEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.AddLabelResultBean
@@ -81,13 +82,11 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         mPresenter.mView = this
 
         btnBack.setOnClickListener(this)
-        rightBtn1.setOnClickListener(this)
+        confirmBtn.setOnClickListener(this)
+        laterBtn.setOnClickListener(this)
         switchOne.setOnClickListener(this)
         hotT1.text = myLabelBean?.title ?: "完善标签特质"
-
-        rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_25dp)
-        rightBtn1.isEnabled = false
-
+        confirmBtn.isEnabled = false
         stateLabelQuality.retryBtn.onClick {
             stateLabelQuality.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.getLabelQuality(params)
@@ -172,16 +171,16 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
      * 检查保存按钮是否可用
      */
     private fun checkConfirmEnable() {
-        rightBtn1.isVisible = true
-        rightBtn1.text = if (choosedQualityAdapter.data.size > 0) {
-            "保存"
+//        rightBtn1.isVisible = true
+        confirmBtn.text = if (choosedQualityAdapter.data.size > 0) {
+            "完成"
         } else {
             "再选${MIN_QUALITY - choosedQualityAdapter.data.size}个"
         }
 
         t2.isVisible = choosedQualityAdapter.data.size <= 0
         labelQualityChoosedRv.isVisible = choosedQualityAdapter.data.size > 0
-        rightBtn1.isEnabled = choosedQualityAdapter.data.size in 1..5
+        confirmBtn.isEnabled = choosedQualityAdapter.data.size in 1..5
     }
 
 
@@ -195,6 +194,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                 EventBus.getDefault().post(UpdateMyLabelEvent())
                 EventBus.getDefault().post(RefreshEvent(true))
                 EventBus.getDefault().post(UserCenterEvent(true))
+                EventBus.getDefault().post(UpdateFindByTagListEvent())
 
                 finish()
             }
@@ -254,7 +254,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     private val saveParams by lazy { hashMapOf<String, Any>() }
     override fun onClick(view: View) {
         when (view) {
-            rightBtn1 -> {
+            confirmBtn -> {
                 if (choosedQualityAdapter.data.size < MIN_QUALITY) {
                     showWarningDialog(MIN_QUALITY)
                     return
@@ -272,7 +272,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                 mPresenter.saveMyQuality(saveParams)
 
             }
-            btnBack -> {
+            laterBtn, btnBack -> {
                 finish()
             }
 

@@ -90,6 +90,8 @@
             android:usesCleartextTraffic="true"
             tools:replace="android:name,android:theme,android:icon">
 
+        <activity android:name=".ui.activity.FindByTagListActivity"/>
+
         <activity android:name=".ui.activity.LikeMeReceivedActivity">
         </activity>
         <activity android:name=".ui.activity.GreetReceivedActivity">

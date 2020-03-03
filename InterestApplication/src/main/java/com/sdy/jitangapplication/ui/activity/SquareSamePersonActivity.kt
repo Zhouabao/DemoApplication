@@ -24,6 +24,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.SamePersonListBean
 import com.sdy.jitangapplication.model.TopicBean
 import com.sdy.jitangapplication.presenter.SquareSamePersonPresenter
@@ -141,11 +142,15 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
 
     override fun onGetTitleInfoResult(b: Boolean, data: SamePersonListBean?) {
         if (b) {
+            if ((data?.list.isNullOrEmpty() || data?.list!!.size < Constants.PAGESIZE)) {
+                adapter.hasmore = false
+            }
             stateSamePerson.viewState = MultiStateView.VIEW_STATE_CONTENT
             for (tdata in data?.list ?: mutableListOf()) {
                 tdata.originalLike = tdata.isliked
             }
             adapter.addData(data?.list ?: mutableListOf())
+
             if (data?.people_cnt == 0) {
                 samePersonCount.visibility = View.INVISIBLE
             } else {
@@ -159,11 +164,13 @@ class SquareSamePersonActivity : BaseMvpActivity<SquareSamePersonPresenter>(), S
         if (refreshSamePerson.state == RefreshState.Refreshing) {
             refreshSamePerson.finishRefresh(b)
             refreshSamePerson.resetNoMoreData()
+            adapter.hasmore = true
         } else if (refreshSamePerson.state == RefreshState.Loading) {
-            if (b && data?.list.isNullOrEmpty())
+            if (b && data?.list.isNullOrEmpty()) {
                 refreshSamePerson.finishLoadMoreWithNoMoreData()
-            else
+            } else {
                 refreshSamePerson.finishLoadMore(b)
+            }
         }
     }
 

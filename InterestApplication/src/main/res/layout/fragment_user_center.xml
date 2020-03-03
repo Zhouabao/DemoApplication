@@ -100,25 +100,7 @@
                         app:layout_constraintTop_toTopOf="@id/userVerify"
                         />
 
-                <TextView
-                        android:id="@+id/userVerifyScore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:drawableLeft="@drawable/icon_smile_orange"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:drawablePadding="2dp"
-                        android:textColor="@color/colorOrange"
-                        android:background="@drawable/rectangle_white_3dp"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="5dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userVerify"
-                        app:layout_constraintLeft_toRightOf="@id/userVerifyTipBtn"
-                        app:layout_constraintTop_toTopOf="@id/userVerify"
-                        tools:text="+10"
-                        />
+
 
                 <ImageView
                         android:id="@+id/settingBtn"

@@ -33,16 +33,14 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
         helper.itemView.labelTypeName.text = item.title
         GlideUtil.loadImg(mContext, item.icon, helper.itemView.labelTypeNameIv)
         helper.itemView.labelManagerBtn.isVisible = item.ismine
-        val labelAdapter = AllNewLabelAdapter1(from = from, isCross = item.ismine || item.ishot)
+        val labelAdapter = AllNewLabelAdapter1(item.ismine || item.ishot)
         if (item.ismine || item.ishot) {
             for (decoration in 0 until helper.itemView.labelTypeRv.itemDecorationCount) {
                 helper.itemView.labelTypeRv.removeItemDecorationAt(decoration)
             }
             helper.itemView.labelTypeRv.layoutManager = LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-            labelAdapter.index = 0
         } else {
             helper.itemView.labelTypeRv.layoutManager = GridLayoutManager(mContext, 3, RecyclerView.VERTICAL, false)
-            labelAdapter.index = 1
         }
         helper.itemView.labelTypeRv.adapter = labelAdapter
         labelAdapter.setNewData(item.son)
@@ -69,7 +67,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
             for (index in 0 until mData.size) {
                 if (!(mData[index].ishot || mData[index].ismine))
                     for (tdata1 in mData[index].son) {
-                        if (tdata1.checked ) {
+                        if (tdata1.checked) {
                             checkedCount += 1
                         }
                     }

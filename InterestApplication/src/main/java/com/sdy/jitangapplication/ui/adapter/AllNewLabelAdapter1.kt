@@ -10,7 +10,6 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.NewLabel
-import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import kotlinx.android.synthetic.main.item_label_all1.view.*
 
 /**
@@ -19,11 +18,7 @@ import kotlinx.android.synthetic.main.item_label_all1.view.*
  *    desc   : 所有新标签的数据
  *    version: 1.0
  */
-class AllNewLabelAdapter1(
-    var index: Int = 1,
-    var from: Int = AddLabelActivity.FROM_ADD_NEW,
-    val isCross: Boolean = false
-) :
+class AllNewLabelAdapter1(val isCross: Boolean = false) :
     BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all1) {
     override fun convert(helper: BaseViewHolder, item: NewLabel) {
         //1.无需付费.未添加 2无需付费.已经添加  3.无需付费.已删除 4需要付费.付费进入

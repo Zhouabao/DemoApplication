@@ -26,16 +26,14 @@
             app:msv_loadingView="@layout/loading_layout"
             app:msv_viewState="loading">
 
-        <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+
 
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                 <TextView
                         android:id="@+id/t2"
@@ -144,13 +142,36 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:overScrollMode="never"
+                        android:layout_weight="1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="@id/t1"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/t3"/>
 
 
+                <TextView
+                        android:id="@+id/confirmBtn"
+                        android:background="@drawable/selector_confirm_btn_25dp"
+                        android:text="再选3个"
+                        android:textColor="#ffffffff"
+                        android:textSize="17sp"
+                        android:gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:layout_gravity="center"
+                        android:layout_width="300dp"
+                        android:layout_height="47dp"/>
+
+                <TextView
+                        android:id="@+id/laterBtn"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="稍后再说"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:textColor="#ffcbcdd3"
+                        android:textSize="15sp"
+                        />
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
     </com.kennyc.view.MultiStateView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -175,31 +175,37 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     private val allMessageTypeAdapter by lazy { MessageCenterAllAdapter() }
 
     private fun initMessageAllHeader(): View {
+        allMessageTypeAdapter.addData(MessageListBean(title = "招呼", icon = R.drawable.icon_message_greet))
         allMessageTypeAdapter.addData(MessageListBean(title = "点赞", icon = R.drawable.icon_message_thumbs_up))
         allMessageTypeAdapter.addData(MessageListBean(title = "评论", icon = R.drawable.icon_message_comment))
-        allMessageTypeAdapter.addData(MessageListBean(title = "喜欢我", icon = R.drawable.icon_message_like))
-        allMessageTypeAdapter.addData(MessageListBean(title = "招呼", icon = R.drawable.icon_message_greet))
+//        allMessageTypeAdapter.addData(MessageListBean(title = "喜欢我", icon = R.drawable.icon_message_like))
+
         val friendsView = layoutInflater.inflate(R.layout.headview_message_all, messageListRv, false)
-        friendsView.messageCenterRv.layoutManager = GridLayoutManager(activity!!, 4)
+        friendsView.messageCenterRv.layoutManager = GridLayoutManager(activity!!, 3)
         friendsView.messageCenterRv.adapter = allMessageTypeAdapter
         allMessageTypeAdapter.setOnItemClickListener { _, _, position ->
             when (position) {
-                0 -> {//点赞
-                    startActivity<MessageSquareActivity>("type" to 1)
+                0 -> {
+                    //招呼
+                    startActivity<GreetReceivedActivity>()
+
                 }
-                1 -> {//评论
+                1 -> {
+                    //点赞
+                    startActivity<MessageSquareActivity>("type" to 1)
+
+                }
+                2 -> {
+                    //评论
                     startActivity<MessageSquareActivity>("type" to 2)
                 }
-                2 -> {//喜欢我
+                else -> {
+                    //喜欢我
                     if (like_free_show) {
                         startActivity<LikeMeReceivedActivity>()
                     } else {
                         startActivity<MessageLikeMeActivity>()
                     }
-
-                }
-                else -> {//招呼
-                    startActivity<GreetReceivedActivity>()
                 }
             }
             allMessageTypeAdapter.data[position].count = 0
@@ -248,11 +254,11 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         UserManager.approveBean = ApproveBean(data?.approve_time ?: 0L, data?.isapprove ?: 0)
 
 
-        ////1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
-        allMessageTypeAdapter.data[0].count = data?.thumbs_up_count ?: 0
-        allMessageTypeAdapter.data[1].count = data?.comment_count ?: 0
-        allMessageTypeAdapter.data[2].count = data?.liked_unread_cnt ?: 0
-        allMessageTypeAdapter.data[3].count = data?.greet_count ?: 0
+        //1广场点赞 2评论我的 3为我评论点赞的 4@我的列表
+        allMessageTypeAdapter.data[0].count = data?.greet_count ?: 0
+        allMessageTypeAdapter.data[1].count = data?.thumbs_up_count ?: 0
+        allMessageTypeAdapter.data[2].count = data?.comment_count ?: 0
+//        allMessageTypeAdapter.data[3].count = data?.liked_unread_cnt ?: 0
         allMessageTypeAdapter.notifyDataSetChanged()
         like_free_show = data?.like_free_show ?: false
         if ((data?.comment_count ?: 0 > 0) || (data?.thumbs_up_count ?: 0) > 0 || (data?.liked_unread_cnt ?: 0) > 0)

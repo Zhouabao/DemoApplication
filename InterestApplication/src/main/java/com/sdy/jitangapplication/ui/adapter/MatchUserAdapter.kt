@@ -228,8 +228,6 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         }
 
 
-        holder.itemView.matchAim.isVisible = item.intention.isNotEmpty()//标签意向
-        holder.itemView.matchAimTv.text = item.intention
         holder.itemView.btnHiLeftTime.text = "${UserManager.getLightingCount()}"
         GlideUtil.loadCircleImg(mContext, item.intention_icon, holder.itemView.matchAimIv)
         holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""

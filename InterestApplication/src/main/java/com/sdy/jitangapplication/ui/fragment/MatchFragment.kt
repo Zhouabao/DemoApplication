@@ -3,8 +3,6 @@ package com.sdy.jitangapplication.ui.fragment
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,15 +17,14 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
@@ -36,20 +33,19 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
-import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.MatchListBean
+import com.sdy.jitangapplication.model.Newtag
+import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
-import com.sdy.jitangapplication.ui.activity.AddLabelActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
-import com.sdy.jitangapplication.ui.adapter.TagAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UserManager
@@ -69,82 +65,14 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
 
     override fun loadData() {
-        initTagsView()
         initView()
     }
 
-    private val tags by lazy { mutableListOf<TagBean>() }
-    private val tagAdapter by lazy { TagAdapter() }
-    private fun initTagsView() {
-        addTagBtn.onClick(object : CustomClickListener() {
-            override fun onSingleClick(view: View) {
-                val intent = Intent()
-                intent.putExtra("from", AddLabelActivity.FROM_ADD_NEW)
-                intent.setClass(activity!!, AddLabelActivity::class.java)
-                startActivity(intent)
-            }
-        })
-
-        matchTagRv.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        matchTagRv.adapter = tagAdapter
-        setTagData()
-        tagAdapter.setOnItemClickListener { _, view, position ->
-            preTagId = UserManager.getGlobalLabelId()
-            for (tag in tagAdapter.data) {
-                tag.cheked = tag == tagAdapter.data[position]
-            }
-            tagAdapter.notifyDataSetChanged()
-
-            UserManager.saveGlobalLabelId(tagAdapter.data[position].id)
-            matchParams["tag_id"] = tagAdapter.data[position].id
-            mPresenter.getMatchList(matchParams)
-            matchUserAdapter.data.clear()
-            setViewState(LOADING)
-        }
-
-    }
-
-    private fun setTagData() {
-        tags.clear()
-        tags.addAll(UserManager.getSpLabels())
-//        tags.add(TagBean(-1))
-        //初始化选中的tag
-        if (UserManager.getGlobalLabelId() == 0) {
-            if (tags.isNotEmpty()) {
-                tags[0].cheked = true
-                matchParams["tag_id"] = tags[0].id
-                UserManager.saveGlobalLabelId(tags[0].id)
-            }
-        } else {
-            var hasCheck = false
-            for (tag in tags) {
-                if (tag.id == UserManager.getGlobalLabelId()) {
-                    tag.cheked = true
-                    matchParams["tag_id"] = tag.id
-                    hasCheck = true
-                    break
-                }
-            }
-            if (!hasCheck) {
-                tags[0].cheked = true
-                matchParams["tag_id"] = tags[0].id
-                UserManager.saveGlobalLabelId(tags[0].id)
-            }
-        }
-        tagAdapter.setNewData(tags)
-        preTagId = UserManager.getGlobalLabelId()
-    }
 
     private var hasMore = false
 
     //用户适配器
     private val matchUserAdapter: MatchUserAdapter by lazy { MatchUserAdapter(mutableListOf()) }
-    //我的资料完整度
-    private var my_percent_complete: Int = 0//（我的资料完整度）
-    //标准完整度
-    private var normal_percent_complete: Int = 0//（标准完整度）
-    private var myCount: Int = 0//当前滑动次数
-    private var maxCount: Int = 0//最大滑动次数
     private var is_human: Boolean = false
 
     companion object {
@@ -213,21 +141,9 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
         mPresenter.mView = this
         mPresenter.context = activity!!
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val param = customStatusBar.layoutParams as ConstraintLayout.LayoutParams
-            param.height = BarUtils.getStatusBarHeight()
-        } else {
-            customStatusBar.isVisible = false
-        }
-
         retryBtn.setOnClickListener(this)
-        greetBtn.setOnClickListener(this)
-        filterBtn.setOnClickListener(this)
-        completeLabelBtn.setOnClickListener(this)
-        dislikeBtn.setOnClickListener(this)
-        likeBtn.setOnClickListener(this)
-        likeBtn.setOnClickListener(this)
+        changeAvatorCloseBtn.setOnClickListener(this)
+        changeAvatorBtn.setOnClickListener(this)
 
         initialize()
 
@@ -247,15 +163,13 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 }
                 R.id.btnHiLottieView,
                 R.id.btnHi -> {
-                    CommonFunction.commonGreet(
-                        activity!!,
-                        matchUserAdapter.data[manager.topPosition].isfriend == 1,
-                        matchUserAdapter.data[manager.topPosition].greet_switch,
-                        matchUserAdapter.data[manager.topPosition].greet_state,
-                        matchUserAdapter.data[manager.topPosition].accid,
-                        matchUserAdapter.data[manager.topPosition].nickname ?: "",
-                        view = itemView.findViewById(R.id.btnHi)
-                    )
+                    val setting = SwipeAnimationSetting.Builder()
+                        .setDirection(Direction.Right)
+                        .setDuration(Duration.Normal.duration)
+                        .setInterpolator(AccelerateInterpolator())
+                        .build()
+                    manager.setSwipeAnimationSetting(setting)
+                    card_stack_view.swipe()
                 }
                 R.id.nextImgBtn -> {
                     if (itemView != null) {
@@ -308,37 +222,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.completeLabelBtn -> {//完善标签
-                startActivity<MyLabelActivity>()
-            }
-            R.id.greetBtn -> {
-                CommonFunction.commonGreet(
-                    activity!!, matchUserAdapter.data[manager.topPosition].isfriend == 1,
-                    matchUserAdapter.data[manager.topPosition].greet_switch,
-                    matchUserAdapter.data[manager.topPosition].greet_state,
-                    matchUserAdapter.data[manager.topPosition].accid,
-                    matchUserAdapter.data[manager.topPosition].nickname ?: "",
-                    view = greetBtn
-                )
-            }
-            R.id.likeBtn -> {
-                val setting = SwipeAnimationSetting.Builder()
-                    .setDirection(Direction.Right)
-                    .setDuration(Duration.Normal.duration)
-                    .setInterpolator(AccelerateInterpolator())
-                    .build()
-                manager.setSwipeAnimationSetting(setting)
-                card_stack_view.swipe()
-            }
-            R.id.dislikeBtn -> {
-                val setting = SwipeAnimationSetting.Builder()
-                    .setDirection(Direction.Left)
-                    .setDuration(Duration.Normal.duration)
-                    .setInterpolator(AccelerateInterpolator())
-                    .build()
-                manager.setSwipeAnimationSetting(setting)
-                card_stack_view.swipe()
-            }
             R.id.retryBtn -> {
                 setViewState(LOADING)
                 updateLocation()
@@ -346,6 +229,12 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             }
             R.id.filterBtn -> {
                 FilterUserDialog(activity!!).show()
+            }
+            R.id.changeAvatorCloseBtn -> {
+                lieAvatorLl.isVisible = false
+            }
+            R.id.changeAvatorBtn -> { //强制替换头像
+                lieAvatorLl.isVisible = false
             }
         }
     }
@@ -364,60 +253,40 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
             if (matchBeans != null) {
-                if (matchBeans.people_cnt > 0) {
-                    rgIndexUse.isVisible = true
-                    matchUseCount.text = "${matchBeans!!.people_cnt}"
-                } else {
-                    rgIndexUse.isVisible = false
-                }
+
                 hasMore = (matchBeans!!.list ?: mutableListOf<MatchBean>()).size == PAGESIZE
 
                 matchUserAdapter.addData(matchBeans.list ?: mutableListOf<MatchBean>())
                 matchUserAdapter.my_tags_quality = matchBeans.mytags ?: mutableListOf<Newtag>()
                 paramsLastFiveIds = matchBeans.exclude ?: mutableListOf()
 
-                //保存没有标签的用户的滑动次数，为了提醒其去更新标签内容
-                completeLabelBtn.isVisible = !matchBeans.is_full
-                if (matchBeans.is_full) {
-                    UserManager.saveCompleteLabelCount(matchBeans.interest_times)
-                }
-
                 //保存 VIP信息
                 UserManager.saveUserVip(matchBeans.isvip)
                 //保存认证信息
                 UserManager.saveUserVerify(matchBeans.isfaced)
 
-                UserManager.saveLeftSlideCount(matchBeans.like_times)
                 EventBus.getDefault().post(UpdateSlideCountEvent())
-                //保存提示剩余滑动次数
-                UserManager.saveHighlightCount(matchBeans.highlight_times)
                 //保存剩余招呼次数
                 UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
-                //保存倒计时时间
-                UserManager.saveCountDownTime(matchBeans.countdown)
 
                 //保存引导次数
                 UserManager.motion = matchBeans.motion
-                my_percent_complete = matchBeans.my_percent_complete
-                normal_percent_complete = matchBeans.normal_percent_complete
-                myCount = matchBeans.my_like_times
-                maxCount = matchBeans.total_like_times
                 is_human = matchBeans.is_human
+                lieAvatorLl.isVisible = !matchBeans.is_human
                 when (matchBeans.motion) {
-                    GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
+                    GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7头像违规替换
                         EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
                     }
-                    GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> {
+                    GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> {//2//头像通过,但是不是真人
                         UserManager.replace_times = matchBeans.replace_times
                     }
-                    GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
+                    GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//3//完善相册
                         UserManager.perfect_times = matchBeans.perfect_times
                     }
                     else -> {
                         UserManager.cleanVerifyData()
                     }
                 }
-                tvLeftChatTime.text = "${UserManager.getLightingCount()}"
             }
 
             if (matchBeans == null || (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty())) {
@@ -460,15 +329,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 CommonFunction.toast(data.msg)
                 card_stack_view.rewind()
             }
-        } else if (data.code == 201) {
-            if (data.data!!.residue == 0) {
-                card_stack_view.rewind()
-                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
-                return
-            }
-        } else if (data.code == 405) {
-            CommonFunction.toast(data.msg)
-            card_stack_view.rewind()
         }
     }
 
@@ -493,11 +353,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
         } else if (data.code == 201) {
             card_stack_view.rewind()
-            if (my_percent_complete <= normal_percent_complete)
-                RightSlideOutdDialog(activity!!, myCount, maxCount).show()
-            else
-                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
-
         } else if (data.code == 405) {
             CommonFunction.toast(data.msg)
             card_stack_view.rewind()
@@ -571,7 +426,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     fun onRefreshEvent(event: RefreshEvent) {
 //        matchStateview.viewState = MultiStateView.VIEW_STATE_LOADING
         setViewState(LOADING)
-        setTagData()
 
         matchUserAdapter.data.clear()
         hasMore = false
@@ -603,20 +457,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateCardEvent(event: GreetEvent) {
-        if (event.success && FragmentUtils.getTopShow(fragmentManager!!) is MatchFragment) {
-            val setting = SwipeAnimationSetting.Builder()
-                .setDirection(Direction.Top)
-                .setDuration(Duration.Normal.duration)
-                .setInterpolator(AccelerateInterpolator())
-                .build()
-            manager.setSwipeAnimationSetting(setting)
-            card_stack_view.swipe()
-        } else {
-//             card_stack_view.rewind()
-        }
+        //请求失败了 卡片飞回来
+        if (!event.success)
+            card_stack_view.rewind()
     }
 
-    private var preTagId = 0
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun turnToLastLabelEvent(event: TurnToLastLabelEvent) {
         if (event.from == ChargeLabelDialog.FROM_INDEX) {
@@ -648,7 +493,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
         //撤回的动画设置
         val setting = RewindAnimationSetting.Builder()
-            .setDirection(Direction.Top)
+            .setDirection(Direction.Right)
             .setDuration(Duration.Normal.duration)
             .setInterpolator(DecelerateInterpolator())
             .build()
@@ -721,15 +566,12 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
                 UserManager.slide_times = 0
             } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times && !UserManager.getAlertChangeAvator()) {//引导替换
-                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS))
+                ChangeAvatarRealManDialog(activity!!, ChangeAvatarRealManDialog.VERIFY_NEED_VALID_REAL_MAN).show()
                 UserManager.slide_times = 0
             }
         }
 
-        //非真人头像提示去修改头像
-        if (!is_human && manager.topPosition - 1 == 0 && !UserManager.getAlertChangeRealMan()) {
-            ChangeAvatarRealManDialog(activity!!).show()
-        }
+
 
         resetAnimation()
         if (direction == Direction.Left) {//左滑不喜欢
@@ -738,28 +580,17 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
-            UserManager.saveSlideCount(UserManager.getSlideCount() + 1)
-            //保存剩余滑动次数
-            if (UserManager.isUserVip() || UserManager.getLeftSlideCount() > 0) {
-                if (!UserManager.isUserVip() && UserManager.getLeftSlideCount() > 0) {
-                    UserManager.saveLeftSlideCount(UserManager.getLeftSlideCount().minus(1))
-                    EventBus.getDefault().post(UpdateSlideCountEvent())
-                }
-                //如果当前弹窗的滑动剩余次数为0并且没有显示过完善标签的弹窗，就弹窗
-                if (UserManager.getCompleteLabelCount() != -1 && UserManager.getCompleteLabelCount() == UserManager.getSlideCount() - 1) {
-                    CompleteLabelDialog(activity!!, UserManager.getGlobalLabelId()).show()
-                }
-                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid
-                if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
-                    params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
-                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
+            //非真人头像打招呼提示去修改头像
+//            ChangeAvatarRealManDialog(activity!!, ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN_GREET).show()
+            if (!is_human && manager.topPosition - 1 == 0 && !UserManager.getAlertChangeRealMan()) {
+                ChangeAvatarRealManDialog(
+                    activity!!,
+                    ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN_GREET,
+                    matchBean = matchUserAdapter.data[manager.topPosition - 1]
+                ).show()
             } else {
-                card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
-                card_stack_view.isEnabled = false
-                if (my_percent_complete < normal_percent_complete)
-                    RightSlideOutdDialog(activity!!, myCount, maxCount).show()
-                else
-                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+//                保存剩余滑动次数
+                CommonFunction.commonGreet(activity!!, matchUserAdapter.data[manager.topPosition - 1].accid)
             }
         }
 
@@ -783,7 +614,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     override fun onCardAppeared(view: View?, position: Int) {
         Log.d("CardStackView", "onCardAppeared: ($position)")
         if (view != null) {
-
             if (matchUserAdapter.data[manager.topPosition].greet_switch) {
                 (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
                 (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible = true
@@ -955,7 +785,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                     //打招呼成功，就减少招呼次数
                     if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
                         UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
-                        tvLeftChatTime.text = "${UserManager.getLightingCount()}"
                     }
                 }
 

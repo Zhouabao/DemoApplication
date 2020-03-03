@@ -95,7 +95,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         hotT1.text = "招呼列表"
         rightBtn.isVisible = true
         rightBtn.setTextColor(Color.WHITE)
-        rightBtn.text = "过往招呼"
+        rightBtn.text = "全部招呼"
         rightBtn.setOnClickListener {
             startActivity<MessageHiPastActivity>()
         }

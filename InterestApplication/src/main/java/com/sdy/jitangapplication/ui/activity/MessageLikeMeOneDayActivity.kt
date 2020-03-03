@@ -32,7 +32,6 @@ import com.sdy.jitangapplication.presenter.view.MessageLikeMeOneDayView
 import com.sdy.jitangapplication.ui.adapter.LikeMeOneDayGirdAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -160,11 +159,6 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
                 EventBus.getDefault().post(UpdateLikemeEvent(clickPos))
                 sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
             }
-        } else if (statusBean.code == 201) {
-            if (my_percent_complete <= normal_percent_complete)
-                RightSlideOutdDialog(this, myCount, maxCount).show()
-            else
-                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
         }
     }
 

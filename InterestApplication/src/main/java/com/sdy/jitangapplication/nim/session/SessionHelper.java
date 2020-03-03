@@ -47,6 +47,7 @@ import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderShareSquare;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderTip;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog;
+import com.sdy.jitangapplication.ui.dialog.ChatToViplDialog;
 import com.sdy.jitangapplication.ui.dialog.HumanVerifyDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 
@@ -314,25 +315,10 @@ public class SessionHelper {
                 //消息遮罩弹出相应弹窗
                 //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
                 if (UserManager.INSTANCE.getApproveBean() != null && UserManager.INSTANCE.getApproveBean().getIsapprove() != 0)//0 不验证
-                    if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 1) {//1去认证
+                    if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 1 || UserManager.INSTANCE.getApproveBean().getIsapprove() == 3) {//1去认证
                         new HumanVerifyDialog(context).show();
-                    } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 2) {//2去开通会员
-                        new ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, context, ChargeVipDialog.PURCHASE_VIP).show();
-                    } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 3) {//3去认证+去会员
-//                        if (UserManager.INSTANCE.isUserVerify() == 0)
-                        new HumanVerifyDialog(context).show();
-//                        else if (UserManager.INSTANCE.isUserVerify() == 2)
-//                            CommonFunction.INSTANCE.toast("正在实名认证中...请稍候");
-//                        else if (!UserManager.INSTANCE.isUserVip())
-//                            new ChargeVipDialog(ChargeVipDialog.FILTER, context, ChargeVipDialog.PURCHASE_VIP).show();
-                    } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 4) {// 4去会员+去认证
-//                        if (!UserManager.INSTANCE.isUserVip())
-                        new ChargeVipDialog(ChargeVipDialog.INFINITE_CHAT, context, ChargeVipDialog.PURCHASE_VIP).show();
-//                        else if (UserManager.INSTANCE.isUserVerify() == 0)
-//                            new HumanVerifyDialog(context).show();
-//                        else if (UserManager.INSTANCE.isUserVerify() == 2)
-//                            CommonFunction.INSTANCE.toast("正在实名认证中...请稍候");
-
+                    } else if (UserManager.INSTANCE.getApproveBean().getIsapprove() == 2 || UserManager.INSTANCE.getApproveBean().getIsapprove() == 4) {//2去开通会员
+                        new ChatToViplDialog(context).show();
                     }
             }
 

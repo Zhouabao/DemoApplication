@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kennyc.view.MultiStateView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading"
+        android:id="@+id/stateFindByTag"
+        tools:context=".ui.fragment.FindByTagFragment">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshFindByTag"
+            app:srlEnableRefresh="false"
+            app:srlEnableLoadMore="false"
+            app:srlDisableContentWhenLoading="true"
+            app:srlDisableContentWhenRefresh="true"
+            android:layout_width="match_parent"
+            android:background="@color/colorWhite"
+            android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFindByTag"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+</com.kennyc.view.MultiStateView>

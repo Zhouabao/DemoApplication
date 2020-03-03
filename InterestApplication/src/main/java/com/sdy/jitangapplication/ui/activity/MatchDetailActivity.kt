@@ -41,6 +41,7 @@ import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
@@ -48,7 +49,6 @@ import com.sdy.jitangapplication.ui.adapter.*
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
-import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
 import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
@@ -150,10 +150,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         vpUserDetail.setScrollable(false)
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
-        detailUserLikeBtn.setOnClickListener(this)
-        detailUserDislikeBtn.setOnClickListener(this)
-        detailUserChatBtn.setOnClickListener(this)
-        detailUserGreetBtn.setOnClickListener(this)
+        detailUserChatLl.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)
         backBtn.setOnClickListener(this)
         backBtn1.setOnClickListener(this)
@@ -556,11 +553,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                             sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                         }
                     }
-                } else if (statusBean.code == 201) {
-                    if (matchBean!!.my_percent_complete <= matchBean!!.normal_percent_complete)
-                        RightSlideOutdDialog(this, matchBean!!.my_like_times, matchBean!!.total_like_times).show()
-                    else
-                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
                 }
         } else {
             if (statusBean != null)
@@ -602,42 +594,17 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.moreBtn1 -> {//更多
                 showMoreActionDialog()
             }
-            R.id.detailUserDislikeBtn -> {//不感兴趣
-                mPresenter.dislikeUser(params)
-            }
-            R.id.detailUserLikeBtn -> {//感兴趣
-                mPresenter.likeUser(params)
-            }
             //这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
-            //1.首先判断是否有次数，
-            // 若有 就打招呼
-            // 若无 就弹充值
-            R.id.detailUserChatBtn -> {
-                if (matchBean != null)
-                    CommonFunction.commonGreet(
-                        this,
-                        matchBean!!.isfriend == 1,
-                        matchBean!!.greet_switch,
-                        matchBean!!.greet_state,
-                        matchBean!!.accid,
-                        matchBean!!.nickname ?: "",
-                        matchBean!!.isgreeted,
-                        detailUserChatBtn
-                    )
-            }
+            //todo 判断是否是好友  如果是好友，就聊天 不然就打招呼
+            R.id.detailUserChatLl -> {
+                if (matchBean != null && (matchBean!!.isfriend == 1 || matchBean!!.isgreeted)) {
+                    ChatActivity.start(this, matchBean!!.accid)
+                } else {
+                    if (matchBean != null)
+                        CommonFunction.commonGreet(this, matchBean!!.accid, detailUserChatLl)
+                }
 
-            R.id.detailUserGreetBtn -> {
-                if (matchBean != null)
-                    CommonFunction.commonGreet(
-                        this,
-                        matchBean!!.isfriend == 1,
-                        matchBean!!.greet_switch,
-                        matchBean!!.greet_state,
-                        matchBean!!.accid,
-                        matchBean!!.nickname ?: "",
-                        matchBean!!.isgreeted,
-                        detailUserChatBtn
-                    )
+
             }
 
             R.id.backBtn1, R.id.btnBack2,
@@ -703,45 +670,16 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             UserManager.saveLightingCount(lightningcnt)
             EventBus.getDefault().postSticky(UpdateHiCountEvent())
         }
-        if (countdown != -1)
-            UserManager.saveCountDownTime(countdown)
 
-        //已感兴趣或者是好友不做操作
-        if (matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
-            detailUserDislikeBtn.visibility = View.INVISIBLE
-            detailUserLikeBtn.isVisible = false
-            detailUserGreetBtn.isVisible = true
-        } else {
-            detailUserDislikeBtn.visibility = View.VISIBLE
-            detailUserLikeBtn.isVisible = true
-            detailUserGreetBtn.isVisible = true
-        }
 
         //判断是否为好友 是：显示聊天
         //              否: 判断是否开启招呼,是否喜欢过
-        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
-            detailUserChatBtn.text = "聊  天"
-            detailUserChatBtn.isVisible = true
-            detailUserGreetBtn.isVisible = false
+        if (matchBean!!.isfriend == 1 || matchBean!!.isgreeted) {//是好友就显示聊天
+            detailUserChatBtn.text = "聊天"
+            detailChatTypeIcon.setImageResource(R.drawable.icon_chat_white)
         } else {
-            detailUserChatBtn.isVisible = false
-            detailUserGreetBtn.isVisible = true
-            detailUserLikeBtn.isVisible = matchBean!!.isliked != 1//喜欢过就不显示“感兴趣”
-            if (!matchBean!!.greet_switch) {//招呼未开启不显示打招呼
-                detailUserChatBtn.isVisible = false
-                detailUserGreetBtn.isVisible = false
-            } else {//招呼开启,   招呼有效 与 招呼无效
-                if (matchBean!!.isgreeted) {
-                    detailUserGreetBtn.isVisible = false
-                    detailUserChatBtn.isVisible = true
-                    detailUserChatBtn.text = "继续聊天"
-                } else {
-                    detailUserGreetBtn.isVisible = true
-                    detailUserChatBtn.isVisible = false
-                }
-            }
-
-
+            detailUserChatBtn.text = "打招呼"
+            detailChatTypeIcon.setImageResource(R.drawable.icon_hi_match)
         }
     }
 

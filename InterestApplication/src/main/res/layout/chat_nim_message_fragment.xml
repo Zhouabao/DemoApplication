@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/colorDivider1"
-              android:orientation="vertical">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorDivider1"
+        android:orientation="vertical">
 
     <FrameLayout
             android:id="@+id/message_activity_list_view_container"
             android:layout_width="match_parent"
             android:layout_height="0dip"
-            android:layout_weight="1">
+            app:layout_constraintBottom_toTopOf="@+id/messageActivityBottomLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
 
         <com.netease.nim.uikit.business.session.helper.MsgBkImageView
                 android:id="@+id/message_activity_background"
@@ -30,7 +35,6 @@
         </LinearLayout>
 
 
-
         <TextView
                 android:id="@+id/btnMakeFriends"
                 android:text="成为好友"
@@ -49,6 +53,26 @@
                 android:layout_height="35dp"/>
     </FrameLayout>
 
-    <include layout="@layout/chat_nim_message_activity_bottom_layout"/>
 
-</LinearLayout>
+    <TextView
+            android:id="@+id/suggestToGreet"
+            app:layout_constraintBottom_toTopOf="@+id/messageActivityBottomLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:background="@drawable/icon_suggest_to_greet"
+            android:text="和TA打个招呼吧"
+            android:textColor="#fff17413"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:paddingBottom="4dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_height="52dp"/>
+
+    <include
+            layout="@layout/chat_nim_message_activity_bottom_layout"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="wrap_content"
+              android:layout_gravity="center"
+              android:gravity="center"
+              android:background="@color/colorTransparent"
+              android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical"
+            android:layout_width="300dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_rectangle_gray_white_10dp"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/bg"
+                android:background="@drawable/icon_bg_greet_use_up_verify_big"
+                android:layout_width="match_parent"
+                android:layout_height="196dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <LinearLayout
+                android:id="@+id/verifyOrVipLl"
+                android:background="@drawable/icon_bg_greet_use_up_verify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                    android:id="@+id/normalGreetTimes"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:text="普通用户招呼次数+0"
+                    android:drawableLeft="@drawable/icon_normal_greet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="51dp"/>
+
+            <TextView
+                    android:id="@+id/verifyGreetTimes"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:text="真人认证招呼次数+0"
+                    android:drawableLeft="@drawable/icon_verify_greet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="51dp"/>
+
+            <TextView
+                    android:id="@+id/vipGreetTimes"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:text="开通会员招呼次数+0"
+                    android:drawableLeft="@drawable/icon_vip_greet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="51dp"/>
+        </LinearLayout>
+
+
+        <ImageView
+                android:id="@+id/close"
+                android:src="@drawable/icon_close1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_gravity="right"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+
+        <TextView
+                android:id="@+id/greetUseUpTitle"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="今日招呼次数已用完"
+                android:textColor="#ff191919"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bg"
+                />
+
+        <TextView
+                android:id="@+id/greetUseUpContent"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp"
+                android:text="为鼓励用户真实性通过认证的用户每天可多打2个招呼"
+                android:textColor="#B6BABF"
+                android:layout_marginLeft="38dp"
+                android:layout_marginRight="38dp"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/greetUseUpTitle"
+                />
+
+        <TextView
+                android:id="@+id/greetUseUpBtn"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp"
+                android:background="@drawable/shape_rectangle_orange_25dp"
+                android:layout_width="232dp"
+                android:layout_height="40dp"
+                android:text="立即认证"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/greetUseUpContent"
+                />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

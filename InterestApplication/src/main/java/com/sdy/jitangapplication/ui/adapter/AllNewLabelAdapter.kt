@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_label_all.view.*
  *    desc   : 所有新标签的数据
  *    version: 1.0
  */
-class AllNewLabelAdapter : BaseQuickAdapter<NewLabel,    BaseViewHolder>(R.layout.item_label_all) {
+class AllNewLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all) {
     override fun convert(helper: BaseViewHolder, item: NewLabel) {
 
         helper.itemView.labelName.text = item.title

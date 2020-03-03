@@ -211,16 +211,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 }
 
         squareChatBtn1.onClick {
-            CommonFunction.commonGreet(
-                this,
-                squareBean?.isfriend ?: false,
-                squareBean?.greet_switch ?: false,
-                squareBean?.greet_state ?: false,
-                squareBean?.accid ?: "",
-                squareBean?.nickname ?: "",
-                squareBean?.isgreeted ?: false,
-                squareChatBtn1
-            )
+            CommonFunction.commonGreet(this, squareBean?.accid ?: "", squareChatBtn1)
         }
         squareUserIv1.onClick {
             if ((squareBean?.accid ?: "") != UserManager.getAccid())

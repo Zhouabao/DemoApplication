@@ -39,9 +39,7 @@ import com.sdy.jitangapplication.presenter.LikeMeReceivedPresenter
 import com.sdy.jitangapplication.presenter.view.LikeMeReceivedView
 import com.sdy.jitangapplication.ui.adapter.LikeMeUserAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.GuideLikeDialog
-import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.activity_like_me_received.*
@@ -218,11 +216,6 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
                 greetRv.rewind()
             }
 
-        } else if (data.code == 201) {
-            if (my_percent_complete <= normal_percent_complete)
-                RightSlideOutdDialog(this, myCount, maxCount).show()
-            else
-                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
         } else if (data.code == 405) {
             CommonFunction.toast(data.msg)
             greetRv.rewind()
@@ -377,10 +370,6 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
                 } else {
                     greetRv.postDelayed({ greetRv.rewind() }, 100)
                     greetRv.isEnabled = false
-                    if (my_percent_complete <= normal_percent_complete)
-                        RightSlideOutdDialog(this!!, myCount, maxCount).show()
-                    else
-                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this!!).show()
                 }
             }
         }

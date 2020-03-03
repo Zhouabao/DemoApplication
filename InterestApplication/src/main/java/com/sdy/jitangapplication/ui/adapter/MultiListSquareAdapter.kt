@@ -184,16 +184,7 @@ class MultiListSquareAdapter(
                 if (resetAudioListener != null) {
                     resetAudioListener!!.resetAudioState()
                 }
-                CommonFunction.commonGreet(
-                    mContext,
-                    item.isfriend,
-                    item.greet_switch,
-                    item.greet_state,
-                    item.accid,
-                    item.nickname ?: "",
-                    item.isgreeted,
-                    holder.itemView.squareChatBtn1
-                )
+                CommonFunction.commonGreet(mContext, item.accid, holder.itemView.squareChatBtn1)
 
             }
 

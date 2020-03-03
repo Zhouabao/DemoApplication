@@ -115,7 +115,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
         userInfoSettingBtn.text = "完成度：${userInfoBean?.userinfo?.percent_complete}%"
-        userVerifyScore.text = "+${userInfoBean?.userinfo?.identification}"
 
         // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
         checkVerify()
@@ -130,13 +129,11 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             userVerifyTipBtn.text = "已认证"
             userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorWhite))
             userVerifyTipBtn.isEnabled = false
-            userVerifyScore.isVisible = false
         } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) { //审核中
             userVerify.setImageResource(R.drawable.icon_verify_reject)
             userVerifyTipBtn.text = "认证审核中"
             userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayTextBF))
             userVerifyTipBtn.isEnabled = false
-            userVerifyScore.isVisible = false
         } else {
             userVerify.setImageResource(R.drawable.icon_verify_reject)
             userVerifyTipBtn.isVisible = true
@@ -145,10 +142,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
             if (userInfoBean?.userinfo?.isfaced == 4) {//审核不通过
                 userVerifyTipBtn.text = "重新认证"
-                userVerifyScore.isVisible = true
             } else {//未认证
                 userVerifyTipBtn.text = "立即认证"
-                userVerifyScore.isVisible = true
             }
         }
     }

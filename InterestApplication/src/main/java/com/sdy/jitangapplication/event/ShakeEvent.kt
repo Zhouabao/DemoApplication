@@ -14,4 +14,11 @@ class TurnToLastLabelEvent(val from: Int)
 
 class CloseDialogEvent()
 
+//更新首页标签列表数据
+class UpdateFindByTagEvent()
+
+//更新某个标签下的数据
+class UpdateFindByTagListEvent()
+
+
 

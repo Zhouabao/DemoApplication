@@ -230,8 +230,35 @@ interface Api {
      * indexV2
      */
     @FormUrlEncoded
-    @POST("Index/indexV12${Constants.END_BASE_URL}")
+    @POST("Index/lookForPeople${Constants.END_BASE_URL}")
     fun getMatchList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchListBean?>>
+
+
+    /**
+     * 获取所有兴趣
+     *
+     */
+    @FormUrlEncoded
+    @POST("Tags/lookForAllTags${Constants.END_BASE_URL}")
+    fun lookForAllTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddLabelBean>>
+
+
+    /**
+     * 兴趣找人
+     *
+     */
+    @FormUrlEncoded
+    @POST("index/lookForPeopleTag${Constants.END_BASE_URL}")
+    fun lookForPeopleTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<FindByTagBean?>>
+
+
+    /**
+     * 单独添加标签
+     *
+     */
+    @FormUrlEncoded
+    @POST("Tags/addMyTagsSingle${Constants.END_BASE_URL}")
+    fun addMyTagsSingle(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddSinlgLabelBean?>>
 
 
     /**
@@ -269,8 +296,8 @@ interface Api {
      * 打招呼、上滑
      */
     @FormUrlEncoded
-    @POST("relationship/greetV3${Constants.END_BASE_URL}")
-    fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<StatusBean?>>
+    @POST("relationship/greetV13${Constants.END_BASE_URL}")
+    fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetTimesBean?>>
 
 
     /**

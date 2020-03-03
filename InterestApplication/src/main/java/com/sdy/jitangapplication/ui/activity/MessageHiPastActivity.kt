@@ -101,6 +101,11 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
             // 通知中的 RecentContact 对象的未读数为0
             ChatActivity.start(this, adapter.data[position].accid ?: "")
         }
+
+        clearBtn.onClick {
+            NIMClient.getService(MsgService::class.java).clearAllUnreadCount()
+            adapter.notifyDataSetChanged()
+        }
     }
 
     override fun onGreatListResult(t: BaseResp<MutableList<HiMessageBean>?>) {

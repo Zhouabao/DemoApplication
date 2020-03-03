@@ -1,5 +1,8 @@
 package com.sdy.jitangapplication.nim.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.SizeUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.api.UIKitOptions;
@@ -112,7 +116,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     private View rootView;
     private TextView btnMakeFriends;
+    private TextView suggestToGreet;
     private LinearLayout messageActivityBottomLayout;
+    private AnimatorSet set;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -126,8 +132,38 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.chat_nim_message_fragment, container, false);
         btnMakeFriends = rootView.findViewById(R.id.btnMakeFriends);
+        suggestToGreet = rootView.findViewById(R.id.suggestToGreet);
         messageActivityBottomLayout = rootView.findViewById(R.id.messageActivityBottomLayout);
 
+
+        ObjectAnimator ani1 = ObjectAnimator.ofFloat(suggestToGreet, "translationY", 0F, SizeUtils.dp2px(-15F));
+        ObjectAnimator ani2 = ObjectAnimator.ofFloat(suggestToGreet, "translationY", SizeUtils.dp2px(-15F), 0F);
+        set = new AnimatorSet();
+        set.playSequentially(ani1, ani2);
+//        set.play(ani1).before(ani2);
+        set.setDuration(800);
+        set.start();
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                set.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
 
         //发送消息成为好友
         btnMakeFriends.setOnClickListener(new View.OnClickListener() {
@@ -194,6 +230,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public void onResume() {
         super.onResume();
         pause = false;
+        suggestToGreet.setVisibility(View.VISIBLE);
+        set.start();
         inputPanel.onResume();
         messageListPanel.onResume();
         if (!sessionId.equals(Constants.ASSISTANT_ACCID))
@@ -222,6 +260,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (aitManager != null) {
             aitManager.reset();
         }
+        set.removeAllListeners();
     }
 
     public boolean onBackPressed() {
@@ -384,6 +423,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
     private Boolean sendAlready3Msgs() {
+        //todo 若己方未认证，则发送  您未通过真人认证，可能导致回复率偏低
+        // 若对方未认证，则发送   对方账号未认证，请小心诈骗
+        sendTipMessage("对方账号未认证，请小心诈骗");
+
         //发起方并且次数为0 禁止发送
         if (!sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsfriend() && nimBean.getIslimit() && leftGreetCount == 0) {
             if (!sendTip) {
@@ -481,11 +524,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void onInputPanelExpand() {
         messageListPanel.scrollToBottom();
+        suggestToGreet.setVisibility(View.GONE);
     }
 
     @Override
     public void shouldCollapseInputPanel() {
         inputPanel.collapse(false);
+        suggestToGreet.postDelayed(() -> suggestToGreet.setVisibility(View.VISIBLE), 500L);
     }
 
     //禁止消息长按操作
