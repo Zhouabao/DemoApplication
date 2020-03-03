@@ -23,11 +23,13 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.GreetEvent
+import com.sdy.jitangapplication.event.UpdateFindByTagListEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.GreetTimesBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.ui.activity.FindByTagListActivity
 import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
@@ -69,7 +71,7 @@ object CommonFunction {
     /**
      * 打招呼通用逻辑
      */
-    fun commonGreet(context: Context, targetAccid: String, view: View? = null) {
+    fun commonGreet(context: Context, targetAccid: String, view: View? = null, position: Int = -1) {
         if (view != null)
             view.isEnabled = false
         /**
@@ -82,7 +84,7 @@ object CommonFunction {
             return
         }
 
-        greet(targetAccid, context, view)
+        greet(targetAccid, context, view, position)
     }
 
 
@@ -96,7 +98,7 @@ object CommonFunction {
      * code  401  发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
      * code  400  招呼次数用尽~
      */
-    fun greet(target_accid: String, context1: Context, view: View?) {
+    fun greet(target_accid: String, context1: Context, view: View?, position: Int) {
         if (!NetworkUtils.isConnected()) {
             toast("请连接网络！")
             return
@@ -133,6 +135,9 @@ object CommonFunction {
                                         UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
                                         if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
                                             EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
+                                        }
+                                        if (ActivityUtils.getTopActivity() is FindByTagListActivity) {
+                                            EventBus.getDefault().post(UpdateFindByTagListEvent(position))
                                         }
                                         ChatActivity.start(context1, target_accid)
                                     }

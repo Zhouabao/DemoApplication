@@ -327,6 +327,9 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateFindByTagListEvent(event: UpdateFindByTagListEvent) {
-        refreshSamePerson.autoRefresh()
+        if (event.position != -1)
+            adapter.remove(event.position)
+        else
+            refreshSamePerson.autoRefresh()
     }
 }
