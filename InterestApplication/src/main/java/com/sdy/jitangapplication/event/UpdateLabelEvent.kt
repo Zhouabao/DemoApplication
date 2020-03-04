@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.event
 
 import com.sdy.jitangapplication.model.NewLabel
+import com.sdy.jitangapplication.model.SquareLabelBean
 import com.sdy.jitangapplication.model.WechatNameBean
 import com.sdy.jitangapplication.ui.fragment.MySquareFragment.Companion.TYPE_SQUARE
 
@@ -47,6 +48,12 @@ class UploadEvent(
  * @param  code失败的code码 判断是否是审核不通过
  */
 class AnnounceEvent(var serverSuccess: Boolean = false, var code: Int = 0)
+
+
+/**
+ * 传递标签事件
+ */
+class TransferLabelEvent(var label: SquareLabelBean)
 
 
 //重新上传内容的通知成功或者失败事件

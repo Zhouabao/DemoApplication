@@ -95,6 +95,7 @@ object CommonFunction {
      * code  203  招呼次数用完,认证获得次数
      * 204  次数使用完毕，请充值会员获取次数
      * 205  今日次数使用完毕
+     * 206  是好友/打过招呼的
      * code  401  发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
      * code  400  招呼次数用尽~
      */
@@ -174,6 +175,9 @@ object CommonFunction {
                         t.code == 205 -> { //会员次数用尽，明天再来
                             EventBus.getDefault().post(GreetEvent(context1, false))
                             GreetUseUpDialog(context1, GreetUseUpDialog.GREET_USE_UP_TOMORROW).show()
+                        }
+                        t.code == 206 -> { //是好友/打过招呼的，直接跳转聊天界面
+                            ChatActivity.start(context1, target_accid)
                         }
                         t.code == 401 -> { // 发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
                             EventBus.getDefault().post(GreetEvent(context1, false))

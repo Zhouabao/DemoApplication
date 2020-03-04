@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -74,6 +75,15 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         userAvatorTake.setOnClickListener(this)
         btnNextStep.setOnClickListener(this)
         help.setOnClickListener(this)
+
+        userAvatorTitle.text = SpanUtils.with(userAvatorTitle)
+            .append("上传")
+            .append("本人高清/美颜头像")
+            .setForegroundColor(resources.getColor(R.color.colorOrange))
+            .append("，优先获得")
+            .append("推荐")
+            .setForegroundColor(resources.getColor(R.color.colorOrange))
+            .create()
 
     }
 
@@ -228,11 +238,15 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                 PictureConfig.CHOOSE_REQUEST -> {
                     if (data != null) {
                         startAnimation(false)
-                        var path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !PictureSelector.obtainMultipleResult(data)[0].androidQToPath.isNullOrEmpty()) {
-                            PictureSelector.obtainMultipleResult(data)[0].androidQToPath
-                        } else {
-                            PictureSelector.obtainMultipleResult(data)[0].path
-                        }
+                        var path =
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !PictureSelector.obtainMultipleResult(
+                                    data
+                                )[0].androidQToPath.isNullOrEmpty()
+                            ) {
+                                PictureSelector.obtainMultipleResult(data)[0].androidQToPath
+                            } else {
+                                PictureSelector.obtainMultipleResult(data)[0].path
+                            }
                         UriUtils.getLubanBuilder(this)
                             .load(path)
                             .setCompressListener(object : OnCompressListener {

@@ -795,6 +795,14 @@ interface Api {
 
 
     /**
+     * 获取所有的标题
+     */
+    @FormUrlEncoded
+    @POST("Tags/getTagTitleList${Constants.END_BASE_URL}")
+    fun getTagTitleList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+
+
+    /**
      * 获取标签的  1介绍模板 2.标签特质 3.标签意向  4.兴趣标题
      */
     @FormUrlEncoded

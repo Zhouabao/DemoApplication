@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -102,8 +103,8 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
                     return
                 }
                 intent.putExtra("label", mylabelBean)
-                intent.setClass(this, PublishActivity::class.java)
-                startActivity(intent)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
             }
         }
     }

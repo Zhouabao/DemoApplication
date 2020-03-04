@@ -11,8 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.constant.RefreshState
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.presenter.ChooseTitlePresenter
 import com.sdy.jitangapplication.presenter.view.ChooseTitleView
@@ -24,17 +29,9 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
 /**
  * 发布选择标题
  */
-class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitleView, View.OnClickListener {
-    override fun getTagTraitInfoResult(b: Boolean, mutableList: MutableList<LabelQualityBean>?) {
-        stateTitle.viewState = if (b) {
-            MultiStateView.VIEW_STATE_CONTENT
-        } else {
-            MultiStateView.VIEW_STATE_CONTENT
-        }
-        if (b && !mutableList.isNullOrEmpty()) {
-            adapter.setNewData(mutableList)
-        }
-    }
+class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitleView, View.OnClickListener,
+    OnRefreshListener, OnLoadMoreListener {
+
 
     private val adapter by lazy { ChooseTitleAdapter() }
 
@@ -42,12 +39,7 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_title)
         initView()
-        mPresenter.getTagTraitInfo(
-            hashMapOf(
-                "type" to LabelQualityActivity.TYPE_TITLE,
-                "tag_id" to intent.getIntExtra("tag_id", 0)
-            )
-        )
+        mPresenter.getTagTitleList(page)
     }
 
 
@@ -56,6 +48,9 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
         mPresenter = ChooseTitlePresenter()
         mPresenter.mView = this
         mPresenter.context = this
+
+        refreshTitle.setOnLoadMoreListener(this)
+        refreshTitle.setOnRefreshListener(this)
 
         btnBack.setOnClickListener(this)
         hotT1.text = "选择标题"
@@ -132,6 +127,42 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             }
+        }
+    }
+
+    private var page = 1
+
+
+    override fun onLoadMore(refreshLayout: RefreshLayout) {
+        page++
+        mPresenter.getTagTitleList(page)
+    }
+
+    override fun onRefresh(refreshLayout: RefreshLayout) {
+        page = 1
+        mPresenter.getTagTitleList(page)
+    }
+
+
+    override fun getTagTraitInfoResult(b: Boolean, data: MutableList<LabelQualityBean>?) {
+        if (refreshTitle.state == RefreshState.Refreshing) {
+            adapter.data.clear()
+            refreshTitle.finishRefresh(b)
+        } else {
+            if (data?.size ?: 0 < Constants.PAGESIZE)
+                refreshTitle.finishLoadMoreWithNoMoreData()
+            else
+                refreshTitle.finishLoadMore(b)
+        }
+
+        stateTitle.viewState = if (b) {
+            MultiStateView.VIEW_STATE_CONTENT
+        } else {
+            MultiStateView.VIEW_STATE_ERROR
+        }
+
+        if (b && !data.isNullOrEmpty()) {
+            adapter.addData(data)
         }
     }
 }
