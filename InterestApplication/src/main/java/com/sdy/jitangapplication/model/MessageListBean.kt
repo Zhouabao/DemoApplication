@@ -21,6 +21,7 @@ data class MessageListBean(
  * 给我打招呼的人
  */
 data class HiMessageBean(
+    var count: Int = 0,
     var content: String = "",
     var accid: String = "",
     var avatar: String = "",

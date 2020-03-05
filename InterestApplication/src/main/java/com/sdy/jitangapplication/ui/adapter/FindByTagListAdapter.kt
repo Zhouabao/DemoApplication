@@ -52,8 +52,7 @@ class FindByTagListAdapter(var hasmore: Boolean = true) :
         } else
             helper.itemView.rvLabelQuality.isVisible = false
         helper.itemView.sameLike.onClick {
-            //todo  这里点击打招呼
-            CommonFunction.commonGreet(mContext, item.accid, helper.itemView.sameLike, helper.layoutPosition)
+            CommonFunction.commonGreet(mContext, item.accid, helper.itemView.sameLike, helper.layoutPosition,item.avatar?:"")
         }
     }
 

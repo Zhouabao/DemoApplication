@@ -40,7 +40,8 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 过往招呼
  */
-class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, OnLoadMoreListener, OnRefreshListener {
+class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiView, OnLoadMoreListener,
+    OnRefreshListener {
 
     private var page = 1
     private val params by lazy {
@@ -166,6 +167,7 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
                     } else {
                         data.content = recentContactt.content
                     }
+                    data.count = recentContactt.unreadCount
                 }
             }
         }
@@ -177,7 +179,6 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
         }
 
     }
-
 
 
     override fun onRefresh(refreshLayout: RefreshLayout) {

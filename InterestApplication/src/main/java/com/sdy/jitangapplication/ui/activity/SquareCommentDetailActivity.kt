@@ -211,7 +211,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 }
 
         squareChatBtn1.onClick {
-            CommonFunction.commonGreet(this, squareBean?.accid ?: "", squareChatBtn1)
+            CommonFunction.commonGreet(
+                this,
+                squareBean?.accid ?: "",
+                squareChatBtn1,
+                targetAvator = squareBean?.avatar ?: ""
+            )
         }
         squareUserIv1.onClick {
             if ((squareBean?.accid ?: "") != UserManager.getAccid())

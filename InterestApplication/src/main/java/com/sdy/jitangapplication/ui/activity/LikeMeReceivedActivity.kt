@@ -409,13 +409,7 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
     private fun sendChatHiMessage(type: Int, matchBean: PositiveLikeBean) {
 //        val matchBean = adapter.data[manager.topPosition - 1]
         Log.d("OkHttp", matchBean.accid ?: "")
-        val chatHiAttachment = ChatHiAttachment(
-            if (type == ChatHiAttachment.CHATHI_MATCH) {
-                UserManager.getGlobalLabelName()
-            } else {
-                null
-            }, type
-        )
+        val chatHiAttachment = ChatHiAttachment(type)
         val config = CustomMessageConfig()
         config.enablePush = false
         val message = MessageBuilder.createCustomMessage(

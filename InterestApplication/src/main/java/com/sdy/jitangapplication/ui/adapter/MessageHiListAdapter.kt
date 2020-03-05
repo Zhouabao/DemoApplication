@@ -19,7 +19,6 @@ class MessageHiListAdapter :
     BaseQuickAdapter<HiMessageBean, BaseViewHolder>(R.layout.item_message_hi_list) {
 
     override fun convert(holder: BaseViewHolder, item: HiMessageBean) {
-        val itemView = holder.itemView
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.msgIcon)
         holder.itemView.msgTitle.text = item.nickname
         holder.itemView.latelyTime.text = item.out_time
@@ -34,7 +33,7 @@ class MessageHiListAdapter :
             "男"
         } else {
             "女"
-        }}.${item.age}岁.${item.distance}"
+        }}·${item.age}岁·${item.distance}"
 
 
         holder.itemView.msgOnlineState.isVisible =
@@ -42,6 +41,9 @@ class MessageHiListAdapter :
                     && !NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid).isNullOrEmpty()
                     && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid).contains("在线")
 
+
+        holder.itemView.newCount.isVisible = item.count > 0
+        holder.itemView.newCount.text  ="${item.count}"
 
     }
 

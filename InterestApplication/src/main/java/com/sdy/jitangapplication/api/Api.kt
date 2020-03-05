@@ -296,7 +296,7 @@ interface Api {
      * 打招呼、上滑
      */
     @FormUrlEncoded
-    @POST("relationship/greetV13${Constants.END_BASE_URL}")
+    @POST("Relationship/greetCheck${Constants.END_BASE_URL}")
     fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetTimesBean?>>
 
 
@@ -474,8 +474,8 @@ interface Api {
      * 无效招呼
      */
     @FormUrlEncoded
-    @POST("Tidings/pastGreetList${Constants.END_BASE_URL}")
-    fun pastGreetList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<HiMessageBean>?>>
+    @POST("Tidings/greetAllLists${Constants.END_BASE_URL}")
+    fun greetAllLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<HiMessageBean>?>>
 
     /**
      * 给我打招呼的列表

@@ -31,7 +31,7 @@ class MessageHiPresenter : BasePresenter<MessageHiView>() {
      */
     fun greatLists(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
-            .pastGreetList(UserManager.getSignParams(params))
+            .greetAllLists(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<MutableList<HiMessageBean>?>>(mView) {
                 override fun onNext(t: BaseResp<MutableList<HiMessageBean>?>) {
                     when {

@@ -24,7 +24,10 @@ data class NimBean(
     var residue_msg_cnt: Int = 0,//剩余可发送的招呼消息次数
     var square: MutableList<Square> = mutableListOf(),
     var square_cnt: Int = 0,
-    var stared: Boolean = false
+    var stared: Boolean = false,
+    var issended: Boolean = false,//是否发送过消息  true发送过 false  没有发送过消息
+    var my_isfaced: Boolean = false,
+    var target_isfaced: Boolean = false
 ) : Serializable
 
 data class ResidueCountBean(

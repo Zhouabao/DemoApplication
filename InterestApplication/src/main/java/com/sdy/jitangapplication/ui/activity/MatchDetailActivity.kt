@@ -41,7 +41,6 @@ import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.StatusBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
@@ -83,7 +82,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         hashMapOf(
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
-            "tag_id" to UserManager.getGlobalLabelId(),
             "target_accid" to targetAccid,
             "_timestamp" to System.currentTimeMillis()
         )
@@ -346,7 +344,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailUserVerify.isVisible = matchBean!!.isfaced == 1
 
         //更新打招呼次数和状态
-        updateLightCount(matchBean!!.lightningcnt ?: 0, matchBean!!.countdown)
+        updateLightCount()
 
 //        用户动态封面图片（暂不展示）
         detailThumbRv.visibility = View.GONE
@@ -537,7 +535,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                         EventBus.getDefault().post(RefreshEvent(true))
                         if (statusBean.data?.status == 1) {  //喜欢成功
                             matchBean!!.isliked = 1
-                            updateLightCount(-1, -1)
                         } else if (statusBean.data?.status == 2) {//匹配成功
                             //如果是来自喜欢我的界面， 就刷新
                             if (intent.getIntExtra("parPos", -1) != -1) {
@@ -549,7 +546,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                             }
                             //喜欢过
                             matchBean!!.isfriend = 1
-                            updateLightCount(-1, -1)
                             sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                         }
                     }
@@ -594,17 +590,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.moreBtn1 -> {//更多
                 showMoreActionDialog()
             }
-            //这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
-            //todo 判断是否是好友  如果是好友，就聊天 不然就打招呼
             R.id.detailUserChatLl -> {
-                if (matchBean != null && (matchBean!!.isfriend == 1 || matchBean!!.isgreeted)) {
-                    ChatActivity.start(this, matchBean!!.accid)
-                } else {
-                    if (matchBean != null)
-                        CommonFunction.commonGreet(this, matchBean!!.accid, detailUserChatLl)
-                }
-
-
+                if (matchBean != null)
+                    CommonFunction.commonGreet(
+                        this,
+                        matchBean!!.accid,
+                        detailUserChatLl,
+                        targetAvator = matchBean!!.avatar ?: ""
+                    )
             }
 
             R.id.backBtn1, R.id.btnBack2,
@@ -665,13 +658,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     /**
      * 更新本地的招呼次数
      */
-    private fun updateLightCount(lightningcnt: Int, countdown: Int) {
-        if (lightningcnt != -1) {
-            UserManager.saveLightingCount(lightningcnt)
-            EventBus.getDefault().postSticky(UpdateHiCountEvent())
-        }
-
-
+    private fun updateLightCount() {
         //判断是否为好友 是：显示聊天
         //              否: 判断是否开启招呼,是否喜欢过
         if (matchBean!!.isfriend == 1 || matchBean!!.isgreeted) {//是好友就显示聊天
@@ -702,11 +689,19 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUserRelationshipEvent(event: UserRelationshipEvent) {
+        matchBean?.isgreeted = true
+        //更新打招呼次数和状态
+        updateLightCount()
+    }
+
+
     /*--------------------------消息代理------------------------*/
     private fun sendChatHiMessage(type: Int) {
         Log.d("OkHttp", matchBean?.accid ?: "")
         val container = Container(this, matchBean?.accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), type)
+        val chatHiAttachment = ChatHiAttachment(type)
         val config = CustomMessageConfig()
         config.enablePush = false
         val message = MessageBuilder.createCustomMessage(

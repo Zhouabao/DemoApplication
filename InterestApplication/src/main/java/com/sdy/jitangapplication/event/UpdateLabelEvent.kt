@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.event
 
-import com.sdy.jitangapplication.model.NewLabel
 import com.sdy.jitangapplication.model.SquareLabelBean
 import com.sdy.jitangapplication.model.WechatNameBean
 import com.sdy.jitangapplication.ui.fragment.MySquareFragment.Companion.TYPE_SQUARE
@@ -12,7 +11,7 @@ import com.sdy.jitangapplication.ui.fragment.MySquareFragment.Companion.TYPE_SQU
  *    version: 1.0
  */
 //更新标签去请求
-class UpdateLabelEvent(var label: NewLabel)
+class UpdateLabelEvent
 
 //更新播放器
 class NotifyEvent(var position: Int, var type: Int = TYPE_SQUARE)
@@ -66,6 +65,10 @@ class UserCenterEvent(var refresh: Boolean)
 
 //更新用户详情状态视图
 class UserDetailViewStateEvent(var success: Boolean)
+
+
+//更新按钮信息及用户关系
+class UserRelationshipEvent()
 
 
 //更新账号信息

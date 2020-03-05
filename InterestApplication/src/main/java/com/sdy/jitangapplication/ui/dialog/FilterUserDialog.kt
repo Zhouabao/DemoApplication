@@ -67,9 +67,11 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
         switchOnLine.isVisible = UserManager.isUserVip()
         switchOnLine.isChecked = sp.getInt("online_only", 1) == 2
         btnGoVip1.isVisible = !UserManager.isUserVip()
-        switchSameCity.isVisible = UserManager.isUserVip()
+//        switchSameCity.isVisible = UserManager.isUserVip()
+//        btnGoVip.isVisible = !UserManager.isUserVip()
         switchSameCity.isChecked = sp.getInt("local_only", 1) == 2
-        btnGoVip.isVisible = !UserManager.isUserVip()
+        btnGoVip.isVisible = false
+        switchSameCity.isVisible = true
 
         if (UserManager.isUserVerify() == 1) {
             btnVerify.visibility = View.GONE

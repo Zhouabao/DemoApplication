@@ -30,6 +30,7 @@ import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.event.UpdateLGreetReceivedEvent
 import com.sdy.jitangapplication.model.GreetedListBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.GreetReceivedPresenter
 import com.sdy.jitangapplication.presenter.view.GreetReceivedView
 import com.sdy.jitangapplication.ui.adapter.GreetUserAdapter
@@ -153,7 +154,10 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                     if (data.accid == contact.fromAccount) {
                         if (data.send_msg.isNullOrEmpty()) {
                             if (!contact.content.isNullOrEmpty()) {
-                                data.send_msg = contact.content
+                                when {
+                                    contact.attachment is ChatHiAttachment -> data.send_msg = "对方向你打了个招呼"
+                                    else -> data.send_msg = contact.content
+                                }
                             } else {
                                 data.send_msg = "对方向你打了个招呼"
                             }

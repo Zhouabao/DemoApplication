@@ -66,7 +66,6 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
 
                         val params = hashMapOf<String, Any>()
                         params["target_accid"] = adapter.data[position].accid ?: ""
-                        params["tag_id"] = UserManager.getGlobalLabelId()
                         RetrofitFactory.instance.create(Api::class.java)
                             .addLike(UserManager.getSignParams(params))
                             .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(null) {
@@ -76,10 +75,7 @@ class LikeMeAdapter : BaseQuickAdapter<LikeMeBean, BaseViewHolder>(R.layout.item
                                             if (t.data!!.status == 2) {//匹配成功
                                                 adapter.data[position].isfriend = 1
                                                 adapter.notifyItemChanged(position)
-                                                val chatHiAttachment = ChatHiAttachment(
-                                                    UserManager.getGlobalLabelName(),
-                                                    ChatHiAttachment.CHATHI_MATCH
-                                                )
+                                                val chatHiAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_MATCH)
                                                 val config = CustomMessageConfig()
                                                 config.enablePush = false
                                                 val message = MessageBuilder.createCustomMessage(

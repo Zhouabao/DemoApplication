@@ -64,7 +64,7 @@ class ChangeAvatarRealManDialog(
         continueGreet.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
                 if (matchBean != null)
-                    CommonFunction.commonGreet(context1, matchBean!!.accid, continueGreet)
+                    CommonFunction.commonGreet(context1, matchBean!!.accid, continueGreet,targetAvator = matchBean!!.avatar?:"")
                 dismiss()
             }
         })

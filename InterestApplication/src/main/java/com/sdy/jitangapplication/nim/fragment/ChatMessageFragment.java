@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -85,16 +84,6 @@ import java.util.Map;
  * Created by huangjun on 2015/2/1.
  */
 public class ChatMessageFragment extends TFragment implements ModuleProxy {
-    /**
-     * 时间倒计时
-     * 招呼头布局
-     *
-     * @param event
-     */
-    private int time = 0;
-    private boolean pause = false;
-    private CountDownTimer countDownTimer;
-
     public NimBean nimBean = null;
 
 
@@ -198,7 +187,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                     NIMClient.getService(FriendService.class).addFriend(new AddFriendData(sessionId, VerifyType.DIRECT_ADD));
 
                                     //并且发送成为好友消息，
-                                    IMMessage message = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, "", new ChatHiAttachment(null, ChatHiAttachment.CHATHI_RFIEND), new CustomMessageConfig());
+                                    IMMessage message = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, "", new ChatHiAttachment(ChatHiAttachment.CHATHI_RFIEND), new CustomMessageConfig());
                                     sendMessage(message);
 
                                 } else {
@@ -220,7 +209,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void onPause() {
         super.onPause();
-        pause = true;
         NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, SessionTypeEnum.None);
         inputPanel.onPause();
         messageListPanel.onPause();
@@ -229,8 +217,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void onResume() {
         super.onResume();
-        pause = false;
-        suggestToGreet.setVisibility(View.VISIBLE);
         set.start();
         inputPanel.onResume();
         messageListPanel.onResume();
@@ -277,7 +263,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         customization = (SessionCustomization) arguments.getSerializable(Extras.EXTRA_CUSTOMIZATION);
         Container container = new Container(getActivity(), sessionId, sessionType, this, true);
 
-        nimBean = (NimBean) arguments.getSerializable("nimBean");
         if (messageListPanel == null) {
             messageListPanel = new ChatMessageListPanelEx(container, rootView, anchor, false, false);
         } else {
@@ -382,7 +367,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             messageListPanel.receiveReceipt();
             //收到已读回执,调用接口,改变此时招呼或者消息的状态
             Log.d("已读回执----", "对方已读你的消息，10分钟内对方未回复消息将过期");
-//            if (!sessionId.equals(Constants.ASSISTANT_ACCID) && (nimBean == null || !nimBean.getIsfriend())) {
             if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
                 getTargetInfo(sessionId);
             }
@@ -423,9 +407,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
     private Boolean sendAlready3Msgs() {
-        //todo 若己方未认证，则发送  您未通过真人认证，可能导致回复率偏低
-        // 若对方未认证，则发送   对方账号未认证，请小心诈骗
-        sendTipMessage("对方账号未认证，请小心诈骗");
+
 
         //发起方并且次数为0 禁止发送
         if (!sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsfriend() && nimBean.getIslimit() && leftGreetCount == 0) {
@@ -530,7 +512,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void shouldCollapseInputPanel() {
         inputPanel.collapse(false);
-        suggestToGreet.postDelayed(() -> suggestToGreet.setVisibility(View.VISIBLE), 500L);
+        if (!nimBean.getIssended() && nimBean.getIsinitiated())
+            suggestToGreet.postDelayed(() -> suggestToGreet.setVisibility(View.VISIBLE), 500L);
+        else
+            suggestToGreet.setVisibility(View.GONE);
     }
 
     //禁止消息长按操作
@@ -602,7 +587,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
                     @Override
                     public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
-                        time = 0;
                         if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
                             nimBean = nimBeanBaseResp.getData();
                             setTargetInfoData();
@@ -630,6 +614,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
      * 设置消息体制内的数据
      */
     private void setTargetInfoData() {
+        if (!nimBean.getIssended() && nimBean.getIsinitiated())
+            suggestToGreet.setVisibility(View.VISIBLE);
+        else
+            suggestToGreet.setVisibility(View.GONE);
+
         UserManager.INSTANCE.setApproveBean(new ApproveBean(nimBean.getApprove_time(), nimBean.getIsapprove(), nimBean.getIssend()));
         leftGreetCount = nimBean.getResidue_msg_cnt();
         if (nimBean.getIsfriend()) { //是好友了，按钮消失
@@ -639,18 +628,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             //发送通知，可以发所有类型的消息
             EventBus.getDefault().post(new EnablePicEvent(true));
         } else {
-            if (nimBean.getIsgreet() == false) {//过期消息
-                //过期消息不展示消息面板
-                inputPanel.collapse(true);
-                messageActivityBottomLayout.setVisibility(View.GONE);
+            messageActivityBottomLayout.setVisibility(View.VISIBLE);
+            if (nimBean.getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
                 btnMakeFriends.setVisibility(View.GONE);
-            } else {
-                messageActivityBottomLayout.setVisibility(View.VISIBLE);
-                if (nimBean.getIsinitiated()) {//非好友并且是自己发起的招呼,按钮消失
-                    btnMakeFriends.setVisibility(View.GONE);
-                } else {//非好友并且是别人发起的招呼,按钮显示
-                    btnMakeFriends.setVisibility(View.VISIBLE);
-                }
+            } else {//非好友并且是别人发起的招呼,按钮显示
+                btnMakeFriends.setVisibility(View.VISIBLE);
             }
         }
         if (!nimBean.getIsfriend())
@@ -702,6 +684,26 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             }
                             if (content.getMsgType() == MsgTypeEnum.text)
                                 sendMsgS(content, false);
+
+                            // 若己方未认证，则发送  您未通过真人认证，可能导致回复率偏低
+                            // 若对方未认证，则发送   对方账号未认证，请小心诈骗
+                            if (!nimBean.getIssended()) {//issended    bool  是否发送过消息  true发送过 false  没有发送过消息
+                                if (!nimBean.getTarget_isfaced()) {
+                                    sendTipMessage("对方账号未认证，请小心诈骗");
+                                } else if (!nimBean.getMy_isfaced())
+                                    sendTipMessage("您未通过真人认证，可能导致回复率偏低");
+                            }
+                            nimBean.setIssended(true);
+
+                            if (!nimBean.getIsgreet() && !nimBean.getIsfriend()) {
+                                //刷新首页数据
+                                EventBus.getDefault().post(new RefreshEvent(true));
+                                //刷新标签找人列表
+                                EventBus.getDefault().post(new UpdateFindByTagListEvent(-1, sessionId));
+                                //刷新对方用户信息页面
+                                EventBus.getDefault().post(new UserRelationshipEvent());
+
+                            }
                         } else if (nimBeanBaseResp.getCode() == 409) {//用户被封禁
                             new CommonAlertDialog.Builder(getActivity())
                                     .setTitle("提示")

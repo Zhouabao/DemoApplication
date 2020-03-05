@@ -25,6 +25,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.RequestCallback
@@ -91,7 +92,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
             "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
             "_timestamp" to System.currentTimeMillis(),
-            "tag_id" to UserManager.getGlobalLabelId(),
             "lng" to UserManager.getlongtitude().toFloat(),
             "lat" to UserManager.getlatitude().toFloat(),
             "city_code" to UserManager.getCityCode(),
@@ -214,7 +214,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
             "target_accid" to "",
-            "tag_id" to UserManager.getGlobalLabelId(),
             "type" to 1
         )
     }
@@ -272,7 +271,20 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 //保存引导次数
                 UserManager.motion = matchBeans.motion
                 is_human = matchBeans.is_human
-                lieAvatorLl.isVisible = !matchBeans.is_human
+
+                if (!matchBeans.is_human) {
+                    lieAvatorLl.isVisible = true
+                    changeAvatorCloseBtn.isVisible = false
+                } else if (!matchBeans.is_full) {
+                    lieAvatorLl.isVisible = true
+                    changeAvatorCloseBtn.isVisible = true
+                    changeAvatorCloseBtn.onClick {
+                        lieAvatorLl.isVisible = false
+                    }
+                } else {
+                    lieAvatorLl.isVisible = false
+                }
+
                 when (matchBeans.motion) {
                     GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7头像违规替换
                         EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
@@ -465,7 +477,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun turnToLastLabelEvent(event: TurnToLastLabelEvent) {
         if (event.from == ChargeLabelDialog.FROM_INDEX) {
-            UserManager.saveGlobalLabelId(0)
             onRefreshEvent(RefreshEvent(true))
         }
     }
@@ -565,10 +576,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //完善相册
                 EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
                 UserManager.slide_times = 0
-            } else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times && !UserManager.getAlertChangeAvator()) {//引导替换
-                ChangeAvatarRealManDialog(activity!!, ChangeAvatarRealManDialog.VERIFY_NEED_VALID_REAL_MAN).show()
-                UserManager.slide_times = 0
             }
+//            else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times && !UserManager.getAlertChangeAvator()) {//引导替换
+//                ChangeAvatarRealManDialog(activity!!, ChangeAvatarRealManDialog.VERIFY_NEED_VALID_REAL_MAN).show()
+//                UserManager.slide_times = 0
+//            }
         }
 
 
@@ -590,7 +602,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 ).show()
             } else {
 //                保存剩余滑动次数
-                CommonFunction.commonGreet(activity!!, matchUserAdapter.data[manager.topPosition - 1].accid)
+                CommonFunction.commonGreet(
+                    activity!!,
+                    matchUserAdapter.data[manager.topPosition - 1].accid,
+                    targetAvator = matchUserAdapter.data[manager.topPosition - 1].avatar ?: ""
+                )
             }
         }
 
@@ -743,13 +759,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     private fun sendChatHiMessage(type: Int, matchBean: MatchBean) {
 //        val matchBean = matchUserAdapter.data[manager.topPosition - 1]
         Log.d("OkHttp", matchBean.accid ?: "")
-        val chatHiAttachment = ChatHiAttachment(
-            if (type == ChatHiAttachment.CHATHI_MATCH) {
-                UserManager.getGlobalLabelName()
-            } else {
-                null
-            }, type
-        )
+        val chatHiAttachment = ChatHiAttachment(type)
         val config = CustomMessageConfig()
         config.enablePush = false
         val message = MessageBuilder.createCustomMessage(
@@ -782,10 +792,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                         matchBean.nickname ?: "",
                         activity!!
                     ).show()
-                    //打招呼成功，就减少招呼次数
-                    if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
-                        UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
-                    }
                 }
 
 

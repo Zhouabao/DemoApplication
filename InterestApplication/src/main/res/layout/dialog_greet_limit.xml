@@ -26,6 +26,32 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
 
+        <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieGeetLimit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/bg"
+                app:layout_constraintLeft_toLeftOf="@id/bg"
+                app:layout_constraintRight_toRightOf="@id/bg"
+                app:layout_constraintTop_toTopOf="@id/bg"
+                app:lottie_autoPlay="false"
+                app:lottie_fileName="data_greet_limit.json"
+                app:lottie_imageAssetsFolder="images_greet_limit/"
+                app:lottie_loop="false"
+                app:lottie_speed="1"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/targetUserAvator"
+                android:src="@drawable/icon_default_avator"
+                android:layout_width="87dp"
+                android:layout_height="87dp"
+                app:civ_border_color="@color/colorWhite"
+                app:civ_border_width="1dp"
+                app:layout_constraintBottom_toBottomOf="@id/bg"
+                app:layout_constraintLeft_toLeftOf="@id/bg"
+                app:layout_constraintRight_toRightOf="@id/bg"
+                app:layout_constraintTop_toTopOf="@id/bg"/>
+
         <ImageView
                 android:id="@+id/close"
                 android:src="@drawable/icon_close1"
@@ -37,9 +63,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
-
-
-
 
 
         <TextView

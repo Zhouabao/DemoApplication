@@ -15,21 +15,15 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.GreetEvent
-import com.sdy.jitangapplication.event.UpdateFindByTagListEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.GreetTimesBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
-import com.sdy.jitangapplication.ui.activity.FindByTagListActivity
 import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
@@ -71,7 +65,13 @@ object CommonFunction {
     /**
      * 打招呼通用逻辑
      */
-    fun commonGreet(context: Context, targetAccid: String, view: View? = null, position: Int = -1) {
+    fun commonGreet(
+        context: Context,
+        targetAccid: String,
+        view: View? = null,
+        position: Int = -1,
+        targetAvator: String
+    ) {
         if (view != null)
             view.isEnabled = false
         /**
@@ -84,7 +84,7 @@ object CommonFunction {
             return
         }
 
-        greet(targetAccid, context, view, position)
+        greet(targetAccid, context, view, position,targetAvator)
     }
 
 
@@ -99,14 +99,13 @@ object CommonFunction {
      * code  401  发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
      * code  400  招呼次数用尽~
      */
-    fun greet(target_accid: String, context1: Context, view: View?, position: Int) {
+    fun greet(target_accid: String, context1: Context, view: View?, position: Int,targetAvator:String) {
         if (!NetworkUtils.isConnected()) {
             toast("请连接网络！")
             return
         }
 
         val params = UserManager.getBaseParams()
-        params["tag_id"] = UserManager.getGlobalLabelId()
         params["target_accid"] = target_accid
         RetrofitFactory.instance.create(Api::class.java)
             .greet(UserManager.getSignParams(params))
@@ -114,7 +113,14 @@ object CommonFunction {
                 override fun onNext(t: BaseResp<GreetTimesBean?>) {
                     when {
                         t.code == 200 -> {//成功
-                            val chatHiAttachment = ChatHiAttachment(
+                            //发送通知修改招呼次数
+                            if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
+                                EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
+                            }
+                            ChatActivity.start(context1, target_accid)
+                            EventBus.getDefault().post(GreetEvent(context1, false))
+
+                            /*val chatHiAttachment = ChatHiAttachment(
                                 UserManager.getGlobalLabelName(),
                                 ChatHiAttachment.CHATHI_HI
                             )
@@ -132,15 +138,7 @@ object CommonFunction {
                                 .setCallback(object :
                                     RequestCallback<Void?> {
                                     override fun onSuccess(param: Void?) {
-                                        //发送通知修改招呼次数
-                                        UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
-                                        if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
-                                            EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
-                                        }
-                                        if (ActivityUtils.getTopActivity() is FindByTagListActivity) {
-                                            EventBus.getDefault().post(UpdateFindByTagListEvent(position))
-                                        }
-                                        ChatActivity.start(context1, target_accid)
+
                                     }
 
                                     override fun onFailed(code: Int) {
@@ -150,7 +148,7 @@ object CommonFunction {
                                     override fun onException(exception: Throwable) {
 
                                     }
-                                })
+                                })*/
                         }
                         t.code == 201 -> {//次数使用完毕，请充值次数
                             ChargeVipDialog(
@@ -161,7 +159,7 @@ object CommonFunction {
                             EventBus.getDefault().post(GreetEvent(context1, false))
                         }
                         t.code == 202 -> { //（该用户当日免费接收次数完毕，请充值会员获取）
-                            GreetLimitlDialog(context1).show()
+                            GreetLimitlDialog(context1,targetAvator).show()
                             EventBus.getDefault().post(GreetEvent(context1, false))
                         }
                         t.code == 203 -> { //招呼次数用完,认证获得次数
@@ -214,11 +212,7 @@ object CommonFunction {
         } else {
             EventBus.getDefault().postSticky(UpdateHiEvent())
         }
-//        EventBus.getDefault().post(UpdateContactBookEvent())
-//        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
-//            ActivityUtils.finishActivity(MessageInfoActivity::class.java)
-//        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
-//            ActivityUtils.finishActivity(ChatActivity::class.java)
+
     }
 
 

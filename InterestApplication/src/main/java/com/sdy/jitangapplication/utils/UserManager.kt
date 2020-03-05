@@ -484,19 +484,6 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).put("globalLabelSquareId", id)
     }
 
-
-    fun getGlobalLabelName(): String {
-        val labels = getSpLabels()
-        val id = getGlobalLabelId()
-        for (label in labels) {
-            if (label.id == id) {
-                return label.title
-            }
-        }
-        return ""
-    }
-
-
     // 如果已经存在IM用户登录信息，返回LoginInfo，否则返回null即可
     fun loginInfo(): LoginInfo? {
         if (SPUtils.getInstance(Constants.SPNAME).getString("imToken") != null

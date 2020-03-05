@@ -583,6 +583,7 @@ public class ChatInputPanel implements IEmoticonSelectedListener, IAudioRecordCa
         moreFuntionButtonInInputBar.setImageResource(R.drawable.nim_message_input_more_clickclose);
         addActionPanelLayout();
         hideEmojiLayout();
+        hideAudioLayout();
         hideInputMethod();
 
         uiHandler.postDelayed(showMoreFuncRunnable, SHOW_LAYOUT_DELAY);

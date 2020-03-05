@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.KeyEvent
 import android.view.WindowManager
 import com.kotlin.base.ext.onClick
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import kotlinx.android.synthetic.main.dialog_greet_limit.*
 
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.dialog_greet_limit.*
  *    desc   : 对方用户招呼上限
  *    version: 1.0
  */
-class GreetLimitlDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
+class GreetLimitlDialog(val context1: Context, var targetAvator: String = "") : Dialog(context1, R.style.MyDialog) {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +35,18 @@ class GreetLimitlDialog(val context1: Context) : Dialog(context1, R.style.MyDial
             ChargeVipDialog(ChargeVipDialog.DOUBLE_HI, context1).show()
             dismiss()
         }
+
+        GlideUtil.loadCircleImg(context1, targetAvator, targetUserAvator)
     }
 
     override fun dismiss() {
         super.dismiss()
+    }
+
+
+    override fun show() {
+        super.show()
+        lottieGeetLimit.playAnimation()
     }
 
 
@@ -51,8 +60,5 @@ class GreetLimitlDialog(val context1: Context) : Dialog(context1, R.style.MyDial
         window?.attributes = params
         setCancelable(true)
         setCanceledOnTouchOutside(true)
-        setOnKeyListener { dialogInterface, keyCode, event ->
-            keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0
-        }
     }
 }

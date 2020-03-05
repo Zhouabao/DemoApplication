@@ -51,7 +51,10 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.AnnounceEvent
 import com.sdy.jitangapplication.event.UpdateLabelEvent
 import com.sdy.jitangapplication.event.UploadEvent
-import com.sdy.jitangapplication.model.*
+import com.sdy.jitangapplication.model.MediaBean
+import com.sdy.jitangapplication.model.MediaParamBean
+import com.sdy.jitangapplication.model.SquareLabelBean
+import com.sdy.jitangapplication.model.TopicBean
 import com.sdy.jitangapplication.player.MediaPlayerHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper.*
@@ -1551,8 +1554,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             if (intent.getIntExtra("from", 1) == 2) {
                 EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
             } else {
-                EventBus.getDefault()
-                    .post(UpdateLabelEvent(NewLabel(id = UserManager.getGlobalLabelId())))
+                EventBus.getDefault().post(UpdateLabelEvent())
             }
             if (!this.isFinishing)
                 finish()

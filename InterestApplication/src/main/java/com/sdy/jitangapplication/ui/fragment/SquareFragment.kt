@@ -299,7 +299,8 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
     companion object {
         const val SQUARE_TAG = 0
-        const val SQUARE_FRIEND = 1
+        const val SQUARE_SAME_CITY = 1
+        const val SQUARE_FRIEND = 2
     }
 
     val titleAdapter by lazy { SquareSwitchAdapter() }
@@ -308,6 +309,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
         rgSquare.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
         titleAdapter.addData(SquareTitleBean("广场", true))
+        titleAdapter.addData(SquareTitleBean("同城", false))
         titleAdapter.addData(SquareTitleBean("好友", false))
         rgSquare.adapter = titleAdapter
 
@@ -316,12 +318,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 data.checked = data == titleAdapter.data[position]
             }
             titleAdapter.notifyDataSetChanged()
-
-            checkedTitleId = if (position == 0) {
-                SQUARE_TAG
-            } else {
-                SQUARE_FRIEND
-            }
+            checkedTitleId = position
             squareTagRv.isVisible = checkedTitleId == SQUARE_TAG
             addTagBg.isVisible = checkedTitleId == SQUARE_TAG
             updateChooseTitle()
@@ -377,9 +374,18 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
         setTagData()
         listParams["type"] = when (checkedTitleId) {
             SQUARE_TAG -> {
+                listParams.remove("local_only")
+                listParams.remove("city_code")
+                1
+            }
+            SQUARE_SAME_CITY->{
+                listParams["local_only"] = 2
+                listParams["city_code"] = UserManager.getCityCode()
                 1
             }
             else -> {
+                listParams.remove("local_only")
+                listParams.remove("city_code")
                 3
             }
         }
@@ -665,7 +671,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     adapter.isUseEmpty(true)
                     if (adapter.headerLayout != null)
                         adapter.headerLayout.isVisible = false
-                    if (checkedTitleId == SQUARE_TAG) {
+                    if (checkedTitleId == SQUARE_TAG||checkedTitleId == SQUARE_FRIEND) {
                         adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
                         adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
                         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)

@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.nim.activity
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -13,12 +12,8 @@ import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.google.gson.Gson
 import com.kotlin.base.common.AppManager
-import com.kotlin.base.data.net.RetrofitFactory
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ext.setVisible
-import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
 import com.netease.nim.uikit.api.model.main.OnlineStateChangeObserver
@@ -39,17 +34,11 @@ import com.sdy.baselibrary.widgets.swipeback.Utils
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityBase
 import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateContactBookEvent
 import com.sdy.jitangapplication.model.CustomerMsgBean
-import com.sdy.jitangapplication.model.NimBean
 import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
 import com.sdy.jitangapplication.ui.activity.MainActivity
-import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.activity_chat.*
 import org.greenrobot.eventbus.EventBus
 
@@ -71,6 +60,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
             val intent = Intent()
             intent.putExtra(Extras.EXTRA_ACCOUNT, contactId)
             intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
+            intent.putExtra(Extras.EXTRA_CUSTOMIZATION, customization)
             if (anchor != null) {
                 intent.putExtra(Extras.EXTRA_ANCHOR, anchor)
             }
@@ -80,60 +70,6 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
             context.startActivity(intent)
 
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (sessionId != Constants.ASSISTANT_ACCID)
-            getTargetInfo()
-    }
-
-    private fun getTargetInfo() {
-        val loadingDialog = LoadingDialog(this)
-        val params = UserManager.getBaseParams()
-        params["target_accid"] = sessionId
-        RetrofitFactory.instance.create(Api::class.java)
-            .getTargetInfo(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<NimBean?>>(null) {
-                override fun onStart() {
-                    if (!loadingDialog.isShowing) {
-                        loadingDialog.show()
-                    }
-                }
-
-                override fun onNext(t: BaseResp<NimBean?>) {
-                    super.onNext(t)
-                    loadingDialog.dismiss()
-                    if (t.code == 200) {
-                        if (t.data != null)
-                            intent.putExtra("nimBean", t.data)
-                    } else if (t.code == 409) {
-                        CommonAlertDialog.Builder(this@ChatActivity)
-                            .setTitle("提示")
-                            .setContent(t.msg)
-                            .setCancelIconIsVisibility(false)
-                            .setConfirmText("知道了")
-                            .setCancelAble(false)
-                            .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {
-                                override fun onClick(dialog: Dialog) {
-                                    dialog.cancel()
-                                    NIMClient.getService(MsgService::class.java)
-                                        .deleteRecentContact2(sessionId, SessionTypeEnum.P2P)
-                                    finish()
-                                }
-
-                            })
-                            .create()
-                            .show()
-                    }
-
-                }
-
-                override fun onError(e: Throwable?) {
-                    loadingDialog.dismiss()
-                    CommonFunction.toast(CommonFunction.getErrorMsg(this@ChatActivity))
-                }
-            })
     }
 
     /**

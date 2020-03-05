@@ -18,7 +18,7 @@ class CloseDialogEvent()
 class UpdateFindByTagEvent()
 
 //更新某个标签下的数据
-class UpdateFindByTagListEvent(var position: Int = -1)
+class UpdateFindByTagListEvent(var position: Int = -1, var accid: String = "")
 
 
 

@@ -241,7 +241,6 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
                 showAdd = true
                 addLabelDialog.show()
                 addLabelDialog.addToLabelBtn.onClick {
-                    //todo  加入自己的标签
                     mPresenter.addMyTagsSingle(labelBean.id)
                     addLabelDialog.dismiss()
                 }
@@ -291,7 +290,6 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
             rightBtn1.isVisible = true
             rightBtn1.text = "加入兴趣"
             rightBtn1.onClick {
-                //todo  加入自己的标签
                 mPresenter.addMyTagsSingle(labelBean.id)
             }
         }
@@ -327,9 +325,14 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateFindByTagListEvent(event: UpdateFindByTagListEvent) {
-        if (event.position != -1)
-            adapter.remove(event.position)
-        else
+        if (event.accid.isNotEmpty()) {
+            for (data in adapter.data.withIndex()) {
+                if (data.value.accid == event.accid) {
+                    adapter.remove(data.index)
+                }
+            }
+        } else {
             refreshSamePerson.autoRefresh()
+        }
     }
 }

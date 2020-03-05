@@ -19,7 +19,6 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.netease.nim.uikit.business.session.module.Container
 import com.netease.nim.uikit.business.session.module.ModuleProxy
@@ -37,10 +36,8 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.GreetEvent
 import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
-import com.sdy.jitangapplication.model.GreetBean
 import com.sdy.jitangapplication.model.GreetTimesBean
 import com.sdy.jitangapplication.model.ResidueCountBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -265,77 +262,6 @@ class SayHiDialog(
     }
 
 
-    /*----------------------------打招呼请求逻辑--------------------------------*/
-// 这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
-    //1.首先判断是否有次数，
-    // 若有 就打招呼
-    // 若无 就弹充值
-    /**
-     * 判断当前能否打招呼
-     */
-    private fun greetState() {
-        if (!NetworkUtils.isConnected()) {
-            CommonFunction.toast("请连接网络！")
-            return
-        }
-
-        val params = UserManager.getBaseParams()
-        params["target_accid"] = target_accid
-        RetrofitFactory.instance.create(Api::class.java)
-            .greetState(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<GreetBean?>>(null) {
-                override fun onStart() {
-                    loadingDialog.show()
-                }
-
-                override fun onNext(t: BaseResp<GreetBean?>) {
-                    if (t.code == 200) {
-                        val greetBean = t.data
-                        if (greetBean != null && greetBean.lightningcnt != -1) {
-                            if (greetBean.isfriend || greetBean.isgreet) {
-                                ChatActivity.start(context1 as Activity, target_accid ?: "")
-                                loadingDialog.dismiss()
-                                startAnimation()
-                                //发送通知修改招呼次数
-                                EventBus.getDefault().post(GreetEvent(context1, true))
-                            } else {
-                                UserManager.saveLightingCount(greetBean.lightningcnt)
-                                if (greetBean.lightningcnt > 0) {
-                                    greet()
-                                } else {
-                                    loadingDialog.dismiss()
-                                    ChargeVipDialog(
-                                        ChargeVipDialog.DOUBLE_HI,
-                                        context1,
-                                        if (UserManager.isUserVip()) {
-                                            ChargeVipDialog.PURCHASE_GREET_COUNT
-                                        } else {
-                                            ChargeVipDialog.PURCHASE_VIP
-                                        }
-                                    ).show()
-                                    EventBus.getDefault().post(GreetEvent(context1, true))
-                                }
-                            }
-                        } else {
-                            loadingDialog.dismiss()
-                            CommonFunction.toast(t.msg)
-                        }
-                    } else {
-                        loadingDialog.dismiss()
-                        EventBus.getDefault().post(GreetEvent(context1, false))
-                        CommonFunction.toast(t.msg)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    loadingDialog.dismiss()
-                    if (e is BaseException) {
-                        TickDialog(context1).show()
-                    }
-                }
-            })
-    }
-
     /**
      *  点击聊天
      *  1. 好友 直接聊天 已经匹配过了 ×
@@ -366,7 +292,6 @@ class SayHiDialog(
         }
 
         val params = UserManager.getBaseParams()
-        params["tag_id"] = UserManager.getGlobalLabelId()
         params["target_accid"] = target_accid
         params["content"] = sayHiContent.text.trim().toString()
         RetrofitFactory.instance.create(Api::class.java)
@@ -439,10 +364,7 @@ class SayHiDialog(
 
     private fun sendChatHiMessage() {
         val container = Container(context1 as Activity, target_accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(
-            UserManager.getGlobalLabelName(),
-            ChatHiAttachment.CHATHI_HI
-        )
+        val chatHiAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_HI)
         val config = CustomMessageConfig()
         config.enableUnreadCount = false
         config.enablePush = false
@@ -480,7 +402,6 @@ class SayHiDialog(
                     loadingDialog.dismiss()
                     startAnimation()
                     //发送通知修改招呼次数
-                    UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
                     EventBus.getDefault().post(GreetEvent(context1, true))
                     if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
                         EventBus.getDefault().post(UpdateLikeMeReceivedEvent())

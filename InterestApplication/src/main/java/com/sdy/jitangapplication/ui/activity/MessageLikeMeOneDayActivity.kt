@@ -31,7 +31,6 @@ import com.sdy.jitangapplication.presenter.MessageLikeMeOneDayPresenter
 import com.sdy.jitangapplication.presenter.view.MessageLikeMeOneDayView
 import com.sdy.jitangapplication.ui.adapter.LikeMeOneDayGirdAdapter
 import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_message_like_me_one_day.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -113,8 +112,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
                             position, hashMapOf(
                                 "accid" to UserManager.getAccid(),
                                 "token" to UserManager.getToken(),
-                                "target_accid" to (adapter.data[position].accid ?: ""),
-                                "tag_id" to UserManager.getGlobalLabelId()
+                                "target_accid" to (adapter.data[position].accid ?: "")
                             )
                         )
                     }
@@ -184,7 +182,7 @@ class MessageLikeMeOneDayActivity : BaseMvpActivity<MessageLikeMeOneDayPresenter
     private fun sendChatHiMessage(position: Int) {
         val accid = adapter.data[position].accid ?: ""
         val container = Container(this, adapter.data[position].accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(UserManager.getGlobalLabelName(), ChatHiAttachment.CHATHI_MATCH)
+        val chatHiAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_MATCH)
         val config = CustomMessageConfig()
         config.enablePush = false
         val message = MessageBuilder.createCustomMessage(

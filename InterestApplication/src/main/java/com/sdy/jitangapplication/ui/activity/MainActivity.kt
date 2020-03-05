@@ -88,18 +88,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         AMapManager.initLocation(this)
         filterBtn.setOnClickListener(this)
 
-
-//        IntentionMatchingDialog(this).show()
-
         if (!UserManager.isShowGuideIndex()) {
             guideDialog.show()
         }
-
         if (!UserManager.getAlertProtocol())
             PrivacyDialog(this).show()
 
-//        onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
-//        UserManager.saveUserVerify(0)
         if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
             //0未认证/认证不成功     1认证通过     2认证中
             if (UserManager.isUserVerify() == 0) {
@@ -440,7 +434,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                         ",greetcount = ${allMsgCount.greetcount},square_count = ${allMsgCount.square_count}"
             )
 
-            showMsgDot((allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || msgCount > 0))
+            showMsgDot((allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || msgCount > 0))
         }
     }
 
