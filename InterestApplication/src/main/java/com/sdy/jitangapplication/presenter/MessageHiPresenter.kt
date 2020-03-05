@@ -51,33 +51,6 @@ class MessageHiPresenter : BasePresenter<MessageHiView>() {
 
 
     /**
-     * 删除过期消息
-     */
-    fun delTimeoutGreet(params: HashMap<String, Any>) {
-
-        RetrofitFactory.instance.create(Api::class.java)
-            .delTimeoutGreet(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<OuttimeBean?>>(mView) {
-                override fun onNext(t: BaseResp<OuttimeBean?>) {
-                    if (t.code == 200)
-                        mView.onDelTimeoutGreetResult(true, t.data?.list ?: mutableListOf())
-                    else {
-                        mView.onDelTimeoutGreetResult(false, null)
-                    }
-                }
-
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onDelTimeoutGreetResult(false, null)
-                }
-            })
-    }
-
-
-    /**
      * 获取云信最近联系人
      */
     fun getRecentContacts(t: BaseResp<MutableList<HiMessageBean>?>) {

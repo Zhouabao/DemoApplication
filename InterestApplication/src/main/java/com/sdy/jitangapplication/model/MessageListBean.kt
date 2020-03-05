@@ -1,7 +1,5 @@
 package com.sdy.jitangapplication.model
 
-import com.chad.library.adapter.base.entity.MultiItemEntity
-
 /**
  *    author : ZFM
  *    date   : 2019/8/511:23
@@ -30,15 +28,9 @@ data class HiMessageBean(
     var age: Int = 0,
     var gender: Int = 1,
     var out_time: String = "",
-    var type: Int = 0//	1，新消息 2，倒计时 3，普通样式 4 过期
-) : MultiItemEntity {
-    override fun getItemType(): Int {
-        if (type != null)
-            return type
-        return -1
-    }
+    var msgTime: Long = 0L
+)
 
-}
 
 /**
  * 给我打招呼的人

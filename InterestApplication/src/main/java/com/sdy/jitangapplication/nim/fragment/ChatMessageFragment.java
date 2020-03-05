@@ -702,8 +702,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                 EventBus.getDefault().post(new UpdateFindByTagListEvent(-1, sessionId));
                                 //刷新对方用户信息页面
                                 EventBus.getDefault().post(new UserRelationshipEvent());
-
+                                //刷新收到的招呼列表
+                                EventBus.getDefault().post(new UpdateLGreetReceivedEvent());
                             }
+
                         } else if (nimBeanBaseResp.getCode() == 409) {//用户被封禁
                             new CommonAlertDialog.Builder(getActivity())
                                     .setTitle("提示")

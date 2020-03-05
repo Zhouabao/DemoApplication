@@ -77,6 +77,22 @@
             app:layout_constraintBottom_toBottomOf="@id/msgTitle"
             tools:text="2018-12-31 12:00:00"/>
 
+
+    <TextView
+            android:id="@+id/msgNew"
+            android:text="新消息"
+            android:textColor="#fffd4417"
+            android:textSize="13sp"
+            android:visibility="visible"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/text"
+            app:layout_constraintLeft_toRightOf="@id/msgIcon"
+            app:layout_constraintRight_toLeftOf="@id/text"
+            app:layout_constraintTop_toTopOf="@id/text"/>
+
     <TextView
             android:id="@+id/text"
             android:layout_marginTop="6dp"
@@ -87,7 +103,8 @@
             android:textSize="14sp"
             android:layout_marginRight="15dp"
             android:maxLines="1"
-            app:layout_constraintLeft_toLeftOf="@id/msgTitle"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toRightOf="@id/msgNew"
             app:layout_constraintRight_toLeftOf="@id/newCount"
             app:layout_constraintTop_toBottomOf="@id/msgTitle"
             tools:text="对方向您打了一个招呼"

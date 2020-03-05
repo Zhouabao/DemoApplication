@@ -19,7 +19,7 @@
 
         <ImageView
                 android:id="@+id/bg"
-                android:src="@drawable/icon_bg_greet_limit"
+                android:src="@drawable/icon_bg_chat_to_vip"
                 android:layout_width="wrap_content"
                 android:layout_height="196dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -46,8 +46,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="积糖杜绝低质量的交友\n
-聊天需要会员可以开启"
+                android:text="积糖杜绝低质量的交友\n聊天需要会员可以开启"
                 android:textColor="#ff191919"
                 android:textSize="18sp"
                 app:layout_constraintLeft_toLeftOf="parent"

@@ -15,10 +15,10 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
@@ -60,9 +60,6 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
         registerObservers(true)
         initView()
         //主动刷新列表
-        page = 1
-        params["page"] = page
-        adapter.data.clear()
         mPresenter.greatLists(params)
 //        setData() 模拟数据请求
     }
@@ -97,13 +94,19 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
 
         adapter.setOnItemClickListener { _, view, position ->
             //发送通知已读消息
-            NIMClient.getService(MsgService::class.java).clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
+            adapter.data[position].count = 0
+            NIMClient.getService(MsgService::class.java)
+                .clearUnreadCount(adapter.data[position].accid, SessionTypeEnum.P2P)
             EventBus.getDefault().post(GetNewMsgEvent())
             // 通知中的 RecentContact 对象的未读数为0
             ChatActivity.start(this, adapter.data[position].accid ?: "")
+            adapter.notifyItemChanged(position)
         }
 
         clearBtn.onClick {
+            for (data in adapter.data) {
+                data.count = 0
+            }
             NIMClient.getService(MsgService::class.java).clearAllUnreadCount()
             adapter.notifyDataSetChanged()
         }
@@ -114,37 +117,19 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
         mPresenter.getRecentContacts(t)
     }
 
-    override fun onDelTimeoutGreetResult(t: Boolean, accids: MutableList<String>?) {
-        if (t) {
-            if (!accids.isNullOrEmpty()) {
-                for (accid in accids) {
-                    NIMClient.getService(MsgService::class.java).deleteRecentContact2(accid, SessionTypeEnum.P2P)
-                }
-            }
-            refreshLayout.resetNoMoreData()
-            page = 1
-            params["page"] = page
-            adapter.data.clear()
-//            adapter.notifyDataSetChanged()
-            mPresenter.greatLists(params)
-        } else {
-            CommonFunction.toast("删除超时消息失败！")
-            adapter.notifyDataSetChanged()
-        }
-    }
-
     override fun onGetRecentContactResults(
         contacts: MutableList<RecentContact>,
         t: BaseResp<MutableList<HiMessageBean>?>
     ) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
         if (t.data.isNullOrEmpty()) {
             refreshLayout.finishLoadMoreWithNoMoreData()
         } else {
             refreshLayout.finishLoadMore(true)
         }
-        refreshLayout.finishRefresh(true)
-
+        if (refreshLayout.state == RefreshState.Refreshing) {
+            adapter.data.clear()
+            refreshLayout.finishRefresh(true)
+        }
         for (recentContactt in contacts) {
             for (data in t.data ?: mutableListOf()) {
                 if (recentContactt.contactId == data.accid) {
@@ -172,11 +157,9 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
             }
         }
         adapter.addData(t.data ?: mutableListOf())
-        if (adapter.data.isEmpty()) {
-            adapter.isUseEmpty(true)
-        } else {
-            adapter.isUseEmpty(false)
-        }
+//        adapter.notifyDataSetChanged()
+        adapter.isUseEmpty(adapter.data.isEmpty())
+        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
 
     }
 
@@ -184,7 +167,6 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
         params["page"] = page
-        adapter.data.clear()
         mPresenter.greatLists(params)
     }
 
@@ -217,13 +199,13 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateHiEvent(event: UpdateHiEvent) {
-        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
-        refreshLayout.resetNoMoreData()
-        page = 1
-        params["page"] = page
-        adapter.data.clear()
-        adapter.notifyDataSetChanged()
-        mPresenter.greatLists(params)
+//        stateview.viewState = MultiStateView.VIEW_STATE_LOADING
+//        refreshLayout.resetNoMoreData()
+//        page = 1
+//        params["page"] = page
+//        adapter.data.clear()
+//        adapter.notifyDataSetChanged()
+//        mPresenter.greatLists(params)
     }
 
 
@@ -231,8 +213,7 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
      * ********************** 收消息，处理状态变化 ************************
      */
     private fun registerObservers(register: Boolean) {
-        val service = NIMClient.getService(MsgServiceObserve::class.java)
-        service.observeReceiveMessage(messageReceiverObserver, register)
+        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(messageReceiverObserver, register)
     }
 
 
@@ -240,11 +221,11 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
     private val messageReceiverObserver =
         Observer<List<IMMessage>> { imMessages ->
             if (imMessages != null) {
-                for (contact in adapter.data) {
+                for (contact in adapter.data.withIndex()) {
                     for (imMessage in imMessages) {
-                        if (contact.accid == imMessage.fromAccount) {
+                        if (contact.value.accid == imMessage.fromAccount) {
                             if (imMessage.attachment is ChatHiAttachment) {
-                                contact.content =
+                                contact.value.content =
                                     if ((imMessage.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
                                         "[招呼消息]"
                                     } else if ((imMessage.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) {
@@ -257,14 +238,16 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
                                         ""
                                     }
                             } else if (imMessage.attachment is ShareSquareAttachment) {
-                                contact.content = "[动态分享内容]"
+                                contact.value.content = "[动态分享内容]"
                             } else {
-                                contact.content = imMessage.content
+                                contact.value.content = imMessage.content
                             }
+                            contact.value.count = contact.value.count + 1
+                            contact.value.msgTime = imMessage.time
+                            adapter.notifyItemChanged(contact.index)
                         }
                     }
                 }
-                adapter.notifyDataSetChanged()
             }
         }
 

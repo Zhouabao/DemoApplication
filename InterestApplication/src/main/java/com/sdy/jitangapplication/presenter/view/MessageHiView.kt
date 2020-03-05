@@ -14,7 +14,6 @@ import com.sdy.jitangapplication.model.HiMessageBean
 interface MessageHiView : BaseView {
     fun onGreatListResult(t: BaseResp<MutableList<HiMessageBean>?>)
 
-    fun onDelTimeoutGreetResult(t: Boolean, accids: MutableList<String>?)
 
 
     fun onGetRecentContactResults(result: MutableList<RecentContact>, t: BaseResp<MutableList<HiMessageBean>?>)
