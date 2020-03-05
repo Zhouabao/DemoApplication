@@ -51,7 +51,9 @@ import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
-import com.sdy.jitangapplication.ui.activity.*
+import com.sdy.jitangapplication.ui.activity.ContactBookActivity
+import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
+import com.sdy.jitangapplication.ui.activity.MessageSquareActivity
 import com.sdy.jitangapplication.ui.adapter.MessageCenterAllAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListAdapter
 import com.sdy.jitangapplication.ui.adapter.MessageListHeadAdapter
@@ -198,14 +200,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                 2 -> {
                     //评论
                     startActivity<MessageSquareActivity>("type" to 2)
-                }
-                else -> {
-                    //喜欢我
-                    if (like_free_show) {
-                        startActivity<LikeMeReceivedActivity>()
-                    } else {
-                        startActivity<MessageLikeMeActivity>()
-                    }
                 }
             }
             allMessageTypeAdapter.data[position].count = 0

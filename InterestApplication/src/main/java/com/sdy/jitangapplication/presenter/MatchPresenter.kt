@@ -87,34 +87,4 @@ class MatchPresenter : BasePresenter<MatchView>() {
                 }
             })
     }
-
-
-    /**
-     * 喜欢
-     */
-    fun likeUser(params: HashMap<String, Any>, matchBean: MatchBean) {
-        if (!checkNetWork()) {
-            return
-        }
-        RetrofitFactory.instance.create(Api::class.java)
-            .addLike(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
-                override fun onNext(t: BaseResp<StatusBean?>) {
-                    if (t.code == 200) {
-                        mView.onGetLikeResult(true, t, matchBean)
-                    } else {
-                        mView.onGetLikeResult(false, t, matchBean)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onError(CommonFunction.getErrorMsg(context))
-                }
-            })
-    }
-
-
 }

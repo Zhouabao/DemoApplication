@@ -91,9 +91,6 @@
             tools:replace="android:name,android:theme,android:icon">
 
         <activity android:name=".ui.activity.FindByTagListActivity"/>
-
-        <activity android:name=".ui.activity.LikeMeReceivedActivity">
-        </activity>
         <activity android:name=".ui.activity.GreetReceivedActivity">
         </activity>
         <activity android:name=".ui.activity.VipPowerActivity">
@@ -224,14 +221,6 @@
                 android:windowSoftInputMode="adjustResize|stateHidden">
         </activity>
         <activity
-                android:name=".ui.activity.MessageLikeMeOneDayActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
-                android:name=".ui.activity.MessageLikeMeActivity"
-                android:screenOrientation="portrait">
-        </activity>
-        <activity
                 android:name=".ui.activity.MessageHiPastActivity"
                 android:screenOrientation="portrait">
         </activity>
@@ -296,11 +285,6 @@
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustResize"/>
-        <activity
-                android:name=".ui.chat.MatchSucceedActivity"
-                android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustPan|stateHidden">
-        </activity>
         <activity
                 android:name=".ui.activity.MatchDetailActivity"
                 android:screenOrientation="portrait"/>

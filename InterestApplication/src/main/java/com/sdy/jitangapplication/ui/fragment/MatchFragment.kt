@@ -27,13 +27,6 @@ import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
-import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.RequestCallback
-import com.netease.nimlib.sdk.msg.MessageBuilder
-import com.netease.nimlib.sdk.msg.MsgService
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
-import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -42,12 +35,10 @@ import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.Newtag
 import com.sdy.jitangapplication.model.StatusBean
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
-import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
@@ -57,7 +48,6 @@ import kotlinx.android.synthetic.main.fragment_match.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.support.v4.startActivity
 
 /**
  * 匹配页面(新版)
@@ -343,35 +333,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             }
         }
     }
-
-    //status :1.喜欢成功  2.匹配成功
-    //201 不是会员
-    //405 封禁
-    override fun onGetLikeResult(success: Boolean, data: BaseResp<StatusBean?>, matchBean: MatchBean) {
-        if (data.code == 200) {
-            if (data.data != null) {
-                if (UserManager.getCurrentSurveyVersion().isEmpty()) {
-                    UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
-                    EventBus.getDefault().post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
-                }
-
-                if (data.data!!.status == 2) {//status :1.喜欢成功  2.匹配成功
-                    sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH, matchBean)
-                }
-            } else {
-                CommonFunction.toast(data.msg)
-                card_stack_view.rewind()
-            }
-
-        } else if (data.code == 201) {
-            card_stack_view.rewind()
-        } else if (data.code == 405) {
-            CommonFunction.toast(data.msg)
-            card_stack_view.rewind()
-        }
-    }
-
-
     override fun onError(text: String) {
         Log.d("error", text)
     }
@@ -417,26 +378,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
 
     /*---------------------事件总线--------------------------------*/
-
-    /**
-     * 通过全局的标签来更新数据
-     */
-    fun updateLabelEvent() {
-        setViewState(LOADING)
-        matchParams["type"] = 1
-        matchUserAdapter.data.clear()
-        hasMore = false
-        updateLocation()
-        mPresenter.getMatchList(matchParams)
-    }
-
-
     /**
      * 通过本地的筛选条件类更新数据
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRefreshEvent(event: RefreshEvent) {
-//        matchStateview.viewState = MultiStateView.VIEW_STATE_LOADING
         setViewState(LOADING)
 
         matchUserAdapter.data.clear()
@@ -577,10 +523,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
                 UserManager.slide_times = 0
             }
-//            else if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS && UserManager.slide_times == UserManager.replace_times && !UserManager.getAlertChangeAvator()) {//引导替换
-//                ChangeAvatarRealManDialog(activity!!, ChangeAvatarRealManDialog.VERIFY_NEED_VALID_REAL_MAN).show()
-//                UserManager.slide_times = 0
-//            }
         }
 
 
@@ -593,7 +535,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             //非真人头像打招呼提示去修改头像
-//            ChangeAvatarRealManDialog(activity!!, ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN_GREET).show()
             if (!is_human && manager.topPosition - 1 == 0 && !UserManager.getAlertChangeRealMan()) {
                 ChangeAvatarRealManDialog(
                     activity!!,
@@ -752,60 +693,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
         params2.height = 0
         animation_dislike.alpha = 0F
         animation_dislike.layoutParams = params2
-    }
-
-    /*--------------------------消息代理------------------------*/
-
-    private fun sendChatHiMessage(type: Int, matchBean: MatchBean) {
-//        val matchBean = matchUserAdapter.data[manager.topPosition - 1]
-        Log.d("OkHttp", matchBean.accid ?: "")
-        val chatHiAttachment = ChatHiAttachment(type)
-        val config = CustomMessageConfig()
-        config.enablePush = false
-        val message = MessageBuilder.createCustomMessage(
-            matchBean?.accid,
-            SessionTypeEnum.P2P,
-            "",
-            chatHiAttachment,
-            config
-        )
-        sendMessage(message, matchBean)
-    }
-
-
-    fun sendMessage(msg: IMMessage, matchBean: MatchBean): Boolean {
-        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
-            RequestCallback<Void?> {
-            override fun onSuccess(param: Void?) {
-                if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) { //匹配成功跳转到飞卡片
-                    startActivity<MatchSucceedActivity>(
-                        "avator" to matchBean.avatar,
-                        "nickname" to matchBean.nickname,
-                        "accid" to matchBean.accid
-//                        "avator" to matchUserAdapter.data[manager.topPosition - 1].avatar,
-//                        "nickname" to matchUserAdapter.data[manager.topPosition - 1].nickname,
-//                        "accid" to matchUserAdapter.data[manager.topPosition - 1].accid
-                    )
-                } else {//招呼成功跳转到招呼
-                    SayHiDialog(
-                        matchBean.accid,
-                        matchBean.nickname ?: "",
-                        activity!!
-                    ).show()
-                }
-
-
-            }
-
-            override fun onFailed(code: Int) {
-                card_stack_view.rewind()
-            }
-
-            override fun onException(exception: Throwable) {
-                card_stack_view.rewind()
-            }
-        })
-        return true
     }
 
 

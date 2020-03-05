@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -17,38 +16,28 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.kennyc.view.MultiStateView
-import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
-import com.netease.nim.uikit.business.session.module.Container
-import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nimlib.sdk.NIMClient
-import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.friend.FriendService
-import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
-import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
 import com.sdy.jitangapplication.model.MatchBean
-import com.sdy.jitangapplication.model.StatusBean
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
-import com.sdy.jitangapplication.ui.adapter.*
-import com.sdy.jitangapplication.ui.chat.MatchSucceedActivity
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
+import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
+import com.sdy.jitangapplication.ui.adapter.MatchDetailInfoAdapter
+import com.sdy.jitangapplication.ui.adapter.MatchImgsPagerAdapter
+import com.sdy.jitangapplication.ui.adapter.MyLabelAdapter
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
-import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
 import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
 import com.sdy.jitangapplication.utils.UserManager
@@ -67,12 +56,10 @@ import java.util.*
 /**
  * 匹配详情页
  */
-class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
-    View.OnClickListener, ModuleProxy {
+class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView, View.OnClickListener {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
-    private val thumbAdapter by lazy { DetailThumbAdapter(from = DetailThumbAdapter.FROM_MATCH_DETAIL) }
 
     var photos: MutableList<String> = mutableListOf()
     private val photosAdapter by lazy { MatchImgsPagerAdapter(this, photos) }
@@ -520,54 +507,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-    override fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?, islike: Boolean) {
-
-        if (islike) {
-            if (statusBean != null)
-                if (statusBean.code == 200) {
-                    if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
-                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
-                    }
-
-                    if (statusBean.data?.residue == 0) {
-                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
-                    } else {
-                        EventBus.getDefault().post(RefreshEvent(true))
-                        if (statusBean.data?.status == 1) {  //喜欢成功
-                            matchBean!!.isliked = 1
-                        } else if (statusBean.data?.status == 2) {//匹配成功
-                            //如果是来自喜欢我的界面， 就刷新
-                            if (intent.getIntExtra("parPos", -1) != -1) {
-                                EventBus.getDefault().post(
-                                    UpdateLikemeOnePosEvent(
-                                        intent.getIntExtra("parPos", -1), intent.getIntExtra("childPos", -1)
-                                    )
-                                )
-                            }
-                            //喜欢过
-                            matchBean!!.isfriend = 1
-                            sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
-                        }
-                    }
-                }
-        } else {
-            if (statusBean != null)
-                if (statusBean.code == 200) {
-                    if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
-                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
-                    }
-
-                    if (statusBean.data != null) {
-                        EventBus.getDefault().post(RefreshEvent(true))
-                        finish()
-                    } else {
-                        CommonFunction.toast(statusBean.msg)
-                    }
-                }
-        }
-    }
-
-
     override fun onRemoveBlockResult(success: Boolean) {
         if (success) {
             NIMClient.getService(FriendService::class.java).removeFromBlackList(matchBean!!.accid)
@@ -694,67 +633,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         matchBean?.isgreeted = true
         //更新打招呼次数和状态
         updateLightCount()
-    }
-
-
-    /*--------------------------消息代理------------------------*/
-    private fun sendChatHiMessage(type: Int) {
-        Log.d("OkHttp", matchBean?.accid ?: "")
-        val container = Container(this, matchBean?.accid, SessionTypeEnum.P2P, this, true)
-        val chatHiAttachment = ChatHiAttachment(type)
-        val config = CustomMessageConfig()
-        config.enablePush = false
-        val message = MessageBuilder.createCustomMessage(
-            matchBean?.accid,
-            SessionTypeEnum.P2P,
-            "",
-            chatHiAttachment,
-            config
-        )
-        container.proxy.sendMessage(message)
-    }
-
-    override fun sendMessage(msg: IMMessage): Boolean {
-        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
-            RequestCallback<Void?> {
-            override fun onSuccess(param: Void?) {
-                if (msg.attachment is ChatHiAttachment) {
-                    if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
-                        SayHiDialog(matchBean!!.accid, matchBean!!.nickname ?: "", this@MatchDetailActivity).show()
-                    } else {
-                        startActivity<MatchSucceedActivity>(
-                            "avator" to matchBean!!.avatar,
-                            "nickname" to matchBean!!.nickname,
-                            "accid" to matchBean!!.accid
-                        )
-                    }
-                }
-
-            }
-
-            override fun onFailed(code: Int) {
-            }
-
-            override fun onException(exception: Throwable) {
-            }
-        })
-        return true
-    }
-
-    override fun onInputPanelExpand() {
-
-    }
-
-    override fun shouldCollapseInputPanel() {
-
-    }
-
-    override fun isLongClickEnabled(): Boolean {
-        return false
-    }
-
-    override fun onItemFooterClick(message: IMMessage?) {
-
     }
 
 }
