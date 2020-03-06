@@ -36,7 +36,7 @@ import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
- * 标签特质
+ * 兴趣特质
  */
 class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQualityView, View.OnClickListener {
 
@@ -46,7 +46,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         const val MODE_NEW = 1
         const val MODE_EDIT = 2
 
-        //获取标签的  1介绍模板 2.标签特质 3.标签意向   4.标签标题
+        //获取兴趣的  1介绍模板 2.兴趣特质 3.兴趣意向   4.兴趣标题
         const val TYPE_TITLE = 4
     }
 
@@ -58,7 +58,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     private val choosedQualityAdapter by lazy { LabelQualityAdapter(true) }
     //所有特质中选中的特质
     private val choosedFromAllQuality = mutableListOf<LabelQualityBean>()
-    //用户自拟标签特质
+    //用户自拟兴趣特质
     private val customQuality = mutableListOf<String>()
     private val mode by lazy { intent.getIntExtra("mode", MODE_NEW) }
 
@@ -85,7 +85,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
         confirmBtn.setOnClickListener(this)
         laterBtn.setOnClickListener(this)
         switchOne.setOnClickListener(this)
-        hotT1.text = myLabelBean?.title ?: "完善标签特质"
+        hotT1.text = myLabelBean?.title ?: "完善兴趣特质"
         confirmBtn.isEnabled = false
         stateLabelQuality.retryBtn.onClick {
             stateLabelQuality.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -187,7 +187,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
     override fun addTagResult(result: Boolean, data: AddLabelResultBean?) {
         if (result) {
             if (data != null) {
-                // 这里标签是来自于发布或者已经在该标签下发布过内容，就不走发布流程
+                // 这里兴趣是来自于发布或者已经在该兴趣下发布过内容，就不走发布流程
                 if (mode != MODE_EDIT && !data!!.is_published) {
                     startActivity<AddLabelSuccessActivity>("data" to myLabelBean)
                 }
@@ -302,7 +302,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     return
                 }
                 if (choosedQualityAdapter.data.size >= MAX_QUALITY) {
-                    CommonFunction.toast("最多能填写5个标签特质")
+                    CommonFunction.toast("最多能填写${MAX_QUALITY}个兴趣特质")
                     return
                 }
 
@@ -314,7 +314,7 @@ class LabelQualityActivity : BaseMvpActivity<LabelQualityPresenter>(), LabelQual
                     }
                 }
                 if (hasDuplicate) {
-                    CommonFunction.toast("不能添加重复的标签特质")
+                    CommonFunction.toast("不能添加重复的兴趣特质")
                     return
                 }
 

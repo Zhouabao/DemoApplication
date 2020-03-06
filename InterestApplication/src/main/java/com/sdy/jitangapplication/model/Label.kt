@@ -11,7 +11,7 @@ import java.io.Serializable
  *    version: 1.0
  */
 
-//-----------------新的标签-----------------
+//-----------------新的兴趣-----------------
 //免费：1已加入 2未加入  付费：3已购买 4付费进入
 data class NewLabel(
     var id: Int = -1,
@@ -37,7 +37,7 @@ data class AddLabelBean(
 
 
 /**
- * 标签特质
+ * 兴趣特质
  */
 data class LabelQualityBean(
     var content: String = "",
@@ -62,7 +62,7 @@ data class LabelQualitysBean(
 
 
 /**
- * 广场发布标签
+ * 广场发布兴趣
  */
 data class SquareLabelsBean(
     var all_list: MutableList<SquareLabelBean> = mutableListOf(),
@@ -99,7 +99,7 @@ data class MyLabelsBean(
 
 
 /**
- * 我的标签
+ * 我的兴趣
  */
 
 data class MyLabelBean(
@@ -111,7 +111,7 @@ data class MyLabelBean(
     var label_quality: MutableList<LabelQualityBean> = mutableListOf(),
     var title: String = "",
     var editMode: Boolean = false,//是否处于编辑模式
-    var same_label: Boolean = false,//是否是相同标签
+    var same_label: Boolean = false,//是否是相同兴趣
     var same_quality_count: Int = 0,//相同特质数量
     var intro_descr: String = "",
     var publish_descr: String = "",
@@ -123,7 +123,7 @@ data class MyLabelBean(
 
 
 /**
- * 他人的标签
+ * 他人的兴趣
  */
 data class OtherLabelsBean(
     var my: MutableList<MyLabelBean> = mutableListOf(),

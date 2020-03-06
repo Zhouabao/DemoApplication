@@ -24,7 +24,7 @@
             android:id="@+id/emptyLabelTip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="标签未完善"
+            android:text="兴趣未完善"
             android:textColor="#ff191919"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -37,7 +37,7 @@
 
     <TextView
             android:id="@+id/emptyTip"
-            android:text="请添加你的标签\n添加标签后才能让更多人看到你"
+            android:text="请添加你的兴趣\n添加兴趣后才能让更多人看到你"
             android:layout_marginTop="22dp"
             android:gravity="center"
             android:layout_centerHorizontal="true"
@@ -51,7 +51,7 @@
 
     <TextView
             android:id="@+id/addLabelBtn"
-            android:text="完善标签"
+            android:text="完善兴趣"
             android:textColor="#ffffffff"
             android:textSize="16sp"
             android:textStyle="bold"

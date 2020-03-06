@@ -27,7 +27,7 @@ class LoginActivity : BaseActivity() {
 
 
         //判断是否有登录
-        //移除老用户的标签
+        //移除老用户的兴趣
         if (!SPUtils.getInstance(Constants.SPNAME).getStringSet("newCheckedLabels").isNullOrEmpty())
             SPUtils.getInstance(Constants.SPNAME).remove("newCheckedLabels")
 

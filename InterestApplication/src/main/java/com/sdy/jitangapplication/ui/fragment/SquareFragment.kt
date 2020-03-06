@@ -421,7 +421,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
         retryBtn.onClick {
             setViewState(LOADING)
-//            这个地方还要默认设置选中第一个标签来更新数据
+//            这个地方还要默认设置选中第一个兴趣来更新数据
             mPresenter.getSquareList(listParams, true, true)
             //mPresenter.getFrinedsList(friendsParams)
         }
@@ -785,11 +785,11 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
 
 
     /**
-     * 根据选择的标签切换广场内容
+     * 根据选择的兴趣切换广场内容
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onUpdateLabelEvent(event: UpdateLabelEvent) {
-        //这个地方还要默认设置选中第一个标签来更新数据
+        //这个地方还要默认设置选中第一个兴趣来更新数据
         if (refreshLayout.state == RefreshState.Refreshing) {
             refreshLayout.finishRefresh()
         }

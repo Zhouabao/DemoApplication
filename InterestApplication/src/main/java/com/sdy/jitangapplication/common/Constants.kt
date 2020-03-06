@@ -41,7 +41,7 @@ object Constants {
 
     //官方助手id
     const val ASSISTANT_ACCID = "01"
-    //精选标签id
+    //精选兴趣id
     const val RECOMMEND_TAG_ID = 1
 
 

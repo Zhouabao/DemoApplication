@@ -66,7 +66,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="标签购买"
+                    android:text="兴趣购买"
                     android:textColor="#ffffffff"
                     android:textSize="18sp"
                     />
@@ -76,7 +76,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="该标签需要付费进入，付费后即可加入标签"
+                    android:text="该兴趣需要付费进入，付费后即可加入兴趣"
                     android:textColor="#ffffffff"
                     android:textSize="14sp"
                     />
@@ -128,7 +128,7 @@
                     android:id="@+id/labelName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="标签「极限运动」1个月"
+                    android:text="兴趣「极限运动」1个月"
                     android:textColor="#ffff4230"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="parent"

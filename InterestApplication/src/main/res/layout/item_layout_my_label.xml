@@ -120,7 +120,7 @@
                     android:layout_marginTop="8dp"
                     android:textSize="14sp"
                     android:textColor="#FF787C7F"
-                    android:text="完善标签"
+                    android:text="完善兴趣"
                     android:visibility="gone"
                     android:paddingLeft="9dp"
                     android:paddingRight="9dp"

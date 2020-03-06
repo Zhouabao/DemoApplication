@@ -93,7 +93,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         const val AUTHORITY = "com.sdy.jitangapplication.provider" //FileProvider的签名 7.0以上要用
         const val REQUEST_CODE_CAPTURE_RAW = 6 //拍照
         const val REQUEST_CODE_VIDEO = 10 //视频选择
-        const val REQUEST_CODE_LABEL = 20 //标签选择
+        const val REQUEST_CODE_LABEL = 20 //兴趣选择
         const val REQUEST_CODE_MAP = 30 //地图选择
         const val REQUEST_CODE_TITILE = 40 //发布标题
 
@@ -226,14 +226,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
     private var titleBean: TopicBean? = null
     private fun initData() {
-        //从其他地方进入发布,自主选择的标签
+        //从其他地方进入发布,自主选择的兴趣
 //        if (intent.getSerializableExtra("label") != null) {
 //            checkTags.clear()
 //            checkTags.add((intent.getSerializableExtra("label") as SquareLabelBean))
 //            chooseTitleBtn.text = ""
 //        }
 
-        //从广场标题引导进入发布，默认选中标签
+        //从广场标题引导进入发布，默认选中兴趣
         if (intent.getSerializableExtra("titleBean") != null) {
             titleBean = intent.getSerializableExtra("titleBean") as TopicBean
 //            checkTags.add(SquareLabelBean(id = titleBean!!.tag_id, title = titleBean!!.tag_title))
@@ -363,7 +363,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     }
 
 
-    /***************设置选中的标签******************/
+    /***************设置选中的兴趣******************/
     private var checkTags = mutableListOf<SquareLabelBean>()
 
 
@@ -1144,7 +1144,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
 
             R.id.chooseTitleBtn -> {
 //                if (checkTags.isNullOrEmpty()) {
-//                    CommonFunction.toast("请先选择标签")
+//                    CommonFunction.toast("请先选择兴趣")
 //                    return
 //                }
                 startActivityForResult<ChooseTitleActivity>(REQUEST_CODE_TITILE)
@@ -1283,13 +1283,13 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     chooseTitleBtn.isFocusableInTouchMode = true
                 }
             }
-            //标签选择返回
+            //兴趣选择返回
             else if (requestCode == REQUEST_CODE_LABEL) {
                 checkTags.clear()
                 checkTags.add((data?.getSerializableExtra("label") as SquareLabelBean))
 
                 if (checkTags.size <= 0) {
-                    CommonFunction.toast("标签是必选项哦~")
+                    CommonFunction.toast("兴趣是必选项哦~")
                     return
                 }
 

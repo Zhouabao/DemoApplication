@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
- * 发布选择标签
+ * 发布选择兴趣
  */
 class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabelView, View.OnClickListener {
     private val adapter by lazy { ChooseLabelAdapter() }
@@ -42,9 +42,9 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
 
         btnBack.setOnClickListener(this)
         rightBtn1.setOnClickListener(this)
-        hotT1.text = "发布到哪个标签"
+        hotT1.text = "发布到哪个兴趣"
         rightBtn1.isVisible = true
-        rightBtn1.text = "下一步"
+        rightBtn1.text = "发布"
         rightBtn1.isEnabled = false
 
         stateChooseLabel.retryBtn.onClick {
@@ -73,13 +73,13 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
                     stateChooseLabel.viewState = MultiStateView.VIEW_STATE_EMPTY
                 } else {
                     if (!datas.used_list.isNullOrEmpty()) {
-                        adapter.addData(SquareLabelBean(title = "常用标签", type = SquareLabelBean.TITLE))
+                        adapter.addData(SquareLabelBean(title = "常用兴趣", type = SquareLabelBean.TITLE))
                         for (data in datas.used_list) {
                             data.type = SquareLabelBean.CONTENT
                         }
                         adapter.addData(datas.used_list)
                     }
-                    adapter.addData(SquareLabelBean(title = "全部标签", type = SquareLabelBean.TITLE))
+                    adapter.addData(SquareLabelBean(title = "全部兴趣", type = SquareLabelBean.TITLE))
                     for (data in datas.all_list) {
                         data.type = SquareLabelBean.CONTENT
                     }
@@ -99,7 +99,7 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
 
             rightBtn1 -> {
                 if (mylabelBean == null) {
-                    CommonFunction.toast("标签为必选项")
+                    CommonFunction.toast("兴趣为必选项")
                     return
                 }
                 intent.putExtra("label", mylabelBean)

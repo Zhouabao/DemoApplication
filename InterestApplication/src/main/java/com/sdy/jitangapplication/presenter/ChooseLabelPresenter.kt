@@ -16,7 +16,7 @@ import com.sdy.jitangapplication.utils.UserManager
 class ChooseLabelPresenter : BasePresenter<ChooseLabelView>() {
 
     /**
-     * 获取我的标签
+     * 获取我的兴趣
      */
     fun getSquareTag() {
         RetrofitFactory.instance.create(Api::class.java)

@@ -721,7 +721,7 @@ public class ChatMessageListPanelEx {
             }
             // 更新要显示时间的消息
             adapter.updateShowTimeItem(total, true, firstLoad);
-            // 更新已读回执标签
+            // 更新已读回执
             updateReceipt(total);
 
             // 加载状态修改,刷新界面

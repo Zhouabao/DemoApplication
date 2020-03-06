@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.item_label_all.view.*
 /**
  *    author : ZFM
  *    date   : 2019/10/910:30
- *    desc   : 所有新标签的数据
+ *    desc   : 所有新兴趣的数据
  *    version: 1.0
  */
 class AllNewLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all) {

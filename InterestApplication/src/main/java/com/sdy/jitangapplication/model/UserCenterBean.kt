@@ -11,8 +11,8 @@ import java.io.Serializable
  *    version: 1.0
  */
 data class UserInfoBean(
-    val mytags_count: Int = 0,//标签个数
-    val mytags_list: MutableList<MyLabelBean> = mutableListOf(),//展示的标签
+    val mytags_count: Int = 0,//兴趣个数
+    val mytags_list: MutableList<MyLabelBean> = mutableListOf(),//展示的兴趣
     val squarelist: Squarelist? = Squarelist(),//展示的广场
     val userinfo: Userinfo? = null,
     val hide_distance: Boolean = false,//（true开启隐藏  false  关闭隐藏）

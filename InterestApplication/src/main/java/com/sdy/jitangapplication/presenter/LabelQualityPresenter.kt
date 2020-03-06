@@ -23,7 +23,7 @@ import com.sdy.jitangapplication.utils.UserManager
 class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
 
 /**
-     *  获取标签的  特质/模板/意向  type  1 2 3
+     *  获取兴趣的  特质/模板/意向  type  1 2 3
      */
     fun getLabelQuality(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
@@ -56,7 +56,7 @@ class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
 
 
     /**
-     * 添加标签
+     * 添加兴趣
      */
     fun saveMyQuality(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)

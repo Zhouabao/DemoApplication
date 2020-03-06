@@ -45,7 +45,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
- * 标签找人具体标签下的人
+ * 兴趣找人具体兴趣下的人
  */
 class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByTagListView, OnRefreshListener,
     OnLoadMoreListener {
@@ -310,7 +310,7 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
             isJoin = true
             setLabelStateBtn()
 
-            //保存标签
+            //保存兴趣
             UserManager.saveLabels(data?.tag_list ?: mutableListOf())
             EventBus.getDefault().post(UpdateMyLabelEvent())
             EventBus.getDefault().post(UserCenterEvent(true))

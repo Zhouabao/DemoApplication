@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.item_new_choose_label.view.*
 /**
  *    author : ZFM
  *    date   : 2019/10/910:30
- *    desc   :选中的标签名字
+ *    desc   :选中的兴趣名字
  *    version: 1.0
  */
 class ChooseNewLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_new_choose_label) {

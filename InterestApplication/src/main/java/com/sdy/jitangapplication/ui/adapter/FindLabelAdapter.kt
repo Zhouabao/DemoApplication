@@ -20,7 +20,7 @@ import org.jetbrains.anko.startActivity
 /**
  *    author : ZFM
  *    date   : 2019/10/910:30
- *    desc   : 标签找人适配器
+ *    desc   : 兴趣找人适配器
  *    version: 1.0
  */
 class FindLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_add_label) {

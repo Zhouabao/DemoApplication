@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
@@ -55,6 +56,9 @@ class SettingsActivity : BaseMvpActivity<SettingsPresenter>(),
         mPresenter.mView = this
         mPresenter.context = this
 
+
+        switchOpenHi.isVisible = false
+        openHi.isVisible = false
 
         blackListBtn.setOnClickListener(this)
         msgNotificate.setOnClickListener(this)

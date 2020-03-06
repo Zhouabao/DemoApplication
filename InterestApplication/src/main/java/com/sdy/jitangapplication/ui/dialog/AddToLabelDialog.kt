@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.dialog_add_to_label.*
 /**
  *    author : ZFM
  *    date   : 2019/10/1614:30
- *    desc   : 加入标签弹窗
+ *    desc   : 加入兴趣弹窗
  *    version: 1.0
  */
 class AddToLabelDialog(val context1: Context, val label: NewLabel) : Dialog(context1, R.style.MyDialog) {

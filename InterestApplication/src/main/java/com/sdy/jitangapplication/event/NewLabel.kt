@@ -9,6 +9,6 @@ package com.sdy.jitangapplication.event
 
 class UpdateMyLabelEvent
 
-//标签支付结果
+//兴趣支付结果
 class PayLabelResultEvent(val success: Boolean)
 

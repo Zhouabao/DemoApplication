@@ -10,7 +10,7 @@ import com.sdy.jitangapplication.ui.fragment.MySquareFragment.Companion.TYPE_SQU
  *    desc   : 广场的事件
  *    version: 1.0
  */
-//更新标签去请求
+//更新兴趣去请求
 class UpdateLabelEvent
 
 //更新播放器
@@ -50,7 +50,7 @@ class AnnounceEvent(var serverSuccess: Boolean = false, var code: Int = 0)
 
 
 /**
- * 传递标签事件
+ * 传递兴趣事件
  */
 class TransferLabelEvent(var label: SquareLabelBean)
 

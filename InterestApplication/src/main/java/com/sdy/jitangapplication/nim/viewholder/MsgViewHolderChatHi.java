@@ -20,7 +20,7 @@ import com.netease.nim.uikit.common.util.sys.ScreenUtil;
  */
 public class MsgViewHolderChatHi extends MsgViewHolderBase {
 
-    private TextView chatHiMatch,//匹配的标签
+    private TextView chatHiMatch,//匹配的兴趣
             targetMatchContent;
     private ImageView targetMatchIv;
     private ConstraintLayout targetCl;
@@ -48,7 +48,7 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
     @Override
     protected void bindContentView() {
         ChatHiAttachment attachment = (ChatHiAttachment) message.getAttachment();
-        //匹配的标签 1.匹配  2.招呼 3.好友
+        //匹配的兴趣 1.匹配  2.招呼 3.好友
         if (attachment.getShowType() == ChatHiAttachment.CHATHI_MATCH) {
 //            chatHiMatch.setText("通过『" + attachment.getTag() + "』匹配");
             chatHiMatch.setText("匹配成功");

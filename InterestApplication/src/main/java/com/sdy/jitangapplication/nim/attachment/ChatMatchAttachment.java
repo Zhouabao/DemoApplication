@@ -19,9 +19,9 @@ public class ChatMatchAttachment extends CustomAttachment {
     private final String KEY_TAGS = "tags";
     private final String KEY_AVATOR = "avator";
 
-    private String matchTag;//匹配的标签
+    private String matchTag;//匹配的兴趣
     private String avator;//头像
-    private List<Tag> tags = new ArrayList<>();//用户所拥有的标签
+    private List<Tag> tags = new ArrayList<>();//用户所拥有的兴趣
 
     public ChatMatchAttachment() {
         super(CustomAttachmentType.ChatMatch);

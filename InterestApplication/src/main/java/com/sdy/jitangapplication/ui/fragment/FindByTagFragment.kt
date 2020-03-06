@@ -28,7 +28,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
- * 标签找人
+ * 兴趣找人
  */
 class FindByTagFragment : BaseMvpLazyLoadFragment<FindByTagPresenter>(), FindByTagView, OnLoadMoreListener,
     OnRefreshListener {

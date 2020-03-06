@@ -258,13 +258,13 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int, var from: Int = 
 
                         //4需要付费.付费进入  7.需要付费.已过期 9.需要付费.已删除.过期
                         if (chargeWayBeans!!.is_new) {//付费未购买
-                            purchaseType.text = "标签购买"
-                            purchaseContent.text = "该标签需要付费进入，付费后即可加入标签"
+                            purchaseType.text = "兴趣购买"
+                            purchaseContent.text = "该兴趣需要付费进入，付费后即可加入兴趣"
                         } else {
-                            purchaseType.text = "标签已过期"
-                            purchaseContent.text = "该标签已过期，续费后即可继续使用标签"
+                            purchaseType.text = "兴趣已过期"
+                            purchaseContent.text = "该兴趣已过期，续费后即可继续使用兴趣"
                         }
-                        labelName.text = "标签「${chargeWayBeans!!.title}」${chargeWayBeans!!.duration}个月"
+                        labelName.text = "兴趣「${chargeWayBeans!!.title}」${chargeWayBeans!!.duration}个月"
                         labelPrice.text = SpanUtils.with(labelPrice)
                             .append("¥")
                             .append("${chargeWayBeans!!.price}")

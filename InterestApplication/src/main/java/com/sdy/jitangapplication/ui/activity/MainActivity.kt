@@ -47,10 +47,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 import java.util.*
 
-//在支持路由的页面上添加注解（必选）
-//这里的路径需要注意的是至少需要两级,/xx/xx
-//路径标签个人建议写在一个类里面，方便统一管理和维护
-
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
     private val titles = arrayOf("匹配", "发现", "消息", "我的")
     //fragment栈管理
@@ -321,7 +317,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.labelAddBtn -> { //标签添加
+            R.id.labelAddBtn -> { //兴趣添加
                 startActivity<MyLabelActivity>()
             }
             R.id.tabMatchCount -> {

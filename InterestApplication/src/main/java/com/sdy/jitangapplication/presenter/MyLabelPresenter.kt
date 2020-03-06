@@ -23,7 +23,7 @@ import com.sdy.jitangapplication.utils.UserManager
  */
 class MyLabelPresenter : BasePresenter<MyLabelView>() {
     /**
-     * 获取我的标签
+     * 获取我的兴趣
      */
     fun getMyTagsList() {
         RetrofitFactory.instance.create(Api::class.java)
@@ -53,7 +53,7 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
     }
 
     /**
-     * 删除标签
+     * 删除兴趣
      */
     fun delMyTags(tag_id: Int, position: Int) {
         val params = hashMapOf<String, Any>("tag_ids" to Gson().toJson(mutableListOf(tag_id)))

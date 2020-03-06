@@ -18,7 +18,7 @@ import com.sdy.jitangapplication.utils.UserManager
 
 class FindByTagListPresenter : BasePresenter<FindByTagListView>() {
     /**
-     * 根据标签来获取新的用户数据
+     * 根据兴趣来获取新的用户数据
      */
     fun lookForPeopleTag(params: HashMap<String, Any>, exclude: MutableList<Int>? = mutableListOf()) {
         params["exclude"] = Gson().toJson(exclude)
@@ -53,7 +53,7 @@ class FindByTagListPresenter : BasePresenter<FindByTagListView>() {
     }
 
     /**
-     * 添加标签
+     * 添加兴趣
      */
     fun addMyTagsSingle(tag_id: Int) {
         RetrofitFactory.instance.create(Api::class.java)

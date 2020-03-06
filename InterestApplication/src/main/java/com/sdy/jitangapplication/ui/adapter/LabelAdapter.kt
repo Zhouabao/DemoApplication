@@ -10,7 +10,6 @@ import kotlinx.android.synthetic.main.item_label.view.*
 /**
  *    author : ZFM
  *    date   : 2019/6/2020:48
- *    desc   : 此处存在二级标签和三级标签的选择和反选
  *    version: 1.0
  */
 class LabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label) {

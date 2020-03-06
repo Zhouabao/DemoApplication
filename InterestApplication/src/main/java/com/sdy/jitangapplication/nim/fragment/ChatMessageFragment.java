@@ -698,7 +698,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             if (!nimBean.getIsgreet() && !nimBean.getIsfriend()) {
                                 //刷新首页数据
                                 EventBus.getDefault().post(new RefreshEvent(true));
-                                //刷新标签找人列表
+                                //刷新兴趣找人列表
                                 EventBus.getDefault().post(new UpdateFindByTagListEvent(-1, sessionId));
                                 //刷新对方用户信息页面
                                 EventBus.getDefault().post(new UserRelationshipEvent());

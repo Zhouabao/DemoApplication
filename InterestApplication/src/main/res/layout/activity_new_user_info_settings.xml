@@ -67,7 +67,7 @@
             app:msv_emptyView="@layout/empty_layout"
             app:msv_errorView="@layout/error_layout"
             app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="content">
+            app:msv_viewState="loading">
 
         <FrameLayout
                 android:layout_width="match_parent"
@@ -724,12 +724,9 @@
                         android:background="@drawable/shape_rectangle_orange_white_9dp"
                         android:layout_width="wrap_content"
                         android:textSize="14sp"
-                        android:textStyle="bold"
                         android:text="0%"
-                        android:paddingTop="2dp"
-                        android:paddingBottom="2dp"
                         android:textColor="@color/colorOrange"
-                        android:layout_height="wrap_content">
+                        android:layout_height="18dp">
                 </TextView>
 
             </RelativeLayout>

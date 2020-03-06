@@ -23,8 +23,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MsgViewHolderMatch extends MsgViewHolderBase {
 
     private CircleImageView chatHiAvator;//头像
-    private RecyclerView chatHiTags;//对方所有的标签
-    private ConstraintLayout targetCl;//对方所有的标签
+    private RecyclerView chatHiTags;//对方所有的兴趣
+    private ConstraintLayout targetCl;//对方所有的兴趣
 
     public MsgViewHolderMatch(BaseMultiItemFetchLoadAdapter adapter) {
         super(adapter);
@@ -50,7 +50,7 @@ public class MsgViewHolderMatch extends MsgViewHolderBase {
         ChatMatchAttachment attachment = (ChatMatchAttachment) message.getAttachment();
         //头像
         GlideUtil.loadAvatorImg(context, attachment.getAvator(), chatHiAvator);
-        //用户标签
+        //用户兴趣
         FlexboxLayoutManager manager = new FlexboxLayoutManager(context, FlexDirection.ROW, FlexWrap.WRAP);
         manager.setAlignItems(AlignItems.STRETCH);
         manager.setJustifyContent(JustifyContent.CENTER);

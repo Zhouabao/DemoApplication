@@ -15,7 +15,7 @@
             android:paddingTop="7dp"
             android:paddingRight="8dp"
             android:paddingLeft="8dp"
-            android:text="根据您选择的标签推荐"
+            android:text="根据您选择的兴趣推荐"
             android:textColor="#ffffffff"
             android:textSize="13sp"
             android:background="@drawable/shape_rectangle_gray_494d_4dp"

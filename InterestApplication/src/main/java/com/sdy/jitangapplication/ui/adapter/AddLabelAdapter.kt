@@ -19,14 +19,14 @@ import kotlinx.android.synthetic.main.item_add_label.view.*
 /**
  *    author : ZFM
  *    date   : 2019/10/910:30
- *    desc   : 标签导航栏的数据
+ *    desc   : 兴趣导航栏的数据
  *    version: 1.0
  */
 class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_add_label) {
     var from: Int = AddLabelActivity.FROM_ADD_NEW
-    var parentPosition = -1  //购买标签的位置
-    var childPosition = -1 //购买标签的子位置
-    var purchaseId = -1 //购买标签的id
+    var parentPosition = -1  //购买兴趣的位置
+    var childPosition = -1 //购买兴趣的子位置
+    var purchaseId = -1 //购买兴趣的id
 
     override fun convert(helper: BaseViewHolder, item: NewLabel) {
         helper.addOnClickListener(R.id.labelManagerBtn)
@@ -73,7 +73,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
                     }
             }
             if (checkedCount >= UserManager.getMaxMyLabelCount() && !data.checked) {
-                showWarningDialog("至多选择${UserManager.getMaxMyLabelCount()}个标签")
+                showWarningDialog("至多选择${UserManager.getMaxMyLabelCount()}个兴趣")
                 return@setOnItemClickListener
             }
 
@@ -109,7 +109,7 @@ class AddLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item
     private val deleteDialog by lazy { DeleteDialog(mContext) }
     private fun showDeleteDialog(position: NewLabel) {
         deleteDialog.show()
-        deleteDialog.title.text = "完善标签"
+        deleteDialog.title.text = "完善兴趣"
         deleteDialog.title.isVisible = true
         deleteDialog.tip.text = "是否恢复「 ${position.title} 」删除前内容"
         deleteDialog.confirm.text = "重新完善"//要走推荐发布流程

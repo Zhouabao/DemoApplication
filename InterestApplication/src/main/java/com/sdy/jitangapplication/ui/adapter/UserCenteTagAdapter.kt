@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.item_tag_usercenter.view.*
 /**
  *    author : ZFM
  *    date   : 2019/6/2615:22
- *    desc   : 个人中心的标签管理
+ *    desc   : 个人中心的兴趣管理
  *    version: 1.0
  */
 class UserCenteTagAdapter : BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.item_tag_usercenter) {
@@ -21,8 +21,8 @@ class UserCenteTagAdapter : BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layo
         holder.itemView.tagName.text = item.title
         holder.itemView.tagEdit.text = when {
             item.is_expire -> "立即续费"
-            item.isfull -> "编辑标签"
-            else -> "完善标签"
+            item.isfull -> "编辑兴趣"
+            else -> "完善兴趣"
         }
     }
 

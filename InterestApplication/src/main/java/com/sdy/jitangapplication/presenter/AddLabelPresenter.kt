@@ -56,7 +56,7 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
 
 
     /**
-     * 保存我感兴趣的标签
+     * 保存我感兴趣的兴趣
      */
     fun saveInterestTag(tag_ids: String) {
         RetrofitFactory.instance.create(Api::class.java)

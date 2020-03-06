@@ -41,7 +41,7 @@ class FilterUserDialog(val context1: Context) : Dialog(context1, R.style.MyDialo
      * 展示筛选条件对话框
      * //最小年龄  limit_age_low
      * //最大年龄  limit_age_high
-     * //标签id
+     * //兴趣id
      * //是否同城筛选 1否 2是 local_only
      * //选择了同城 传递城市id city_code
      * //是否筛选认证会员1不用 2需要筛选 audit_only

@@ -253,7 +253,7 @@ interface Api {
 
 
     /**
-     * 单独添加标签
+     * 单独添加兴趣
      *
      */
     @FormUrlEncoded
@@ -707,7 +707,7 @@ interface Api {
 
 
     /**
-     * 获取标签的支付方式
+     * 获取兴趣的支付方式
      */
     @FormUrlEncoded
     @POST("Tags/getTagsPrice${Constants.END_BASE_URL}")
@@ -715,7 +715,7 @@ interface Api {
 
 
     /**
-     * 获取标签订单信息
+     * 获取兴趣订单信息
      */
     @FormUrlEncoded
     @POST("pay_order/createTagsOrder${Constants.END_BASE_URL}")
@@ -779,7 +779,7 @@ interface Api {
 
 
     /**
-     * 标签接口
+     * 兴趣接口
      */
     @FormUrlEncoded
     @POST("Tags/tagClassifyListV12${Constants.END_BASE_URL}")
@@ -787,7 +787,7 @@ interface Api {
 
 
     /**
-     * 获取标签的  1介绍模板 2.标签特质 3.标签意向  4.兴趣标题
+     * 获取兴趣的  1介绍模板 2.兴趣特质 3.兴趣意向  4.兴趣标题
      */
     @FormUrlEncoded
     @POST("Tags/getTagTraitInfo${Constants.END_BASE_URL}")
@@ -803,35 +803,35 @@ interface Api {
 
 
     /**
-     * 获取标签的  1介绍模板 2.标签特质 3.标签意向  4.兴趣标题
+     * 获取兴趣的  1介绍模板 2.兴趣特质 3.标签意向  4.兴趣标题
      */
     @FormUrlEncoded
     @POST("Tags/getQualityList${Constants.END_BASE_URL}")
     fun getQualityList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LabelQualitysBean?>>
 
     /**
-     * 修改或者新增标签的特质
+     * 修改或者新增兴趣的特质
      */
     @FormUrlEncoded
     @POST("Tags/saveMyQualityV12${Constants.END_BASE_URL}")
     fun saveMyQuality(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddLabelResultBean?>>
 
     /**
-     * 获取我的标签
+     * 获取我的兴趣
      */
     @FormUrlEncoded
     @POST("Tags/getMyTagsListV12${Constants.END_BASE_URL}")
     fun getMyTagsList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyLabelsBean?>>
 
     /**
-     * 获取发布标签
+     * 获取发布兴趣
      */
     @FormUrlEncoded
     @POST("Tags/getSquareTag${Constants.END_BASE_URL}")
     fun getSquareTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareLabelsBean?>>
 
     /**
-     * 删除我的标签
+     * 删除我的兴趣
      */
     @FormUrlEncoded
     @POST("Tags/delMyTagsV12${Constants.END_BASE_URL}")
@@ -839,7 +839,7 @@ interface Api {
 
 
     /**
-     * 获取他人的标签
+     * 获取他人的兴趣
      */
     @FormUrlEncoded
     @POST("MemberInfo/getOtherTags${Constants.END_BASE_URL}")

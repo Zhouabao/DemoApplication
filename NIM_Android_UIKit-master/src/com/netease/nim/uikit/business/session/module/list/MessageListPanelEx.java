@@ -670,7 +670,7 @@ public class MessageListPanelEx {
             }
             // 更新要显示时间的消息
             adapter.updateShowTimeItem(total, true, firstLoad);
-            // 更新已读回执标签
+            // 更新已读回执
             updateReceipt(total);
 
             // 加载状态修改,刷新界面
@@ -720,7 +720,7 @@ public class MessageListPanelEx {
 
             // 在更新前，先确定一些标记
             adapter.updateShowTimeItem(messages, true, firstLoad); // 更新要显示时间的消息
-            updateReceipt(messages); // 更新已读回执标签
+            updateReceipt(messages); // 更新已读回执
 
             // new data
             if (loadCount < loadMsgCount) {

@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.item_label_my_interest.view.*
 /**
  *    author : ZFM
  *    date   : 2019/10/910:30
- *    desc   : 我感兴趣的标签
+ *    desc   : 我感兴趣的兴趣
  *    version: 1.0
  */
 class MyInterestLabelAdapter : BaseQuickAdapter<LabelQualityBean, BaseViewHolder>(R.layout.item_label_my_interest) {

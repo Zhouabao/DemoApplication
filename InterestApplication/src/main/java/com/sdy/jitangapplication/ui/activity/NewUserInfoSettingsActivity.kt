@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -124,6 +125,8 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         userEat.setOnClickListener(this)
         saveBtn.setOnClickListener(this)
         //userScore20.setOnClickListener(this)
+        userScore20.typeface = Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf")
+
 
 
         stateview.retryBtn.onClick {
@@ -1019,7 +1022,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
         val translate = ObjectAnimator.ofFloat(
             userScore20, "translationX",
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70+15F) - SizeUtils.dp2px(45F)) * userFinishProgress.progress * 1.0f / 100)
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70 + 15F) - SizeUtils.dp2px(45F)) * userFinishProgress.progress * 1.0f / 100)
         )
         translate.duration = 100
         translate.start()

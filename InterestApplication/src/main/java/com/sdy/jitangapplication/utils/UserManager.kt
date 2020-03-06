@@ -46,7 +46,7 @@ object UserManager {
     var publishState: Int = 0  //0未发布  1进行中   -1失败--违规400  -2失败--发布失败
     //发布
     var publishParams: HashMap<String, Any> = hashMapOf()
-    //发布的标签ids
+    //发布的兴趣ids
     var checkIds: MutableList<Int> = mutableListOf()
     //发布的对象
     var mediaBeans: MutableList<MediaParamBean> = mutableListOf()
@@ -73,7 +73,7 @@ object UserManager {
 
 
     /**
-     * 我的兴趣的标签个数
+     * 我的兴趣最大个数
      */
     fun saveMaxMyLabelCount(count: Int) {
         SPUtils.getInstance(Constants.SPNAME).put("maxMyLabelCount", count)
@@ -229,18 +229,6 @@ object UserManager {
 //        SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
 //        SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
 //        SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
-    }
-
-    /**
-     * 清除打招呼轻提示
-     */
-    fun cleanHiTime() {
-        SPUtils.getInstance(Constants.SPNAME).remove("TipSend")
-        SPUtils.getInstance(Constants.SPNAME).remove("threetimes")
-        SPUtils.getInstance(Constants.SPNAME).remove("heread")
-        SPUtils.getInstance(Constants.SPNAME).remove("readhe")
-        SPUtils.getInstance(Constants.SPNAME).remove("StopTime")
-        SPUtils.getInstance(Constants.SPNAME).remove("secondReply")
     }
 
 
@@ -419,7 +407,7 @@ object UserManager {
      * 展示筛选条件对话框
      * //最小年龄  limit_age_low
      * //最大年龄  limit_age_high
-     * //标签id
+     * //兴趣id
      * //是否同城筛选 1否 2是 local_only
      * //选择了同城 传递城市id city_code
      * //是否筛选认证会员1不用 2需要筛选 audit_only
@@ -454,7 +442,7 @@ object UserManager {
     }
 
     /**
-     * 获取本地存放的标签
+     * 获取本地存放的兴趣
      */
     fun getSpLabels(): MutableList<TagBean> {
         val tempLabels = mutableListOf<TagBean>()
@@ -466,15 +454,6 @@ object UserManager {
         tempLabels.sortWith(Comparator { p0, p1 -> p0.id.compareTo(p1.id) })
         return tempLabels
     }
-
-    fun getGlobalLabelId(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelId", 0)
-    }
-
-    fun saveGlobalLabelId(id: Int) {
-        return SPUtils.getInstance(Constants.SPNAME).put("globalLabelId", id)
-    }
-
 
     fun getGlobalLabelSquareId(): Int {
         return SPUtils.getInstance(Constants.SPNAME).getInt("globalLabelSquareId", 0)
@@ -570,7 +549,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
         SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
-        cleanHiTime()
 
         /**
          * 弹窗缓存信息清空
@@ -597,23 +575,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("switchComment")
         EventBus.getDefault().removeAllStickyEvents()//移除全部
     }
-
-
-    /**
-     * 保存剩余滑动次数
-     */
-    fun saveLeftSlideCount(slideTimes: Int) {
-        SPUtils.getInstance(Constants.SPNAME).put("leftSlideCount", slideTimes)
-    }
-
-    /**
-     * 获取剩余滑动次数
-     */
-    fun getLeftSlideCount(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("leftSlideCount", 0)
-    }
-
-
     /**
      * 保存剩余招呼次数
      */
@@ -727,7 +688,7 @@ object UserManager {
         } else if (data.extra_data?.aboutme.isNullOrEmpty() || data.extra_data?.aboutme?.trim().isNullOrEmpty()) {//个人介绍未填写
             context.startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
             return
-        } else if (data.extra_data?.mytaglist.isNullOrEmpty()) {//标签没有选择
+        } else if (data.extra_data?.mytaglist.isNullOrEmpty()) {//兴趣没有选择
             context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
             return
         } else {//跳到主页

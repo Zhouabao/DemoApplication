@@ -53,7 +53,7 @@
             android:layout_height="20dp"
             android:singleLine="true"
             android:ellipsize="end"
-            android:text="有XX个人对你感标签，快来看看吧"
+            android:text="有XX个人对你感兴趣，快来看看吧"
             android:textColor="#ff999999"
             android:textSize="14sp"
             android:maxLength="20"

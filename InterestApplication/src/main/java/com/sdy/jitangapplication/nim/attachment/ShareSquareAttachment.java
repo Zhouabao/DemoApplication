@@ -16,7 +16,7 @@ public class ShareSquareAttachment extends CustomAttachment {
     private final String KEY_IMG = "img";//分享的图片
     private final String KEY_ID = "squareId";//分享的图片
 
-    private String desc;//匹配的标签
+    private String desc;//匹配的兴趣
     private String content;//分享的文本内容
     private int shareType;//分享的类型 1图片 2视 频 3语音
     private String img;//分享的图片

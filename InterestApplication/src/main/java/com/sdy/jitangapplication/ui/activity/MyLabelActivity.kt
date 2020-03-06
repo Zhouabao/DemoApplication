@@ -36,7 +36,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 
 /**
- * 管理我的标签
+ * 管理我的兴趣
  */
 class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.OnClickListener {
     companion object {
@@ -59,7 +59,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
         btnBack.setOnClickListener(this)
         rightBtn.setOnClickListener(this)
         addLabelBtn.setOnClickListener(this)
-        hotT1.text = "标签管理"
+        hotT1.text = "兴趣管理"
         rightBtn.isVisible = true
         rightBtn.text = "删除"
         divider.isVisible = false
@@ -83,9 +83,9 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
                     ChargeLabelDialog(this, adapter.data[position].tag_id).show()
                 }
                 R.id.labelDelete -> {
-                    // 删除标签
+                    // 删除兴趣
                     if (adapter.data.size <= MIN_LABEL) {
-                        CommonFunction.toast("至少保留${MIN_LABEL}个标签")
+                        CommonFunction.toast("至少保留${MIN_LABEL}个兴趣")
                         return@setOnItemChildClickListener
                     }
                     showDeleteDialog(position)
@@ -129,7 +129,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
     override fun getMyTagsListResult(result: Boolean, datas: MyLabelsBean?) {
         if (result) {
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
-            //保存标签的最大个数
+            //保存兴趣的最大个数
             UserManager.saveMaxMyLabelCount(datas?.limit_count ?: 0)
             if (datas != null && datas.is_using.isNullOrEmpty()) {
                 addLabelBtn.isVisible = false
@@ -141,7 +141,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
                 }
                 adapter.emptyView.emptyLabelTip.isVisible = true
                 adapter.emptyView.emptyTip.isVisible = true
-                adapter.emptyView.addLabelBtn.text = "添加标签"
+                adapter.emptyView.addLabelBtn.text = "添加兴趣"
             } else {
                 addLabelBtn.isVisible = true
                 adapter.setNewData(datas?.is_using ?: mutableListOf())
@@ -169,9 +169,9 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
     private val deleteDialog by lazy { DeleteDialog(this) }
     private fun showDeleteDialog(position: Int) {
         deleteDialog.show()
-        deleteDialog.title.text = "删除标签"
+        deleteDialog.title.text = "删除兴趣"
         deleteDialog.title.isVisible = true
-        deleteDialog.tip.text = "您确定要删除标签「${adapter.data[position].title}」吗？"
+        deleteDialog.tip.text = "您确定要删除兴趣「${adapter.data[position].title}」吗？"
         deleteDialog.confirm.onClick {
             mPresenter.delMyTags(adapter.data[position].id, position)
             deleteDialog.dismiss()
@@ -189,9 +189,9 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
             rightBtn -> {
                 onUpdateEditMode()
             }
-            addLabelBtn -> {//添加标签
+            addLabelBtn -> {//添加兴趣
                 if (adapter.data.size >= UserManager.getMaxMyLabelCount()) {
-                    CommonFunction.toast("最多能拥有${UserManager.getMaxMyLabelCount()}个标签")
+                    CommonFunction.toast("最多能拥有${UserManager.getMaxMyLabelCount()}个兴趣")
                     return
                 }
                 intent.putExtra("from", AddLabelActivity.FROM_ADD_NEW)

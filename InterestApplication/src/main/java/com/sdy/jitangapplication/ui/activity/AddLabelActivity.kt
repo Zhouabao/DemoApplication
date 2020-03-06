@@ -35,13 +35,13 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
- * 添加标签activity
+ * 添加兴趣activity
  */
 class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, View.OnClickListener {
 
     companion object {
         const val FROM_REGISTER = 1//注册流程进入
-        const val FROM_ADD_NEW = 3//主页添加新标签
+        const val FROM_ADD_NEW = 3//主页添加新兴趣
     }
 
     private val from by lazy { intent.getIntExtra("from", FROM_ADD_NEW) }
@@ -58,9 +58,9 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
         )
     }
 
-    //标签标题适配器
+    //兴趣标题适配器
     private val labelMenuAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(this) }
-    //标签列表适配器
+    //兴趣列表适配器
     private val labelListAdapter: AddLabelAdapter by lazy { AddLabelAdapter() }
 
     private var menuClick = false
@@ -74,7 +74,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
 
         setSwipeBackEnable(from != FROM_REGISTER)
         btnBack.isVisible = from != FROM_REGISTER
-        hotT1.text = "选择标签"
+        hotT1.text = "选择兴趣"
 
         rightBtn1.isEnabled = true
         rightBtn1.text = "保存"
@@ -95,12 +95,12 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
             )
         }
 
-        //标签种类
+        //兴趣种类
         labelClassRv.layoutManager = CenterLayoutManager(this, RecyclerView.HORIZONTAL, false)
         LinearSnapHelper().attachToRecyclerView(labelClassRv)
         labelClassRv.adapter = labelMenuAdapter
 
-        //标签列表
+        //兴趣列表
         labelsRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         labelsRv.addItemDecoration(
             DividerItemDecoration(
@@ -184,7 +184,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
                 if (tag_ids.isNotEmpty()) {
                     mPresenter.saveInterestTag(Gson().toJson(tag_ids))
                 } else {
-                    CommonFunction.toast("暂无选中的标签可保存")
+                    CommonFunction.toast("暂无选中的兴趣可保存")
                 }
             }
         }
@@ -216,7 +216,7 @@ class AddLabelActivity : BaseMvpActivity<AddLabelPresenter>(), AddLabelView, Vie
 
     override fun saveMyTagResult(result: Boolean, data: MutableList<TagBean>?) {
         if (result) {
-            //保存标签
+            //保存兴趣
             UserManager.saveLabels(data ?: mutableListOf())
             EventBus.getDefault().post(RefreshEvent(true))
             EventBus.getDefault().post(UpdateMyLabelEvent())

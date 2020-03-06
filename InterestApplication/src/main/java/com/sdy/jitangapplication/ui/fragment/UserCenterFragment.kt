@@ -110,7 +110,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
         GlideUtil.loadAvatorImg(activity!!, userInfoBean?.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean?.userinfo?.nickname ?: ""
-        userTagsBtn.text = "标签管理 ${userInfoBean?.mytags_count}"
+        userTagsBtn.text = "兴趣管理 ${userInfoBean?.mytags_count}"
 //        userSquareCount.text = "我的动态 ${userInfoBean?.squarelist?.count}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
@@ -409,7 +409,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                     )
                 }
             }
-            //我的标签
+            //我的兴趣
             R.id.userTagsBtn -> {
                 startActivity<MyLabelActivity>()
             }

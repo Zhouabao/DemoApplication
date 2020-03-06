@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.item_label_match.view.*
 /**
  *    author : ZFM
  *    date   : 2019/6/249:54
- *    desc   :匹配页面标签的adapter  标签点击更改状态并且要实时更新用户
+ *    desc   :匹配页面兴趣的adapter  兴趣点击更改状态并且要实时更新用户
  *    version: 1.0
  */
 class MatchLabelAdapter(var context: Context, var enable: Boolean = true) :

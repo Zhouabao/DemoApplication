@@ -123,7 +123,7 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
             btnBack -> {
                 finish()
             }
-            labelPurposeBtn -> {//标签意向
+            labelPurposeBtn -> {//兴趣意向
                 startActivityForResult<MyIntentionActivity>(100, "from" to MyIntentionActivity.FROM_REGISTER)
             }
             rightBtn1 -> { //保存个人介绍

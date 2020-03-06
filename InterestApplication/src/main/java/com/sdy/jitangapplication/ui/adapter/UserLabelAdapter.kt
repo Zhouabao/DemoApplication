@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_label_all.view.*
 /**
  *    author : ZFM
  *    date   : 2019/6/2020:48
- *    desc   : 个人中心标签适配器
+ *    desc   : 个人中心兴趣适配器
  *    version: 1.0
  */
 class UserLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all) {

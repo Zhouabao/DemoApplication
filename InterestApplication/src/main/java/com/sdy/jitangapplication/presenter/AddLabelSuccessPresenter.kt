@@ -22,7 +22,7 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
 
 
     /**
-     *  获取标签的  特质/模板/意向/标题  type  1 2 3 4
+     *  获取兴趣的  特质/模板/意向/标题  type  1 2 3 4
      */
     fun getTagTraitInfo(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)

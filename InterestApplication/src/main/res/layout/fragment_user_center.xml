@@ -249,7 +249,7 @@
 
             <TextView
                     android:id="@+id/userTagsBtn"
-                    android:text="标签管理 10"
+                    android:text="兴趣管理 10"
                     android:textColor="#ff19191a"
                     android:textSize="16sp"
                     android:gravity="center_vertical"

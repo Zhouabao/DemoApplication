@@ -65,7 +65,7 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
-                    android:text="添加标签"
+                    android:text="添加兴趣"
                     android:textColor="#ffffffff"
                     android:textSize="16sp"
                     android:textStyle="bold"/>

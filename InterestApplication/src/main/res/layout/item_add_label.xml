@@ -37,7 +37,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="管理标签"
+                android:text="管理兴趣"
                 android:textColor="#ffa5a5a5"
                 android:textSize="14sp"
                 android:drawablePadding="5dp"

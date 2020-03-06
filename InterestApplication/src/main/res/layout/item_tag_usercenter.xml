@@ -38,7 +38,7 @@
             android:id="@+id/tagEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="编辑标签"
+            android:text="编辑兴趣"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:paddingTop="2dp"

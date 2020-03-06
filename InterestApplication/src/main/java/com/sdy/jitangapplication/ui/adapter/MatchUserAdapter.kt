@@ -65,11 +65,11 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                     (holder.itemView.vpIndicator[i] as RadioButton).isChecked = i == position
                 }
 
-                //首张内容  用户在该标签下的特质
+                //首张内容  用户在该兴趣下的特质
                 //次张内容  用户的「关于我」描述文本。如用用户填写过则呈现，没有则保留至最后一张显示状态
-                //三张内容  用户在发布过的内容（所有标签），参考设计内容，如用户没发布过则跳转至第三张内容
+                //三张内容  用户在发布过的内容（所有兴趣），参考设计内容，如用户没发布过则跳转至第三张内容
                 when (position) {
-                    0 -> {  //0显示用户在该标签下的特质
+                    0 -> {  //0显示用户在该兴趣下的特质
                         if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
                             holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
                             holder.itemView.matchUserLocalTagCharacter.isVisible = true
@@ -231,7 +231,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.itemView.btnHiLeftTime.text = "${UserManager.getLightingCount()}"
         GlideUtil.loadCircleImg(mContext, item.intention_icon, holder.itemView.matchAimIv)
         holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""
-        holder.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty() //撮合标签
+        holder.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty() //撮合兴趣
         holder.itemView.matchBothIntersetContent.text = "${item.matching_content}"
         GlideUtil.loadImg(mContext, item.matching_icon, holder.itemView.matchBothIntersetIv)
 

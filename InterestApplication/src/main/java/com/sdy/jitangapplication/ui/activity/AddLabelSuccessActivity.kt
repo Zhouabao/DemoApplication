@@ -39,7 +39,7 @@ import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
- * 添加标签成功
+ * 添加兴趣成功
  */
 class AddLabelSuccessActivity : BaseMvpActivity<AddLabelSuccessPresenter>(), AddLabelSuccessView, View.OnClickListener {
 

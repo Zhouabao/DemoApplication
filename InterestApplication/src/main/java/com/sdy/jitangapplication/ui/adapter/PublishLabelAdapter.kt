@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.item_label_publish_index.view.*
 /**
  *    author : ZFM
  *    date   : 2019/6/249:54
- *    desc   : 发布页面标签的adapter  标签点击进行删除
+ *    desc   : 发布页面兴趣的adapter  兴趣点击进行删除
  *    version: 1.0
  */
 class PublishLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_publish_index) {

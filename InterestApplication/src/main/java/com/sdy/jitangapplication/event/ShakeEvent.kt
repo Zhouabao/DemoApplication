@@ -14,10 +14,10 @@ class TurnToLastLabelEvent(val from: Int)
 
 class CloseDialogEvent()
 
-//更新首页标签列表数据
+//更新首页兴趣列表数据
 class UpdateFindByTagEvent()
 
-//更新某个标签下的数据
+//更新某个兴趣下的数据
 class UpdateFindByTagListEvent(var position: Int = -1, var accid: String = "")
 
 

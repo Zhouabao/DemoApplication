@@ -9,8 +9,6 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchView
@@ -27,7 +25,7 @@ import com.sdy.jitangapplication.utils.UserManager
 class MatchPresenter : BasePresenter<MatchView>() {
 
     /**
-     * 根据标签来获取新的用户数据
+     * 根据兴趣来获取新的用户数据
      */
     fun getMatchList(params: HashMap<String, Any>, exclude: MutableList<Int>? = mutableListOf()) {
         params["exclude"] = Gson().toJson(exclude)
