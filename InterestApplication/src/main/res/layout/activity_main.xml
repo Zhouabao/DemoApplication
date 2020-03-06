@@ -19,7 +19,6 @@
             android:orientation="horizontal">
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/headRvLabels"
                 android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -107,14 +106,13 @@
 
         <TextView
                 android:id="@+id/tabMatchCount"
-                android:textColor="@color/colorGrayCCC"
+                android:textColor="@color/colorOrange"
                 android:drawableTop="@drawable/icon_tab_match_checked"
                 android:gravity="center_horizontal|bottom"
                 android:layout_width="0dp"
                 android:textStyle="bold"
                 android:textSize="12sp"
                 android:layout_height="41dp"
-                android:paddingBottom="3dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toLeftOf="parent"

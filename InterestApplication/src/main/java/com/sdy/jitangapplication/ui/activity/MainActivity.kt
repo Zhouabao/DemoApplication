@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -193,7 +195,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun switchTab(position: Int) {
         when (position) {
             0 -> {
-                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -224,9 +225,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             1 -> {
-                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
-                tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     resources.getDrawable(R.drawable.icon_tab_match),
@@ -256,9 +255,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             2 -> {
-                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
-                tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     resources.getDrawable(R.drawable.icon_tab_match),
@@ -288,9 +285,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             3 -> {
-                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
-                tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     resources.getDrawable(R.drawable.icon_tab_match),
@@ -321,22 +316,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
         }
 
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateSlideCountEvent(event: UpdateSlideCountEvent) {
-        if (vpMain.currentItem == 0) {
-            if (!UserManager.isUserVip()) {
-                tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
-                tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
-                tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
-            } else {
-                tabMatchCount.text = "匹配"
-                tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
-                tabMatchCount.setPadding(0)
-            }
-        }
     }
 
 

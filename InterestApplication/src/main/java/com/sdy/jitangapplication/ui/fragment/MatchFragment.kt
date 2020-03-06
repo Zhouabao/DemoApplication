@@ -254,7 +254,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 //保存认证信息
                 UserManager.saveUserVerify(matchBeans.isfaced)
 
-                EventBus.getDefault().post(UpdateSlideCountEvent())
                 //保存剩余招呼次数
                 UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
 

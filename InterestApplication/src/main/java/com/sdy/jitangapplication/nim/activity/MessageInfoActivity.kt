@@ -380,10 +380,13 @@ class MessageInfoActivity : UI(), SwipeBackActivityBase, View.OnClickListener {
                         NIMClient.getService(MsgService::class.java).clearChattingHistory(account, SessionTypeEnum.P2P)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageInfoActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(MessageInfoActivity::class.java)
+//                        SubActivityActivity::class.java.name
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(ChatActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(ChatActivity::class.java)
                         if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MessageHiPastActivity::class.java.newInstance()))
                             ActivityUtils.finishActivity(MessageHiPastActivity::class.java)
+                        if (AppUtils.isAppForeground() && ActivityUtils.isActivityAlive(MatchDetailActivity::class.java.newInstance()))
+                            ActivityUtils.finishActivity(MatchDetailActivity::class.java)
                         EventBus.getDefault().post(UpdateHiEvent())
                     } else {
                         CommonFunction.toast(t.msg)

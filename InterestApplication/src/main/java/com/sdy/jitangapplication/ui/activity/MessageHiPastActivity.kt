@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -110,6 +111,12 @@ class MessageHiPastActivity : BaseMvpActivity<MessageHiPresenter>(), MessageHiVi
             NIMClient.getService(MsgService::class.java).clearAllUnreadCount()
             adapter.notifyDataSetChanged()
         }
+    }
+
+
+    override fun finish() {
+        setResult(Activity.RESULT_OK)
+        super.finish()
     }
 
     override fun onGreatListResult(t: BaseResp<MutableList<HiMessageBean>?>) {

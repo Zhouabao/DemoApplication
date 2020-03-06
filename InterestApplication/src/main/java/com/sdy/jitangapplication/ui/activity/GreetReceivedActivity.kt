@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -27,7 +29,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.GetNewMsgEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
-import com.sdy.jitangapplication.event.UpdateLGreetReceivedEvent
 import com.sdy.jitangapplication.model.GreetedListBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
@@ -38,17 +39,11 @@ import com.sdy.jitangapplication.ui.dialog.GuideGreetDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.activity_greet_received.*
-import kotlinx.android.synthetic.main.activity_greet_received.animation_dislike
-import kotlinx.android.synthetic.main.activity_greet_received.animation_like
-import kotlinx.android.synthetic.main.activity_greet_received.greetRv
-import kotlinx.android.synthetic.main.activity_like_me_received.*
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startActivityForResult
 
 /**
  * 收到的招呼列表
@@ -75,13 +70,11 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
 
     override fun onDestroy() {
         super.onDestroy()
-        EventBus.getDefault().unregister(this)
         registerObservers(false)
     }
 
 
     private fun initView() {
-        EventBus.getDefault().register(this)
         BarUtils.setStatusBarLightMode(this, false)
 
         mPresenter = GreetReceivedPresenter()
@@ -98,7 +91,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
         rightBtn.setTextColor(Color.WHITE)
         rightBtn.text = "全部招呼"
         rightBtn.setOnClickListener {
-            startActivity<MessageHiPastActivity>()
+            startActivityForResult<MessageHiPastActivity>(100)
         }
         divider.setBackgroundColor(Color.TRANSPARENT)
         llTitle.setBackgroundColor(Color.TRANSPARENT)
@@ -197,12 +190,11 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun updatGreetReceivedEvent(event: UpdateLGreetReceivedEvent) {
+    fun updatGreetReceivedEvent() {
         page = 1
         hasMore = true
         adapter.data.clear()
-        stateLikeReceived.viewState = MultiStateView.VIEW_STATE_LOADING
+        stateGreet.viewState = MultiStateView.VIEW_STATE_LOADING
         mPresenter.greatLists(params)
     }
 
@@ -348,8 +340,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
      */
 
     private fun registerObservers(register: Boolean) {
-        val service = NIMClient.getService(MsgServiceObserve::class.java)
-        service.observeReceiveMessage(messageReceiverObserver, register)
+        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(messageReceiverObserver, register)
     }
 
 
@@ -368,5 +359,12 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
             }
         }
 
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 100) {
+                updatGreetReceivedEvent()
+            }
+        }
+    }
 }

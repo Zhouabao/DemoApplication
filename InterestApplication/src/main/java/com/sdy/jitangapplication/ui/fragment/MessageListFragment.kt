@@ -216,7 +216,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     private fun initAssistHeadsView(): View {
         val headView = LayoutInflater.from(activity!!).inflate(R.layout.headerview_like_me, messageListRv, false)
-        headView.rlFriend.visibility = View.GONE
         val linearLayoutManager = LinearLayoutManager(activity!!, RecyclerView.VERTICAL, false)
         headView.headRv.layoutManager = linearLayoutManager
         headView.headRv.adapter = headAdapter
