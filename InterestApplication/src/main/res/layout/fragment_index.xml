@@ -18,16 +18,20 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="34dp">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/titleIndex"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="152dp"
+                android:layout_height="34dp"
+                android:background="@drawable/shape_rectangle_f6f6f6_6dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
+
 
         <TextView
                 android:id="@+id/filterBtn"

@@ -121,14 +121,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //设置图片的宽度占满屏幕，宽高比9:16
         val layoutParams = clPhotos.layoutParams
         layoutParams.width = ScreenUtils.getScreenWidth()
-//        layoutParams.height = (16 / 9.0F * layoutParams.width).toInt()
-        layoutParams.height = ScreenUtils.getScreenHeight() - SizeUtils.dp2px(197F)
+        layoutParams.height = ScreenUtils.getScreenWidth()
+//        layoutParams.height = ScreenUtils.getScreenHeight() - SizeUtils.dp2px(197F)
         clPhotos.layoutParams = layoutParams
 
         //设置个人信息距离顶部的距离
 //        val paramsClUserInfo = clUserInfo.layoutParams as LinearLayout.LayoutParams
         val paramsClUserInfo = clUserInfo.layoutParams as FrameLayout.LayoutParams
-        paramsClUserInfo.topMargin = ScreenUtils.getScreenHeight() - SizeUtils.dp2px(197F) - SizeUtils.dp2px(26F)
+        paramsClUserInfo.topMargin = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(26F)
         paramsClUserInfo.height = LinearLayout.LayoutParams.WRAP_CONTENT
         clUserInfo.layoutParams = paramsClUserInfo
 

@@ -65,6 +65,7 @@ import com.sdy.jitangapplication.nim.session.ChatBaseAction;
 import com.sdy.jitangapplication.nim.session.ChatPickImageAction;
 import com.sdy.jitangapplication.nim.session.ChatTakeImageAction;
 import com.sdy.jitangapplication.nim.session.MyLocationAction;
+import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 import org.greenrobot.eventbus.EventBus;
@@ -85,6 +86,7 @@ import java.util.Map;
  */
 public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public NimBean nimBean = null;
+    private boolean firstIn = true;
 
 
     private SessionCustomization customization;
@@ -566,7 +568,15 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
      *
      * @param target_accid
      */
+    private LoadingDialog loadingDialog;
+
     public void getTargetInfo(String target_accid) {
+        if (firstIn) {
+            if (loadingDialog == null)
+                loadingDialog = new LoadingDialog(getActivity());
+            loadingDialog.show();
+            firstIn = false;
+        }
         HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
         params.put("target_accid", target_accid);
         RetrofitFactory.Companion.getInstance()
@@ -582,11 +592,16 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                     }
 
                     @Override
                     public void onNext(BaseResp<NimBean> nimBeanBaseResp) {
+                        if (loadingDialog != null && loadingDialog.isShowing()) {
+                            loadingDialog.dismiss();
+                        }
                         if (nimBeanBaseResp.getCode() == 200 && nimBeanBaseResp.getData() != null) {
                             nimBean = nimBeanBaseResp.getData();
                             setTargetInfoData();

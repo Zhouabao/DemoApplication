@@ -378,7 +378,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                 listParams.remove("city_code")
                 1
             }
-            SQUARE_SAME_CITY->{
+            SQUARE_SAME_CITY -> {
                 listParams["local_only"] = 2
                 listParams["city_code"] = UserManager.getCityCode()
                 1
@@ -671,7 +671,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     adapter.isUseEmpty(true)
                     if (adapter.headerLayout != null)
                         adapter.headerLayout.isVisible = false
-                    if (checkedTitleId == SQUARE_TAG||checkedTitleId == SQUARE_FRIEND) {
+                    if (checkedTitleId == SQUARE_TAG || checkedTitleId == SQUARE_SAME_CITY) {
                         adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
                         adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
                         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
@@ -679,7 +679,7 @@ class SquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, O
                     } else {
                         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
                         adapter.emptyView.emptyFriendTitle.text = "暂时没有动态"
-                        adapter.emptyView.emptyFriendTip.text = "通过右滑匹配或主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
+                        adapter.emptyView.emptyFriendTip.text = "主动打招呼去添加更多好友\n好友已发布的动态可在此直接查看"
                         adapter.emptyView.emptyFriendGoBtn.isVisible = false
                     }
                 }

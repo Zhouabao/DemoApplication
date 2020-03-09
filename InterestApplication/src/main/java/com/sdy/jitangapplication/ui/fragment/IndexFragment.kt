@@ -18,8 +18,8 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.SquareTitleBean
 import com.sdy.jitangapplication.presenter.ContentPresenter
 import com.sdy.jitangapplication.presenter.view.ContentView
+import com.sdy.jitangapplication.ui.adapter.IndexSwitchAdapter
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.adapter.SquareSwitchAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import kotlinx.android.synthetic.main.fragment_index.*
 import java.util.*
@@ -37,7 +37,7 @@ class IndexFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView {
         return inflater.inflate(R.layout.fragment_index, container, false)
     }
 
-    val titleAdapter by lazy { SquareSwitchAdapter() }
+    val titleAdapter by lazy { IndexSwitchAdapter() }
 
     override fun loadData() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -56,8 +56,22 @@ class IndexFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView {
 
     private fun initFragments() {
         titleIndex.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        titleAdapter.addData(SquareTitleBean("匹配", true))
-        titleAdapter.addData(SquareTitleBean("兴趣找人", false))
+        titleAdapter.addData(
+            SquareTitleBean(
+                "匹配",
+                true,
+                R.drawable.icon_tab_top_match_normal,
+                R.drawable.icon_tab_top_match_checked
+            )
+        )
+        titleAdapter.addData(
+            SquareTitleBean(
+                "兴趣",
+                false,
+                R.drawable.icon_tab_top_tag_normal,
+                R.drawable.icon_tab_top_tag_checked
+            )
+        )
         titleIndex.adapter = titleAdapter
         titleAdapter.setOnItemClickListener { _, view, position ->
             for (data in titleAdapter.data) {

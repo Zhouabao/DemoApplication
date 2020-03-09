@@ -155,6 +155,7 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                                 data.send_msg = "对方向你打了个招呼"
                             }
                         }
+                        NIMClient.getService(MsgService::class.java).clearUnreadCount(data.accid,SessionTypeEnum.P2P)
                         break
                     }
                 }

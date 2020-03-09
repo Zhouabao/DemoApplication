@@ -25,7 +25,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
@@ -38,6 +37,8 @@ import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
+import com.sdy.jitangapplication.ui.activity.MyLabelActivity
+import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
 import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UserManager
@@ -48,6 +49,7 @@ import kotlinx.android.synthetic.main.fragment_match.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.support.v4.startActivity
 
 /**
  * 匹配页面(新版)
@@ -223,7 +225,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 lieAvatorLl.isVisible = false
             }
             R.id.changeAvatorBtn -> { //强制替换头像
-                lieAvatorLl.isVisible = false
+                if (!is_human) {
+                    startActivity<NewUserInfoSettingsActivity>()
+                } else {
+                    startActivity<MyLabelActivity>()
+                }
             }
         }
     }
@@ -263,13 +269,14 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
                 if (!matchBeans.is_human) {
                     lieAvatorLl.isVisible = true
+                    lieAvatorContent.text = "当前头像非真实头像，替换后可获得首页推荐"
+                    changeAvatorBtn.text = "立即替换"
                     changeAvatorCloseBtn.isVisible = false
                 } else if (!matchBeans.is_full) {
                     lieAvatorLl.isVisible = true
+                    lieAvatorContent.text = "当前有未完善兴趣，完善提升被打招呼几率"
+                    changeAvatorBtn.text = "立即完善"
                     changeAvatorCloseBtn.isVisible = true
-                    changeAvatorCloseBtn.onClick {
-                        lieAvatorLl.isVisible = false
-                    }
                 } else {
                     lieAvatorLl.isVisible = false
                 }
@@ -332,6 +339,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             }
         }
     }
+
     override fun onError(text: String) {
         Log.d("error", text)
     }

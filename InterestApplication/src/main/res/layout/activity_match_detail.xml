@@ -145,7 +145,7 @@
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/clUserInfo"
-                                android:background="@drawable/shape_retangele_top_16_white"
+                                android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 

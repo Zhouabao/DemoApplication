@@ -118,8 +118,6 @@ data class FriendBean(
 )
 
 
-
-
 data class SquareRecentlyListBean(
     var list: MutableList<SquareBean?>?
 )
@@ -161,4 +159,4 @@ data class CommentBean(
 
 }
 
-data class SquareTitleBean(val title: String, var checked: Boolean)
+data class SquareTitleBean(val title: String, var checked: Boolean, var image: Int = -1, var imageChecked: Int = -1)
