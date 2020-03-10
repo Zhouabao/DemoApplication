@@ -704,7 +704,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                             // 若对方未认证，则发送   对方账号未认证，请小心诈骗
                             if (!nimBean.getIssended()) {//issended    bool  是否发送过消息  true发送过 false  没有发送过消息
                                 if (!nimBean.getTarget_isfaced()) {
-                                    sendTipMessage("对方账号未认证，请小心诈骗");
+                                    sendTipMessage("对方账号未认证，请注意对方信息真实性");
                                 } else if (!nimBean.getMy_isfaced())
                                     sendTipMessage("您未通过真人认证，可能导致回复率偏低");
                             }

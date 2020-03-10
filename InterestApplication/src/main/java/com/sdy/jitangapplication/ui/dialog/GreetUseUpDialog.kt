@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.dialog
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
@@ -40,9 +41,28 @@ class GreetUseUpDialog(val context1: Context, val type: Int, var greetTimesBean:
     private fun initView() {
         when (type) {
             GREET_USE_UP_VERIFY -> {
-                normalGreetTimes.text = "普通用户招呼次数+${greetTimesBean?.normal_cnt}"
-                verifyGreetTimes.text = "真人认证招呼次数+${greetTimesBean?.isfaced}"
-                vipGreetTimes.text = "开通会员招呼次数+${greetTimesBean?.normal_cnt}"
+                normalGreetTimes.text =
+                    SpanUtils.with(greetUseUpContent)
+                        .append("普通用户招呼次数\t\t")
+                        .append("${greetTimesBean?.normal_cnt}")
+                        .setTypeface(Typeface.createFromAsset(context1.assets, "DIN_Alternate_Bold.ttf"))
+                        .append("次")
+                        .create()
+
+                verifyGreetTimes.text = SpanUtils.with(greetUseUpContent)
+                    .append("真人认证招呼次数\t\t")
+                    .append("+${greetTimesBean?.isfaced}")
+                    .setTypeface(Typeface.createFromAsset(context1.assets, "DIN_Alternate_Bold.ttf"))
+                    .append("次")
+                    .create()
+
+                vipGreetTimes.text =
+                    SpanUtils.with(greetUseUpContent)
+                        .append("开通会员招呼次数\t\t")
+                        .append("+${greetTimesBean?.isvip}")
+                        .setTypeface(Typeface.createFromAsset(context1.assets, "DIN_Alternate_Bold.ttf"))
+                        .append("次")
+                        .create()
 
                 bg.setImageResource(R.drawable.icon_bg_greet_use_up_verify_big)
                 greetUseUpContent.text = SpanUtils.with(greetUseUpContent)
@@ -55,9 +75,28 @@ class GreetUseUpDialog(val context1: Context, val type: Int, var greetTimesBean:
                 greetUseUpBtn.text = "立即认证"
             }
             GREET_USE_UP_CHARGEVIP -> {
-                normalGreetTimes.text = "普通用户招呼次数+${greetTimesBean?.normal_cnt}"
-                verifyGreetTimes.text = "真人认证招呼次数+${greetTimesBean?.isfaced}"
-                vipGreetTimes.text = "开通会员招呼次数+${greetTimesBean?.normal_cnt}"
+                normalGreetTimes.text =
+                    SpanUtils.with(greetUseUpContent)
+                        .append("普通用户招呼次数\t\t")
+                        .append("${greetTimesBean?.normal_cnt}")
+                        .setTypeface(Typeface.createFromAsset(context1.assets, "DIN_Alternate_Bold.ttf"))
+                        .append("次")
+                        .create()
+
+                verifyGreetTimes.text = SpanUtils.with(greetUseUpContent)
+                    .append("真人认证招呼次数\t\t")
+                    .append("+${greetTimesBean?.isfaced}")
+                    .setTypeface(Typeface.createFromAsset(context1.assets, "DIN_Alternate_Bold.ttf"))
+                    .append("次")
+                    .create()
+
+                vipGreetTimes.text =
+                    SpanUtils.with(greetUseUpContent)
+                        .append("开通会员招呼次数\t\t")
+                        .append("+${greetTimesBean?.isvip}")
+                        .setTypeface(Typeface.createFromAsset(context1.assets, "DIN_Alternate_Bold.ttf"))
+                        .append("次")
+                        .create()
 
                 bg.setImageResource(R.drawable.icon_bg_greet_use_up_verify_big)
                 greetUseUpContent.text = SpanUtils.with(greetUseUpContent)

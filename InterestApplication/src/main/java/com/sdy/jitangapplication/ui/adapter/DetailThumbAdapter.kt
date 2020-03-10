@@ -40,7 +40,7 @@ class DetailThumbAdapter(private var from: Int = FROM_INDEX, private var dataSiz
 
 
 
-        if (holder.layoutPosition + 1 == MAX_MATCH_COUNT && from == FROM_INDEX) {
+        if (dataSize > MAX_MATCH_COUNT && holder.layoutPosition + 1 == MAX_MATCH_COUNT && from == FROM_INDEX) {
             holder.itemView.bgThumb.isVisible = true
             holder.itemView.lengthThumb.text = "+${dataSize - MAX_MATCH_COUNT}"
         } else {

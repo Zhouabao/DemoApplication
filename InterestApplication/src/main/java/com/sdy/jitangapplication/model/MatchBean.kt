@@ -20,6 +20,7 @@ data class MatchListBean(
     var replace_times: Int = 0, //滑动x次数跳【替换头像】
     var mytags: MutableList<Newtag>? = null,
     var is_human: Boolean = false,
+    var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管
     var is_full: Boolean = false//兴趣是否完整
 )
 

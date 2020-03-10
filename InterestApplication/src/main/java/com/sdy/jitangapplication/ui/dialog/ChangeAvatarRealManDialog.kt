@@ -18,10 +18,12 @@ import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.GreetEvent
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.change_avator_real_man_dialog_layout.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -58,6 +60,7 @@ class ChangeAvatarRealManDialog(
         }
         accountDangerBtn.onClick {
             context1.startActivity<NewUserInfoSettingsActivity>()
+            EventBus.getDefault().post(GreetEvent(context1, false)) //去了个人页修改信息就将卡片还原回来
             dismiss()
         }
 
@@ -120,7 +123,6 @@ class ChangeAvatarRealManDialog(
 
     override fun dismiss() {
         super.dismiss()
-        UserManager.saveAlertChangeRealMan(true)
     }
 
 

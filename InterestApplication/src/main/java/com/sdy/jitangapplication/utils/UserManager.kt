@@ -160,14 +160,7 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getString("ChangeAvator")
     }
 
-    //是否提示过引导替换头像
-    fun saveAlertChangeAvator(isNeedChangeAvator: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("AlertChangeAvator", isNeedChangeAvator)
-    }
 
-    fun getAlertChangeAvator(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAvator", false)
-    }
 
     //是否提示过引导替换相册
     fun saveAlertChangeAlbum(isNeedChangeAvator: Boolean) {
@@ -178,14 +171,6 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeAlbum", false)
     }
 
-    //是否提示过引导替换相册
-    fun saveAlertChangeRealMan(isNeedChangeAvator: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("AlertChangeRealMan", isNeedChangeAvator)
-    }
-
-    fun getAlertChangeRealMan(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertChangeRealMan", false)
-    }
 
     //是否提示过用户协议
     fun saveAlertProtocol(isNeedChangeAvator: Boolean) {
@@ -196,7 +181,7 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("AlertProtocol", false)
     }
 
-    //是否提示过用户协议
+    //是否提示过wifi状态
     fun saveNoticeWifiState(notice: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("notice", notice)
     }
@@ -545,7 +530,6 @@ object UserManager {
         cleanVerifyData()
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("ChangeAvatorType")
-        SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
         SPUtils.getInstance(Constants.SPNAME).remove("isNeedChangeAvator")
         SPUtils.getInstance(Constants.SPNAME).remove("isForceChangeAvator")
@@ -564,7 +548,6 @@ object UserManager {
         //账号异常记录清除
         SPUtils.getInstance(Constants.SPNAME).remove("accountDanger")
         SPUtils.getInstance(Constants.SPNAME).remove("AccountDangerAvatorNotPass")
-        SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeRealMan")
 
 
         /**

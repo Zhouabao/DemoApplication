@@ -138,10 +138,10 @@
                     android:id="@+id/filterByGender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="性别不限"
+                    android:text="不限性别"
                     android:layout_marginRight="15dp"
                     android:drawablePadding="5dp"
-                    android:drawableRight="@drawable/icon_popup_down"
+                    android:drawableRight="@drawable/icon_popup_down_black"
                     android:textColor="#ff696e73"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@id/labelName"
@@ -156,7 +156,7 @@
                     android:text="按距离"
                     android:layout_marginRight="15dp"
                     android:drawablePadding="5dp"
-                    android:drawableRight="@drawable/icon_popup_down"
+                    android:drawableRight="@drawable/icon_popup_down_black"
                     android:textColor="#ff696e73"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@id/labelName"
@@ -185,7 +185,8 @@
                     app:srlDisableContentWhenLoading="true"
                     app:srlDisableContentWhenRefresh="true"
                     app:srlEnableLoadMore="true"
-                    app:srlEnableLoadMoreWhenContentNotFull="false"
+                    app:srlEnableAutoLoadMore="true"
+                    app:srlEnableLoadMoreWhenContentNotFull="true"
                     app:srlEnableRefresh="true">
 
                 <androidx.recyclerview.widget.RecyclerView

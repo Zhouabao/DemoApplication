@@ -35,7 +35,6 @@ class GotoVerifyDialog : Dialog {
         const val TYPE_VERIFY = 4//认证失败去认证
         const val TYPE_CHANGE_AVATOR_NOT_PASS = 7//头像违规替换
         const val TYPE_CHANGE_AVATOR_REAL_NOT_VALID = 11//真人头像不合规
-        const val TYPE_CHANGE_AVATOR_PASS = 2//头像通过,但是不是真人
         const val TYPE_CHANGE_ABLUM = 3//完善相册
     }
 

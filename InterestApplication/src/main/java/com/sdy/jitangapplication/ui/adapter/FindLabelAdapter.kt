@@ -33,7 +33,7 @@ class FindLabelAdapter : BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.ite
         helper.itemView.labelManagerBtn.onClick {
             mContext.startActivity<MyLabelActivity>()
         }
-        val labelAdapter = AllNewLabelAdapter1()
+        val labelAdapter = AllNewLabelAdapter1(isIndex = true)
         if (item.ismine || item.ishot) {
             for (decoration in 0 until helper.itemView.labelTypeRv.itemDecorationCount) {
                 helper.itemView.labelTypeRv.removeItemDecorationAt(decoration)

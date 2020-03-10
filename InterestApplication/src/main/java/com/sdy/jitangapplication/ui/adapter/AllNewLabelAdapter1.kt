@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.item_label_all1.view.*
  *    desc   : 所有新兴趣的数据
  *    version: 1.0
  */
-class AllNewLabelAdapter1(val isCross: Boolean = false) :
+class AllNewLabelAdapter1(val isCross: Boolean = false, var isIndex: Boolean = false) :
     BaseQuickAdapter<NewLabel, BaseViewHolder>(R.layout.item_label_all1) {
     override fun convert(helper: BaseViewHolder, item: NewLabel) {
         //1.无需付费.未添加 2无需付费.已经添加  3.无需付费.已删除 4需要付费.付费进入
@@ -30,7 +30,7 @@ class AllNewLabelAdapter1(val isCross: Boolean = false) :
                 helper.itemView.labelAdded.isVisible = false
             }
             2, 10 -> {//2无需付费.已经添加  10.需要付费.已经添加
-                helper.itemView.labelAdded.isVisible = false
+                helper.itemView.labelAdded.isVisible = isIndex
                 helper.itemView.labelAdded.setImageResource(R.drawable.icon_label_added)
             }
             8 -> {//8.需要付费.(已删除,未加入).未过期限

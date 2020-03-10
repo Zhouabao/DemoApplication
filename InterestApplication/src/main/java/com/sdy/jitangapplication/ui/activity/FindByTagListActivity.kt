@@ -156,6 +156,9 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
         mPresenter.lookForPeopleTag(params)
     }
 
+    private val gridLayoutManager by lazy { GridLayoutManager(this, 2, RecyclerView.VERTICAL, false) }
+
+    private var loadmore = false
     private fun initView() {
         EventBus.getDefault().register(this)
 
@@ -189,7 +192,7 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
         btnBack.setImageResource(R.drawable.icon_back_white)
 
 
-        samePersonRv.layoutManager = GridLayoutManager(this, 2, RecyclerView.VERTICAL, false)
+        samePersonRv.layoutManager = gridLayoutManager
         samePersonRv.adapter = adapter
         samePersonRv.setHasFixedSize(true)
         adapter.setOnItemClickListener { _, view, position ->
@@ -199,8 +202,6 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
                 view.isEnabled = true
             }, 1000L)
         }
-
-
         initData()
     }
 
@@ -226,6 +227,7 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
     private var showAdd = false
     override fun onGetTitleInfoResult(b: Boolean, data: FindByTagBean?) {
         if (b) {
+            loadmore = false
             if ((data?.list.isNullOrEmpty() || data?.list!!.size < Constants.PAGESIZE)) {
                 adapter.hasmore = false
             }
@@ -251,7 +253,7 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
         if (refreshSamePerson.state == RefreshState.Refreshing) {
             refreshSamePerson.finishRefresh(b)
             refreshSamePerson.resetNoMoreData()
-
+            samePersonRv.scrollToPosition(0) //刷新回滚到第一条
         } else if (refreshSamePerson.state == RefreshState.Loading) {
             if (b && data?.list.isNullOrEmpty())
                 refreshSamePerson.finishLoadMoreWithNoMoreData()
@@ -297,8 +299,9 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
 
     override fun onAddLabelResult(result: Boolean, data: AddSinlgLabelBean?) {
         if (result) {
-            if (data?.tag_info != null)
-                myLabelBean = data?.tag_info
+            if (data?.tag_info != null) {
+            }
+            myLabelBean = data?.tag_info
             startActivity<LabelQualityActivity>(
                 "aimData" to myLabelBean, "mode" to if (myLabelBean?.label_quality.isNullOrEmpty()) {
                     LabelQualityActivity.MODE_NEW

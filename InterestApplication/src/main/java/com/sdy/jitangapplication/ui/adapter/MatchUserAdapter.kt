@@ -18,6 +18,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.Newtag
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.item_match_user.view.*
@@ -73,7 +74,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                         if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
                             holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
                             holder.itemView.matchUserLocalTagCharacter.isVisible = true
-                            (holder.itemView.matchUserLocalTagCharacter.layoutParams as ConstraintLayout.LayoutParams).topMargin = SizeUtils.dp2px(5F)
+                            (holder.itemView.matchUserLocalTagCharacter.layoutParams as ConstraintLayout.LayoutParams).topMargin =
+                                SizeUtils.dp2px(5F)
                             holder.itemView.matchUserLocalTagContent.isVisible = false
                             holder.itemView.matchUserDynamicThumbRv.isVisible = false
                         } else if (!item.sign.isNullOrBlank()) {
@@ -200,6 +202,9 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 adapter.setNewData(item.square ?: mutableListOf())
             }
             holder.itemView.matchUserDynamicThumbRv.adapter = adapter
+            adapter.setOnItemClickListener { adapter, view, position ->
+                MatchDetailActivity.start(mContext, item.accid)
+            }
         }
 
 
@@ -208,7 +213,8 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.itemView.btnHi.isVisible = item.greet_switch
         holder.itemView.btnHiView.isVisible = item.greet_switch
         if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
-            (holder.itemView.matchUserLocalTagCharacter.layoutParams as ConstraintLayout.LayoutParams).topMargin = SizeUtils.dp2px(5F)
+            (holder.itemView.matchUserLocalTagCharacter.layoutParams as ConstraintLayout.LayoutParams).topMargin =
+                SizeUtils.dp2px(5F)
             holder.itemView.matchUserLocalTagCl.isVisible = true
             holder.itemView.matchUserLocalTagCharacter.isVisible = true
             holder.itemView.matchUserLocalTagContent.isVisible = false
@@ -255,6 +261,9 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             }
             adapter1.setNewData(item.newtags!![0].label_quality)
             holder.itemView.matchUserLocalTagCharacter.adapter = adapter1
+            adapter1.setOnItemClickListener { adapter, view, position ->
+                MatchDetailActivity.start(mContext, item.accid)
+            }
         }
 
         holder.itemView.matchUserName.text = item.nickname ?: ""

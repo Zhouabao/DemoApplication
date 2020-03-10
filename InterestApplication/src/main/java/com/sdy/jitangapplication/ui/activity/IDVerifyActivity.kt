@@ -146,7 +146,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
             .setIconVisible(false)
             .setCancelIconIsVisibility(true)
             .setTitle("认证提醒")
-            .setContent("审核将与用户头像做比对，请确认头像为本人")
+            .setContent("审核将与用户头像做比对，请确认头像为本人\n验证信息只用作审核，不会对外展示")
             .setConfirmText("确定")
             .setCancelText("取消")
             .setOnConfirmListener(object : CommonAlertDialog.OnConfirmListener {

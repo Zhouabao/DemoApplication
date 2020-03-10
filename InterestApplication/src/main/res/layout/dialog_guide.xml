@@ -461,7 +461,7 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="向左滑动表示无好感"
+                    android:text="向左滑动稍后处理"
                     android:textColor="#ffffffff"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"

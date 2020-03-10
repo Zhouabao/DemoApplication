@@ -307,7 +307,7 @@ class SayHiDialog(
                         loadingDialog.dismiss()
                         EventBus.getDefault().post(GreetEvent(context1, false))
                         HarassmentDialog(context1, HarassmentDialog.CHATHI).show() //开启招呼提示
-                    } else if (t.code == 202) { //对方普通招呼收到上限
+                    } else if (t.code == 202) { //对方普通招呼收到上限F
                         loadingDialog.dismiss()
                         GreetLimitlDialog(context1).show()
                         EventBus.getDefault().post(GreetEvent(context1, false))

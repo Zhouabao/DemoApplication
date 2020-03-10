@@ -915,7 +915,7 @@ interface Api {
      *招呼的左右滑动
      */
     @FormUrlEncoded
-    @POST("Tidings/likeOrGreetState${Constants.END_BASE_URL}")
+    @POST("Tidings/likeOrGreetStateV13${Constants.END_BASE_URL}")
     fun likeOrGreetState(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 }

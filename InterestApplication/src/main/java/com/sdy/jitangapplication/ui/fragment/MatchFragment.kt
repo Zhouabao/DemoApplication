@@ -50,6 +50,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.support.v4.startActivityForResult
 
 /**
  * 匹配页面(新版)
@@ -66,7 +67,9 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
     //用户适配器
     private val matchUserAdapter: MatchUserAdapter by lazy { MatchUserAdapter(mutableListOf()) }
-    private var is_human: Boolean = false
+    private var ranking_level: Int = 0
+    private var isShowChangeAvatorRealMan: Boolean = false
+
 
     companion object {
         private const val LOADING = 0
@@ -225,8 +228,8 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 lieAvatorLl.isVisible = false
             }
             R.id.changeAvatorBtn -> { //强制替换头像
-                if (!is_human) {
-                    startActivity<NewUserInfoSettingsActivity>()
+                if (ranking_level == 1 || ranking_level == 2) {
+                    startActivityForResult<NewUserInfoSettingsActivity>(100)
                 } else {
                     startActivity<MyLabelActivity>()
                 }
@@ -244,6 +247,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
      * 匹配列表数据
      */
     private var paramsLastFiveIds = mutableListOf<Int>()
+    private var firstLoad = true
 
     override fun onGetMatchListResult(success: Boolean, matchBeans: MatchListBean?) {
         if (success) {
@@ -265,28 +269,34 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
                 //保存引导次数
                 UserManager.motion = matchBeans.motion
-                is_human = matchBeans.is_human
+                //头像等级
+                ranking_level = matchBeans.ranking_level
 
-                if (!matchBeans.is_human) {
-                    lieAvatorLl.isVisible = true
-                    lieAvatorContent.text = "当前头像非真实头像，替换后可获得首页推荐"
-                    changeAvatorBtn.text = "立即替换"
-                    changeAvatorCloseBtn.isVisible = false
-                } else if (!matchBeans.is_full) {
-                    lieAvatorLl.isVisible = true
-                    lieAvatorContent.text = "当前有未完善兴趣，完善提升被打招呼几率"
-                    changeAvatorBtn.text = "立即完善"
-                    changeAvatorCloseBtn.isVisible = true
-                } else {
-                    lieAvatorLl.isVisible = false
+                //第一次加载的时候就显示顶部提示条
+                if (firstLoad) {
+                    if (ranking_level == 2) {//2 真人提示
+                        lieAvatorLl.isVisible = true
+                        lieAvatorContent.text = "当前头像非真实头像，替换后可获得首页推荐"
+                        changeAvatorBtn.text = "立即替换"
+                        changeAvatorCloseBtn.isVisible = false
+                    } else if (ranking_level == 1) {//1 审核中ing      管
+                        lieAvatorLl.isVisible = true
+                        lieAvatorContent.text = "头像审核中，可替换头像加速审核"
+                        changeAvatorBtn.text = "立即替换"
+                        changeAvatorCloseBtn.isVisible = true
+                    } else if (!matchBeans.is_full) {
+                        lieAvatorLl.isVisible = true
+                        lieAvatorContent.text = "当前有未完善兴趣，完善提升被打招呼几率"
+                        changeAvatorBtn.text = "立即完善"
+                        changeAvatorCloseBtn.isVisible = true
+                    } else {
+                        lieAvatorLl.isVisible = false
+                    }
+                    firstLoad = false
                 }
-
                 when (matchBeans.motion) {
                     GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7头像违规替换
                         EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
-                    }
-                    GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> {//2//头像通过,但是不是真人
-                        UserManager.replace_times = matchBeans.replace_times
                     }
                     GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//3//完善相册
                         UserManager.perfect_times = matchBeans.perfect_times
@@ -542,12 +552,13 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             //非真人头像打招呼提示去修改头像
-            if (!is_human && manager.topPosition - 1 == 0 && !UserManager.getAlertChangeRealMan()) {
+            if (ranking_level == 2 && manager.topPosition - 1 == 0 && !isShowChangeAvatorRealMan) {
                 ChangeAvatarRealManDialog(
                     activity!!,
                     ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN_GREET,
                     matchBean = matchUserAdapter.data[manager.topPosition - 1]
                 ).show()
+                isShowChangeAvatorRealMan = true
             } else {
 //                保存剩余滑动次数
                 CommonFunction.commonGreet(

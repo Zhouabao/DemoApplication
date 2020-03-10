@@ -387,8 +387,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             CommonFunction.toast("再按一次退出程序")
             firstClickTime = secondTime
         } else {
-            SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeRealMan")
-            SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAvator")
             SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
             AppManager.instance.finishAllActivity()
             System.exit(0)//正常退出
@@ -500,7 +498,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
      */
 //    const val TYPE_VERIFY = 4//认证失败去认证
 //    const val TYPE_CHANGE_AVATOR_NOT_PASS = 7//头像违规替换
-//    const val TYPE_CHANGE_AVATOR_PASS = 2//头像通过,但是不是真人
 //    const val TYPE_CHANGE_ABLUM = 3//完善相册
     private var gotoVerifyDialog: GotoVerifyDialog? = null
 
@@ -523,11 +520,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 title = "完善相册"
                 confirmText = "完善相册"
             }
-            GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> { //真实头像替换
-                content = "当前的匹配率偏低，替换真实头像会使匹配率提高一倍，获得更多的用户好感。"
-                title = "获得更多匹配"
-                confirmText = "修改头像"
-            }
+
         }
         if (gotoVerifyDialog != null) {
             gotoVerifyDialog!!.dismiss()
@@ -569,7 +562,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     UserManager.saveForceChangeAvator(false)//是否强制替换过头像
                     UserManager.saveChangeAvatorType(1)//头像不合规
                 }
-                event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_PASS -> UserManager.saveAlertChangeAvator(true)
                 event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> UserManager.saveAlertChangeAlbum(true)
             }
             showGotoVerifyDialog(event.type, event.avator)

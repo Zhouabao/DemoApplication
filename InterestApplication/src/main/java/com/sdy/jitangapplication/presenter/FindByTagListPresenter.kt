@@ -64,12 +64,14 @@ class FindByTagListPresenter : BasePresenter<FindByTagListView>() {
                 }
 
                 override fun onNext(t: BaseResp<AddSinlgLabelBean?>) {
-                    CommonFunction.toast(t.msg)
-                    mView.onAddLabelResult(t.code == 200,t.data)
+                    if (t.code != 200)
+                        CommonFunction.toast(t.msg)
+
+                    mView.onAddLabelResult(t.code == 200, t.data)
                 }
 
                 override fun onError(e: Throwable?) {
-                    mView.onAddLabelResult(false,null)
+                    mView.onAddLabelResult(false, null)
                 }
             })
     }
