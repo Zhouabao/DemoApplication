@@ -36,7 +36,8 @@ class ChangeAvatarRealManDialog(
     val context1: Context,
     var status: Int = VERIFY_NEED_REAL_MAN,
     var avator: String = "",
-    var matchBean: MatchBean? = null
+    var matchBean: MatchBean? = null,
+    var view1: View? = null
 ) :
     Dialog(context1, R.style.MyDialog) {
 
@@ -67,7 +68,12 @@ class ChangeAvatarRealManDialog(
         continueGreet.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
                 if (matchBean != null)
-                    CommonFunction.commonGreet(context1, matchBean!!.accid, continueGreet,targetAvator = matchBean!!.avatar?:"")
+                    CommonFunction.commonGreet(
+                        context1,
+                        matchBean!!.accid,
+                        view1,
+                        targetAvator = matchBean!!.avatar ?: ""
+                    )
                 dismiss()
             }
         })

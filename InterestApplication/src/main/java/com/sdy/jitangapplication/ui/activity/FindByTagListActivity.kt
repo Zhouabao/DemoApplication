@@ -159,7 +159,6 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
         mPresenter.lookForPeopleTag(params)
     }
 
-    private val gridLayoutManager by lazy { GridLayoutManager(this, 2, RecyclerView.VERTICAL, false) }
 
     private var loadmore = false
     private fun initView() {
@@ -195,7 +194,7 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
         btnBack.setImageResource(R.drawable.icon_back_white)
 
 
-        samePersonRv.layoutManager = gridLayoutManager
+        samePersonRv.layoutManager = GridLayoutManager(this, 2, RecyclerView.VERTICAL, false)
         samePersonRv.adapter = adapter
         samePersonRv.setHasFixedSize(true)
         adapter.setOnItemClickListener { _, view, position ->

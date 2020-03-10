@@ -21,10 +21,8 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.GreetEvent
 import com.sdy.jitangapplication.event.UpdateHiEvent
-import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.GreetTimesBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
-import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.GreetLimitlDialog
@@ -84,7 +82,7 @@ object CommonFunction {
             return
         }
 
-        greet(targetAccid, context, view, position,targetAvator)
+        greet(targetAccid, context, view, position, targetAvator)
     }
 
 
@@ -99,7 +97,7 @@ object CommonFunction {
      * code  401  发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
      * code  400  招呼次数用尽~
      */
-    fun greet(target_accid: String, context1: Context, view: View?, position: Int,targetAvator:String) {
+    fun greet(target_accid: String, context1: Context, view: View?, position: Int, targetAvator: String) {
         if (!NetworkUtils.isConnected()) {
             toast("请连接网络！")
             return
@@ -113,42 +111,15 @@ object CommonFunction {
                 override fun onNext(t: BaseResp<GreetTimesBean?>) {
                     when {
                         t.code == 200 -> {//成功
-                            //发送通知修改招呼次数
-                            if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
-                                EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
+                            if (view != null) {
+                                view.postDelayed({
+                                    EventBus.getDefault().post(GreetEvent(context1, false))
+                                }, 1000L)
+                            } else {
+                                EventBus.getDefault().post(GreetEvent(context1, false))
                             }
                             ChatActivity.start(context1, target_accid)
-                            EventBus.getDefault().post(GreetEvent(context1, false))
 
-                            /*val chatHiAttachment = ChatHiAttachment(
-                                UserManager.getGlobalLabelName(),
-                                ChatHiAttachment.CHATHI_HI
-                            )
-                            val config = CustomMessageConfig()
-                            config.enableUnreadCount = false
-                            config.enablePush = false
-                            val message = MessageBuilder.createCustomMessage(
-                                target_accid,
-                                SessionTypeEnum.P2P,
-                                "",
-                                chatHiAttachment,
-                                config
-                            )
-                            NIMClient.getService(MsgService::class.java).sendMessage(message, false)
-                                .setCallback(object :
-                                    RequestCallback<Void?> {
-                                    override fun onSuccess(param: Void?) {
-
-                                    }
-
-                                    override fun onFailed(code: Int) {
-
-                                    }
-
-                                    override fun onException(exception: Throwable) {
-
-                                    }
-                                })*/
                         }
                         t.code == 201 -> {//次数使用完毕，请充值次数
                             ChargeVipDialog(
@@ -159,7 +130,7 @@ object CommonFunction {
                             EventBus.getDefault().post(GreetEvent(context1, false))
                         }
                         t.code == 202 -> { //（该用户当日免费接收次数完毕，请充值会员获取）
-                            GreetLimitlDialog(context1,targetAvator).show()
+                            GreetLimitlDialog(context1, targetAvator).show()
                             EventBus.getDefault().post(GreetEvent(context1, false))
                         }
                         t.code == 203 -> { //招呼次数用完,认证获得次数

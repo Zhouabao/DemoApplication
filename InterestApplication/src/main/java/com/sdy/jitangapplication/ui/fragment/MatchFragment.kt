@@ -556,7 +556,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 ChangeAvatarRealManDialog(
                     activity!!,
                     ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN_GREET,
-                    matchBean = matchUserAdapter.data[manager.topPosition - 1]
+                    matchBean = matchUserAdapter.data[manager.topPosition - 1],
+                    view1 = if (manager.topView != null)
+                        (manager.topView.findViewById<ConstraintLayout>(R.id.btnHi))
+                    else
+                        changeAvatorBtn
                 ).show()
                 isShowChangeAvatorRealMan = true
             } else {
@@ -564,10 +568,15 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 CommonFunction.commonGreet(
                     activity!!,
                     matchUserAdapter.data[manager.topPosition - 1].accid,
-                    targetAvator = matchUserAdapter.data[manager.topPosition - 1].avatar ?: ""
+                    targetAvator = matchUserAdapter.data[manager.topPosition - 1].avatar ?: "",
+                    view = if (manager.topView != null)
+                        (manager.topView.findViewById<ConstraintLayout>(R.id.btnHi))
+                    else
+                        changeAvatorBtn
                 )
             }
         }
+//        changeAvatorBtn
 
 
         //如果已经只剩5张了就请求数据(预加载).
