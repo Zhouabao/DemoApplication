@@ -49,6 +49,9 @@ import org.jetbrains.anko.startActivity
  */
 class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByTagListView, OnRefreshListener,
     OnLoadMoreListener {
+    companion object {
+        val PAGESIZE = 20
+    }
 
     private var page: Int = 1
     private val labelBean by lazy { intent.getSerializableExtra("labelBean") as NewLabel }
@@ -203,6 +206,27 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
             }, 1000L)
         }
         initData()
+
+
+        samePersonRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val lastVisible = (samePersonRv.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+                val totalCount = (samePersonRv.layoutManager as GridLayoutManager).itemCount
+                if (lastVisible == totalCount - 5 && dy > 0 && !loadmore) {
+                    if (totalCount == page * PAGESIZE) {
+                        loadmore = !loadmore
+                        page++
+                        params["page"] = page
+                        mPresenter.lookForPeopleTag(params)
+                    } else {
+                        refreshSamePerson.finishLoadMoreWithNoMoreData()
+                    }
+//                    refreshSamePerson.autoLoadMore()
+                }
+            }
+        })
     }
 
     private fun initData() {
@@ -254,7 +278,8 @@ class FindByTagListActivity : BaseMvpActivity<FindByTagListPresenter>(), FindByT
             refreshSamePerson.finishRefresh(b)
             refreshSamePerson.resetNoMoreData()
             samePersonRv.scrollToPosition(0) //刷新回滚到第一条
-        } else if (refreshSamePerson.state == RefreshState.Loading) {
+        } else {
+//            if (refreshSamePerson.state == RefreshState.Loading)
             if (b && data?.list.isNullOrEmpty())
                 refreshSamePerson.finishLoadMoreWithNoMoreData()
             else

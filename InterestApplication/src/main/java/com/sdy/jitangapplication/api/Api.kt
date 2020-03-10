@@ -272,7 +272,7 @@ interface Api {
      * 匹配详情数据
      */
     @FormUrlEncoded
-    @POST("member_info/usrinfoV2${Constants.END_BASE_URL}")
+    @POST("member_info/usrinfoV12${Constants.END_BASE_URL}")
     fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchBean?>>
 
 
