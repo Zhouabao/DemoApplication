@@ -344,7 +344,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         //用户照片
         detailPhotosVp.adapter = photosAdapter
-        detailPhotosVp.setScrollable(true)
+        detailPhotosVp.setScrollable(false)
 
         if (matchBean!!.photos == null || matchBean!!.photos!!.isEmpty())
             photos.add(matchBean!!.avatar ?: "")
@@ -358,7 +358,36 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     /**
      * 设置竖直滑动的vp2以及其滑动的indicator
      */
+    private var downX = 0F
+    private var upX = 0F
     private fun setViewpagerAndIndicator() {
+//        detailPhotosVp.onTouch { v, event ->
+//            val action = event.action
+//            when (action) {
+//                MotionEvent.ACTION_DOWN -> {
+//                    downX = event.x
+//                }
+//                MotionEvent.ACTION_UP -> {
+//                    upX = event.x
+//                    if (Math.abs(upX - downX) < 10) {
+//                        if (upX < ScreenUtils.getScreenWidth() / 2F) {
+//                            if (detailPhotosVp.currentItem > 0) {
+//                                val index = detailPhotosVp.currentItem
+//                                detailPhotosVp.setCurrentItem(index - 1, true)
+//                            }
+//                        } else {
+//                            if (detailPhotosVp.currentItem < photos.size - 1) {
+//                                val index = detailPhotosVp.currentItem
+//                                detailPhotosVp.setCurrentItem(index + 1, true)
+//                            }
+//                        }
+//                    }else
+//                        upX = 0F
+//                }
+//            }
+//        }
+
+
         detailPhotosVp.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
