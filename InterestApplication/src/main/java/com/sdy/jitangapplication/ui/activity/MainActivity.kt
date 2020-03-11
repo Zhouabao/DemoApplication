@@ -32,9 +32,9 @@ import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.ui.fragment.ContentFragment
 import com.sdy.jitangapplication.ui.fragment.IndexFragment
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
-import com.sdy.jitangapplication.ui.fragment.SquareFragment
 import com.sdy.jitangapplication.ui.fragment.UserCenterFragment
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UserManager
@@ -55,8 +55,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 //    private val matchFragment by lazy { MatchFragment() }
     private val matchFragment by lazy { IndexFragment() }
     //广场
-    private val squareFragment by lazy { SquareFragment() }
-    //    private val squareFragment by lazy { ContentFragment() }
+//    private val squareFragment by lazy { SquareFragment() }
+    private val squareFragment by lazy { ContentFragment() }
     //消息
     private val messageListFragment by lazy { MessageListFragment() }
     //我
