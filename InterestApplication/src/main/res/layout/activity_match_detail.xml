@@ -51,26 +51,6 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
 
-                <TextView
-                        android:id="@+id/btnLast"
-                        android:layout_width="0dp"
-                        app:layout_constraintRight_toLeftOf="@id/btnNext"
-                        android:layout_height="0dp"
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="@id/detailPhotosVp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/detailPhotosVp"/>
-
-                <TextView
-                        android:id="@+id/btnNext"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintLeft_toRightOf="@id/btnLast"
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="@id/detailPhotosVp"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/detailPhotosVp"/>
-
                 <LinearLayout
                         android:id="@+id/detailPhotosIndicator"
                         android:layout_marginBottom="37dp"

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -49,6 +50,7 @@ import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.sdk27.coroutines.onTouch
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import java.util.*
@@ -344,7 +346,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         //用户照片
         detailPhotosVp.adapter = photosAdapter
-        detailPhotosVp.setScrollable(false)
+        detailPhotosVp.setScrollable(true)
 
         if (matchBean!!.photos == null || matchBean!!.photos!!.isEmpty())
             photos.add(matchBean!!.avatar ?: "")
@@ -361,31 +363,28 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     private var downX = 0F
     private var upX = 0F
     private fun setViewpagerAndIndicator() {
-//        detailPhotosVp.onTouch { v, event ->
-//            val action = event.action
-//            when (action) {
-//                MotionEvent.ACTION_DOWN -> {
-//                    downX = event.x
-//                }
-//                MotionEvent.ACTION_UP -> {
-//                    upX = event.x
-//                    if (Math.abs(upX - downX) < 10) {
-//                        if (upX < ScreenUtils.getScreenWidth() / 2F) {
-//                            if (detailPhotosVp.currentItem > 0) {
-//                                val index = detailPhotosVp.currentItem
-//                                detailPhotosVp.setCurrentItem(index - 1, true)
-//                            }
-//                        } else {
-//                            if (detailPhotosVp.currentItem < photos.size - 1) {
-//                                val index = detailPhotosVp.currentItem
-//                                detailPhotosVp.setCurrentItem(index + 1, true)
-//                            }
-//                        }
-//                    }else
-//                        upX = 0F
-//                }
-//            }
-//        }
+        detailPhotosVp.onTouch { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    downX = event.x
+                }
+                MotionEvent.ACTION_UP -> {
+                    upX = event.x
+                    if (Math.abs(upX - downX) < 10) {
+                        if (upX < ScreenUtils.getScreenWidth() / 2F) {
+                            if (detailPhotosVp.currentItem > 0) {
+                                detailPhotosVp.setCurrentItem(detailPhotosVp.currentItem - 1, true)
+                            }
+                        } else {
+                            if (detailPhotosVp.currentItem < photos.size - 1) {
+                                detailPhotosVp.setCurrentItem(detailPhotosVp.currentItem + 1, true)
+                            }
+                        }
+                    }
+                    downX = 0F
+                }
+            }
+        }
 
 
         detailPhotosVp.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -434,24 +433,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 detailPhotosIndicator.addView(indicator)
             }
         }
-
-        //上一张
-        btnLast.onClick {
-            if (detailPhotosVp.currentItem > 0) {
-                val index = detailPhotosVp.currentItem
-                detailPhotosVp.setCurrentItem(index - 1, true)
-            }
-        }
-
-        //下一张
-        btnNext.onClick {
-            if (detailPhotosVp.currentItem < photos.size - 1) {
-                val index = detailPhotosVp.currentItem
-                detailPhotosVp.setCurrentItem(index + 1, true)
-            }
-        }
-
-
     }
 
 
