@@ -9,13 +9,13 @@
     <include
             android:id="@+id/tv1"
             layout="@layout/layout_comment_head"
-            android:layout_height="26dp"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"/>
 
     <ImageView
             android:id="@+id/emptyImg"
             android:layout_below="@id/tv1"
-            android:layout_marginTop="65dp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:src="@drawable/icon_empty_square_comment"

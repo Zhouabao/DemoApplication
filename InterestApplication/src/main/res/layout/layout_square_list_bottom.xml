@@ -5,21 +5,38 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:background="@color/colorWhite"
+        android:paddingTop="12dp"
         android:descendantFocusability="afterDescendants"
         android:layout_height="wrap_content">
 
+
+
+        <TextView
+                android:id="@+id/squareTitle"
+                android:layout_width="wrap_content"
+                android:maxLines="1"
+                app:layout_constraintLeft_toLeftOf="@id/squareContent1"
+                app:layout_constraintTop_toTopOf="parent"
+                android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                tools:text="#这是我的标题"
+                android:textColor="#FF6796FA"
+                android:textSize="16sp"
+                android:gravity="center"
+                />
+
+
     <com.ctetin.expandabletextviewlibrary.ExpandableTextView
             android:id="@+id/squareContent1"
-            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="12dp"
-            android:textColor="#FF2C2F31"
-            android:textSize="17sp"
+            android:textColor="#FF191919"
+            android:textSize="16sp"
             android:layout_marginLeft="15dp"
             android:ellipsize="end"
             android:lineSpacingMultiplier="1.4"
-            android:textStyle="bold"
             app:ep_contract_color="@color/colorGrayText"
             app:ep_contract_text="收起"
             app:ep_expand_color="@color/colorGrayText"
@@ -31,56 +48,27 @@
             app:ep_need_expand="true"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/squareTitle"
             tools:text="在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品"/>
 
-
-    <LinearLayout
-            android:id="@+id/squareTitleLl"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:paddingRight="10dp"
-            app:layout_constraintBottom_toBottomOf="@id/squareLocationAndTime1Ll"
-            app:layout_constraintLeft_toLeftOf="@id/squareContent1"
-            app:layout_constraintRight_toLeftOf="@id/squareLocationAndTime1Ll"
-            app:layout_constraintTop_toTopOf="@id/squareLocationAndTime1Ll">
-
-        <TextView
-                android:id="@+id/squareTitle"
-                android:layout_width="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                tools:text="#这是我的标题"
-                android:textColor="#FFC5C6C8"
-                android:drawablePadding="8dp"
-                android:textSize="12sp"
-                android:drawableLeft="@drawable/icon_title_blue"
-                android:paddingRight="8dp"
-                android:gravity="center"
-                android:background="@drawable/shape_rectangle_f6f6f6_5dp"
-                />
-
-    </LinearLayout>
 
     <LinearLayout
             android:id="@+id/squareLocationAndTime1Ll"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            app:layout_constraintLeft_toRightOf="@id/squareTitleLl"
-            app:layout_constraintRight_toRightOf="@id/squareContent1"
+            app:layout_constraintRight_toLeftOf="@id/squareTagName"
+            app:layout_constraintLeft_toLeftOf="@id/squareContent1"
             app:layout_constraintTop_toBottomOf="@id/squareContent1">
 
         <TextView
-                android:id="@+id/squareLocationAndTime1"
+                android:id="@+id/squareLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FFC5C6C8"
                 android:textSize="12sp"
                 android:singleLine="true"
+                android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:paddingRight="8dp"
@@ -94,6 +82,28 @@
 
 
     <TextView
+            android:layout_marginLeft="15dp"
+            android:id="@+id/squareTagName"
+            android:layout_marginRight="15dp"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ff2d2f30"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/shape_rectangle_light_gray_15dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/squareLocationAndTime1Ll"
+            app:layout_constraintTop_toTopOf="@id/squareLocationAndTime1Ll"
+            tools:text="游戏"/>
+
+
+    <TextView
             android:id="@+id/squareDianzanBtn1"
             android:drawableLeft="@drawable/icon_dianzan"
             android:layout_width="wrap_content"
@@ -103,9 +113,9 @@
             android:gravity="center"
             android:textColor="@color/colorBlack6f"
             android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@id/squareTagName"
+            android:layout_marginTop="15dp"
             app:layout_constraintLeft_toLeftOf="@id/squareContent1"
-            app:layout_constraintTop_toTopOf="@id/squareTagName"
+            app:layout_constraintTop_toBottomOf="@id/squareLocationAndTime1Ll"
             tools:text="123"/>
 
 
@@ -154,27 +164,6 @@
             app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
             app:layout_constraintLeft_toRightOf="@id/squareCommentBtn1"
             app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"/>
-
-
-    <TextView
-            android:id="@+id/squareTagName"
-            android:layout_marginRight="15dp"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:paddingRight="15dp"
-            android:paddingLeft="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ff2d2f30"
-            android:textSize="14sp"
-            android:visibility="invisible"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:background="@drawable/shape_rectangle_light_gray_15dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/squareLocationAndTime1Ll"
-            tools:text="游戏"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

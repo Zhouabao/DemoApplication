@@ -80,7 +80,7 @@ dependencies {
     //七牛
     api 'com.qiniu:qiniu-android-sdk:7.4.2'
     //Banner
-    api 'com.bigkoo:convenientbanner:2.1.5'
+    api 'com.github.zhpanvip:BannerViewPager:2.7.0'
     //MulitStateView
     api "com.github.Kennyc1012:MultiStateView:$multi_state_view_version"
     //brv adapter简洁的适配器

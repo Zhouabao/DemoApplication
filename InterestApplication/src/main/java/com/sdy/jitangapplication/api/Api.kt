@@ -3,7 +3,10 @@ package com.sdy.jitangapplication.api
 import com.kotlin.base.data.protocol.BaseResp
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.*
-import retrofit2.http.*
+import retrofit2.http.Field
+import retrofit2.http.FieldMap
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.POST
 import rx.Observable
 
 interface Api {
@@ -90,14 +93,6 @@ interface Api {
 
 
     /**
-     * 验证短信(已经过期)
-     */
-    @FormUrlEncoded
-    @POST("Open_Api/CheckSms${Constants.END_BASE_URL}")
-    fun checkVerifyCode(@Path("phone") phone: String, @Path("scene") scene: String, @Path("code") code: String): Observable<BaseResp<CheckBean>>
-
-
-    /**
      * 验证昵称是否正确
      */
     @POST("open_api/nickFilteRrule${Constants.END_BASE_URL}")
@@ -120,6 +115,28 @@ interface Api {
     fun checkAvatar(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
     /************************广场列表*****************************/
+    /**
+     * 广场获取兴趣
+     *
+     */
+    @FormUrlEncoded
+    @POST("Square/squareTagList${Constants.END_BASE_URL}")
+    fun squareTagList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareTagBean>?>>
+
+    /**
+     * 推荐广场
+     *
+     */
+    @FormUrlEncoded
+    @POST("Square/squareEliteList${Constants.END_BASE_URL}")
+    fun squareEliteList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
+
+    /**
+     * 兴趣广场详情列表
+     */
+    @FormUrlEncoded
+    @POST("Square/squareTagInfo${Constants.END_BASE_URL}")
+    fun squareTagInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TagSquareListBean?>>
 
     /**
      * 获取广场列表

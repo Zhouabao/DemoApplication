@@ -146,7 +146,6 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
                     SquareCommentDetailActivity.start(
                         activity!!,
                         adapter.data[position],
-                        enterPosition = "comment",
                         position = position
                     )
                 }

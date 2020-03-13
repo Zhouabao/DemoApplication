@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <com.zhpan.bannerview.BannerViewPager
+            android:id="@+id/bannerVp2"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="140dp"
+            app:bvp_auto_play="false"
+            app:bvp_can_loop="true"
+            android:layout_marginRight="7dp"
+            app:bvp_indicator_checked_color="@color/colorWhite"
+            app:bvp_indicator_normal_color="#66FFFFFF"
+            app:bvp_indicator_slide_mode="normal"
+            app:bvp_indicator_style="round_rect"
+            app:bvp_round_corner="10dp"
+            app:bvp_indicator_gravity="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

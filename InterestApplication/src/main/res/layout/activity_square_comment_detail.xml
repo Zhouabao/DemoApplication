@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.kennyc.view.MultiStateView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stateview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
@@ -10,159 +11,246 @@
         android:focusable="true"
         android:fitsSystemWindows="true"
         android:focusableInTouchMode="true"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading"
         tools:context=".ui.activity.SquareCommentDetailActivity">
 
-    <include layout="@layout/layout_actionbar"/>
-
-    <com.kennyc.view.MultiStateView
+    <androidx.constraintlayout.widget.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/stateview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:msv_errorView="@layout/error_layout"
-            app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading">
+            android:layout_height="match_parent">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:id="@+id/headSquareView"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view">
 
-            <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                    android:id="@+id/refreshLayout"
-                    android:layout_width="match_parent"
+            <ImageView
+                    android:id="@+id/btnBack"
+                    android:src="@drawable/icon_return"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    app:layout_constraintBottom_toTopOf="@id/showCommentLl"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srlEnableAutoLoadMore="true"
-                    app:srlEnableLoadMore="true"
-                    app:srlEnableLoadMoreWhenContentNotFull="false"
-                    app:srlEnableRefresh="true">
+                    android:paddingLeft="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/squareUserIv1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/icon_default_avator"
+                    app:civ_border_color="@color/colorDivider"
+                    app:civ_border_width="1dp"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/btnBack"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-                <androidx.core.widget.NestedScrollView
-                        android:id="@+id/squareScrollView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+            <ImageView
+                    android:id="@+id/squareUserVipIv1"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/icon_vip"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/squareUserName1"
+                    app:layout_constraintLeft_toRightOf="@id/squareUserName1"
+                    app:layout_constraintTop_toTopOf="@id/squareUserName1"/>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+            <TextView
+                    android:id="@+id/squareUserName1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack22"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    app:layout_constraintBottom_toTopOf="@id/squareTime"
+                    app:layout_constraintLeft_toRightOf="@id/squareUserIv1"
+                    app:layout_constraintTop_toTopOf="@id/squareUserIv1"
+                    tools:text="Kimberly Davis"
+                    />
 
-                        <include
-                                android:id="@+id/topLayout"
-                                layout="@layout/layout_square_list_top"
-                                android:layout_height="wrap_content"
-                                android:layout_width="match_parent"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                    android:id="@+id/squareTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8小时前"
+                    android:textColor="#ffc5c6c8"
+                    android:textSize="12sp"
+                    android:gravity="center_vertical"
+                    app:layout_constraintBottom_toBottomOf="@id/squareUserIv1"
+                    app:layout_constraintLeft_toLeftOf="@id/squareUserName1"
+                    app:layout_constraintTop_toBottomOf="@id/squareUserName1"
+                    tools:text="Kimberly Davis"
+                    />
 
+            <TextView
+                    android:id="@+id/squareOfficialTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="官方"
+                    android:layout_marginRight="15dp"
+                    android:textColor="#ffc5c6c8"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/squareUserIv1"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/squareUserIv1"
+                    />
 
-                        <com.sdy.jitangapplication.switchplay.SwitchVideo
-                                android:id="@+id/squareUserVideo"
-                                android:layout_marginTop="15dp"
-                                android:layout_width="0dp"
-                                android:layout_height="252dp"
-                                android:visibility="gone"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginRight="15dp"
-                                app:layout_constraintBottom_toTopOf="@id/bottomLayout"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/topLayout"/>
-
-                        <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/squareUserPics"
-                                android:nestedScrollingEnabled="false"
-                                android:clickable="true"
-                                android:visibility="gone"
-                                android:layout_marginTop="15dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:layout_constraintBottom_toTopOf="@id/bottomLayout"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/topLayout"
-                                />
-
-                        <include
-                                layout="@layout/layout_record_audio"
-                                android:layout_height="50dp"
-                                android:layout_marginTop="15dp"
-                                android:layout_width="275dp"
-                                android:layout_marginLeft="12dp"
-                                app:layout_constraintBottom_toTopOf="@id/bottomLayout"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/topLayout"/>
-
-                        <include
-                                android:id="@+id/bottomLayout"
-                                layout="@layout/layout_square_list_bottom"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="20dp"
-                                app:layout_constraintBottom_toTopOf="@id/commentList"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/commentList"
-                                android:overScrollMode="never"
-                                android:scrollbars="none"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="60dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                </androidx.core.widget.NestedScrollView>
-            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             <LinearLayout
-                    android:id="@+id/showCommentLl"
-                    android:layout_width="match_parent"
+                    android:id="@+id/squareChatBtn1"
+                    android:background="@drawable/icon_square_chat"
+                    android:layout_width="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_height="40dp"
-                    android:background="@drawable/shape_rectangle_gray_white_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    app:layout_constraintBottom_toBottomOf="@id/squareUserIv1"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/squareUserIv1"/>
+
+            <View
+                    android:background="@color/colorDivider"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent">
-
-                <EditText
-                        android:id="@+id/showCommentEt"
-                        android:orientation="horizontal"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="10dp"
-                        android:hint="有什么感受说来听听"
-                        android:background="@null"
-                        android:textSize="14sp"
-                        android:maxLength="150"
-                        android:textColorHint="@color/colorBlackC9"
-                        android:textColor="@color/colorBlackTitle"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="12dp"
-                        />
-
-                <Button
-                        android:id="@+id/sendCommentBtn"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/icon_send_unable"
-                        android:layout_width="30dp"
-                        android:enabled="false"
-                        android:layout_marginRight="12dp"
-                        android:layout_height="30dp"/>
-            </LinearLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.kennyc.view.MultiStateView>
-</LinearLayout>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/showCommentLl"
+                app:layout_constraintTop_toBottomOf="@+id/headSquareView"
+                app:srlEnableAutoLoadMore="true"
+                app:srlEnableLoadMore="true"
+                app:srlEnableLoadMoreWhenContentNotFull="false"
+                app:srlEnableRefresh="true">
+
+
+            <androidx.core.widget.NestedScrollView
+                    android:id="@+id/squareScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+
+                    <com.sdy.jitangapplication.switchplay.SwitchVideo
+                            android:id="@+id/squareUserVideo"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="0dp"
+                            android:layout_height="252dp"
+                            android:visibility="gone"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
+                            app:layout_constraintBottom_toTopOf="@id/bottomLayout"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/squareUserPics"
+                            android:nestedScrollingEnabled="false"
+                            android:clickable="true"
+                            android:visibility="gone"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toTopOf="@id/bottomLayout"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                    <include
+                            layout="@layout/layout_record_audio"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_width="275dp"
+                            android:layout_marginLeft="12dp"
+                            app:layout_constraintBottom_toTopOf="@id/bottomLayout"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                    <include
+                            android:id="@+id/bottomLayout"
+                            layout="@layout/layout_square_list_bottom"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            app:layout_constraintBottom_toTopOf="@id/commentList"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/commentList"
+                            android:overScrollMode="never"
+                            android:scrollbars="none"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="60dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.core.widget.NestedScrollView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <LinearLayout
+                android:id="@+id/showCommentLl"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="40dp"
+                android:background="@drawable/shape_rectangle_gray_white_0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent">
+
+            <EditText
+                    android:id="@+id/showCommentEt"
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:hint="有什么感受说来听听"
+                    android:background="@null"
+                    android:textSize="14sp"
+                    android:maxLength="150"
+                    android:textColorHint="@color/colorBlackC9"
+                    android:textColor="@color/colorBlackTitle"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="12dp"
+                    />
+
+            <Button
+                    android:id="@+id/sendCommentBtn"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/icon_send_unable"
+                    android:layout_width="30dp"
+                    android:enabled="false"
+                    android:layout_marginRight="12dp"
+                    android:layout_height="30dp"/>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.kennyc.view.MultiStateView>
 

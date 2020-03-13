@@ -99,6 +99,8 @@
         </activity>
         <activity android:name=".ui.activity.SquareSamePersonActivity">
         </activity>
+        <activity android:name=".ui.activity.TagDetailCategoryActivity">
+        </activity>
         <activity android:name=".ui.activity.MyIntentionActivity">
         </activity>
         <activity android:name=".ui.activity.MyIntentionActivity1">
@@ -280,11 +282,7 @@
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustResize"/>
-        <activity
-                android:name=".ui.activity.SquareCommentDetailActivity1"
-                android:screenOrientation="portrait"
-                android:theme="@style/Theme.AppCompat.Transitions"
-                android:windowSoftInputMode="adjustResize"/>
+
         <activity
                 android:name=".ui.activity.MatchDetailActivity"
                 android:screenOrientation="portrait"/>

@@ -61,10 +61,8 @@ import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
-import kotlinx.android.synthetic.main.layout_actionbar.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
 import kotlinx.android.synthetic.main.layout_square_list_bottom.*
-import kotlinx.android.synthetic.main.layout_square_list_top.*
 import kotlinx.android.synthetic.main.switch_video.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
@@ -98,7 +96,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             context: Context,
             squareBean: SquareBean? = null,
             squareId: Int? = null,
-            enterPosition: String? = null,
             position: Int? = 0
         ) {
             context.startActivity<SquareCommentDetailActivity>(
@@ -109,11 +106,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 },
                 if (squareId != null) {
                     "square_id" to squareId
-                } else {
-                    "" to ""
-                },
-                if (enterPosition != null) {
-                    "enterPosition" to enterPosition
                 } else {
                     "" to ""
                 },
@@ -167,15 +159,14 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
         GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv1)
-        squareTagName.visibility = View.INVISIBLE
-//        if (!squareBean!!.tags.isNullOrEmpty()) {
-//            squareTagName.text = squareBean!!.tags ?: ""
-//            squareTagName.isVisible = true
-//        } else {
-//            squareTagName.isVisible = false
-//        }
+        if (!squareBean!!.tags.isNullOrEmpty()) {
+            squareTagName.text = squareBean!!.tags ?: ""
+            squareTagName.isVisible = true
+        } else {
+            squareTagName.isVisible = false
+        }
 
-        squareTitleLl.isVisible = !squareBean!!.title.isNullOrEmpty()
+        squareTitle.isVisible = !squareBean!!.title.isNullOrEmpty()
         squareTitle.text = squareBean!!.title ?: ""
         squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
             resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
@@ -223,13 +214,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 MatchDetailActivity.start(this, squareBean?.accid ?: "")
         }
 
-        squareLocationAndTime1.text = "${squareBean!!.puber_address}" +
-                "${if (!squareBean!!.puber_address.isNullOrEmpty()) {
-                    "·"
-                } else {
-                    ""
-                }}${squareBean!!.out_time}"
-
+        squareLocation.text = "${squareBean!!.puber_address}"
+        squareTime.text = "${squareBean!!.out_time}"
 
     }
 
@@ -269,7 +255,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         btnBack.onClick {
             onBackPressed()
         }
-        hotT1.text = "动态详情"
 
 
         squareZhuanfaBtn1.setOnClickListener(this)
@@ -909,10 +894,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         super.onStart()
         Log.d(TAG1, "super.onStart()")
         GSYVideoType.setShowType(GSYVideoType.SCREEN_TYPE_DEFAULT)
-//        if (!enterPosition.isNullOrEmpty()) {
-//            showCommentEt.isFocusable = true
-//            showCommentEt.postDelayed({ KeyboardUtils.showSoftInput(showCommentEt) }, 500L)
-//        }
     }
 
     override fun onResume() {

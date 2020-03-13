@@ -3,30 +3,29 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/stateRecommendSquare"
+        android:id="@+id/stateTagSquare"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
         app:msv_viewState="loading"
-        tools:context=".ui.fragment.RecommendSquareFragment">
+        tools:context=".ui.fragment.TagSquareFragment">
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshRecommendSquare"
+            android:id="@+id/refreshTagSquare"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorWhite"
-            app:srlEnableLoadMoreWhenContentNotFull="false">
+            app:srlDisableContentWhenLoading="true"
+            app:srlDisableContentWhenRefresh="true"
+            app:srlEnableLoadMore="false"
+            app:srlEnableRefresh="true">
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvRecommendSquare"
-                android:orientation="vertical"
-                android:overScrollMode="never"
+                android:id="@+id/rvTagSquare"
+                android:background="@color/colorWhite"
                 android:layout_width="match_parent"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="8dp"
-                android:layout_height="match_parent"/>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                android:layout_height="wrap_content"/>
 
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </com.kennyc.view.MultiStateView>

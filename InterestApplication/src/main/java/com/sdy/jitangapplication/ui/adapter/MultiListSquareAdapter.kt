@@ -89,6 +89,8 @@ class MultiListSquareAdapter(
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.squareUserIv1)
 
         holder.itemView.squareOfficialTv.isVisible = holder.itemViewType == SquareBean.OFFICIAL_NOTICE
+        holder.itemView.squareChatBtn1.isVisible = holder.itemViewType != SquareBean.OFFICIAL_NOTICE
+        holder.itemView.squareTime.isVisible = holder.itemViewType != SquareBean.OFFICIAL_NOTICE
         if (holder.itemViewType == SquareBean.OFFICIAL_NOTICE) {
             holder.itemView.onClick {
                 mContext.startActivity<ProtocolActivity>(
@@ -112,16 +114,17 @@ class MultiListSquareAdapter(
             )
         } else {
             holder.itemView.headSquareView.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
+            holder.itemView.view.isVisible = holder.layoutPosition - headerLayoutCount != 0
 
-//            if (!item.tags.isNullOrEmpty()) {
-//                holder.itemView.squareTagName.text = item.tags
-//                holder.itemView.squareTagName.isVisible = true
-//            } else {
-//                holder.itemView.squareTagName.visibility = View.INVISIBLE
-//            }
-            holder.itemView.squareTagName.visibility = View.INVISIBLE
+            if (!item.tags.isNullOrEmpty()) {
+                holder.itemView.squareTagName.text = item.tags
+                holder.itemView.squareTagName.isVisible = true
+            } else {
+                holder.itemView.squareTagName.visibility = View.INVISIBLE
+            }
 
-            holder.itemView.squareTitleLl.isVisible = !item.title.isNullOrEmpty()
+
+            holder.itemView.squareTitle.isVisible = !item.title.isNullOrEmpty()
             holder.itemView.squareTitle.text = item.title ?: ""
 
             //设置点赞状态
@@ -151,12 +154,8 @@ class MultiListSquareAdapter(
                 View.GONE
             }
 
-            holder.itemView.squareLocationAndTime1.text =
-                "${item.puber_address}${if (!item.puber_address.isNullOrEmpty()) {
-                    "·"
-                } else {
-                    ""
-                }}${item.out_time}"
+            holder.itemView.squareLocation.text = "${item.puber_address}"
+            holder.itemView.squareTime.text = item.out_time
 
             //点击跳转评论详情
             holder.itemView.squareCommentBtn1.onClick {
@@ -166,7 +165,6 @@ class MultiListSquareAdapter(
                 SquareCommentDetailActivity.start(
                     mContext!!,
                     data[holder.layoutPosition - headerLayoutCount],
-                    enterPosition = "comment",
                     position = holder.layoutPosition - headerLayoutCount
                 )
             }
@@ -184,7 +182,12 @@ class MultiListSquareAdapter(
                 if (resetAudioListener != null) {
                     resetAudioListener!!.resetAudioState()
                 }
-                CommonFunction.commonGreet(mContext, item.accid, holder.itemView.squareChatBtn1,targetAvator = item.avatar)
+                CommonFunction.commonGreet(
+                    mContext,
+                    item.accid,
+                    holder.itemView.squareChatBtn1,
+                    targetAvator = item.avatar
+                )
 
             }
 
@@ -194,6 +197,10 @@ class MultiListSquareAdapter(
             }
 
 
+            //标题跳转
+            holder.itemView.squareTitle.onClick {
+                mContext.startActivity<TagDetailCategoryActivity>("id" to item.title_id, "type" to 2)
+            }
 
             holder.itemView.squareUserIv1.onClick {
                 if (!(UserManager.getAccid() == item.accid || !chat)) {

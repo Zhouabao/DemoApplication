@@ -97,7 +97,7 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
                         SquarePlayListDetailActivity.start(this, item.id ?: 0)
                 }
                 2, 3 -> {//点击评论进入评论详情
-                    SquareCommentDetailActivity.start(this, squareId = item.id ?: 0, enterPosition = "comment")
+                    SquareCommentDetailActivity.start(this, squareId = item.id ?: 0)
                 }
             }
         }

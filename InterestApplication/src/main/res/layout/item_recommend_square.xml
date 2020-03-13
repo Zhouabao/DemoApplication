@@ -3,11 +3,11 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
         android:layout_marginTop="7dp"
-        app:cardCornerRadius="10dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_height="wrap_content"
@@ -16,17 +16,49 @@
         <ImageView
                 android:id="@+id/squareImg"
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:scaleType="centerCrop"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+                android:id="@+id/squareOnlyTextContent"
+                android:paddingLeft="13dp"
+                android:paddingRight="13dp"
+                android:visibility="gone"
+                android:layout_height="0dp"
+                android:layout_width="0dp"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:ellipsize="end"
+                android:maxLines="6"
+                android:background="@drawable/icon_bg_only_text_content"
+                android:textColor="#FF2C2F31"
+                app:layout_constraintBottom_toBottomOf="@id/squareImg"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/squareImg"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/squareAudioCover"
+                android:layout_width="93dp"
+                android:layout_height="93dp"
+                app:civ_border_color="#33000000"
+                app:civ_border_width="4dp"
+                app:layout_constraintBottom_toBottomOf="@id/squareImg"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/squareImg"/>
 
         <ImageView
                 android:id="@+id/squareVideoState"
                 android:layout_height="24dp"
                 android:layout_marginLeft="7dp"
                 android:layout_marginTop="7dp"
+                android:visibility="gone"
                 android:layout_width="24dp"
-                android:src="@drawable/nim_music_icon_play"
+                android:src="@drawable/icon_play_transparent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -40,6 +72,13 @@
                 android:text="300Km"
                 android:textColor="#FF191919"
                 android:textSize="10sp"
+                android:textStyle="bold"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="1dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingBottom="1dp"
                 app:layout_constraintBottom_toBottomOf="@id/squareImg"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -57,6 +96,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/squareImg"/>
@@ -67,9 +107,10 @@
                 android:src="@drawable/icon_default_avator"
                 android:layout_width="19dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_height="19dp"
                 app:layout_constraintBottom_toBottomOf="@id/squareLike"
-                app:layout_constraintLeft_toLeftOf="@id/squareContent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="@id/squareLike"/>
 
         <TextView
@@ -92,7 +133,7 @@
 
         <TextView
                 android:id="@+id/squareLike"
-                android:drawableLeft="@drawable/icon_dianzan"
+                android:drawableLeft="@drawable/icon_zan_normal"
                 android:layout_marginRight="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

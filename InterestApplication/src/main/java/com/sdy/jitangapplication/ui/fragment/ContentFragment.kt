@@ -59,15 +59,15 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
 
     private fun initFragments() {
-        titleAdapter.addData(SquareTitleBean("推荐", true))
-        titleAdapter.addData(SquareTitleBean("标签", false))
+        titleAdapter.addData(SquareTitleBean("好友", true))
+        titleAdapter.addData(SquareTitleBean("推荐", false))
+        titleAdapter.addData(SquareTitleBean("兴趣", false))
         titleAdapter.addData(SquareTitleBean("附近", false))
-        titleAdapter.addData(SquareTitleBean("好友", false))
 
+        mStack.add(SquareFragment())
         mStack.add(RecommendSquareFragment())
-        mStack.add(SquareFragment())
-        mStack.add(SquareFragment())
-        mStack.add(SquareFragment())
+        mStack.add(TagSquareFragment())
+        mStack.add(RecommendSquareFragment())
     }
 
     private fun initViewpager() {
@@ -83,6 +83,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
                 data.checked = data == titleAdapter.data[position]
                 squareVp.currentItem = position
             }
+            filterGenderBtn.isVisible = position != 2
             titleAdapter.notifyDataSetChanged()
         }
 

@@ -32,6 +32,7 @@ data class SquareBean(
     var create_time: String = "",
     var descr: String? = "",
     var id: Int?,
+    var title_id: Int?,
     var isliked: Int = 0,
     var iscollected: Int?,//0没收藏 1收藏
     var like_cnt: Int = 0,
@@ -160,3 +161,59 @@ data class CommentBean(
 }
 
 data class SquareTitleBean(val title: String, var checked: Boolean, var image: Int = -1, var imageChecked: Int = -1)
+
+
+/**
+ * 广场兴趣列表
+ */
+data class SquareTagBean(
+    var icon: String = "",
+    var id: Int = 0,
+    var is_hot: Boolean = false,
+    var is_join: Boolean = false,
+    var cover_list: MutableList<String> = mutableListOf(),
+    var title: String = ""
+)
+
+/**
+ * 广场运营位广告
+ */
+data class SquareBannerBean(
+    var adv_type: Int = 0,
+    var cover_url: String = "",
+    var id: Int = 0,
+    var link_url: String = "",
+    var title: String = "",
+    var icon: String = ""
+)
+
+data class RecommendSquareBean(
+    var accid: String = "",
+    var avatar: String = "",
+    var comment_cnt: Int = 0,
+    var cover_url: String = "",
+    var descr: String = "",
+    var distance: String = "",
+    var gender: Int = 0,
+    var id: Int = 0,
+    var title_id: Int = 0,
+    var isliked: Boolean = false,
+    var originalLike: Boolean = false,
+    var like_cnt: Int = 0,
+    var originalLikeCount: Int = 0,
+    var nickname: String = "",
+    var title: String = "",
+    var type: Int = 0,
+    var height: Int = 0,
+    var width: Int = 0
+)
+
+data class RecommendSquareListBean(
+    var banner: MutableList<SquareBannerBean> = mutableListOf(),
+    var list: MutableList<RecommendSquareBean> = mutableListOf()
+)
+
+data class TagSquareListBean(
+    var banner: SquareBannerBean,
+    var list: MutableList<RecommendSquareBean> = mutableListOf()
+)
