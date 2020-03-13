@@ -9,7 +9,6 @@ class UpdateHiCountEvent
 class GreetEvent(val context: Context, val success: Boolean)
 
 
-class TurnToLastLabelEvent(val from: Int)
 
 
 class CloseDialogEvent()

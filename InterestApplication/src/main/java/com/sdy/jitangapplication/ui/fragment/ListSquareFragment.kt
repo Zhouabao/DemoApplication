@@ -62,10 +62,6 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
         )
     }
 
-    override fun onCheckBlockResult(result: Boolean) {
-
-    }
-
     private val TAG = ListSquareFragment::class.java.simpleName
     private lateinit var scrollCalculatorHelper: ScrollCalculatorHelper
     //音频当前播放位置
@@ -188,12 +184,6 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
         mPresenter.getSomeoneSquare(params)
     }
 
-
-    override fun onSquareAnnounceResult(type: Int, b: Boolean, code: Int) {
-    }
-
-    override fun onQnUploadResult(b: Boolean, type: Int, key: String?) {
-    }
 
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {

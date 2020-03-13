@@ -18,11 +18,6 @@ interface SquareView : BaseView {
     fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean = false)
 
     /**
-     * 设置用户封禁
-     */
-    fun onCheckBlockResult( result: Boolean)
-
-    /**
      * 广场点赞
      */
     fun onGetSquareLikeResult(position: Int, result: Boolean)
@@ -41,16 +36,6 @@ interface SquareView : BaseView {
      * 删除自己的广场动态
      */
     fun onRemoveMySquareResult(result: Boolean, position: Int)
-
-    /**
-     * 广场发布结果
-     */
-    fun onSquareAnnounceResult(type: Int, b: Boolean, code: Int = 0)
-
-    /**
-     * 七牛上传进度
-     */
-    fun onQnUploadResult(b: Boolean, type: Int, key: String?)
 
 
 

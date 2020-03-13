@@ -27,9 +27,9 @@ import com.sdy.jitangapplication.ui.adapter.RecommendSquareAdapter
 import com.sdy.jitangapplication.ui.holder.BannerHolderView
 import com.sdy.jitangapplication.utils.UserManager
 import com.zhpan.bannerview.BannerViewPager
+import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_recommend_square.*
-import kotlinx.android.synthetic.main.fragment_square.*
 import kotlinx.android.synthetic.main.headerview_recommend_banner.view.*
 
 /**
@@ -72,15 +72,18 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
         }
         refreshRecommendSquare.setOnRefreshListener(this)
         refreshRecommendSquare.setOnLoadMoreListener(this)
-
-        //android 瀑布流
-        adapter.setHeaderView(initHeadBannerView())
-
         rvRecommendSquare.setHasFixedSize(true)
         val manager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         manager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
         rvRecommendSquare.layoutManager = manager
         rvRecommendSquare.adapter = adapter
+        //android 瀑布流
+        adapter.setHeaderView(initHeadBannerView())
+        adapter.setEmptyView(R.layout.empty_friend_layout,rvRecommendSquare)
+        adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
+        adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
+        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
+        adapter.isUseEmpty(false)
         adapter.setOnItemClickListener { _, view, position ->
             SquareCommentDetailActivity.start(activity!!, squareId = adapter.data[position].id)
         }
@@ -92,7 +95,7 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
      */
     private fun initHeadBannerView(): View {
         val headBanner =
-            LayoutInflater.from(activity!!).inflate(R.layout.headerview_recommend_banner, squareDynamicRv, false)
+            LayoutInflater.from(activity!!).inflate(R.layout.headerview_recommend_banner, rvRecommendSquare, false)
 
         (headBanner.bannerVp2 as BannerViewPager<SquareBannerBean, BannerHolderView>)
             .setHolderCreator { BannerHolderView() }
@@ -139,6 +142,9 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
             }
         }
         if (refreshRecommendSquare.state == RefreshState.Refreshing) {
+            if (data?.list.isNullOrEmpty()) {
+                adapter.isUseEmpty(true)
+            }
             adapter.data.clear()
             refreshRecommendSquare.finishRefresh(b)
         } else {

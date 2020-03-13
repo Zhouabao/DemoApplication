@@ -14,6 +14,7 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.common.AppManager
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.NimIntent
@@ -22,6 +23,7 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -52,11 +54,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     //fragment栈管理
     private val mStack = Stack<Fragment>()
     //匹配
-//    private val matchFragment by lazy { MatchFragment() }
-    private val matchFragment by lazy { IndexFragment() }
+    private val indexFragment by lazy { IndexFragment() }
     //广场
-//    private val squareFragment by lazy { SquareFragment() }
-    private val squareFragment by lazy { ContentFragment() }
+    private val contentFragment by lazy { ContentFragment() }
     //消息
     private val messageListFragment by lazy { MessageListFragment() }
     //我
@@ -154,11 +154,18 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun initFragment() {
         tabMatchCount.setOnClickListener(this)
         tabSquare.setOnClickListener(this)
+        tabSquarePublish.onClick(
+            object : CustomClickListener() {
+                override fun onSingleClick(view: View) {
+                    contentFragment.mPresenter.checkBlock()
+                }
+            }
+        )
         tabMe.setOnClickListener(this)
         tabMessage.setOnClickListener(this)
 
-        mStack.add(matchFragment)
-        mStack.add(squareFragment)
+        mStack.add(indexFragment)
+        mStack.add(contentFragment)
         mStack.add(messageListFragment)
         mStack.add(myFragment)
         vpMain.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
@@ -198,13 +205,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     null,
                     null
                 )
-                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
-                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
-                    null,
-                    resources.getDrawable(R.drawable.icon_tab_square),
-                    null,
-                    null
-                )
+                tabSquarePublish.isVisible = false
+                tabSquare.isVisible = true
                 tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMe.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -228,13 +230,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     null,
                     null
                 )
-                tabSquare.setTextColor(resources.getColor(R.color.colorOrange))
-                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
-                    null,
-                    resources.getDrawable(R.drawable.icon_tab_square_checked),
-                    null,
-                    null
-                )
+
+                tabSquarePublish.isVisible = true
+                tabSquare.visibility = View.INVISIBLE
                 tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMe.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -258,13 +256,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     null,
                     null
                 )
-                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
-                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
-                    null,
-                    resources.getDrawable(R.drawable.icon_tab_square),
-                    null,
-                    null
-                )
+
+                tabSquarePublish.isVisible = false
+                tabSquare.isVisible = true
+//                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
+//                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
+//                    null,
+//                    resources.getDrawable(R.drawable.icon_tab_square),
+//                    null,
+//                    null
+//                )
                 tabMessage.setTextColor(resources.getColor(R.color.colorOrange))
                 tabMessage.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -288,13 +289,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     null,
                     null
                 )
-                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
-                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
-                    null,
-                    resources.getDrawable(R.drawable.icon_tab_square),
-                    null,
-                    null
-                )
+                tabSquarePublish.isVisible = false
+                tabSquare.isVisible = true
                 tabMessage.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMessage.setCompoundDrawablesWithIntrinsicBounds(
                     null,

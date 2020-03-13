@@ -113,12 +113,12 @@
                 android:textStyle="bold"
                 android:textSize="12sp"
                 android:layout_height="41dp"
+                android:text="首页"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/tabSquare"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="首页"
                 />
 
         <TextView
@@ -131,13 +131,26 @@
                 android:layout_width="0dp"
                 android:textSize="12sp"
                 android:layout_height="41dp"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toRightOf="@id/tabMatchCount"
                 app:layout_constraintRight_toLeftOf="@id/tabMessage"
                 app:layout_constraintTop_toTopOf="parent"
-
                 />
+
+        <ImageView
+                android:id="@+id/tabSquarePublish"
+                android:visibility="visible"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_publish"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="@id/tabSquare"
+                app:layout_constraintRight_toRightOf="@id/tabSquare"
+                app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
                 android:id="@+id/tabMessage"

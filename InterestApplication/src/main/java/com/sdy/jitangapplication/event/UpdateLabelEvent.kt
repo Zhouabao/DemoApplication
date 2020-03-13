@@ -10,8 +10,6 @@ import com.sdy.jitangapplication.ui.fragment.MySquareFragment.Companion.TYPE_SQU
  *    desc   : 广场的事件
  *    version: 1.0
  */
-//更新兴趣去请求
-class UpdateLabelEvent
 
 //更新播放器
 class NotifyEvent(var position: Int, var type: Int = TYPE_SQUARE)

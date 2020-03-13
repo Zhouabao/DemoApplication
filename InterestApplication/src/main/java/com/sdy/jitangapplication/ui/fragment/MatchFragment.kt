@@ -437,12 +437,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             card_stack_view.rewind()
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun turnToLastLabelEvent(event: TurnToLastLabelEvent) {
-        if (event.from == ChargeLabelDialog.FROM_INDEX) {
-            onRefreshEvent(RefreshEvent(true))
-        }
-    }
 
 
     /*---------------------卡片参数和方法------------------------------*/

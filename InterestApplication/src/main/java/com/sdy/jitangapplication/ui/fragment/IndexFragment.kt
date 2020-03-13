@@ -16,8 +16,8 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.SquareTitleBean
-import com.sdy.jitangapplication.presenter.ContentPresenter
-import com.sdy.jitangapplication.presenter.view.ContentView
+import com.sdy.jitangapplication.presenter.IndexPresenter
+import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.adapter.IndexSwitchAdapter
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
@@ -27,7 +27,7 @@ import java.util.*
 /**
  * 首页fragment
  */
-class IndexFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView {
+class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
 
     private val fragments by lazy { Stack<Fragment>() }
     private val matchFragment by lazy { MatchFragment() }

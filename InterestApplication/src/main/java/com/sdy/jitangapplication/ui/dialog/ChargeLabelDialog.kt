@@ -110,9 +110,6 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int, var from: Int = 
         //取消支付
         refuseBtn.onClick {
             dismiss()
-            if ((context1 as Activity) is MainActivity) {
-                EventBus.getDefault().post(TurnToLastLabelEvent(from))
-            }
         }
 
         contentFl.onClick {

@@ -9,7 +9,6 @@
 
     <View
             android:id="@+id/customStatusBar"
-            android:visibility="visible"
             android:background="@color/colorTransparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +41,80 @@
                 />
     </LinearLayout>
 
+    <FrameLayout
+            android:id="@+id/uploadFl"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="25dp">
 
+
+        <ProgressBar
+                android:id="@+id/uploadProgressBar"
+                style="@style/uploadProgress"
+                android:max="100"
+                android:progress="0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:id="@+id/uploadProgressTv"
+                    android:layout_marginLeft="15dp"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    android:text="正在发布"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                    android:id="@+id/llRetry"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/uploadProgressTv"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_rectangle_gray_white_10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingLeft="6dp"
+                    android:layout_marginLeft="5dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="1dp"
+                    android:visibility="gone"
+                    android:paddingBottom="1dp"
+                    android:layout_height="15dp">
+
+                <ImageView
+                        android:id="@+id/iconRetry"
+                        android:src="@drawable/icon_edit_retry"
+                        android:layout_width="10dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_height="10dp"/>
+
+                <TextView
+                        android:id="@+id/editRetry"
+                        android:layout_width="20dp"
+                        android:layout_height="14dp"
+                        android:text="编辑"
+                        android:textColor="#ff919191"
+                        android:textSize="10sp"
+                        />
+            </LinearLayout>
+
+            <ImageView
+                    android:id="@+id/btnClose"
+                    android:visibility="gone"
+                    android:layout_marginRight="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/icon_close_publish"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"/>
+        </RelativeLayout>
+    </FrameLayout>
     <com.sdy.jitangapplication.widgets.CommonNoScrollViewPager
             android:id="@+id/squareVp"
             android:layout_width="match_parent"
