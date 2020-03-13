@@ -25,7 +25,6 @@ import com.sdy.jitangapplication.presenter.view.RecommendSquareView
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.RecommendSquareAdapter
 import com.sdy.jitangapplication.ui.holder.BannerHolderView
-import com.sdy.jitangapplication.utils.UserManager
 import com.zhpan.bannerview.BannerViewPager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
@@ -46,12 +45,9 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
 
     //请求广场的参数 TODO要更新tagid
     private val params by lazy {
-        hashMapOf(
-            "accid" to UserManager.getAccid(),
-            "token" to UserManager.getToken(),
+        hashMapOf<String, Any>(
             "page" to page,
-            "pagesize" to Constants.PAGESIZE,
-            "type" to 1
+            "pagesize" to Constants.PAGESIZE
         )
     }
     private val adapter by lazy { RecommendSquareAdapter() }
@@ -79,7 +75,7 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
         rvRecommendSquare.adapter = adapter
         //android 瀑布流
         adapter.setHeaderView(initHeadBannerView())
-        adapter.setEmptyView(R.layout.empty_friend_layout,rvRecommendSquare)
+        adapter.setEmptyView(R.layout.empty_friend_layout, rvRecommendSquare)
         adapter.emptyView.emptyFriendTitle.text = "暂时没有人了"
         adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
