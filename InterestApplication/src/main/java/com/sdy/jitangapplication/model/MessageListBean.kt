@@ -167,17 +167,6 @@ data class LikeMeOneDayBean(
 /**************广场消息列表*******************/
 
 /**
- * 广场消息列表
- */
-data class SquareLitBean(
-    val newest: MutableList<SquareMsgBean>? = mutableListOf(),
-    val current_page: Int? = 0,
-    val last_page: Int? = 0,
-    val per_page: Int? = 0,
-    val total: Int? = 0
-)
-
-/**
  * 广场消息
  */
 data class SquareMsgBean(

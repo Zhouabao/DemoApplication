@@ -122,6 +122,13 @@ interface Api {
     @FormUrlEncoded
     @POST("Square/squareTagList${Constants.END_BASE_URL}")
     fun squareTagList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareTagBean>?>>
+   /**
+     * 兴趣置顶或者置底
+     *
+     */
+    @FormUrlEncoded
+    @POST("Tags/markTag${Constants.END_BASE_URL}")
+    fun markTag(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**
      * 推荐广场
@@ -142,7 +149,7 @@ interface Api {
      * 获取广场列表
      */
     @FormUrlEncoded
-    @POST("square/squareListsV12${Constants.END_BASE_URL}")
+    @POST("square/squareListsV13${Constants.END_BASE_URL}")
     fun getSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
 
 
@@ -158,7 +165,7 @@ interface Api {
      * 获取某一广场详情
      */
     @FormUrlEncoded
-    @POST("square/squareInfoV2${Constants.END_BASE_URL}")
+    @POST("square/squareInfoV13${Constants.END_BASE_URL}")
     fun getSquareInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareBean?>>
 
 
@@ -236,7 +243,7 @@ interface Api {
      * 广场发布
      */
     @FormUrlEncoded
-    @POST("square/announceV2${Constants.END_BASE_URL}")
+    @POST("square/announceV13${Constants.END_BASE_URL}")
     fun squareAnnounce(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
@@ -375,7 +382,7 @@ interface Api {
      * 获取用户广场列表
      */
     @FormUrlEncoded
-    @POST("square/someoneSquareV2${Constants.END_BASE_URL}")
+    @POST("square/someoneSquareV13${Constants.END_BASE_URL}")
     fun someoneSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
 
 
@@ -384,7 +391,7 @@ interface Api {
      * 个人中心
      */
     @FormUrlEncoded
-    @POST("member_info/myInfoV12${Constants.END_BASE_URL}")
+    @POST("member_info/myInfoV13${Constants.END_BASE_URL}")
     fun myInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
 
     /**
@@ -399,7 +406,7 @@ interface Api {
      * 我的动态
      */
     @FormUrlEncoded
-    @POST("square/aboutMeSquareV2${Constants.END_BASE_URL}")
+    @POST("square/aboutMeSquareV13${Constants.END_BASE_URL}")
     fun aboutMeSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
 
 
@@ -815,8 +822,8 @@ interface Api {
      * 获取所有的标题
      */
     @FormUrlEncoded
-    @POST("Tags/getTagTitleList${Constants.END_BASE_URL}")
-    fun getTagTitleList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<LabelQualityBean>?>>
+    @POST("Tags/getTagTitleListV13${Constants.END_BASE_URL}")
+    fun getTagTitleList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChooseTitleBean?>>
 
 
     /**

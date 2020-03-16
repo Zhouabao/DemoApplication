@@ -48,18 +48,3 @@ data class InvestigateBean(
  * 举报对象
  */
 data class ReportBean(var reason: String, var checked: Boolean)
-
-data class TabEntity(val title: String, val iconSelect: Int = 0, val iconUnselect: Int = 0) : CustomTabEntity {
-    override fun getTabUnselectedIcon(): Int {
-        return iconUnselect
-
-    }
-
-    override fun getTabSelectedIcon(): Int {
-        return iconSelect
-    }
-
-    override fun getTabTitle(): String {
-        return title
-    }
-}

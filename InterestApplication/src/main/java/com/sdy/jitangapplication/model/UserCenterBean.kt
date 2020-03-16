@@ -189,12 +189,6 @@ data class MyPhotoBean(
 }
 
 
-data class SchoolBean(
-    var id: Int? = 0,
-    var school_title: String? = ""
-) : Serializable
-
-
 data class ProvinceBean(
     var city: MutableList<City> = mutableListOf(),
     var name: String = ""

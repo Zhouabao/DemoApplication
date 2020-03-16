@@ -14,6 +14,7 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.google.android.flexbox.*
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -118,14 +119,11 @@ class MultiListSquareAdapter(
 
             if (!item.tags.isNullOrEmpty()) {
                 holder.itemView.squareTagName.text = item.tags
-                holder.itemView.squareTagName.isVisible = true
+                holder.itemView.squareTagLl.isVisible = true
             } else {
-                holder.itemView.squareTagName.visibility = View.INVISIBLE
+                holder.itemView.squareTagLl.isVisible = false
             }
 
-
-            holder.itemView.squareTitle.isVisible = !item.title.isNullOrEmpty()
-            holder.itemView.squareTitle.text = item.title ?: ""
 
             //设置点赞状态
             setLikeStatus(item.isliked, item.like_cnt, holder.itemView.squareDianzanBtn1)
@@ -155,6 +153,11 @@ class MultiListSquareAdapter(
             }
 
             holder.itemView.squareLocation.text = "${item.puber_address}"
+            if (item.puber_address.isNullOrEmpty()) {
+                holder.itemView.squareLocationAndTime1Ll.visibility = View.INVISIBLE
+            } else {
+                holder.itemView.squareLocationAndTime1Ll.isVisible = true
+            }
             holder.itemView.squareTime.text = item.out_time
 
             //点击跳转评论详情
@@ -198,9 +201,18 @@ class MultiListSquareAdapter(
 
 
             //标题跳转
-            holder.itemView.squareTitle.onClick {
-                mContext.startActivity<TagDetailCategoryActivity>("id" to item.title_id, "type" to 2)
+            holder.itemView.squareTitleRv.isVisible = !item.title_list.isNullOrEmpty()
+            val manager = FlexboxLayoutManager(mContext, FlexDirection.ROW, FlexWrap.WRAP)
+            manager.alignItems = AlignItems.STRETCH
+            manager.justifyContent = JustifyContent.FLEX_START
+            holder.itemView.squareTitleRv.layoutManager = manager
+            val adapter = SquareTitleAdapter()
+            adapter.addData(item.title_list?: mutableListOf())
+            holder.itemView.squareTitleRv.adapter = adapter
+            adapter.setOnItemClickListener { _, view, position ->
+                mContext.startActivity<TagDetailCategoryActivity>("id" to adapter.data[position].id, "type" to TagDetailCategoryActivity.TYPE_TOPIC)
             }
+
 
             holder.itemView.squareUserIv1.onClick {
                 if (!(UserManager.getAccid() == item.accid || !chat)) {

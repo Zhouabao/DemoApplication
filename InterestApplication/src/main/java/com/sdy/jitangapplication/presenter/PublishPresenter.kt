@@ -35,7 +35,6 @@ class PublishPresenter : BasePresenter<PublishView>() {
     fun publishContent(
         type: Int,
         params: HashMap<String, Any>,
-        checkIds: MutableList<Int>,
         keyList: MutableList<String> = mutableListOf()
     ) {
         if (!checkNetWork()) {
@@ -43,7 +42,9 @@ class PublishPresenter : BasePresenter<PublishView>() {
             return
         }
         //, @Field("tags[]") tagList: Array<Int?>, @Field("comment[]") keyList: Array<String?>?
-        params["tag_id"] = checkIds[0]
+//        if (checkIds.isNotEmpty()) {
+//            params["tag_id"] = checkIds[0]
+//        }
         params["comment"] = Gson().toJson(keyList)
         RetrofitFactory.instance.create(Api::class.java)
             .squareAnnounce(UserManager.getSignParams(params))

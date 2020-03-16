@@ -46,8 +46,6 @@ object UserManager {
     var publishState: Int = 0  //0未发布  1进行中   -1失败--违规400  -2失败--发布失败
     //发布
     var publishParams: HashMap<String, Any> = hashMapOf()
-    //发布的兴趣ids
-    var checkIds: MutableList<Int> = mutableListOf()
     //发布的对象
     var mediaBeans: MutableList<MediaParamBean> = mutableListOf()
     //发布的对象keylist
@@ -199,7 +197,6 @@ object UserManager {
         publishParams.clear()
         mediaBeans.clear()
         keyList = mutableListOf()
-        checkIds = mutableListOf()
         cancelUpload = false
     }
 

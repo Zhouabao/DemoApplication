@@ -12,7 +12,7 @@ import com.sdy.jitangapplication.presenter.view.TagSquareView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
-class TagSquarePresenter:BasePresenter<TagSquareView>() {
+class TagSquarePresenter : BasePresenter<TagSquareView>() {
 
     /**
      * 获取广场列表
@@ -40,4 +40,34 @@ class TagSquarePresenter:BasePresenter<TagSquareView>() {
             })
     }
 
+
+    /**
+     * 标记置顶
+     */
+    fun markTag(tag_id: Int, type: Int) {
+        val params = UserManager.getBaseParams()
+        params["tag_id"] = tag_id
+        params["type"] = type
+        RetrofitFactory.instance.create(Api::class.java)
+            .markTag(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onGetMarkTagResult(true)
+                    else {
+                        mView.onGetMarkTagResult(false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onGetMarkTagResult(false)
+                }
+            })
+
+    }
 }

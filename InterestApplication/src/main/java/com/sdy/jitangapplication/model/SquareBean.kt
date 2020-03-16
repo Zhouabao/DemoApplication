@@ -63,8 +63,8 @@ data class SquareBean(
     var originalLike: Int = 0,
     var originalLikeCount: Int = 0,
     var isgreeted: Boolean = true,//招呼是否仍然有效
-
-    var member_id: Int? = null
+    var member_id: Int? = null,
+    var title_list: MutableList<TopicBean>? = mutableListOf()
 ) :
     Serializable, MultiItemEntity {
 
@@ -172,6 +172,7 @@ data class SquareTagBean(
     var is_hot: Boolean = false,
     var is_join: Boolean = false,
     var cover_list: MutableList<String> = mutableListOf(),
+    var place_type: Int = 0,//位置类型 0 没有操作 1置顶 2置底
     var title: String = ""
 )
 
@@ -179,7 +180,7 @@ data class SquareTagBean(
  * 广场运营位广告
  */
 data class SquareBannerBean(
-    var adv_type: Int = 0,
+    var adv_type: Int = 0,//类型 广告类型默认1   1.只是展示图  2.跳转外连  3.内部跳转   4发布+话题 5发布+兴趣
     var cover_url: String = "",
     var id: Int = 0,
     var link_url: String = "",
@@ -205,7 +206,8 @@ data class RecommendSquareBean(
     var title: String = "",
     var type: Int = 0,
     var height: Int = 0,
-    var width: Int = 0
+    var width: Int = 0,
+    var title_list: MutableList<TopicBean>? = mutableListOf()
 )
 
 data class RecommendSquareListBean(

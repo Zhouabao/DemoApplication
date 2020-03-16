@@ -540,7 +540,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         mPresenter.publishContent(
             UserManager.publishParams["type"] as Int,
             UserManager.publishParams,
-            UserManager.checkIds,
             UserManager.keyList
         )
     }

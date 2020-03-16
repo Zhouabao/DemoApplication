@@ -227,7 +227,7 @@ public class ChatMessageListPanelEx {
         items = new ArrayList<>();
         adapter = new MsgAdapter(messageListView, items, container);
         adapter.setFetchMoreView(new MsgListFetchLoadMoreView());
-//        adapter.setLoadMoreView(new MsgListFetchLoadMoreView());
+        adapter.setLoadMoreView(new MsgListFetchLoadMoreView());
         adapter.setEventListener(new MsgItemEventListener());
         initFetchLoadListener(anchor);
         messageListView.setAdapter(adapter);
@@ -742,10 +742,10 @@ public class ChatMessageListPanelEx {
             }
 
             // 如果是第一次加载，updateShowTimeItem返回的就是lastShowTimeItem
-//            if (firstLoad) {
-            doScrollToBottom();
-            sendReceipt(); // 发送已读回执
-//            }
+            if (firstLoad) {
+                doScrollToBottom();
+                sendReceipt(); // 发送已读回执
+            }
 
             // 通过历史记录加载的群聊消息，需要刷新一下已读未读最新数据
             if (container.sessionType == SessionTypeEnum.Team) {
@@ -966,7 +966,6 @@ public class ChatMessageListPanelEx {
                 showResendAlert(message);
             }
         }
-
 
 
         private void showResendAlert(IMMessage item) {
@@ -1411,7 +1410,7 @@ public class ChatMessageListPanelEx {
         targetSquareAdapter = new ChatTaregetSquareAdapter();
         targetSquare.setAdapter(targetSquareAdapter);
         targetSquareAdapter.setOnItemClickListener((adapter, view, position) ->
-                SquareCommentDetailActivity.Companion.start(container.activity, null, targetSquareAdapter.getData().get(position).getId(),  -1));
+                SquareCommentDetailActivity.Companion.start(container.activity, null, targetSquareAdapter.getData().get(position).getId(), -1));
         return headView;
     }
 

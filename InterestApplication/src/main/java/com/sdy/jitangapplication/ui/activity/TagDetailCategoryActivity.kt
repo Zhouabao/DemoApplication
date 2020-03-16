@@ -27,6 +27,7 @@ import com.sdy.jitangapplication.presenter.view.TagDetailCategoryView
 import com.sdy.jitangapplication.ui.adapter.RecommendSquareAdapter
 import kotlinx.android.synthetic.main.activity_tag_detail.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.jetbrains.anko.startActivity
 
 /**
  * 标签或者话题分类详情
@@ -46,6 +47,11 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
     private val adapter by lazy { RecommendSquareAdapter() }
     private val id by lazy { intent.getIntExtra("id", 0) }
     private val type by lazy { intent.getIntExtra("type", 0) }
+
+    companion object {
+        val TYPE_TAG = 1
+        val TYPE_TOPIC = 2
+    }
 
     //请求广场的参数 TODO要更新tagid
     private val params by lazy {
@@ -68,6 +74,13 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
         mPresenter = TagDetailCategoryPresenter()
         mPresenter.context = this
         mPresenter.mView = this
+
+        smallBg.isVisible = type == TYPE_TAG
+        samePersonTitle.textSize = if (type == TYPE_TAG) {
+            24F
+        } else {
+            18F
+        }
 
         refreshSamePerson.setOnRefreshListener(this)
         refreshSamePerson.setOnLoadMoreListener(this)
@@ -133,6 +146,7 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
 
     private fun initData(bannerBean: SquareBannerBean) {
         GlideUtil.loadImgCenterCrop(this, bannerBean.icon, samePersonBg)
+        GlideUtil.loadRoundImgCenterCrop(this, bannerBean.icon, smallBg, SizeUtils.dp2px(5F))
         samePersonTitle.text = bannerBean.title
         hotT1.text = bannerBean.title
 
@@ -151,8 +165,13 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
 
 
     override fun onCheckBlockResult(b: Boolean) {
-//        if (b)
-//            startActivity<PublishActivity>("titleBean" to topicBean)
+        if (b) {
+            if (type == TYPE_TAG)
+                startActivity<PublishActivity>("tag_id" to id)
+            else
+                startActivity<PublishActivity>("title" to samePersonTitle.text.toString())
+            finish()
+        }
     }
 
 

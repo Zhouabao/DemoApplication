@@ -66,17 +66,14 @@ class ContentPresenter : BasePresenter<ContentView>() {
     }
 
 
-
     /**
      * 广场发布
      */
     fun publishContent(
         type: Int,
         params: HashMap<String, Any>,
-        checkIds: MutableList<Int>,
         keyList: MutableList<String> = mutableListOf()
     ) {
-        params["tag_id"] = checkIds[0]
         params["comment"] = Gson().toJson(keyList)
         RetrofitFactory.instance.create(Api::class.java)
             .squareAnnounce(UserManager.getSignParams(params))

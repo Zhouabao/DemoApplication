@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
@@ -25,6 +26,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.AnnounceEvent
 import com.sdy.jitangapplication.event.RePublishEvent
+import com.sdy.jitangapplication.event.RefreshSquareByGenderEvent
 import com.sdy.jitangapplication.event.UploadEvent
 import com.sdy.jitangapplication.model.SquareTitleBean
 import com.sdy.jitangapplication.presenter.ContentPresenter
@@ -35,7 +37,6 @@ import com.sdy.jitangapplication.ui.adapter.SquareSwitchAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import kotlinx.android.synthetic.main.fragment_content.*
-import kotlinx.android.synthetic.main.fragment_square.*
 import kotlinx.android.synthetic.main.popupwindow_square_filter_gender.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -65,7 +66,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
                 contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
                 filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
                 sp.put("filter_square_gender", 3)
-                refreshLayout.autoRefresh()
+                EventBus.getDefault().post(RefreshSquareByGenderEvent())
                 dismiss()
             }
             contentView.genderMan.onClick {
@@ -74,7 +75,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
                 contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
                 filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
                 sp.put("filter_square_gender", 1)
-                refreshLayout.autoRefresh()
+                EventBus.getDefault().post(RefreshSquareByGenderEvent())
                 dismiss()
 
             }
@@ -84,7 +85,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
                 contentView.genderMan.setTextColor(Color.parseColor("#191919"))
                 filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
                 sp.put("filter_square_gender", 2)
-                refreshLayout.autoRefresh()
+                EventBus.getDefault().post(RefreshSquareByGenderEvent())
                 dismiss()
             }
         }
@@ -111,6 +112,44 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
         initFragments()
         initViewpager()
+
+
+        /**
+         *性别筛选
+         */
+        if (sp.getInt("filter_square_gender", 3) == 3) {
+            filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
+        } else if (sp.getInt("filter_square_gender", 3) == 1) {
+            filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
+        } else if (sp.getInt("filter_square_gender", 3) == 2) {
+            filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
+        }
+        filterGenderBtn.onClick {
+            if (filterPopupWindow.isShowing) {
+                filterPopupWindow.dismiss()
+            } else {
+                filterPopupWindow.showAsDropDown(filterGenderBtn, 0, SizeUtils.dp2px(-15F))
+                if (sp.getInt("filter_square_gender", 3) == 3) {
+                    filterPopupWindow.contentView.genderAll.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                    filterPopupWindow.contentView.genderMan.setTextColor(Color.parseColor("#191919"))
+                    filterPopupWindow.contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
+                    filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
+
+                } else if (sp.getInt("filter_square_gender", 3) == 1) {
+                    filterPopupWindow.contentView.genderMan.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                    filterPopupWindow.contentView.genderAll.setTextColor(Color.parseColor("#191919"))
+                    filterPopupWindow.contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
+                    filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
+
+                } else if (sp.getInt("filter_square_gender", 3) == 2) {
+                    filterPopupWindow.contentView.genderWoman.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                    filterPopupWindow.contentView.genderAll.setTextColor(Color.parseColor("#191919"))
+                    filterPopupWindow.contentView.genderMan.setTextColor(Color.parseColor("#191919"))
+                    filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
+                }
+
+            }
+        }
     }
 
 
@@ -373,10 +412,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
         onAnnounceEvent(AnnounceEvent(success, code))
         if (from == 2) {
             EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
-        } else {
-            refreshLayout.autoRefresh()
         }
-
         from = 1
     }
 
@@ -386,7 +422,6 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
         if (result) {
             onRePublishEvent(RePublishEvent(true, FriendSquareFragment::class.java.simpleName))
         }
-//        squareEdit.isEnabled = true
     }
 
 
@@ -411,7 +446,6 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
         mPresenter.publishContent(
             UserManager.publishParams["type"] as Int,
             UserManager.publishParams,
-            UserManager.checkIds,
             UserManager.keyList
         )
     }

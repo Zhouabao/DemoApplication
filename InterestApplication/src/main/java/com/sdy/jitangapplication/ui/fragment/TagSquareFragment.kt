@@ -1,12 +1,14 @@
 package com.sdy.jitangapplication.ui.fragment
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
@@ -21,16 +23,53 @@ import com.sdy.jitangapplication.ui.activity.TagDetailCategoryActivity
 import com.sdy.jitangapplication.ui.adapter.TagSquareAdapter
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_tag_square.*
-import org.greenrobot.eventbus.EventBus
+import kotlinx.android.synthetic.main.popupwindow_square_filter_tag_top.view.*
 import org.jetbrains.anko.support.v4.startActivity
 
 /**
  * 兴趣广场
  */
 class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSquareView, OnRefreshListener {
+
+
     override fun loadData() {
         initView()
+    }
 
+    private val filterPopupWindow by lazy {
+        PopupWindow(activity!!).apply {
+            contentView =
+                LayoutInflater.from(activity!!).inflate(R.layout.popupwindow_square_filter_tag_top, null, false)
+            width = ViewGroup.LayoutParams.WRAP_CONTENT
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            setBackgroundDrawable(null)
+            isFocusable = true
+            isOutsideTouchable = true
+            contentView.tagTop.onClick {
+                //位置类型 0 没有操作 1置顶 2置底
+                mPresenter.markTag(
+                    adapter.data[topPosition].id,
+                    if (adapter.data[topPosition].place_type == 1) {
+                        0
+                    } else {
+                        1
+                    }
+                )
+                dismiss()
+
+            }
+            contentView.tagBottom.onClick {
+                mPresenter.markTag(
+                    adapter.data[topPosition].id, if (adapter.data[topPosition].place_type == 2) {
+                        0
+                    } else {
+                        2
+                    }
+                )
+                dismiss()
+
+            }
+        }
     }
 
     //广场列表内容适配器
@@ -65,13 +104,28 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
         adapter.bindToRecyclerView(rvTagSquare)
 
         adapter.setOnItemClickListener { _, view, position ->
-            startActivity<TagDetailCategoryActivity>("id" to adapter.data[position].id, "type" to 1)
+            if (!ActivityUtils.isActivityExistsInStack(TagDetailCategoryActivity::class.java))
+                startActivity<TagDetailCategoryActivity>(
+                    "id" to adapter.data[position].id,
+                    "type" to TagDetailCategoryActivity.TYPE_TAG
+                )
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
                 R.id.btnTagMore -> {
-
+                    topPosition = position
+                    filterPopupWindow.showAsDropDown(view, 0, SizeUtils.dp2px(-15F))
+                    filterPopupWindow.contentView.tagTop.text = if (adapter.data[position].place_type == 1) {
+                        "取消置顶"
+                    } else {
+                        "置于顶部"
+                    }
+                    filterPopupWindow.contentView.tagBottom.text = if (adapter.data[position].place_type == 2) {
+                        "取消置底"
+                    } else {
+                        "置于底部"
+                    }
                 }
             }
         }
@@ -79,6 +133,8 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
         mPresenter.getSquareList()
 
     }
+
+    private var topPosition = -1
 
 
     override fun onRefresh(refreshTagSquare: RefreshLayout) {
@@ -93,6 +149,7 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
             if (refreshTagSquare.state == RefreshState.Refreshing) {
                 adapter.data.clear()
                 adapter.notifyDataSetChanged()
+                rvTagSquare.scrollToPosition(0)
             }
             stateTagSquare.viewState = MultiStateView.VIEW_STATE_CONTENT
             adapter.addData(data ?: mutableListOf())
@@ -110,13 +167,13 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
     }
 
 
+    override fun onGetMarkTagResult(result: Boolean) {
+        refreshTagSquare.autoRefresh()
+    }
+
     override fun showLoading() {
         stateTagSquare.viewState = MultiStateView.VIEW_STATE_LOADING
     }
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
 }

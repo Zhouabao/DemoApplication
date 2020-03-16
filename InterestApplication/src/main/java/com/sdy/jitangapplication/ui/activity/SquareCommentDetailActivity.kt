@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
+import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -43,6 +44,7 @@ import com.sdy.jitangapplication.presenter.view.SquareDetailView
 import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.adapter.ListSquareImgsAdapter
 import com.sdy.jitangapplication.ui.adapter.MultiListCommentAdapter
+import com.sdy.jitangapplication.ui.adapter.SquareTitleAdapter
 import com.sdy.jitangapplication.ui.dialog.CommentActionDialog
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
@@ -61,6 +63,7 @@ import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_comment_head.view.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
 import kotlinx.android.synthetic.main.layout_square_list_bottom.*
 import kotlinx.android.synthetic.main.switch_video.view.*
@@ -161,13 +164,24 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv1)
         if (!squareBean!!.tags.isNullOrEmpty()) {
             squareTagName.text = squareBean!!.tags ?: ""
-            squareTagName.isVisible = true
+            squareTagLl.isVisible = true
         } else {
-            squareTagName.isVisible = false
+            squareTagLl.isVisible = false
         }
 
-        squareTitle.isVisible = !squareBean!!.title.isNullOrEmpty()
-        squareTitle.text = squareBean!!.title ?: ""
+
+        //标题跳转
+        val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
+        manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.FLEX_START
+        squareTitleRv.layoutManager = manager
+        val adapter = SquareTitleAdapter()
+        adapter.addData(squareBean!!.title_list ?: mutableListOf())
+        squareTitleRv.adapter = adapter
+        adapter.setOnItemClickListener { _, view, position ->
+            startActivity<TagDetailCategoryActivity>("id" to adapter.data[position].id, "type" to TagDetailCategoryActivity.TYPE_TOPIC)
+        }
+        squareTitleRv.isVisible = !squareBean!!.title_list.isNullOrEmpty()
         squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
             resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
             null,
@@ -214,9 +228,13 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 MatchDetailActivity.start(this, squareBean?.accid ?: "")
         }
 
-        squareLocation.text = "${squareBean!!.puber_address}"
         squareTime.text = "${squareBean!!.out_time}"
-
+        squareLocation.text = "${squareBean!!.puber_address}"
+        if (squareBean!!.puber_address.isNullOrEmpty()) {
+            squareLocationAndTime1Ll.visibility = View.INVISIBLE
+        } else {
+            squareLocationAndTime1Ll.isVisible = true
+        }
     }
 
     private fun initView() {
@@ -251,6 +269,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         commentList.adapter = adapter
 //        commentList.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.HORIZONTAL_LIST,SizeUtils.dp2px(15F),Color.WHITE))
         adapter.setEmptyView(R.layout.empty_layout_comment, commentList)
+
+        adapter.emptyView.allT2.isVisible = false
 
         btnBack.onClick {
             onBackPressed()

@@ -10,7 +10,7 @@
         android:fitsSystemWindows="true"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading"
+        app:msv_viewState="content"
         tools:context=".ui.activity.ChooseTitleActivity">
 
 
@@ -52,8 +52,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:hint="请输入标题文本"
-                            android:textColor="@color/colorBlack"
+                            android:hint="请输入话题文本"
+                            android:textColor="#FF6796FA"
                             android:textSize="16sp"
                             />
 
@@ -64,6 +64,7 @@
                             android:paddingLeft="15dp"
                             android:gravity="center_vertical"
                             android:text="热门标题"
+                            android:layout_marginBottom="10dp"
                             android:textColor="#ff959a9e"
                             android:textSize="14sp"
                             android:background="@color/colorDivider"
@@ -77,7 +78,7 @@
                             android:overScrollMode="never"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
-                            android:layout_marginRight="15dp"
+                            android:layout_marginRight="5dp"
                             />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

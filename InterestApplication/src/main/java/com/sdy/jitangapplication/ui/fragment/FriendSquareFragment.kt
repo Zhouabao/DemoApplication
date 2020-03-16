@@ -22,6 +22,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.NotifyEvent
 import com.sdy.jitangapplication.event.RefreshCommentEvent
+import com.sdy.jitangapplication.event.RefreshSquareByGenderEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.SquareListBean
@@ -51,7 +52,8 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 好友广场列表
  */
-class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener, OnLoadMoreListener,
+class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener,
+    OnLoadMoreListener,
     MultiListSquareAdapter.ResetAudioListener {
     override fun loadData() {
         initView()
@@ -393,6 +395,13 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
         refreshLayout.autoRefresh()
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshSquareByGenderEvent(event: RefreshSquareByGenderEvent) {
+        refreshLayout.autoRefresh()
+    }
+
+
     /**
      * 无缝切换小屏和全屏
      */
@@ -447,7 +456,6 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
             adapter.refreshNotifyItemChanged(event.position)
         }
     }
-
 
 
 }

@@ -5,5 +5,5 @@
             android:drawable="@drawable/shape_rectangle_solid_white_publish_way"/>
     <item
             android:state_checked="true"
-            android:drawable="@drawable/shape_rectangle_solid_orange_publish_way"/>
+            android:drawable="@drawable/shape_rectangle_black_2dp"/>
 </selector>

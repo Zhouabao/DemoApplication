@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -10,7 +11,6 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.SquareLabelBean
 import com.sdy.jitangapplication.model.SquareLabelsBean
 import com.sdy.jitangapplication.presenter.ChooseLabelPresenter
@@ -41,11 +41,12 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
         mPresenter.context = this
 
         btnBack.setOnClickListener(this)
-        rightBtn1.setOnClickListener(this)
+        rightBtn.setOnClickListener(this)
         hotT1.text = "发布到哪个兴趣"
-        rightBtn1.isVisible = true
-        rightBtn1.text = "发布"
-        rightBtn1.isEnabled = false
+        rightBtn.isVisible = true
+        rightBtn.text = "跳过"
+        rightBtn.textSize = 17F
+        rightBtn.setTextColor(Color.parseColor("#FFE1E1E3"))
 
         stateChooseLabel.retryBtn.onClick {
             stateChooseLabel.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -55,11 +56,23 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
         rvMyLabels.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvMyLabels.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
-            for (label in adapter.data) {
-                label.checked = label == adapter.data[position]
+            val dataChecked = adapter.data[position].checked
+            if (!dataChecked) {
+                rightBtn.setTextColor(Color.parseColor("#FFFF6318"))
+                rightBtn.text = "发布"
+                mylabelBean = adapter.data[position]
+            } else {
+                rightBtn.setTextColor(Color.parseColor("#FFE1E1E3"))
+                rightBtn.text = "跳过"
+                mylabelBean = null
             }
-            mylabelBean = adapter.data[position]
-            rightBtn1.isEnabled = true
+//            rightBtn
+            for (label in adapter.data) {
+                if (label.id == adapter.data[position].id)
+                    label.checked = !dataChecked
+                else
+                    label.checked = false
+            }
             adapter.notifyDataSetChanged()
         }
     }
@@ -97,12 +110,9 @@ class ChooseLabelActivity : BaseMvpActivity<ChooseLabelPresenter>(), ChooseLabel
                 finish()
             }
 
-            rightBtn1 -> {
-                if (mylabelBean == null) {
-                    CommonFunction.toast("兴趣为必选项")
-                    return
-                }
-                intent.putExtra("label", mylabelBean)
+            rightBtn -> {
+                if (mylabelBean != null)
+                    intent.putExtra("label", mylabelBean)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             }

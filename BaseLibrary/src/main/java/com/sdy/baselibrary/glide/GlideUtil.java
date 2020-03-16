@@ -210,7 +210,7 @@ public class GlideUtil {
     public static void loadImgCenterCrop(Context context, String url, ImageView tartgetImg) {
         Glide.with(context)
                 .load(url)
-                .priority(Priority.NORMAL)
+                .priority(Priority.LOW)
                 .thumbnail(0.1F)
                 .transform(new CenterInside())
                 .into(tartgetImg);

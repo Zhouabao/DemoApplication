@@ -8,7 +8,7 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.LabelQualityBean
+import com.sdy.jitangapplication.model.ChooseTitleBean
 import com.sdy.jitangapplication.presenter.view.ChooseTitleView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -20,17 +20,17 @@ class ChooseTitlePresenter : BasePresenter<ChooseTitleView>() {
     fun getTagTitleList(page: Int) {
         RetrofitFactory.instance.create(Api::class.java)
             .getTagTitleList(UserManager.getSignParams(hashMapOf("page" to page)))
-            .excute(object : BaseSubscriber<BaseResp<MutableList<LabelQualityBean>?>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<ChooseTitleBean?>>(mView) {
                 override fun onStart() {
                 }
 
-                override fun onNext(t: BaseResp<MutableList<LabelQualityBean>?>) {
+                override fun onNext(t: BaseResp<ChooseTitleBean?>) {
                     if (t.code == 200) {
-                        mView.getTagTraitInfoResult(true, t.data ?: mutableListOf())
+                        mView.getTagTraitInfoResult(true, t.data?.list ?: mutableListOf(), t.data?.limit_cnt ?: 0)
                     } else if (t.code == 403) {
                         TickDialog(context).show()
                     } else {
-                        mView.getTagTraitInfoResult(false, null)
+                        mView.getTagTraitInfoResult(false, null,0)
                         CommonFunction.toast(t.msg)
                     }
                 }
@@ -39,7 +39,7 @@ class ChooseTitlePresenter : BasePresenter<ChooseTitleView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {
-                        mView.getTagTraitInfoResult(false, null)
+                        mView.getTagTraitInfoResult(false, null,0)
                         CommonFunction.toast(CommonFunction.getErrorMsg(context))
                     }
                 }

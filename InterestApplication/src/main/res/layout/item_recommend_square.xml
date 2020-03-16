@@ -87,7 +87,6 @@
                 android:textStyle="bold"
                 android:textColor="#ff191919"
                 android:textSize="14sp"
-                android:lineSpacingMultiplier="1.2"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:text="有功无过是短暂的，无功有过是行不通的，有功…"

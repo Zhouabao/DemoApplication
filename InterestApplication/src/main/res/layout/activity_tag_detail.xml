@@ -19,6 +19,7 @@
         <ImageView
                 android:id="@+id/samePersonBg"
                 android:scaleType="centerCrop"
+                android:background="@color/colorDivider"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"/>
 
@@ -74,6 +75,8 @@
                         <TextView
                                 android:id="@+id/samePersonTitle"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:layout_gravity="center_vertical"
                                 android:layout_width="wrap_content"
                                 android:layout_height="33dp"
                                 android:text="#我看过最棒的演出"
@@ -84,15 +87,18 @@
 
                         <TextView
                                 android:id="@+id/publish"
-                                android:textColor="@color/colorWhite"
-                                android:text="发布"
-                                android:textSize="15sp"
                                 android:layout_gravity="right"
                                 android:gravity="center"
-                                android:textStyle="bold"
-                                android:background="@drawable/shape_rectangle_orange_25dp"
-                                android:layout_width="62dp"
-                                android:layout_height="30dp"/>
+                                android:text="发布动态"
+                                android:textColor="#ffffffff"
+                                android:paddingLeft="12dp"
+                                android:textSize="14sp"
+                                android:paddingRight="12dp"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
+                                android:background="@drawable/gradient_rectangle_orange_17dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -114,19 +120,29 @@
                     <ImageView
                             android:id="@+id/btnBack1"
                             android:paddingLeft="15dp"
+                            android:paddingRight="10dp"
                             android:layout_alignBottom="@id/hotT1"
                             android:layout_alignTop="@id/hotT1"
                             android:src="@drawable/icon_return"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
+                    <ImageView
+                            android:id="@+id/smallBg"
+                            android:layout_alignBottom="@id/hotT1"
+                            android:layout_alignTop="@id/hotT1"
+                            android:src="@drawable/default_image_5dp"
+                            android:layout_width="24dp"
+                            android:layout_toRightOf="@id/btnBack1"
+                            android:layout_height="24dp"/>
 
                     <TextView
                             android:id="@+id/hotT1"
                             android:layout_below="@id/statusView"
-                            android:layout_centerHorizontal="true"
+                            android:layout_toRightOf="@id/smallBg"
                             android:textColor="@color/colorBlackTitle"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textStyle="bold"
+                            android:layout_marginLeft="5dp"
                             android:gravity="center"
                             android:layout_width="wrap_content"
                             android:layout_height="55dp"
@@ -136,18 +152,24 @@
 
                     <TextView
                             android:id="@+id/rightBtn1"
-                            android:text="发布"
                             android:layout_below="@id/statusView"
-                            android:background="@drawable/shape_rectangle_orange_25dp"
                             android:layout_marginRight="15dp"
-                            android:gravity="center"
                             android:layout_marginTop="13dp"
                             android:layout_alignParentRight="true"
-                            android:layout_width="62dp"
-                            android:textSize="15sp"
                             android:enabled="false"
-                            android:textColor="@color/colorWhite"
-                            android:layout_height="30dp"/>
+                            android:layout_gravity="right"
+                            android:gravity="center"
+                            android:text="发布动态"
+                            android:textColor="#ffffffff"
+                            android:paddingLeft="12dp"
+                            android:textSize="14sp"
+                            android:paddingRight="12dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:background="@drawable/gradient_rectangle_orange_17dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
                 </RelativeLayout>
 
 

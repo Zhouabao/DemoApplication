@@ -11,53 +11,13 @@
 
     <include layout="@layout/layout_actionbar"/>
 
-    <RelativeLayout
-            android:id="@+id/chooseTitleRl"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llTitle">
-
-        <TextView
-                android:text="选择标题"
-                android:textColor="#ff191919"
-                android:textSize="16sp"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-
-        <TextView
-                android:id="@+id/chooseTitleBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:hint=""
-                android:gravity="center"
-                android:minWidth="100dp"
-                android:drawablePadding="10dp"
-                android:layout_marginLeft="75dp"
-                android:drawableRight="@drawable/icon_more_right"
-                android:layout_alignParentRight="true"
-                android:textColor="#ff9b9b9b"
-                android:textSize="16sp"
-                />
-
-        <View
-                android:layout_alignParentBottom="true"
-                android:background="@color/colorDivider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-    </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@color/colorWhite"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chooseTitleRl">
+            app:layout_constraintTop_toBottomOf="@id/llTitle">
 
         <EditText
                 android:id="@+id/publishContent"
@@ -65,10 +25,10 @@
                 android:layout_width="0dp"
                 android:layout_marginRight="15dp"
                 android:layout_height="0dp"
-                android:hint="说点儿自己想说的给想听的人吧"
+                android:hint="分享一下此刻的心情吧..."
                 android:gravity="left"
                 android:textColor="@color/colorBlackTitle"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:background="@null"
                 android:minHeight="50dp"
                 android:layout_marginTop="15dp"
@@ -108,38 +68,105 @@
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
 
-        <LinearLayout
+        <RelativeLayout
                 android:id="@+id/locationCityLl"
                 android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginRight="63dp"
+                android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toTopOf="@id/divide"
+                app:layout_constraintBottom_toTopOf="@id/chooseTitleRl"
                 app:layout_constraintLeft_toLeftOf="@id/publishContent"
                 app:layout_constraintRight_toRightOf="parent">
 
             <TextView
                     android:id="@+id/locationCity"
-                    android:layout_height="30dp"
-                    android:background="@drawable/shape_rectangle_light_gray_15dp"
-                    android:layout_width="wrap_content"
-                    android:paddingRight="5dp"
-                    android:drawableLeft="@drawable/icon_map_black"
-                    android:textColor="#ff191919"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:drawableLeft="@drawable/icon_map_green"
+                    android:textColor="#FF27D593"
                     android:textSize="14sp"
-                    android:textColorHint="#ff191919"
-                    android:paddingTop="6dp"
+                    android:drawableRight="@drawable/icon_more_right"
+                    android:textColorHint="#FF27D593"
+                    android:drawablePadding="8dp"
                     android:ellipsize="marquee"
+                    android:paddingRight="15dp"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:gravity="center"
-                    android:paddingBottom="6dp"
+                    android:gravity="center_vertical"
                     android:hint="选择发布位置"
                     />
-        </LinearLayout>
+            <View
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorDivider"
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="1dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/chooseTitleRl"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toTopOf="@id/tabPublishWay"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+            <ImageView
+                    android:id="@+id/titleState"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/icon_topic"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/chooseTitle"
+                    android:text="选择热门话题"
+                    android:textColor="#ff191919"
+                    android:textSize="14sp"
+                    android:visibility="visible"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="41dp"
+                    android:layout_toRightOf="@id/titleState"
+                    android:layout_centerVertical="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/chooseTitleRv"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="41dp"
+                    android:visibility="gone"
+                    android:layout_toRightOf="@id/titleState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                    android:id="@+id/chooseTitleBtn"
+                    android:layout_width="41dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:minWidth="41dp"
+                    android:paddingRight="15dp"
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@drawable/icon_more_right"
+                    android:layout_alignParentRight="true"
+                    android:textColor="#ff9b9b9b"
+                    android:textSize="16sp"
+                    />
+
+            <View
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+        </RelativeLayout>
 
 
         <TextView
@@ -149,76 +176,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="10sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/locationCityLl"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/locationCityLl"
                 />
 
 
-        <View
-                android:id="@+id/divide"
-                android:layout_marginBottom="10dp"
-                android:background="@color/colorDivider"
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tabPublishWay"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                app:layout_constraintBottom_toTopOf="@id/tabPublishWay"
+                android:layout_height="43dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toTopOf="@id/allWayLl"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
-        <!--<net.lucode.hackware.magicindicator.MagicIndicator-->
-        <!--android:id="@+id/tabPublishWay"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="23dp"-->
-        <!--android:orientation="horizontal"-->
-        <!--app:layout_constraintLeft_toLeftOf="@id/locationCityLl"-->
-        <!--app:layout_constraintTop_toBottomOf="@id/divide"-->
-        <!--/>-->
-
-        <RadioGroup
-                android:id="@+id/tabPublishWay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toTopOf="@id/allWayLl"
-                app:layout_constraintLeft_toLeftOf="@id/publishContent"
-                >
-
-            <RadioButton
-                    android:id="@+id/publishPhotos"
-                    android:button="@null"
-                    android:text="图片"
-                    android:textColor="@color/publish_way_color_selector"
-                    android:textSize="14sp"
-                    android:checked="true"
-                    android:drawableBottom="@drawable/selector_publish_way"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            <RadioButton
-                    android:id="@+id/publishVideo"
-                    android:button="@null"
-                    android:text="视频"
-                    android:textColor="@color/publish_way_color_selector"
-                    android:textSize="14sp"
-                    android:drawableBottom="@drawable/selector_publish_way"
-                    android:layout_marginLeft="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            <RadioButton
-                    android:id="@+id/publishAudio"
-                    android:button="@null"
-                    android:text="语音"
-                    android:textColor="@color/publish_way_color_selector"
-                    android:textSize="14sp"
-                    android:drawableBottom="@drawable/selector_publish_way"
-                    android:layout_marginLeft="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </RadioGroup>
-
         <ImageView
+                android:visibility="gone"
                 android:id="@+id/btn_emo"
                 android:src="@drawable/icon_emo"
                 android:layout_width="24dp"

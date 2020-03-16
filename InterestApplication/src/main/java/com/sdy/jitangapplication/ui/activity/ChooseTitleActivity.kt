@@ -1,15 +1,15 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SizeUtils
+import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
@@ -22,8 +22,8 @@ import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.presenter.ChooseTitlePresenter
 import com.sdy.jitangapplication.presenter.view.ChooseTitleView
 import com.sdy.jitangapplication.ui.adapter.ChooseTitleAdapter
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import kotlinx.android.synthetic.main.activity_choose_title.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
 
 /**
@@ -34,6 +34,7 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
 
 
     private val adapter by lazy { ChooseTitleAdapter() }
+    private var limitCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +44,6 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
     }
 
 
-    private var checkPos = -1
     private fun initView() {
         mPresenter = ChooseTitlePresenter()
         mPresenter.mView = this
@@ -53,43 +53,58 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
         refreshTitle.setOnRefreshListener(this)
 
         btnBack.setOnClickListener(this)
-        hotT1.text = "选择标题"
-        rightBtn1.setOnClickListener(this)
-        rightBtn1.text = "保存"
-        rightBtn1.isVisible = true
+        hotT1.text = "选择热门话题"
+        rightBtn.setOnClickListener(this)
+        rightBtn.text = "完成"
+        rightBtn.setTextColor(Color.parseColor("#FFFF6318"))
+        rightBtn.isVisible = true
 
 //        stateTitle
-        titleRv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        titleRv.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.HORIZONTAL_LIST,
-                SizeUtils.dp2px(1f),
-                resources.getColor(R.color.colorDivider)
-            )
-        )
+        stateTitle.retryBtn.onClick {
+            stateTitle.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.getTagTitleList(page)
+        }
+        val manager = FlexboxLayoutManager(this, FlexDirection.ROW, FlexWrap.WRAP)
+        manager.alignItems = AlignItems.STRETCH
+        manager.justifyContent = JustifyContent.FLEX_START
+        titleRv.layoutManager = manager
         titleRv.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
-            checkPos = position
-            titleEt.text.clear()
-            for (data in adapter.data) {
-                data.isfuse = data == adapter.data[position]
+            if (!adapter.data[position].isfuse) {
+                var chooseCount = 0
+                for (data in adapter.data) {
+                    if (data.isfuse) {
+                        chooseCount++
+                    }
+                }
+                if (titleEt.text.trim().toString().isNotEmpty()) {
+                    chooseCount++
+                }
+                if (chooseCount >= limitCount) {
+                    CommonFunction.toast("至多可以选择${limitCount}个话题")
+                    return@setOnItemClickListener
+                }
             }
-            adapter.notifyDataSetChanged()
-            checkConfirmEnable()
+
+            adapter.data[position].isfuse = !adapter.data[position].isfuse
+            adapter.notifyItemChanged(position)
         }
+
+
 
         titleEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-
-
-                if (s != null && s.trim().toString().isNotEmpty() && checkPos != -1) {
-                    adapter.data[checkPos].isfuse = false
-                    adapter.notifyItemChanged(checkPos)
-                    checkPos = -1
+                var chooseCount = 0
+                for (data in adapter.data) {
+                    if (data.isfuse) {
+                        chooseCount++
+                    }
                 }
-                checkConfirmEnable()
-                titleEt.setSelection(titleEt.text.length)
+                if (chooseCount >= limitCount) {
+                    CommonFunction.toast("至多可以选择${limitCount}个话题")
+                    titleEt.text.clear()
+                } else
+                    titleEt.setSelection(titleEt.text.length)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -105,11 +120,7 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
             }
 
         })
-    }
 
-
-    fun checkConfirmEnable() {
-        rightBtn1.isEnabled = titleEt.text.trim().toString().isNotEmpty() || checkPos != -1
     }
 
 
@@ -118,12 +129,17 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
             btnBack -> {
                 finish()
             }
-            rightBtn1 -> {
+            rightBtn -> {
+                val topics = ArrayList<String>()
                 if (titleEt.text.trim().isNotEmpty()) {
-                    intent.putExtra("title", titleEt.text.trim().toString())
-                } else if (checkPos != -1) {
-                    intent.putExtra("title", adapter.data[checkPos].content)
+                    topics.add(titleEt.text.trim().toString())
                 }
+                for (data in adapter.data) {
+                    if (data.isfuse) {
+                        topics.add(data.content)
+                    }
+                }
+                intent.putExtra("title", topics)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             }
@@ -144,7 +160,8 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
     }
 
 
-    override fun getTagTraitInfoResult(b: Boolean, data: MutableList<LabelQualityBean>?) {
+    override fun getTagTraitInfoResult(b: Boolean, data: MutableList<LabelQualityBean>?, maxCount: Int) {
+        limitCount = maxCount
         if (refreshTitle.state == RefreshState.Refreshing) {
             adapter.data.clear()
             refreshTitle.finishRefresh(b)
@@ -162,6 +179,14 @@ class ChooseTitleActivity : BaseMvpActivity<ChooseTitlePresenter>(), ChooseTitle
         }
 
         if (b && !data.isNullOrEmpty()) {
+            val topics = intent.getStringArrayListExtra("title")
+//            for (topic in topics) {
+//                for (topic1 in data) {
+//                    if (topic1.content == topic) {
+//                        topic1.isfuse = true
+//                    }
+//                }
+//            }
             adapter.addData(data)
         }
     }

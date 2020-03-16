@@ -20,7 +20,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.MediaController
-import android.widget.RadioGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -50,10 +49,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.AnnounceEvent
 import com.sdy.jitangapplication.event.UploadEvent
-import com.sdy.jitangapplication.model.MediaBean
-import com.sdy.jitangapplication.model.MediaParamBean
-import com.sdy.jitangapplication.model.SquareLabelBean
-import com.sdy.jitangapplication.model.TopicBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.player.MediaPlayerHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper
 import com.sdy.jitangapplication.player.MediaRecorderHelper.*
@@ -61,7 +57,9 @@ import com.sdy.jitangapplication.player.UpdateVoiceTimeThread
 import com.sdy.jitangapplication.presenter.PublishPresenter
 import com.sdy.jitangapplication.presenter.view.PublishView
 import com.sdy.jitangapplication.ui.adapter.ChoosePhotosAdapter
+import com.sdy.jitangapplication.ui.adapter.ChooseTitleAdapter
 import com.sdy.jitangapplication.ui.adapter.EmojAdapter
+import com.sdy.jitangapplication.ui.adapter.PublishWayAdapter
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.utils.AMapManager
 import com.sdy.jitangapplication.utils.UriUtils
@@ -85,7 +83,7 @@ import java.util.*
  * 发布内容页面
  *
  */
-class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioGroup.OnCheckedChangeListener,
+class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
     View.OnClickListener, TextWatcher, LoaderManager.LoaderCallbacks<Cursor> {
 
     companion object {
@@ -223,26 +221,24 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         }
     }
 
-    private var titleBean: TopicBean? = null
     private fun initData() {
         //从其他地方进入发布,自主选择的兴趣
-//        if (intent.getSerializableExtra("label") != null) {
-//            checkTags.clear()
-//            checkTags.add((intent.getSerializableExtra("label") as SquareLabelBean))
-//            chooseTitleBtn.text = ""
-//        }
+        if (intent.getIntExtra("tag_id", -1) != -1) {
+            checkTags.clear()
+            checkTags.add(SquareLabelBean(id = intent.getIntExtra("tag_id", -1)))
+            rightBtn1.text = "发布"
+        } else {
+            rightBtn1.text = "下一步"
+
+        }
 
         //从广场标题引导进入发布，默认选中兴趣
-        if (intent.getSerializableExtra("titleBean") != null) {
-            titleBean = intent.getSerializableExtra("titleBean") as TopicBean
-//            checkTags.add(SquareLabelBean(id = titleBean!!.tag_id, title = titleBean!!.tag_title))
-
-            chooseTitleBtn.text = titleBean!!.title
-            chooseTitleBtn.ellipsize = TextUtils.TruncateAt.MARQUEE
-            chooseTitleBtn.isSingleLine = true
-            chooseTitleBtn.isSelected = true
-            chooseTitleBtn.isFocusable = true
-            chooseTitleBtn.isFocusableInTouchMode = true
+        if (!intent.getStringExtra("title").isNullOrEmpty()) {
+            choosedTitleAdapter.addData(LabelQualityBean(intent.getStringExtra("title"), isfuse = true))
+            choosedTitleAdapter.notifyDataSetChanged()
+            titleState.setImageResource(R.drawable.icon_topic_blue)
+            chooseTitle.isVisible = false
+            chooseTitleRv.isVisible = true
         }
         locationCity.text = UserManager.getCity()
         contentLength.text = SpanUtils.with(contentLength)
@@ -281,7 +277,8 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         }
     }
 
-
+    val publishAdapter by lazy { PublishWayAdapter() }
+    val choosedTitleAdapter by lazy { ChooseTitleAdapter() }
     private fun initView() {
         UserManager.cancelUpload = false
 
@@ -299,19 +296,113 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
         rightBtn1.isEnabled = true
         rightBtn1.setBackgroundResource(R.drawable.selector_confirm_btn_15dp)
         rightBtn1.setTextColor(resources.getColor(R.color.complete_btn_color_selector))
-        rightBtn1.text = "下一步"
+
 
         mPresenter = PublishPresenter()
         mPresenter.mView = this
         mPresenter.context = applicationContext
 
+        tabPublishWay.layoutManager = GridLayoutManager(this, 4)
+        tabPublishWay.adapter = publishAdapter
+        publishAdapter.addData(
+            PublishWayBean(
+                R.drawable.icon_publish_pic_normal,
+                R.drawable.icon_publish_pic_checked,
+                true
+            )
+        )
+        publishAdapter.addData(
+            PublishWayBean(
+                R.drawable.icon_publish_audio_normal,
+                R.drawable.icon_publish_audio_checked,
+                false
+            )
+        )
+        publishAdapter.addData(
+            PublishWayBean(
+                R.drawable.icon_publish_video_normal,
+                R.drawable.icon_publish_video_checked,
+                false
+            )
+        )
+        publishAdapter.addData(
+            PublishWayBean(
+                R.drawable.icon_publish_emoj_normal,
+                R.drawable.icon_publish_emoj_checked,
+                false
+            )
+        )
+        publishAdapter.setOnItemClickListener { _, view, position ->
 
-        tabPublishWay.setOnCheckedChangeListener(this)
-        tabPublishWay.check(currentWayId)//默认选中图片
+            when (position) {
+                0 -> {//图片
+                    if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.VIDEO || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+                        CommonFunction.toast("不支持图片和其他媒体一起上传哦")
+                        return@setOnItemClickListener
+                    }
+                    allPhotosRv.isVisible = true
+                    videosRv.isVisible = false
+                    audioLl.isVisible = false
+                    emojRv.isVisible = false
+                }
+                1 -> {//语音
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(Manifest.permission.RECORD_AUDIO)) {
+                        PermissionUtils.permission(PermissionConstants.MICROPHONE)
+                            .callback(object : PermissionUtils.SimpleCallback {
+                                override fun onGranted() {
+                                    if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
+                                        CommonFunction.toast("不支持语音和其他媒体一起上传哦")
+                                        return
+                                    }
+                                    allPhotosRv.visibility = View.GONE
+                                    videosRv.visibility = View.GONE
+                                    audioLl.visibility = View.VISIBLE
+                                }
+
+                                override fun onDenied() {
+                                    CommonFunction.toast("录音权限被拒,请开启后再录音.")
+                                }
+                            }).request()
+                    } else {
+                        if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
+                            CommonFunction.toast("不支持语音和其他媒体一起上传哦")
+                            return@setOnItemClickListener
+                        }
+                        allPhotosRv.isVisible = false
+                        videosRv.isVisible = false
+                        audioLl.isVisible = true
+                        emojRv.isVisible = false
+                    }
+                }
+                2 -> {//视频
+                    if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+                        CommonFunction.toast("不支持视频和其他媒体一起上传哦")
+                        return@setOnItemClickListener
+                    }
+                    allPhotosRv.isVisible = false
+                    videosRv.isVisible = true
+                    audioLl.isVisible = false
+                    emojRv.isVisible = false
+
+                }
+                3 -> {//表情
+                    allPhotosRv.isVisible = false
+                    videosRv.isVisible = false
+                    audioLl.isVisible = false
+                    emojRv.isVisible = true
+                }
+            }
+            for (data in publishAdapter.data) {
+                data.checked = (data == publishAdapter.data[position])
+            }
+            publishAdapter.notifyDataSetChanged()
+        }
         publishContent.addTextChangedListener(this)
         locationCity.setOnClickListener(this)
         chooseTitleBtn.setOnClickListener(this)
-        btn_emo.setOnClickListener(this)
+        chooseTitle.setOnClickListener(this)
+        chooseTitleRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        chooseTitleRv.adapter = choosedTitleAdapter
         rightBtn1.onClick(object : CustomClickListener() {
             override fun onSingleClick(view: View) {
                 if (pickedPhotos.size == 0 && mMediaRecorderHelper.currentFilePath.isNullOrEmpty() && publishContent.text.isNullOrEmpty()) {
@@ -329,7 +420,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                     emojRv.visibility = View.GONE
                 }
 
-                startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL)
+                if (intent.getIntExtra("tag_id", -1) != -1) {
+                    publish()
+                } else
+                    startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL)
 
             }
 
@@ -898,72 +992,6 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
     }
 
 
-    //默认单选组按钮选中照片
-    private var currentWayId: Int = R.id.publishPhotos
-
-    override fun onCheckedChanged(radioGroup: RadioGroup, checkedId: Int) {
-        if (emojRv.visibility == View.VISIBLE)
-            emojRv.visibility = View.GONE
-        when (checkedId) {
-            R.id.publishPhotos -> {
-                if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.VIDEO || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-                    tabPublishWay.check(currentWayId)
-                    CommonFunction.toast("不支持图片和其他媒体一起上传哦")
-                    return
-                }
-                currentWayId = checkedId
-                allPhotosRv.visibility = View.VISIBLE
-                videosRv.visibility = View.GONE
-                audioLl.visibility = View.GONE
-            }
-            R.id.publishVideo -> {
-                if (pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE || !mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
-                    tabPublishWay.check(currentWayId)
-                    CommonFunction.toast("不支持视频和其他媒体一起上传哦")
-                    return
-                }
-                currentWayId = checkedId
-                allPhotosRv.visibility = View.GONE
-                videosRv.visibility = View.VISIBLE
-                audioLl.visibility = View.GONE
-            }
-            R.id.publishAudio -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !PermissionUtils.isGranted(Manifest.permission.RECORD_AUDIO)) {
-                    PermissionUtils.permission(PermissionConstants.MICROPHONE)
-                        .callback(object : PermissionUtils.SimpleCallback {
-                            override fun onGranted() {
-                                if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
-                                    tabPublishWay.check(currentWayId)
-                                    CommonFunction.toast("不支持语音和其他媒体一起上传哦")
-                                    return
-                                }
-                                currentWayId = checkedId
-                                allPhotosRv.visibility = View.GONE
-                                videosRv.visibility = View.GONE
-                                audioLl.visibility = View.VISIBLE
-                            }
-
-                            override fun onDenied() {
-                                CommonFunction.toast("录音权限被拒,请开启后再录音.")
-                            }
-                        }).request()
-                } else {
-                    if (pickedPhotos.isNotEmpty() || videoPath.isNotEmpty()) {
-                        tabPublishWay.check(currentWayId)
-                        CommonFunction.toast("不支持语音和其他媒体一起上传哦")
-                        return
-                    }
-                    currentWayId = checkedId
-                    allPhotosRv.visibility = View.GONE
-                    videosRv.visibility = View.GONE
-                    audioLl.visibility = View.VISIBLE
-                }
-
-
-            }
-        }
-    }
-
     /************编辑内容监听**************/
     override fun afterTextChanged(p0: Editable) {
         if (p0.length > 200) {
@@ -1130,22 +1158,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 isTopPreview = true
                 switchActionState()
             }
-            R.id.btn_emo -> {
-                if (emojRv.visibility == View.VISIBLE) {
-                    emojRv.visibility = View.GONE
-                } else {
-//                    allPhotosRv.visibility = View.GONE
-//                    videosRv.visibility = View.GONE
-//                    audioLl.visibility = View.GONE
-                    emojRv.visibility = View.VISIBLE
-                }
-            }
-
-            R.id.chooseTitleBtn -> {
-//                if (checkTags.isNullOrEmpty()) {
-//                    CommonFunction.toast("请先选择兴趣")
-//                    return
+            R.id.chooseTitle, R.id.chooseTitleBtn -> {
+//                val topics = ArrayList<String>()
+//                for (data in choosedTitleAdapter.data) {
+//                    if (data.isfuse) {
+//                        topics.add(data.content)
+//                    }
 //                }
+//                startActivityForResult<ChooseTitleActivity>(REQUEST_CODE_TITILE,"title" to topics)
                 startActivityForResult<ChooseTitleActivity>(REQUEST_CODE_TITILE)
             }
         }
@@ -1273,24 +1293,25 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             }
             //发布标题返回
             else if (requestCode == REQUEST_CODE_TITILE) {
-                if (data?.getStringExtra("title") != null) {
-                    chooseTitleBtn.text = data?.getStringExtra("title")
-                    chooseTitleBtn.ellipsize = TextUtils.TruncateAt.MARQUEE
-                    chooseTitleBtn.isSingleLine = true
-                    chooseTitleBtn.isSelected = true
-                    chooseTitleBtn.isFocusable = true
-                    chooseTitleBtn.isFocusableInTouchMode = true
+                choosedTitleAdapter.data.clear()
+                choosedTitleAdapter.notifyDataSetChanged()
+                if (data?.getStringArrayListExtra("title") != null) {
+                    val topics = data?.getStringArrayListExtra("title")
+                    for (topic in topics) {
+                        choosedTitleAdapter.addData(LabelQualityBean(topic, isfuse = true))
+                    }
+                    titleState.setImageResource(R.drawable.icon_topic_blue)
+                    chooseTitle.isVisible = false
+                    chooseTitleRv.isVisible = true
+
                 }
             }
             //兴趣选择返回
             else if (requestCode == REQUEST_CODE_LABEL) {
                 checkTags.clear()
-                checkTags.add((data?.getSerializableExtra("label") as SquareLabelBean))
+                if (data?.getSerializableExtra("label") != null)
+                    checkTags.add((data?.getSerializableExtra("label") as SquareLabelBean))
 
-                if (checkTags.size <= 0) {
-                    CommonFunction.toast("兴趣是必选项哦~")
-                    return
-                }
 
                 if (!mPresenter.checkNetWork()) {
                     CommonFunction.toast("网络不可用,请检查网络设置")
@@ -1401,13 +1422,15 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
      */
     private val keyList: MutableList<String> = mutableListOf()
 
+    /**
+     * 发布的话题
+     */
     private fun publish() {
         // 此处要存下所有的数据信息
         val checkIds = mutableListOf<Int>()
         for (i in 0 until checkTags.size) {
             checkIds.add(checkTags[i].id)
         }
-        UserManager.checkIds = checkIds
         val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
             0
         } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
@@ -1418,11 +1441,14 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
             2
         }
 
+        val titles = mutableListOf<String>()
+        for (data in choosedTitleAdapter.data) {
+            titles.add(data.content)
+        }
         val param = hashMapOf(
             "token" to UserManager.getToken(),
             "accid" to UserManager.getAccid(),
             "descr" to "${publishContent.text}",
-            "tag_id" to checkTags[0].id,
             "title" to "${chooseTitleBtn.text}",
             "lat" to if (positionItem == null) {
                 UserManager.getlatitude()
@@ -1455,25 +1481,17 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView, RadioG
                 locationCity.text.toString()
             },
             //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
-            "type" to type
-            /*,
-            //上传音频、视频的时间，精确到秒
-            "duration" to if (pickedPhotos.isNotEmpty() && type == 2) {
-                pickedPhotos[0].duration / 1000
-            } else if (type == 3) {
-                totalSecond
-            } else {
-                0
-            }*/
-            //	发布的图片/视频/声音 的json串（ios和android定义相同数据结构）
-            //  "comment" to "",
-            //发布图片/视频/声音 后加密的json串（ios和android定义相同数据结构）
-            //  "md5_json" to ""
+            "type" to type,
+            "titles" to Gson().toJson(titles)
         )
+
+        if (checkIds.isNotEmpty()) {
+            param["tag_id"] = checkTags[0].id
+        }
         UserManager.publishParams = param
 
         mPresenter.publishContent(
-            type, UserManager.publishParams, checkIds, keyList = keyList
+            type, UserManager.publishParams, keyList = keyList
         )
     }
 

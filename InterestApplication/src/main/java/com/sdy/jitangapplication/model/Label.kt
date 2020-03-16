@@ -59,8 +59,6 @@ data class LabelQualitysBean(
 )
 
 
-
-
 /**
  * 广场发布兴趣
  */
@@ -152,3 +150,9 @@ data class NewJobBean(
 
 
 data class AddLabelResultBean(var is_published: Boolean = false, var list: MutableList<TagBean> = mutableListOf())
+
+
+data class ChooseTitleBean(
+    val limit_cnt: Int?,
+    val list: MutableList<LabelQualityBean>?
+)

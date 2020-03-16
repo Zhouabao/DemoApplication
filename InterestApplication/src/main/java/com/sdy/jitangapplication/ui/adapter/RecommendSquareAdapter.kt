@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.ui.adapter
 
 import android.app.Activity
 import android.graphics.Color
+import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.view.View
@@ -32,6 +33,7 @@ import com.sdy.jitangapplication.model.RecommendSquareBean
 import com.sdy.jitangapplication.ui.activity.TagDetailCategoryActivity
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CustomMovementMethod
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_recommend_square.view.*
@@ -63,30 +65,14 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
         helper.itemView.squareImg.layoutParams = params
         helper.itemView.squareOnlyTextContent.layoutParams = params
 
-        //点击跳转link
-        val clickableSpan = object : ClickableSpan() {
-            override fun updateDrawState(ds: TextPaint) {
-                ds.linkColor = Color.parseColor("#FF6796FA")
-                ds.isUnderlineText = false
-            }
-            override fun onClick(widget: View) {
-                if (mContext as Activity !is TagDetailCategoryActivity)
-                    mContext.startActivity<TagDetailCategoryActivity>("id" to item.title_id, "type" to 2)
-            }
-        }
+
         if (item.type == 0) {//纯文本
             helper.itemView.squareImg.visibility = View.INVISIBLE
             helper.itemView.squareAudioCover.isVisible = false
             helper.itemView.squareOnlyTextContent.isVisible = true
             helper.itemView.squareVideoState.isVisible = false
             helper.itemView.squareOnlyTextContent.text =
-                SpanUtils.with(helper.itemView.squareOnlyTextContent)
-                    .append("${item.title}")
-                    .setForegroundColor(Color.parseColor("#FF6796FA"))
-                    .setClickSpan(clickableSpan)
-                    .append("${item.descr}")
-                    .setForegroundColor(Color.parseColor("#FF2C2F31"))
-                    .create()
+                spannableStringBuilder(helper.itemView.squareOnlyTextContent, item)
         } else if (item.type == 3) {//语音
             helper.itemView.squareOnlyTextContent.isVisible = false
             helper.itemView.squareImg.isVisible = true
@@ -134,20 +120,8 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
         helper.itemView.squareDistance.isVisible = !item.distance.isNullOrEmpty()
         helper.itemView.squareDistance.text = "${item.distance}"
         helper.itemView.squareContent.isVisible =
-            item.type != 0 && (!item.descr.isNullOrEmpty() || !item.title.isNullOrEmpty())
-        helper.itemView.squareContent.text = SpanUtils.with(helper.itemView.squareContent)
-            .append(
-                "${item.title}${if (!item.title.isNullOrEmpty()) {
-                    "\t"
-                } else {
-                    ""
-                }}"
-            )
-            .setClickSpan(clickableSpan)
-            .setForegroundColor(Color.parseColor("#FF6796FA"))
-            .append("${item.descr}")
-            .setForegroundColor(Color.parseColor("#FF2C2F31"))
-            .create()
+            item.type != 0 && (!item.descr.isNullOrEmpty() || !item.title_list.isNullOrEmpty())
+        helper.itemView.squareContent.text = spannableStringBuilder(helper.itemView.squareContent, item)
         helper.itemView.squareLike.text = "${item.like_cnt}"
         helper.itemView.squareName.text = item.nickname
         GlideUtil.loadCircleImg(mContext, item.avatar, helper.itemView.squareAvator)
@@ -159,6 +133,35 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
         }
 
 
+    }
+
+    /**
+     * 制造富文本链接跳转
+     */
+    private fun spannableStringBuilder(textView: TextView, item: RecommendSquareBean): SpannableStringBuilder {
+        textView.movementMethod = CustomMovementMethod.getInstance()
+        val spanUtils = SpanUtils.with(textView)
+        for (data in item.title_list ?: mutableListOf()) {
+            //点击跳转link
+            val clickableSpan = object : ClickableSpan() {
+                override fun updateDrawState(ds: TextPaint) {
+                    ds.linkColor = Color.parseColor("#FF6796FA")
+                    ds.isUnderlineText = false
+                }
+
+                override fun onClick(widget: View) {
+                    if (mContext as Activity !is TagDetailCategoryActivity)
+                        mContext.startActivity<TagDetailCategoryActivity>("id" to data.id, "type" to TagDetailCategoryActivity.TYPE_TOPIC)
+                }
+            }
+            spanUtils.append("${data.title}")
+                .setClickSpan(clickableSpan)
+                .setForegroundColor(Color.parseColor("#FF6796FA"))
+        }
+
+        return spanUtils.append("${item.descr}")
+            .setForegroundColor(Color.parseColor("#FF2C2F31"))
+            .create()
     }
 
     /**

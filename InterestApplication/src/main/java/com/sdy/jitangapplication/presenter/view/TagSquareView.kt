@@ -9,4 +9,9 @@ interface TagSquareView : BaseView {
      */
     fun onGetSquareTagResult(data: MutableList<SquareTagBean>?, result: Boolean)
 
+    /**
+     * 标记置顶结果
+     */
+    fun onGetMarkTagResult(result: Boolean)
+
 }

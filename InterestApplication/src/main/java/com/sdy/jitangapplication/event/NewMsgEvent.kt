@@ -19,9 +19,6 @@ class ReVerifyEvent(val type: Int, var avator: String = UserManager.getAvator())
 //账号异常认证事件通知
 class AccountDangerEvent(val type: Int)
 
-//更新首页滑动次数
-class UpdateSlideCountEvent
-
 
 //展示调研弹窗的event
 class ShowSurveyDialogEvent(val slideCount: Int)

@@ -5,3 +5,9 @@ data class ApproveBean(
     var isapprove: Int,//0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
     var issend: Boolean = true//判断是否可以发送消息 0就可以发，不是就不能发
 )
+
+data class PublishWayBean(
+    var normalImg: Int,
+    var checkedImg: Int,
+    var checked: Boolean
+)

@@ -50,10 +50,6 @@ data class TagBean(
     var is_expire: Boolean = false
 ) : Serializable
 
-data class UserBean(
-    var taglist: MutableList<TagBean?>?,
-    var userinfo: Userinfo?
-)
 
 
 data class VersionBean(val version: String)

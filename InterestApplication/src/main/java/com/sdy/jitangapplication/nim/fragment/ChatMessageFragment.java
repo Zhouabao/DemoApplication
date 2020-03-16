@@ -266,7 +266,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         Container container = new Container(getActivity(), sessionId, sessionType, this, true);
 
         if (messageListPanel == null) {
-            messageListPanel = new ChatMessageListPanelEx(container, rootView, anchor, false, false);
+            messageListPanel = new ChatMessageListPanelEx(container, rootView, anchor, false, true);
         } else {
             messageListPanel.reload(container, anchor);
         }
@@ -753,7 +753,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         config.enableUnreadCount = false;
         config.enablePush = false;
         tip.setConfig(config);
-        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, true);
+        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, false);
 //        messageListPanel.onMsgSend(tip);
     }
 
