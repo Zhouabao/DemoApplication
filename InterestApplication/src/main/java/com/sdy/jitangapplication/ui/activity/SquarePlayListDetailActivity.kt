@@ -161,11 +161,6 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
             rvLast.visibility = View.GONE
             rvNext.visibility = View.GONE
             mPresenter.getSquareInfo(fromChatParams)
-        } else {//好友列表
-            from = 1
-            rvLast.visibility = View.VISIBLE
-            rvNext.visibility = View.VISIBLE
-            mPresenter.getRencentlySquares(fromFriendsParams)
         }
     }
 
@@ -192,9 +187,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
-            if (from == 1) {
-                mPresenter.getRencentlySquares(fromFriendsParams)
-            } else if (from == 3) {
+            if (from == 3) {
                 mPresenter.getSquareInfo(fromChatParams)
             }
         }
@@ -478,31 +471,6 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
         }
     }
 
-    override fun onGetRecentlySquaresResults(data: MutableList<SquareBean?>) {
-        stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-//        data.addAll(data)
-        for (tempData in 0 until data.size) {
-
-            data[tempData]!!.type = when {
-                !data!![tempData]!!.video_json.isNullOrEmpty() -> SquareBean.VIDEO
-                !data!![tempData]!!.audio_json.isNullOrEmpty() -> SquareBean.AUDIO
-                !data!![tempData]!!.photo_json.isNullOrEmpty() ||
-                        (data!![tempData]!!.photo_json.isNullOrEmpty() && data!![tempData]!!.audio_json.isNullOrEmpty() && data!![tempData]!!.video_json.isNullOrEmpty()) -> SquareBean.PIC
-                else -> SquareBean.PIC
-            }
-        }
-
-        if (data.size <= 1) {
-            rvLast.visibility = View.GONE
-            rvNext.visibility = View.GONE
-        } else {
-            rvLast.visibility = View.GONE
-            rvNext.visibility = View.VISIBLE
-        }
-        adapter.addData(data)
-
-    }
-
     override fun onGetSquareLikeResult(position: Int, result: Boolean) {
         if (result) {
             if (adapter.data[position].isliked == 1) {
@@ -569,7 +537,7 @@ public class SquarePlayListDetailActivity : BaseMvpActivity<SquarePlayDetaiPrese
 
 
     override fun finish() {
-        setResult(Activity.RESULT_OK,intent)
+        setResult(Activity.RESULT_OK, intent)
         //释放所有
         GSYVideoManager.releaseAllVideos()
         if (mediaPlayer != null) {

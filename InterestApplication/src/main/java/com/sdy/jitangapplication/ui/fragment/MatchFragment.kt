@@ -26,6 +26,13 @@ import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -34,9 +41,11 @@ import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.Newtag
 import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
+import com.sdy.jitangapplication.ui.activity.MatchSucceedActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.ui.adapter.MatchUserAdapter
@@ -67,6 +76,12 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
     //用户适配器
     private val matchUserAdapter: MatchUserAdapter by lazy { MatchUserAdapter(mutableListOf()) }
+    //我的资料完整度
+    private var my_percent_complete: Int = 0//（我的资料完整度）
+    //标准完整度
+    private var normal_percent_complete: Int = 0//（标准完整度）
+    private var myCount: Int = 0//当前滑动次数
+    private var maxCount: Int = 0//最大滑动次数
     private var ranking_level: Int = 0
     private var isShowChangeAvatorRealMan: Boolean = false
 
@@ -158,13 +173,24 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 }
                 R.id.btnHiLottieView,
                 R.id.btnHi -> {
-                    val setting = SwipeAnimationSetting.Builder()
-                        .setDirection(Direction.Right)
-                        .setDuration(Duration.Normal.duration)
-                        .setInterpolator(AccelerateInterpolator())
-                        .build()
-                    manager.setSwipeAnimationSetting(setting)
-                    card_stack_view.swipe()
+                    //非真人头像打招呼提示去修改头像
+                    if (ranking_level == 2 && manager.topPosition == 0 && !isShowChangeAvatorRealMan) {
+                        ChangeAvatarRealManDialog(
+                            activity!!,
+                            ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN_GREET,
+                            matchBean = matchUserAdapter.data[manager.topPosition],
+                            view1 = view
+                        ).show()
+                        isShowChangeAvatorRealMan = true
+                    } else {
+                        //保存剩余滑动次数
+                        CommonFunction.commonGreet(
+                            activity!!,
+                            matchUserAdapter.data[manager.topPosition].accid,
+                            targetAvator = matchUserAdapter.data[manager.topPosition].avatar ?: "",
+                            view = view, needSwipe = true
+                        )
+                    }
                 }
                 R.id.nextImgBtn -> {
                     if (itemView != null) {
@@ -264,11 +290,19 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 //保存认证信息
                 UserManager.saveUserVerify(matchBeans.isfaced)
 
+                UserManager.saveLeftSlideCount(matchBeans.like_times)
+                EventBus.getDefault().post(UpdateSlideCountEvent())
+                //保存提示剩余滑动次数
+                UserManager.saveHighlightCount(matchBeans.highlight_times)
                 //保存剩余招呼次数
                 UserManager.saveLightingCount(matchBeans.lightningcnt ?: 0)
 
                 //保存引导次数
                 UserManager.motion = matchBeans.motion
+                my_percent_complete = matchBeans.my_percent_complete
+                normal_percent_complete = matchBeans.normal_percent_complete
+                myCount = matchBeans.my_like_times
+                maxCount = matchBeans.total_like_times
                 //头像等级
                 ranking_level = matchBeans.ranking_level
 
@@ -347,6 +381,39 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 CommonFunction.toast(data.msg)
                 card_stack_view.rewind()
             }
+        }
+    }
+
+
+    //status :1.喜欢成功  2.匹配成功
+    //201 不是会员
+    //405 封禁
+    override fun onGetLikeResult(success: Boolean, data: BaseResp<StatusBean?>, matchBean: MatchBean) {
+        if (data.code == 200) {
+            if (data.data != null) {
+                if (UserManager.getCurrentSurveyVersion().isEmpty()) {
+                    UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
+                    EventBus.getDefault().post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
+                }
+
+                if (data.data!!.status == 2) {//status :1.喜欢成功  2.匹配成功
+                    sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH, matchBean)
+                }
+            } else {
+                CommonFunction.toast(data.msg)
+                card_stack_view.rewind()
+            }
+
+        } else if (data.code == 201) {
+            card_stack_view.rewind()
+            if (my_percent_complete <= normal_percent_complete)
+                RightSlideOutdDialog(activity!!, myCount, maxCount).show()
+            else
+                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
+
+        } else if (data.code == 405) {
+            CommonFunction.toast(data.msg)
+            card_stack_view.rewind()
         }
     }
 
@@ -437,6 +504,19 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             card_stack_view.rewind()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateGreetTopEvent(event: GreetTopEvent) {
+        //请求成功并且在首页 卡片飞回来
+        if (event.success) {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Top)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(AccelerateInterpolator())
+                .build()
+            manager.setSwipeAnimationSetting(setting)
+            card_stack_view.swipe()
+        }
+    }
 
 
     /*---------------------卡片参数和方法------------------------------*/
@@ -461,7 +541,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
         //撤回的动画设置
         val setting = RewindAnimationSetting.Builder()
-            .setDirection(Direction.Right)
+            .setDirection(Direction.Top)
             .setDuration(Duration.Normal.duration)
             .setInterpolator(DecelerateInterpolator())
             .build()
@@ -545,29 +625,25 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
-            //非真人头像打招呼提示去修改头像
-            if (ranking_level == 2 && manager.topPosition - 1 == 0 && !isShowChangeAvatorRealMan) {
-                ChangeAvatarRealManDialog(
-                    activity!!,
-                    ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN_GREET,
-                    matchBean = matchUserAdapter.data[manager.topPosition - 1],
-                    view1 = if (manager.topView != null)
-                        (manager.topView.findViewById<ConstraintLayout>(R.id.btnHi))
-                    else
-                        changeAvatorBtn
-                ).show()
-                isShowChangeAvatorRealMan = true
+            UserManager.saveSlideCount(UserManager.getSlideCount() + 1)
+            //保存剩余滑动次数
+            if (UserManager.isUserVip() || UserManager.getLeftSlideCount() > 0) {
+                if (!UserManager.isUserVip() && UserManager.getLeftSlideCount() > 0) {
+                    UserManager.saveLeftSlideCount(UserManager.getLeftSlideCount().minus(1))
+                    EventBus.getDefault().post(UpdateSlideCountEvent())
+                }
+
+                params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid
+                if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
+                    params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
+                mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
             } else {
-//                保存剩余滑动次数
-                CommonFunction.commonGreet(
-                    activity!!,
-                    matchUserAdapter.data[manager.topPosition - 1].accid,
-                    targetAvator = matchUserAdapter.data[manager.topPosition - 1].avatar ?: "",
-                    view = if (manager.topView != null)
-                        (manager.topView.findViewById<ConstraintLayout>(R.id.btnHi))
-                    else
-                        changeAvatorBtn
-                )
+                card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
+                card_stack_view.isEnabled = false
+                if (my_percent_complete < normal_percent_complete)
+                    RightSlideOutdDialog(activity!!, myCount, maxCount).show()
+                else
+                    ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
             }
         }
 //        changeAvatorBtn
@@ -714,6 +790,54 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
         params2.height = 0
         animation_dislike.alpha = 0F
         animation_dislike.layoutParams = params2
+    }
+
+    /*--------------------------消息代理------------------------*/
+
+    private fun sendChatHiMessage(type: Int, matchBean: MatchBean) {
+//        val matchBean = matchUserAdapter.data[manager.topPosition - 1]
+        Log.d("OkHttp", matchBean.accid ?: "")
+        val chatHiAttachment = ChatHiAttachment(type)
+        val config = CustomMessageConfig()
+        config.enablePush = false
+        val message = MessageBuilder.createCustomMessage(
+            matchBean?.accid,
+            SessionTypeEnum.P2P,
+            "",
+            chatHiAttachment,
+            config
+        )
+        sendMessage(message, matchBean)
+    }
+
+
+    fun sendMessage(msg: IMMessage, matchBean: MatchBean): Boolean {
+        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
+            RequestCallback<Void?> {
+            override fun onSuccess(param: Void?) {
+                if (msg.attachment is ChatHiAttachment && (msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH) { //匹配成功跳转到飞卡片
+                    startActivity<MatchSucceedActivity>(
+                        "avator" to matchBean.avatar,
+                        "nickname" to matchBean.nickname,
+                        "accid" to matchBean.accid
+//                        "avator" to matchUserAdapter.data[manager.topPosition - 1].avatar,
+//                        "nickname" to matchUserAdapter.data[manager.topPosition - 1].nickname,
+//                        "accid" to matchUserAdapter.data[manager.topPosition - 1].accid
+                    )
+                }
+
+
+            }
+
+            override fun onFailed(code: Int) {
+                card_stack_view.rewind()
+            }
+
+            override fun onException(exception: Throwable) {
+                card_stack_view.rewind()
+            }
+        })
+        return true
     }
 
 

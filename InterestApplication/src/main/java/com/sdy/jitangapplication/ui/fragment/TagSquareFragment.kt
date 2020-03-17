@@ -127,6 +127,13 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
                         "置于底部"
                     }
                 }
+                R.id.rvTagSquareImg->{
+                    if (!ActivityUtils.isActivityExistsInStack(TagDetailCategoryActivity::class.java))
+                        startActivity<TagDetailCategoryActivity>(
+                            "id" to adapter.data[position].id,
+                            "type" to TagDetailCategoryActivity.TYPE_TAG
+                        )
+                }
             }
         }
 

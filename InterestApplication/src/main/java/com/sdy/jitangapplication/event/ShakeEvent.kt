@@ -8,7 +8,9 @@ class UpdateHiCountEvent
 
 class GreetEvent(val context: Context, val success: Boolean)
 
+class GreetTopEvent(val context: Context, val success: Boolean)
 
+class GreetDetailSuccessEvent(val success: Boolean)
 
 
 class CloseDialogEvent()

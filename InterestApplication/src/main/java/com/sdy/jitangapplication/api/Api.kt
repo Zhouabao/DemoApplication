@@ -320,7 +320,7 @@ interface Api {
      * 打招呼、上滑
      */
     @FormUrlEncoded
-    @POST("Relationship/greetCheck${Constants.END_BASE_URL}")
+    @POST("Relationship/greetV13${Constants.END_BASE_URL}")
     fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetTimesBean?>>
 
 
@@ -710,7 +710,7 @@ interface Api {
      * 发消息请求服务器
      */
     @FormUrlEncoded
-    @POST("Tidings/sendMsgRequestV13${Constants.END_BASE_URL}")
+    @POST("Tidings/sendMsgRequestEnd${Constants.END_BASE_URL}")
     fun sendMsgRequest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ResidueCountBean?>>
     /*--------------------------------会员充值---------------------------------*/
 

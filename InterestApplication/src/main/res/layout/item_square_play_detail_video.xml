@@ -12,6 +12,7 @@
             android:layout_height="match_parent">
 
         <com.sdy.jitangapplication.switchplay.SwitchVideo
+                android:background="@color/colorBlack"
                 android:id="@+id/detailPlayVideo"
                 android:layout_width="match_parent"
                 android:layout_gravity="center"

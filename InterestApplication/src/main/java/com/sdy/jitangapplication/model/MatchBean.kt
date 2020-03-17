@@ -18,7 +18,16 @@ data class MatchListBean(
     var motion: Int = -1, //		1，强制替换 2，引导替换 3，引导添加相册 其他不管
     var perfect_times: Int = 0,    //滑动x次数跳【完善相册】
     var replace_times: Int = 0, //滑动x次数跳【替换头像】
+    var like_times: Int = 0, //剩余滑动次数
+    var highlight_times: Int = 0,//提示剩余次数的节点
+    val my_percent_complete: Int,//（我的资料完整度）
+    val normal_percent_complete: Int,//（标准完整度）
+    val my_like_times: Int,//（我的次数）
+    val total_like_times: Int,//  total_like_times（最高次数）
     var mytags: MutableList<Newtag>? = null,
+    val intention: LabelQualityBean? = null,
+    var myinterest_count: Int = 0,
+    var interest_times: Int = 0,
     var is_human: Boolean = false,
     var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管
     var is_full: Boolean = false//兴趣是否完整

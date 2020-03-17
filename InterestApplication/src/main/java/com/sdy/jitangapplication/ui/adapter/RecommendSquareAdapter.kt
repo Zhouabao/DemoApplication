@@ -30,6 +30,8 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.RecommendSquareBean
+import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
+import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
 import com.sdy.jitangapplication.ui.activity.TagDetailCategoryActivity
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -132,7 +134,13 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
             clickZan(helper.itemView.squareLike, helper.layoutPosition - headerLayoutCount)
         }
 
-
+        //点击跳转
+        helper.itemView.onClick {
+            if (item.type == 2)  //视频
+                SquarePlayDetailActivity.startActivity(mContext as Activity, id = item.id,fromRecommend = true)
+            else//文本.语音.图片
+                SquareCommentDetailActivity.start(mContext, squareId = item.id)
+        }
     }
 
     /**
@@ -151,7 +159,10 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
 
                 override fun onClick(widget: View) {
                     if (mContext as Activity !is TagDetailCategoryActivity)
-                        mContext.startActivity<TagDetailCategoryActivity>("id" to data.id, "type" to TagDetailCategoryActivity.TYPE_TOPIC)
+                        mContext.startActivity<TagDetailCategoryActivity>(
+                            "id" to data.id,
+                            "type" to TagDetailCategoryActivity.TYPE_TOPIC
+                        )
                 }
             }
             spanUtils.append("${data.title}")

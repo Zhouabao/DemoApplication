@@ -47,29 +47,43 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     View.OnClickListener {
 
     private val TAG = SquarePlayDetailActivity::class.java.simpleName
-    override fun onGetSquareInfoResults(mutableList: SquareBean?) {
-
+    override fun onGetSquareInfoResults(squareBean: SquareBean?) {
+        if (squareBean != null) {
+            this.squareBean = squareBean
+            initData()
+        }
     }
 
-    private val squareBean: SquareBean by lazy { intent.getSerializableExtra("squareBean") as SquareBean }
+    private lateinit var squareBean: SquareBean
 
     companion object {
         public val OPTION_VIEW = "VIEW"
         public val REQUEST_CODE = 1002
         fun startActivity(
             activity: Activity,
-            transactionView: View,
-            data: SquareBean,
-            position: Int,
-            type: Int = MySquareFragment.TYPE_SQUARE
+            transactionView: View? = null,
+            data: SquareBean? = null,
+            position: Int? = -1,
+            type: Int = MySquareFragment.TYPE_SQUARE,
+            id: Int? = -1,
+            fromRecommend: Boolean = false
         ) {
             val intent = Intent(activity, SquarePlayDetailActivity::class.java)
-            intent.putExtra("squareBean", data)
-            intent.putExtra("position", position)
+            if (data != null)
+                intent.putExtra("squareBean", data)
+            if (id != null && id != -1)
+                intent.putExtra("id", id)
+            if (position != null && position != -1)
+                intent.putExtra("position", position)
+            intent.putExtra("fromRecommend", fromRecommend)
             intent.putExtra("type", type)
             //这里指定了共享的视图元素
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transactionView, OPTION_VIEW)
-            ActivityCompat.startActivityForResult(activity, intent, REQUEST_CODE, options.toBundle())
+            if (transactionView != null) {
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transactionView, OPTION_VIEW)
+                ActivityCompat.startActivityForResult(activity, intent, REQUEST_CODE, options.toBundle())
+            } else {
+                activity.startActivityForResult(intent, REQUEST_CODE)
+            }
         }
     }
 
@@ -77,9 +91,20 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_square_play_detail)
-
         initView()
-        initData()
+        if (intent.getSerializableExtra("squareBean") != null) {
+            squareBean = intent.getSerializableExtra("squareBean") as SquareBean
+            initData()
+        } else {
+            mPresenter.getSquareInfo(
+                hashMapOf(
+                    "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
+                    "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
+                    "square_id" to intent.getIntExtra("id", -1)
+                )
+            )
+        }
+
     }
 
 
@@ -107,6 +132,10 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         detailPlayCommentBtn.setOnClickListener(this)
         //發送評論
         detailPlayCommentSend.setOnClickListener(this)
+
+    }
+
+    private fun initData() {
         //增加封面
         val imageview = ImageView(this)
         imageview.scaleType = ImageView.ScaleType.CENTER_INSIDE
@@ -141,19 +170,13 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         detailPlayVideo.startPlayLogic()
         // 这里指定了被共享的视图元素
         ViewCompat.setTransitionName(videoFl, OPTION_VIEW)
-    }
-
-    private fun initData() {
         GlideUtil.loadAvatorImg(this, squareBean.avatar, detailPlayUserAvatar)
-        detailPlayUserLocationAndTime.text =  "${squareBean!!.puber_address}" +
+        detailPlayUserLocationAndTime.text = "${squareBean!!.puber_address}" +
                 "${if (!squareBean!!.puber_address.isNullOrEmpty()) {
                     "·"
                 } else {
                     ""
                 }}${squareBean!!.out_time}"
-
-
-
 
         detailPlayUserName.text = squareBean.nickname ?: ""
         detailPlayContent.text = squareBean.descr ?: ""
@@ -413,15 +436,16 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     }
 
     override fun finish() {
-        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.listener())
-
-        SwitchUtil.savePlayState(detailPlayVideo)
-        detailPlayVideo.gsyVideoManager.setLastListener(detailPlayVideo)
+        if (intent.getBooleanExtra("fromRecommend", false)) {
+            GSYVideoManager.releaseAllVideos()
+        } else {
+            detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.listener())
+            SwitchUtil.savePlayState(detailPlayVideo)
+            detailPlayVideo.gsyVideoManager.setLastListener(detailPlayVideo)
 //        supportFinishAfterTransition()
-        setResult(Activity.RESULT_OK, intent)
-        super.finish()
-    }
+            setResult(Activity.RESULT_OK, intent)
+        }
 
-    override fun onGetRecentlySquaresResults(mutableList: MutableList<SquareBean?>) {
+        super.finish()
     }
 }

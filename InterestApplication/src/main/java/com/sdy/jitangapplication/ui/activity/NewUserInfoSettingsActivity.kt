@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -15,6 +14,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.animation.*
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -50,10 +50,7 @@ import com.sdy.jitangapplication.model.UserInfoSettingBean
 import com.sdy.jitangapplication.presenter.UserInfoSettingsPresenter
 import com.sdy.jitangapplication.presenter.view.UserInfoSettingsView
 import com.sdy.jitangapplication.ui.adapter.UserPhotoAdapter
-import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
-import com.sdy.jitangapplication.ui.dialog.DeleteDialog
-import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import com.sdy.jitangapplication.ui.dialog.ReminderScoreDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GetJsonDataUtil
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -63,6 +60,7 @@ import kotlinx.android.synthetic.main.activity_new_user_info_settings.*
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
 import kotlinx.android.synthetic.main.dialog_delete_photo.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_add_score.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivityForResult
 import org.json.JSONArray
@@ -95,6 +93,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_user_info_settings)
         initView()
+        updateScoreLayout()
 
         mPresenter.personalInfo(params)
         setSwipeBackEnable(false)
@@ -125,10 +124,12 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         userEat.setOnClickListener(this)
         saveBtn.setOnClickListener(this)
         //userScore20.setOnClickListener(this)
-        userScore20.typeface = Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf")
+        userScore80.setOnClickListener(this)
+        userScoreVip.setOnClickListener(this)
 
 
-
+        userScore80.setBackgroundResource(R.drawable.shape_rectangle_gray_white_11dp)
+        userScore80.tvAddScoreSmile.setTextColor(Color.parseColor("#FFD1D1DB"))
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
             mPresenter.personalInfo(params)
@@ -237,7 +238,23 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             }
             userBirth.text = "${data.birth}/${data.constellation}"
 
+            if (UserManager.isUserVip()) {
+                userScore80.isVisible = false
+                userScoreVip.isVisible = false
+                userScoreVip.setImageResource(R.drawable.icon_vip_score_highlight)
+                userScoreVip.isEnabled = false
+            } else {
+                userScore80.isVisible = true
+                userScoreVip.isVisible = true
+                userScoreVip.setImageResource(R.drawable.icon_vip_score)
+                userScoreVip.isEnabled = true
+            }
+
+
+
             if (data.score_rule != null) {
+                userScore80.tvAddScoreSmile.text = "${data.score_rule.base_total + data.score_rule.base}"
+                userScore80.ivAddScoreSmile.setImageResource(R.drawable.icon_xiaolian_gray)
                 var scorePhoto = 0
                 if (!data.photos_wall.isNullOrEmpty()) {
                     scorePhoto = (data.photos_wall.size - 1) * data.score_rule.photo
@@ -248,30 +265,43 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
             if (!data.sign.isNullOrEmpty() && data.sign.trim().isNotEmpty()) {
                 userNickSign.text = "${data.sign}"
-            }
+                userScoreAboutMe.isVisible = false
+            } else
+                userScoreAboutMe.isVisible = true
+
             updateScoreStatus(
+                userScoreAboutMe,
                 data.score_rule?.about ?: 0,
                 !data.sign.isNullOrEmpty() && data.sign.trim().isNotEmpty()
             )
 
             if (data.emotion_state > 0 && data.emotion_list.size > data.emotion_state - 1) {
                 userLoveStatus.text = data.emotion_list[data.emotion_state - 1]
-            }
-            updateScoreStatus(data.score_rule?.emotion ?: 0, data.emotion_state > 0)
+                userScoreEmotion.isVisible = false
+            } else
+                userScoreEmotion.isVisible = true
+            updateScoreStatus(userScoreEmotion, data.score_rule?.emotion ?: 0, data.emotion_state > 0)
             if (data.height > 0) {
                 userHeight.text = "${data.height}"
-            }
+                userScoreHeight.isVisible = false
+            } else
+                userScoreHeight.isVisible = true
 
-            updateScoreStatus(data.score_rule?.height ?: 0, data.height > 0)
+            updateScoreStatus(userScoreHeight, data.score_rule?.height ?: 0, data.height > 0)
 
             if (!data.hometown.isNullOrEmpty()) {
                 userHomeTown.text = data.hometown
-            }
-            updateScoreStatus(data.score_rule?.hometown ?: 0, !data.hometown.isNullOrEmpty())
+                userScoreHomeTown.isVisible = false
+            } else
+                userScoreHomeTown.isVisible = true
+            updateScoreStatus(userScoreHomeTown, data.score_rule?.hometown ?: 0, !data.hometown.isNullOrEmpty())
             if (!data.present_address.isNullOrEmpty()) {
                 userLiveNow.text = data.present_address
-            }
+                userScoreLiveNow.isVisible = false
+            } else
+                userScoreLiveNow.isVisible = true
             updateScoreStatus(
+                userScoreLiveNow,
                 data.score_rule?.present_address ?: 0,
                 !data.present_address.isNullOrEmpty()
             )
@@ -279,19 +309,26 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
             if (!data.personal_job.isNullOrEmpty()) {
                 userJob.text = data.personal_job
-            }
-            updateScoreStatus(data.score_rule?.personal_job ?: 0, !data.personal_job.isNullOrEmpty())
+                userScoreJob.isVisible = false
+            } else
+                userScoreJob.isVisible = true
+            updateScoreStatus(userScoreJob, data.score_rule?.personal_job ?: 0, !data.personal_job.isNullOrEmpty())
 
             if (data.making_friends > 0 && data.making_friends_list.size > data.making_friends - 1) {
                 userFriendsAim.text = data.making_friends_list[data.making_friends - 1]
-            }
-            updateScoreStatus(data.score_rule?.making_friends ?: 0, data.making_friends > 0)
+                userScoreFriendsAim.isVisible = false
+            } else
+                userScoreFriendsAim.isVisible = true
+            updateScoreStatus(userScoreFriendsAim, data.score_rule?.making_friends ?: 0, data.making_friends > 0)
 
             if (!data.personal_school.isNullOrEmpty()) {
                 userSchool.text = data.personal_school
-            }
+                userScoreSchool.isVisible = false
+            } else
+                userScoreSchool.isVisible = true
 
             updateScoreStatus(
+                userScoreSchool,
                 data.score_rule?.personal_school ?: 0,
                 !data.personal_school.isNullOrEmpty()
             )
@@ -299,20 +336,27 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
             if (data.personal_drink > 0 && data.personal_drink_list.size > data.personal_drink - 1) {
                 userDrink.text = data.personal_drink_list[data.personal_drink - 1]
-            }
-            updateScoreStatus(data.score_rule?.personal_drink ?: 0, data.personal_drink > 0)
+                userScoreDrink.isVisible = false
+            } else
+                userScoreDrink.isVisible = true
+
+            updateScoreStatus(userScoreDrink, data.score_rule?.personal_drink ?: 0, data.personal_drink > 0)
 
 
 
             if (data.personal_smoke > 0 && data.personal_smoke_list.size > data.personal_smoke - 1) {
                 userSmoke.text = data.personal_smoke_list[data.personal_smoke - 1]
-            }
-            updateScoreStatus(data.score_rule?.personal_smoke ?: 0, data.personal_smoke > 0)
+                userScoreSmoke.isVisible = false
+            } else
+                userScoreSmoke.isVisible = true
+            updateScoreStatus(userScoreSmoke, data.score_rule?.personal_smoke ?: 0, data.personal_smoke > 0)
 
             if (data.personal_schedule > 0 && data.personal_schedule_list.size > data.personal_schedule - 1) {
                 userEat.text = data.personal_schedule_list[data.personal_schedule - 1]
-            }
-            updateScoreStatus(data.score_rule?.personal_schedule ?: 0, data.personal_schedule > 0)
+                userScoreEat.isVisible = false
+            } else
+                userScoreEat.isVisible = true
+            updateScoreStatus(userScoreEat, data.score_rule?.personal_schedule ?: 0, data.personal_schedule > 0)
 
 
             for (photoWallBean in (data.photos_wall ?: mutableListOf()).withIndex()) {
@@ -633,7 +677,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
         for (job in newJobs) {
             secondJobs.add(job.son ?: mutableListOf())
         }
-        showConditionPicker<NewJobBean>(userJob, 2, "请选择您的职业", "personal_job", newJobs, secondJobs)
+        showConditionPicker<NewJobBean>(userJob, userScoreJob, 2, "请选择您的职业", "personal_job", newJobs, secondJobs)
     }
 
     /**
@@ -721,28 +765,34 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                                 ChooseSchoolActivity.CHOOSE_SCHOOL
                             ) == ChooseSchoolActivity.CHOOSE_SCHOOL
                         ) {
-                            if (userSchool.text.isNullOrEmpty())
-                                updateScoreStatus(this.data!!.score_rule?.personal_school ?: 0, update = true)
                             userSchool.text = data.getStringExtra("schoolBean")
                             savePersonalParams["personal_school"] = data.getStringExtra("schoolBean")
-                        } else {
-                            if (userJob.text.isNullOrEmpty())
+                            if (userScoreSchool.isVisible)
                                 updateScoreStatus(
+                                    userScoreSchool,
+                                    this.data!!.score_rule?.personal_school ?: 0,
+                                    update = true
+                                )
+                        } else {
+                            userJob.text = data.getStringExtra("schoolBean")
+                            savePersonalParams["personal_job"] = data.getStringExtra("schoolBean")
+                            if (userScoreJob.isVisible)
+                                updateScoreStatus(
+                                    userScoreJob,
                                     this.data!!.score_rule?.personal_job ?: 0,
                                     update = true
                                 )
-                            userJob.text = data.getStringExtra("schoolBean")
-                            savePersonalParams["personal_job"] = data.getStringExtra("schoolBean")
                         }
                         isChange = true
                         checkSaveEnable()
                     }
                 }
                 105 -> {//关于我
-                    if (userNickSign.text.isNullOrEmpty())
-                        updateScoreStatus(this.data!!.score_rule?.about ?: 0, update = true)
                     userNickSign.text = data?.getStringExtra("content")
                     savePersonalParams["sign"] = data?.getStringExtra("content")
+
+                    if (userScoreAboutMe.isVisible)
+                        updateScoreStatus(userScoreAboutMe, this.data!!.score_rule?.about ?: 0, update = true)
                     isChange = true
                     checkSaveEnable()
                 }
@@ -781,6 +831,13 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 ReminderScoreDialog(this, 20).show()
 //                userScore20.setImageResource(R.drawable.icon_twenty_click)
             }
+            R.id.userScoreVip -> {
+                ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
+            }
+            R.id.userScore80 -> {
+                ReminderScoreDialog(this, ((data?.score_rule?.base_total ?: 0) + (data?.score_rule?.base ?: 0))).show()
+//                userScore80.setImageResource(R.drawable.icon_eighty_click)
+            }
             R.id.userNickName -> {//昵称
                 startActivityForResult<NickNameActivity>(102, "type" to 1, "content" to userNickName.text.toString())
             }
@@ -788,6 +845,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             R.id.userGender -> {//性别
                 showConditionPicker<String>(
                     userGender,
+                    null,
                     0,
                     "请选择您的性别",
                     "gender",
@@ -805,6 +863,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 }
                 showConditionPicker(
                     userHeight,
+                    userScoreHeight,
                     2,
                     "请选择您的身高",
                     "height",
@@ -821,6 +880,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             R.id.userLoveStatus -> {//情感状态
                 showConditionPicker(
                     userLoveStatus,
+                    userScoreEmotion,
                     2,
                     "请选择您的感情状态",
                     "emotion_state",
@@ -830,6 +890,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             R.id.userHomeTown -> {//家乡
                 showConditionPicker(
                     userHomeTown,
+                    userScoreHomeTown,
                     2,
                     "请选择您的家乡",
                     "hometown",
@@ -840,6 +901,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             R.id.userLiveNow -> {//现居地
                 showConditionPicker(
                     userLiveNow,
+                    userScoreLiveNow,
                     2,
                     "请选择您的现居地",
                     "present_address",
@@ -856,6 +918,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             R.id.userFriendsAim -> {//交友目的
                 showConditionPicker(
                     userFriendsAim,
+                    userScoreFriendsAim,
                     2,
                     "请选择您的交友目的",
                     "making_friends",
@@ -868,6 +931,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             R.id.userDrink -> {//饮酒
                 showConditionPicker(
                     userDrink,
+                    userScoreDrink,
                     2,
                     "请选择您的饮酒状态",
                     "personal_drink",
@@ -877,6 +941,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             R.id.userSmoke -> {//抽烟
                 showConditionPicker(
                     userSmoke,
+                    userScoreSmoke,
                     2,
                     "请选择您的抽烟状态",
                     "personal_smoke",
@@ -886,6 +951,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
             R.id.userEat -> {//饮食
                 showConditionPicker(
                     userEat,
+                    userScoreEat,
                     2,
                     "请选择您的作息习惯",
                     "personal_schedule",
@@ -987,7 +1053,73 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
      * 更新添加分数的状态
      * 资料新增后就要改变状态实现动画
      */
-    private fun updateScoreStatus(score: Int, update: Boolean? = false) {
+    private fun updateScoreStatus(view: View? = null, score: Int, update: Boolean? = false) {
+        //会员的时候不显示添加分数
+        if (view != null) {
+            view.tvAddScoreSmile.text = "+$score"
+            //如果view处于可见状态，说明之前没有加过分数，那这时就实现动画效果
+            if (view.isVisible && update == true) {
+                val translateAnimationRight = TranslateAnimation(
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0f,
+                    TranslateAnimation.ABSOLUTE,
+                    (view.width - view.ivAddScoreSmile.width - SizeUtils.dp2px(8f)).toFloat(),
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0f,
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0F
+
+                )
+                translateAnimationRight.duration = 500
+                translateAnimationRight.fillAfter = true
+                translateAnimationRight.interpolator = LinearInterpolator()
+
+                val translateAnimationTop = TranslateAnimation(
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0f,
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0F,
+                    TranslateAnimation.RELATIVE_TO_SELF,
+                    0f,
+                    TranslateAnimation.RELATIVE_TO_PARENT,
+                    -0.7F
+
+                )
+                translateAnimationTop.duration = 500
+                translateAnimationTop.fillAfter = true
+                translateAnimationTop.interpolator = DecelerateInterpolator()
+                val scaleAnimation = ScaleAnimation(1f, 0f, 1f, 0f)
+                scaleAnimation.duration = 500
+                scaleAnimation.fillAfter = true
+                val alphaAnimation = AlphaAnimation(0F, 1F)
+                alphaAnimation.duration = 500
+                alphaAnimation.fillAfter = true
+                val animationSet = AnimationSet(true)
+                animationSet.addAnimation(translateAnimationTop)
+                animationSet.addAnimation(scaleAnimation)
+                animationSet.addAnimation(alphaAnimation)
+                animationSet.fillAfter = true
+
+                translateAnimationRight.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationRepeat(p0: Animation?) {
+
+                    }
+
+                    override fun onAnimationEnd(p0: Animation?) {
+                        view.postDelayed({
+                            view.isVisible = false
+                        }, 200)
+                    }
+
+                    override fun onAnimationStart(p0: Animation?) {
+                        view.setBackgroundResource(R.drawable.shape_rectangle_orange_11dp)
+                        view.tvAddScoreSmile.startAnimation(animationSet)
+                    }
+                })
+                view.ivAddScoreSmile.startAnimation(translateAnimationRight)
+            }
+        }
+
         if (update == true)
             setScroeProgress(score)
 
@@ -1022,10 +1154,26 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
 
         val translate = ObjectAnimator.ofFloat(
             userScore20, "translationX",
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70 + 15F) - SizeUtils.dp2px(45F)) * userFinishProgress.progress * 1.0f / 100)
+            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(70F + 15) - SizeUtils.dp2px(45F)) * userFinishProgress.progress * 1.0f / 100)
         )
         translate.duration = 100
         translate.start()
+
+        if (!UserManager.isUserVip()) {
+            userScore80.isVisible = (progress < 80)
+        }
+
+    }
+
+
+    /**
+     * 更新分数的位置
+     */
+    private fun updateScoreLayout() {
+        val layoutmanager80 = userScore80.layoutParams as RelativeLayout.LayoutParams
+        layoutmanager80.rightMargin =
+            (SizeUtils.dp2px(15F) + (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(110F)) * 0.2F).toInt()
+//        userScore80.layoutParams = layoutmanager80
 
 
     }
@@ -1115,6 +1263,7 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
      */
     private fun <T> showConditionPicker(
         textview: TextView,
+        scoreView: View?,
         score: Int,
         title: String,
         param: String,
@@ -1141,8 +1290,6 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 personal_drink	[int]	是	喝酒状况 0 未填写 1偶尔 2 经常 3不喝
                 personal_smoke	[int]	是	抽烟状况 0未填写 1偶尔 2 经常 3不喝
                 personal_schedule	[int]	是	饮食喜好 0 未填写 1素食主义者*/
-                if (textview.text.isNullOrEmpty())
-                    updateScoreStatus(score, update = true)
                 if (optionsItems2.isNullOrEmpty()) {
                     if (param == "height") {
                         savePersonalParams[param] = optionsItems1[options1] as Int
@@ -1169,6 +1316,9 @@ class NewUserInfoSettingsActivity : BaseMvpActivity<UserInfoSettingsPresenter>()
                 }
                 isChange = true
                 checkSaveEnable()
+
+                if (scoreView != null && scoreView.isVisible)
+                    updateScoreStatus(scoreView, score, update = true)
             })
             .setSubmitText("确定")
             .setTitleText(title)

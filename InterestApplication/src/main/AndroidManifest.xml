@@ -89,7 +89,14 @@
             android:theme="@style/MyAppTheme"
             android:usesCleartextTraffic="true"
             tools:replace="android:name,android:theme,android:icon">
-
+        <activity android:name=".ui.activity.MatchSucceedActivity">
+        </activity>
+        <activity android:name=".ui.activity.LikeMeReceivedActivity">
+        </activity>
+        <activity android:name=".ui.activity.MessageLikeMeActivity">
+        </activity>
+        <activity android:name=".ui.activity.MessageLikeMeOneDayActivity">
+        </activity>
         <activity android:name=".ui.activity.FindByTagListActivity"/>
         <activity android:name=".ui.activity.GreetReceivedActivity">
         </activity>
@@ -282,7 +289,6 @@
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Transitions"
                 android:windowSoftInputMode="adjustResize"/>
-
         <activity
                 android:name=".ui.activity.MatchDetailActivity"
                 android:screenOrientation="portrait"/>

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
@@ -17,28 +18,41 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.kennyc.view.MultiStateView
+import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
+import com.netease.nim.uikit.business.session.module.Container
+import com.netease.nim.uikit.business.session.module.ModuleProxy
 import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.friend.FriendService
+import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
 import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchDetailInfoAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchImgsPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.MyLabelAdapter
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
+import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
+import com.sdy.jitangapplication.ui.dialog.SayHiDialog
 import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
 import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
 import com.sdy.jitangapplication.utils.UserManager
@@ -58,7 +72,8 @@ import java.util.*
 /**
  * 匹配详情页
  */
-class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView, View.OnClickListener {
+class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView, View.OnClickListener,
+    ModuleProxy {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
@@ -137,7 +152,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         vpUserDetail.setScrollable(false)
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
-        detailUserChatLl.setOnClickListener(this)
+        detailUserLikeBtn.setOnClickListener(this)
+        detailUserDislikeBtn.setOnClickListener(this)
+        detailUserChatBtn.setOnClickListener(this)
+        detailUserGreetBtn.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)
         backBtn.setOnClickListener(this)
         backBtn1.setOnClickListener(this)
@@ -333,7 +351,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailUserVerify.isVisible = matchBean!!.isfaced == 1
 
         //更新打招呼次数和状态
-        updateLightCount()
+        updateLightCount(matchBean!!.lightningcnt ?: 0)
 
 //        用户动态封面图片（暂不展示）
         detailThumbRv.visibility = View.GONE
@@ -517,6 +535,61 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
+    override fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?, islike: Boolean) {
+
+        if (islike) {
+            if (statusBean != null)
+                if (statusBean.code == 200) {
+                    if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
+                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
+                    }
+
+                    if (statusBean.data?.residue == 0) {
+                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
+                    } else {
+                        EventBus.getDefault().post(RefreshEvent(true))
+                        if (statusBean.data?.status == 1) {  //喜欢成功
+                            matchBean!!.isliked = 1
+                            updateLightCount(-1)
+                        } else if (statusBean.data?.status == 2) {//匹配成功
+                            //如果是来自喜欢我的界面， 就刷新
+                            if (intent.getIntExtra("parPos", -1) != -1) {
+                                EventBus.getDefault().post(
+                                    UpdateLikemeOnePosEvent(
+                                        intent.getIntExtra("parPos", -1), intent.getIntExtra("childPos", -1)
+                                    )
+                                )
+                            }
+                            //喜欢过
+                            matchBean!!.isfriend = 1
+                            updateLightCount(-1)
+                            sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
+                        }
+                    }
+                } else if (statusBean.code == 201) {
+                    if (matchBean!!.my_percent_complete <= matchBean!!.normal_percent_complete)
+                        RightSlideOutdDialog(this, matchBean!!.my_like_times, matchBean!!.total_like_times).show()
+                    else
+                        ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
+                }
+        } else {
+            if (statusBean != null)
+                if (statusBean.code == 200) {
+                    if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
+                        EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
+                    }
+
+                    if (statusBean.data != null) {
+                        EventBus.getDefault().post(RefreshEvent(true))
+                        finish()
+                    } else {
+                        CommonFunction.toast(statusBean.msg)
+                    }
+                }
+        }
+    }
+
+
     override fun onRemoveBlockResult(success: Boolean) {
         if (success) {
             NIMClient.getService(FriendService::class.java).removeFromBlackList(matchBean!!.accid)
@@ -539,12 +612,32 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.moreBtn1 -> {//更多
                 showMoreActionDialog()
             }
-            R.id.detailUserChatLl -> {
+            R.id.detailUserDislikeBtn -> {//不感兴趣
+                mPresenter.dislikeUser(params)
+            }
+            R.id.detailUserLikeBtn -> {//感兴趣
+                mPresenter.likeUser(params)
+            }
+            //这里要判断是不是VIP用户 如果是VIP 直接进入聊天界面
+            //1.首先判断是否有次数，
+            // 若有 就打招呼
+            // 若无 就弹充值
+            R.id.detailUserChatBtn -> {
                 if (matchBean != null)
                     CommonFunction.commonGreet(
                         this,
                         matchBean!!.accid,
-                        detailUserChatLl,
+                        detailUserChatBtn,
+                        targetAvator = matchBean!!.avatar ?: ""
+                    )
+            }
+
+            R.id.detailUserGreetBtn -> {
+                if (matchBean != null)
+                    CommonFunction.commonGreet(
+                        this,
+                        matchBean!!.accid,
+                        detailUserGreetBtn,
                         targetAvator = matchBean!!.avatar ?: ""
                     )
             }
@@ -607,15 +700,48 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     /**
      * 更新本地的招呼次数
      */
-    private fun updateLightCount() {
+    private fun updateLightCount(lightningcnt: Int) {
+        if (lightningcnt != -1) {
+            UserManager.saveLightingCount(lightningcnt)
+            EventBus.getDefault().postSticky(UpdateHiCountEvent())
+        }
+
+        //已感兴趣或者是好友不做操作
+        if (matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
+            detailUserDislikeBtn.visibility = View.INVISIBLE
+            detailUserLikeBtn.isVisible = false
+            detailUserGreetBtn.isVisible = true
+        } else {
+            detailUserDislikeBtn.visibility = View.VISIBLE
+            detailUserLikeBtn.isVisible = true
+            detailUserGreetBtn.isVisible = true
+        }
+
         //判断是否为好友 是：显示聊天
         //              否: 判断是否开启招呼,是否喜欢过
-        if (matchBean!!.isfriend == 1 || matchBean!!.isgreeted) {//是好友就显示聊天
-            detailUserChatBtn.text = "聊天"
-            detailChatTypeIcon.setImageResource(R.drawable.icon_chat_white)
+        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
+            detailUserChatBtn.text = "聊  天"
+            detailUserChatBtn.isVisible = true
+            detailUserGreetBtn.isVisible = false
         } else {
-            detailUserChatBtn.text = "打招呼"
-            detailChatTypeIcon.setImageResource(R.drawable.icon_hi_match)
+            detailUserChatBtn.isVisible = false
+            detailUserGreetBtn.isVisible = true
+            detailUserLikeBtn.isVisible = matchBean!!.isliked != 1//喜欢过就不显示“感兴趣”
+            if (!matchBean!!.greet_switch) {//招呼未开启不显示打招呼
+                detailUserChatBtn.isVisible = false
+                detailUserGreetBtn.isVisible = false
+            } else {//招呼开启,   招呼有效 与 招呼无效
+                if (matchBean!!.isgreeted) {
+                    detailUserGreetBtn.isVisible = false
+                    detailUserChatBtn.isVisible = true
+                    detailUserChatBtn.text = "继续聊天"
+                } else {
+                    detailUserGreetBtn.isVisible = true
+                    detailUserChatBtn.isVisible = false
+                }
+            }
+
+
         }
     }
 
@@ -638,11 +764,74 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUserRelationshipEvent(event: UserRelationshipEvent) {
-        matchBean?.isgreeted = true
-        //更新打招呼次数和状态
-        updateLightCount()
+    fun onGreetDetailSuccessEvent(event: GreetDetailSuccessEvent) {
+        if (event.success) {
+            matchBean!!.isgreeted = true
+            updateLightCount(UserManager.getLightingCount()-1)
+        }
+    }
+
+
+    /*--------------------------消息代理------------------------*/
+    private fun sendChatHiMessage(type: Int) {
+        Log.d("OkHttp", matchBean?.accid ?: "")
+        val container = Container(this, matchBean?.accid, SessionTypeEnum.P2P, this, true)
+        val chatHiAttachment = ChatHiAttachment(type)
+        val config = CustomMessageConfig()
+        config.enablePush = false
+        val message = MessageBuilder.createCustomMessage(
+            matchBean?.accid,
+            SessionTypeEnum.P2P,
+            "",
+            chatHiAttachment,
+            config
+        )
+        container.proxy.sendMessage(message)
+    }
+
+    override fun sendMessage(msg: IMMessage): Boolean {
+        NIMClient.getService(MsgService::class.java).sendMessage(msg, false).setCallback(object :
+            RequestCallback<Void?> {
+            override fun onSuccess(param: Void?) {
+                if (msg.attachment is ChatHiAttachment) {
+                    if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
+                        SayHiDialog(matchBean!!.accid, matchBean!!.nickname ?: "", this@MatchDetailActivity).show()
+                    } else {
+                        startActivity<MatchSucceedActivity>(
+                            "avator" to matchBean!!.avatar,
+                            "nickname" to matchBean!!.nickname,
+                            "accid" to matchBean!!.accid
+                        )
+                    }
+                }
+
+            }
+
+            override fun onFailed(code: Int) {
+            }
+
+            override fun onException(exception: Throwable) {
+            }
+        })
+        return true
+    }
+
+    override fun onInputPanelExpand() {
+
+    }
+
+    override fun shouldCollapseInputPanel() {
+
+    }
+
+    override fun isLongClickEnabled(): Boolean {
+        return false
+    }
+
+    override fun onItemFooterClick(message: IMMessage?) {
+
     }
 
 }

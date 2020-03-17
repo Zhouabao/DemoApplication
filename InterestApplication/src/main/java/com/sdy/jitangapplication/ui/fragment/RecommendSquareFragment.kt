@@ -92,9 +92,6 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
         adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.isUseEmpty(false)
-        adapter.setOnItemClickListener { _, view, position ->
-            SquareCommentDetailActivity.start(activity!!, squareId = adapter.data[position].id)
-        }
     }
 
 

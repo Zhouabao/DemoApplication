@@ -11,8 +11,6 @@ import com.sdy.jitangapplication.model.SquareBean
  *    version: 1.0
  */
 interface SquarePlayDetailView : BaseView {
-    fun onGetRecentlySquaresResults(mutableList: MutableList<SquareBean?>)
-
     fun onGetSquareInfoResults(mutableList: SquareBean?)
 
     fun onGetSquareLikeResult(position: Int, result: Boolean)

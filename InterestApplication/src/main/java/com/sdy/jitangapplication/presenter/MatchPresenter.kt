@@ -9,6 +9,8 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchView
@@ -85,4 +87,34 @@ class MatchPresenter : BasePresenter<MatchView>() {
                 }
             })
     }
+
+
+    /**
+     * 喜欢
+     */
+    fun likeUser(params: HashMap<String, Any>, matchBean: MatchBean) {
+        if (!checkNetWork()) {
+            return
+        }
+        RetrofitFactory.instance.create(Api::class.java)
+            .addLike(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<StatusBean?>>(mView) {
+                override fun onNext(t: BaseResp<StatusBean?>) {
+                    if (t.code == 200) {
+                        mView.onGetLikeResult(true, t, matchBean)
+                    } else {
+                        mView.onGetLikeResult(false, t, matchBean)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onError(CommonFunction.getErrorMsg(context))
+                }
+            })
+    }
+
+
 }

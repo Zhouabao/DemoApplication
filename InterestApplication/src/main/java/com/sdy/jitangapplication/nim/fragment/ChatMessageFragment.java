@@ -709,17 +709,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                     sendTipMessage("您未通过真人认证，可能导致回复率偏低");
                             }
                             nimBean.setIssended(true);
-
-                            if (!nimBean.getIsgreet() && !nimBean.getIsfriend()) {
-                                //刷新首页数据
-                                EventBus.getDefault().post(new RefreshEvent(true));
-                                //刷新兴趣找人列表
-                                EventBus.getDefault().post(new UpdateFindByTagListEvent(-1, sessionId));
-                                //刷新对方用户信息页面
-                                EventBus.getDefault().post(new UserRelationshipEvent());
-
-                            }
-
                         } else if (nimBeanBaseResp.getCode() == 409) {//用户被封禁
                             new CommonAlertDialog.Builder(getActivity())
                                     .setTitle("提示")

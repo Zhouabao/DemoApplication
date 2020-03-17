@@ -72,7 +72,8 @@ class ChangeAvatarRealManDialog(
                         context1,
                         matchBean!!.accid,
                         view1,
-                        targetAvator = matchBean!!.avatar ?: ""
+                        targetAvator = matchBean!!.avatar ?: "",
+                        needSwipe = true
                     )
                 dismiss()
             }

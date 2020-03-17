@@ -19,11 +19,12 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.event.GreetEvent
-import com.sdy.jitangapplication.event.UpdateHiEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.GreetTimesBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.ui.activity.FindByTagListActivity
 import com.sdy.jitangapplication.ui.activity.MainActivity
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.GreetLimitlDialog
 import com.sdy.jitangapplication.ui.dialog.GreetUseUpDialog
@@ -58,17 +59,25 @@ object CommonFunction {
         ToastUtils.setGravity(Gravity.CENTER, 0, 0)
         ToastUtils.showShort(msg)
     }
-
-
     /**
-     * 打招呼通用逻辑
+     * 打招呼
+     * code  201  次数使用完毕，请充值次数
+     * code  202  你就弹框（该用户当日免费接收次数完毕，请充值会员获取）
+     * code  203  招呼次数用完,认证获得次数
+     * 204  次数使用完毕，请充值会员获取次数
+     * 205  今日次数使用完毕
+     * 206  是好友/打过招呼的
+     * code  401  发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
+     * code  400  招呼次数用尽~
      */
+
     fun commonGreet(
-        context: Context,
-        targetAccid: String,
+        context1: Context,
+        target_accid: String,
         view: View? = null,
         position: Int = -1,
-        targetAvator: String
+        targetAvator: String,
+        needSwipe: Boolean = false
     ) {
         if (view != null)
             view.isEnabled = false
@@ -82,22 +91,6 @@ object CommonFunction {
             return
         }
 
-        greet(targetAccid, context, view, position, targetAvator)
-    }
-
-
-    /**
-     * 打招呼
-     * code  201  次数使用完毕，请充值次数
-     * code  202  你就弹框（该用户当日免费接收次数完毕，请充值会员获取）
-     * code  203  招呼次数用完,认证获得次数
-     * 204  次数使用完毕，请充值会员获取次数
-     * 205  今日次数使用完毕
-     * 206  是好友/打过招呼的
-     * code  401  发起招呼失败,对方开启了招呼认证,您需要通过人脸认证
-     * code  400  招呼次数用尽~
-     */
-    fun greet(target_accid: String, context1: Context, view: View?, position: Int, targetAvator: String) {
         if (!NetworkUtils.isConnected()) {
             toast("请连接网络！")
             return
@@ -111,15 +104,15 @@ object CommonFunction {
                 override fun onNext(t: BaseResp<GreetTimesBean?>) {
                     when {
                         t.code == 200 -> {//成功
-                            if (view != null) {
-                                view.postDelayed({
-                                    EventBus.getDefault().post(GreetEvent(context1, false))
-                                }, 1000L)
-                            } else {
-                                EventBus.getDefault().post(GreetEvent(context1, false))
-                            }
+                            if (needSwipe)
+                                EventBus.getDefault().post(GreetTopEvent(context1, true))
+                            //刷新对方用户信息页面
+                            if (ActivityUtils.isActivityExistsInStack(MatchDetailActivity::class.java))
+                                EventBus.getDefault().post(GreetDetailSuccessEvent(true))
+                            //刷新兴趣找人列表
+                            if (ActivityUtils.isActivityExistsInStack(FindByTagListActivity::class.java))
+                                EventBus.getDefault().post(UpdateFindByTagListEvent(position, target_accid))
                             ChatActivity.start(context1, target_accid)
-
                         }
                         t.code == 201 -> {//次数使用完毕，请充值次数
                             ChargeVipDialog(
@@ -170,7 +163,6 @@ object CommonFunction {
                 }
             })
     }
-
 
     fun dissolveRelationship(target_accid: String, negative: Boolean = false) {
         NIMClient.getService(MsgService::class.java).deleteRecentContact2(target_accid, SessionTypeEnum.P2P)

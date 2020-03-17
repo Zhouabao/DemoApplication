@@ -169,8 +169,8 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
 
     private fun initFragments() {
-        titleAdapter.addData(SquareTitleBean("好友", true))
-        titleAdapter.addData(SquareTitleBean("推荐", false))
+        titleAdapter.addData(SquareTitleBean("好友", false))
+        titleAdapter.addData(SquareTitleBean("推荐", true))
         titleAdapter.addData(SquareTitleBean("兴趣", false))
         titleAdapter.addData(SquareTitleBean("附近", false))
 

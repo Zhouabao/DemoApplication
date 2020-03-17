@@ -135,13 +135,6 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
         manager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
         samePersonRv.layoutManager = manager
         samePersonRv.adapter = adapter
-        adapter.setOnItemClickListener { _, view, position ->
-            view.isEnabled = false
-            SquareCommentDetailActivity.start(this, squareId = adapter.data[position].id)
-            view.postDelayed({
-                view.isEnabled = true
-            }, 1000L)
-        }
     }
 
     private fun initData(bannerBean: SquareBannerBean) {
@@ -188,7 +181,6 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
         adapter.addData(data?.list ?: mutableListOf())
         refreshSamePerson.finishRefresh()
         refreshSamePerson.finishLoadMore()
-
     }
 
 }

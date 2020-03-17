@@ -12,6 +12,7 @@ import com.sdy.jitangapplication.model.SquareTagBean
 import com.sdy.jitangapplication.ui.activity.TagDetailCategoryActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_layout_tag_square.view.*
+import org.jetbrains.anko.sdk27.coroutines.onTouch
 import org.jetbrains.anko.startActivity
 
 /**
@@ -21,6 +22,7 @@ class TagSquareAdapter : BaseQuickAdapter<SquareTagBean, BaseViewHolder>(R.layou
     override fun convert(helper: BaseViewHolder, item: SquareTagBean) {
         val itemview = helper.itemView
         helper.addOnClickListener(R.id.btnTagMore)
+        helper.addOnClickListener(R.id.rvTagSquareImg)
         itemview.rvTagSquareImg.layoutManager = GridLayoutManager(mContext, 3)
         val adapter = TagSquarePicAdapter(3)
         if (item.cover_list.isNullOrEmpty()) {
@@ -32,6 +34,9 @@ class TagSquareAdapter : BaseQuickAdapter<SquareTagBean, BaseViewHolder>(R.layou
                 adapter.addData(SquarePicBean(data))
             }
 
+        itemview.rvTagSquareImg.onTouch { _, event ->
+            helper.itemView.onTouchEvent(event)
+        }
         adapter.setOnItemClickListener { _, view, position ->
             if (!isActivityExistsInStack(TagDetailCategoryActivity::class.java))
                 mContext.startActivity<TagDetailCategoryActivity>(

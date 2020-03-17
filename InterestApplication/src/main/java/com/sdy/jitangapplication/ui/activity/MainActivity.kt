@@ -7,12 +7,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.*
 import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -198,13 +196,31 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun switchTab(position: Int) {
         when (position) {
             0 -> {
-                tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
-                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
-                    null,
-                    resources.getDrawable(R.drawable.icon_tab_match_checked),
-                    null,
-                    null
-                )
+                if (!UserManager.isUserVip()) {
+                    tabMatch.isVisible = true
+                    tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
+                    tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
+                    tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
+                    tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                        null,
+                        null,
+                        null,
+                        null
+                    )
+                } else {
+                    tabMatch.isVisible = false
+                    tabMatchCount.text = "匹配"
+                    tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
+                    tabMatchCount.setPadding(0)
+                    tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                        null,
+                        resources.getDrawable(R.drawable.icon_tab_match_checked),
+                        null,
+                        null
+                    )
+                }
+
+
                 tabSquarePublish.isVisible = false
                 tabSquare.isVisible = true
                 tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
@@ -223,14 +239,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             1 -> {
+                tabMatch.isVisible = false
+                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     resources.getDrawable(R.drawable.icon_tab_match),
                     null,
                     null
                 )
-
                 tabSquarePublish.isVisible = true
                 tabSquare.visibility = View.INVISIBLE
                 tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
@@ -249,7 +267,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             2 -> {
+                tabMatch.isVisible = false
+                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     resources.getDrawable(R.drawable.icon_tab_match),
@@ -259,13 +280,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
                 tabSquarePublish.isVisible = false
                 tabSquare.isVisible = true
-//                tabSquare.setTextColor(resources.getColor(R.color.colorGrayCCC))
-//                tabSquare.setCompoundDrawablesWithIntrinsicBounds(
-//                    null,
-//                    resources.getDrawable(R.drawable.icon_tab_square),
-//                    null,
-//                    null
-//                )
                 tabMessage.setTextColor(resources.getColor(R.color.colorOrange))
                 tabMessage.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -282,7 +296,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             3 -> {
+                tabMatch.isVisible = false
+                tabMatchCount.text = "匹配"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
+                tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     resources.getDrawable(R.drawable.icon_tab_match),
@@ -311,12 +328,42 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateSlideCountEvent(event: UpdateSlideCountEvent) {
+        if (vpMain.currentItem == 0) {
+            if (!UserManager.isUserVip()) {
+                tabMatch.isVisible = true
+                tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
+                tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
+                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    null,
+                    null
+                )
+            } else {
+                tabMatch.isVisible = false
+                tabMatchCount.text = "匹配"
+                tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
+                tabMatchCount.setPadding(0)
+                tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    resources.getDrawable(R.drawable.icon_tab_match_checked),
+                    null,
+                    null
+                )
+            }
+        }
+    }
+
+
     override fun onClick(view: View) {
         when (view.id) {
             R.id.labelAddBtn -> { //兴趣添加
                 startActivity<MyLabelActivity>()
             }
-            R.id.tabMatchCount -> {
+            R.id.tabMatchCount, R.id.tabMatch -> {
                 vpMain.currentItem = 0
             }
             R.id.tabSquare -> {
@@ -403,7 +450,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                         ",greetcount = ${allMsgCount.greetcount},square_count = ${allMsgCount.square_count}"
             )
 
-            showMsgDot((allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || msgCount > 0))
+            showMsgDot((allMsgCount.likecount > 0 || allMsgCount.greetcount > 0 || allMsgCount.square_count > 0 || msgCount > 0))
         }
     }
 

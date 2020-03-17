@@ -10,7 +10,6 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.SquareBean
-import com.sdy.jitangapplication.model.SquareRecentlyListBean
 import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -22,35 +21,6 @@ import com.sdy.jitangapplication.utils.UserManager
  *    version: 1.0
  */
 class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
-
-
-    /**
-     * 获取最近的好友动态列表
-     */
-    fun getRencentlySquares(params: HashMap<String, Any>) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .getLatelySquareInfo(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<SquareRecentlyListBean?>>(mView) {
-                override fun onNext(t: BaseResp<SquareRecentlyListBean?>) {
-                    super.onNext(t)
-                    if (t.code == 200) {
-                        if (t != null && t.data != null && t.data!!.list != null && t.data!!.list!!.size > 0) {
-                            mView.onGetRecentlySquaresResults(t.data!!.list!!)
-                        }
-                    } else  {
-                        mView.onError(t.msg)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onError(context.getString(R.string.service_error))
-                }
-            })
-    }
-
 
     /**
      * 获取某一广场详情

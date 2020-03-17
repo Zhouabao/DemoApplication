@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:background="@color/colorBlack"
-        tools:context=".ui.activity.SquarePlayListDetailActivity">
+        tools:context=".ui.activity.SquarePlayDetailActivity">
 
     <FrameLayout
             android:id="@+id/videoFl"
