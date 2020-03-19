@@ -10,7 +10,7 @@
         android:fitsSystemWindows="true"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content"
+        app:msv_viewState="loading"
         tools:context=".ui.activity.ChooseTitleActivity">
 
 
@@ -28,10 +28,10 @@
                 android:layout_height="match_parent"
                 app:srlDisableContentWhenLoading="true"
                 app:srlDisableContentWhenRefresh="true"
-                app:srlEnableLoadMore="true"
-                app:srlEnableAutoLoadMore="true"
+                app:srlEnableLoadMore="false"
+                app:srlEnableAutoLoadMore="false"
                 app:srlEnableLoadMoreWhenContentNotFull="true"
-                app:srlEnableRefresh="true">
+                app:srlEnableRefresh="false">
 
             <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
@@ -39,6 +39,7 @@
 
                 <LinearLayout
                         android:orientation="vertical"
+                        android:paddingBottom="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 

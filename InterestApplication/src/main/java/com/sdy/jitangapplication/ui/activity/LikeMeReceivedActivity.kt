@@ -231,7 +231,20 @@ class LikeMeReceivedActivity : BaseMvpActivity<LikeMeReceivedPresenter>(), LikeM
 
 
     override fun onGetDislikeResult(b: Boolean) {
+        if (b) {
+            if (likeCount > 0 && likeLeftCount.isVisible) {
+                likeCount -= 1
+                likeLeftCount.text = SpanUtils.with(likeLeftCount)
+                    .append("有")
+                    .append(" $likeCount ")
+                    .setForegroundColor(resources.getColor(R.color.colorOrange))
+                    .setBold()
+                    .append("个人喜欢你")
+                    .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                    .create()
+            }
 
+        }
     }
 
 

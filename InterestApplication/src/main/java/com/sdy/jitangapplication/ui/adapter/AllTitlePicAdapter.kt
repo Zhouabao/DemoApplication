@@ -25,10 +25,11 @@ class AllTitlePicAdapter(private var spanCount: Int = 5) :
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = SizeUtils.dp2px(48F)
             (helper.itemView.layoutParams as RecyclerView.LayoutParams).height = SizeUtils.dp2px(48F)
         }
+
         GlideUtil.loadRoundImgCenterCrop(
             mContext,
             item.cover_url,
-            helper.itemView.content,
+            helper.itemView.pic,
             SizeUtils.dp2px(8F)
         )
     }

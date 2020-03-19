@@ -103,8 +103,8 @@ class PublishPresenter : BasePresenter<PublishView>() {
             imagePath,
             SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
             { key, info, response ->
-                Log.d("OkHttp", response.toString())
-                Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
+//                Log.d("OkHttp", response.toString())
+//                Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null) {
                     if (!info.isOK) {
 //                        mView.onQnUploadResult(false, type, key)

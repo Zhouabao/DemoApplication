@@ -20,10 +20,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.NotifyEvent
-import com.sdy.jitangapplication.event.RefreshCommentEvent
-import com.sdy.jitangapplication.event.RefreshSquareByGenderEvent
-import com.sdy.jitangapplication.event.RefreshSquareEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.model.SquareListBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
@@ -85,8 +82,7 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
             "token" to UserManager.getToken(),
             "page" to page,
             "pagesize" to Constants.PAGESIZE,
-            "gender" to SPUtils.getInstance(Constants.SPNAME).getInt("filter_square_gender", 3),
-            "type" to 3
+            "gender" to SPUtils.getInstance(Constants.SPNAME).getInt("filter_square_gender", 3)
         )
     }
 
@@ -112,7 +108,7 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
         retryBtn.onClick {
             stateSquare.viewState = MultiStateView.VIEW_STATE_LOADING
 //            这个地方还要默认设置选中第一个兴趣来更新数据
-            mPresenter.getSquareList(listParams, true, true)
+            mPresenter.squareNewestLists(listParams, true, true)
             //mPresenter.getFrinedsList(friendsParams)
         }
 
@@ -189,7 +185,7 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
         }
 
 
-        mPresenter.getSquareList(listParams, true, true)
+        mPresenter.squareNewestLists(listParams, true, true)
 
     }
 
@@ -296,7 +292,7 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
         resetAudio()
 
         refreshLayout.setNoMoreData(false)
-        mPresenter.getSquareList(listParams, true)
+        mPresenter.squareNewestLists(listParams, true)
 
     }
 
@@ -306,7 +302,7 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
         } else {
             page++
             listParams["page"] = page
-            mPresenter.getSquareList(listParams, false)
+            mPresenter.squareNewestLists(listParams, false)
         }
     }
 
@@ -399,6 +395,21 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshSquareByGenderEvent(event: RefreshSquareByGenderEvent) {
         refreshLayout.autoRefresh()
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshLikeEvent(event: RefreshLikeEvent) {
+        if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
+            adapter.data[event.position].isliked = event.isLike
+            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
+                adapter.data[event.position].like_cnt + 1
+            } else {
+                adapter.data[event.position].like_cnt - 1
+            }
+
+            adapter.refreshNotifyItemChanged(event.position)
+        }
     }
 
 

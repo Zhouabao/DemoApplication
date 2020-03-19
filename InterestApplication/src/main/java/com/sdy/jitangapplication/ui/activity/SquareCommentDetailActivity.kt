@@ -13,10 +13,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
@@ -59,13 +61,17 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoView
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_square_comment_detail.*
+import kotlinx.android.synthetic.main.activity_square_comment_detail.headSquareView
 import kotlinx.android.synthetic.main.delete_dialog_layout.*
+import kotlinx.android.synthetic.main.delete_dialog_layout.view
 import kotlinx.android.synthetic.main.dialog_comment_action.*
 import kotlinx.android.synthetic.main.dialog_more_action_new.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.layout_actionbar.*
 import kotlinx.android.synthetic.main.layout_comment_head.view.*
 import kotlinx.android.synthetic.main.layout_record_audio.*
 import kotlinx.android.synthetic.main.layout_square_list_bottom.*
+import kotlinx.android.synthetic.main.layout_square_list_top.*
 import kotlinx.android.synthetic.main.switch_video.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
@@ -162,6 +168,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
 
         GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", squareUserIv1)
+        GlideUtil.loadAvatorImg(this, squareBean!!.avatar ?: "", headSquareUserIv1)
         if (!squareBean!!.tags.isNullOrEmpty()) {
             squareTagName.text = squareBean!!.tags ?: ""
             squareTagLl.isVisible = true
@@ -179,7 +186,10 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         adapter.addData(squareBean!!.title_list ?: mutableListOf())
         squareTitleRv.adapter = adapter
         adapter.setOnItemClickListener { _, view, position ->
-            startActivity<TagDetailCategoryActivity>("id" to adapter.data[position].id, "type" to TagDetailCategoryActivity.TYPE_TOPIC)
+            startActivity<TagDetailCategoryActivity>(
+                "id" to adapter.data[position].id,
+                "type" to TagDetailCategoryActivity.TYPE_TOPIC
+            )
         }
         squareTitleRv.isVisible = !squareBean!!.title_list.isNullOrEmpty()
         squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
@@ -203,32 +213,30 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         squareZhuanfaBtn1.text = "${squareBean!!.share_cnt}"
         squareUserName1.text = "${squareBean!!.nickname}"
+        headSquareUserName1.text = "${squareBean!!.nickname}"
         squareUserVipIv1.isVisible = squareBean!!.isvip == 1
+        headSquareUserVipIv1.isVisible = squareBean!!.isvip == 1
 
-        if (squareBean!!.isfriend)
+        if (squareBean!!.isfriend) {
             squareChatBtn1.isVisible = true
-        else
+            headSquareChatBtn1.isVisible = true
+        } else {
             squareChatBtn1.visibility =
                 if (!(UserManager.getAccid() == squareBean!!.accid || !squareBean!!.greet_switch)) {
                     View.VISIBLE
                 } else {
                     View.INVISIBLE
                 }
-
-        squareChatBtn1.onClick {
-            CommonFunction.commonGreet(
-                this,
-                squareBean?.accid ?: "",
-                squareChatBtn1,
-                targetAvator = squareBean?.avatar ?: ""
-            )
-        }
-        squareUserIv1.onClick {
-            if ((squareBean?.accid ?: "") != UserManager.getAccid())
-                MatchDetailActivity.start(this, squareBean?.accid ?: "")
+            headSquareChatBtn1.visibility =
+                if (!(UserManager.getAccid() == squareBean!!.accid || !squareBean!!.greet_switch)) {
+                    View.VISIBLE
+                } else {
+                    View.INVISIBLE
+                }
         }
 
         squareTime.text = "${squareBean!!.out_time}"
+        headSquareTime.text = "${squareBean!!.out_time}"
         squareLocation.text = "${squareBean!!.puber_address}"
         if (squareBean!!.puber_address.isNullOrEmpty()) {
             squareLocationAndTime1Ll.visibility = View.INVISIBLE
@@ -261,7 +269,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
         }
 
-
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
 
@@ -272,16 +279,19 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         adapter.emptyView.allT2.isVisible = false
 
-        btnBack.onClick {
-            onBackPressed()
-        }
-
-
+        hotT1.text = "动态详情"
+        btnBack.setOnClickListener(this)
+        headBtnBack.setOnClickListener(this)
         squareZhuanfaBtn1.setOnClickListener(this)
         squareDianzanBtn1.setOnClickListener(this)
         squareCommentBtn1.setOnClickListener(this)
+        squareChatBtn1.setOnClickListener(this)
+        headSquareChatBtn1.setOnClickListener(this)
+        squareUserIv1.setOnClickListener(this)
+        headSquareUserIv1.setOnClickListener(this)
         squareMoreBtn1.setOnClickListener(this)
         sendCommentBtn.setOnClickListener(this)
+        view.isVisible = false
 
         showCommentEt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(charSequence: Editable?) {
@@ -350,6 +360,18 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                     showCommentEt.hint = "『回复${adapter.data[position].replyed_nickname}：』"
                     KeyboardUtils.showSoftInput(showCommentEt)
                 }
+            }
+        }
+
+        squareScrollView.setOnScrollChangeListener { v: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            if (scrollY >= SizeUtils.dp2px(56F)) {
+                headSquareView.isVisible = true
+                topLayout.visibility = View.INVISIBLE
+                llTitle.visibility = View.INVISIBLE
+            } else {
+                topLayout.isVisible = true
+                llTitle.isVisible = true
+                headSquareView.isVisible = false
             }
         }
     }
@@ -491,6 +513,18 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             //滑动动画
             squareUserPics.addOnScrollListener(GalleryOnScrollListener())
             imgsAdapter.setOnItemClickListener { _, view, position ->
+                if (squareBean!!.isliked != 1) {
+                    val params = hashMapOf<String, Any>(
+                        "type" to if (squareBean!!.isliked == 1) {
+                            2
+                        } else {
+                            1
+                        },
+                        "square_id" to squareBean!!.id!!
+                    )
+                    mPresenter.getSquareLike(params)
+                }
+
                 startActivity<BigImageActivity>(
                     BigImageActivity.IMG_KEY to squareBean!!,
                     BigImageActivity.IMG_POSITION to position
@@ -619,6 +653,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             if (intent.getIntExtra("position", -1) != -1)
                 EventBus.getDefault().post(
                     RefreshLikeEvent(
+                        squareBean?.id ?: 0,
                         squareBean?.isliked ?: 0,
                         intent.getIntExtra("position", -1)
                     )
@@ -681,6 +716,9 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             R.id.squareZhuanfaBtn1 -> {
                 showTranspondDialog()
             }
+            R.id.btnBack, R.id.headBtnBack -> {
+                onBackPressed()
+            }
             R.id.squareDianzanBtn1 -> {
                 val params = hashMapOf(
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
@@ -700,6 +738,18 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
             R.id.squareMoreBtn1 -> {
                 showMoreDialog()
+            }
+            R.id.squareChatBtn1, R.id.headSquareChatBtn1 -> {
+                CommonFunction.commonGreet(
+                    this,
+                    squareBean?.accid ?: "",
+                    squareChatBtn1,
+                    targetAvator = squareBean?.avatar ?: ""
+                )
+            }
+            R.id.squareUserIv1, R.id.headSquareUserIv1 -> {
+                if ((squareBean?.accid ?: "") != UserManager.getAccid())
+                    MatchDetailActivity.start(this, squareBean?.accid ?: "")
             }
             R.id.sendCommentBtn -> {
                 mPresenter.addComment(

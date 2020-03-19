@@ -146,11 +146,11 @@ interface Api {
     fun squareTagInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<TagSquareListBean?>>
 
     /**
-     * 获取广场列表
+     * 获取最新广场列表
      */
     @FormUrlEncoded
-    @POST("square/squareListsV13${Constants.END_BASE_URL}")
-    fun getSquareList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
+    @POST("Square/squareNewestLists${Constants.END_BASE_URL}")
+    fun squareNewestLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
 
 
     /**

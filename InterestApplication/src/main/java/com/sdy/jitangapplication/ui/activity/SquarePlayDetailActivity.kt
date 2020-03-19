@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -49,6 +50,14 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     private val TAG = SquarePlayDetailActivity::class.java.simpleName
     override fun onGetSquareInfoResults(squareBean: SquareBean?) {
         if (squareBean != null) {
+            squareBean.type = when {
+                !squareBean.video_json.isNullOrEmpty() -> SquareBean.VIDEO
+                !squareBean.audio_json.isNullOrEmpty() -> SquareBean.AUDIO
+                !squareBean.photo_json.isNullOrEmpty() ||
+                        (squareBean.photo_json.isNullOrEmpty() && squareBean.audio_json.isNullOrEmpty() && squareBean.video_json.isNullOrEmpty()) -> SquareBean.PIC
+                else -> SquareBean.PIC
+            }
+
             this.squareBean = squareBean
             initData()
         }
@@ -151,8 +160,12 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             squareBean.video_json?.get(0)?.url ?: "",
             true
         )
+        if (!intent.getBooleanExtra("fromRecommend", false)) {
+            SwitchUtil.clonePlayState(detailPlayVideo)
+            // 这里指定了被共享的视图元素
+            ViewCompat.setTransitionName(videoFl, OPTION_VIEW)
 
-        SwitchUtil.clonePlayState(detailPlayVideo)
+        }
         GSYVideoManager.instance().isNeedMute = false
         detailPlayVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
             override fun onClickBlank(url: String?, vararg objects: Any?) {
@@ -168,8 +181,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
         })
 //        setSurfaceToPlay()
         detailPlayVideo.startPlayLogic()
-        // 这里指定了被共享的视图元素
-        ViewCompat.setTransitionName(videoFl, OPTION_VIEW)
+
         GlideUtil.loadAvatorImg(this, squareBean.avatar, detailPlayUserAvatar)
         detailPlayUserLocationAndTime.text = "${squareBean!!.puber_address}" +
                 "${if (!squareBean!!.puber_address.isNullOrEmpty()) {
@@ -358,6 +370,8 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             R.id.detailPlayUserAvatar -> {
                 if (UserManager.getAccid() != squareBean.accid) {
                     MatchDetailActivity.start(this, squareBean.accid)
+                    GSYVideoManager.onResume()
+                    detailPlayVideo.onVideoResume()
                 }
             }
             //更多操作
@@ -407,18 +421,23 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
     }
 
     override fun onBackPressed() {
-        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.listener())
-
-        SwitchUtil.savePlayState(detailPlayVideo)
-        detailPlayVideo.gsyVideoManager.setLastListener(detailPlayVideo)
+        if (intent.getBooleanExtra("fromRecommend", false)) {
+            GSYVideoManager.releaseAllVideos()
+        } else {
+            detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.listener())
+            SwitchUtil.savePlayState(detailPlayVideo)
+            detailPlayVideo.gsyVideoManager.setLastListener(detailPlayVideo)
 //        supportFinishAfterTransition()
-        setResult(Activity.RESULT_OK, intent)
+            setResult(Activity.RESULT_OK, intent)
+        }
+
         super.onBackPressed()
     }
 
     override fun onPause() {
         super.onPause()
         detailPlayVideo.onVideoPause()
+
     }
 
     override fun onResume() {
@@ -428,6 +447,12 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d("SquarePlayDetailActivity=", "onDestroy")
+
+        if (intent.getBooleanExtra("fromRecommend", false)) {
+            detailPlayVideo.release()
+            GSYVideoManager.releaseAllVideos()
+        }
 //        detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.lastListener())
 //        detailPlayVideo.gsyVideoManager.setLastListener(null)
 //        detailPlayVideo.release()
@@ -437,6 +462,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
     override fun finish() {
         if (intent.getBooleanExtra("fromRecommend", false)) {
+            detailPlayVideo.release()
             GSYVideoManager.releaseAllVideos()
         } else {
             detailPlayVideo.gsyVideoManager.setListener(detailPlayVideo.gsyVideoManager.listener())

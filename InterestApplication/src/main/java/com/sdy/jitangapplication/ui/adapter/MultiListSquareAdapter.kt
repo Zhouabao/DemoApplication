@@ -114,7 +114,7 @@ class MultiListSquareAdapter(
                 SizeUtils.dp2px(5F)
             )
         } else {
-            holder.itemView.headSquareView.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
+//            holder.itemView.headSquareView.isVisible = type != MySquareFragment.TYPE_OTHER_DETAIL
             holder.itemView.view.isVisible = holder.layoutPosition - headerLayoutCount != 0
 
             if (!item.tags.isNullOrEmpty()) {
@@ -213,6 +213,9 @@ class MultiListSquareAdapter(
                 mContext.startActivity<TagDetailCategoryActivity>("id" to adapter.data[position].id, "type" to TagDetailCategoryActivity.TYPE_TOPIC)
             }
 
+            holder.itemView.squareTagName.onClick {
+                mContext.startActivity<TagDetailCategoryActivity>("id" to item.tag_id, "type" to TagDetailCategoryActivity.TYPE_TAG)
+            }
 
             holder.itemView.squareUserIv1.onClick {
                 if (!(UserManager.getAccid() == item.accid || !chat)) {

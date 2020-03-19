@@ -16,6 +16,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.event.UpdateFindByTagEvent
 import com.sdy.jitangapplication.model.SquareTagBean
 import com.sdy.jitangapplication.presenter.TagSquarePresenter
 import com.sdy.jitangapplication.presenter.view.TagSquareView
@@ -24,6 +25,9 @@ import com.sdy.jitangapplication.ui.adapter.TagSquareAdapter
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_tag_square.*
 import kotlinx.android.synthetic.main.popupwindow_square_filter_tag_top.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
 
 /**
@@ -84,6 +88,7 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
 
 
     private fun initView() {
+        EventBus.getDefault().register(this)
         mPresenter = TagSquarePresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!
@@ -127,7 +132,7 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
                         "置于底部"
                     }
                 }
-                R.id.rvTagSquareImg->{
+                R.id.rvTagSquareImg -> {
                     if (!ActivityUtils.isActivityExistsInStack(TagDetailCategoryActivity::class.java))
                         startActivity<TagDetailCategoryActivity>(
                             "id" to adapter.data[position].id,
@@ -182,5 +187,16 @@ class TagSquareFragment : BaseMvpLazyLoadFragment<TagSquarePresenter>(), TagSqua
         stateTagSquare.viewState = MultiStateView.VIEW_STATE_LOADING
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateFindByTagEvent(eve: UpdateFindByTagEvent) {
+        refreshTagSquare.autoRefresh()
+    }
 
 }

@@ -1,10 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.app.Activity
-import android.graphics.Color
-import android.text.SpannableStringBuilder
-import android.text.TextPaint
-import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -12,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.blankj.utilcode.util.SpanUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.MultiTransformation
@@ -32,14 +27,11 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.RecommendSquareBean
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
-import com.sdy.jitangapplication.ui.activity.TagDetailCategoryActivity
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.CustomMovementMethod
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_recommend_square.view.*
-import org.jetbrains.anko.startActivity
 
 //0文本 1图片 2视频 3语音
 class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHolder>(R.layout.item_recommend_square) {
@@ -73,13 +65,13 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
             helper.itemView.squareAudioCover.isVisible = false
             helper.itemView.squareOnlyTextContent.isVisible = true
             helper.itemView.squareVideoState.isVisible = false
-            helper.itemView.squareOnlyTextContent.text =
-                spannableStringBuilder(helper.itemView.squareOnlyTextContent, item)
+            helper.itemView.squareOnlyTextContent.text = "${item.descr}"
         } else if (item.type == 3) {//语音
             helper.itemView.squareOnlyTextContent.isVisible = false
             helper.itemView.squareImg.isVisible = true
             helper.itemView.squareAudioCover.isVisible = true
             helper.itemView.squareVideoState.isVisible = true
+            helper.itemView.squareVideoState.setImageResource(R.drawable.icon_audio_recommend)
 
             val transformation = MultiTransformation(
                 CenterCrop(),
@@ -110,6 +102,7 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
             helper.itemView.squareImg.isVisible = true
             helper.itemView.squareAudioCover.isVisible = false
             helper.itemView.squareVideoState.isVisible = true
+            helper.itemView.squareVideoState.setImageResource(R.drawable.icon_play_transparent)
             GlideUtil.loadRoundImgCenterCrop(
                 mContext,
                 item.cover_url,
@@ -123,7 +116,7 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
         helper.itemView.squareDistance.text = "${item.distance}"
         helper.itemView.squareContent.isVisible =
             item.type != 0 && (!item.descr.isNullOrEmpty() || !item.title_list.isNullOrEmpty())
-        helper.itemView.squareContent.text = spannableStringBuilder(helper.itemView.squareContent, item)
+        helper.itemView.squareContent.text = "${item.descr}"
         helper.itemView.squareLike.text = "${item.like_cnt}"
         helper.itemView.squareName.text = item.nickname
         GlideUtil.loadCircleImg(mContext, item.avatar, helper.itemView.squareAvator)
@@ -137,42 +130,21 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
         //点击跳转
         helper.itemView.onClick {
             if (item.type == 2)  //视频
-                SquarePlayDetailActivity.startActivity(mContext as Activity, id = item.id,fromRecommend = true)
-            else//文本.语音.图片
-                SquareCommentDetailActivity.start(mContext, squareId = item.id)
-        }
-    }
-
-    /**
-     * 制造富文本链接跳转
-     */
-    private fun spannableStringBuilder(textView: TextView, item: RecommendSquareBean): SpannableStringBuilder {
-        textView.movementMethod = CustomMovementMethod.getInstance()
-        val spanUtils = SpanUtils.with(textView)
-        for (data in item.title_list ?: mutableListOf()) {
-            //点击跳转link
-            val clickableSpan = object : ClickableSpan() {
-                override fun updateDrawState(ds: TextPaint) {
-                    ds.linkColor = Color.parseColor("#FF6796FA")
-                    ds.isUnderlineText = false
-                }
-
-                override fun onClick(widget: View) {
-                    if (mContext as Activity !is TagDetailCategoryActivity)
-                        mContext.startActivity<TagDetailCategoryActivity>(
-                            "id" to data.id,
-                            "type" to TagDetailCategoryActivity.TYPE_TOPIC
-                        )
+                SquarePlayDetailActivity.startActivity(mContext as Activity, id = item.id, fromRecommend = true)
+            else {//文本.语音.图片
+                SquareCommentDetailActivity.start(
+                    mContext,
+                    squareId = item.id,
+                    position = helper.layoutPosition - headerLayoutCount
+                )
+                if (item.type == 1) {
+                    if (!item.isliked)
+                        clickZan(helper.itemView.squareLike, helper.layoutPosition - headerLayoutCount)
                 }
             }
-            spanUtils.append("${data.title}")
-                .setClickSpan(clickableSpan)
-                .setForegroundColor(Color.parseColor("#FF6796FA"))
-        }
 
-        return spanUtils.append("${item.descr}")
-            .setForegroundColor(Color.parseColor("#FF2C2F31"))
-            .create()
+
+        }
     }
 
     /**
@@ -219,7 +191,7 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
                 "square_id" to data[position].id!!
             )
             getSquareLike(params, position)
-        }, 2000L)
+        }, 500L)
 
 
     }

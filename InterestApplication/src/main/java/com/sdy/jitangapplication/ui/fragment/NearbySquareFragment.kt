@@ -15,17 +15,16 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareByGenderEvent
 import com.sdy.jitangapplication.model.TagSquareListBean
 import com.sdy.jitangapplication.presenter.TagDetailCategoryPresenter
 import com.sdy.jitangapplication.presenter.view.TagDetailCategoryView
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.RecommendSquareAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_nearby_square.*
-import kotlinx.android.synthetic.main.fragment_square.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -111,6 +110,8 @@ class NearbySquareFragment : BaseMvpLazyLoadFragment<TagDetailCategoryPresenter>
                 adapter.isUseEmpty(true)
             }
             adapter.data.clear()
+            adapter.notifyDataSetChanged()
+            rvNearbySquare.scrollToPosition(0)
             refreshNearbySquare.finishRefresh(b)
         } else {
             if (data?.list.isNullOrEmpty() || (data?.list ?: mutableListOf()).size < Constants.PAGESIZE)
@@ -119,12 +120,13 @@ class NearbySquareFragment : BaseMvpLazyLoadFragment<TagDetailCategoryPresenter>
                 refreshNearbySquare.finishLoadMore(b)
         }
 
-        for (data in data?.list ?: mutableListOf()) {
-            data.originalLike = data.isliked
-            data.originalLikeCount = data.like_cnt
+        if ((data?.list ?: mutableListOf()).size > 0) {
+            for (data in data?.list ?: mutableListOf()) {
+                data.originalLike = data.isliked
+                data.originalLikeCount = data.like_cnt
+            }
+            adapter.addData(data?.list ?: mutableListOf())
         }
-        adapter.addData(data?.list ?: mutableListOf())
-        adapter.notifyDataSetChanged()
     }
 
     override fun onCheckBlockResult(b: Boolean) {}
@@ -137,7 +139,20 @@ class NearbySquareFragment : BaseMvpLazyLoadFragment<TagDetailCategoryPresenter>
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshSquareByGenderEvent(event: RefreshSquareByGenderEvent) {
-        refreshLayout.autoRefresh()
+        refreshNearbySquare.autoRefresh()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshLikeEvent(event: RefreshLikeEvent) {
+        if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
+            adapter.data[event.position].isliked = event.isLike==1
+            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
+                adapter.data[event.position].like_cnt + 1
+            } else {
+                adapter.data[event.position].like_cnt - 1
+            }
+            adapter.refreshNotifyItemChanged(event.position)
+        }
     }
 
 }

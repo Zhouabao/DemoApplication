@@ -6,9 +6,8 @@ class ShakeEvent(val left: Boolean)
 
 class UpdateHiCountEvent
 
-class GreetEvent(val context: Context, val success: Boolean)
 
-class GreetTopEvent(val context: Context, val success: Boolean)
+class GreetTopEvent(val context: Context, val success: Boolean, val targetAccid: String)
 
 class GreetDetailSuccessEvent(val success: Boolean)
 

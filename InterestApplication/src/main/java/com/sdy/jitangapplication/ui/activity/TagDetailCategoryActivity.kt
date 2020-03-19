@@ -20,6 +20,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.model.SquareBannerBean
 import com.sdy.jitangapplication.model.TagSquareListBean
 import com.sdy.jitangapplication.presenter.TagDetailCategoryPresenter
@@ -27,6 +28,9 @@ import com.sdy.jitangapplication.presenter.view.TagDetailCategoryView
 import com.sdy.jitangapplication.ui.adapter.RecommendSquareAdapter
 import kotlinx.android.synthetic.main.activity_tag_detail.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -71,6 +75,7 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
     }
 
     private fun initView() {
+        EventBus.getDefault().register(this)
         mPresenter = TagDetailCategoryPresenter()
         mPresenter.context = this
         mPresenter.mView = this
@@ -147,12 +152,13 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
+        params["page"] = page
         mPresenter.squareTagInfo(params)
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
-        adapter.data.clear()
+        params["page"] = page
         mPresenter.squareTagInfo(params)
     }
 
@@ -175,12 +181,36 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
             stateSamePerson.viewState = MultiStateView.VIEW_STATE_ERROR
         }
 
-        if (refreshSamePerson.state != RefreshState.Loading)
+        if (refreshSamePerson.state != RefreshState.Loading) {
             data?.banner?.let { initData(it) }
+            adapter.data.clear()
+        }
 
         adapter.addData(data?.list ?: mutableListOf())
-        refreshSamePerson.finishRefresh()
-        refreshSamePerson.finishLoadMore()
+        refreshSamePerson.finishRefresh(b)
+        if ((data?.list ?: mutableListOf()).isNullOrEmpty()) {
+            refreshSamePerson.finishLoadMoreWithNoMoreData()
+        } else {
+            refreshSamePerson.finishLoadMore(b)
+        }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshLikeEvent(event: RefreshLikeEvent) {
+        if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
+            adapter.data[event.position].isliked = event.isLike == 1
+            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
+                adapter.data[event.position].like_cnt + 1
+            } else {
+                adapter.data[event.position].like_cnt - 1
+            }
+
+            adapter.refreshNotifyItemChanged(event.position)
+        }
+    }
 }

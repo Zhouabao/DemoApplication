@@ -628,7 +628,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                         this,
                         matchBean!!.accid,
                         detailUserChatBtn,
-                        targetAvator = matchBean!!.avatar ?: ""
+                        targetAvator = matchBean!!.avatar ?: "", needSwipe = true
                     )
             }
 
@@ -638,7 +638,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                         this,
                         matchBean!!.accid,
                         detailUserGreetBtn,
-                        targetAvator = matchBean!!.avatar ?: ""
+                        targetAvator = matchBean!!.avatar ?: "", needSwipe = true
                     )
             }
 
@@ -764,12 +764,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onGreetDetailSuccessEvent(event: GreetDetailSuccessEvent) {
         if (event.success) {
             matchBean!!.isgreeted = true
-            updateLightCount(UserManager.getLightingCount()-1)
+            updateLightCount(UserManager.getLightingCount() - 1)
         }
     }
 

@@ -27,9 +27,9 @@ class SquarePresenter : BasePresenter<SquareView>() {
     /**
      * 获取广场列表
      */
-    fun getSquareList(params: HashMap<String, Any>, isRefresh: Boolean, firstIn: Boolean = false) {
+    fun squareNewestLists(params: HashMap<String, Any>, isRefresh: Boolean, firstIn: Boolean = false) {
         RetrofitFactory.instance.create(Api::class.java)
-            .getSquareList(UserManager.getSignParams(params))
+            .squareNewestLists(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
                 override fun onStart() {
                     if (firstIn) {

@@ -77,16 +77,16 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                             (holder.itemView.matchUserLocalTagCharacter.layoutParams as ConstraintLayout.LayoutParams).topMargin =
                                 SizeUtils.dp2px(5F)
                             holder.itemView.matchUserLocalTagContent.isVisible = false
-                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                            holder.itemView.matchUserDynamicThumbLl.isVisible = false
                         } else if (!item.sign.isNullOrBlank()) {
                             holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
                             holder.itemView.matchUserLocalTagContent.isVisible = true
                             holder.itemView.matchUserLocalTagCharacter.isVisible = false
-                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                            holder.itemView.matchUserDynamicThumbLl.isVisible = false
                         } else if (!item.square.isNullOrEmpty()) {
                             holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
 
-                            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+                            holder.itemView.matchUserDynamicThumbLl.isVisible = true
                             holder.itemView.matchUserLocalTagContent.isVisible = false
                             holder.itemView.matchUserLocalTagCharacter.isVisible = false
                         } else {
@@ -95,31 +95,48 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
 
                     }
                     1 -> {
-                        if (!item.sign.isNullOrBlank()) {
-                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
-                            holder.itemView.matchUserLocalTagContent.isVisible = true
-                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
-                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
-                        } else if (!item.square.isNullOrEmpty()) {
-                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
-                            holder.itemView.matchUserDynamicThumbRv.isVisible = true
-                            holder.itemView.matchUserLocalTagContent.isVisible = false
-                            holder.itemView.matchUserLocalTagCharacter.isVisible = false
-                        } else if (!item.newtags.isNullOrEmpty() && !item.newtags!![0].label_quality.isEmpty()) {
-                            holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
-                            holder.itemView.matchUserLocalTagCharacter.isVisible = true
-                            holder.itemView.matchUserLocalTagContent.isVisible = false
-                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                        if (item.newtags.isNullOrEmpty() || item.newtags!![0].label_quality.isNullOrEmpty()) {
+                            if (!item.square.isNullOrEmpty()) {
+                                holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                                holder.itemView.matchUserDynamicThumbLl.isVisible = true
+                                holder.itemView.matchUserLocalTagContent.isVisible = false
+                                holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                            } else if (!item.sign.isNullOrBlank()) {
+                                holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                                holder.itemView.matchUserLocalTagContent.isVisible = true
+                                holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                                holder.itemView.matchUserDynamicThumbLl.isVisible = false
+                            } else {
+                                holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
+                            }
                         } else {
+                            if (!item.sign.isNullOrBlank()) {
+                                holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                                holder.itemView.matchUserLocalTagContent.isVisible = true
+                                holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                                holder.itemView.matchUserDynamicThumbLl.isVisible = false
 
-                            holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
+                            } else if (!item.square.isNullOrEmpty()) {
+                                holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                                holder.itemView.matchUserDynamicThumbLl.isVisible = true
+                                holder.itemView.matchUserLocalTagContent.isVisible = false
+                                holder.itemView.matchUserLocalTagCharacter.isVisible = false
+                            } else if (!item.newtags.isNullOrEmpty() && !item.newtags!![0].label_quality.isEmpty()) {
+                                holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
+                                holder.itemView.matchUserLocalTagCharacter.isVisible = true
+                                holder.itemView.matchUserLocalTagContent.isVisible = false
+                                holder.itemView.matchUserDynamicThumbLl.isVisible = false
+                            } else {
+                                holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
+                            }
                         }
+
                     }
                     else -> {
                         if (!item.square.isNullOrEmpty()) {
                             holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
 
-                            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+                            holder.itemView.matchUserDynamicThumbLl.isVisible = true
                             holder.itemView.matchUserLocalTagContent.isVisible = false
                             holder.itemView.matchUserLocalTagCharacter.isVisible = false
                         } else if (!item.sign.isNullOrBlank()) {
@@ -127,13 +144,13 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
 
                             holder.itemView.matchUserLocalTagContent.isVisible = true
                             holder.itemView.matchUserLocalTagCharacter.isVisible = false
-                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                            holder.itemView.matchUserDynamicThumbLl.isVisible = false
                         } else if (!item.newtags.isNullOrEmpty() && !item.newtags!![0].label_quality.isEmpty()) {
                             holder.itemView.matchUserLocalTagCl.visibility = View.VISIBLE
 
                             holder.itemView.matchUserLocalTagCharacter.isVisible = true
                             holder.itemView.matchUserLocalTagContent.isVisible = false
-                            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+                            holder.itemView.matchUserDynamicThumbLl.isVisible = false
                         } else {
                             holder.itemView.matchUserLocalTagCl.visibility = View.INVISIBLE
                         }
@@ -188,6 +205,11 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             mContext.resources.getColor(R.color.colorTransparent)
         )
         if (!item.square.isNullOrEmpty()) {
+            holder.itemView.matchUserDynamicThumbTitle.text = if (item.gender == 1) {
+                "他发布的动态"
+            } else {
+                "她发布的动态"
+            }
             holder.itemView.matchUserDynamicThumbRv.layoutManager =
                 LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
             for (decoration in 0 until holder.itemView.matchUserDynamicThumbRv.itemDecorationCount) {
@@ -218,15 +240,15 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             holder.itemView.matchUserLocalTagCl.isVisible = true
             holder.itemView.matchUserLocalTagCharacter.isVisible = true
             holder.itemView.matchUserLocalTagContent.isVisible = false
-            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+            holder.itemView.matchUserDynamicThumbLl.isVisible = false
         } else if (!item.sign.isNullOrBlank()) {
             holder.itemView.matchUserLocalTagCl.isVisible = true
             holder.itemView.matchUserLocalTagContent.isVisible = true
             holder.itemView.matchUserLocalTagCharacter.isVisible = false
-            holder.itemView.matchUserDynamicThumbRv.isVisible = false
+            holder.itemView.matchUserDynamicThumbLl.isVisible = false
         } else if (!item.square.isNullOrEmpty()) {
             holder.itemView.matchUserLocalTagCl.isVisible = true
-            holder.itemView.matchUserDynamicThumbRv.isVisible = true
+            holder.itemView.matchUserDynamicThumbLl.isVisible = true
             holder.itemView.matchUserLocalTagContent.isVisible = false
             holder.itemView.matchUserLocalTagCharacter.isVisible = false
         } else {

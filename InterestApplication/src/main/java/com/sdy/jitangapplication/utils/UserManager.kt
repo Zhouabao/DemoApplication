@@ -119,6 +119,18 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getString("currentVersion")
     }
 
+
+    /**
+     * 保存当前是否引导发布
+     */
+    fun saveShowGuidePublish(showGuide: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuidePublish", showGuide)
+    }
+
+    fun isShowGuidePublish(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuidePublish", false)
+    }
+
     /**
      * 保存滑动多少次弹调研弹窗
      */
@@ -178,7 +190,6 @@ object UserManager {
     fun getChangeAvator(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("ChangeAvator")
     }
-
 
 
     //是否提示过引导替换相册
@@ -371,8 +382,9 @@ object UserManager {
     fun getAvator(): String {
         return SPUtils.getInstance(Constants.SPNAME).getString("avatar")
     }
+
     fun getGender(): Int {
-        return SPUtils.getInstance(Constants.SPNAME).getInt("gender",0)
+        return SPUtils.getInstance(Constants.SPNAME).getInt("gender", 0)
     }
 
     fun getUserIntroduce(): String {
@@ -514,6 +526,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("msgCount")
         SPUtils.getInstance(Constants.SPNAME).remove("myLabels")
         SPUtils.getInstance(Constants.SPNAME).remove("maxInterestLabelCount")
+        SPUtils.getInstance(Constants.SPNAME).remove("isShowGuidePublish")
 
 
         //位置信息

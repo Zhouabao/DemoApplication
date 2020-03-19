@@ -222,6 +222,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
     }
 
     private fun initData() {
+        UserManager.saveShowGuidePublish(true)
         //从其他地方进入发布,自主选择的兴趣
         if (intent.getIntExtra("tag_id", -1) != -1) {
             checkTags.clear()
@@ -421,7 +422,7 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 }
 
                 if (intent.getIntExtra("tag_id", -1) != -1) {
-                    publish()
+                    startToUploadAndPublsih()
                 } else
                     startActivityForResult<ChooseLabelActivity>(REQUEST_CODE_LABEL)
 
@@ -736,6 +737,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
             videoPreview.stopPlayback()
         }
         videoPreview.onClick {
+            previewRl.visibility = View.GONE
+            videoPreview.stopPlayback()
+        }
+        previewRl.onClick {
             previewRl.visibility = View.GONE
             videoPreview.stopPlayback()
         }
@@ -1312,106 +1317,173 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
                 if (data?.getSerializableExtra("label") != null)
                     checkTags.add((data?.getSerializableExtra("label") as SquareLabelBean))
 
-
-                if (!mPresenter.checkNetWork()) {
-                    CommonFunction.toast("网络不可用,请检查网络设置")
-                    return
-                }
-
-                UserManager.publishState = 1
-
-                if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//文本
-                    publish()
-                } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//音频
-                    //保存音频数据
-                    UserManager.mediaBeans.add(
-                        MediaParamBean(
-                            url = mMediaRecorderHelper.currentFilePath,
-                            duration = totalSecond
-                        )
-                    )
-                    //TODO上传音频
-                    val audioQnPath =
-                        "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                            "accid"
-                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                            16
-                        )}"
-                    mPresenter.uploadFile(1, 1, mMediaRecorderHelper.currentFilePath, audioQnPath, 3)
-                } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) { //图片
-                    //压缩图片并保存图片数据
-                    var pickedPaths = mutableListOf<String>()
-                    var index = 0
-                    for (photo in pickedPhotos) {
-                        pickedPaths.add(photo.filePath)
-                    }
-                    UriUtils.getLubanBuilder(this@PublishActivity)
-                        .load(pickedPaths)
-                        .setCompressListener(object : OnCompressListener {
-                            override fun onSuccess(file: File?) {
-                                if (file != null) {
-                                    Log.d(TAG1, "original[$index] = ${pickedPhotos[index].filePath}")
-                                    Log.d(TAG1, "crop[$index] = ${file.absolutePath}")
-                                    UserManager.mediaBeans.add(
-                                        MediaParamBean(
-                                            url = file.absolutePath,
-                                            width = pickedPhotos[index].width,
-                                            height = pickedPhotos[index].height
-                                        )
-                                    )
-                                    pickedPhotos[index].filePath = file.absolutePath
-                                    index++
-                                }
-                                if (index == pickedPhotos.size)
-                                    uploadPictures()
-                            }
-
-                            override fun onError(e: Throwable?) {
-                                for (photo in pickedPhotos) {
-                                    UserManager.mediaBeans.add(
-                                        MediaParamBean(
-                                            url = photo.filePath,
-                                            width = photo.width,
-                                            height = photo.height
-                                        )
-                                    )
-                                }
-
-                                uploadPictures()
-
-                            }
-
-                            override fun onStart() {
-                            }
-
-                        })
-                        .launch()
-
-                } else {//视频
-                    //保存视频数据
-                    UserManager.mediaBeans.add(
-                        MediaParamBean(
-                            url = pickedPhotos[0].filePath,
-                            duration = pickedPhotos[0].duration,
-                            width = pickedPhotos[0].width,
-                            height = pickedPhotos[0].height
-                        )
-                    )
-                    //TODO上传视频
-                    val videoQnPath =
-                        "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                            "accid"
-                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                            16
-                        )}"
-                    mPresenter.uploadFile(1, 1, pickedPhotos[0].filePath, videoQnPath, 2)
-                }
-                if (ActivityUtils.isActivityAlive(ChooseLabelActivity::class.java.newInstance())) {
-                    ActivityUtils.finishActivity(ChooseLabelActivity::class.java)
-                }
-                finish()
+                startToUploadAndPublsih()
             }
         }
+    }
+
+    private fun startToUploadAndPublsih() {
+        if (!mPresenter.checkNetWork()) {
+            CommonFunction.toast("网络不可用,请检查网络设置")
+            return
+        }
+
+
+        // 此处要存下所有的数据信息
+        val checkIds = mutableListOf<Int>()
+        for (i in 0 until checkTags.size) {
+            checkIds.add(checkTags[i].id)
+        }
+        val type = if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+            0
+        } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {
+            3
+        } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) {
+            1
+        } else {
+            2
+        }
+
+        val titles = mutableListOf<String>()
+        for (data in choosedTitleAdapter.data) {
+            titles.add(data.content)
+        }
+        val param = hashMapOf(
+            "token" to UserManager.getToken(),
+            "accid" to UserManager.getAccid(),
+            "descr" to "${publishContent.text}",
+            "title" to "${chooseTitleBtn.text}",
+            "lat" to if (positionItem == null) {
+                UserManager.getlatitude()
+            } else {
+                positionItem!!.latLonPoint?.latitude ?: 0.0
+            },
+            "lng" to if (positionItem == null) {
+                UserManager.getlongtitude()
+            } else {
+                positionItem!!.latLonPoint?.longitude ?: 0.0
+            },
+            "province_name" to if (positionItem == null) {
+                UserManager.getProvince()
+            } else {
+                positionItem!!.provinceName ?: ""
+            },
+            "city_name" to if (positionItem == null) {
+                UserManager.getCity()
+            } else {
+                positionItem!!.cityName ?: ""
+            },
+            "city_code" to (if (positionItem == null) {
+                UserManager.getCityCode()
+            } else {
+                positionItem!!.cityCode ?: ""
+            }),
+            "puber_address" to if (locationCity.text.toString() == "不显示位置") {
+                ""
+            } else {
+                locationCity.text.toString()
+            },
+            //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
+            "type" to type,
+            "titles" to Gson().toJson(titles)
+        )
+
+        if (checkIds.isNotEmpty()) {
+            param["tag_id"] = checkTags[0].id
+        }
+        UserManager.publishParams = param
+        UserManager.publishState = 1
+
+        if (pickedPhotos.isNullOrEmpty() && mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//文本
+            publish()
+        } else if (!mMediaRecorderHelper.currentFilePath.isNullOrEmpty()) {//音频
+            //保存音频数据
+            UserManager.mediaBeans.add(
+                MediaParamBean(
+                    url = mMediaRecorderHelper.currentFilePath,
+                    duration = totalSecond
+                )
+            )
+            //TODO上传音频
+            val audioQnPath =
+                "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
+                    "accid"
+                )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                    16
+                )}"
+            mPresenter.uploadFile(1, 1, mMediaRecorderHelper.currentFilePath, audioQnPath, 3)
+        } else if (pickedPhotos.isNotEmpty() && pickedPhotos.size > 0 && pickedPhotos[0].fileType == MediaBean.TYPE.IMAGE) { //图片
+            //压缩图片并保存图片数据
+            var pickedPaths = mutableListOf<String>()
+            var index = 0
+            for (photo in pickedPhotos) {
+                pickedPaths.add(photo.filePath)
+            }
+            UriUtils.getLubanBuilder(this@PublishActivity)
+                .load(pickedPaths)
+                .setCompressListener(object : OnCompressListener {
+                    override fun onSuccess(file: File?) {
+                        if (file != null) {
+                            Log.d(TAG1, "original[$index] = ${pickedPhotos[index].filePath}")
+                            Log.d(TAG1, "crop[$index] = ${file.absolutePath}")
+                            UserManager.mediaBeans.add(
+                                MediaParamBean(
+                                    url = file.absolutePath,
+                                    width = pickedPhotos[index].width,
+                                    height = pickedPhotos[index].height
+                                )
+                            )
+                            pickedPhotos[index].filePath = file.absolutePath
+                            index++
+                        }
+                        if (index == pickedPhotos.size)
+                            uploadPictures()
+                    }
+
+                    override fun onError(e: Throwable?) {
+                        for (photo in pickedPhotos) {
+                            UserManager.mediaBeans.add(
+                                MediaParamBean(
+                                    url = photo.filePath,
+                                    width = photo.width,
+                                    height = photo.height
+                                )
+                            )
+                        }
+
+                        uploadPictures()
+
+                    }
+
+                    override fun onStart() {
+                    }
+
+                })
+                .launch()
+
+        } else {//视频
+            //保存视频数据
+            UserManager.mediaBeans.add(
+                MediaParamBean(
+                    url = pickedPhotos[0].filePath,
+                    duration = pickedPhotos[0].duration,
+                    width = pickedPhotos[0].width,
+                    height = pickedPhotos[0].height
+                )
+            )
+            //TODO上传视频
+            val videoQnPath =
+                "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
+                    "accid"
+                )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                    16
+                )}"
+            mPresenter.uploadFile(1, 1, pickedPhotos[0].filePath, videoQnPath, 2)
+        }
+        if (ActivityUtils.isActivityAlive(ChooseLabelActivity::class.java.newInstance())) {
+            ActivityUtils.finishActivity(ChooseLabelActivity::class.java)
+        }
+        finish()
     }
 
 

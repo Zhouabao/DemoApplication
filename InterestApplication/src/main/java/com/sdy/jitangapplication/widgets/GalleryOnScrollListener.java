@@ -31,10 +31,17 @@ public class GalleryOnScrollListener extends RecyclerView.OnScrollListener {
                 return;
             }
             //根据滑动的距离改变item的大小
-            ViewGroup.MarginLayoutParams lp = ((ViewGroup.MarginLayoutParams) targetView.getLayoutParams());
-            lp.width = (int) (SizeUtils.dp2px(280F) * (0.89 + 0.11 * percent));
-            lp.height = (int) (SizeUtils.dp2px(280F) * (0.89 + 0.11 * percent));
-            targetView.setLayoutParams(lp);
+            if (recyclerView.getChildCount() == 1) {
+                ViewGroup.MarginLayoutParams lp = ((ViewGroup.MarginLayoutParams) targetView.getLayoutParams());
+                lp.width = SizeUtils.dp2px(250F);
+                lp.height = SizeUtils.dp2px(250F);
+                targetView.setLayoutParams(lp);
+            } else {
+                ViewGroup.MarginLayoutParams lp = ((ViewGroup.MarginLayoutParams) targetView.getLayoutParams());
+                lp.width = (int) (SizeUtils.dp2px(280F) * (0.89 + 0.11 * percent));
+                lp.height = (int) (SizeUtils.dp2px(280F) * (0.89 + 0.11 * percent));
+                targetView.setLayoutParams(lp);
+            }
         }
     }
 

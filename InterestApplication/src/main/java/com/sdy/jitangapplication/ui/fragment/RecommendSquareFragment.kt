@@ -20,20 +20,19 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareByGenderEvent
 import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.model.SquareBannerBean
 import com.sdy.jitangapplication.presenter.RecommendSquarePresenter
 import com.sdy.jitangapplication.presenter.view.RecommendSquareView
 import com.sdy.jitangapplication.ui.activity.PublishActivity
-import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.adapter.RecommendSquareAdapter
 import com.sdy.jitangapplication.ui.holder.BannerHolderView
 import com.zhpan.bannerview.BannerViewPager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_recommend_square.*
-import kotlinx.android.synthetic.main.fragment_square.*
 import kotlinx.android.synthetic.main.headerview_recommend_banner.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -115,9 +114,8 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
                     startActivity(intent)
                 } else if (banner[it].adv_type == 4) {//4发布+话题
                     mPresenter.checkBlock(banner[it])
-
                 } else if (banner[it].adv_type == 5) {//5发布+兴趣
-
+                    mPresenter.checkBlock(banner[it])
                 }
             }
             .setIndicatorSliderGap(SizeUtils.dp2px(5F))
@@ -151,8 +149,10 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
         if (refreshRecommendSquare.state != RefreshState.Loading) {
             if ((data?.banner ?: mutableListOf()).size == 0) {
                 adapter.headerLayout.isVisible = false
+                adapter.headerLayout.bannerVp2.isVisible = false
             } else {
                 adapter.headerLayout.isVisible = true
+                adapter.headerLayout.bannerVp2.isVisible = true
                 banner = data?.banner ?: mutableListOf()
                 (adapter.headerLayout.bannerVp2 as BannerViewPager<SquareBannerBean, BannerHolderView>).create(
                     data?.banner ?: mutableListOf()
@@ -164,6 +164,8 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
                 adapter.isUseEmpty(true)
             }
             adapter.data.clear()
+            adapter.notifyDataSetChanged()
+            rvRecommendSquare.scrollToPosition(0)
             refreshRecommendSquare.finishRefresh(b)
         } else {
             if (data?.list.isNullOrEmpty() || (data?.list ?: mutableListOf()).size < Constants.PAGESIZE)
@@ -172,12 +174,13 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
                 refreshRecommendSquare.finishLoadMore(b)
         }
 
-        for (data in data?.list ?: mutableListOf()) {
-            data.originalLike = data.isliked
-            data.originalLikeCount = data.like_cnt
+        if ((data?.list ?: mutableListOf()).size > 0) {
+            for (data in data?.list ?: mutableListOf()) {
+                data.originalLike = data.isliked
+                data.originalLikeCount = data.like_cnt
+            }
+            adapter.addData(data?.list ?: mutableListOf())
         }
-        adapter.addData(data?.list ?: mutableListOf())
-        adapter.notifyDataSetChanged()
 
     }
 
@@ -201,8 +204,20 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshSquareByGenderEvent(event: RefreshSquareByGenderEvent) {
-        refreshLayout.autoRefresh()
+        refreshRecommendSquare.autoRefresh()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshLikeEvent(event: RefreshLikeEvent) {
+        if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
+            adapter.data[event.position].isliked = event.isLike==1
+            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
+                adapter.data[event.position].like_cnt + 1
+            } else {
+                adapter.data[event.position].like_cnt - 1
+            }
 
+            adapter.refreshNotifyItemChanged(event.position)
+        }
+    }
 }

@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
@@ -169,7 +170,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
 
     private fun initFragments() {
-        titleAdapter.addData(SquareTitleBean("好友", false))
+        titleAdapter.addData(SquareTitleBean("最新", false))
         titleAdapter.addData(SquareTitleBean("推荐", true))
         titleAdapter.addData(SquareTitleBean("兴趣", false))
         titleAdapter.addData(SquareTitleBean("附近", false))
@@ -181,9 +182,9 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     }
 
     private fun initViewpager() {
-        squareVp.setScrollable(false)
+        squareVp.setScrollable(true)
         squareVp.adapter = MainPagerAdapter(activity!!.supportFragmentManager, mStack)
-        squareVp.currentItem = 0
+        squareVp.currentItem = 1
         squareVp.offscreenPageLimit = 4
 
         rgSquare.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
@@ -197,6 +198,24 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
             titleAdapter.notifyDataSetChanged()
         }
 
+        squareVp.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                for (data in titleAdapter.data) {
+                    data.checked = data == titleAdapter.data[position]
+                    squareVp.currentItem = position
+                }
+                filterGenderBtn.isVisible = position != 2
+                titleAdapter.notifyDataSetChanged()
+            }
+
+        })
     }
 
 
@@ -231,6 +250,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
             uploadFl.postDelayed({
                 uploadFl.isVisible = false
             }, 500)
+            SPUtils.getInstance(Constants.SPNAME).remove("draft", true)
         } else {
             UserManager.cancelUpload = true
             uploadFl.isVisible = true

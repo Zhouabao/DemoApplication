@@ -34,7 +34,6 @@ import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.GreetEvent
 import com.sdy.jitangapplication.event.UpdateLikeMeReceivedEvent
 import com.sdy.jitangapplication.model.GreetTimesBean
 import com.sdy.jitangapplication.model.ResidueCountBean
@@ -305,15 +304,12 @@ class SayHiDialog(
                         UserManager.startToLogin(context1 as Activity)
                     } else if (t.code == 401) { //弹真人认证
                         loadingDialog.dismiss()
-                        EventBus.getDefault().post(GreetEvent(context1, false))
                         HarassmentDialog(context1, HarassmentDialog.CHATHI).show() //开启招呼提示
                     } else if (t.code == 202) { //对方普通招呼收到上限F
                         loadingDialog.dismiss()
                         GreetLimitlDialog(context1).show()
-                        EventBus.getDefault().post(GreetEvent(context1, false))
                     } else {
                         loadingDialog.dismiss()
-                        EventBus.getDefault().post(GreetEvent(context1, false))
                         CommonFunction.toast(t.msg)
                     }
                 }
@@ -402,7 +398,6 @@ class SayHiDialog(
                     loadingDialog.dismiss()
                     startAnimation()
                     //发送通知修改招呼次数
-                    EventBus.getDefault().post(GreetEvent(context1, true))
                     if (ActivityUtils.isActivityAlive(GreetReceivedActivity::class.java.newInstance())) {
                         EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
                     }

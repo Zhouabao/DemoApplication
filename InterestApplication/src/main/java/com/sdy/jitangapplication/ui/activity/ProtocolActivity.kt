@@ -43,7 +43,7 @@ class ProtocolActivity : BaseActivity() {
                 hotT1.text = "用户协议"
             }
             TYPE_ANTI_FRAUD -> {
-//                hotT1.text = "谨防骗子"
+                hotT1.text = "谨防骗子"
             }
         }
 

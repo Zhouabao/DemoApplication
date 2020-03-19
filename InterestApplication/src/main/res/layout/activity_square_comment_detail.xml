@@ -23,17 +23,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <include layout="@layout/layout_actionbar"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/headSquareView"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/llTitle"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view">
+                app:layout_constraintTop_toTopOf="@id/llTitle">
 
             <ImageView
-                    android:id="@+id/btnBack"
+                    android:id="@+id/headBtnBack"
                     android:src="@drawable/icon_return"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
@@ -43,30 +46,30 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/squareUserIv1"
+                    android:id="@+id/headSquareUserIv1"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/icon_default_avator"
+                    android:layout_marginLeft="10dp"
                     app:civ_border_color="@color/colorDivider"
                     app:civ_border_width="1dp"
-                    android:layout_marginLeft="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/btnBack"
+                    app:layout_constraintLeft_toRightOf="@id/headBtnBack"
                     app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                    android:id="@+id/squareUserVipIv1"
+                    android:id="@+id/headSquareUserVipIv1"
                     android:layout_marginLeft="5dp"
                     android:src="@drawable/icon_vip"
                     android:layout_width="17dp"
                     android:layout_height="17dp"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/squareUserName1"
-                    app:layout_constraintLeft_toRightOf="@id/squareUserName1"
-                    app:layout_constraintTop_toTopOf="@id/squareUserName1"/>
+                    app:layout_constraintBottom_toBottomOf="@id/headSquareUserName1"
+                    app:layout_constraintLeft_toRightOf="@id/headSquareUserName1"
+                    app:layout_constraintTop_toTopOf="@id/headSquareUserName1"/>
 
             <TextView
-                    android:id="@+id/squareUserName1"
+                    android:id="@+id/headSquareUserName1"
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -74,23 +77,23 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:gravity="center_vertical"
-                    app:layout_constraintBottom_toTopOf="@id/squareTime"
-                    app:layout_constraintLeft_toRightOf="@id/squareUserIv1"
-                    app:layout_constraintTop_toTopOf="@id/squareUserIv1"
+                    app:layout_constraintBottom_toTopOf="@id/headSquareTime"
+                    app:layout_constraintLeft_toRightOf="@id/headSquareUserIv1"
+                    app:layout_constraintTop_toTopOf="@id/headSquareUserIv1"
                     tools:text="Kimberly Davis"
                     />
 
             <TextView
-                    android:id="@+id/squareTime"
+                    android:id="@+id/headSquareTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="8小时前"
                     android:textColor="#ffc5c6c8"
                     android:textSize="12sp"
                     android:gravity="center_vertical"
-                    app:layout_constraintBottom_toBottomOf="@id/squareUserIv1"
-                    app:layout_constraintLeft_toLeftOf="@id/squareUserName1"
-                    app:layout_constraintTop_toBottomOf="@id/squareUserName1"
+                    app:layout_constraintBottom_toBottomOf="@id/headSquareUserIv1"
+                    app:layout_constraintLeft_toLeftOf="@id/headSquareUserName1"
+                    app:layout_constraintTop_toBottomOf="@id/headSquareUserName1"
                     tools:text="Kimberly Davis"
                     />
 
@@ -103,29 +106,29 @@
                     android:textColor="#ffc5c6c8"
                     android:textSize="13sp"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/squareUserIv1"
+                    app:layout_constraintBottom_toBottomOf="@id/headSquareUserIv1"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/squareUserIv1"
+                    app:layout_constraintTop_toTopOf="@id/headSquareUserIv1"
                     />
 
 
             <LinearLayout
-                    android:id="@+id/squareChatBtn1"
+                    android:id="@+id/headSquareChatBtn1"
                     android:background="@drawable/icon_square_chat"
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
-                    app:layout_constraintBottom_toBottomOf="@id/squareUserIv1"
+                    app:layout_constraintBottom_toBottomOf="@id/headSquareUserIv1"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/squareUserIv1"/>
+                    app:layout_constraintTop_toTopOf="@id/headSquareUserIv1"/>
 
             <View
                     android:background="@color/colorDivider"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
+                    android:layout_height="1dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -134,7 +137,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toTopOf="@id/showCommentLl"
-                app:layout_constraintTop_toBottomOf="@+id/headSquareView"
+                app:layout_constraintTop_toBottomOf="@+id/llTitle"
                 app:srlEnableAutoLoadMore="true"
                 app:srlEnableLoadMore="true"
                 app:srlEnableLoadMoreWhenContentNotFull="false"
@@ -150,6 +153,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
+                    <include
+                            android:id="@+id/topLayout"
+                            layout="@layout/layout_square_list_top"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
 
                     <com.sdy.jitangapplication.switchplay.SwitchVideo
                             android:id="@+id/squareUserVideo"
@@ -162,7 +172,7 @@
                             app:layout_constraintBottom_toTopOf="@id/bottomLayout"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            app:layout_constraintTop_toBottomOf="@id/topLayout"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/squareUserPics"
@@ -175,7 +185,7 @@
                             app:layout_constraintBottom_toTopOf="@id/bottomLayout"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/topLayout"
                             />
 
                     <include
@@ -186,7 +196,7 @@
                             android:layout_marginLeft="12dp"
                             app:layout_constraintBottom_toTopOf="@id/bottomLayout"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            app:layout_constraintTop_toBottomOf="@id/topLayout"/>
 
                     <include
                             android:id="@+id/bottomLayout"

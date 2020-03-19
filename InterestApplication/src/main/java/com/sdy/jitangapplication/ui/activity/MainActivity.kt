@@ -48,10 +48,10 @@ import org.jetbrains.anko.startActivity
 import java.util.*
 
 class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickListener {
-    private val titles = arrayOf("匹配", "发现", "消息", "我的")
+    private val titles = arrayOf("首页", "发现", "消息", "我的")
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    //匹配
+    //首页
     private val indexFragment by lazy { IndexFragment() }
     //广场
     private val contentFragment by lazy { ContentFragment() }
@@ -83,7 +83,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         //如果定位信息没有就重新定位
         AMapManager.initLocation(this)
         filterBtn.setOnClickListener(this)
-
         if (!UserManager.isShowGuideIndex()) {
             guideDialog.show()
         }
@@ -209,7 +208,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     )
                 } else {
                     tabMatch.isVisible = false
-                    tabMatchCount.text = "匹配"
+                    tabMatchCount.text = "首页"
                     tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
                     tabMatchCount.setPadding(0)
                     tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -220,7 +219,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     )
                 }
 
-
+                publishGuideIv.isVisible = false
                 tabSquarePublish.isVisible = false
                 tabSquare.isVisible = true
                 tabMe.setTextColor(resources.getColor(R.color.colorGrayCCC))
@@ -239,8 +238,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             1 -> {
+                publishGuideIv.isVisible = !UserManager.isShowGuidePublish()
+
                 tabMatch.isVisible = false
-                tabMatchCount.text = "匹配"
+                tabMatchCount.text = "首页"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -268,7 +269,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
             2 -> {
                 tabMatch.isVisible = false
-                tabMatchCount.text = "匹配"
+                tabMatchCount.text = "首页"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -278,6 +279,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     null
                 )
 
+                publishGuideIv.isVisible = false
                 tabSquarePublish.isVisible = false
                 tabSquare.isVisible = true
                 tabMessage.setTextColor(resources.getColor(R.color.colorOrange))
@@ -297,7 +299,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
             3 -> {
                 tabMatch.isVisible = false
-                tabMatchCount.text = "匹配"
+                tabMatchCount.text = "首页"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -306,6 +308,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     null,
                     null
                 )
+                publishGuideIv.isVisible = false
                 tabSquarePublish.isVisible = false
                 tabSquare.isVisible = true
                 tabMessage.setTextColor(resources.getColor(R.color.colorGrayCCC))
@@ -344,7 +347,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             } else {
                 tabMatch.isVisible = false
-                tabMatchCount.text = "匹配"
+                tabMatchCount.text = "首页"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
                 tabMatchCount.setPadding(0)
                 tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
@@ -398,6 +401,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 UserManager.saveNeedChangeAvator(false)
                 UserManager.saveForceChangeAvator(true)
             }
+
+        if (vpMain.currentItem == 1 && UserManager.isShowGuidePublish()) {
+            publishGuideIv.isVisible = false
+        }
     }
 
     override fun onDestroy() {

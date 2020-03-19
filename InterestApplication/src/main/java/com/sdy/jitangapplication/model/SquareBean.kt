@@ -94,7 +94,9 @@ data class TopicBean(
 
 data class SquarePicBean(
     var cover_url: String = "",
-    var square_id: Int = 0
+    var square_id: Int = 0,
+    var id: Int = 0,
+    var descr: String = ""
 ) : Serializable
 
 
@@ -171,7 +173,7 @@ data class SquareTagBean(
     var id: Int = 0,
     var is_hot: Boolean = false,
     var is_join: Boolean = false,
-    var cover_list: MutableList<String> = mutableListOf(),
+    var cover_list: MutableList<SquarePicBean> = mutableListOf(),
     var place_type: Int = 0,//位置类型 0 没有操作 1置顶 2置底
     var title: String = ""
 )

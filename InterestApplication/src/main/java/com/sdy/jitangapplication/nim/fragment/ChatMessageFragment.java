@@ -1,8 +1,5 @@
 package com.sdy.jitangapplication.nim.fragment;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -14,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
-import com.blankj.utilcode.util.SizeUtils;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
 import com.netease.nim.uikit.api.UIKitOptions;
@@ -107,9 +103,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
     private View rootView;
     private TextView btnMakeFriends;
-    private TextView suggestToGreet;
     private LinearLayout messageActivityBottomLayout;
-    private AnimatorSet set;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -123,83 +117,49 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.chat_nim_message_fragment, container, false);
         btnMakeFriends = rootView.findViewById(R.id.btnMakeFriends);
-        suggestToGreet = rootView.findViewById(R.id.suggestToGreet);
         messageActivityBottomLayout = rootView.findViewById(R.id.messageActivityBottomLayout);
 
-
-        ObjectAnimator ani1 = ObjectAnimator.ofFloat(suggestToGreet, "translationY", 0F, SizeUtils.dp2px(-15F));
-        ObjectAnimator ani2 = ObjectAnimator.ofFloat(suggestToGreet, "translationY", SizeUtils.dp2px(-15F), 0F);
-        set = new AnimatorSet();
-        set.playSequentially(ani1, ani2);
-//        set.play(ani1).before(ani2);
-        set.setDuration(800);
-        set.start();
-        set.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                set.start();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-
         //发送消息成为好友
-        btnMakeFriends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
-                params.put("target_accid", sessionId);
-                RetrofitFactory.Companion.getInstance().create(Api.class)
-                        .addFriend(UserManager.INSTANCE.getSignParams(params))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new rx.Observer<BaseResp<Object>>() {
-                            @Override
-                            public void onCompleted() {
+        btnMakeFriends.setOnClickListener(view -> {
+            HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
+            params.put("target_accid", sessionId);
+            RetrofitFactory.Companion.getInstance().create(Api.class)
+                    .addFriend(UserManager.INSTANCE.getSignParams(params))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new rx.Observer<BaseResp<Object>>() {
+                        @Override
+                        public void onCompleted() {
 
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(BaseResp<Object> objectBaseResp) {
+                            if (objectBaseResp.getCode() == 200) {
+                                //隐藏倒计时控件
+                                btnMakeFriends.setVisibility(View.GONE);
+                                //发送通知，可以发所有类型的消息
+                                EventBus.getDefault().post(new EnablePicEvent(true));
+                                EventBus.getDefault().post(new UpdateContactBookEvent());
+                                CommonFunction.INSTANCE.toast(objectBaseResp.getMsg());
+                                NIMClient.getService(FriendService.class).addFriend(new AddFriendData(sessionId, VerifyType.DIRECT_ADD));
+
+                                //并且发送成为好友消息，
+                                IMMessage message = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, "", new ChatHiAttachment(ChatHiAttachment.CHATHI_RFIEND), new CustomMessageConfig());
+                                sendMessage(message);
+
+                            } else {
+                                CommonFunction.INSTANCE.toast("添加好友失败哦~");
                             }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(BaseResp<Object> objectBaseResp) {
-                                if (objectBaseResp.getCode() == 200) {
-                                    //隐藏倒计时控件
-                                    btnMakeFriends.setVisibility(View.GONE);
-                                    //发送通知，可以发所有类型的消息
-                                    EventBus.getDefault().post(new EnablePicEvent(true));
-                                    EventBus.getDefault().post(new UpdateContactBookEvent());
-                                    CommonFunction.INSTANCE.toast(objectBaseResp.getMsg());
-                                    NIMClient.getService(FriendService.class).addFriend(new AddFriendData(sessionId, VerifyType.DIRECT_ADD));
-
-                                    //并且发送成为好友消息，
-                                    IMMessage message = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, "", new ChatHiAttachment(ChatHiAttachment.CHATHI_RFIEND), new CustomMessageConfig());
-                                    sendMessage(message);
-
-                                } else {
-                                    CommonFunction.INSTANCE.toast("添加好友失败哦~");
-                                }
-                            }
-                        });
+                        }
+                    });
 
 
-            }
         });
         return rootView;
     }
@@ -219,9 +179,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void onResume() {
         super.onResume();
-        set.start();
         inputPanel.onResume();
         messageListPanel.onResume();
+        messageListPanel.refreshMessageList();
         if (!sessionId.equals(Constants.ASSISTANT_ACCID))
             if (nimBean == null) {
                 getTargetInfo(sessionId);
@@ -248,7 +208,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (aitManager != null) {
             aitManager.reset();
         }
-        set.removeAllListeners();
     }
 
     public boolean onBackPressed() {
@@ -266,7 +225,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         Container container = new Container(getActivity(), sessionId, sessionType, this, true);
 
         if (messageListPanel == null) {
-            messageListPanel = new ChatMessageListPanelEx(container, rootView, anchor, false, true);
+            messageListPanel = new ChatMessageListPanelEx(container, rootView, anchor, false, false);
         } else {
             messageListPanel.reload(container, anchor);
         }
@@ -409,8 +368,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
     private Boolean sendAlready3Msgs() {
-
-
         //发起方并且次数为0 禁止发送
         if (!sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsfriend() && nimBean.getIslimit() && leftGreetCount == 0) {
             if (!sendTip) {
@@ -508,16 +465,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public void onInputPanelExpand() {
         messageListPanel.scrollToBottom();
-        suggestToGreet.setVisibility(View.GONE);
     }
 
     @Override
     public void shouldCollapseInputPanel() {
         inputPanel.collapse(false);
-        if (!nimBean.getIssended() && nimBean.getIsinitiated())
-            suggestToGreet.postDelayed(() -> suggestToGreet.setVisibility(View.VISIBLE), 500L);
-        else
-            suggestToGreet.setVisibility(View.GONE);
     }
 
     //禁止消息长按操作
@@ -629,11 +581,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
      * 设置消息体制内的数据
      */
     private void setTargetInfoData() {
-        if (!nimBean.getIssended() && nimBean.getIsinitiated())
-            suggestToGreet.setVisibility(View.VISIBLE);
-        else
-            suggestToGreet.setVisibility(View.GONE);
-
         UserManager.INSTANCE.setApproveBean(new ApproveBean(nimBean.getApprove_time(), nimBean.getIsapprove(), nimBean.getIssend()));
         leftGreetCount = nimBean.getResidue_msg_cnt();
         if (nimBean.getIsfriend()) { //是好友了，按钮消失
@@ -742,7 +689,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         config.enableUnreadCount = false;
         config.enablePush = false;
         tip.setConfig(config);
-        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, false);
+        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, true);
 //        messageListPanel.onMsgSend(tip);
     }
 

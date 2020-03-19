@@ -128,7 +128,7 @@ data class StatusBean(val status: Int, val residue: Int = 0)
 /**
  * 获取招呼的次数
  */
-data class GreetTimesBean(val normal_cnt: Int, val isfaced: Int = 0, val isvip: Int = 0)
+data class GreetTimesBean(val normal_cnt: Int, val isfaced: Int = 0, val isvip: Int = 0, val default_msg: String = "")
 
 /**
  * 用戶標簽

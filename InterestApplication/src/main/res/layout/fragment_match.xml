@@ -85,7 +85,7 @@
                         android:id="@+id/animation_like"
                         android:alpha="0"
                         android:layout_alignParentRight="true"
-                        android:src="@drawable/icon_hi_guide"
+                        android:src="@drawable/icon_like_match"
                         android:layout_width="50dp"
                         android:layout_centerVertical="true"
                         android:layout_height="50dp"/>

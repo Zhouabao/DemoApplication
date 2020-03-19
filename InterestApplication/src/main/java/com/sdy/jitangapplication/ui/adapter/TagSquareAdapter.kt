@@ -30,9 +30,7 @@ class TagSquareAdapter : BaseQuickAdapter<SquareTagBean, BaseViewHolder>(R.layou
             adapter.addData(SquarePicBean(UserManager.getAvator()))
             adapter.addData(SquarePicBean(UserManager.getAvator()))
         } else
-            for (data in item.cover_list) {
-                adapter.addData(SquarePicBean(data))
-            }
+            adapter.addData(item.cover_list)
 
         itemview.rvTagSquareImg.onTouch { _, event ->
             helper.itemView.onTouchEvent(event)

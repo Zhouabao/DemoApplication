@@ -247,19 +247,37 @@
                     tools:text="手游端游主机都玩，但时间紧主手游目前常驻fgo偶尔明日方舟剑乱舞，PC只玩steam上的，是个以撒狂个以，是个以撒狂个以是个以撒狂个以是个以撒狂个以"
                     />
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/matchUserDynamicThumbRv"
-                    android:layout_width="0dp"
-                    android:layout_height="57dp"
-                    android:orientation="horizontal"
-                    android:layout_marginRight="10dp"
-                    android:visibility="gone"
-                    android:layout_marginBottom="5dp"
+            <LinearLayout
+                    android:id="@+id/matchUserDynamicThumbLl"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/btnHiView"
                     app:layout_constraintTop_toTopOf="parent"
-                    />
+                    android:layout_width="0dp"
+                    android:visibility="gone"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                <TextView
+                        android:id="@+id/matchUserDynamicThumbTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="她发布的动态"
+                        android:textColor="#ff191919"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="14sp"
+                        />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/matchUserDynamicThumbRv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="57dp"
+                        android:orientation="horizontal"
+                        android:layout_marginRight="10dp"
+                        android:visibility="visible"
+                        android:layout_marginBottom="5dp"
+                        />
+            </LinearLayout>
+
 
             <View
                     android:id="@+id/btnHiView"

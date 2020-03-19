@@ -19,11 +19,11 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
 
-
     <com.ctetin.expandabletextviewlibrary.ExpandableTextView
             android:id="@+id/squareContent1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
             android:layout_marginRight="12dp"
             android:textColor="#FF191919"
             android:textSize="16sp"
@@ -80,9 +80,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            app:layout_constraintRight_toLeftOf="@id/squareLocationAndTime1Ll"
-            app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginLeft="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/squareLocationAndTime1Ll"
             app:layout_constraintTop_toBottomOf="@id/squareContent1">
 
         <TextView
@@ -97,13 +97,13 @@
                 android:gravity="center_vertical"
                 android:paddingRight="8dp"
                 android:drawablePadding="8dp"
+                android:drawableRight="@drawable/icon_triangle_gray"
                 android:drawableLeft="@drawable/icon_tag_square"
                 android:background="@drawable/shape_rectangle_f6f6f6_5dp"
                 tools:text="玩游戏"
                 />
 
     </LinearLayout>
-
 
 
     <TextView

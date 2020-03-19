@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -20,11 +21,19 @@ class TagSquarePicAdapter(private var spanCount: Int = 3) :
             ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(50F) - SizeUtils.dp2px(5F) * (spanCount - 1)) / spanCount)
         (helper.itemView.layoutParams as RecyclerView.LayoutParams).height =
             ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(50F) - SizeUtils.dp2px(5F) * (spanCount - 1)) / spanCount)
-        GlideUtil.loadRoundImgCenterCrop(
-            mContext,
-            item.cover_url,
-            helper.itemView.content,
-            SizeUtils.dp2px(6F)
-        )
+        if (!item.cover_url.isNullOrEmpty()) {
+            helper.itemView.pic.isVisible = true
+            helper.itemView.content.isVisible = false
+            GlideUtil.loadRoundImgCenterCrop(
+                mContext,
+                item.cover_url,
+                helper.itemView.pic,
+                SizeUtils.dp2px(8F)
+            )
+        } else {
+            helper.itemView.content.isVisible = true
+            helper.itemView.pic.isVisible = false
+            helper.itemView.content.text = item.descr
+        }
     }
 }

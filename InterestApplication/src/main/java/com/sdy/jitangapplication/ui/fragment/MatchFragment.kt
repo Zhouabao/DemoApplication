@@ -471,6 +471,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
         matchUserAdapter.data.clear()
         hasMore = false
+        firstLoad = true
 
         updateLocation()
         mPresenter.getMatchList(matchParams)
@@ -498,16 +499,9 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onUpdateCardEvent(event: GreetEvent) {
-        //请求失败了 卡片飞回来
-        if (!event.success)
-            card_stack_view.rewind()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateGreetTopEvent(event: GreetTopEvent) {
-        //请求成功并且在首页 卡片飞回来
-        if (event.success) {
+        //请求成功并且在首页 卡片飞出去
+        if (event.success && matchUserAdapter.data[manager.topPosition].accid == event.targetAccid) {
             val setting = SwipeAnimationSetting.Builder()
                 .setDirection(Direction.Top)
                 .setDuration(Duration.Normal.duration)

@@ -75,8 +75,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     /**
      * 系统通知监听
      */
-    private
-    var customNotificationObserver: Observer<CustomNotification> =
+    private var customNotificationObserver: Observer<CustomNotification> =
         Observer { customNotification ->
             if (customNotification.content != null) {
                 val customerMsgBean =
