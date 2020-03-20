@@ -120,8 +120,7 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
             helper.itemView.squareDistance.text = "推荐"
         }
 
-        helper.itemView.squareContent.isVisible =
-            item.type != 0 && (!item.descr.isNullOrEmpty() || !item.title_list.isNullOrEmpty())
+        helper.itemView.squareContent.isVisible = item.type != 0 && !item.descr.isNullOrEmpty()
         helper.itemView.squareContent.text = "${item.descr}"
         helper.itemView.squareLike.text = "${item.like_cnt}"
         helper.itemView.squareName.text = item.nickname
