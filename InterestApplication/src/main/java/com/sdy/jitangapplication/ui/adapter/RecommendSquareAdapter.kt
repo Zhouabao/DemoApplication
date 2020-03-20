@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.Glide
@@ -37,24 +36,25 @@ import kotlinx.android.synthetic.main.item_recommend_square.view.*
 class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHolder>(R.layout.item_recommend_square) {
     override fun convert(helper: BaseViewHolder, item: RecommendSquareBean) {
         val params = helper.itemView.squareImg.layoutParams as ConstraintLayout.LayoutParams
-        params.width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F)) / 2
-        (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = params.width
+//        params.width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F)) / 2
+        val width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F)) / 2
+//        (helper.itemView.layoutParams as RecyclerView.LayoutParams).width = params.width
         params.height =
             if (item.type == 0 || item.type == 3) { //纯文本和语音是1:1
-                params.width
+                width
             } else if (item.type == 1) { //图片
                 when {
-                    item.width > item.height -> (3 / 4F * params.width).toInt()
-                    item.width < item.height -> (4 / 3F * params.width).toInt()
-                    else -> params.width
+                    item.width > item.height -> (3 / 4F * width).toInt()
+                    item.width < item.height -> (4 / 3F * width).toInt()
+                    else -> width
                 }
             } else {
                 when {
-                    item.width > item.height -> (3 / 4F * params.width).toInt()
-                    item.width < item.height -> (4 / 3F * params.width).toInt()
-                    else -> params.width
+                    item.width > item.height -> (3 / 4F * width).toInt()
+                    item.width < item.height -> (4 / 3F * width).toInt()
+                    else -> width
                 }
-                params.width
+                width
             }
         helper.itemView.squareImg.layoutParams = params
         helper.itemView.squareOnlyTextContent.layoutParams = params
@@ -112,8 +112,14 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
             )
         }
 
-        helper.itemView.squareDistance.isVisible = !item.distance.isNullOrEmpty()
-        helper.itemView.squareDistance.text = "${item.distance}"
+        if (!item.is_elite) {
+            helper.itemView.squareDistance.isVisible = !item.distance.isNullOrEmpty()
+            helper.itemView.squareDistance.text = "${item.distance}"
+        } else {
+            helper.itemView.squareDistance.isVisible = true
+            helper.itemView.squareDistance.text = "推荐"
+        }
+
         helper.itemView.squareContent.isVisible =
             item.type != 0 && (!item.descr.isNullOrEmpty() || !item.title_list.isNullOrEmpty())
         helper.itemView.squareContent.text = "${item.descr}"

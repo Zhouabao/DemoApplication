@@ -126,6 +126,7 @@
                             android:src="@drawable/icon_return"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
+
                     <ImageView
                             android:id="@+id/smallBg"
                             android:layout_alignBottom="@id/hotT1"
@@ -186,19 +187,35 @@
                 app:srlDisableContentWhenRefresh="true"
                 app:srlEnableLoadMore="true"
                 app:srlEnableLoadMoreWhenContentNotFull="false"
-                app:srlEnableRefresh="false">
+                app:srlEnableRefresh="true">
 
             <com.scwang.smartrefresh.layout.header.ClassicsHeader
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:srlFinishDuration="200"/>
+                    app:srlAccentColor="@color/colorBlack"
+                    app:srlClassicsSpinnerStyle="Translate"
+                    app:srlDrawableArrowSize="20dp"
+                    app:srlDrawableMarginRight="20dp"
+                    app:srlDrawableProgressSize="20dp"
+                    app:srlDrawableSize="20dp"
+                    app:srlEnableLastTime="true"
+                    app:srlPrimaryColor="@color/colorTransparent"
+                    app:srlTextFailed="@string/srl_header_failed"
+                    app:srlTextFinish="@string/srl_header_finish"
+                    app:srlTextLoading="@string/srl_header_loading"
+                    app:srlTextPulling="@string/srl_header_pulling"
+                    app:srlTextRefreshing="@string/srl_header_refreshing"
+                    app:srlTextRelease="@string/srl_header_release"
+                    app:srlTextSecondary="@string/srl_header_secondary"
+                    app:srlTextUpdate="@string/srl_header_update"/>
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/samePersonRv"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="15dp"
+                    android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
                     android:layout_marginRight="8dp"
                     android:layout_height="match_parent"
                     />

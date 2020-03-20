@@ -209,6 +209,7 @@ data class RecommendSquareBean(
     var type: Int = 0,
     var height: Int = 0,
     var width: Int = 0,
+    var is_elite: Boolean = false,
     var title_list: MutableList<TopicBean>? = mutableListOf()
 )
 

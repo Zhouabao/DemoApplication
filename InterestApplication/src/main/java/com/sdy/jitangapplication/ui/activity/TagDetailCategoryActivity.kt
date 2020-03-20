@@ -186,6 +186,11 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
             adapter.data.clear()
         }
 
+        if (refreshSamePerson.state == RefreshState.Refreshing) {
+            adapter.notifyDataSetChanged()
+            samePersonRv.scrollToPosition(0)
+        }
+
         adapter.addData(data?.list ?: mutableListOf())
         refreshSamePerson.finishRefresh(b)
         if ((data?.list ?: mutableListOf()).isNullOrEmpty()) {
