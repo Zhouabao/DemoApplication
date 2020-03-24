@@ -29,7 +29,7 @@ import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
-import com.sdy.jitangapplication.ui.fragment.MySquareFragment
+import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -73,7 +73,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             transactionView: View? = null,
             data: SquareBean? = null,
             position: Int? = -1,
-            type: Int = MySquareFragment.TYPE_SQUARE,
+            type: Int = MyCollectionAndLikeFragment.TYPE_SQUARE,
             id: Int? = -1,
             fromRecommend: Boolean = false
         ) {

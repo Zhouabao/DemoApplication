@@ -18,7 +18,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.NotifyEvent
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.fragment.MyCommentFragment
-import com.sdy.jitangapplication.ui.fragment.MySquareFragment
+import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
 import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_my_foot_print.*
@@ -101,9 +101,9 @@ class MyFootPrintActivity : BaseActivity() {
       初始化Fragment栈管理
    */
     private fun initFragment() {
-        mStack.add(MySquareFragment(MySquareFragment.TYPE_LIKE))   //我的点赞
+        mStack.add(MyCollectionAndLikeFragment(MyCollectionAndLikeFragment.TYPE_LIKE))   //我的点赞
         mStack.add(MyCommentFragment())   //我的评论
-        mStack.add(MySquareFragment(MySquareFragment.TYPE_COLLECT))//我的收藏
+        mStack.add(MyCollectionAndLikeFragment(MyCollectionAndLikeFragment.TYPE_COLLECT))//我的收藏
         vpMyFootPrint.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
         vpMyFootPrint.offscreenPageLimit = 3
         initIndicator()

@@ -9,13 +9,6 @@
               tools:context=".ui.fragment.IndexFragment">
 
 
-    <View
-            android:id="@+id/customStatusBar"
-            android:background="@color/colorWhite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_marginBottom="10dp"

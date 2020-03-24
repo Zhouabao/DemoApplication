@@ -104,7 +104,7 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
         val linearLayoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         listSquareRv.layoutManager = linearLayoutManager
         listSquareRv.adapter = adapter
-        adapter.type = MySquareFragment.TYPE_OTHER_DETAIL
+        adapter.type = MyCollectionAndLikeFragment.TYPE_OTHER_DETAIL
         adapter.setEmptyView(R.layout.empty_layout_block, listSquareRv)
         adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(listSquareRv)

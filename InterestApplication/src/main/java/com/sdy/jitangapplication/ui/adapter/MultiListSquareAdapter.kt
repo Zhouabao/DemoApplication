@@ -35,7 +35,7 @@ import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
-import com.sdy.jitangapplication.ui.fragment.MySquareFragment
+import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
@@ -68,7 +68,7 @@ class MultiListSquareAdapter(
     var playState: Int = -1,
     var playPosition: Int = 0,
     var resetAudioListener: ResetAudioListener? = null,
-    var type: Int = MySquareFragment.TYPE_SQUARE
+    var type: Int = MyCollectionAndLikeFragment.TYPE_SQUARE
 ) :
     BaseMultiItemQuickAdapter<SquareBean, BaseViewHolder>(data) {
     companion object {
@@ -286,7 +286,7 @@ class MultiListSquareAdapter(
                         }
 
                         override fun onPrepared(url: String?, vararg objects: Any?) {
-                            if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen && type != MySquareFragment.TYPE_SQUARE_COMMENT) {
+                            if (!holder.itemView.squareUserVideo.isIfCurrentIsFullscreen && type != MyCollectionAndLikeFragment.TYPE_SQUARE_COMMENT) {
                                 //静音
                                 GSYVideoManager.instance().isNeedMute = true
                             }
@@ -296,7 +296,7 @@ class MultiListSquareAdapter(
                         override fun onQuitFullscreen(url: String?, vararg objects: Any?) {
                             super.onQuitFullscreen(url, *objects)
                             //退出全屏静音
-                            if (type != MySquareFragment.TYPE_SQUARE_COMMENT)
+                            if (type != MyCollectionAndLikeFragment.TYPE_SQUARE_COMMENT)
                                 GSYVideoManager.instance().isNeedMute = true
                         }
 
@@ -319,7 +319,7 @@ class MultiListSquareAdapter(
                         null,
                         ""
                     )
-                    if (type == MySquareFragment.TYPE_SQUARE_COMMENT) {
+                    if (type == MyCollectionAndLikeFragment.TYPE_SQUARE_COMMENT) {
                         holder.itemView.squareUserVideo.startPlayLogic()
                     }
                 }

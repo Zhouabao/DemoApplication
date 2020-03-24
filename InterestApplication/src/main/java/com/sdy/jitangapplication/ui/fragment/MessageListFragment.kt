@@ -99,14 +99,6 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     private val adapter by lazy { MessageListAdapter() }
     private fun initView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val param = customStatusBar.layoutParams as LinearLayout.LayoutParams
-            param.height = BarUtils.getStatusBarHeight()
-        } else {
-            customStatusBar.isVisible = false
-        }
-
-
         mPresenter = MessageListPresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!

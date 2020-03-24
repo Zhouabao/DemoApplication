@@ -7,7 +7,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.NotifyEvent
-import com.sdy.jitangapplication.ui.fragment.MySquareFragment
+import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.layout_actionbar.*
 import org.greenrobot.eventbus.EventBus
@@ -26,7 +26,7 @@ class MyCollectionEtcActivity : BaseActivity() {
             finish()
         }
         hotT1.text = "我的动态"
-        supportFragmentManager.beginTransaction().add(R.id.content, MySquareFragment(type)).commit()
+        supportFragmentManager.beginTransaction().add(R.id.content, MyCollectionAndLikeFragment(type)).commit()
     }
 
 

@@ -40,12 +40,6 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
     val titleAdapter by lazy { IndexSwitchAdapter() }
 
     override fun loadData() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val param = customStatusBar.layoutParams as LinearLayout.LayoutParams
-            param.height = BarUtils.getStatusBarHeight()
-        } else {
-            customStatusBar.isVisible = false
-        }
 
         initFragments()
 

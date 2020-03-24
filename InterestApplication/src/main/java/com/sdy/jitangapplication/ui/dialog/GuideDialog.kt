@@ -12,6 +12,7 @@ import android.view.animation.TranslateAnimation
 import androidx.core.view.isVisible
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_guide.*
 
@@ -44,9 +45,35 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
 
 
     private fun initView() {
-        last.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
-        next.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
-        detail.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
+        onceAgain.text = if (UserManager.getGender() == 1) {
+            "没有看懂？再来一次"
+        } else {
+            "开启积糖之旅"
+        }
+        startUse.text = if (UserManager.getGender() == 1) {
+            "开启积糖之旅"
+        } else {
+            "糖果有什么用？"
+        }
+
+        last.startAnimation(
+            (AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_small_to_big
+            ) as ScaleAnimation)
+        )
+        next.startAnimation(
+            (AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_small_to_big
+            ) as ScaleAnimation)
+        )
+        detail.startAnimation(
+            (AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_small_to_big
+            ) as ScaleAnimation)
+        )
 
         guide_dislike_hand_left.startAnimation(
             (AnimationUtils.loadAnimation(
@@ -159,23 +186,45 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
         }
 
         onceAgain.onClick {
-            guideCl.isVisible = true
-            guideLast.isVisible = true
-            guideNext.isVisible = false
-            guideDetail.isVisible = false
-            guideLike.isVisible = false
-            guideDislike.isVisible = false
-            useCl.isVisible = false
-            intentionMatchingCl.isVisible = false
+            if (UserManager.getGender() == 1) { //1-男 2-女
+                guideCl.isVisible = true
+                guideLast.isVisible = true
+                guideNext.isVisible = false
+                guideDetail.isVisible = false
+                guideLike.isVisible = false
+                guideDislike.isVisible = false
+                useCl.isVisible = false
+                intentionMatchingCl.isVisible = false
+            } else {
+                last.clearAnimation()
+                next.clearAnimation()
+                detail.clearAnimation()
+                guide_dislike_hand_left.clearAnimation()
+                guide_like_hand_right.clearAnimation()
+                UserManager.saveShowGuideIndex(true)
+                dismiss()
+            }
+
         }
         startUse.onClick {
-            last.clearAnimation()
-            next.clearAnimation()
-            detail.clearAnimation()
-            guide_dislike_hand_left.clearAnimation()
-            guide_like_hand_right.clearAnimation()
-            UserManager.saveShowGuideIndex(true)
-            dismiss()
+            if (UserManager.getGender() == 1) {
+                last.clearAnimation()
+                next.clearAnimation()
+                detail.clearAnimation()
+                guide_dislike_hand_left.clearAnimation()
+                guide_like_hand_right.clearAnimation()
+                UserManager.saveShowGuideIndex(true)
+                dismiss()
+            } else {
+                CommonFunction.toast("跳转到糖果商城引导页")
+                last.clearAnimation()
+                next.clearAnimation()
+                detail.clearAnimation()
+                guide_dislike_hand_left.clearAnimation()
+                guide_like_hand_right.clearAnimation()
+                UserManager.saveShowGuideIndex(true)
+                dismiss()
+            }
         }
     }
 }

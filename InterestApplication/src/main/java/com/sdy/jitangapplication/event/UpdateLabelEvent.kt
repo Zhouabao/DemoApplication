@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.event
 
 import com.sdy.jitangapplication.model.WechatNameBean
-import com.sdy.jitangapplication.ui.fragment.MySquareFragment.Companion.TYPE_SQUARE
+import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment.Companion.TYPE_SQUARE
 
 /**
  *    author : ZFM

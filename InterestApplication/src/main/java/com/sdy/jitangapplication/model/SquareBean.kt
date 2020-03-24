@@ -12,10 +12,7 @@ import java.io.Serializable
 
 
 data class SquareListBean(
-    var list: MutableList<SquareBean>?,
-    var banner_title: MutableList<TopicBean>? = mutableListOf(),//标题
-    var friend_list: MutableList<FriendBean>?,
-    var myinterest_count: Int = 0
+    var list: MutableList<SquareBean>?
 )
 
 /**
@@ -162,7 +159,12 @@ data class CommentBean(
 
 }
 
-data class SquareTitleBean(val title: String, var checked: Boolean, var image: Int = -1, var imageChecked: Int = -1)
+data class SquareTitleBean(
+    val title: String,
+    var checked: Boolean,
+    var image: Int = -1,
+    var imageChecked: Int = -1
+)
 
 
 /**

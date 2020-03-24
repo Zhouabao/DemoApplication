@@ -101,12 +101,6 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
     private fun initView() {
         EventBus.getDefault().register(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val param = customStatusBar.layoutParams as LinearLayout.LayoutParams
-            param.height = BarUtils.getStatusBarHeight()
-        } else {
-            customStatusBar.isVisible = false
-        }
         mPresenter = ContentPresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!

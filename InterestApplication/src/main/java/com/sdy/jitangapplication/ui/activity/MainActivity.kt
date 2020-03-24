@@ -113,7 +113,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun parseIntents() {
         // 可以获取消息的发送者，跳转到指定的单聊、群聊界面。
         if (intent != null && intent.hasExtra(NimIntent.EXTRA_NOTIFY_CONTENT)) {
-            val messages = intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT) as ArrayList<IMMessage>?
+            val messages =
+                intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT) as ArrayList<IMMessage>?
             if (messages != null && messages.size > 0) {
                 val message = messages[0]
                 intent.removeExtra(NimIntent.EXTRA_NOTIFY_CONTENT)
@@ -131,7 +132,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     private fun initView() {
         EventBus.getDefault().register(this)
-        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
+        NIMClient.getService(MsgServiceObserve::class.java)
+            .observeReceiveMessage(incomingMessageObserver, true)
 
         //首页禁止滑动
         setSwipeBackEnable(false)
@@ -175,7 +177,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
 
             }
 
@@ -390,7 +396,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (UserManager.isNeedChangeAvator())
             if (!UserManager.isForceChangeAvator()) {
                 if (UserManager.getChangeAvatorType() == 1)
-                    showGotoVerifyDialog(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS, UserManager.getChangeAvator())
+                    showGotoVerifyDialog(
+                        GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS,
+                        UserManager.getChangeAvator()
+                    )
                 else
                     ChangeAvatarRealManDialog(
                         this,
@@ -414,7 +423,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             gotoVerifyDialog = null
         }
         EventBus.getDefault().unregister(this)
-        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, false)
+        NIMClient.getService(MsgServiceObserve::class.java)
+            .observeReceiveMessage(incomingMessageObserver, false)
     }
 
 
@@ -612,13 +622,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     UserManager.saveForceChangeAvator(false)//是否强制替换过头像
                     UserManager.saveChangeAvatorType(1)//头像不合规
                 }
-                event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> UserManager.saveAlertChangeAlbum(true)
+                event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> UserManager.saveAlertChangeAlbum(
+                    true
+                )
             }
             showGotoVerifyDialog(event.type, event.avator)
         }
         if (EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java) != null) {
             // 若粘性事件存在，将其删除
-            EventBus.getDefault().removeStickyEvent(EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java))
+            EventBus.getDefault()
+                .removeStickyEvent(EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java))
         }
     }
 
