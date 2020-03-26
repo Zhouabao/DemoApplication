@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -21,15 +20,12 @@ class UserCenteTagAdapter :
 
     override fun convert(holder: BaseViewHolder, item: MyLabelBean) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-        params.width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(33F)) / 2
         if ((holder.layoutPosition - headerLayoutCount) % 2 == 0) {
             params.leftMargin = SizeUtils.dp2px(15F)
             params.rightMargin = SizeUtils.dp2px(13F)
         } else if ((holder.layoutPosition - headerLayoutCount) % 2 == 1) {
-//            params.leftMargin = SizeUtils.dp2px(13F)
-//            params.rightMargin = SizeUtils.dp2px(15F)
+            params.rightMargin = SizeUtils.dp2px(15F)
             params.leftMargin = 0
-            params.rightMargin = 0
         }
         holder.itemView.layoutParams = params
 

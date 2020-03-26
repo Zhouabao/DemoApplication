@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    tools:context=".ui.activity.CandyProductDetailActivity">
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFAFAFA">
+
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/productDetailAppbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                android:minHeight="0dp"
+                app:collapsedTitleGravity="left"
+                app:contentScrim="@color/colorTransparent"
+                app:expandedTitleGravity="center"
+                app:expandedTitleMarginEnd="64dp"
+                app:expandedTitleMarginStart="48dp"
+                app:expandedTitleTextAppearance="@style/matchdetailTitleExpandStyle"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/colorWhite">
+
+
+                    <com.zhpan.bannerview.BannerViewPager
+                        android:id="@+id/bannerProduct"
+                        android:layout_width="match_parent"
+                        android:layout_height="375dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/colorWhite"
+                        android:orientation="horizontal"
+                        android:paddingTop="10dp"
+                        app:bvp_auto_play="false"
+                        app:bvp_can_loop="true"
+                        app:bvp_indicator_checked_color="@color/colorOrange"
+                        app:bvp_indicator_gravity="center"
+                        app:bvp_indicator_normal_color="#F0F0F0"
+                        app:bvp_indicator_slide_mode="normal"
+                        app:bvp_indicator_style="round_rect"
+                        app:bvp_round_corner="10dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/productCandyPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:drawableLeft="@drawable/icon_candy_me"
+                        android:drawablePadding="5dp"
+                        android:text="399,699"
+                        android:textColor="#ffff6318"
+                        android:textSize="31sp"
+                        android:typeface="normal"
+                        app:layout_constraintBottom_toBottomOf="@id/productCollect"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/productCollect" />
+
+                    <TextView
+                        android:id="@+id/productRmbPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="价值¥259"
+                        android:textColor="#ff888d92"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@id/productCandyPrice"
+                        app:layout_constraintLeft_toRightOf="@id/productCandyPrice"
+                        app:layout_constraintTop_toTopOf="@id/productCandyPrice" />
+
+                    <TextView
+                        android:id="@+id/productCollect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:drawableTop="@drawable/icon_collect"
+                        android:drawablePadding="2dp"
+                        android:text="加入心愿"
+                        android:textColor="#ff888d92"
+                        android:textSize="10sp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/bannerProduct" />
+
+                    <TextView
+                        android:id="@+id/productDesc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="15dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="好时（Hershey’s）好时之吻kisses休闲零食好时牛奶巧克力16粒圆形铁盒结婚喜糖礼盒装"
+                        android:textColor="#ff191919"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/productCollect" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="15dp"
+                        android:background="#FAFAFA"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/productDesc" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+            <LinearLayout
+                android:id="@+id/pinView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/statusBarView"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:background="@color/colorWhite" />
+
+                    <include layout="@layout/layout_actionbar" />
+
+                </LinearLayout>
+
+
+                <RadioGroup
+                    android:id="@+id/rgCandyCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/colorWhite"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbWant"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="想要"
+                        android:textColor="@color/selector_color_product_detail_options"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/rbMessage"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="留言"
+                        android:textColor="@color/selector_color_product_detail_options"
+                        android:textSize="16sp" />
+
+                    <RadioButton
+                        android:id="@+id/rbComment"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="评价"
+                        android:textColor="@color/selector_color_product_detail_options"
+                        android:textSize="16sp" />
+                </RadioGroup>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F6F6F6" />
+            </LinearLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/statusBar"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/rectangle_cover_bg57_0"
+            android:visibility="visible"
+            app:layout_collapseMode="pin"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="28dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="24dp"
+                android:src="@drawable/icon_return_oval"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vpProductOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+            <View
+                android:id="@+id/v1"
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:background="@drawable/icon_detail_bg1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/v2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorWhite"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v1" />
+
+            <ProgressBar
+                android:id="@+id/exchangeProgress"
+                style="@style/progressBarHorizontal27"
+                android:layout_width="232dp"
+                android:layout_height="53dp"
+                android:layout_marginBottom="10dp"
+                android:progress="50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/exchangeCandy"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:drawablePadding="7dp"
+                android:text="399 \t\t兑换"
+                android:gravity="center"
+                android:textColor="#ffffffff"
+                android:textSize="19sp"
+                app:layout_constraintBottom_toBottomOf="@id/exchangeProgress"
+                app:layout_constraintLeft_toLeftOf="@id/exchangeProgress"
+                app:layout_constraintRight_toRightOf="@id/exchangeProgress"
+                app:layout_constraintTop_toTopOf="@id/exchangeProgress" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

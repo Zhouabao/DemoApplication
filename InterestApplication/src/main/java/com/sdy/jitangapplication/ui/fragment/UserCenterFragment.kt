@@ -114,6 +114,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userInfoSettingBtn.setOnClickListener(this)
         userAvator.setOnClickListener(this)
         isVipPowerBtn.setOnClickListener(this)
+        candyCl.setOnClickListener(this)
         userFoot.setOnClickListener(this)
         userVisit.setOnClickListener(this)
         userVerify.setOnClickListener(this)
@@ -425,6 +426,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             //认证中心
             R.id.userVerify -> {
                 startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
+            }
+            //我的糖果
+            R.id.candyCl -> {
+                startActivity<MyCandyActivity>()
             }
         }
     }

@@ -229,6 +229,8 @@ dependencies {
     implementation 'com.leon.channel:helper:2.0.3'
     //联动选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
+    //仿京东选址器
+    implementation 'liji.library.dev:citypickerview:5.2.1'
     //growing增长
     implementation 'com.growingio.android:vds-android-agent:autotrack-2.8.7'
 
