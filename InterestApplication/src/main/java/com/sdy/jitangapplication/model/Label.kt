@@ -19,6 +19,7 @@ data class NewLabel(
     var icon: String = "",
     var son: MutableList<NewLabel> = mutableListOf(),
     var title: String = "",
+    var descr: String = "",
     var checked: Boolean = false,
     var used_cnt: Int = 0,
     var ishot: Boolean = false,
@@ -149,7 +150,10 @@ data class NewJobBean(
 }
 
 
-data class AddLabelResultBean(var is_published: Boolean = false, var list: MutableList<TagBean> = mutableListOf())
+data class AddLabelResultBean(
+    var is_published: Boolean = false,
+    var list: MutableList<TagBean> = mutableListOf()
+)
 
 
 data class ChooseTitleBean(

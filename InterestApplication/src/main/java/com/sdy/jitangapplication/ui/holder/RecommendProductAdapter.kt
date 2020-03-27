@@ -6,13 +6,14 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.model.BannerProductBean
 import kotlinx.android.synthetic.main.item_recommend_product.view.*
 
 class RecommendProductAdapter :
-    BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_recommend_product) {
+    BaseQuickAdapter<BannerProductBean, BaseViewHolder>(R.layout.item_recommend_product) {
 
 
-    override fun convert(helper: BaseViewHolder, item: String?) {
+    override fun convert(helper: BaseViewHolder, item: BannerProductBean) {
         val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
 
         if (helper.layoutPosition == 0) {
@@ -30,10 +31,10 @@ class RecommendProductAdapter :
 //        val params1 = helper.itemView.productImg.layoutParams as ConstraintLayout.LayoutParams
 //        params1.height = params.width
 //        params1.width = params.width
-
+        helper.itemView.productName.text = item.title
         GlideUtil.loadRoundImgCenterCrop(
             mContext,
-            R.drawable.icon_bg_actionbar_candy_mall,
+            item.icon,
             helper.itemView.productImg,
             SizeUtils.dp2px(10F)
         )

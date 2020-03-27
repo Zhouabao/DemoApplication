@@ -64,7 +64,7 @@
         app:layout_constraintTop_toBottomOf="@+id/llTitle"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content">
+        app:msv_viewState="loading">
 
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout

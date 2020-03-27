@@ -184,7 +184,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="15dp"
         android:background="@null"
-        android:hint="街道详细地址"
+        android:hint="邮政编码"
         android:maxLines="1"
         android:textColor="#ff191919"
         android:textColorHint="#ffc5c6c8"

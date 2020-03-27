@@ -122,7 +122,8 @@ interface Api {
     @FormUrlEncoded
     @POST("Square/squareTagList${Constants.END_BASE_URL}")
     fun squareTagList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SquareTagBean>?>>
-   /**
+
+    /**
      * 兴趣置顶或者置底
      *
      */
@@ -941,5 +942,22 @@ interface Api {
     @FormUrlEncoded
     @POST("Tidings/likeOrGreetStateV13${Constants.END_BASE_URL}")
     fun likeOrGreetState(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    //----------------------------商城模块------------------------------
+    /**
+     * 流水记录
+     */
+    @FormUrlEncoded
+    @POST("Candy/myBillList${Constants.END_BASE_URL}")
+    fun myBillList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 商城首页列表
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodsList${Constants.END_BASE_URL}")
+    fun goodsList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GoodsListBean?>>
 
 }

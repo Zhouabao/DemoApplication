@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +14,7 @@ import com.blankj.utilcode.util.SpanUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.event.GetAddressvent
 import com.sdy.jitangapplication.presenter.CandyProductDetailPresenter
 import com.sdy.jitangapplication.presenter.view.CandyProductDetailView
 import com.sdy.jitangapplication.ui.adapter.CandyProductAdapter
@@ -24,6 +27,7 @@ import com.sdy.jitangapplication.ui.fragment.WantProductListFragment
 import kotlinx.android.synthetic.main.activity_candy_product_detail.*
 import kotlinx.android.synthetic.main.activity_candy_product_detail.btnBack
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -157,5 +161,16 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
             }
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 100) {
+                if (!data?.getStringExtra("address").isNullOrEmpty()) {
+                    EventBus.getDefault().post(GetAddressvent(data?.getStringExtra("address")!!))
+                }
+            }
+        }
     }
 }

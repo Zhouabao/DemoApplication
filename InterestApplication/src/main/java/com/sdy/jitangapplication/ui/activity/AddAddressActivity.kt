@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.app.Activity
 import android.os.Bundle
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
@@ -34,6 +35,12 @@ class AddAddressActivity : BaseMvpActivity<AddAddressPresenter>(), AddAddressVie
         initPicker()
         addressContent.onClick {
             cityPicker.showCityPicker()
+        }
+
+        saveBtn.onClick {
+            intent.putExtra("address", "${addressContent.text}${addressDetailContent.text}")
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         }
     }
 

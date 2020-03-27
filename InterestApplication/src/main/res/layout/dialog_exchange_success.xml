@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/colorWhite">
+    android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg">
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_height="0dp"
         android:background="@drawable/gradient_rectangle_top_left_right_25_corners_bg"
         app:layout_constraintBottom_toBottomOf="@id/iv1"
@@ -188,7 +189,8 @@
             android:textColor="#ff696e73"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@id/seeOrder"
+            app:layout_constraintTop_toTopOf="@id/seeOrder" />
 
         <TextView
             android:id="@+id/oderNum"
@@ -215,9 +217,9 @@
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
             android:text="查看订单"
+            android:layout_marginTop="7dp"
             android:textColor="#ff191919"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/t2"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -231,7 +233,7 @@
             android:textColor="#ff696e73"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/t2" />
+            app:layout_constraintTop_toBottomOf="@id/seeOrder" />
 
         <TextView
             android:id="@+id/orderTime"

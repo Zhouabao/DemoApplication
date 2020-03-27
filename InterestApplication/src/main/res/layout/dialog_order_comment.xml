@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/shape_rectangle_white_top_left_right_15_corners_bg">
+
+
+    <TextView
+        android:id="@+id/t1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="已经收货啦！"
+        android:textColor="#ff191919"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/t2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:text="打个分吧，说说你想说的\n说不定下个礼物就在向你招手"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        android:lineSpacingMultiplier="1.2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t1" />
+
+    <RatingBar
+        android:id="@+id/orderStar"
+        style="?android:attr/ratingBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_marginTop="15dp"
+        android:progressDrawable="@drawable/ratingbar_bg"
+        android:numStars="5"
+        android:rating="1"
+        android:stepSize="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t2" />
+
+    <EditText
+        android:id="@+id/orderComment"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_rectangle_fafafa_8dp"
+        android:gravity="left"
+        android:hint="描述一下收到礼物的喜悦吧~"
+        android:padding="10dp"
+        android:textColorHint="#ffc5c6c8"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orderStar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orderCommentPicRv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="@id/orderComment"
+        app:layout_constraintRight_toRightOf="@id/orderComment"
+        app:layout_constraintTop_toBottomOf="@id/orderComment" />
+
+    <TextView
+        android:id="@+id/publishComment"
+        android:layout_width="0dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/selector_confirm_btn_25dp"
+        android:gravity="center"
+        android:text="发布评价"
+        android:textColor="#ffffffff"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/orderComment"
+        app:layout_constraintRight_toRightOf="@id/orderComment"
+        app:layout_constraintTop_toBottomOf="@id/orderCommentPicRv" />
+</androidx.constraintlayout.widget.ConstraintLayout>

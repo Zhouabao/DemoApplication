@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.dialog
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -8,27 +7,25 @@ import android.view.Gravity
 import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.event.GetAddressvent
-import com.sdy.jitangapplication.ui.activity.AddAddressActivity
-import com.sdy.jitangapplication.ui.adapter.AddressAdapter
-import kotlinx.android.synthetic.main.dialog_add_exchange_address.*
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.CommentPicEvent
+import com.sdy.jitangapplication.ui.adapter.OrderCommentPicAdapter
+import kotlinx.android.synthetic.main.dialog_order_comment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.startActivityForResult
 
 /**
  *    author : ZFM
  *    date   : 2019/8/1513:59
- *    desc   : 管理添加选择收货地址
+ *    desc   : 收到货评价商品
  *    version: 1.0
  */
-class AddExchangeAddressDialog(var context1: Context) : Dialog(context1, R.style.MyDialog) {
+class OrderCommentDialog(var context1: Context) : Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_add_exchange_address)
+        setContentView(R.layout.dialog_order_comment)
         initWindow()
         initview()
     }
@@ -47,30 +44,28 @@ class AddExchangeAddressDialog(var context1: Context) : Dialog(context1, R.style
         setCanceledOnTouchOutside(true)
     }
 
-    private val addressAdapter = AddressAdapter()
+    private val picAdapter by lazy { OrderCommentPicAdapter() }
 
     fun initview() {
-        rvAddress.layoutManager = LinearLayoutManager(context1, RecyclerView.HORIZONTAL, false)
-        rvAddress.adapter = addressAdapter
-
-        addressAdapter.setOnItemChildClickListener { _, view, position ->
+        orderCommentPicRv.layoutManager =
+            LinearLayoutManager(context1, RecyclerView.HORIZONTAL, false)
+        orderCommentPicRv.adapter = picAdapter
+        picAdapter.setOnItemChildClickListener { _, view, position ->
             when (view.id) {
-                R.id.addAddressIv -> {
-                    (context1 as Activity).startActivityForResult<AddAddressActivity>(100)
+                R.id.addPicComment -> {
+                    CommonFunction.onTakePhoto(context1, 9 - (picAdapter.data.size - 1), 100)
                 }
-                R.id.addressCl -> {
-                    (context1 as Activity).startActivityForResult<AddAddressActivity>(100)
+
+                R.id.cancelPic->{
+                    picAdapter.remove(position)
+                    picAdapter.notifyDataSetChanged()
                 }
             }
         }
 
-        addressAdapter.addData("")
-
-        exchangeBtn.onClick {
-            dismiss()
-            ExchangeSuccessDialog(context1).show()
-        }
+        picAdapter.addData("")
     }
+
 
     override fun show() {
         super.show()
@@ -82,10 +77,13 @@ class AddExchangeAddressDialog(var context1: Context) : Dialog(context1, R.style
         EventBus.getDefault().unregister(this)
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onGetAddressvent(event: GetAddressvent) {
-        addressAdapter.addData(event.address)
-        addressAdapter.notifyDataSetChanged()
+    fun onCommentPicEvent(event: CommentPicEvent) {
+        if (!event.imgs.isNullOrEmpty()) {
+            picAdapter.addData(event.imgs)
+            picAdapter.notifyDataSetChanged()
+        }
     }
+
+
 }
