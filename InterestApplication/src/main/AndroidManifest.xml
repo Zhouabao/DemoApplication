@@ -89,50 +89,128 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.MyOrderActivity"></activity>
+        <activity
+            android:name=".ui.activity.MyOrderActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.AddAddressActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-        <activity android:name=".ui.activity.CandyProductDetailActivity" />
-        <activity android:name=".ui.activity.CandyMallActivity" />
-        <activity android:name=".ui.activity.CandyRecordActivity" />
-        <activity android:name=".ui.activity.BindAlipayAccountActivity" />
-        <activity android:name=".ui.activity.MyCandyActivity" />
-        <activity android:name=".ui.activity.MatchSucceedActivity" />
-        <activity android:name=".ui.activity.LikeMeReceivedActivity" />
-        <activity android:name=".ui.activity.MessageLikeMeActivity" />
-        <activity android:name=".ui.activity.MessageLikeMeOneDayActivity" />
-        <activity android:name=".ui.activity.FindByTagListActivity" />
-        <activity android:name=".ui.activity.GreetReceivedActivity" />
-        <activity android:name=".ui.activity.VipPowerActivity" />
-        <activity android:name=".ui.activity.AllTitleActivity" />
-        <activity android:name=".ui.activity.SquareSamePersonActivity" />
-        <activity android:name=".ui.activity.TagDetailCategoryActivity" />
-        <activity android:name=".ui.activity.MyIntentionActivity" />
-        <activity android:name=".ui.activity.MyIntentionActivity1" />
-        <activity android:name=".ui.activity.ChooseLabelActivity" />
-        <activity android:name=".ui.activity.ChooseTitleActivity" />
-        <activity android:name=".ui.activity.MyLabelActivity" />
-        <activity android:name=".ui.activity.AddLabelSuccessActivity" />
-        <activity android:name=".ui.activity.UserIntroduceActivity" />
-        <activity android:name=".ui.activity.LabelQualityActivity" />
-        <activity android:name=".ui.activity.AddLabelActivity" />
-        <activity android:name=".ui.activity.MyFootPrintActivity" />
-        <activity android:name=".ui.activity.LoginOffActivity" />
-        <activity android:name=".ui.activity.ChangeAccountActivity" />
-        <activity android:name=".ui.activity.AccountAboutActivity" />
-        <activity android:name=".ui.activity.LoginHelpDetailActivity" />
-        <activity android:name=".ui.activity.LoginHelpActivity" />
-        <activity android:name=".ui.activity.UserAvatorActivity" />
-        <activity android:name=".ui.activity.UserGenderActivity" />
-        <activity android:name=".ui.activity.UserNickNameActivity" />
-        <activity android:name=".ui.activity.ModelAboutMeActivity" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".ui.activity.CandyProductDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.CandyMallActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.CandyRecordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BindAlipayAccountActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MyCandyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MatchSucceedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LikeMeReceivedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MessageLikeMeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MessageLikeMeOneDayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.FindByTagListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.GreetReceivedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.VipPowerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AllTitleActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SquareSamePersonActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.TagDetailCategoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MyIntentionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MyIntentionActivity1"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ChooseLabelActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ChooseTitleActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MyLabelActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AddLabelSuccessActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.UserIntroduceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LabelQualityActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AddLabelActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MyFootPrintActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LoginOffActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ChangeAccountActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AccountAboutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LoginHelpDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LoginHelpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.UserAvatorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.UserGenderActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.UserNickNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ModelAboutMeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.LoginHelpReasonActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".ui.activity.ChooseSchoolActivity" />
-        <activity android:name=".ui.activity.ReportReasonActivity" />
-        <activity android:name=".ui.activity.NewUserInfoSettingsActivity" />
+        <activity
+            android:name=".ui.activity.ChooseSchoolActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ReportReasonActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.NewUserInfoSettingsActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.SplashActivity"
             android:screenOrientation="portrait"

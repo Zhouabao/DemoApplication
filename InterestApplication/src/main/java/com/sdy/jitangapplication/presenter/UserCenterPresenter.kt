@@ -34,12 +34,12 @@ import java.io.File
 class UserCenterPresenter : BasePresenter<UserCenterView>() {
 
     //获取个人信息
-    fun getMemberInfo(params: HashMap<String, Any>) {
+    fun myInfoCandy() {
         if (!checkNetWork()) {
             mView.onError("")
         }
         RetrofitFactory.instance.create(Api::class.java)
-            .myInfo(UserManager.getSignParams(params))
+            .myInfoCandy(UserManager.getSignParams())
             .excute(object : BaseSubscriber<BaseResp<UserInfoBean?>>(mView) {
                 override fun onNext(t: BaseResp<UserInfoBean?>) {
                     mView.onGetMyInfoResult(t.data)

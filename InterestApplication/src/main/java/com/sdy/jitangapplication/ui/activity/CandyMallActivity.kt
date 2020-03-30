@@ -17,6 +17,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.event.RefreshCandyMallEvent
 import com.sdy.jitangapplication.model.BannerProductBean
 import com.sdy.jitangapplication.model.GoodsCategoryBeans
 import com.sdy.jitangapplication.model.GoodsListBean
@@ -32,6 +33,9 @@ import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.zhpan.bannerview.BannerViewPager
 import kotlinx.android.synthetic.main.activity_candy_mall.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.startActivity
 
 /**
@@ -53,6 +57,8 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
 
     private var checkedMenuIndex = 0
     private fun initView() {
+        EventBus.getDefault().register(this)
+
         mPresenter = CandyMallPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -73,19 +79,6 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
         rvCategoryProduct.adapter = candyProductAdapter
         candyProductAdapter.setOnItemClickListener { _, view, position ->
             startActivity<CandyProductDetailActivity>("id" to candyProductAdapter.data[position].id)
-        }
-
-        candyProductAdapter.setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-
-                R.id.exchangeBtn -> {//兑换
-                    if (candyProductAdapter.mycandy >= candyProductAdapter.data[position].amount) {
-                        AddExchangeAddressDialog(this,candyProductAdapter.data[position].id).show()
-                    } else {
-                        AlertCandyEnoughDialog(this).show()
-                    }
-                }
-            }
         }
 
 
@@ -196,5 +189,15 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshCandyMallEvent(event: RefreshCandyMallEvent) {
+        refreshProduct.autoRefresh()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
 
 }

@@ -14,6 +14,8 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.RefreshCandyMallDetailEvent
 import com.sdy.jitangapplication.model.ProductDetailBean
 import com.sdy.jitangapplication.presenter.CandyProductDetailPresenter
 import com.sdy.jitangapplication.presenter.view.CandyProductDetailView
@@ -29,6 +31,9 @@ import com.zhpan.bannerview.BannerViewPager
 import kotlinx.android.synthetic.main.activity_candy_product_detail.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 /**
@@ -47,6 +52,8 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
     }
 
     private fun initView() {
+        EventBus.getDefault().register(this)
+
         mPresenter = CandyProductDetailPresenter()
         mPresenter.mView = this
         mPresenter.context = this
@@ -156,8 +163,10 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
                 finish()
             }
             R.id.productCollect -> {
-                if (!productBean.is_wished)
-                    AddAndMessageDialog(this, productBean.id).show()
+                if (!productBean.is_wished) {
+                }
+                mPresenter.goodsAddWish(productBean.id)
+
             }
             R.id.exchangeCandy -> {
                 if (productBean.my_candy_amount >= productBean.amount) {
@@ -176,7 +185,7 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
         if (data != null) {
             productBean = data
             (bannerProduct as BannerViewPager<String, ProductDetailImgHolderView>).create(data.cover_list)
-            productCandyPrice.text = "${data!!.amount}"
+            productCandyPrice.text = CommonFunction.num2thousand("${data!!.amount}")
             productRmbPrice.text = "价值¥${data!!.price}"
             productCollect.text = if (data.is_wished) {
                 "已加入"
@@ -196,8 +205,8 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
             if (data.my_candy_amount >= data.amount) {
                 exchangeProgress.progress = 100
                 exchangeCandy.text = SpanUtils.with(exchangeCandy)
-                    .appendImage(R.drawable.icon_candy_small)
-                    .append("\t\t${data.amount}\t\t")
+                    .appendImage(R.drawable.icon_candy_detail)
+                    .append("\t\t${CommonFunction.num2thousand("${data!!.amount}")}\t\t")
                     .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
                     .append("兑换")
                     .create()
@@ -205,8 +214,8 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
                 exchangeProgress.progress = (data.my_candy_amount * 1F / data.amount * 100).toInt()
                 exchangeCandy.text = SpanUtils.with(exchangeCandy)
                     .append("还需要\t\t")
-                    .appendImage(R.drawable.icon_candy_small)
-                    .append("${data.amount - data.my_candy_amount}")
+                    .appendImage(R.drawable.icon_candy_detail)
+                    .append("${CommonFunction.num2thousand("${data.amount - data.my_candy_amount}")}")
                     .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
                     .create()
             }
@@ -234,9 +243,19 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
                     resources.getDrawable(R.drawable.icon_collect)
                 }, null, null
             )
-            mPresenter.goodsAddWish(productBean.id)
+            AddAndMessageDialog(this, productBean.id).show()
         }
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    //            mPresenter.goodsInfo(goods_id)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshCandyMallDetailEvent(event: RefreshCandyMallDetailEvent) {
+        mPresenter.goodsInfo(goods_id)
+    }
 }

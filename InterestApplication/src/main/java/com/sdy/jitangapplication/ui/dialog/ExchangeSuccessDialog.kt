@@ -71,7 +71,6 @@ class ExchangeSuccessDialog(var context1: Context, val exchangeSuccessBean: Exch
         }
 
         seeOrder.onClick {
-            //todo 跳转到我的订单
             context1.startActivity<MyOrderActivity>()
             dismiss()
         }

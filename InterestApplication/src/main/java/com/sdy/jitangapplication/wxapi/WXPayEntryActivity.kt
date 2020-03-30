@@ -8,9 +8,7 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.ui.activity.AddLabelActivity
-import com.sdy.jitangapplication.ui.activity.MainActivity
-import com.sdy.jitangapplication.ui.activity.MyLabelActivity
+import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseReq
@@ -70,9 +68,15 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
                     overridePendingTransition(0, 0)
                     if (code == BaseResp.ErrCode.ERR_OK) {
                         //TODO 刷新糖果相关界面 我的糖果 糖果商城 糖果详情
-
-                        if (ActivityUtils.getTopActivity() is AddLabelActivity) {
-                            EventBus.getDefault().post(PayLabelResultEvent(code == BaseResp.ErrCode.ERR_OK))
+                        if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) {
+                            EventBus.getDefault().post(RefreshCandyMallDetailEvent())
+                        } else if (ActivityUtils.getTopActivity() is CandyMallActivity) {
+                            EventBus.getDefault().post(RefreshCandyMallEvent())
+                        } else if (ActivityUtils.getTopActivity() is MyCandyActivity) {
+                            EventBus.getDefault().post(RefreshMyCandyEvent(-1))
+                        } else if (ActivityUtils.getTopActivity() is AddLabelActivity) {
+                            EventBus.getDefault()
+                                .post(PayLabelResultEvent(code == BaseResp.ErrCode.ERR_OK))
                         } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {
                             EventBus.getDefault().post(UpdateMyLabelEvent())
                         } else {

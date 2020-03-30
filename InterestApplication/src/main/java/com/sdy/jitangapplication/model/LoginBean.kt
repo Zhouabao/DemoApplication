@@ -40,8 +40,10 @@ data class Userinfo(
     var isfaced: Int = -1,//   0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     var identification: Int = 0,// int（认证分数）
     var percent_complete: Int = 0,// float（百分比例如 80.99）
-    var intention: LabelQualityBean? = null //意向
-)
+    var intention: LabelQualityBean? = null, //意向
+    var my_candy_amount: Int = 0,
+    var my_candy_amount_str: String = ""
+    )
 
 data class TagBean(
     var id: Int = 0,
@@ -49,7 +51,6 @@ data class TagBean(
     var cheked: Boolean = false,
     var is_expire: Boolean = false
 ) : Serializable
-
 
 
 data class VersionBean(val version: String)

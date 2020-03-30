@@ -392,8 +392,8 @@ interface Api {
      * 个人中心
      */
     @FormUrlEncoded
-    @POST("member_info/myInfoV13${Constants.END_BASE_URL}")
-    fun myInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
+    @POST("MemberInfo/myInfoCandy${Constants.END_BASE_URL}")
+    fun myInfoCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoBean?>>
 
     /**
      * 系统推荐问题

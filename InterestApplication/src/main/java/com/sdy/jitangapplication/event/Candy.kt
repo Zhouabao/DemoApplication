@@ -40,3 +40,13 @@ class RefreshGoodsMessageEvent()
  * 更新我的糖果之类的数据
  */
 class RefreshMyCandyEvent(val candyCount: Int)
+
+/**
+ * 更新糖果商城
+ */
+class RefreshCandyMallEvent()
+
+/**
+ * 更新糖果商城详情页
+ */
+class RefreshCandyMallDetailEvent()

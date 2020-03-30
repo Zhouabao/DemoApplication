@@ -7,13 +7,12 @@ import java.io.Serializable
 /**
  *    author : ZFM
  *    date   : 2019/7/3014:31
- *    desc   : 个人中心请求model
+
  *    version: 1.0
  */
 data class UserInfoBean(
-    val mytags_count: Int = 0,//兴趣个数
+    val mytags_count: Int = 0,//兴趣个数 *    desc   : 个人中心请求model
     val mytags_list: MutableList<MyLabelBean> = mutableListOf(),//展示的兴趣
-    val squarelist: Squarelist? = Squarelist(),//展示的广场
     val userinfo: Userinfo? = null,
     val hide_distance: Boolean = false,//（true开启隐藏  false  关闭隐藏）
     val hide_book: Boolean = false,//（ true 屏蔽通讯录     false  关闭隐藏通讯录）
@@ -21,7 +20,6 @@ data class UserInfoBean(
     val free_show: Boolean = false,//  true（显示）  false(模糊)
     val vip_descr: MutableList<VipDescr>? = mutableListOf(),//会员权益描述
     val visitlist: MutableList<String>? = mutableListOf()//看过我的头像列表
-
 )
 
 //设置中心开关
@@ -33,9 +31,6 @@ data class SettingsBean(
     val notify_square_like_state: Boolean = true,//true 开启招呼认证 false关闭招呼认证
     val notify_square_comment_state: Boolean = true//true 开启招呼认证 false关闭招呼认证
 )
-
-
-
 
 
 //个人中心展示封面

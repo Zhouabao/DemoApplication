@@ -38,6 +38,9 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import org.greenrobot.eventbus.EventBus
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.text.ParseException
 
 /**
  *    author : ZFM
@@ -46,6 +49,24 @@ import org.greenrobot.eventbus.EventBus
  *    version: 1.0
  */
 object CommonFunction {
+    /**
+     * 字符串 千位符
+     *
+     * @param num
+     * @return
+     */
+    fun num2thousand(num: String): String {
+        var numStr = "";
+        val nf = NumberFormat.getInstance();
+        try {
+            val df = DecimalFormat("#,###");
+            numStr = df.format(nf.parse(num));
+        } catch (e: ParseException) {
+            e.printStackTrace();
+        }
+        return numStr;
+    }
+
 
     fun getErrorMsg(context: Context): String {
         return if (NetworkUtils.isConnected()) {
@@ -117,14 +138,35 @@ object CommonFunction {
                                 NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                     .setCallback(object : RequestCallback<Void> {
                                         override fun onSuccess(p0: Void?) {
-                                            view?.postDelayed({ ChatActivity.start(context1, target_accid) }, 500L)
+                                            view?.postDelayed({
+                                                ChatActivity.start(
+                                                    context1,
+                                                    target_accid
+                                                )
+                                            }, 500L)
                                             if (needSwipe)
-                                                EventBus.getDefault().post(GreetTopEvent(context1, true, target_accid))
+                                                EventBus.getDefault().post(
+                                                    GreetTopEvent(
+                                                        context1,
+                                                        true,
+                                                        target_accid
+                                                    )
+                                                )
                                             //刷新对方用户信息页面
-                                            if (ActivityUtils.isActivityExistsInStack(MatchDetailActivity::class.java))
-                                                EventBus.getDefault().post(GreetDetailSuccessEvent(true))
+                                            if (ActivityUtils.isActivityExistsInStack(
+                                                    MatchDetailActivity::class.java
+                                                )
+                                            )
+                                                EventBus.getDefault().post(
+                                                    GreetDetailSuccessEvent(
+                                                        true
+                                                    )
+                                                )
                                             //刷新兴趣找人列表
-                                            if (ActivityUtils.isActivityExistsInStack(FindByTagListActivity::class.java))
+                                            if (ActivityUtils.isActivityExistsInStack(
+                                                    FindByTagListActivity::class.java
+                                                )
+                                            )
                                                 EventBus.getDefault().post(
                                                     UpdateFindByTagListEvent(position, target_accid)
                                                 )
@@ -152,13 +194,24 @@ object CommonFunction {
                             GreetLimitlDialog(context1, targetAvator).show()
                         }
                         t.code == 203 -> { //招呼次数用完,认证获得次数
-                            GreetUseUpDialog(context1, GreetUseUpDialog.GREET_USE_UP_VERIFY, t.data).show()
+                            GreetUseUpDialog(
+                                context1,
+                                GreetUseUpDialog.GREET_USE_UP_VERIFY,
+                                t.data
+                            ).show()
                         }
                         t.code == 204 -> { //次数使用完毕，请充值会员获取次数
-                            GreetUseUpDialog(context1, GreetUseUpDialog.GREET_USE_UP_CHARGEVIP, t.data).show()
+                            GreetUseUpDialog(
+                                context1,
+                                GreetUseUpDialog.GREET_USE_UP_CHARGEVIP,
+                                t.data
+                            ).show()
                         }
                         t.code == 205 -> { //会员次数用尽，明天再来
-                            GreetUseUpDialog(context1, GreetUseUpDialog.GREET_USE_UP_TOMORROW).show()
+                            GreetUseUpDialog(
+                                context1,
+                                GreetUseUpDialog.GREET_USE_UP_TOMORROW
+                            ).show()
                         }
                         t.code == 206 -> { //是好友/打过招呼的，直接跳转聊天界面
                             ChatActivity.start(context1, target_accid)
@@ -184,10 +237,12 @@ object CommonFunction {
     }
 
     fun dissolveRelationship(target_accid: String, negative: Boolean = false) {
-        NIMClient.getService(MsgService::class.java).deleteRecentContact2(target_accid, SessionTypeEnum.P2P)
+        NIMClient.getService(MsgService::class.java)
+            .deleteRecentContact2(target_accid, SessionTypeEnum.P2P)
         // 删除与某个聊天对象的全部消息记录
         //如果是被动删除，就删除会话
-        NIMClient.getService(MsgService::class.java).clearChattingHistory(target_accid, SessionTypeEnum.P2P)
+        NIMClient.getService(MsgService::class.java)
+            .clearChattingHistory(target_accid, SessionTypeEnum.P2P)
 //        NIMClient.getService(MsgService::class.java).clearServerHistory(target_accid, SessionTypeEnum.P2P)
         if (ActivityUtils.isActivityExistsInStack(ChatActivity::class.java))
             ActivityUtils.finishActivity(ChatActivity::class.java)
@@ -266,7 +321,12 @@ object CommonFunction {
     /**
      * 单独拍照
      */
-    fun openCamera(context: Context, requestCode: Int, chooseMode: Int = 1, compress: Boolean = false) {
+    fun openCamera(
+        context: Context,
+        requestCode: Int,
+        chooseMode: Int = 1,
+        compress: Boolean = false
+    ) {
         PictureSelector.create(context as Activity)
             .openCamera(chooseMode)
             .enableCrop(false)

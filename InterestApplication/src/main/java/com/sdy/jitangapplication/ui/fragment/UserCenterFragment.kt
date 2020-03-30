@@ -38,7 +38,6 @@ import com.sdy.jitangapplication.presenter.UserCenterPresenter
 import com.sdy.jitangapplication.presenter.view.UserCenterView
 import com.sdy.jitangapplication.ui.activity.*
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.adapter.UserCenterCoverAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -65,13 +64,6 @@ import java.util.*
  */
 class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserCenterView,
     View.OnClickListener {
-    private val params by lazy {
-        hashMapOf(
-            "accid" to UserManager.getAccid(),
-            "token" to UserManager.getToken(),
-            "_timestamp" to System.currentTimeMillis()
-        )
-    }
 
     companion object {
         const val REQUEST_INFO_SETTING = 11
@@ -81,8 +73,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         const val REQUEST_INTENTION = 15
     }
 
-    //动态封面适配器
-    private val coverAdapter by lazy { UserCenterCoverAdapter() }
     //我的访客adapter
     private val visitsAdapter by lazy { VisitUserAvatorAdater() }
 
@@ -122,16 +112,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
         multiStateView.retryBtn.onClick {
             multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.getMemberInfo(params)
-        }
-
-        coverAdapter.setOnItemClickListener { _, view, position ->
-            if (position == coverAdapter.data.size - 1) {
-                startActivityForResult<MyCollectionEtcActivity>(
-                    REQUEST_MY_SQUARE,
-                    "type" to MyCollectionAndLikeFragment.TYPE_MINE
-                )
-            }
+            mPresenter.myInfoCandy()
         }
 
         //我的访客封面
@@ -242,12 +223,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     private fun initData() {
         //更新了信息之后更新本地缓存
         SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
-        coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
 
         visitsAdapter.freeShow = userInfoBean?.free_show ?: false
         visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
         GlideUtil.loadAvatorImg(activity!!, userInfoBean?.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean?.userinfo?.nickname ?: ""
+        candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount_str}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
 
@@ -440,7 +421,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     fun onProgressEvent(event: UploadEvent) {
         if (event.from == 2) {
 //            multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.getMemberInfo(params)
+            mPresenter.myInfoCandy()
             EventBus.getDefault().post(RefreshEvent(true))
         }
     }
@@ -450,7 +431,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: UserCenterEvent) {
 //        multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-        mPresenter.getMemberInfo(params)
+        mPresenter.myInfoCandy()
     }
 
 

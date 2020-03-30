@@ -17,6 +17,8 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.ProductBean
 import com.sdy.jitangapplication.ui.dialog.AddAndMessageDialog
+import com.sdy.jitangapplication.ui.dialog.AddExchangeAddressDialog
+import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
@@ -32,7 +34,6 @@ class CandyProductAdapter :
     BaseQuickAdapter<ProductBean, BaseViewHolder>(R.layout.item_candy_product) {
     var mycandy: Int = 0
     override fun convert(helper: BaseViewHolder, item: ProductBean) {
-        helper.addOnClickListener(R.id.exchangeBtn)//兑换礼品
         helper.itemView.ProductCandyPrice.typeface =
             Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
         helper.itemView.addProductProgressCount.typeface =
@@ -55,7 +56,7 @@ class CandyProductAdapter :
             }
         }
 
-        helper.itemView.ProductCandyPrice.text = "${item.amount}"
+        helper.itemView.ProductCandyPrice.text = CommonFunction.num2thousand("${item.amount}")
         helper.itemView.productDesc.text = "${item.descr}"
         helper.itemView.addProductProgress.progress =
             if (mycandy >= item.amount) {
@@ -73,9 +74,19 @@ class CandyProductAdapter :
         helper.itemView.addProductProgress.isVisible = item.is_wished
         helper.itemView.addProductProgressCount.isVisible = item.is_wished
         helper.itemView.addProductBtn.isVisible = !item.is_wished
+
         //加入心愿
         helper.itemView.addProductBtn.onClick {
             goodsAddWish(helper.layoutPosition, item.id)
+        }
+
+        //兑换礼品
+        helper.itemView.exchangeBtn.onClick {
+            if (mycandy >= item.amount) {
+                AddExchangeAddressDialog(mContext, item.id).show()
+            } else {
+                AlertCandyEnoughDialog(mContext).show()
+            }
         }
 
     }

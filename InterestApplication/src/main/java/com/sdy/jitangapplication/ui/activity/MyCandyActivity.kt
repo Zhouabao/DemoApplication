@@ -13,6 +13,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshMyCandyEvent
 import com.sdy.jitangapplication.model.GoodsCategoryBeans
@@ -113,7 +114,7 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
     override fun onMyCadnyResult(candyCoun: PullWithdrawBean?) {
         if (candyCoun != null) {
             candyProductAdapter.mycandy = candyCoun!!.candy_amount
-            candyCount.text = "${candyCoun.candy_amount}"
+            candyCount.text = CommonFunction.num2thousand("${candyCoun.candy_amount}")
             candyNewRecord.isVisible = candyCoun.has_unread
         }
         mPresenter.goodsCategoryList(params)
@@ -143,7 +144,8 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshMyCandyEvent(event: RefreshMyCandyEvent) {
         if (event.candyCount >= 0) {
-            candyCount.text = "${candyProductAdapter.mycandy - event.candyCount}"
+            candyCount.text = CommonFunction.num2thousand("${candyProductAdapter.mycandy - event.candyCount}")
+
             candyProductAdapter.mycandy = candyProductAdapter.mycandy - event.candyCount
             candyProductAdapter.notifyDataSetChanged()
         } else {

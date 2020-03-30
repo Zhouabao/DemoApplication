@@ -24,11 +24,14 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.event.RefreshCandyMallDetailEvent
+import com.sdy.jitangapplication.event.RefreshCandyMallEvent
 import com.sdy.jitangapplication.event.RefreshMyCandyEvent
 import com.sdy.jitangapplication.model.PayBean
 import com.sdy.jitangapplication.model.Paylist
 import com.sdy.jitangapplication.model.RechargeCandyBean
 import com.sdy.jitangapplication.ui.activity.CandyMallActivity
+import com.sdy.jitangapplication.ui.activity.CandyProductDetailActivity
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -220,10 +223,14 @@ class ConfirmPayCandyDialog(
                     dialog.cancel()
                     if (result) {
                         //TODO 刷新糖果相关界面 我的糖果 糖果商城 糖果详情
-                        if (ActivityUtils.isActivityExistsInStack(MyCandyActivity::class.java)) {
+                        if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) {
+                            EventBus.getDefault().post(RefreshCandyMallDetailEvent())
+                        } else if (ActivityUtils.getTopActivity() is CandyMallActivity) {
+                            EventBus.getDefault().post(RefreshCandyMallEvent())
+                        } else if (ActivityUtils.getTopActivity() is MyCandyActivity) {
                             EventBus.getDefault().post(RefreshMyCandyEvent(-1))
-                        } else if (ActivityUtils.isActivityExistsInStack(CandyMallActivity::class.java))
-                            EventBus.getDefault().post(CloseDialogEvent())
+                        }
+                        EventBus.getDefault().post(CloseDialogEvent())
                         dismiss()
                     }
                 }
