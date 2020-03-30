@@ -6,8 +6,8 @@
             <certificates src="system"/>
         </trust-anchors>
     </base-config>
-    <domain-config>
-        <!--<domain includeSubdomains="true">ppsns.duluduludala.com</domain>-->
+    <!--<domain-config>
+        <domain includeSubdomains="true">ppsns.duluduludala.com</domain>
         <domain includeSubdomains="true">devppsns.duluduludala.com</domain>
         <domain includeSubdomains="true">192.168.0.111</domain>
         <domain includeSubdomains="true">fengkongcloud.com</domain>
@@ -16,5 +16,5 @@
             <certificates src="user"/>
         </trust-anchors>
     </domain-config>
-
+-->
 </network-security-config>

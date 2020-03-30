@@ -126,19 +126,19 @@ android {
 
 
     // 输出文件配置
-    applicationVariants.all { variant ->
-        //这个修改输出的APK路径
-        variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/app/apk")
-        variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
-            //这个修改输出APK的文件名
-            apkData.outputFileName = "JITANG-" +
-                    variant.versionName + "-" +
-                    variant.flavorName + "-" +
-                    variant.buildType.name +
-                    ".apk"
-
-        }
-    }
+//    applicationVariants.all { variant ->
+//        //这个修改输出的APK路径
+//        variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/app/apk")
+//        variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
+//            //这个修改输出APK的文件名
+//            apkData.outputFileName = "JITANG-" +
+//                    variant.versionName + "-" +
+//                    variant.flavorName + "-" +
+//                    variant.buildType.name +
+//                    ".apk"
+//
+//        }
+//    }
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
