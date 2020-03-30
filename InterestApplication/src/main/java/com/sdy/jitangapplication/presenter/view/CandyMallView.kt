@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.GoodsCategoryBeans
 import com.sdy.jitangapplication.model.GoodsListBean
 
 /**
@@ -12,4 +13,8 @@ import com.sdy.jitangapplication.model.GoodsListBean
 interface CandyMallView : BaseView {
 
     fun onGoodsListResult(goodsListBean: GoodsListBean?)
+
+    fun ongoodsCategoryList(goodsListBean: GoodsCategoryBeans?)
+
+
 }

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".ui.activity.MyOrderActivity">
 
     <include layout="@layout/layout_actionbar" />
@@ -17,7 +18,7 @@
         app:layout_constraintTop_toBottomOf="@+id/llTitle"
         app:msv_errorView="@layout/error_layout"
         app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content">
+        app:msv_viewState="loading">
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refreshOrder"

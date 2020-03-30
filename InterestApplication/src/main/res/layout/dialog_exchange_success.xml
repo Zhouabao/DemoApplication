@@ -266,6 +266,8 @@
             android:text="放小区物业就行"
             android:textColor="#ff696e73"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="10dp"
             app:layout_constraintLeft_toRightOf="@id/t2"
             app:layout_constraintTop_toTopOf="@id/t4" />
 

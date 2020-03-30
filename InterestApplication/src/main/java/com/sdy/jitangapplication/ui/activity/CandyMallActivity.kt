@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,15 +12,21 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.constant.RefreshState
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.BannerProductBean
+import com.sdy.jitangapplication.model.GoodsCategoryBeans
 import com.sdy.jitangapplication.model.GoodsListBean
+import com.sdy.jitangapplication.model.ProductBean
 import com.sdy.jitangapplication.presenter.CandyMallPresenter
 import com.sdy.jitangapplication.presenter.view.CandyMallView
 import com.sdy.jitangapplication.ui.adapter.CandyProductAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
+import com.sdy.jitangapplication.ui.dialog.AddExchangeAddressDialog
+import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog
 import com.sdy.jitangapplication.ui.holder.RecommendBannerHolderView
 import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.zhpan.bannerview.BannerViewPager
@@ -44,8 +51,13 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
     private val candyProductAdapter by lazy { CandyProductAdapter() }
     private val productMenuAdapter: MatchLabelAdapter by lazy { MatchLabelAdapter(this) }
 
+    private var checkedMenuIndex = 0
     private fun initView() {
-        BarUtils.setStatusBarVisibility(this, false)
+        mPresenter = CandyMallPresenter()
+        mPresenter.mView = this
+        mPresenter.context = this
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            BarUtils.setStatusBarVisibility(this, false)
         btnBack.onClick {
             finish()
         }
@@ -60,16 +72,28 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
         rvCategoryProduct.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvCategoryProduct.adapter = candyProductAdapter
         candyProductAdapter.setOnItemClickListener { _, view, position ->
-            startActivity<CandyProductDetailActivity>()
+            startActivity<CandyProductDetailActivity>("id" to candyProductAdapter.data[position].id)
         }
+
+        candyProductAdapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+
+                R.id.exchangeBtn -> {//兑换
+                    if (candyProductAdapter.mycandy >= candyProductAdapter.data[position].amount) {
+                        AddExchangeAddressDialog(this,candyProductAdapter.data[position].id).show()
+                    } else {
+                        AlertCandyEnoughDialog(this).show()
+                    }
+                }
+            }
+        }
+
 
         (bannerRecommendProduct as BannerViewPager<MutableList<BannerProductBean>, RecommendBannerHolderView>)
             .setHolderCreator { RecommendBannerHolderView() }
             .setIndicatorSliderRadius(SizeUtils.dp2px(3F))
             .setIndicatorSliderWidth(SizeUtils.dp2px(6f), SizeUtils.dp2px(18F))
             .setIndicatorHeight(SizeUtils.dp2px(6f))
-            .setOnPageClickListener {
-            }
             .setIndicatorSliderGap(SizeUtils.dp2px(5F))
             .create(mutableListOf())
 
@@ -79,41 +103,41 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
         rvCandyCategory.adapter = productMenuAdapter
 
         productMenuAdapter.setOnItemClickListener { _, view, position ->
-            //todo 点击切换数据源
-            for (data in productMenuAdapter.data.withIndex()) {
-                data.value.checked = data.index == position
+            if (checkedMenuIndex != position) {
+                checkedMenuIndex = position
+                for (data in productMenuAdapter.data.withIndex()) {
+                    data.value.checked = data.index == position
+                }
+                productMenuAdapter.notifyDataSetChanged()
+
+                refreshProduct.resetNoMoreData()
+                params["category_id"] = productMenuAdapter.data[position].id
+                page = 1
+                params["page"] = page
+                mPresenter.goodsCategoryList(params)
+
+                (rvCandyCategory.layoutManager as CenterLayoutManager).smoothScrollToPosition(
+                    rvCandyCategory,
+                    RecyclerView.State(),
+                    position
+                )
             }
-            productMenuAdapter.notifyDataSetChanged()
-
-            (rvCandyCategory.layoutManager as CenterLayoutManager).smoothScrollToPosition(
-                rvCandyCategory,
-                RecyclerView.State(),
-                position
-            )
-        }
-
-
-        for (i in 0 until 10) {
-            candyProductAdapter.addData("")
         }
 
 
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
-        candyProductAdapter.data.clear()
-        candyProductAdapter.notifyDataSetChanged()
-        for (i in 0 until 10) {
-            candyProductAdapter.addData("")
-        }
-        refreshLayout.finishRefresh()
+        page = 1
+        params["page"] = page
+        mPresenter.goodsCategoryList(params)
+        refreshLayout.resetNoMoreData()
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
-        for (i in 0 until 10) {
-            candyProductAdapter.addData("")
-        }
-        refreshLayout.finishLoadMore()
+        page++
+        params["page"] = page
+        mPresenter.goodsCategoryList(params)
     }
 
     override fun onClick(v: View) {
@@ -122,6 +146,15 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
                 startActivity<MyOrderActivity>()
             }
         }
+    }
+
+    private var page = 1
+    private val params by lazy {
+        hashMapOf<String, Any>(
+            "category_id" to -1,
+            "page" to page,
+            "pagesize" to Constants.PAGESIZE
+        )
     }
 
     override fun onGoodsListResult(goodsListBean: GoodsListBean?) {
@@ -133,11 +166,35 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
             (bannerRecommendProduct as BannerViewPager<MutableList<BannerProductBean>, RecommendBannerHolderView>).create(
                 goodsListBean.banner
             )
-
-            stateProduct.viewState = MultiStateView.VIEW_STATE_CONTENT
+            candyProductAdapter.mycandy = goodsListBean.mycandy
+            params["category_id"] = goodsListBean.list[0].id
+            mPresenter.goodsCategoryList(params)
+            refreshProduct.resetNoMoreData()
         } else {
             stateProduct.viewState = MultiStateView.VIEW_STATE_ERROR
         }
 
     }
+
+    override fun ongoodsCategoryList(goodsListBean: GoodsCategoryBeans?) {
+        if (stateProduct.viewState == MultiStateView.VIEW_STATE_LOADING)
+            stateProduct.viewState = MultiStateView.VIEW_STATE_CONTENT
+        if (refreshProduct.state != RefreshState.Loading) {
+            rvCategoryProduct.scrollToPosition(0)
+            candyProductAdapter.data.clear()
+            candyProductAdapter.notifyDataSetChanged()
+        }
+        if (refreshProduct.state == RefreshState.Loading) {
+            refreshProduct.finishLoadMore(goodsListBean != null)
+        }
+        if ((goodsListBean?.list ?: mutableListOf<ProductBean>()).size < Constants.PAGESIZE) {
+            refreshProduct.finishLoadMoreWithNoMoreData()
+        }
+        if (refreshProduct.state == RefreshState.Refreshing)
+            refreshProduct.finishRefresh(goodsListBean != null)
+        candyProductAdapter.addData(goodsListBean?.list ?: mutableListOf())
+    }
+
+
+
 }

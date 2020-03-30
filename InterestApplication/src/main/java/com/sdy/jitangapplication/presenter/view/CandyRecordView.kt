@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.BillBean
 
 /**
  *    author : ZFM
@@ -9,4 +10,6 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface CandyRecordView : BaseView {
+
+    fun onMyBillList(success: Boolean, billList: MutableList<BillBean>?)
 }

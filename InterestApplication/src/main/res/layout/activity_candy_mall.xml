@@ -1,76 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.kennyc.view.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stateProduct"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
+    app:msv_errorView="@layout/error_layout"
+    app:msv_loadingView="@layout/loading_layout"
+    app:msv_viewState="loading"
     tools:context=".ui.activity.CandyMallActivity">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/llTitle"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@drawable/icon_bg_actionbar_candy_mall"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="false">
 
-        <View
-            android:id="@+id/view"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/llTitle"
             android:layout_width="match_parent"
-            android:layout_height="24dp" />
+            android:layout_height="80dp"
+            android:background="@drawable/icon_bg_actionbar_candy_mall"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            style="@style/BckBtnStyle"
-            android:layout_below="@id/view"
-            android:src="@drawable/icon_back_white" />
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="55dp"
-            android:layout_alignTop="@id/btnBack"
-            android:layout_centerHorizontal="true"
-            android:gravity="center_vertical"
-            android:text="糖果商城"
-            android:textColor="@color/colorWhite"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/btnBack"
+                style="@style/BckBtnStyle"
+                android:layout_below="@id/view"
+                android:src="@drawable/icon_back_white" />
 
-        <TextView
-            android:id="@+id/myOrderBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="55dp"
-            android:layout_alignTop="@id/btnBack"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="我的订单"
-            android:textColor="@color/colorWhite"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_alignTop="@id/btnBack"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_vertical"
+                android:text="糖果商城"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/myOrderBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_alignTop="@id/btnBack"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="我的订单"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp" />
 
 
-    </RelativeLayout>
-
-
-    <com.kennyc.view.MultiStateView
-        android:id="@+id/stateProduct"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llTitle"
-        app:msv_errorView="@layout/error_layout"
-        app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+        </RelativeLayout>
 
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFAFAFA">
+            android:layout_height="0dp"
+            android:background="#FFFAFAFA"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTitle">
 
 
             <com.google.android.material.appbar.AppBarLayout
@@ -102,14 +105,14 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
                         android:layout_height="201dp"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="15dp"
                         android:layout_marginTop="20dp"
+                        android:layout_marginRight="15dp"
                         android:layout_marginBottom="20dp"
-                        android:elevation="2dp"
-                        android:background="@drawable/rectangle_white_10dp">
+                        android:background="@drawable/rectangle_white_10dp"
+                        android:elevation="2dp">
 
                         <TextView
                             android:id="@+id/t1"
@@ -179,6 +182,7 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-    </com.kennyc.view.MultiStateView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.kennyc.view.MultiStateView>
+

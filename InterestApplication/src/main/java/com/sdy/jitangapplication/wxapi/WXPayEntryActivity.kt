@@ -69,6 +69,8 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
                     finish()
                     overridePendingTransition(0, 0)
                     if (code == BaseResp.ErrCode.ERR_OK) {
+                        //TODO 刷新糖果相关界面 我的糖果 糖果商城 糖果详情
+
                         if (ActivityUtils.getTopActivity() is AddLabelActivity) {
                             EventBus.getDefault().post(PayLabelResultEvent(code == BaseResp.ErrCode.ERR_OK))
                         } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {

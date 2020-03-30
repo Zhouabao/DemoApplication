@@ -1,11 +1,24 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Typeface
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseException
+import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.ProductBean
+import com.sdy.jitangapplication.ui.dialog.AddAndMessageDialog
+import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_candy_product.view.*
 
@@ -15,16 +28,85 @@ import kotlinx.android.synthetic.main.item_candy_product.view.*
  *    desc   :糖果商品
  *    version: 1.0
  */
-class CandyProductAdapter : BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_candy_product) {
-    override fun convert(helper: BaseViewHolder, item: String) {
-
+class CandyProductAdapter :
+    BaseQuickAdapter<ProductBean, BaseViewHolder>(R.layout.item_candy_product) {
+    var mycandy: Int = 0
+    override fun convert(helper: BaseViewHolder, item: ProductBean) {
+        helper.addOnClickListener(R.id.exchangeBtn)//兑换礼品
+        helper.itemView.ProductCandyPrice.typeface =
+            Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
+        helper.itemView.addProductProgressCount.typeface =
+            Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
         GlideUtil.loadRoundImgCenterCrop(
             mContext,
-            R.drawable.icon_bg_pic_my_candy,
+            item.icon,
             helper.itemView.productImg,
             SizeUtils.dp2px(10F),
             RoundedCornersTransformation.CornerType.LEFT
         )
-        helper.itemView.ProductCandyPrice.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
+        if (item.is_wished) {
+            helper.itemView.collectProduct.setImageResource(R.drawable.icon_collected)
+        } else {
+            helper.itemView.collectProduct.setImageResource(R.drawable.icon_collect)
+            helper.itemView.addProductBtn.text = if (item.friend_wish_cnt > 0) {
+                "${item.friend_wish_cnt}个好友想要"
+            } else {
+                "加入心愿单"
+            }
+        }
+
+        helper.itemView.ProductCandyPrice.text = "${item.amount}"
+        helper.itemView.productDesc.text = "${item.descr}"
+        helper.itemView.addProductProgress.progress =
+            if (mycandy >= item.amount) {
+                100
+            } else {
+                ((mycandy * 1.0F / item.amount) * 100).toInt()
+            }
+        helper.itemView.addProductProgressCount.text =
+            "${if (mycandy >= item.amount) {
+                100
+            } else {
+                ((mycandy * 1.0F / item.amount) * 100).toInt()
+            }}%"
+
+        helper.itemView.addProductProgress.isVisible = item.is_wished
+        helper.itemView.addProductProgressCount.isVisible = item.is_wished
+        helper.itemView.addProductBtn.isVisible = !item.is_wished
+        //加入心愿
+        helper.itemView.addProductBtn.onClick {
+            goodsAddWish(helper.layoutPosition, item.id)
+        }
+
+    }
+
+    /**
+     * 商品加入心愿单
+     */
+    fun goodsAddWish(position: Int, id: Int) {
+        val params = hashMapOf<String, Any>()
+        params["goods_id"] = id
+        RetrofitFactory.instance.create(Api::class.java)
+            .goodsAddWish(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200) {
+                        mData[position].is_wished = true
+                        notifyItemChanged(position)
+                        AddAndMessageDialog(mContext, mData[position].id).show()
+                    } else {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    if (e is BaseException) {
+                        TickDialog(mContext).show()
+                    }
+                }
+            })
+
     }
 }

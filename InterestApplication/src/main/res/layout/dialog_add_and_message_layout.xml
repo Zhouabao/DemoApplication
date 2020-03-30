@@ -59,8 +59,8 @@
         android:gravity="left|top"
         android:hint="输入留言"
         android:padding="10dp"
-        android:textSize="14sp"
         android:textColorHint="#C5C6C8"
+        android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/t2" />
@@ -72,6 +72,7 @@
         android:layout_marginTop="35dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/selector_confirm_btn_25dp"
+        android:enabled="false"
         android:gravity="center"
         android:text="发布留言"
         android:textColor="#ffffffff"

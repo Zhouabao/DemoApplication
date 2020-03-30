@@ -23,16 +23,17 @@
         android:text="豆炎"
         android:textColor="#ff191919"
         android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@id/commentAvator"
         app:layout_constraintTop_toTopOf="@id/commentAvator" />
 
     <RatingBar
         android:id="@+id/commentStar"
         style="?android:attr/ratingBarStyleIndicator"
-        android:progressDrawable="@drawable/ratingbar_bg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="11dp"
         android:layout_marginTop="2dp"
+        android:progressDrawable="@drawable/ratingbar_bg_small"
         android:rating="5"
         app:layout_constraintLeft_toLeftOf="@id/commentName"
         app:layout_constraintTop_toBottomOf="@id/commentName" />

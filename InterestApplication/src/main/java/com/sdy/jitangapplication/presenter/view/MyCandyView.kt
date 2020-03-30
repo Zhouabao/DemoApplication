@@ -1,6 +1,8 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.GoodsCategoryBeans
+import com.sdy.jitangapplication.model.PullWithdrawBean
 
 /**
  *    author : ZFM
@@ -9,4 +11,8 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface MyCandyView : BaseView {
+
+    fun ongoodsCategoryList(success: Boolean, data: GoodsCategoryBeans?)
+
+    fun onMyCadnyResult(candyCount: PullWithdrawBean?)
 }

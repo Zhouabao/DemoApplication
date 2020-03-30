@@ -6,6 +6,7 @@
     android:layout_marginBottom="15dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rechargeCl"
         android:layout_width="match_parent"
         android:layout_height="81dp"
         android:layout_marginTop="5dp"
@@ -18,7 +19,7 @@
             android:id="@+id/candyCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/icon_candy_me"
+            android:drawableLeft="@drawable/icon_candy_small"
             android:drawablePadding="4dp"
             android:text="120"
             android:textColor="#191919"

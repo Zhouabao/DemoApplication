@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.WantFriendBean
 
 /**
  *    author : ZFM
@@ -9,4 +10,7 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface WantProductListView : BaseView {
+
+    fun onGoodsWishList(success: Boolean, data: MutableList<WantFriendBean>?)
+
 }

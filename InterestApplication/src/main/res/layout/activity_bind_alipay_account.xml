@@ -24,7 +24,6 @@
         app:layout_constraintTop_toBottomOf="@id/llTitle" />
 
     <EditText
-
         android:id="@+id/etAlipayAccount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -104,6 +103,7 @@
         android:layout_marginRight="15dp"
         android:background="@null"
         android:hint="填写您的联系方式"
+        android:inputType="number"
         android:textColor="#191919"
         android:textColorHint="#ffc5c6c8"
         android:textSize="14sp"

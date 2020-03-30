@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.WindowManager
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.*
 
 /**
@@ -44,7 +43,7 @@ class AlertCandyEnoughDialog(var context1: Context) : Dialog(context1, R.style.M
 
         confirm.onClick {
             //todo 跳转充值
-            CommonFunction.toast("立即充值")
+            RechargeCandyDialog(context1).show()
             dismiss()
         }
 

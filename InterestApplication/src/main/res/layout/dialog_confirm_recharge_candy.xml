@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
     android:background="@drawable/rectangle_white_10dp"
     android:orientation="vertical">
@@ -35,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="¥ 30.00"
+        tools:text="¥ 30.00"
         android:textColor="#ff191919"
         android:textSize="35sp"
         app:layout_constraintLeft_toLeftOf="parent"

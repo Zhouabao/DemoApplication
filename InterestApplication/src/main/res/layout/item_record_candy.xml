@@ -17,19 +17,26 @@
 
     <TextView
         android:id="@+id/recordContent"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
         android:text="和 对方ID 聊天得到 5000 颗糖"
         android:textColor="#ff191919"
         android:textSize="14sp"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintBottom_toTopOf="@id/recordType"
         app:layout_constraintLeft_toRightOf="@id/recordImg"
+        app:layout_constraintRight_toLeftOf="@id/recordMoney"
         app:layout_constraintTop_toTopOf="@id/recordImg" />
 
     <TextView
         android:id="@+id/recordType"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintRight_toRightOf="@id/recordContent"
         android:layout_height="wrap_content"
         android:text="聊天消耗"
         android:textColor="#ff888d92"
@@ -43,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="15dp"
-        android:drawableRight="@drawable/icon_candy_me"
+        android:drawableRight="@drawable/icon_candy_small"
         android:drawablePadding="7dp"
         android:text="+5000"
         android:textColor="#fffd4417"

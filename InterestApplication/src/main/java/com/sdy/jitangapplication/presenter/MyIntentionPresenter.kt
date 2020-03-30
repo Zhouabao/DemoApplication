@@ -73,8 +73,6 @@ class MyIntentionPresenter : BasePresenter<MyIntentionView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     if (t.code == 200) {
                         mView.onSaveRegisterInfo(true)
-                    } else if (t.code == 403) {
-                        TickDialog(context).show()
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onSaveRegisterInfo(false)

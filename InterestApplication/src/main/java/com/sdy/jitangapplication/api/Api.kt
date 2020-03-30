@@ -950,7 +950,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Candy/myBillList${Constants.END_BASE_URL}")
-    fun myBillList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    fun myBillList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<BillBean>??>>
 
 
     /**
@@ -959,5 +959,133 @@ interface Api {
     @FormUrlEncoded
     @POST("Goods/goodsList${Constants.END_BASE_URL}")
     fun goodsList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GoodsListBean?>>
+
+
+    /**
+     * 商城首页分类商品
+     * Goods/goodsCategoryList
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodsCategoryList${Constants.END_BASE_URL}")
+    fun goodsCategoryList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GoodsCategoryBeans?>>
+
+    /**
+     * 商品加入心愿
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodsAddWish${Constants.END_BASE_URL}")
+    fun goodsAddWish(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * 商品详情
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodsInfo${Constants.END_BASE_URL}")
+    fun goodsInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ProductDetailBean?>>
+
+    /**
+     * 获取某一商品的心愿列表
+     * Goods/goodsWishList/v1.json
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodsWishList${Constants.END_BASE_URL}")
+    fun goodsWishList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<WantFriendBean>?>>
+
+    /**
+     * 商品留言列表
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodsMsgList${Constants.END_BASE_URL}")
+    fun goodsMsgList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<ProductMsgBean>?>>
+
+    /**
+     * 商品评论详情
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodscommentsList${Constants.END_BASE_URL}")
+    fun goodscommentsList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<ProductCommentBean>?>>
+
+    /**
+     * 获取收货地址
+     */
+    @FormUrlEncoded
+    @POST("Goods/getAddress${Constants.END_BASE_URL}")
+    fun getAddress(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyAddressBean?>>
+
+    /**
+     * 添加收货地址
+     */
+    @FormUrlEncoded
+    @POST("Goods/addAddress${Constants.END_BASE_URL}")
+    fun addAddress(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddressBean?>>
+
+    /**
+     * 兑换商品
+     */
+    @FormUrlEncoded
+    @POST("Goods/createGoods${Constants.END_BASE_URL}")
+    fun createGoods(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ExchangeOrderBean?>>
+
+    /**
+     * 我的商品订单
+     */
+    @FormUrlEncoded
+    @POST("Goods/myGoodsList${Constants.END_BASE_URL}")
+    fun myGoodsList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<MyOrderBean>?>>
+
+    /**
+     * 兑换商品后添加评论
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodsAddcomments${Constants.END_BASE_URL}")
+    fun goodsAddcomments(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * Goods/goodsAddMsg/v1.json
+     * 添加商品留言
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodsAddMsg${Constants.END_BASE_URL}")
+    fun goodsAddMsg(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    //--------------------礼物来往记录------------------------------
+    /**
+     * 礼物来往记录
+     * Gift/giftContactList/v1.json
+     */
+    @FormUrlEncoded
+    @POST("Gift/giftContactList${Constants.END_BASE_URL}")
+    fun giftContactList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * 提现
+     */
+    @FormUrlEncoded
+    @POST("Candy/withdraw${Constants.END_BASE_URL}")
+    fun withdraw(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<WithDrawSuccessBean?>>
+
+    /**
+     * 拉起提现
+     * Candy/pullWithdraw
+     */
+    @FormUrlEncoded
+    @POST("Candy/myCandy${Constants.END_BASE_URL}")
+    fun myCadny(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<PullWithdrawBean?>>
+
+    /**
+     * 充值价格列表
+     */
+    @FormUrlEncoded
+    @POST("PayOrder/giftRechargeList${Constants.END_BASE_URL}")
+    fun giftRechargeList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RechargeBean?>>
+
+    /**
+     * 绑定支付宝账号
+     * Candy/saveWithdrawAccount
+     */
+    @FormUrlEncoded
+    @POST("Candy/saveWithdrawAccount${Constants.END_BASE_URL}")
+    fun saveWithdrawAccount(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Alipay?>>
 
 }

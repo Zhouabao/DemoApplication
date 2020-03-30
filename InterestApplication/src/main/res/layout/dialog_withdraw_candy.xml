@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginRight="15dp"
-            android:drawableLeft="@drawable/icon_candy_me"
+            android:drawableLeft="@drawable/icon_candy_small"
             android:drawablePadding="5dp"
             android:text="3650"
             android:textColor="#ff191919"
@@ -101,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="￥"
+            android:text="¥"
             android:textColor="#ff191919"
             android:textSize="34sp"
             app:layout_constraintLeft_toLeftOf="@id/t1"
@@ -109,7 +109,8 @@
 
         <EditText
             android:id="@+id/inputWithdrawMoney"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="@id/withdrawAll"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:background="@null"

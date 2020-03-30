@@ -92,7 +92,7 @@
         <activity android:name=".ui.activity.MyOrderActivity"></activity>
         <activity
             android:name=".ui.activity.AddAddressActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity android:name=".ui.activity.CandyProductDetailActivity" />
         <activity android:name=".ui.activity.CandyMallActivity" />
         <activity android:name=".ui.activity.CandyRecordActivity" />

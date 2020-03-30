@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
-import com.sdy.jitangapplication.model.ProductMsgBean
+import com.sdy.jitangapplication.model.ProductCommentBean
 
 /**
  *    author : ZFM
@@ -9,7 +9,7 @@ import com.sdy.jitangapplication.model.ProductMsgBean
  *    desc   :
  *    version: 1.0
  */
-interface MessageView : BaseView {
+interface CommentView : BaseView {
 
-    fun onGoodsMsgListList(b: Boolean, data: MutableList<ProductMsgBean>?)
+    fun onGoodscommentsList(b: Boolean, data: MutableList<ProductCommentBean>?)
 }

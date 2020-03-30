@@ -12,6 +12,7 @@ object Constants {
     const val PUBLISH = "publish/" //发布
     const val USERCENTER = "usecenter/"//个人中心
     const val REPORTUSER = "report/"//舉報用户
+    const val CANDYPRODUCT = "candyproduct/"//舉報用户
     const val FEEDBACK = "feedback/"//问题反馈
     const val DEFAULT_AVATAR = "/meta/default_avatar.jpg"//默认图
     const val DEFAULT_EMPTY_AVATAR = "/ppsns_default_avatar.png"//默认头像
@@ -81,10 +82,10 @@ object Constants {
     const val SM_AINFOKEY = "cyhDpMYLMOWsrzgiCQTKPqHQYWqsEdEEVyaLTACvwYpJehLfFTUZIzfdiWoIzPjV"
 
     //云信新账号
-    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
+//    const val NIM_APP_KEY = "8556d54f7f6f3453efd7713dba23f852"//正式
 //    const val NIM_APP_KEY = "197b98d4853be1582aec4f2a9c6a6645"//测试
 
-//    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951"//测试1
+    const val NIM_APP_KEY = "789f6cf551ec789fbe39b0a4ea68c951"//测试1
     //是否处于测试环境
     const val TEST = false
 

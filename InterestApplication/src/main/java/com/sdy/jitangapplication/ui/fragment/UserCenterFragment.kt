@@ -101,7 +101,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     override fun loadData() {
         EventBus.getDefault().register(this)
         initView()
-        mPresenter.getMemberInfo(params)
+//        mPresenter.getMemberInfo(params)
     }
 
 
@@ -447,7 +447,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
 
     //更新用户中心信息
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: UserCenterEvent) {
 //        multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
         mPresenter.getMemberInfo(params)

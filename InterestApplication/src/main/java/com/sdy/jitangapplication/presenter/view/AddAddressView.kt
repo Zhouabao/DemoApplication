@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
+import com.sdy.jitangapplication.model.AddressBean
 
 /**
  *    author : ZFM
@@ -9,4 +10,5 @@ import com.kotlin.base.presenter.view.BaseView
  *    version: 1.0
  */
 interface AddAddressView : BaseView {
+    fun onAddAddressResult(success: Boolean, address: AddressBean?)
 }

@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="120dp"
     android:layout_height="120dp"
-    android:background="@drawable/shape_rectangle_gray_10dp">
+    android:background="@drawable/shape_rectangle_orange_white_10dp">
 
     <ImageView
         android:id="@+id/addAddressIv"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent"
         android:src="@drawable/icon_add_address" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:visibility="gone"
         android:id="@+id/addressCl"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

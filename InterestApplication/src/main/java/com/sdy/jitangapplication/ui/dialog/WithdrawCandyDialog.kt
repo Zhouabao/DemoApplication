@@ -9,9 +9,19 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
+import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.GetAlipayAccountEvent
+import com.sdy.jitangapplication.event.RefreshMyCandyEvent
+import com.sdy.jitangapplication.model.PullWithdrawBean
+import com.sdy.jitangapplication.model.WithDrawSuccessBean
 import com.sdy.jitangapplication.ui.activity.BindAlipayAccountActivity
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_withdraw_candy.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -33,6 +43,7 @@ class WithdrawCandyDialog(val myContext: Context) : Dialog(myContext, R.style.My
         setContentView(R.layout.dialog_withdraw_candy)
         initWindow()
         initView()
+        pullWithdraw()
     }
 
 
@@ -52,6 +63,12 @@ class WithdrawCandyDialog(val myContext: Context) : Dialog(myContext, R.style.My
     private fun initView() {
         inputWithdrawMoney.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                if (!s.isNullOrEmpty())
+                    if (s.toString().toFloat() > (pullWithdrawBean?.money_amount ?: 0F)
+                    ) {
+                        CommonFunction.toast("可提现金额不能大于${(pullWithdrawBean?.money_amount ?: 0F)}")
+                        inputWithdrawMoney.setText("")
+                    }
                 checkWithdrawEnable()
             }
 
@@ -71,8 +88,13 @@ class WithdrawCandyDialog(val myContext: Context) : Dialog(myContext, R.style.My
 
 
     fun checkWithdrawEnable() {
-        confirmWithdraw.isEnabled = !inputWithdrawMoney.text.trim().isNullOrEmpty()
-                && !wirteAlipayAcount.text.trim().isNullOrEmpty()
+        confirmWithdraw.isEnabled = !inputWithdrawMoney.text.trim().isNullOrEmpty() &&
+                !wirteAlipayAcount.text.trim().isNullOrEmpty() &&
+                if (inputWithdrawMoney.text.isNullOrEmpty()) {
+                    0F
+                } else {
+                    inputWithdrawMoney.text.toString().toFloat()
+                } <= (pullWithdrawBean?.money_amount ?: 0F)
     }
 
     override fun show() {
@@ -87,7 +109,7 @@ class WithdrawCandyDialog(val myContext: Context) : Dialog(myContext, R.style.My
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onGetAlipayAccountEvent(event: GetAlipayAccountEvent) {
-        wirteAlipayAcount.text = event.account
+        wirteAlipayAcount.text = event.account.ali_account
         checkWithdrawEnable()
     }
 
@@ -95,26 +117,77 @@ class WithdrawCandyDialog(val myContext: Context) : Dialog(myContext, R.style.My
     override fun onClick(v: View) {
         when (v.id) {
             R.id.withdrawAll -> {//全部提现
-
+                inputWithdrawMoney.setText("${pullWithdrawBean?.money_amount}")
+                inputWithdrawMoney.setSelection(inputWithdrawMoney.text.length)
             }
             R.id.wirteAlipayAcount -> {//填写支付宝账户
-                myContext.startActivity<BindAlipayAccountActivity>()
-
+                myContext.startActivity<BindAlipayAccountActivity>("alipay" to pullWithdrawBean?.alipay)
             }
             R.id.successBtn -> {//提现成功
                 dismiss()
             }
             R.id.confirmWithdraw -> {//确认提现
-                loadingDialog.show()
-                withdrawCl.postDelayed({
-                    withdrawCl.isVisible = false
-                    loadingDialog.dismiss()
-                    withdrawSuccessCl.isVisible = true
-                }, 1000L)
+                withdraw()
             }
-
         }
+    }
 
+    private var pullWithdrawBean: PullWithdrawBean? = null
+    /**
+     * 拉起提现
+     */
+    fun pullWithdraw() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .myCadny(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<PullWithdrawBean?>>(null) {
+                override fun onNext(t: BaseResp<PullWithdrawBean?>) {
+                    super.onNext(t)
+                    if (t.code == 200) {
+                        pullWithdrawBean = t.data
+                        candyCount.text = "${pullWithdrawBean?.candy_amount}"
+                        withdrawMoney.text = "可提现¥${pullWithdrawBean?.money_amount}"
+                        if (pullWithdrawBean?.alipay != null)
+                            wirteAlipayAcount.text = pullWithdrawBean?.alipay?.ali_account
+                    }
+                }
+            })
+    }
+
+
+    /**
+     * 提现
+     */
+    fun withdraw() {
+        val params = hashMapOf<String, Any>(
+            "amount" to inputWithdrawMoney.text.toString().toFloat()
+        )
+        RetrofitFactory.instance.create(Api::class.java)
+            .withdraw(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<WithDrawSuccessBean?>>(null) {
+                override fun onStart() {
+                    super.onStart()
+                    loadingDialog.show()
+                }
+
+                override fun onNext(t: BaseResp<WithDrawSuccessBean?>) {
+                    super.onNext(t)
+                    loadingDialog.dismiss()
+                    if (t.code == 200) {
+                        withdrawCl.isVisible = false
+                        withdrawSuccessCl.isVisible = true
+                        withdrawID.text = "${t.data?.trade_no}"
+                        withdrawTime.text = "${t.data?.create_tme}"
+                        EventBus.getDefault().post(RefreshMyCandyEvent(t.data?.candy_amount ?: 0))
+                    } else {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    loadingDialog.dismiss()
+                }
+            })
     }
 
 

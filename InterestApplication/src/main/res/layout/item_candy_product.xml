@@ -82,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:drawableLeft="@drawable/icon_candy_me"
+        android:drawableLeft="@drawable/icon_candy_small"
         android:drawablePadding="3dp"
         android:text="1,999,999"
         android:textColor="#ffff6318"
@@ -94,6 +94,7 @@
         app:layout_constraintTop_toBottomOf="@id/collectProduct" />
 
     <TextView
+        android:id="@+id/exchangeBtn"
         android:layout_width="60dp"
         android:layout_height="26dp"
         android:background="@drawable/shape_rectangle_orange_white_15dp"
