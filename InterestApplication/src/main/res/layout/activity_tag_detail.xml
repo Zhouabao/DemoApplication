@@ -1,162 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.kennyc.view.MultiStateView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/stateSamePerson"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        app:msv_errorView="@layout/error_layout"
-        app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading"
-        tools:context=".ui.activity.SquareSamePersonActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stateSamePerson"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    app:msv_errorView="@layout/error_layout"
+    app:msv_loadingView="@layout/loading_layout"
+    app:msv_viewState="loading"
+    tools:context=".ui.activity.TagDetailCategoryActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/samePersonBg"
+            android:scaleType="centerCrop"
+            android:background="@color/colorDivider"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <ImageView
-                android:id="@+id/samePersonBg"
-                android:scaleType="centerCrop"
-                android:background="@color/colorDivider"
-                android:layout_width="match_parent"
-                android:layout_height="230dp"/>
+            android:layout_height="230dp"/>
 
 
         <ImageView
-                android:id="@+id/btnBack"
-                android:paddingLeft="15dp"
-                android:paddingRight="10dp"
-                android:layout_marginTop="24dp"
-                android:src="@drawable/icon_back_white"
-                android:layout_width="wrap_content"
-                android:layout_height="56dp"
-                />
+            android:id="@+id/btnBack"
+            android:paddingLeft="15dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/icon_back_white"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            />
 
         <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/sameAppbar"
-                android:background="@color/colorTransparent"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:elevation="0dp">
+            android:id="@+id/sameAppbar"
+            android:background="@color/colorTransparent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
 
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:minHeight="79dp"
-                    app:contentScrim="@null"
-                    app:expandedTitleGravity="center"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                    app:statusBarScrim="@null">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="79dp"
+                app:contentScrim="@null"
+                app:expandedTitleGravity="center"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:statusBarScrim="@null">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/llSame"
-                        android:paddingBottom="20dp"
-                        android:layout_width="match_parent"
-                        android:orientation="vertical"
-                        android:layout_height="wrap_content">
+                    android:id="@+id/llSame"
+                    android:paddingBottom="20dp"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
 
 
                     <LinearLayout
-                            android:id="@+id/ll1"
-                            android:layout_marginTop="129dp"
-                            android:orientation="horizontal"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginRight="15dp"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                        <TextView
-                                android:id="@+id/samePersonTitle"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical"
-                                android:layout_gravity="center_vertical"
-                                android:layout_width="wrap_content"
-                                android:layout_height="33dp"
-                                android:text="#我看过最棒的演出"
-                                android:textColor="#ffffffff"
-                                android:textStyle="bold"
-                                android:textSize="24sp"
-                                />
-
-                        <TextView
-                                android:id="@+id/publish"
-                                android:layout_gravity="right"
-                                android:gravity="center"
-                                android:text="发布动态"
-                                android:textColor="#ffffffff"
-                                android:paddingLeft="12dp"
-                                android:textSize="14sp"
-                                android:paddingRight="12dp"
-                                android:paddingTop="5dp"
-                                android:paddingBottom="5dp"
-                                android:background="@drawable/gradient_rectangle_orange_17dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <RelativeLayout
-                        android:id="@+id/llTitle"
-                        android:visibility="visible"
-                        android:layout_width="match_parent"
-                        android:background="@color/colorWhite"
+                        android:id="@+id/ll1"
+                        android:layout_marginTop="129dp"
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:layout_collapseMode="pin">
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <View
-                            android:id="@+id/statusView"
-                            android:background="@color/colorTransparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="24dp"/>
-
-                    <ImageView
-                            android:id="@+id/btnBack1"
-                            android:paddingLeft="15dp"
-                            android:paddingRight="10dp"
-                            android:layout_alignBottom="@id/hotT1"
-                            android:layout_alignTop="@id/hotT1"
-                            android:src="@drawable/icon_return"
+                        <TextView
+                            android:id="@+id/samePersonTitle"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                    <ImageView
-                            android:id="@+id/smallBg"
-                            android:layout_alignBottom="@id/hotT1"
-                            android:layout_alignTop="@id/hotT1"
-                            android:src="@drawable/default_image_5dp"
-                            android:layout_width="24dp"
-                            android:layout_toRightOf="@id/btnBack1"
-                            android:layout_height="24dp"/>
-
-                    <TextView
-                            android:id="@+id/hotT1"
-                            android:layout_below="@id/statusView"
-                            android:layout_toRightOf="@id/smallBg"
-                            android:textColor="@color/colorBlackTitle"
-                            android:textSize="16sp"
+                            android:layout_height="33dp"
+                            android:text="#我看过最棒的演出"
+                            android:textColor="#ffffffff"
                             android:textStyle="bold"
-                            android:layout_marginLeft="5dp"
-                            android:gravity="center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="55dp"
-                            tools:text="黑名单"
+                            android:textSize="24sp"
                             />
 
-
-                    <TextView
-                            android:id="@+id/rightBtn1"
-                            android:layout_below="@id/statusView"
-                            android:layout_marginRight="15dp"
-                            android:layout_marginTop="13dp"
-                            android:layout_alignParentRight="true"
+                        <TextView
+                            android:id="@+id/publish"
                             android:layout_gravity="right"
                             android:gravity="center"
                             android:text="发布动态"
@@ -168,8 +98,78 @@
                             android:paddingBottom="5dp"
                             android:background="@drawable/gradient_rectangle_orange_17dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            />
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <RelativeLayout
+                    android:id="@+id/llTitle"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:background="@color/colorWhite"
+                    android:layout_height="wrap_content"
+                    app:layout_collapseMode="pin">
+
+                    <View
+                        android:id="@+id/statusView"
+                        android:background="@color/colorTransparent"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"/>
+
+                    <ImageView
+                        android:id="@+id/btnBack1"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp"
+                        android:layout_alignBottom="@id/hotT1"
+                        android:layout_alignTop="@id/hotT1"
+                        android:src="@drawable/icon_return"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <ImageView
+                        android:id="@+id/smallBg"
+                        android:layout_alignBottom="@id/hotT1"
+                        android:layout_alignTop="@id/hotT1"
+                        android:src="@drawable/default_image_5dp"
+                        android:layout_width="24dp"
+                        android:layout_toRightOf="@id/btnBack1"
+                        android:layout_height="24dp"/>
+
+                    <TextView
+                        android:id="@+id/hotT1"
+                        android:layout_below="@id/statusView"
+                        android:layout_toRightOf="@id/smallBg"
+                        android:textColor="@color/colorBlackTitle"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
+                        tools:text="黑名单"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/rightBtn1"
+                        android:layout_below="@id/statusView"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="13dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="right"
+                        android:gravity="center"
+                        android:text="发布动态"
+                        android:textColor="#ffffffff"
+                        android:paddingLeft="12dp"
+                        android:textSize="14sp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="@drawable/gradient_rectangle_orange_17dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
                 </RelativeLayout>
 
 
@@ -178,52 +178,52 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                android:id="@+id/refreshSamePerson"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:srlDisableContentWhenLoading="true"
-                app:srlDisableContentWhenRefresh="true"
-                app:srlEnableLoadMore="true"
-                app:srlEnableLoadMoreWhenContentNotFull="false"
-                app:srlEnableRefresh="true">
+            android:id="@+id/refreshSamePerson"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:srlDisableContentWhenLoading="true"
+            app:srlDisableContentWhenRefresh="true"
+            app:srlEnableLoadMore="true"
+            app:srlEnableLoadMoreWhenContentNotFull="false"
+            app:srlEnableRefresh="true">
 
             <com.scwang.smartrefresh.layout.header.ClassicsHeader
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:srlAccentColor="@color/colorBlack"
-                    app:srlClassicsSpinnerStyle="Translate"
-                    app:srlDrawableArrowSize="20dp"
-                    app:srlDrawableMarginRight="20dp"
-                    app:srlDrawableProgressSize="20dp"
-                    app:srlDrawableSize="20dp"
-                    app:srlEnableLastTime="true"
-                    app:srlPrimaryColor="@color/colorTransparent"
-                    app:srlTextFailed="@string/srl_header_failed"
-                    app:srlTextFinish="@string/srl_header_finish"
-                    app:srlTextLoading="@string/srl_header_loading"
-                    app:srlTextPulling="@string/srl_header_pulling"
-                    app:srlTextRefreshing="@string/srl_header_refreshing"
-                    app:srlTextRelease="@string/srl_header_release"
-                    app:srlTextSecondary="@string/srl_header_secondary"
-                    app:srlTextUpdate="@string/srl_header_update"/>
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srlAccentColor="@color/colorBlack"
+                app:srlClassicsSpinnerStyle="Translate"
+                app:srlDrawableArrowSize="20dp"
+                app:srlDrawableMarginRight="20dp"
+                app:srlDrawableProgressSize="20dp"
+                app:srlDrawableSize="20dp"
+                app:srlEnableLastTime="true"
+                app:srlPrimaryColor="@color/colorTransparent"
+                app:srlTextFailed="@string/srl_header_failed"
+                app:srlTextFinish="@string/srl_header_finish"
+                app:srlTextLoading="@string/srl_header_loading"
+                app:srlTextPulling="@string/srl_header_pulling"
+                app:srlTextRefreshing="@string/srl_header_refreshing"
+                app:srlTextRelease="@string/srl_header_release"
+                app:srlTextSecondary="@string/srl_header_secondary"
+                app:srlTextUpdate="@string/srl_header_update"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/samePersonRv"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
-                    android:layout_marginRight="8dp"
-                    android:layout_height="match_parent"
-                    />
+                android:id="@+id/samePersonRv"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
+                android:layout_marginRight="8dp"
+                android:layout_height="match_parent"
+                />
 
             <com.scwang.smartrefresh.layout.footer.ClassicsFooter
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:srlFinishDuration="200"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srlFinishDuration="200"/>
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 

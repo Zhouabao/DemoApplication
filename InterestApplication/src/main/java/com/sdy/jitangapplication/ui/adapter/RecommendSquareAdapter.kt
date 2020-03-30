@@ -33,7 +33,8 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_recommend_square.view.*
 
 //0文本 1图片 2视频 3语音
-class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHolder>(R.layout.item_recommend_square) {
+class RecommendSquareAdapter :
+    BaseQuickAdapter<RecommendSquareBean, BaseViewHolder>(R.layout.item_recommend_square) {
     override fun convert(helper: BaseViewHolder, item: RecommendSquareBean) {
         val params = helper.itemView.squareImg.layoutParams as ConstraintLayout.LayoutParams
 //        params.width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F)) / 2
@@ -76,7 +77,11 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
             val transformation = MultiTransformation(
                 CenterCrop(),
                 BlurTransformation(SizeUtils.dp2px(10F)),
-                RoundedCornersTransformation(SizeUtils.dp2px(10F), 0, RoundedCornersTransformation.CornerType.TOP)
+                RoundedCornersTransformation(
+                    SizeUtils.dp2px(10F),
+                    0,
+                    RoundedCornersTransformation.CornerType.TOP
+                )
             )
             Glide.with(mContext)
                 .load(item.avatar)
@@ -121,7 +126,7 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
         }
 
         helper.itemView.squareContent.isVisible =
-            item.type != 0 && (!item.descr.isNullOrEmpty() || !item.title_list.isNullOrEmpty())
+            item.type != 0 && (!item.descr.isNullOrEmpty())
         helper.itemView.squareContent.text = "${item.descr}"
         helper.itemView.squareLike.text = "${item.like_cnt}"
         helper.itemView.squareName.text = item.nickname
@@ -136,7 +141,11 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
         //点击跳转
         helper.itemView.onClick {
             if (item.type == 2)  //视频
-                SquarePlayDetailActivity.startActivity(mContext as Activity, id = item.id, fromRecommend = true)
+                SquarePlayDetailActivity.startActivity(
+                    mContext as Activity,
+                    id = item.id,
+                    fromRecommend = true
+                )
             else {//文本.语音.图片
                 SquareCommentDetailActivity.start(
                     mContext,
@@ -145,7 +154,10 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
                 )
                 if (item.type == 1) {
                     if (!item.isliked)
-                        clickZan(helper.itemView.squareLike, helper.layoutPosition - headerLayoutCount)
+                        clickZan(
+                            helper.itemView.squareLike,
+                            helper.layoutPosition - headerLayoutCount
+                        )
                 }
             }
 
@@ -159,7 +171,12 @@ class RecommendSquareAdapter : BaseQuickAdapter<RecommendSquareBean, BaseViewHol
     private fun setLikeStatus(isliked: Boolean, likeCount: Int, likeView: TextView) {
         val drawable1 =
             mContext.resources.getDrawable(if (isliked) R.drawable.icon_zan_clicked else R.drawable.icon_zan_normal)
-        drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
+        drawable1!!.setBounds(
+            0,
+            0,
+            drawable1.intrinsicWidth,
+            drawable1.intrinsicHeight
+        )    //需要设置图片的大小才能显示
         likeView.setCompoundDrawables(drawable1, null, null, null)
         likeView.text = "${if (likeCount < 0) {
             0
