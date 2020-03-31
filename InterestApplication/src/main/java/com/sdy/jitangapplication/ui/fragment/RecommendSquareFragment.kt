@@ -112,7 +112,8 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
             .setIndicatorSliderWidth(SizeUtils.dp2px(6f), SizeUtils.dp2px(18F))
             .setIndicatorHeight(SizeUtils.dp2px(6f))
             .setOnPageClickListener {
-                if (banner[it].adv_type == 2) {//广告类型默认1   1.只是展示图  2.跳转外连  3.内部跳转   4发布+话题 5发布+兴趣
+                //广告类型默认1   1.只是展示图  2.跳转外连  3.内部跳转   4发布+话题 5发布+兴趣
+                if (banner[it].adv_type == 3) {
                     startActivity<ProtocolActivity>(
                         "url" to banner[it].link_url,
                         "type" to ProtocolActivity.TYPE_OTHER
