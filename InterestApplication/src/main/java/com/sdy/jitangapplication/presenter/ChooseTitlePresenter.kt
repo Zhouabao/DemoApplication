@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -28,7 +29,7 @@ class ChooseTitlePresenter : BasePresenter<ChooseTitleView>() {
                     if (t.code == 200) {
                         mView.getTagTraitInfoResult(true, t.data?.list ?: mutableListOf(), t.data?.limit_cnt ?: 0)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.getTagTraitInfoResult(false, null,0)
                         CommonFunction.toast(t.msg)

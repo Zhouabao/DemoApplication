@@ -233,7 +233,8 @@ class RecommendSquareAdapter :
                     if (t.code == 200) {
                         onGetSquareLikeResult(position, true)
                     } else if (t.code == 403) {
-                        TickDialog(mContext).show()
+                        UserManager.startToLogin(mContext as Activity)
+
                     } else {
                         CommonFunction.toast(t.msg)
                         onGetSquareLikeResult(position, false)

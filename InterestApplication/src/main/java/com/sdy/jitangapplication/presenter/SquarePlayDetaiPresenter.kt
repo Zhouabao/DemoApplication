@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -60,7 +61,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     if (t.code == 200) {
                         mView.onGetSquareLikeResult(position, true)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onError(t.msg)
                         mView.onGetSquareLikeResult(position, false)

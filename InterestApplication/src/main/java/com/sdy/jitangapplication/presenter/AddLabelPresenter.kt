@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -35,7 +36,8 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
                     if (t.code == 200) {
                         mView.onTagClassifyListResult(true, t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
+
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onTagClassifyListResult(false, t.data)
@@ -71,7 +73,8 @@ class AddLabelPresenter : BasePresenter<AddLabelView>() {
                     if (t.code == 200) {
                         mView.saveMyTagResult(true, t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
+
                     } else
                         CommonFunction.toast(t.msg)
                 }

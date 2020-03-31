@@ -24,6 +24,7 @@ import com.sdy.jitangapplication.presenter.view.MyCandyView
 import com.sdy.jitangapplication.ui.adapter.CandyProductAdapter
 import com.sdy.jitangapplication.ui.dialog.RechargeCandyDialog
 import com.sdy.jitangapplication.ui.dialog.WithdrawCandyDialog
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_my_candy.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import org.greenrobot.eventbus.EventBus
@@ -72,6 +73,27 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
         productRv.adapter = candyProductAdapter
         candyProductAdapter.setOnItemClickListener { _, view, position ->
             startActivity<CandyProductDetailActivity>("id" to candyProductAdapter.data[position].id)
+        }
+
+        if (!UserManager.isShowGuideCandy()) {
+            guideCandyList.isVisible = true
+        }
+
+        guideCandyList.onClick {
+            guideCandyList.isVisible = false
+            guideCandyAll.isVisible = true
+        }
+        guideCandyAll.onClick {
+            guideCandyAll.isVisible = false
+            guideCandyWithdraw.isVisible = true
+        }
+        guideCandyWithdraw.onClick {
+            guideCandyWithdraw.isVisible = false
+            guideCandyRecord.isVisible = true
+        }
+        guideCandyRecord.onClick {
+            guideCandyRecord.isVisible = false
+            UserManager.saveShowGuideCandy(true)
         }
 
     }
@@ -144,7 +166,8 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshMyCandyEvent(event: RefreshMyCandyEvent) {
         if (event.candyCount >= 0) {
-            candyCount.text = CommonFunction.num2thousand("${candyProductAdapter.mycandy - event.candyCount}")
+            candyCount.text =
+                CommonFunction.num2thousand("${candyProductAdapter.mycandy - event.candyCount}")
 
             candyProductAdapter.mycandy = candyProductAdapter.mycandy - event.candyCount
             candyProductAdapter.notifyDataSetChanged()

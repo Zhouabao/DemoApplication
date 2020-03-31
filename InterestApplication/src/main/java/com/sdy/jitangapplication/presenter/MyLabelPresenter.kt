@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -33,7 +34,7 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
                     if (t.code == 200) {
                         mView.getMyTagsListResult(true, t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.getMyTagsListResult(false, null)
@@ -69,7 +70,7 @@ class MyLabelPresenter : BasePresenter<MyLabelView>() {
                     if (t.code == 200) {
                         mView.delTagResult(true, position, t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     }
                     CommonFunction.toast(t.msg)
                 }

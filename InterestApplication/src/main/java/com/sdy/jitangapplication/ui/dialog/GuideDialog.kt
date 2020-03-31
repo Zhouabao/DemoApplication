@@ -12,9 +12,10 @@ import android.view.animation.TranslateAnimation
 import androidx.core.view.isVisible
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_guide.*
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -216,7 +217,7 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
                 UserManager.saveShowGuideIndex(true)
                 dismiss()
             } else {
-                CommonFunction.toast("跳转到糖果商城引导页")
+                context.startActivity<MyCandyActivity>()
                 last.clearAnimation()
                 next.clearAnimation()
                 detail.clearAnimation()

@@ -27,7 +27,11 @@ class SquarePresenter : BasePresenter<SquareView>() {
     /**
      * 获取广场列表
      */
-    fun squareNewestLists(params: HashMap<String, Any>, isRefresh: Boolean, firstIn: Boolean = false) {
+    fun squareNewestLists(
+        params: HashMap<String, Any>,
+        isRefresh: Boolean,
+        firstIn: Boolean = false
+    ) {
         RetrofitFactory.instance.create(Api::class.java)
             .squareNewestLists(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
@@ -42,7 +46,11 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     if (t.code == 200)
                         mView.onGetSquareListResult(t.data, true, isRefresh)
                     else if (t.code == 410) {
-                        ChargeLabelDialog(context, params["tag_id"] as Int, ChargeLabelDialog.FROM_SQUARE).show()
+                        ChargeLabelDialog(
+                            context,
+                            params["tag_id"] as Int,
+                            ChargeLabelDialog.FROM_SQUARE
+                        ).show()
                         mView.onGetSquareListResult(t.data, true, isRefresh)
                     } else {
                         mView.onGetSquareListResult(t.data, false, isRefresh)
@@ -72,7 +80,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     if (t.code == 200)
                         mView.onGetSquareCollectResult(position, t)
                     else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onGetSquareCollectResult(position, t)
                     }
@@ -102,7 +110,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
                     if (t.code == 200)
                         mView.onGetSquareReport(t, position)
                     else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onGetSquareReport(t, position)
                     }
@@ -153,6 +161,7 @@ class SquarePresenter : BasePresenter<SquareView>() {
                 }
             })
     }
+
     /**
      * 广场举报
      */

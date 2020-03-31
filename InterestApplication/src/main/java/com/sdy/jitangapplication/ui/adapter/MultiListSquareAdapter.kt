@@ -434,7 +434,8 @@ class MultiListSquareAdapter(
                     if (t.code == 200) {
                         onGetSquareLikeResult(position, true)
                     } else if (t.code == 403) {
-                        TickDialog(mContext).show()
+                        UserManager.startToLogin(mContext as Activity)
+
                     } else {
                         CommonFunction.toast(t.msg)
                         onGetSquareLikeResult(position, false)
@@ -609,7 +610,8 @@ class MultiListSquareAdapter(
                     if (t.code == 200)
                         onGetSquareCollectResult(position, t)
                     else if (t.code == 403) {
-                        TickDialog(mContext).show()
+                        UserManager.startToLogin(mContext as Activity)
+
                     } else {
                         onGetSquareCollectResult(position, t)
                     }
@@ -639,7 +641,8 @@ class MultiListSquareAdapter(
                     if (t.code == 200)
                         onGetSquareReport(t, position)
                     else if (t.code == 403) {
-                        TickDialog(mContext).show()
+                        UserManager.startToLogin(mContext as Activity)
+
                     } else {
                         onGetSquareReport(t, position)
                     }
