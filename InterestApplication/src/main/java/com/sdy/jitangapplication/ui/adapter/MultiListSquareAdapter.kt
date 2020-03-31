@@ -95,7 +95,7 @@ class MultiListSquareAdapter(
         if (holder.itemViewType == SquareBean.OFFICIAL_NOTICE) {
             holder.itemView.onClick {
                 mContext.startActivity<ProtocolActivity>(
-                    "type" to ProtocolActivity.TYPE_ANTI_FRAUD,
+                    "type" to ProtocolActivity.TYPE_OTHER,
                     "url" to "${item.link_url ?: ""}"
                 )
             }

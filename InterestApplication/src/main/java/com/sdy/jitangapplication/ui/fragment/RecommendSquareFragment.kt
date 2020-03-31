@@ -1,8 +1,6 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +24,7 @@ import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.model.SquareBannerBean
 import com.sdy.jitangapplication.presenter.RecommendSquarePresenter
 import com.sdy.jitangapplication.presenter.view.RecommendSquareView
+import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.ui.activity.PublishActivity
 import com.sdy.jitangapplication.ui.adapter.RecommendSquareAdapter
 import com.sdy.jitangapplication.ui.holder.BannerHolderView
@@ -42,12 +41,17 @@ import org.jetbrains.anko.support.v4.startActivity
 /**
  * 推荐
  */
-class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter>(), RecommendSquareView,
+class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter>(),
+    RecommendSquareView,
     OnRefreshListener, OnLoadMoreListener {
 
     private var page = 1
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_recommend_square, container, false)
     }
 
@@ -99,7 +103,8 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
      */
     private fun initHeadBannerView(): View {
         val headBanner =
-            LayoutInflater.from(activity!!).inflate(R.layout.headerview_recommend_banner, rvRecommendSquare, false)
+            LayoutInflater.from(activity!!)
+                .inflate(R.layout.headerview_recommend_banner, rvRecommendSquare, false)
 
         (headBanner.bannerVp2 as BannerViewPager<SquareBannerBean, BannerHolderView>)
             .setHolderCreator { BannerHolderView() }
@@ -108,10 +113,10 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
             .setIndicatorHeight(SizeUtils.dp2px(6f))
             .setOnPageClickListener {
                 if (banner[it].adv_type == 2) {//广告类型默认1   1.只是展示图  2.跳转外连  3.内部跳转   4发布+话题 5发布+兴趣
-                    val intent = Intent()
-                    intent.action = "android.intent.action.VIEW"
-                    intent.data = Uri.parse(banner[it].link_url)//此处填链接
-                    startActivity(intent)
+                    startActivity<ProtocolActivity>(
+                        "url" to banner[it].link_url,
+                        "type" to ProtocolActivity.TYPE_OTHER
+                    )
                 } else if (banner[it].adv_type == 4) {//4发布+话题
                     mPresenter.checkBlock(banner[it])
                 } else if (banner[it].adv_type == 5) {//5发布+兴趣
@@ -168,7 +173,9 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
             rvRecommendSquare.scrollToPosition(0)
             refreshRecommendSquare.finishRefresh(b)
         } else {
-            if (data?.list.isNullOrEmpty() || (data?.list ?: mutableListOf()).size < Constants.PAGESIZE)
+            if (data?.list.isNullOrEmpty() || (data?.list
+                    ?: mutableListOf()).size < Constants.PAGESIZE
+            )
                 refreshRecommendSquare.finishLoadMoreWithNoMoreData()
             else
                 refreshRecommendSquare.finishLoadMore(b)
@@ -210,7 +217,7 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshLikeEvent(event: RefreshLikeEvent) {
         if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
-            adapter.data[event.position].isliked = event.isLike==1
+            adapter.data[event.position].isliked = event.isLike == 1
             adapter.data[event.position].like_cnt = if (event.isLike == 1) {
                 adapter.data[event.position].like_cnt + 1
             } else {
