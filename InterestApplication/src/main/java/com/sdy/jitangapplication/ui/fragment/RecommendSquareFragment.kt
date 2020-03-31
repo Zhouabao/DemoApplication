@@ -118,10 +118,6 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
                         "type" to ProtocolActivity.TYPE_OTHER,
                         "url" to banner[it].link_url
                     )
-//                    val intent = Intent()
-//                    intent.action = "android.intent.action.VIEW"
-//                    intent.data = Uri.parse(banner[it].link_url)//此处填链接
-//                    startActivity(intent)
                 } else if (banner[it].adv_type == 4) {//4发布+话题
                     mPresenter.checkBlock(banner[it])
                 } else if (banner[it].adv_type == 5) {//5发布+兴趣
