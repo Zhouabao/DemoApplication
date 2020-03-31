@@ -26,7 +26,7 @@ class AboutActivity : BaseActivity() {
         }
         hotT1.text = "关于"
         privacyPolicy.onClick {
-            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_ANTI_FRAUD )
+            startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_PRIVACY_PROTOCOL )
         }
         userAgreement.onClick {
             startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)

@@ -23,7 +23,7 @@ class ProtocolActivity : BaseActivity() {
     companion object {
         const val TYPE_PRIVACY_PROTOCOL = 1
         const val TYPE_USER_PROTOCOL = 2
-        const val TYPE_ANTI_FRAUD = 3
+        const val TYPE_OTHER = 3
     }
 
     private val type by lazy { intent.getIntExtra("type", TYPE_PRIVACY_PROTOCOL) }
@@ -41,9 +41,6 @@ class ProtocolActivity : BaseActivity() {
             }
             TYPE_USER_PROTOCOL -> {
                 hotT1.text = "用户协议"
-            }
-            TYPE_ANTI_FRAUD -> {
-                hotT1.text = "谨防骗子"
             }
         }
 
@@ -80,7 +77,8 @@ class ProtocolActivity : BaseActivity() {
         webView.settings.useWideViewPort = true
 
         webView.settings.blockNetworkImage = false//解决图片不显示
-        webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW//混合模式，允许https中加载http图片
+        webView.settings.mixedContentMode =
+            WebSettings.MIXED_CONTENT_ALWAYS_ALLOW//混合模式，允许https中加载http图片
         //自适应屏幕
         webView.settings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         webView.settings.loadWithOverviewMode = true
@@ -108,12 +106,7 @@ class ProtocolActivity : BaseActivity() {
         when (type) {
             TYPE_PRIVACY_PROTOCOL -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/privacyProtocol${Constants.END_BASE_URL}")
             TYPE_USER_PROTOCOL -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/userProtocol${Constants.END_BASE_URL}")
-            TYPE_ANTI_FRAUD -> webView.loadUrl(
-                if (!intent.getStringExtra("url").isNullOrEmpty()) {
-                    intent.getStringExtra("url")
-                } else
-                    "${BaseConstant.SERVER_ADDRESS}protocol/bewareFraud${Constants.END_BASE_URL}"
-            )
+            TYPE_OTHER -> webView.loadUrl(intent.getStringExtra("url"))
         }
 
 
