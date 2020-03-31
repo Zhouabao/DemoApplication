@@ -75,9 +75,7 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
             startActivity<CandyProductDetailActivity>("id" to candyProductAdapter.data[position].id)
         }
 
-        if (!UserManager.isShowGuideCandy()) {
-            guideCandyList.isVisible = true
-        }
+        guideCandyList.isVisible = !UserManager.isShowGuideCandy()
 
         guideCandyList.onClick {
             guideCandyList.isVisible = false
