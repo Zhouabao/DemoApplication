@@ -1,10 +1,22 @@
 package com.sdy.jitangapplication.nim.viewholder;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.text.Html;
-import android.text.TextUtils;
+import android.text.TextPaint;
+import android.text.style.ClickableSpan;
+import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
+import com.blankj.utilcode.util.SpanUtils;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderBase;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
+import com.sdy.jitangapplication.ui.activity.CandyMallActivity;
+import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
+import com.sdy.jitangapplication.ui.activity.MyCandyActivity;
 
 import java.util.Map;
 
@@ -33,16 +45,48 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
     @Override
     protected void bindContentView() {
         String text = "未知通知提醒";
-        if (TextUtils.isEmpty(message.getContent())) {
             Map<String, Object> content = message.getRemoteExtension();
-            if (content != null && !content.isEmpty()) {
-                text = (String) content.get("content");
-            }
+//        Map<String, Object> content = message.getLocalExtension();
+        if (content != null && !content.isEmpty()) {
+            text = (String) content.get("content");
+            notificationTextView.setText(SpanUtils.with(notificationTextView)
+                    .append((String) content.get("head"))
+                    .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                    .append((String) content.get("footer"))
+                    .setClickSpan(new ClickableSpan() {
+                        @Override
+                        public void updateDrawState(@NonNull TextPaint ds) {
+                            ds.setColor(Color.parseColor("#FF6796FA"));
+                            ds.setUnderlineText(false);
+                        }
+
+                        @Override
+                        public void onClick(@NonNull View widget) {
+                            if (content.get("type") != null) {
+                                int type = (int) content.get("type");
+                                if (type == 1) {
+                                    Intent intent = new Intent(context, MyCandyActivity.class);
+                                    context.startActivity(intent);
+                                } else if (type == 2) {
+                                    Intent intent = new Intent(context, IDVerifyActivity.class);
+                                    context.startActivity(intent);
+                                } else if (type == 3) {
+                                    Intent intent = new Intent(context, CandyMallActivity.class);
+                                    context.startActivity(intent);
+                                } else if (type == 4) {
+                                    MatchDetailActivity.start(context, message.getFromAccount(), -1, -1);
+                                }
+                            }
+                        }
+                    })
+                    .setForegroundColor(Color.parseColor("#FF6796FA"))
+                    .create());
         } else {
             text = message.getContent();
+            notificationTextView.setText(Html.fromHtml(text));
         }
 
-        handleTextNotification(text);
+//        handleTextNotification(text);
     }
 
     private void handleTextNotification(String text) {
@@ -60,4 +104,6 @@ public class MsgViewHolderTip extends MsgViewHolderBase {
     protected boolean isMiddleItem() {
         return true;
     }
+
+
 }

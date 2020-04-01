@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="7dip"
         android:layout_marginRight="7dip"
-        android:background="@drawable/nim_bg_message_tip"
+
         android:gravity="center"
         android:paddingLeft="7dip"
         android:paddingRight="7dip"

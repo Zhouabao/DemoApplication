@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.nim.session;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -20,18 +21,18 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Created by zhoujianghua on 2015/7/31.
+ *
  */
-public class ChatPickImageAction extends ChatBaseAction {
+public class ChatChooseGiftAction extends ChatBaseAction {
     private static final int PICK_IMAGE_COUNT = 9;
 
-    public ChatPickImageAction() {
-        super(R.drawable.send_img_uncheck, R.drawable.send_img_uncheck, R.string.input_panel_photo);
+    public ChatChooseGiftAction() {
+        super(R.drawable.send_gift_uncheck, R.drawable.send_gift_uncheck, R.string.input_panel_photo);
     }
 
     @Override
     public void onClick() {
-        onTakePhoto();
+        CommonFunction.INSTANCE.toast("礼物正在开发中");
     }
 
 

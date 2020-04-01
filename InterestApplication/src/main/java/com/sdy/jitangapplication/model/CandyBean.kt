@@ -179,11 +179,11 @@ data class RechargeBean(
 data class RechargeCandyBean(
     var amount: Int = 0,
     var descr: String = "",
-    var discount_price: Int = 0,
+    var discount_price: Float = 0F,
     var giving_amount: Int = 0,
     var id: Int = 0,
     var is_promote: Boolean = false,
-    var original_price: Int = 0,
+    var original_price: Float = 0F,
     var product_id: String = "",
     var title: String = "",
     var checked: Boolean = false

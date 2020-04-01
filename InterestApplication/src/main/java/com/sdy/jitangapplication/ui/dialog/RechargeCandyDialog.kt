@@ -78,6 +78,10 @@ class RechargeCandyDialog(val myContext: Context) : Dialog(myContext, R.style.My
                         payments.addAll(t.data?.paylist ?: mutableListOf<Paylist>())
                     }
                 }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                }
             })
     }
 

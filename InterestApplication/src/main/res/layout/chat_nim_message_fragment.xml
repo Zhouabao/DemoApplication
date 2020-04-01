@@ -1,65 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorDivider1"
-        android:orientation="vertical">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorDivider1"
+    android:orientation="vertical">
 
     <FrameLayout
-            android:id="@+id/message_activity_list_view_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            app:layout_constraintBottom_toTopOf="@+id/messageActivityBottomLayout"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            >
+        android:id="@+id/message_activity_list_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        app:layout_constraintBottom_toTopOf="@+id/messageActivityBottomLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.netease.nim.uikit.business.session.helper.MsgBkImageView
-                android:id="@+id/message_activity_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+            android:id="@+id/message_activity_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/messageListView"
-                    style="@style/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                android:id="@+id/messageListView"
+                style="@style/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
 
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutPlayAudio"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:background="@drawable/nim_dialog_toast_bg"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/recordIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_voice_record"
+                app:layout_constraintBottom_toBottomOf="@id/recordAnima"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/recordAnima"
+                app:layout_constraintTop_toTopOf="@id/recordAnima" />
+
+            <ImageView
+                android:id="@+id/recordAnima"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/drawable_record_animation"
+                app:layout_constraintBottom_toTopOf="@id/timer_tip"
+                app:layout_constraintLeft_toRightOf="@id/recordIv"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/timer_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:gravity="center"
+                android:text="@string/recording_cancel"
+                android:textColor="#FF8B8B8B"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
-                android:id="@+id/btnMakeFriends"
-                android:text="成为好友"
-                android:background="@drawable/make_friend_bg"
-                android:layout_gravity="right"
-                android:layout_width="107dp"
-                android:textColor="@color/colorWhite"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="58dp"
-                android:drawablePadding="10dp"
-                android:paddingLeft="10dp"
-                android:visibility="gone"
-                android:gravity="center_vertical"
-                android:drawableLeft="@drawable/icon_make_friends"
-                android:layout_height="35dp"/>
+            android:id="@+id/btnMakeFriends"
+            android:layout_width="107dp"
+            android:layout_height="35dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="58dp"
+            android:background="@drawable/make_friend_bg"
+            android:drawableLeft="@drawable/icon_make_friends"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="成为好友"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </FrameLayout>
 
 
-
     <include
-            layout="@layout/chat_nim_message_activity_bottom_layout"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+        layout="@layout/chat_nim_message_activity_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

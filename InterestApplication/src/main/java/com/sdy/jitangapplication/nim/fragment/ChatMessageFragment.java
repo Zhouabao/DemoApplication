@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.alibaba.fastjson.JSONObject;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
@@ -50,7 +51,12 @@ import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
 import com.sdy.jitangapplication.common.Constants;
-import com.sdy.jitangapplication.event.*;
+import com.sdy.jitangapplication.event.EnablePicEvent;
+import com.sdy.jitangapplication.event.NimHeadEvent;
+import com.sdy.jitangapplication.event.StarEvent;
+import com.sdy.jitangapplication.event.UpdateApproveEvent;
+import com.sdy.jitangapplication.event.UpdateContactBookEvent;
+import com.sdy.jitangapplication.event.UpdateHiEvent;
 import com.sdy.jitangapplication.model.ApproveBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
@@ -58,22 +64,25 @@ import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
 import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
+import com.sdy.jitangapplication.nim.session.ChatChooseGiftAction;
 import com.sdy.jitangapplication.nim.session.ChatPickImageAction;
 import com.sdy.jitangapplication.nim.session.ChatTakeImageAction;
 import com.sdy.jitangapplication.nim.session.MyLocationAction;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * 聊天界面基类
@@ -508,6 +517,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         actions.add(new ChatPickImageAction()); //图片
         actions.add(new ChatTakeImageAction()); //拍照
         actions.add(new MyLocationAction()); //位置
+        actions.add(new ChatChooseGiftAction()); //礼物
 //        actions.add(new PhoneCallAction()); //语音通话
 
         return actions;
@@ -609,6 +619,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     private int leftGreetCount = 0;
     private boolean sendTip = false;
 
+
     private void sendMsgRequest(IMMessage content, String target_accid) {
         HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
         params.put("target_accid", target_accid);
@@ -641,6 +652,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
                         if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
                             leftGreetCount = nimBeanBaseResp.getData().getResidue_msg_cnt();
+//                            count = count + 1;
+//                            sendTipMessage();
                             if (nimBeanBaseResp.getCode() == 211) {
                                 sendTipMessage(nimBeanBaseResp.getMsg());
                             }
@@ -684,6 +697,62 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         // 同时，本地插入被对方拒收的tip消息
         IMMessage tip = MessageBuilder.createTipMessage(sessionId, SessionTypeEnum.P2P);
         tip.setContent(msg);
+        tip.setStatus(MsgStatusEnum.success);
+        CustomMessageConfig config = new CustomMessageConfig();
+        config.enableUnreadCount = false;
+        config.enablePush = false;
+        tip.setConfig(config);
+        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, true);
+//        messageListPanel.onMsgSend(tip);
+    }
+
+    //
+    //1.男方发送信息后，仅男方。为提高用户质量，将交友机会留给诚意用户。每条消息会消耗一个糖果
+    // *仅第一次发送消息会显示，切换用户不重复发送
+    //2.男方发送信息后，仅女方 认证。回复消息将获得一个对方赠送的糖果，糖果可以兑换礼物哦
+    //*仅出现一次，切换用户不重复发送，点击兑换礼物直接进入糖果商城页
+    //3.男方发送信息后,仅女方 未认证。 认证后每次回复能收到对方糖果，立即认证
+    //每个对话出现一次，切换用户重复发送
+    //4.聊天条数=设定条数 仅女方。你还没有心愿礼物，快去糖果商城看看吧
+    //*条数需可配置
+    //5.双方聊天数>设定聊天条数 仅男方。如对方没许愿礼物：你们聊的好像还不错，要不送个礼物给她吧？
+                                    //如对方添加了心愿礼物：你们聊的还不错，看看她喜欢什么东西吧！
+    //*条数需可配置
+    //6.收件方非真人用户 发件方。对方非认证用户，请勿轻信对方且请勿添加其联系方式，谨防被骗
+    private int count = 0;
+    private void sendTipMessage() {
+        IMMessage tip = MessageBuilder.createTipMessage(sessionId, SessionTypeEnum.P2P);
+        HashMap<String, Object> extensions = new HashMap<>();
+        extensions.put("type", count);
+        if (count == 1) {
+            tip.setContent("对方每次回消息会附带一个糖果，糖果有什么用？");
+            extensions.put("head", "对方每次回消息会附带一个糖果，");
+            extensions.put("footer", "糖果有什么用？");
+        } else if (count == 2) {
+//            认证后每次回复能收到对方糖果，立即认证
+            tip.setContent("认证后每次回复能收到对方糖果，立即认证");
+            extensions.put("head", "认证后每次回复能收到对方糖果，");
+            extensions.put("footer", "立即认证");
+        } else if (count == 3) {
+//            你还没有心愿礼物，快去糖果商城看看吧
+            tip.setContent("你还没有心愿礼物，快去糖果商城看看吧！");
+            extensions.put("head", "你还没有心愿礼物，");
+            extensions.put("footer", "快去糖果商城看看吧！");
+        } else if (count == 4) {
+//            你们聊的好像还不错，要不送个礼物给她吧？
+            tip.setContent("你们聊的还不错，要不送个礼物给她吧？");
+            extensions.put("head", "你们聊的还不错，要不");
+            extensions.put("footer", "送个礼物");
+            extensions.put("footer1", "给她吧");
+        } else if (count == 5) {
+//            你们聊的还不错，看看她喜欢什么东西吧！
+            tip.setContent("你们聊的还不错，看看她喜欢什么东西吧！");
+            extensions.put("head", "你们聊的还不错，");
+            extensions.put("footer", "看看她喜欢什么东西吧！");
+        }
+        // 同时，本地插入被对方拒收的tip消息
+        tip.setRemoteExtension(extensions);
+        tip.setLocalExtension(extensions);
         tip.setStatus(MsgStatusEnum.success);
         CustomMessageConfig config = new CustomMessageConfig();
         config.enableUnreadCount = false;
