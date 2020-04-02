@@ -89,6 +89,7 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
+        <activity android:name=".ui.activity.SomeoneGetGiftActivity"></activity>
         <activity
             android:name=".ui.activity.MyOrderActivity"
             android:screenOrientation="portrait" />

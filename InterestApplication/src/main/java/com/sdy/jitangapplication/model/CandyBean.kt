@@ -222,7 +222,13 @@ data class WithDrawSuccessBean(
  */
 data class GiftBean(
     var amount: Int = 0,
+    var count: Int = 0,
     var icon: String = "",
     var id: Int = 0,
     var title: String = ""
+)
+
+data class SomeoneGiftBean(
+    var amount: Int = 0,
+    var list: MutableList<GiftBean> = mutableListOf()
 )

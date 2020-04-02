@@ -325,6 +325,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
 //        EventBus.getDefault().post(UpdateSquareEvent())
+        gift.text = "礼物墙 ${matchBean!!.candy_cnt ?: 0}"
         squareCount.text = "动态 ${matchBean!!.square_cnt ?: 0}"
         detailUserName.text = matchBean!!.nickname
         titleUsername.text = matchBean!!.nickname
@@ -712,7 +713,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 )
             }
             R.id.giftAll -> { //查看全部礼物
-                CommonFunction.toast("查看全部礼物")
+                startActivity<SomeoneGetGiftActivity>("target_accid" to targetAccid)
             }
         }
 

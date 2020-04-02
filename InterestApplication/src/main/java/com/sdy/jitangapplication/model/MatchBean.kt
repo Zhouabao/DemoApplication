@@ -80,6 +80,7 @@ data class MatchBean(
     var constellation: String? = null,
     var square: MutableList<Square>? = null,
     var square_cnt: Int? = 0,
+    var candy_cnt: Int? = 0,
     var tags: MutableList<TagBean>?,
     var lightningcnt: Int?,
     var countdown: Int = 0,

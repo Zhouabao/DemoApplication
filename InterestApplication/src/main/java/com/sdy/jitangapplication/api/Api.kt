@@ -1104,4 +1104,12 @@ interface Api {
     @POST("Gift/getGiftList${Constants.END_BASE_URL}")
     fun getGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<GiftBean>?>>
 
+    /**
+     * 获取礼物列表
+     * MemberInfo/getGiftList/
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/getGiftList${Constants.END_BASE_URL}")
+    fun getSomeoneGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SomeoneGiftBean?>>
+
 }
