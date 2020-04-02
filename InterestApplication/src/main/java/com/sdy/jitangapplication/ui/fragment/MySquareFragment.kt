@@ -16,7 +16,6 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RePublishEvent
 import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.model.RecommendSquareListBean
-import com.sdy.jitangapplication.model.SquareListBean
 import com.sdy.jitangapplication.presenter.MySquarePresenter
 import com.sdy.jitangapplication.presenter.view.MySquareView
 import com.sdy.jitangapplication.ui.activity.PublishActivity
@@ -57,7 +56,7 @@ class MySquareFragment : BaseMvpLazyLoadFragment<MySquarePresenter>(), MySquareV
     private val adapter by lazy { RecommendSquareAdapter() }
     override fun loadData() {
         initView()
-        mPresenter.squareEliteList(params)
+        mPresenter.aboutMeSquareCandy(params)
     }
 
     private fun initView() {
@@ -104,13 +103,13 @@ class MySquareFragment : BaseMvpLazyLoadFragment<MySquarePresenter>(), MySquareV
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
         params["page"] = page
-        mPresenter.squareEliteList(params)
+        mPresenter.aboutMeSquareCandy(params)
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
         params["page"] = page
-        mPresenter.squareEliteList(params)
+        mPresenter.aboutMeSquareCandy(params)
     }
 
 
@@ -134,11 +133,7 @@ class MySquareFragment : BaseMvpLazyLoadFragment<MySquarePresenter>(), MySquareV
         }
     }
 
-    override fun onGetSquareListResult(data: SquareListBean?) {
-
-    }
-
-    override fun onGetSquareRecommendResult(data: RecommendSquareListBean?, b: Boolean) {
+    override fun onGetSquareListResult(data: RecommendSquareListBean?, b: Boolean) {
         if (refreshMySquare.state == RefreshState.Refreshing) {
             if (data?.list.isNullOrEmpty()) {
                 adapter.isUseEmpty(true)

@@ -97,6 +97,7 @@ data class MatchBean(
     var interesttags: MutableList<TagBean>? = null,
     var newtags: MutableList<Newtag>? = null,
     var other_tags: MutableList<MyLabelBean> = mutableListOf(),
+    var gift_list: MutableList<GiftBean> = mutableListOf(),
     var other_interest: MutableList<LabelQualityBean> = mutableListOf()
 ) : Serializable
 

@@ -10,7 +10,6 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.RecommendSquareListBean
-import com.sdy.jitangapplication.model.SquareListBean
 import com.sdy.jitangapplication.presenter.view.MySquareView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -24,45 +23,15 @@ import com.sdy.jitangapplication.utils.UserManager
  */
 class MySquarePresenter : BasePresenter<MySquareView>() {
 
-    fun getMySquare(params: HashMap<String, Any>) {
+    fun aboutMeSquareCandy(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
-            .aboutMeSquare(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
-                override fun onNext(t: BaseResp<SquareListBean?>) {
-                    if (t.code == 200) {
-                        mView.onGetSquareListResult(t.data)
-                    } else {
-                        mView.onError("")
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onError("")
-                }
-            })
-    }
-
-
-    /**
-     * 获取推荐广场列表
-     */
-    fun squareEliteList(params: HashMap<String, Any>) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .squareEliteList(UserManager.getSignParams(params))
+            .aboutMeSquareCandy(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
-                override fun onStart() {
-
-                }
-
                 override fun onNext(t: BaseResp<RecommendSquareListBean?>) {
-                    super.onNext(t)
                     if (t.code == 200)
-                        mView.onGetSquareRecommendResult(t.data, true)
+                        mView.onGetSquareListResult(t.data, true)
                     else
-                        mView.onGetSquareRecommendResult(t.data, false)
+                        mView.onGetSquareListResult(t.data, false)
 
                 }
 
@@ -70,7 +39,7 @@ class MySquarePresenter : BasePresenter<MySquareView>() {
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else
-                        mView.onGetSquareRecommendResult(null, false)
+                        mView.onGetSquareListResult(null, false)
                 }
             })
     }

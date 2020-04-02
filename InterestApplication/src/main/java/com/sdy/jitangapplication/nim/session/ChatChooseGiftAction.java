@@ -15,7 +15,7 @@ import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.sdy.jitangapplication.R;
-import com.sdy.jitangapplication.common.CommonFunction;
+import com.sdy.jitangapplication.ui.dialog.ChatSendGiftDialog;
 
 import java.io.File;
 import java.util.List;
@@ -32,20 +32,10 @@ public class ChatChooseGiftAction extends ChatBaseAction {
 
     @Override
     public void onClick() {
-        CommonFunction.INSTANCE.toast("礼物正在开发中");
+        new ChatSendGiftDialog(getActivity()).show();
+//        CommonFunction.INSTANCE.toast("礼物正在开发中");
     }
 
-
-    /**
-     * * 打开图片选择器
-     * 拍照或者选取照片
-     */
-    private void onTakePhoto() {
-        int requestCode = makeRequestCode(RequestCode.PICK_IMAGE);
-
-        CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode, PictureMimeType.ofImage() & PictureMimeType.ofVideo(), true, true);
-
-    }
 
 
     @Override

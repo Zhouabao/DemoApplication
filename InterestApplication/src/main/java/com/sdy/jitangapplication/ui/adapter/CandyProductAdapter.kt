@@ -57,7 +57,7 @@ class CandyProductAdapter :
         }
 
         helper.itemView.ProductCandyPrice.text = CommonFunction.num2thousand("${item.amount}")
-        helper.itemView.productDesc.text = "${item.descr}"
+        helper.itemView.productDesc.text = "${item.title}"
         helper.itemView.addProductProgress.progress =
             if (mycandy >= item.amount) {
                 100

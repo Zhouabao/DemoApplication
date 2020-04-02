@@ -186,7 +186,6 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         mHelper.onActivityCreate()
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
 
-
         // 单聊特例话数据，包括个人信息，
         requestBuddyInfo()
         displayOnlineState()

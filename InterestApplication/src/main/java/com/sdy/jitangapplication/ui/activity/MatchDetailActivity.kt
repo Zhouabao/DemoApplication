@@ -14,9 +14,10 @@ import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.marginTop
 import androidx.core.view.size
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
@@ -41,20 +42,16 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
 import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
-import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.adapter.MatchDetailInfoAdapter
-import com.sdy.jitangapplication.ui.adapter.MatchImgsPagerAdapter
-import com.sdy.jitangapplication.ui.adapter.MyLabelAdapter
+import com.sdy.jitangapplication.ui.adapter.*
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
 import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
 import com.sdy.jitangapplication.ui.dialog.SayHiDialog
-import com.sdy.jitangapplication.ui.fragment.BlockSquareFragment
-import com.sdy.jitangapplication.ui.fragment.ListSquareFragment
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.umeng.socialize.UMShareAPI
@@ -67,12 +64,12 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.sdk27.coroutines.onTouch
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
-import java.util.*
 
 /**
  * 匹配详情页
  */
-class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView, View.OnClickListener,
+class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
+    View.OnClickListener,
     ModuleProxy {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
@@ -126,7 +123,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-    private val userTagAdapter by lazy { MyLabelAdapter(false) }
+    private val userTagAdapter by lazy { UserCenteTagAdapter() }
+    private val usergiftAdapter by lazy { UserCenteGiftAdapter() }
+    private val adapter by lazy { RecommendSquareAdapter() }
 
     private fun initView() {
         EventBus.getDefault().register(this)
@@ -149,13 +148,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         paramsClUserInfo.height = LinearLayout.LayoutParams.WRAP_CONTENT
         clUserInfo.layoutParams = paramsClUserInfo
 
-        vpUserDetail.setScrollable(false)
+//        vpUserDetail.setScrollable(false)
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
         detailUserDislikeBtn.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
         detailUserGreetBtn.setOnClickListener(this)
+        giftAll.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)
         backBtn.setOnClickListener(this)
         backBtn1.setOnClickListener(this)
@@ -172,10 +172,19 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         )
         //用户详细信息列表
         detailUserInformationRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-
-
-        detailRvTag.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        detailUserInformationRv.adapter = detailUserInformationAdapter
+        //用户动态
+        listSquareRv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        listSquareRv.adapter = adapter
+        adapter.setEmptyView(R.layout.empty_layout_block, listSquareRv)
+        adapter.isUseEmpty(false)
+        adapter.bindToRecyclerView(listSquareRv)
+        //用户兴趣
+        detailRvTag.layoutManager = GridLayoutManager(this, 2)
         detailRvTag.adapter = userTagAdapter
+        //用户礼物墙
+        rvGift.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        rvGift.adapter = usergiftAdapter
 
 
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
@@ -198,14 +207,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         }
 
-        detailSquareSwitchRg.setOnCheckedChangeListener { radioGroup, checkedId ->
-            if (checkedId == R.id.rbList) {
-                vpUserDetail.currentItem = 0
-            } else if (checkedId == R.id.rbBlock) {
-                vpUserDetail.currentItem = 1
-            }
-        }
-        detailSquareSwitchRg.check(R.id.rbBlock)
     }
 
 
@@ -214,18 +215,18 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      */
 
     //fragment栈管理
-    private val mStack = Stack<Fragment>()
+//    private val mStack = Stack<Fragment>()
 
     /*
       初始化Fragment栈管理
    */
     private fun initFragment() {
-        mStack.add(ListSquareFragment(targetAccid))
-        mStack.add(BlockSquareFragment(targetAccid))
+//        mStack.add(ListSquareFragment(targetAccid))
+//        mStack.add(BlockSquareFragment(targetAccid))
 //        mStack.add(MatchDetailLabelFragment(targetAccid))
-        vpUserDetail.offscreenPageLimit = 3
-        vpUserDetail.adapter = MainPagerAdapter(supportFragmentManager, mStack)
-        vpUserDetail.currentItem = 1
+//        vpUserDetail.offscreenPageLimit = 3
+//        vpUserDetail.adapter = MainPagerAdapter(supportFragmentManager, mStack)
+//        vpUserDetail.currentItem = 1
     }
 
 
@@ -319,10 +320,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     private fun initData() {
         userTagAdapter.setNewData(matchBean!!.other_tags)
+        usergiftAdapter.setNewData(matchBean!!.gift_list)
 
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
-        detailUserInformationRv.adapter = detailUserInformationAdapter
 //        EventBus.getDefault().post(UpdateSquareEvent())
         squareCount.text = "动态 ${matchBean!!.square_cnt ?: 0}"
         detailUserName.text = matchBean!!.nickname
@@ -410,7 +411,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
 
             override fun onPageSelected(position: Int) {
@@ -433,7 +438,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 indicator.background = resources.getDrawable(R.drawable.selector_round_indicator)
 
                 indicator.layoutParams = LinearLayout.LayoutParams(width, height)
-                val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
+                val layoutParams: LinearLayout.LayoutParams =
+                    indicator.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(
                     if (i == 0) {
                         SizeUtils.dp2px(15F)
@@ -458,11 +464,21 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      * 获取用户详情结果
      */
     //1 互相没有拉黑  2 我拉黑了他  3  ta拉黑了我   4 互相拉黑
+    private var page = 1
+    private val params1 by lazy {
+        hashMapOf(
+            "token" to UserManager.getToken(),
+            "accid" to UserManager.getAccid(),
+            "page" to page,
+            "target_accid" to targetAccid
+        )
+    }
+
     override fun onGetMatchDetailResult(success: Boolean, matchUserDetailBean: MatchBean?) {
         if (success) {
-            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
             matchBean = matchUserDetailBean
             updateBlockStatus()
+            mPresenter.getSomeoneSquare(params1)
             initData()
         } else {
             stateview.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -535,7 +551,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
-    override fun onGetLikeResult(success: Boolean, statusBean: BaseResp<StatusBean?>?, islike: Boolean) {
+    override fun onGetLikeResult(
+        success: Boolean,
+        statusBean: BaseResp<StatusBean?>?,
+        islike: Boolean
+    ) {
 
         if (islike) {
             if (statusBean != null)
@@ -556,7 +576,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                             if (intent.getIntExtra("parPos", -1) != -1) {
                                 EventBus.getDefault().post(
                                     UpdateLikemeOnePosEvent(
-                                        intent.getIntExtra("parPos", -1), intent.getIntExtra("childPos", -1)
+                                        intent.getIntExtra("parPos", -1),
+                                        intent.getIntExtra("childPos", -1)
                                     )
                                 )
                             }
@@ -568,7 +589,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     }
                 } else if (statusBean.code == 201) {
                     if (matchBean!!.my_percent_complete <= matchBean!!.normal_percent_complete)
-                        RightSlideOutdDialog(this, matchBean!!.my_like_times, matchBean!!.total_like_times).show()
+                        RightSlideOutdDialog(
+                            this,
+                            matchBean!!.my_like_times,
+                            matchBean!!.total_like_times
+                        ).show()
                     else
                         ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
                 }
@@ -601,6 +626,37 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             }
             EventBus.getDefault().post(UpdateBlackEvent())
             updateBlockStatus()
+        }
+
+    }
+
+    override fun onGetSquareListResult(
+        data: RecommendSquareListBean?,
+        result: Boolean,
+        isRefresh: Boolean
+    ) {
+        if (result) {
+            stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
+            if (data == null || data.list == null || data!!.list!!.size == 0) {
+                if (adapter.data.isNullOrEmpty()) {
+                    adapter.isUseEmpty(true)
+                }
+                listRefresh.finishLoadMoreWithNoMoreData()
+            } else {
+                if (data?.list.size > 0) {
+                    for (data in data?.list) {
+                        data.originalLike = data.isliked
+                        data.originalLikeCount = data.like_cnt
+                    }
+                    adapter.addData(data?.list)
+                }
+                listRefresh.finishLoadMore(true)
+            }
+        } else {
+            if (listRefresh != null && page > 1)
+                listRefresh.finishLoadMore(false)
+            else
+                stateview.viewState = MultiStateView.VIEW_STATE_ERROR
         }
 
     }
@@ -654,6 +710,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                         "target_accid" to matchBean!!.accid
                     )
                 )
+            }
+            R.id.giftAll -> { //查看全部礼物
+                CommonFunction.toast("查看全部礼物")
             }
         }
 
@@ -796,7 +855,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             override fun onSuccess(param: Void?) {
                 if (msg.attachment is ChatHiAttachment) {
                     if ((msg.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI) {
-                        SayHiDialog(matchBean!!.accid, matchBean!!.nickname ?: "", this@MatchDetailActivity).show()
+                        SayHiDialog(
+                            matchBean!!.accid,
+                            matchBean!!.nickname ?: "",
+                            this@MatchDetailActivity
+                        ).show()
                     } else {
                         startActivity<MatchSucceedActivity>(
                             "avator" to matchBean!!.avatar,

@@ -133,33 +133,33 @@ class SquarePresenter : BasePresenter<SquareView>() {
      */
     fun getSomeoneSquare(params: HashMap<String, Any>) {
 
-        RetrofitFactory.instance.create(Api::class.java)
-            .someoneSquare(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
-                override fun onStart() {
-                    super.onStart()
-                }
-
-                override fun onNext(t: BaseResp<SquareListBean?>) {
-                    super.onNext(t)
-                    if (t.code == 200)
-                        mView.onGetSquareListResult(t.data, true)
-                    else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
-                        mView.onGetSquareListResult(t.data, false)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else {
-                        mView.onError("服务器错误~")
-                        mView.onGetSquareListResult(null, false)
-                    }
-                }
-            })
+//        RetrofitFactory.instance.create(Api::class.java)
+//            .someoneSquare(UserManager.getSignParams(params))
+//            .excute(object : BaseSubscriber<BaseResp<SquareListBean?>>(mView) {
+//                override fun onStart() {
+//                    super.onStart()
+//                }
+//
+//                override fun onNext(t: BaseResp<SquareListBean?>) {
+//                    super.onNext(t)
+//                    if (t.code == 200)
+//                        mView.onGetSquareListResult(t.data, true)
+//                    else if (t.code == 403) {
+//                        UserManager.startToLogin(context as Activity)
+//                    } else {
+//                        mView.onGetSquareListResult(t.data, false)
+//                    }
+//                }
+//
+//                override fun onError(e: Throwable?) {
+//                    if (e is BaseException) {
+//                        TickDialog(context).show()
+//                    } else {
+//                        mView.onError("服务器错误~")
+//                        mView.onGetSquareListResult(null, false)
+//                    }
+//                }
+//            })
     }
 
     /**

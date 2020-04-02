@@ -297,7 +297,7 @@ interface Api {
      * 匹配详情数据
      */
     @FormUrlEncoded
-    @POST("member_info/usrinfoV12${Constants.END_BASE_URL}")
+    @POST("MemberInfo/usrInfoCandy${Constants.END_BASE_URL}")
     fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchBean?>>
 
 
@@ -383,8 +383,8 @@ interface Api {
      * 获取用户广场列表
      */
     @FormUrlEncoded
-    @POST("square/someoneSquareV13${Constants.END_BASE_URL}")
-    fun someoneSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
+    @POST("square/someoneSquareCandy${Constants.END_BASE_URL}")
+    fun someoneSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
 
 
     /*******************************个人中心*****************************************/
@@ -409,6 +409,14 @@ interface Api {
     @FormUrlEncoded
     @POST("square/aboutMeSquareV13${Constants.END_BASE_URL}")
     fun aboutMeSquare(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SquareListBean?>>
+
+
+    /**
+     * 我的动态糖果版
+     */
+    @FormUrlEncoded
+    @POST("square/aboutMeSquareCandy${Constants.END_BASE_URL}")
+    fun aboutMeSquareCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RecommendSquareListBean?>>
 
 
     /**
@@ -1087,5 +1095,13 @@ interface Api {
     @FormUrlEncoded
     @POST("Candy/saveWithdrawAccount${Constants.END_BASE_URL}")
     fun saveWithdrawAccount(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Alipay?>>
+
+    /**
+     * 获取礼物列表
+     * Gift/getGiftList
+     */
+    @FormUrlEncoded
+    @POST("Gift/getGiftList${Constants.END_BASE_URL}")
+    fun getGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<GiftBean>?>>
 
 }

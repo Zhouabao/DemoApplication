@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.model.StatusBean
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -28,6 +29,43 @@ import com.sdy.jitangapplication.widgets.CommonAlertDialog
  *    version: 1.0
  */
 class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
+
+
+
+    /**
+     * 获取广场列表
+     */
+    fun getSomeoneSquare(params: HashMap<String, Any>) {
+
+        RetrofitFactory.instance.create(Api::class.java)
+            .someoneSquare(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<RecommendSquareListBean?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                }
+
+                override fun onNext(t: BaseResp<RecommendSquareListBean?>) {
+                    super.onNext(t)
+                    if (t.code == 200)
+                        mView.onGetSquareListResult(t.data, true)
+                    else if (t.code == 403) {
+                        UserManager.startToLogin(context as Activity)
+                    } else {
+                        mView.onGetSquareListResult(t.data, false)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onError("服务器错误~")
+                        mView.onGetSquareListResult(null, false)
+                    }
+                }
+            })
+    }
+
 
 
     /**

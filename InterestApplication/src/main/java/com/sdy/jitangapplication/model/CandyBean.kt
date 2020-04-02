@@ -216,3 +216,13 @@ data class WithDrawSuccessBean(
     var money_amount: Int = 0,
     var trade_no: String = ""
 )
+
+/**
+ * 礼物
+ */
+data class GiftBean(
+    var amount: Int = 0,
+    var icon: String = "",
+    var id: Int = 0,
+    var title: String = ""
+)
