@@ -719,7 +719,7 @@ interface Api {
      * 发消息请求服务器
      */
     @FormUrlEncoded
-    @POST("Tidings/sendMsgRequestEnd${Constants.END_BASE_URL}")
+    @POST("Tidings/sendMsg${Constants.END_BASE_URL}")
     fun sendMsgRequest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ResidueCountBean?>>
     /*--------------------------------会员充值---------------------------------*/
 
@@ -1102,7 +1102,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Gift/getGiftList${Constants.END_BASE_URL}")
-    fun getGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<GiftBean>?>>
+    fun getGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftBeans?>>
 
     /**
      * 获取礼物列表
@@ -1110,6 +1110,14 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/getGiftList${Constants.END_BASE_URL}")
-    fun getSomeoneGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SomeoneGiftBean?>>
+    fun getSomeoneGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftBeans?>>
+
+    /**
+     * 获取礼物列表
+     * MemberInfo/getGiftList/
+     */
+    @FormUrlEncoded
+    @POST("Gift/giveGift${Constants.END_BASE_URL}")
+    fun giveGift(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 }

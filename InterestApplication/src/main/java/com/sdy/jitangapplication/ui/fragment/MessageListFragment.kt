@@ -1,19 +1,16 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
@@ -48,6 +45,7 @@ import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.presenter.MessageListPresenter
 import com.sdy.jitangapplication.presenter.view.MessageListView
@@ -297,6 +295,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                         else -> ""
                     }
                     loadedRecent.attachment is ShareSquareAttachment -> "『动态分享内容』"
+                    loadedRecent.attachment is SendGiftAttachment -> "『礼物消息』"
                     else -> loadedRecent.content
                 }
                 ass.count = loadedRecent.unreadCount

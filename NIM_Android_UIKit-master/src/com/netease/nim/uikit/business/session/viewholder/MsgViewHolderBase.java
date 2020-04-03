@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.business.session.module.list.MsgAdapter;
 import com.netease.nim.uikit.business.team.helper.TeamHelper;
@@ -46,6 +47,7 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
     // view
     protected View alertButton;
     protected TextView timeTextView;
+    protected ImageView giftImageView;
     protected ProgressBar progressBar;
     protected TextView nameTextView;
     protected FrameLayout contentContainer;
@@ -195,6 +197,8 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         readReceiptTextViewLl = findViewById(R.id.textViewAlreadyReadLl);
         msgInvisibleIv = findViewById(R.id.message_item_invisible);
         ackMsgTextView = findViewById(R.id.team_ack_msg);
+        giftImageView = findViewById(R.id.message_item_gift);
+
 
         // 这里只要inflate出来后加入一次即可
         if (contentContainer.getChildCount() == 0) {
@@ -214,6 +218,7 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         setReadReceipt();
         setAckMsg();
         setMessageIsVisible();
+        setGiftShow();
 
         bindContentView();
     }
@@ -285,6 +290,14 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
             show.loadBuddyAvatar(message);
         }
 
+    }
+
+    private void setGiftShow() {
+        if (NimUIKitImpl.getSessionListener().isShowGiftIcon(message)) {
+            giftImageView.setVisibility(View.VISIBLE);
+        } else {
+            giftImageView.setVisibility(View.GONE);
+        }
     }
 
     private void setOnClickListener() {
@@ -408,7 +421,7 @@ public abstract class MsgViewHolderBase extends RecyclerViewHolder<BaseMultiItem
         LinearLayout bodyContainerChild = (LinearLayout) view.findViewById(R.id.message_item_body1);
 
         // 调整container的位置
-        int index = isReceivedMessage() ? 0 : 3;
+        int index = isReceivedMessage() ? 0 : 4;
         if (bodyContainerChild.getChildAt(index) != contentContainer) {
             bodyContainerChild.removeView(contentContainer);
             bodyContainerChild.addView(contentContainer, index);

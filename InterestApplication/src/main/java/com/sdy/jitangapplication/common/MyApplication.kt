@@ -20,7 +20,6 @@ import com.growingio.android.sdk.collection.GrowingIO
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
 import com.leon.channel.helper.ChannelReaderUtil
-import com.netease.nim.uikit.R
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.UIKitOptions
 import com.netease.nimlib.sdk.NIMClient
@@ -32,6 +31,7 @@ import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
+import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
@@ -357,7 +357,7 @@ class MyApplication : BaseApplication() {
         val options = UIKitOptions()
         options.appCacheDir = UriUtils.getCacheDir(this)
         options.messageLeftBackground = R.drawable.shape_rectangle_share_square_bg_left
-        options.messageRightBackground = R.drawable.shape_rectangle_share_square_bg
+        options.messageRightBackground = R.drawable.shape_rectangle_chat_bg_right
         return options
     }
 

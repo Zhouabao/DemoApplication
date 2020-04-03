@@ -9,10 +9,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.GiftBean
+import com.sdy.jitangapplication.model.GiftBeans
 import com.sdy.jitangapplication.ui.adapter.SendGiftAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_chat_send_gift.*
@@ -23,7 +25,13 @@ import kotlinx.android.synthetic.main.dialog_chat_send_gift.*
  *    desc   :聊天赠送礼物弹窗
  *    version: 1.0
  */
-class ChatSendGiftDialog(context: Context) : Dialog(context, R.style.MyDialog) {
+class ChatSendGiftDialog(
+    val nickName: String,
+    val avator: String,
+    val account: String,
+    context: Context
+) :
+    Dialog(context, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +44,19 @@ class ChatSendGiftDialog(context: Context) : Dialog(context, R.style.MyDialog) {
 
     private val giftAdapter by lazy { SendGiftAdapter() }
     private fun initView() {
+        targetNickname.text = nickName
+        GlideUtil.loadCircleImg(context, avator, targetAvator)
         giftRv.layoutManager = GridLayoutManager(context, 4)
         giftRv.adapter = giftAdapter
         giftAdapter.setOnItemClickListener { _, view, position ->
-            ConfirmSendGiftDialog(context,giftAdapter.data[position]).show()
+            if (myCandyCount >= giftAdapter.data[position].amount)
+                ConfirmSendGiftDialog(context, giftAdapter.data[position],account).show()
+            else
+                AlertCandyEnoughDialog(context).show()
+        }
+
+        chargeBtn.onClick {
+            RechargeCandyDialog(context).show()
         }
     }
 
@@ -57,14 +74,17 @@ class ChatSendGiftDialog(context: Context) : Dialog(context, R.style.MyDialog) {
         setCanceledOnTouchOutside(true)
     }
 
+    private var myCandyCount = 0
     fun getGiftList() {
         RetrofitFactory.instance.create(Api::class.java)
             .getGiftList(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<MutableList<GiftBean>?>>(null) {
-                override fun onNext(t: BaseResp<MutableList<GiftBean>?>) {
+            .excute(object : BaseSubscriber<BaseResp<GiftBeans?>>(null) {
+                override fun onNext(t: BaseResp<GiftBeans?>) {
                     super.onNext(t)
                     if (t.code == 200) {
-                        giftAdapter.addData(t.data ?: mutableListOf())
+                        myCandyCount = t.data?.candy_amount ?: 0
+                        candyCount.text = "${t.data?.candy_amount}"
+                        giftAdapter.addData(t.data?.list ?: mutableListOf())
                     }
                 }
             })

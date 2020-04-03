@@ -26,7 +26,7 @@ public class ChatTakeImageAction extends ChatBaseAction {
     private static final int PICK_IMAGE_COUNT = 9;
 
     public ChatTakeImageAction() {
-        super(R.drawable.send_take_img_uncheck, R.drawable.send_take_img_uncheck, R.string.input_panel_take_photo);
+        super(R.drawable.send_take_img_normal, R.drawable.send_take_img_uncheck, R.string.input_panel_take_photo);
     }
 
     @Override

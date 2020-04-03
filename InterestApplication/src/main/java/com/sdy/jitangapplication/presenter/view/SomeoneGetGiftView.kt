@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
-import com.sdy.jitangapplication.model.SomeoneGiftBean
+import com.sdy.jitangapplication.model.GiftBeans
 
 /**
  *    author : ZFM
@@ -11,5 +11,5 @@ import com.sdy.jitangapplication.model.SomeoneGiftBean
  */
 interface SomeoneGetGiftView : BaseView {
 
-    fun onGetSomeoneGiftList(success: Boolean, data: SomeoneGiftBean?)
+    fun onGetSomeoneGiftList(success: Boolean, data: GiftBeans?)
 }

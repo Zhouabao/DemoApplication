@@ -8,7 +8,7 @@ import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.SomeoneGiftBean
+import com.sdy.jitangapplication.model.GiftBeans
 import com.sdy.jitangapplication.presenter.SomeoneGetGiftPresenter
 import com.sdy.jitangapplication.presenter.view.SomeoneGetGiftView
 import com.sdy.jitangapplication.ui.adapter.ReceiveGiftAdapter
@@ -48,7 +48,7 @@ class SomeoneGetGiftActivity : BaseMvpActivity<SomeoneGetGiftPresenter>(), Someo
         rvGift.adapter = receiveGiftAdapter
     }
 
-    override fun onGetSomeoneGiftList(success: Boolean, data: SomeoneGiftBean?) {
+    override fun onGetSomeoneGiftList(success: Boolean, data: GiftBeans?) {
         if (success) {
             stateGift.viewState = MultiStateView.VIEW_STATE_CONTENT
             candyCount.text = SpanUtils.with(candyCount)

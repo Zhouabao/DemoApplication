@@ -30,6 +30,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.ShareSquare:
                     attachment = new ShareSquareAttachment();
                     break;
+                case CustomAttachmentType.SendGift:
+                    attachment = new SendGiftAttachment();
+                    break;
                 default:
                     attachment = new DefaultCustomAttachment();
                     break;

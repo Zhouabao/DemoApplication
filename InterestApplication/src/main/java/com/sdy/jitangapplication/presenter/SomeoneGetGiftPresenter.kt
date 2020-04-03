@@ -7,7 +7,7 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.SomeoneGiftBean
+import com.sdy.jitangapplication.model.GiftBeans
 import com.sdy.jitangapplication.presenter.view.SomeoneGetGiftView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -23,8 +23,8 @@ class SomeoneGetGiftPresenter : BasePresenter<SomeoneGetGiftView>() {
     fun getSomeoneGiftList(target_accid: String) {
         RetrofitFactory.instance.create(Api::class.java)
             .getSomeoneGiftList(UserManager.getSignParams(hashMapOf("target_accid" to target_accid)))
-            .excute(object : BaseSubscriber<BaseResp<SomeoneGiftBean?>>(mView) {
-                override fun onNext(t: BaseResp<SomeoneGiftBean?>) {
+            .excute(object : BaseSubscriber<BaseResp<GiftBeans?>>(mView) {
+                override fun onNext(t: BaseResp<GiftBeans?>) {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetSomeoneGiftList(true, t.data)

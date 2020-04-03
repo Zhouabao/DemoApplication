@@ -9,4 +9,5 @@ public interface CustomAttachmentType {
     int ShareSquare = 1;//分享
     int ChatHi = 0;//打招呼
     int Sticker = 3;
+    int SendGift = 4; //赠送礼物
 }

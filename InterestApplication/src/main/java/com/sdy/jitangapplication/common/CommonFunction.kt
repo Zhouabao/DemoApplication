@@ -135,6 +135,8 @@ object CommonFunction {
                                     SessionTypeEnum.P2P,
                                     t.data?.default_msg
                                 )
+                                val params = hashMapOf<String, Any>("showGift" to false)
+                                msg.localExtension = params
                                 NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                     .setCallback(object : RequestCallback<Void> {
                                         override fun onSuccess(p0: Void?) {

@@ -228,7 +228,8 @@ data class GiftBean(
     var title: String = ""
 )
 
-data class SomeoneGiftBean(
+data class GiftBeans(
     var amount: Int = 0,
+    var candy_amount: Int = 0,
     var list: MutableList<GiftBean> = mutableListOf()
 )

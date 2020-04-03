@@ -9,6 +9,7 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.SdkVersionUtils;
 import com.netease.nim.uikit.business.session.constant.RequestCode;
+import com.netease.nim.uikit.business.uinfo.UserInfoHelper;
 import com.netease.nim.uikit.common.util.string.MD5;
 import com.netease.nimlib.sdk.chatroom.ChatRoomMessageBuilder;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
@@ -32,10 +33,13 @@ public class ChatChooseGiftAction extends ChatBaseAction {
 
     @Override
     public void onClick() {
-        new ChatSendGiftDialog(getActivity()).show();
+        new ChatSendGiftDialog(UserInfoHelper.getUserTitleName(getAccount(), SessionTypeEnum.P2P),
+                UserInfoHelper.getAvatar(getAccount()),
+                getAccount(),
+                getActivity()).show();
+
 //        CommonFunction.INSTANCE.toast("礼物正在开发中");
     }
-
 
 
     @Override

@@ -67,6 +67,7 @@ import com.sdy.jitangapplication.utils.UserManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.List;
@@ -1045,7 +1046,7 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
         gridView.setGravity(Gravity.CENTER);
         //图片、拍照、位置
         gridView.setOnItemClickListener((parent, view1, position, id) -> {
-            if (disable) {
+            if (disable && position != 3) {
                 CommonFunction.INSTANCE.toast("打招呼仅限语音,文本,表情");
                 return;
             }
@@ -1058,10 +1059,15 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
     //是否禁用图片、定位、
     private boolean disable = false;
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void EnablePicEvent(EnablePicEvent event) {
         //是好友就不禁用,如果不是好友就禁用
         disable = !event.getEnable();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (i != adapter.getCount() - 1)
+                ((ChatBaseAction) adapter.getItem(i)).setEnable(event.getEnable());
+        }
+        adapter.notifyDataSetChanged();
     }
 
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
+
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.model.recent.RecentCustomization;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -39,10 +40,12 @@ import com.sdy.jitangapplication.nim.activity.MessageInfoActivity;
 import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatMatchAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.StickerAttachment;
 import com.sdy.jitangapplication.nim.extension.CustomAttachParser;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatHi;
+import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderSendGift;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderShareSquare;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderTip;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
@@ -261,6 +264,9 @@ public class SessionHelper {
                     } else if (recent.getAttachment() instanceof ShareSquareAttachment) {
                         return "『转发动态』";
 
+                    } else if (recent.getAttachment() instanceof SendGiftAttachment) {
+                        return "『礼物』";
+
                     }
                     return super.getDefaultDigest(recent);
                 }
@@ -273,6 +279,7 @@ public class SessionHelper {
     //自定义消息界面
     private static void registerViewHolders() {
 //        NimUIKit.registerMsgItemViewHolder(ChatMatchAttachment.class, MsgViewHolderMatch.class);
+        NimUIKit.registerMsgItemViewHolder(SendGiftAttachment.class, MsgViewHolderSendGift.class);
         NimUIKit.registerMsgItemViewHolder(ShareSquareAttachment.class, MsgViewHolderShareSquare.class);
         NimUIKit.registerMsgItemViewHolder(ChatHiAttachment.class, MsgViewHolderChatHi.class);
         NimUIKit.registerTipMsgViewHolder(MsgViewHolderTip.class);
@@ -340,6 +347,22 @@ public class SessionHelper {
                     }
                 }
                 return false;
+            }
+
+            @Override
+            public boolean isShowGiftIcon(IMMessage message) {
+                if (message.getLocalExtension() != null && message.getLocalExtension().get("showGift") != null && ((Boolean) message.getLocalExtension().get("showGift")) == false) {
+                    return false;
+                } else {
+                    if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)
+                            && message.getMsgType() != MsgTypeEnum.tip && !(message.getAttachment() instanceof ChatMatchAttachment) && !(message.getAttachment() instanceof ChatHiAttachment)
+                            && UserManager.INSTANCE.getGender() == 1
+                            && message.getDirect() == MsgDirectionEnum.Out) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
             }
 
             @Override

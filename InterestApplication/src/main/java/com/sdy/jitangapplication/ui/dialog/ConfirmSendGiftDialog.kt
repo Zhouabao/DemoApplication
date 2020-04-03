@@ -5,10 +5,23 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseSubscriber
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.GiftBean
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.cancel
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.confirm
 import kotlinx.android.synthetic.main.dialog_alert_candy_enough_layout.*
@@ -19,7 +32,7 @@ import kotlinx.android.synthetic.main.dialog_alert_candy_enough_layout.*
  *    desc   :确定赠送糖果
  *    version: 1.0
  */
-class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean) :
+class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val account: String) :
     Dialog(context1, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +62,57 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean) :
         }
 
         confirm.onClick {
-            CommonFunction.toast("赠送礼物")
-            dismiss()
+            //    target_accid
+            //gift_id
+            sendGift()
         }
 
+    }
+
+
+    //todo  如果赠送礼物成功，就要发送礼物消息出去
+    fun sendGift() {
+        val params = hashMapOf<String, Any>()
+        params["target_accid"] = account
+        params["gift_id"] = giftName.id
+        RetrofitFactory.instance.create(Api::class.java)
+            .giveGift(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    CommonFunction.toast(t.msg)
+                    if (t.code == 200) {
+                        sendGiftMessage()
+                    }
+                }
+            })
+
+    }
+
+    private fun sendGiftMessage() {
+        val shareSquareAttachment = SendGiftAttachment(giftName.title, giftName.icon, giftName.id)
+        val message = MessageBuilder.createCustomMessage(
+            account,
+            SessionTypeEnum.P2P,
+            "",
+            shareSquareAttachment,
+            CustomMessageConfig()
+        )
+        NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+            .setCallback(object :
+                RequestCallback<Void?> {
+                override fun onSuccess(param: Void?) {
+                    dismiss()
+                }
+
+                override fun onFailed(code: Int) {
+                    dismiss()
+                }
+
+                override fun onException(exception: Throwable) {
+
+                }
+            })
     }
 
 }

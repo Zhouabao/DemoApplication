@@ -16,6 +16,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.Likelist
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_message_list.view.*
@@ -70,6 +71,7 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
                         else -> ""
                     }
                 item.attachment is ShareSquareAttachment -> holder.itemView.text.text = "『动态分享内容』"
+                item.attachment is SendGiftAttachment -> holder.itemView.text.text = "『礼物消息』"
                 else -> holder.itemView.text.text = item.content
             }
         }
