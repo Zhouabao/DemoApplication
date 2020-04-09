@@ -136,6 +136,7 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
             candyProductAdapter.mycandy = candyCoun!!.candy_amount
             candyCount.text = CommonFunction.num2thousand("${candyCoun.candy_amount}")
             candyNewRecord.isVisible = candyCoun.has_unread
+            withdrawCandy.isVisible = candyCoun.is_withdraw
         }
         mPresenter.goodsCategoryList(params)
     }

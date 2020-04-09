@@ -40,6 +40,7 @@ import com.sdy.jitangapplication.nim.activity.MessageInfoActivity;
 import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatMatchAttachment;
+import com.sdy.jitangapplication.nim.attachment.CustomAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.StickerAttachment;
@@ -355,7 +356,9 @@ public class SessionHelper {
                     return false;
                 } else {
                     if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)
-                            && message.getMsgType() != MsgTypeEnum.tip && !(message.getAttachment() instanceof ChatMatchAttachment) && !(message.getAttachment() instanceof ChatHiAttachment)
+                            && message.getMsgType() != MsgTypeEnum.tip
+                            && !(message.getAttachment() instanceof ChatMatchAttachment)
+                            && !(message.getAttachment() instanceof ChatHiAttachment)
                             && UserManager.INSTANCE.getGender() == 1
                             && message.getDirect() == MsgDirectionEnum.Out) {
                         return true;
@@ -412,6 +415,8 @@ public class SessionHelper {
             public boolean shouldIgnore(IMMessage message) {
                 if (DemoCache.getAccount().equals(message.getSessionId())) {
                     // 发给我的电脑 不允许撤回
+                    return true;
+                } else if (message.getAttachment() instanceof CustomAttachment) {
                     return true;
                 }
                 return false;

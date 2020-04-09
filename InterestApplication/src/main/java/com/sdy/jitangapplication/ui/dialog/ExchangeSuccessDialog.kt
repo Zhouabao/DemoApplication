@@ -6,14 +6,22 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.event.RefreshCandyMallDetailEvent
+import com.sdy.jitangapplication.event.RefreshCandyMallEvent
+import com.sdy.jitangapplication.event.RefreshMyCandyEvent
 import com.sdy.jitangapplication.model.ExchangeOrderBean
+import com.sdy.jitangapplication.ui.activity.CandyMallActivity
+import com.sdy.jitangapplication.ui.activity.CandyProductDetailActivity
+import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.ui.activity.MyOrderActivity
 import kotlinx.android.synthetic.main.dialog_exchange_success.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -66,7 +74,17 @@ class ExchangeSuccessDialog(var context1: Context, val exchangeSuccessBean: Exch
         orderRemark.text = exchangeSuccessBean.order_remark
 
         confirmBtn.onClick {
-            //            todo 应该要发送通知刷新界面
+            //兑换成功，刷新界面。
+            // 我的糖果
+            if (ActivityUtils.getTopActivity() is MyCandyActivity) {
+                EventBus.getDefault().post(RefreshMyCandyEvent(-1))
+            } else if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) {
+                //商品详情
+                EventBus.getDefault().post(RefreshCandyMallDetailEvent())
+            }else if (ActivityUtils.getTopActivity() is CandyMallActivity) {
+                //糖果商城
+                EventBus.getDefault().post(RefreshCandyMallEvent())
+            }
             dismiss()
         }
 

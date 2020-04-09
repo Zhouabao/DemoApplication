@@ -5,9 +5,9 @@ package com.sdy.jitangapplication.nim.extension;
  */
 public interface CustomAttachmentType {
     // 多端统一
-    int ChatMatch = 2;//匹配
-    int ShareSquare = 1;//分享
     int ChatHi = 0;//打招呼
+    int ShareSquare = 1;//分享
+    int SendGift = 2; //赠送礼物
     int Sticker = 3;
-    int SendGift = 4; //赠送礼物
+    int ChatMatch = 4;//匹配
 }

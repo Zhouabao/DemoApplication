@@ -68,4 +68,29 @@ class CandyProductDetailPresenter : BasePresenter<CandyProductDetailView>() {
             })
 
     }
+
+    /**
+     * 商品取消加入心愿单
+     */
+    fun goodsDelWish(id: Int) {
+        val params = hashMapOf<String, Any>()
+        params["goods_id"] = id
+        RetrofitFactory.instance.create(Api::class.java)
+            .goodsDelWish(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    mView.onGoodsAddWishResult(t.code == 200)
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        mView.onGoodsAddWishResult(false)
+                }
+            })
+
+    }
 }

@@ -146,27 +146,27 @@ class ChargeVipDialog(
         vipBannerAdapter.setNewData(banners)
         if (bannerIndicator.childCount == 0)
             if (vipBannerAdapter.data.size > 0) {
-                val size = vipBannerAdapter.data.size
-                for (i in 0 until size) {
-                    val indicator = RadioButton(context1)
-                    indicator.width = SizeUtils.dp2px(5F)
-                    indicator.height = SizeUtils.dp2px(5F)
-                    indicator.buttonDrawable = null
-                    indicator.background = context1.resources.getDrawable(R.drawable.selector_circle_indicator)
+            val size = vipBannerAdapter.data.size
+            for (i in 0 until size) {
+                val indicator = RadioButton(context1)
+                indicator.width = SizeUtils.dp2px(5F)
+                indicator.height = SizeUtils.dp2px(5F)
+                indicator.buttonDrawable = null
+                indicator.background = context1.resources.getDrawable(R.drawable.selector_circle_indicator)
 
-                    indicator.layoutParams =
-                        LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                        )
-                    val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
-                    layoutParams.setMargins(0, 0, SizeUtils.dp2px(6f), 0)
-                    indicator.layoutParams = layoutParams
-                    indicator.isEnabled = false
-                    indicator.isChecked = i == 0
-                    bannerIndicator.addView(indicator)
-                }
+                indicator.layoutParams =
+                    LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
+                layoutParams.setMargins(0, 0, SizeUtils.dp2px(6f), 0)
+                indicator.layoutParams = layoutParams
+                indicator.isEnabled = false
+                indicator.isChecked = i == 0
+                bannerIndicator.addView(indicator)
             }
+        }
         bannerVip.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 for (child in 0 until bannerIndicator.childCount)

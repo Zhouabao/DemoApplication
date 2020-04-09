@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Typeface
+import android.os.Build
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -38,7 +39,7 @@ class CandyProductAdapter :
             Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
         helper.itemView.addProductProgressCount.typeface =
             Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
-        GlideUtil.loadRoundImgCenterCrop(
+        GlideUtil.loadRoundImgFitcenter(
             mContext,
             item.icon,
             helper.itemView.productImg,
@@ -58,12 +59,21 @@ class CandyProductAdapter :
 
         helper.itemView.ProductCandyPrice.text = CommonFunction.num2thousand("${item.amount}")
         helper.itemView.productDesc.text = "${item.title}"
-        helper.itemView.addProductProgress.progress =
-            if (mycandy >= item.amount) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            helper.itemView.addProductProgress.setProgress(
+                if (mycandy >= item.amount) {
+                    100
+                } else {
+                    ((mycandy * 1.0F / item.amount) * 100).toInt()
+                }, true
+            )
+        } else {
+            helper.itemView.addProductProgress.progress = if (mycandy >= item.amount) {
                 100
             } else {
                 ((mycandy * 1.0F / item.amount) * 100).toInt()
             }
+        }
         helper.itemView.addProductProgressCount.text =
             "${if (mycandy >= item.amount) {
                 100
@@ -77,7 +87,10 @@ class CandyProductAdapter :
 
         //加入心愿
         helper.itemView.addProductBtn.onClick {
-            goodsAddWish(helper.layoutPosition, item.id)
+            if (item.is_wished) {
+                goodsDelWish(helper.layoutPosition, item.id)
+            } else
+                goodsAddWish(helper.layoutPosition, item.id)
         }
 
         //兑换礼品
@@ -104,6 +117,36 @@ class CandyProductAdapter :
                     super.onNext(t)
                     if (t.code == 200) {
                         mData[position].is_wished = true
+                        notifyItemChanged(position)
+                        AddAndMessageDialog(mContext, mData[position].id).show()
+                    } else {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    if (e is BaseException) {
+                        TickDialog(mContext).show()
+                    }
+                }
+            })
+
+    }
+
+    /**
+     * 商品取消加入心愿单
+     */
+    fun goodsDelWish(position: Int, id: Int) {
+        val params = hashMapOf<String, Any>()
+        params["goods_id"] = id
+        RetrofitFactory.instance.create(Api::class.java)
+            .goodsDelWish(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    super.onNext(t)
+                    if (t.code == 200) {
+                        mData[position].is_wished = false
                         notifyItemChanged(position)
                         AddAndMessageDialog(mContext, mData[position].id).show()
                     } else {

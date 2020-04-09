@@ -985,6 +985,13 @@ interface Api {
     fun goodsAddWish(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
     /**
+     * 商品取消加入心愿
+     */
+    @FormUrlEncoded
+    @POST("Goods/goodsDelWish${Constants.END_BASE_URL}")
+    fun goodsDelWish(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
      * 商品详情
      */
     @FormUrlEncoded
@@ -1019,6 +1026,20 @@ interface Api {
     @FormUrlEncoded
     @POST("Goods/getAddress${Constants.END_BASE_URL}")
     fun getAddress(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyAddressBean?>>
+
+    /**
+     * 删除收货地址
+     */
+    @FormUrlEncoded
+    @POST("Goods/delAddress${Constants.END_BASE_URL}")
+    fun delAddress(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyAddressBean?>>
+
+    /**
+     * 编辑收货地址
+     */
+    @FormUrlEncoded
+    @POST("Goods/editAddress${Constants.END_BASE_URL}")
+    fun editAddress(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddressBean?>>
 
     /**
      * 添加收货地址

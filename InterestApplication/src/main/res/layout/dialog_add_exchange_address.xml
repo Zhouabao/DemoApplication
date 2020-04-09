@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/shape_rectangle_white_top_left_right_15_corners_bg">
+    android:background="@drawable/shape_rectangle_white_top_left_right_15_corners_bg"
+    android:orientation="vertical">
 
     <View
         android:id="@+id/view1"
         android:layout_width="45dp"
         android:layout_height="5dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:background="@drawable/rectangle_gray_3dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -20,6 +22,7 @@
         android:id="@+id/t1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:text="收货信息"
         android:textColor="#ff191919"
@@ -29,23 +32,94 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view1" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvAddress"
-        android:layout_width="0dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_height="120dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
+    <TextView
+        android:id="@+id/addAdressBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_dash_10dp"
+        android:gravity="center"
+        android:text="添加收货地址"
+        android:textColor="#ffc0c1c4"
+        android:textSize="16sp"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/t1" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/addressCl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/shadow_115844"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t1">
+
+        <ImageView
+            android:id="@+id/iv1"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icon_location_exchange_gift"
+            app:layout_constraintBottom_toBottomOf="@id/addressDetail"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/addressNameAndPhone" />
+
+        <TextView
+            android:id="@+id/addressNameAndPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:text="陈秋柔\t\t18034454303"
+            android:textColor="#ff191919"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/iv1"
+            app:layout_constraintRight_toRightOf="@id/addressDetail"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/gotoMoreAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="10dp"
+            android:src="@drawable/icon_more_right_gray"
+            app:layout_constraintBottom_toBottomOf="@id/addressDetail"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/addressNameAndPhone" />
+
+        <TextView
+            android:id="@+id/addressDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="10dp"
+            android:text="四川省成都市武侯区天府三街花样年·福年广场1302"
+            android:textColor="#ff696e73"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/addressNameAndPhone"
+            app:layout_constraintRight_toLeftOf="@id/gotoMoreAddress"
+            app:layout_constraintTop_toBottomOf="@id/addressNameAndPhone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <EditText
         android:id="@+id/orderRemark"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_gravity="center"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="25dp"
         android:layout_marginRight="15dp"
@@ -62,7 +136,7 @@
 
     <TextView
         android:id="@+id/exchangeBtn"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="47dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="30dp"
@@ -80,4 +154,4 @@
         app:layout_constraintTop_toBottomOf="@id/orderRemark" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

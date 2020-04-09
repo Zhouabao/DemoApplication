@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.model
 
+import com.chad.library.adapter.base.entity.MultiItemEntity
 import java.io.Serializable
 
 /**
@@ -57,18 +58,36 @@ data class ProductBean(
 data class ProductDetailBean(
     var amount: Int = 0,
     var comments_cnt: Int = 0,
-    var cover_list: MutableList<String> = mutableListOf(),
+    var cover_list: MutableList<ProductDetailMediaBean> = mutableListOf(),
     var descr: String = "",
     var id: Int = 0,
     var is_recommend: Boolean = false,
     var is_wished: Boolean = false,
     var msg_cnt: Int = 0,
     var my_candy_amount: Int = 0,
-    var price: Int = 0,
+    var price: Float = 0F,
     var title: String = "",
     var visit_cnt: Int = 0,
     var wish_cnt: Int = 0
 )
+
+data class ProductDetailMediaBean(
+
+    var type: Int = 0,
+    var url: String = "",
+    var duration: Int = 0,
+    var cover_url: String = ""
+) : MultiItemEntity {
+    override fun getItemType(): Int {
+        return type
+    }
+
+    companion object {
+        //        类型1 图片 2视频 3语音
+        val DETAIL_IMG = 1
+        val DETAIL_VIDEO = 2
+    }
+}
 
 /**
  * 商品想要对象
@@ -125,7 +144,8 @@ data class AddressBean(
     var phone: String = "",
     var postcode: String = "",
     var province_name: String = "",
-    var checked: Boolean = false
+    var checked: Boolean = false,
+    var is_default: Boolean = false
 ) : Serializable
 
 data class MyOrderBean(
@@ -196,6 +216,7 @@ data class RechargeCandyBean(
 data class PullWithdrawBean(
     var alipay: Alipay? = null,
     var has_unread: Boolean = false,
+    var is_withdraw: Boolean = false,
     var candy_amount: Int = 0,
     var money_amount: Float = 0.0F
 )

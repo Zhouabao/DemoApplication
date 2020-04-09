@@ -218,16 +218,50 @@
                 app:layout_constraintLeft_toLeftOf="@id/t1"
                 app:layout_constraintRight_toRightOf="@id/addressName"
                 app:layout_constraintTop_toBottomOf="@id/addressPostNumber" />
+
+            <TextView
+                android:id="@+id/t6"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="设为默认地址"
+                android:textColor="#ff191919"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintTop_toBottomOf="@id/t5" />
+
+            <Switch
+                android:id="@+id/switchDefaultAddress"
+                android:layout_width="44dp"
+                android:layout_height="26dp"
+                android:checked="false"
+                android:showText="false"
+                app:layout_constraintRight_toRightOf="@id/addressPostNumber"
+                app:layout_constraintBottom_toBottomOf="@id/t6"
+                app:layout_constraintTop_toTopOf="@id/t6"
+                android:thumb="@drawable/switch_ios_thumb"
+                android:track="@drawable/selector_switch_ios_track" />
+
+            <View
+                android:id="@+id/view6"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/colorDivider"
+                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintRight_toRightOf="@id/addressName"
+                app:layout_constraintTop_toBottomOf="@id/t6" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintRight_toRightOf="parent">
+
         <TextView
             android:id="@+id/saveBtn"
             android:layout_width="match_parent"

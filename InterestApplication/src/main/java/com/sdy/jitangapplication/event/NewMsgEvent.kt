@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.event
 
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.utils.UserManager
 
 /**
@@ -27,3 +28,8 @@ class UpdateSlideCountEvent
 class ShowSurveyDialogEvent(val slideCount: Int)
 
 class UpdateApproveEvent()
+
+/**
+ * 更新发送礼物的事件
+ */
+class UpdateSendGiftEvent(val message: IMMessage)

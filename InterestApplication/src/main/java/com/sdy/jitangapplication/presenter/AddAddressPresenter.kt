@@ -9,6 +9,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.AddressBean
+import com.sdy.jitangapplication.model.MyAddressBean
 import com.sdy.jitangapplication.presenter.view.AddAddressView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
@@ -57,5 +58,58 @@ class AddAddressPresenter : BasePresenter<AddAddressView>() {
                 }
             })
 
+    }
+
+
+    /**
+     * 编辑收货地址
+     */
+    fun editAddress(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .editAddress(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<AddressBean?>>(null) {
+                override fun onNext(t: BaseResp<AddressBean?>) {
+                    super.onNext(t)
+                    CommonFunction.toast(t.msg)
+                    mView.onAddAddressResult(t.code == 200, t.data)
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onAddAddressResult(false, null)
+                    }
+                }
+            })
+    }
+
+
+
+    /**
+     * 删除收货地址
+     */
+    fun delAddress(id: Int) {
+        val params = hashMapOf<String, Any>("id" to id)
+        RetrofitFactory.instance.create(Api::class.java)
+            .delAddress(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<MyAddressBean?>>(null) {
+                override fun onNext(t: BaseResp<MyAddressBean?>) {
+                    super.onNext(t)
+                    CommonFunction.toast(t.msg)
+                    mView.delAddressResult(t.code == 200)
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.delAddressResult(false)
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                    }
+                }
+            })
     }
 }

@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +9,11 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
-import com.sdy.jitangapplication.model.MyLabelBean
+import com.sdy.jitangapplication.model.LabelQuality
 import com.sdy.jitangapplication.presenter.MyTagPresenter
 import com.sdy.jitangapplication.presenter.view.MyTagView
-import com.sdy.jitangapplication.ui.activity.LabelQualityActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.ui.adapter.UserCenteTagAdapter
-import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
 import kotlinx.android.synthetic.main.empty_my_square_layout.view.*
 import kotlinx.android.synthetic.main.fragment_my_tag.*
 import kotlinx.android.synthetic.main.headerview_user_center_square.view.*
@@ -63,25 +60,16 @@ class MyTagFragment : BaseMvpLazyLoadFragment<MyTagPresenter>(), MyTagView {
 
 
         tagAdapter.setOnItemClickListener { _, view, position ->
-            if (tagAdapter.data[position].is_expire) {
-                ChargeLabelDialog(activity!!, tagAdapter.data[position].tag_id).show()
-            } else {
-                val intent = Intent()
-                intent.putExtra("aimData", tagAdapter.data[position])
-                intent.putExtra(
-                    "mode", if (tagAdapter.data[position].label_quality.isNullOrEmpty()) {
-                        LabelQualityActivity.MODE_NEW
-                    } else {
-                        LabelQualityActivity.MODE_EDIT
-                    }
-                )
-                intent.setClass(activity!!, LabelQualityActivity::class.java)
-                startActivity(intent)
-            }
+            startActivity<MyLabelActivity>()
+//            val intent = Intent()
+//            intent.putExtra("aimData", tagAdapter.data[position])
+//            intent.putExtra("mode", LabelQualityActivity.MODE_NEW)
+//            intent.setClass(activity!!, LabelQualityActivity::class.java)
+//            startActivity(intent)
         }
     }
 
-    fun setTagData(datas: MutableList<MyLabelBean>) {
+    fun setTagData(datas: MutableList<LabelQuality>) {
         tagAdapter.setNewData(datas)
         if (tagAdapter.data.size == 0) {
             tagAdapter.isUseEmpty(true)
@@ -115,6 +103,6 @@ class MyTagFragment : BaseMvpLazyLoadFragment<MyTagPresenter>(), MyTagView {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateMyLabelEvent(event: UpdateMyLabelEvent) {
         if (!event.tags.isNullOrEmpty())
-            setTagData(event.tags ?: mutableListOf<MyLabelBean>())
+            setTagData(event.tags ?: mutableListOf<LabelQuality>())
     }
 }

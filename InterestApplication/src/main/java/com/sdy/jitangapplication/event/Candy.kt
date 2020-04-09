@@ -27,6 +27,11 @@ class CommentPicEvent(val imgs: MutableList<String>)
 class GetAddressvent(val address: AddressBean)
 
 /**
+ * 刷新收货地址
+ */
+class RefreshAddressvent()
+
+/**
  * 更新商品状态事件总线
  */
 class RefreshOrderStateEvent(val position: Int, val state: Int)
@@ -40,6 +45,7 @@ class RefreshGoodsMessageEvent()
  * 更新我的糖果之类的数据
  */
 class RefreshMyCandyEvent(val candyCount: Int)
+
 
 /**
  * 更新糖果商城

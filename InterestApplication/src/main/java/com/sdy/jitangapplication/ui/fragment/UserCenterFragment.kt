@@ -6,10 +6,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.PopupWindow
@@ -63,7 +61,7 @@ import java.util.*
  * 我的用户中心
  */
 class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserCenterView,
-    View.OnClickListener {
+    View.OnClickListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     companion object {
         const val REQUEST_INFO_SETTING = 11
@@ -108,6 +106,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userFoot.setOnClickListener(this)
         userVisit.setOnClickListener(this)
         userVerify.setOnClickListener(this)
+        userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
+
 
 
         multiStateView.retryBtn.onClick {
@@ -237,6 +237,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         checkVip()
         for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
             marqueeVipPower.addView(getMarqueeView(data))
+
+
     }
 
 
@@ -313,10 +315,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {
         multiStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
-        guideVerifyWindow.showAtLocation(userVerify, Gravity.TOP, 0, 0)
+//        guideVerifyWindow.showAsDropDown(userVerify, 0, 0, Gravity.NO_GRAVITY)
+
         multiStateView.postDelayed({
             guideVerifyWindow.dismiss()
-        }, 1000L)
+            userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
+        }, 3000L)
         if (userinfo != null) {
             userInfoBean = userinfo
             initData()
@@ -558,6 +562,21 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 CommonFunction.toast("发布失败")
             }
         }
+    }
+
+    private var width = 0
+    override fun onGlobalLayout() {
+        width = userVerify.left + userVerify.width
+        if (width > 0) {
+            guideVerifyWindow.showAtLocation(
+                userVerify,
+                Gravity.TOP and Gravity.LEFT,
+                width - SizeUtils.dp2px(154F),
+                SizeUtils.dp2px(-20F)
+            )
+        }
+        Log.d("onGlobalLayout", "$width")
+
     }
 
 

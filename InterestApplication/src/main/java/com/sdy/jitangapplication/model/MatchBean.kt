@@ -62,7 +62,6 @@ data class MatchBean(
     var matching_icon: String = "",
     var face_auditing_state: Int = 0,
     var intention_icon: String = "",
-    var label_quality: MutableList<LabelQualityBean> = mutableListOf(),
     var isvip: Int = 0,    //是否会员 true是 false不是
     var isfaced: Int = 0,  //0未认证/认证不成功     1认证通过     2认证中
     var accid: String = "",
@@ -80,7 +79,7 @@ data class MatchBean(
     var constellation: String? = null,
     var square: MutableList<Square>? = null,
     var square_cnt: Int? = 0,
-    var candy_cnt: Int? = 0,
+    var gift_cnt: Int? = 0,
     var tags: MutableList<TagBean>?,
     var lightningcnt: Int?,
     var countdown: Int = 0,
@@ -97,9 +96,17 @@ data class MatchBean(
     val total_like_times: Int,//  total_like_times（最高次数）
     var interesttags: MutableList<TagBean>? = null,
     var newtags: MutableList<Newtag>? = null,
-    var other_tags: MutableList<MyLabelBean> = mutableListOf(),
     var gift_list: MutableList<GiftBean> = mutableListOf(),
-    var other_interest: MutableList<LabelQualityBean> = mutableListOf()
+    var birth: Int = 0,
+    var label_quality: MutableList<LabelQuality> = mutableListOf(),
+    var jobname: String = "",
+    var label_quality_cnt: Int = 0
+) : Serializable
+
+
+data class LabelQuality(
+    var icon: String = "",
+    var title: String = ""
 ) : Serializable
 
 
@@ -130,7 +137,12 @@ data class StatusBean(val status: Int, val residue: Int = 0)
 /**
  * 获取招呼的次数
  */
-data class GreetTimesBean(val normal_cnt: Int, val isfaced: Int = 0, val isvip: Int = 0, val default_msg: String = "")
+data class GreetTimesBean(
+    val normal_cnt: Int,
+    val isfaced: Int = 0,
+    val isvip: Int = 0,
+    val default_msg: String = ""
+)
 
 /**
  * 用戶標簽

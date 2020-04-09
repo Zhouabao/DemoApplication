@@ -1,13 +1,11 @@
 package com.sdy.jitangapplication.ui.dialog
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.isVisible
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -16,13 +14,12 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.GetAddressvent
+import com.sdy.jitangapplication.event.RefreshAddressvent
 import com.sdy.jitangapplication.model.AddressBean
 import com.sdy.jitangapplication.model.ExchangeOrderBean
 import com.sdy.jitangapplication.model.MyAddressBean
-import com.sdy.jitangapplication.ui.activity.AddAddressActivity
-import com.sdy.jitangapplication.ui.adapter.AddressAdapter
+import com.sdy.jitangapplication.ui.activity.AddressManagerActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_add_exchange_address.*
 import org.greenrobot.eventbus.EventBus
@@ -38,6 +35,9 @@ import org.jetbrains.anko.startActivity
  */
 class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
     Dialog(context1, R.style.MyDialog) {
+
+    private var addressBean: AddressBean? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_add_exchange_address)
@@ -59,36 +59,24 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
         setCanceledOnTouchOutside(true)
     }
 
-    private val addressAdapter = AddressAdapter()
 
     fun initview() {
-        rvAddress.layoutManager = LinearLayoutManager(context1, RecyclerView.HORIZONTAL, false)
-        rvAddress.adapter = addressAdapter
-
-        addressAdapter.setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-                R.id.addAddressIv -> {
-                    if (addressAdapter.data.size - 1 < max_count) {
-                        (context1 as Activity).startActivity<AddAddressActivity>()
-                    } else
-                        CommonFunction.toast("最多可以拥有$max_count 地址")
-
-                }
-                R.id.addressCl -> {
-                    for (data in addressAdapter.data.withIndex()) {
-                        data.value.checked = data.index == position
-                    }
-                    addressAdapter.notifyDataSetChanged()
-                }
-            }
-        }
-
-        addressAdapter.addData(AddressBean())
-
         exchangeBtn.onClick {
             createGoods()
         }
 
+        /**
+         * 添加地址
+         */
+        addAdressBtn.onClick {
+            context1.startActivity<AddressManagerActivity>()
+        }
+        /**
+         * 去地址管理界面
+         */
+        addressCl.onClick {
+            context1.startActivity<AddressManagerActivity>("address" to addressBean)
+        }
         getAddress()
     }
 
@@ -105,11 +93,19 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onGetAddressvent(event: GetAddressvent) {
-        addressAdapter.addData(event.address)
-        addressAdapter.notifyDataSetChanged()
+        addressBean = event.address
+        addressNameAndPhone.text = "${addressBean!!.nickname}\t\t${addressBean!!.phone}"
+        addressDetail.text = "${addressBean!!.province_name}${addressBean!!.city_name}${addressBean!!.area_name}${addressBean!!.full_address}"
+        exchangeBtn.isEnabled = true
     }
 
-    private var max_count = 0
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshAddressvent(event: RefreshAddressvent) {
+        getAddress()
+    }
+
+
     /**
      * 获取收货地址
      */
@@ -120,11 +116,28 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
                 override fun onNext(t: BaseResp<MyAddressBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
-                        max_count = t.data?.max_cnt ?: 0
-                        if (!t.data?.list.isNullOrEmpty())
-                            t.data?.list?.get(0)!!.checked = true
-                        addressAdapter.addData(t.data?.list ?: mutableListOf<AddressBean>())
-                        addressAdapter.notifyDataSetChanged()
+                        if (!t.data?.list.isNullOrEmpty()) {
+                            for (data in t.data?.list ?: mutableListOf()) {
+                                if (data.is_default) {
+                                    addressBean = data
+                                    break
+                                } else
+                                    addressBean = t.data?.list?.get(0)!!
+                            }
+
+                            addressCl.isVisible = true
+                            addAdressBtn.isVisible = false
+                            addressNameAndPhone.text =
+                                "${addressBean!!.nickname}\t\t${addressBean!!.phone}"
+                            addressDetail.text =
+                                "${addressBean!!.province_name}${addressBean!!.city_name}${addressBean!!.area_name}${addressBean!!.full_address}"
+
+                            exchangeBtn.isEnabled = true
+                        } else {
+                            addressCl.isVisible = false
+                            addAdressBtn.isVisible = true
+                            exchangeBtn.isEnabled = false
+                        }
                     }
                 }
             })
@@ -136,13 +149,8 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
 
     fun createGoods() {
         val params = hashMapOf<String, Any>()
-        for (data in addressAdapter.data) {
-            if (data.checked) {
-                params["address_id"] = data.id
-                break
-            }
-        }
-
+        if (addressBean != null)
+            params["address_id"] = addressBean!!.id
         params["goods_id"] = goods_id
         if (orderRemark.text.trim().isNotEmpty())
             params["remark"] = orderRemark.text.trim().toString()
@@ -164,9 +172,7 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
                         TickDialog(context1).show()
                     }
                 }
-
             })
-
     }
 
 }

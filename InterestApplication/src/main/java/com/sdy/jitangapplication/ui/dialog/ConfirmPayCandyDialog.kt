@@ -222,7 +222,6 @@ class ConfirmPayCandyDialog(
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
                     if (result) {
-                        //TODO 刷新糖果相关界面 我的糖果 糖果商城 糖果详情
                         if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) {
                             EventBus.getDefault().post(RefreshCandyMallDetailEvent())
                         } else if (ActivityUtils.getTopActivity() is CandyMallActivity) {

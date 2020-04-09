@@ -58,6 +58,7 @@ import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
 import kotlinx.android.synthetic.main.error_layout.view.*
+import kotlinx.android.synthetic.main.footer_tag_quality.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -171,10 +172,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             )
         )
         //用户详细信息列表
-        detailUserInformationRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        detailUserInformationRv.layoutManager =
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         detailUserInformationRv.adapter = detailUserInformationAdapter
         //用户动态
-        listSquareRv.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        listSquareRv.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         listSquareRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout_block, listSquareRv)
         adapter.isUseEmpty(false)
@@ -185,6 +188,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //用户礼物墙
         rvGift.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rvGift.adapter = usergiftAdapter
+        usergiftAdapter.setEmptyView(R.layout.empty_gift, rvGift)
+        usergiftAdapter.isUseEmpty(false)
 
 
         userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
@@ -207,6 +212,43 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         }
 
+    }
+
+    private var expand = false
+    private fun initTagFooterView(): View {
+        val view = layoutInflater.inflate(R.layout.footer_tag_quality, detailRvTag, false)
+        view.expandAll.onClick {
+            if (expand) {
+                view.expandAll.text = "展开全部"
+                view.expandAll.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    resources.getDrawable(R.drawable.down_icon),
+                    null
+                )
+                userTagAdapter.data.clear()
+                val data = matchBean!!.label_quality
+                userTagAdapter.addData(data.subList(0, 6))
+                userTagAdapter.notifyDataSetChanged()
+
+            } else {
+                view.expandAll.text = "收起展示"
+                view.expandAll.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    resources.getDrawable(R.drawable.up_icon),
+                    null
+                )
+                userTagAdapter.data.clear()
+
+                val data = matchBean!!.label_quality
+                userTagAdapter.addData(data)
+                userTagAdapter.notifyDataSetChanged()
+
+            }
+            expand = !expand
+        }
+        return view
     }
 
 
@@ -319,13 +361,22 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
     private fun initData() {
-        userTagAdapter.setNewData(matchBean!!.other_tags)
-        usergiftAdapter.setNewData(matchBean!!.gift_list)
+        val data = matchBean!!.label_quality
+        if (!matchBean!!.label_quality.isNullOrEmpty() && matchBean!!.label_quality.size > 6) {
+            userTagAdapter.setFooterView(initTagFooterView())
+            userTagAdapter.addData(data.subList(0, 6))
+        } else {
+            userTagAdapter.addData(data)
+        }
+        if (matchBean!!.gift_list.isNullOrEmpty()) {
+            usergiftAdapter.isUseEmpty(true)
+        } else
+            usergiftAdapter.setNewData(matchBean!!.gift_list)
 
         initFragment()//初始化vp
         initUserInfomationData()//初始化个人信息数据
 //        EventBus.getDefault().post(UpdateSquareEvent())
-        gift.text = "礼物墙 ${matchBean!!.candy_cnt ?: 0}"
+        gift.text = "礼物墙 ${matchBean!!.gift_cnt ?: 0}"
         squareCount.text = "动态 ${matchBean!!.square_cnt ?: 0}"
         detailUserName.text = matchBean!!.nickname
         titleUsername.text = matchBean!!.nickname

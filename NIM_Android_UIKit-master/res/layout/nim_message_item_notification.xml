@@ -11,7 +11,7 @@
         android:gravity="center"
         android:paddingLeft="7dip"
         android:paddingRight="7dip"
-        android:textColor="#ffffff"
+        android:textColor="#FFC5C6C8"
         android:textSize="12sp"/>
 
 </merge>

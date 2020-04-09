@@ -1,6 +1,6 @@
 package com.sdy.jitangapplication.event
 
-import com.sdy.jitangapplication.model.MyLabelBean
+import com.sdy.jitangapplication.model.LabelQuality
 
 /**
  *    author : ZFM
@@ -10,7 +10,7 @@ import com.sdy.jitangapplication.model.MyLabelBean
  */
 
 
-class UpdateMyLabelEvent(var tags: MutableList<MyLabelBean>? = null)
+class UpdateMyLabelEvent(var tags: MutableList<LabelQuality>? = null)
 
 //兴趣支付结果
 class PayLabelResultEvent(val success: Boolean)

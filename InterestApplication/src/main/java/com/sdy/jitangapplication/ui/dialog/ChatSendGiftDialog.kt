@@ -14,10 +14,14 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.GiftBeans
 import com.sdy.jitangapplication.ui.adapter.SendGiftAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_chat_send_gift.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  *    author : ZFM
@@ -49,10 +53,7 @@ class ChatSendGiftDialog(
         giftRv.layoutManager = GridLayoutManager(context, 4)
         giftRv.adapter = giftAdapter
         giftAdapter.setOnItemClickListener { _, view, position ->
-            if (myCandyCount >= giftAdapter.data[position].amount)
-                ConfirmSendGiftDialog(context, giftAdapter.data[position],account).show()
-            else
-                AlertCandyEnoughDialog(context).show()
+            ConfirmSendGiftDialog(context, giftAdapter.data[position], account).show()
         }
 
         chargeBtn.onClick {
@@ -90,5 +91,21 @@ class ChatSendGiftDialog(
             })
     }
 
+    override fun show() {
+        super.show()
+        EventBus.getDefault().register(this)
+    }
 
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onCloseDialogEvent(event: CloseDialogEvent) {
+        if (isShowing) {
+            dismiss()
+        }
+    }
 }

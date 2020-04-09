@@ -3,24 +3,22 @@
 
     <item android:id="@android:id/background">
         <shape>
-            <corners android:radius="27dp"/>
+            <corners android:radius="27dp" />
             <gradient
-                    android:startColor="#CCCCCC"
-                    android:centerColor="#CCCCCC"
-                    android:centerY="0.75"
-                    android:endColor="#CCCCCC"
-                    android:angle="270"
-                    />
+                android:angle="270"
+                android:centerColor="#CCCCCC"
+                android:centerY="0.75"
+                android:endColor="#CCCCCC"
+                android:startColor="#CCCCCC" />
         </shape>
     </item>
 
     <item android:id="@android:id/secondaryProgress">
         <scale android:scaleWidth="100%">
             <shape android:shape="rectangle">
-                <solid android:color="@color/colorOrange"/>
+                <solid android:color="@color/colorOrange" />
 
-                <corners android:radius="27dp"/>
-
+                <corners android:radius="27dp" />
 
             </shape>
         </scale>
@@ -29,16 +27,14 @@
     <item android:id="@android:id/progress">
         <scale android:scaleWidth="100%">
             <shape android:shape="rectangle">
-                <solid android:color="@color/colorOrange"/>
-                <corners android:radius="27dp"/>
+                <solid android:color="@color/colorOrange" />
+                <corners android:radius="27dp" />
                 <gradient
-                        android:startColor="#FFFF9C35"
-                        android:centerColor="#FFFF8127"
-                        android:centerY="0.75"
-                        android:endColor="#FFFF6318"
-                        android:angle="360"
-                        />
-
+                    android:angle="270"
+                    android:centerY="0.75"
+                    android:centerColor="#FFFF8127"
+                    android:endColor="#FFFF6318"
+                    android:startColor="#FFFF9C35" />
             </shape>
         </scale>
     </item>

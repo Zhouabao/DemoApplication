@@ -19,12 +19,15 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.event.UpdateSendGiftEvent
 import com.sdy.jitangapplication.model.GiftBean
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.cancel
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.confirm
 import kotlinx.android.synthetic.main.dialog_alert_candy_enough_layout.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -62,15 +65,12 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
         }
 
         confirm.onClick {
-            //    target_accid
-            //gift_id
             sendGift()
         }
 
     }
 
 
-    //todo  如果赠送礼物成功，就要发送礼物消息出去
     fun sendGift() {
         val params = hashMapOf<String, Any>()
         params["target_accid"] = account
@@ -83,6 +83,8 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
                     CommonFunction.toast(t.msg)
                     if (t.code == 200) {
                         sendGiftMessage()
+                    } else if (t.code == 419) {
+                        AlertCandyEnoughDialog(context).show()
                     }
                 }
             })
@@ -102,7 +104,13 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
             .setCallback(object :
                 RequestCallback<Void?> {
                 override fun onSuccess(param: Void?) {
+                    //更新消息列表
+                    EventBus.getDefault().post(UpdateSendGiftEvent(message))
+                    //关闭自己的弹窗
                     dismiss()
+                    //关闭礼物弹窗
+                    EventBus.getDefault().post(CloseDialogEvent())
+
                 }
 
                 override fun onFailed(code: Int) {

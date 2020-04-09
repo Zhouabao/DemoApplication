@@ -42,7 +42,6 @@ class AlertCandyEnoughDialog(var context1: Context) : Dialog(context1, R.style.M
         }
 
         confirm.onClick {
-            //todo 跳转充值
             RechargeCandyDialog(context1).show()
             dismiss()
         }

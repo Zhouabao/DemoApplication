@@ -5,11 +5,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
 
@@ -51,20 +50,24 @@ public class ChatActionsGridviewAdapter extends BaseAdapter {
             itemlayout = convertView;
         }
 
-        if (viewHolder.isEnable()) {
-            if (viewHolder.isCheck()) {
-                ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdChoose());
+        if (position != getCount() - 1) {
+            if (viewHolder.isEnable()) {
+                if (viewHolder.isCheck()) {
+                    ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdChoose());
+                } else {
+                    ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdChoose());
+                }
             } else {
-                ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdChoose());
+                ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResId());
             }
         } else {
-            ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResId());
+            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageAssetsFolder("images_gift");
+            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setAnimation("data_gift.json");
         }
         ((TextView) itemlayout.findViewById(R.id.textView)).setText(context.getString(viewHolder.getTitleId()));
 
         if (position == getCount() - 1) {
             itemlayout.setEnabled(true);
-            itemlayout.findViewById(R.id.imageView).startAnimation(AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big_gift));
         } else {
             itemlayout.setEnabled(viewHolder.isEnable());
         }

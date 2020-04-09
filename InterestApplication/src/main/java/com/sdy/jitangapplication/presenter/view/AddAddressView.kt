@@ -11,4 +11,7 @@ import com.sdy.jitangapplication.model.AddressBean
  */
 interface AddAddressView : BaseView {
     fun onAddAddressResult(success: Boolean, address: AddressBean?)
+
+    fun delAddressResult(success: Boolean)
+
 }

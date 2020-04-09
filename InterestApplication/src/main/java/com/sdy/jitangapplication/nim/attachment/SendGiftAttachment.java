@@ -11,7 +11,7 @@ import com.sdy.jitangapplication.nim.extension.CustomAttachmentType;
  */
 public class SendGiftAttachment extends CustomAttachment {
     private final String KEY_TITLE = "title"; //分享的描述
-    private final String KEY_IMG = "img";//分享的图片
+    private final String KEY_IMG = "icon";//分享的图片
     private final String KEY_ID = "giftId";//分享的图片
 
     private String title;//匹配的兴趣

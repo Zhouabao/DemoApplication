@@ -29,7 +29,7 @@ public class MyYAnimation extends Animation {
         super.initialize(width, height, parentWidth, parentHeight);
         //获得中心点坐标
 //        centerX = width / 2;
-        centerX = -width/2;
+        centerX = -width / 2;
         centerY = height / 2;
 //        centerY = width / 2;
         //动画执行时间 自行定义

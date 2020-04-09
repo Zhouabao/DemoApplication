@@ -57,6 +57,7 @@ import com.sdy.jitangapplication.event.StarEvent;
 import com.sdy.jitangapplication.event.UpdateApproveEvent;
 import com.sdy.jitangapplication.event.UpdateContactBookEvent;
 import com.sdy.jitangapplication.event.UpdateHiEvent;
+import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
 import com.sdy.jitangapplication.model.ApproveBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
@@ -275,6 +276,13 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     public void updateApproveEvent(UpdateApproveEvent event) {
         getTargetInfo(sessionId);
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateApproveEvent(UpdateSendGiftEvent event) {
+        messageListPanel.onMsgSend(event.getMessage());
+    }
+
 
     /**
      * ************************* 消息收发 **********************************
@@ -716,10 +724,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     //4.聊天条数=设定条数 仅女方。你还没有心愿礼物，快去糖果商城看看吧
     //*条数需可配置
     //5.双方聊天数>设定聊天条数 仅男方。如对方没许愿礼物：你们聊的好像还不错，要不送个礼物给她吧？
-                                    //如对方添加了心愿礼物：你们聊的还不错，看看她喜欢什么东西吧！
+    //如对方添加了心愿礼物：你们聊的还不错，看看她喜欢什么东西吧！
     //*条数需可配置
     //6.收件方非真人用户 发件方。对方非认证用户，请勿轻信对方且请勿添加其联系方式，谨防被骗
     private int count = 0;
+
     private void sendTipMessage() {
         IMMessage tip = MessageBuilder.createTipMessage(sessionId, SessionTypeEnum.P2P);
         HashMap<String, Object> extensions = new HashMap<>();

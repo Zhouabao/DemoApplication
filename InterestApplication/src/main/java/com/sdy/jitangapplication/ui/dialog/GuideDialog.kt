@@ -170,8 +170,9 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            useCl.isVisible = false
+//            useCl.isVisible = false
             useCl.isVisible = true
+            welldone.playAnimation()
 
             intentionMatchingCl.isVisible = false
 //            intentionMatchingCl.isVisible = true

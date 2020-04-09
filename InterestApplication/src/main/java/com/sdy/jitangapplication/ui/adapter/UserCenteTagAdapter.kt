@@ -1,12 +1,13 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.MyLabelBean
+import com.sdy.jitangapplication.model.LabelQuality
 import kotlinx.android.synthetic.main.item_tag_usercenter.view.*
 
 /**
@@ -16,16 +17,18 @@ import kotlinx.android.synthetic.main.item_tag_usercenter.view.*
  *    version: 1.0
  */
 class UserCenteTagAdapter :
-    BaseQuickAdapter<MyLabelBean, BaseViewHolder>(R.layout.item_tag_usercenter) {
+    BaseQuickAdapter<LabelQuality, BaseViewHolder>(R.layout.item_tag_usercenter) {
 
-    override fun convert(holder: BaseViewHolder, item: MyLabelBean) {
+    override fun convert(holder: BaseViewHolder, item: LabelQuality) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+        params.width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(43F)) / 2
+
         if ((holder.layoutPosition - headerLayoutCount) % 2 == 0) {
             params.leftMargin = SizeUtils.dp2px(15F)
             params.rightMargin = SizeUtils.dp2px(13F)
         } else if ((holder.layoutPosition - headerLayoutCount) % 2 == 1) {
-            params.rightMargin = SizeUtils.dp2px(15F)
             params.leftMargin = 0
+            params.rightMargin = SizeUtils.dp2px(15F)
         }
         holder.itemView.layoutParams = params
 
@@ -36,11 +39,6 @@ class UserCenteTagAdapter :
             SizeUtils.dp2px(10F)
         )
         holder.itemView.tagName.text = item.title
-        holder.itemView.tagEdit.text = when {
-            item.is_expire -> "立即续费"
-            item.isfull -> "编辑兴趣"
-            else -> "完善兴趣"
-        }
     }
 
 }
