@@ -721,6 +721,12 @@ interface Api {
     @FormUrlEncoded
     @POST("Tidings/sendMsg${Constants.END_BASE_URL}")
     fun sendMsgRequest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ResidueCountBean?>>
+    /**
+     * 小助手发消息请求服务器
+     */
+    @FormUrlEncoded
+    @POST("Tidings/aideSendMsg${Constants.END_BASE_URL}")
+    fun aideSendMsg(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ResidueCountBean?>>
     /*--------------------------------会员充值---------------------------------*/
 
     /**

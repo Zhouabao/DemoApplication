@@ -8,26 +8,31 @@ import java.io.Serializable
  *    desc   : 聊天界面返回用户信息
  *    version: 1.0
  */
-
 data class NimBean(
-    var isapprove: Int = 0,
-    var issend: Boolean = true,
     var approve_time: Long = 0L,
-    var isgreet: Boolean = true,//招呼是否有效
     var avatar: String = "",
+    var isapprove: Int = 0,
     var isblocked: Boolean = false,
     var isfriend: Boolean = false,
+    var isgreet: Boolean = false,//招呼是否有效
     var isinitiated: Boolean = false,
     var islimit: Boolean = false,
+    var issend: Boolean = false,
+    var issended: Boolean = false,//是否发送过消息  true发送过 false  没有发送过消息
     var matching_content: String = "",
     var matching_icon: String = "",
+    var my_gender: Int = 0,
+    var my_isfaced: Boolean = false,
+    var my_want_cnt: Boolean = false,
     var residue_msg_cnt: Int = 0,//剩余可发送的招呼消息次数
-    var square: MutableList<Square> = mutableListOf(),
+    var square: List<Square> = listOf(),
     var square_cnt: Int = 0,
     var stared: Boolean = false,
-    var issended: Boolean = false,//是否发送过消息  true发送过 false  没有发送过消息
-    var my_isfaced: Boolean = false,
-    var target_isfaced: Boolean = false
+    var target_gender: Int = 0,
+    var target_isfaced: Boolean = false,
+    var target_want_cnt: Boolean = false,
+    var tips_chat_cnt: Int = 0,
+    var tips_gift_cnt: Int = 0
 ) : Serializable
 
 data class ResidueCountBean(

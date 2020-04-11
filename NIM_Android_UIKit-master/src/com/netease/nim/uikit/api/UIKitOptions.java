@@ -86,7 +86,7 @@ public class UIKitOptions {
     /**
      * 单次抓取消息条数配置
      */
-    public int messageCountLoadOnce = 20;
+    public int messageCountLoadOnce = 30;
 
     /**
      * IM 接收到的消息时，内容区域背景的drawable id

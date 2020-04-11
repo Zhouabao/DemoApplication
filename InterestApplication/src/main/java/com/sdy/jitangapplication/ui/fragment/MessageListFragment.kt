@@ -45,6 +45,7 @@ import com.sdy.jitangapplication.model.MessageListBean
 import com.sdy.jitangapplication.model.MessageListBean1
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.presenter.MessageListPresenter
@@ -286,16 +287,17 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
         setViewState(BaseActivity.CONTENT)
         for (loadedRecent in result) {
             if (loadedRecent.contactId == Constants.ASSISTANT_ACCID) {
-                ass.msg = when {
-                    loadedRecent.attachment is ChatHiAttachment -> when {
-                        (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
-                        (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
-                        (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
-                        (loadedRecent.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
+                ass.msg = when (loadedRecent.attachment) {
+                    is ChatHiAttachment -> when ((loadedRecent.attachment as ChatHiAttachment).showType) {
+                        ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
+                        ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
+                        ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
+                        ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
                         else -> ""
                     }
-                    loadedRecent.attachment is ShareSquareAttachment -> "『动态分享内容』"
-                    loadedRecent.attachment is SendGiftAttachment -> "『礼物消息』"
+                    is ShareSquareAttachment -> "『动态分享内容』"
+                    is SendGiftAttachment -> "『礼物消息』"
+                    is SendCustomTipAttachment -> (loadedRecent.attachment as SendCustomTipAttachment).content
                     else -> loadedRecent.content
                 }
                 ass.count = loadedRecent.unreadCount

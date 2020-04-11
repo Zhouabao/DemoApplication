@@ -41,11 +41,13 @@ import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatMatchAttachment;
 import com.sdy.jitangapplication.nim.attachment.CustomAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.StickerAttachment;
 import com.sdy.jitangapplication.nim.extension.CustomAttachParser;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatHi;
+import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderSendCustomTip;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderSendGift;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderShareSquare;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderTip;
@@ -267,7 +269,8 @@ public class SessionHelper {
 
                     } else if (recent.getAttachment() instanceof SendGiftAttachment) {
                         return "『礼物』";
-
+                    } else if (recent.getAttachment() instanceof SendCustomTipAttachment) {
+                        return ((SendCustomTipAttachment) recent.getAttachment()).getContent();
                     }
                     return super.getDefaultDigest(recent);
                 }
@@ -281,6 +284,7 @@ public class SessionHelper {
     private static void registerViewHolders() {
 //        NimUIKit.registerMsgItemViewHolder(ChatMatchAttachment.class, MsgViewHolderMatch.class);
         NimUIKit.registerMsgItemViewHolder(SendGiftAttachment.class, MsgViewHolderSendGift.class);
+        NimUIKit.registerMsgItemViewHolder(SendCustomTipAttachment.class, MsgViewHolderSendCustomTip.class);
         NimUIKit.registerMsgItemViewHolder(ShareSquareAttachment.class, MsgViewHolderShareSquare.class);
         NimUIKit.registerMsgItemViewHolder(ChatHiAttachment.class, MsgViewHolderChatHi.class);
         NimUIKit.registerTipMsgViewHolder(MsgViewHolderTip.class);
@@ -359,6 +363,7 @@ public class SessionHelper {
                             && message.getMsgType() != MsgTypeEnum.tip
                             && !(message.getAttachment() instanceof ChatMatchAttachment)
                             && !(message.getAttachment() instanceof ChatHiAttachment)
+                            && !(message.getAttachment() instanceof SendCustomTipAttachment)
                             && UserManager.INSTANCE.getGender() == 1
                             && message.getDirect() == MsgDirectionEnum.Out) {
                         return true;

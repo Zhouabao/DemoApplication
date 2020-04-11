@@ -18,9 +18,9 @@ import com.sdy.jitangapplication.ui.activity.SquarePlayListDetailActivity;
  */
 public class MsgViewHolderSendGift extends MsgViewHolderBase {
 
-    private TextView giftTitle; //分享描述文本
-    private TextView giftReceiver; //分享描述文本
-    private ImageView giftImg;//分享的图片
+    private TextView giftTitle; //礼物的名字
+    private TextView giftReceiver;
+    private ImageView giftImg;//礼物图片
     private SendGiftAttachment attachment;
 
 

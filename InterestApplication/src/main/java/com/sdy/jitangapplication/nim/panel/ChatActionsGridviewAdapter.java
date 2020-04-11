@@ -62,7 +62,9 @@ public class ChatActionsGridviewAdapter extends BaseAdapter {
             }
         } else {
             ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageAssetsFolder("images_gift");
+            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setRepeatCount(-1);
             ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setAnimation("data_gift.json");
+            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).playAnimation();
         }
         ((TextView) itemlayout.findViewById(R.id.textView)).setText(context.getString(viewHolder.getTitleId()));
 

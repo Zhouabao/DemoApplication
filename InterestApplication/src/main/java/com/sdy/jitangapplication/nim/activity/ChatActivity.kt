@@ -163,8 +163,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     /**
      * 好友在线状态观察者
      */
-    private
-    val onlineStateChangeObserver =
+    private val onlineStateChangeObserver =
         OnlineStateChangeObserver { accounts ->
             if (!accounts.contains(sessionId)) {
                 return@OnlineStateChangeObserver

@@ -13,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.blankj.utilcode.util.SizeUtils;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
@@ -63,6 +65,7 @@ import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.event.NimHeadEvent;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity;
 import com.sdy.jitangapplication.ui.adapter.ChatTaregetSquareAdapter;
@@ -70,6 +73,7 @@ import com.sdy.jitangapplication.ui.dialog.ReportChatContentDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 import com.sdy.jitangapplication.widgets.DividerItemDecoration;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -329,6 +333,16 @@ public class ChatMessageListPanelEx {
 
     public void onIncomingMessage(List<IMMessage> messages) {
         try {
+            //首先剔除自定义的tip消息
+            Iterator iterator = messages.iterator();
+            while (iterator.hasNext()) {
+                IMMessage message = (IMMessage) iterator.next();
+                if (message.getAttachment() instanceof SendCustomTipAttachment && message.getDirect() == MsgDirectionEnum.In) {
+                    NIMClient.getService(MsgService.class).deleteChattingHistory(message);
+                    iterator.remove();
+                }
+            }
+
             boolean needRefresh = false;
             List<IMMessage> addedListItems = new ArrayList<>(messages.size());
             for (IMMessage message : messages) {
@@ -629,6 +643,14 @@ public class ChatMessageListPanelEx {
                     }
 
                     if (messages != null) {
+                        Iterator iterator = messages.iterator();
+                        while (iterator.hasNext()) {
+                            IMMessage message = (IMMessage) iterator.next();
+                            if (message.getAttachment() instanceof SendCustomTipAttachment && message.getDirect() == MsgDirectionEnum.In) {
+                                NIMClient.getService(MsgService.class).deleteChattingHistory(message);
+                                iterator.remove();
+                            }
+                        }
                         onMessageLoaded(messages);
                     }
                 } catch (Exception e) {
@@ -691,6 +713,7 @@ public class ChatMessageListPanelEx {
             if (remote) {
                 Collections.reverse(messages);
             }
+
 
             // 在第一次加载的过程中又收到了新消息，做一下去重
             if (firstLoad && items.size() > 0) {
@@ -1262,6 +1285,7 @@ public class ChatMessageListPanelEx {
                 && msg.getDirect() == MsgDirectionEnum.Out
                 && msg.getMsgType() != MsgTypeEnum.tip
                 && msg.getMsgType() != MsgTypeEnum.notification
+                && !(msg.getAttachment() instanceof SendCustomTipAttachment)
                 && msg.isRemoteRead();
 
     }

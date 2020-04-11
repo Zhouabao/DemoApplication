@@ -62,6 +62,7 @@ import com.sdy.jitangapplication.model.ApproveBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
 import com.sdy.jitangapplication.nim.panel.ChatInputPanel;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
@@ -235,7 +236,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         Container container = new Container(getActivity(), sessionId, sessionType, this, true);
 
         if (messageListPanel == null) {
-            messageListPanel = new ChatMessageListPanelEx(container, rootView, anchor, false, false);
+            messageListPanel = new ChatMessageListPanelEx(container, rootView, anchor, false, true);
         } else {
             messageListPanel.reload(container, anchor);
         }
@@ -257,7 +258,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (customization != null) {
             messageListPanel.setChattingBackground(customization.backgroundUri, customization.backgroundColor);
         }
-
 
     }
 
@@ -313,20 +313,20 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     };
 
     private void onMessageIncoming(List<IMMessage> messages) {
+
+        Log.d("message", messages.get(0).toString());
         try {
             if (!sessionId.equals(Constants.ASSISTANT_ACCID)) {
                 getTargetInfo(sessionId);
+            } else {
+                messageActivityBottomLayout.setVisibility(View.VISIBLE);
             }
+
             if (CommonUtil.isEmpty(messages)) {
                 return;
             }
             //新消息来了更新消息状态
             messageListPanel.onIncomingMessage(messages);
-            //新消息来了请求接口，更新键盘啊头布局等数据。
-            if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
-                messageActivityBottomLayout.setVisibility(View.VISIBLE);
-            }
-
             // 发送已读回执
             messageListPanel.sendReceipt();
 
@@ -389,7 +389,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (!sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsfriend() && nimBean.getIslimit() && leftGreetCount == 0) {
             if (!sendTip) {
                 inputPanel.collapse(true);
-                sendTipMessage("你已向对方打了招呼，对方回复后即可继续聊天");
+                sendTipMessage("你已向对方打了招呼，对方回复后即可继续聊天", SendCustomTipAttachment.CUSTOME_TIP_NORMAL);
                 sendTip = true;
             }
             return false;
@@ -592,7 +592,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                         }
                     }
                 });
-
     }
 
     /**
@@ -660,21 +659,18 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
                         if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
                             leftGreetCount = nimBeanBaseResp.getData().getResidue_msg_cnt();
-//                            count = count + 1;
-//                            sendTipMessage();
                             if (nimBeanBaseResp.getCode() == 211) {
-                                sendTipMessage(nimBeanBaseResp.getMsg());
+                                sendTipMessage(nimBeanBaseResp.getMsg(), SendCustomTipAttachment.CUSTOME_TIP_NORMAL);
                             }
                             if (content.getMsgType() == MsgTypeEnum.text)
                                 sendMsgS(content, false);
-
                             // 若己方未认证，则发送  您未通过真人认证，可能导致回复率偏低
                             // 若对方未认证，则发送   对方账号未认证，请小心诈骗
                             if (!nimBean.getIssended()) {//issended    bool  是否发送过消息  true发送过 false  没有发送过消息
                                 if (!nimBean.getTarget_isfaced()) {
-                                    sendTipMessage("对方账号未认证，请注意对方信息真实性");
+                                    sendTipMessage("对方账号未认证，请注意对方信息真实性", SendCustomTipAttachment.CUSTOME_TIP_RECEIVE_NOT_HUMAN);
                                 } else if (!nimBean.getMy_isfaced())
-                                    sendTipMessage("您未通过真人认证，可能导致回复率偏低");
+                                    sendTipMessage("您未通过真人认证，可能导致回复率偏低", SendCustomTipAttachment.CUSTOME_TIP_NORMAL);
                             }
                             nimBean.setIssended(true);
                         } else if (nimBeanBaseResp.getCode() == 409) {//用户被封禁
@@ -701,75 +697,58 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                 });
     }
 
-    private void sendTipMessage(String msg) {
-        // 同时，本地插入被对方拒收的tip消息
-        IMMessage tip = MessageBuilder.createTipMessage(sessionId, SessionTypeEnum.P2P);
-        tip.setContent(msg);
-        tip.setStatus(MsgStatusEnum.success);
-        CustomMessageConfig config = new CustomMessageConfig();
-        config.enableUnreadCount = false;
-        config.enablePush = false;
-        tip.setConfig(config);
-        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, true);
-//        messageListPanel.onMsgSend(tip);
-    }
 
-    //
-    //1.男方发送信息后，仅男方。为提高用户质量，将交友机会留给诚意用户。每条消息会消耗一个糖果
-    // *仅第一次发送消息会显示，切换用户不重复发送
-    //2.男方发送信息后，仅女方 认证。回复消息将获得一个对方赠送的糖果，糖果可以兑换礼物哦
-    //*仅出现一次，切换用户不重复发送，点击兑换礼物直接进入糖果商城页
-    //3.男方发送信息后,仅女方 未认证。 认证后每次回复能收到对方糖果，立即认证
-    //每个对话出现一次，切换用户重复发送
-    //4.聊天条数=设定条数 仅女方。你还没有心愿礼物，快去糖果商城看看吧
-    //*条数需可配置
-    //5.双方聊天数>设定聊天条数 仅男方。如对方没许愿礼物：你们聊的好像还不错，要不送个礼物给她吧？
-    //如对方添加了心愿礼物：你们聊的还不错，看看她喜欢什么东西吧！
-    //*条数需可配置
-    //6.收件方非真人用户 发件方。对方非认证用户，请勿轻信对方且请勿添加其联系方式，谨防被骗
-    private int count = 0;
-
-    private void sendTipMessage() {
-        IMMessage tip = MessageBuilder.createTipMessage(sessionId, SessionTypeEnum.P2P);
-        HashMap<String, Object> extensions = new HashMap<>();
-        extensions.put("type", count);
-        if (count == 1) {
-            tip.setContent("对方每次回消息会附带一个糖果，糖果有什么用？");
-            extensions.put("head", "对方每次回消息会附带一个糖果，");
-            extensions.put("footer", "糖果有什么用？");
-        } else if (count == 2) {
-//            认证后每次回复能收到对方糖果，立即认证
-            tip.setContent("认证后每次回复能收到对方糖果，立即认证");
-            extensions.put("head", "认证后每次回复能收到对方糖果，");
-            extensions.put("footer", "立即认证");
-        } else if (count == 3) {
-//            你还没有心愿礼物，快去糖果商城看看吧
-            tip.setContent("你还没有心愿礼物，快去糖果商城看看吧！");
-            extensions.put("head", "你还没有心愿礼物，");
-            extensions.put("footer", "快去糖果商城看看吧！");
-        } else if (count == 4) {
-//            你们聊的好像还不错，要不送个礼物给她吧？
-            tip.setContent("你们聊的还不错，要不送个礼物给她吧？");
-            extensions.put("head", "你们聊的还不错，要不");
-            extensions.put("footer", "送个礼物");
-            extensions.put("footer1", "给她吧");
-        } else if (count == 5) {
-//            你们聊的还不错，看看她喜欢什么东西吧！
-            tip.setContent("你们聊的还不错，看看她喜欢什么东西吧！");
-            extensions.put("head", "你们聊的还不错，");
-            extensions.put("footer", "看看她喜欢什么东西吧！");
+    private void aideSendMsg(IMMessage content) {
+        HashMap<String, Object> params = UserManager.INSTANCE.getBaseParams();
+        if (content.getMsgType() == MsgTypeEnum.text) {
+            params.put("content", content.getContent());
         }
+        RetrofitFactory.Companion.getInstance().create(Api.class)
+                .aideSendMsg(UserManager.INSTANCE.getSignParams(params))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new rx.Observer<BaseResp<ResidueCountBean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
+
+                    }
+
+                });
+    }
+
+
+    private void sendTipMessage(String msg, int type) {
         // 同时，本地插入被对方拒收的tip消息
-        tip.setRemoteExtension(extensions);
-        tip.setLocalExtension(extensions);
-        tip.setStatus(MsgStatusEnum.success);
+//        IMMessage tip = MessageBuilder.createTipMessage(sessionId, SessionTypeEnum.P2P);
+//        tip.setContent(msg);
+//        tip.setStatus(MsgStatusEnum.success);
+//        CustomMessageConfig config = new CustomMessageConfig();
+//        config.enableUnreadCount = false;
+//        config.enablePush = false;
+//        tip.setConfig(config);
+//        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, true);
+//        messageListPanel.onMsgSend(tip);
+
+
+        SendCustomTipAttachment attachment = new SendCustomTipAttachment(msg, type);
+        IMMessage tip = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, attachment);
         CustomMessageConfig config = new CustomMessageConfig();
         config.enableUnreadCount = false;
         config.enablePush = false;
         tip.setConfig(config);
-        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, true);
-//        messageListPanel.onMsgSend(tip);
+        sendMsgS(tip, false);
     }
+
 
     private void sendMsgS(IMMessage content, boolean requestMsg) {
         appendPushConfig(content);
@@ -779,6 +758,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             public void onSuccess(Void aVoid) {
                 if (requestMsg) {
                     sendMsgRequest(content, sessionId);
+                }
+                if (sessionId.equals(Constants.ASSISTANT_ACCID) && content.getMsgType() == MsgTypeEnum.text) {
+                    aideSendMsg(content);
                 }
             }
 

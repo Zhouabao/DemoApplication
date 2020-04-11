@@ -33,6 +33,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.SendGift:
                     attachment = new SendGiftAttachment();
                     break;
+                case CustomAttachmentType.SendTip:
+                    attachment = new SendCustomTipAttachment();
+                    break;
                 default:
                     attachment = new DefaultCustomAttachment();
                     break;
