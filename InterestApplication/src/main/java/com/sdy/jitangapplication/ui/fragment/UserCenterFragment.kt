@@ -318,11 +318,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         multiStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
 //        guideVerifyWindow.showAsDropDown(userVerify, 0, 0, Gravity.NO_GRAVITY)
 
-        multiStateView.postDelayed({
-            guideVerifyWindow.dismiss()
-            UserManager.saveShowGuideVerify(true)
-            userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
-        }, 3000L)
         if (userinfo != null) {
             userInfoBean = userinfo
             initData()
@@ -575,6 +570,11 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 width - SizeUtils.dp2px(154F),
                 SizeUtils.dp2px(-20F)
             )
+            multiStateView.postDelayed({
+                guideVerifyWindow.dismiss()
+                UserManager.saveShowGuideVerify(true)
+                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }, 3000L)
         }
         Log.d("onGlobalLayout", "$width")
 

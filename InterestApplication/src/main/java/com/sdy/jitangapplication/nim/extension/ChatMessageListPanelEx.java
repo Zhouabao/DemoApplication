@@ -202,14 +202,7 @@ public class ChatMessageListPanelEx {
 
     private void initListView(IMMessage anchor) {
 
-
         ivBackground = rootView.findViewById(R.id.message_activity_background);
-
-        //倒计时进度条
-//        countDownProgress = rootView.findViewById(com.sdy.jitangapplication.R.id.outdateTime);
-//        outdateTimeText = rootView.findViewById(com.sdy.jitangapplication.R.id.outdateTimeText);
-//        countDownProgress.setVisibility(View.GONE);
-//        outdateTimeText.setVisibility(View.GONE);
 
 
         // RecyclerView
@@ -765,10 +758,10 @@ public class ChatMessageListPanelEx {
             }
 
             // 如果是第一次加载，updateShowTimeItem返回的就是lastShowTimeItem
-//            if (firstLoad) {
-            doScrollToBottom();
-            sendReceipt(); // 发送已读回执
-//            }
+            if (firstLoad) {
+                doScrollToBottom();
+                sendReceipt(); // 发送已读回执
+            }
 
             // 通过历史记录加载的群聊消息，需要刷新一下已读未读最新数据
             if (container.sessionType == SessionTypeEnum.Team) {
