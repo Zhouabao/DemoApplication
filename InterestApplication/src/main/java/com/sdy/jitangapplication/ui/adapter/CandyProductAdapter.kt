@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
 import android.graphics.Typeface
-import android.os.Build
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -59,21 +58,14 @@ class CandyProductAdapter :
 
         helper.itemView.ProductCandyPrice.text = CommonFunction.num2thousand("${item.amount}")
         helper.itemView.productDesc.text = "${item.title}"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            helper.itemView.addProductProgress.setProgress(
-                if (mycandy >= item.amount) {
-                    100
-                } else {
-                    ((mycandy * 1.0F / item.amount) * 100).toInt()
-                }, true
-            )
-        } else {
-            helper.itemView.addProductProgress.progress = if (mycandy >= item.amount) {
-                100
+
+        helper.itemView.addProductProgress.setProgress(
+            if (mycandy >= item.amount) {
+                100F
             } else {
-                ((mycandy * 1.0F / item.amount) * 100).toInt()
+                ((mycandy * 1.0F / item.amount) * 100).toInt().toFloat()
             }
-        }
+        )
         helper.itemView.addProductProgressCount.text =
             "${if (mycandy >= item.amount) {
                 100

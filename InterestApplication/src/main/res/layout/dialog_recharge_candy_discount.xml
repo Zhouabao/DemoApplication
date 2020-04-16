@@ -21,13 +21,25 @@
         android:id="@+id/t1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
         android:text="糖果充值"
         android:textColor="#ff191919"
-        android:textSize="14sp"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view1" />
+
+    <TextView
+        android:id="@+id/candyUsage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:text="糖果有什么用？"
+        android:textColor="#ff6796fa"
+        android:textSize="14sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/t1" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRechargeCandy"

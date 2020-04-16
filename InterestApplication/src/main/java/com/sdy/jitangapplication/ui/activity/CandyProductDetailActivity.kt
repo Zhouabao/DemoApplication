@@ -277,16 +277,12 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
                     resources.getDrawable(R.drawable.icon_collect)
                 }, null, null
             )
-            productDesc.text = data.descr
+            productDesc.text = data.title
             rbMessage.text = "留言(${data.msg_cnt})"
             rbComment.text = "评价(${data.comments_cnt})"
             if (data.mycandy_amount >= data.amount) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    exchangeProgress.setProgress(100, true)
-                } else {
-                    exchangeProgress.progress = 100
-                }
+                exchangeProgress.setProgress(100F)
                 exchangeCandy.text = SpanUtils.with(exchangeCandy)
                     .appendImage(R.drawable.icon_candy_detail)
                     .append("\t\t${CommonFunction.num2thousand("${data!!.amount}")}\t\t")
@@ -294,15 +290,8 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
                     .append("兑换")
                     .create()
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    exchangeProgress.setProgress(
-                        (data.mycandy_amount * 1F / data.amount * 100).toInt(),
-                        true
-                    )
-                } else {
-                    exchangeProgress.progress =
-                        (data.mycandy_amount * 1F / data.amount * 100).toInt()
-                }
+                exchangeProgress.setProgress((data.mycandy_amount * 1F / data.amount * 100))
+
                 exchangeCandy.text = SpanUtils.with(exchangeCandy)
                     .append("还需要\t\t")
                     .appendImage(R.drawable.icon_candy_detail)

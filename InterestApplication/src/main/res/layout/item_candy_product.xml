@@ -13,8 +13,8 @@
         android:layout_height="0dp"
         android:scaleType="fitCenter"
         android:src="@drawable/icon_bg_pic_my_candy"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -56,16 +56,20 @@
         app:layout_constraintTop_toTopOf="@id/collectProduct" />
 
 
-    <ProgressBar
+    <com.sdy.jitangapplication.widgets.ProgressBarHorizontal
         android:id="@+id/addProductProgress"
-        style="@style/progressBarHorizontal11"
         android:layout_width="125dp"
         android:layout_height="10dp"
         android:layout_marginLeft="5dp"
-        android:progress="10"
         app:layout_constraintBottom_toBottomOf="@id/collectProduct"
         app:layout_constraintLeft_toRightOf="@id/collectProduct"
-        app:layout_constraintTop_toTopOf="@id/collectProduct" />
+        app:layout_constraintTop_toTopOf="@id/collectProduct"
+        app:pbhBgColorStart="#F1F1F1"
+        app:pbhBgRadius="11dp"
+        app:pbhCoverColorEnd="#FF8B18"
+        app:pbhCoverColorStart="#FF5D18"
+        app:pbhCoverRadius="11dp"
+        app:pbhProgress="20" />
 
     <TextView
         android:id="@+id/addProductProgressCount"
@@ -83,13 +87,13 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:drawableLeft="@drawable/icon_candy_small"
         android:drawablePadding="3dp"
+        android:gravity="center"
         android:text="1,999,999"
         android:textColor="#ffff6318"
         android:textSize="22sp"
-        android:gravity="center"
-        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/productDesc"
         app:layout_constraintTop_toBottomOf="@id/collectProduct" />

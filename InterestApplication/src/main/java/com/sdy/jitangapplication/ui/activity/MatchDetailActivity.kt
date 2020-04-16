@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -646,6 +648,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (islike) {
             if (statusBean != null)
                 if (statusBean.code == 200) {
+
                     if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
                         EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
                     }
@@ -656,6 +659,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                         EventBus.getDefault().post(RefreshEvent(true))
                         if (statusBean.data?.status == 1) {  //喜欢成功
                             matchBean!!.isliked = 1
+                            showGreetAnimatioon()
                             updateLightCount(-1)
                         } else if (statusBean.data?.status == 2) {//匹配成功
                             //如果是来自喜欢我的界面， 就刷新
@@ -669,6 +673,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                             }
                             //喜欢过
                             matchBean!!.isfriend = 1
+                            showGreetAnimatioon()
                             updateLightCount(-1)
                             sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                         }
@@ -698,6 +703,27 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     }
                 }
         }
+    }
+
+    private fun showGreetAnimatioon() {
+        detailUserGreetBtn.playAnimation()
+        val translateDislike = ObjectAnimator.ofFloat(
+            detailUserDislikeBtn,
+            "translationX",
+            SizeUtils.dp2px(-150F).toFloat()
+        )
+        translateDislike.duration = 250L
+        translateDislike.interpolator = LinearInterpolator()
+        translateDislike.start()
+
+        val translateLike = ObjectAnimator.ofFloat(
+            detailUserLikeBtn,
+            "translationX",
+            SizeUtils.dp2px(150F).toFloat()
+        )
+        translateLike.duration = 250L
+        translateLike.interpolator = LinearInterpolator()
+        translateLike.start()
     }
 
 

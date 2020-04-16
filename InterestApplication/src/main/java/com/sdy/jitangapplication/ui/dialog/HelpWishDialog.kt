@@ -46,7 +46,7 @@ class HelpWishDialog(
     val giftBean: GiftBean,
     context: Context
 ) :
-    BottomSheetDialog(context, R.style.MyDialog) {
+    BottomSheetDialog(context, R.style.BottomSheetDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

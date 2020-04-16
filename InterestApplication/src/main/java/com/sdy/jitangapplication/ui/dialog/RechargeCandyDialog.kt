@@ -1,14 +1,15 @@
 package com.sdy.jitangapplication.ui.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
@@ -29,7 +30,7 @@ import org.greenrobot.eventbus.ThreadMode
  *    desc   : 糖果充值价格获取
  *    version: 1.0
  */
-class RechargeCandyDialog(val myContext: Context) : Dialog(myContext, R.style.MyDialog) {
+class RechargeCandyDialog(val myContext: Context) : BottomSheetDialog(myContext, R.style.BottomSheetDialog) {
     private val candyPriceAdapter by lazy { CandyPriceAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +64,11 @@ class RechargeCandyDialog(val myContext: Context) : Dialog(myContext, R.style.My
             }
             candyPriceAdapter.notifyDataSetChanged()
             ConfirmPayCandyDialog(myContext, candyPriceAdapter.data[position], payments).show()
+        }
+
+        //todo 糖果有什么用跳转H5页面
+        candyUsage.onClick {
+
         }
     }
 

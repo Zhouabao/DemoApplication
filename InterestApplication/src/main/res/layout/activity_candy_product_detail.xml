@@ -270,20 +270,21 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/v1" />
 
-            <com.sdy.jitangapplication.widgets.CustomHorizontalProgresNoNum
+            <com.sdy.jitangapplication.widgets.ProgressBarHorizontal
                 android:id="@+id/exchangeProgress"
                 android:layout_width="232dp"
                 android:layout_height="53dp"
                 android:layout_marginBottom="10dp"
-                android:progress="20"
-                app:HorizontalProgresRadius="27dp"
-                app:HorizontalProgresReachColor="@color/colorOrange"
-                app:HorizontalProgresReachHeight="53dp"
-                app:HorizontalProgresUnReachColor="#FFF3F3F6"
-                app:HorizontalProgresUnReachHeight="53dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:pbhBgColorEnd="#CCCCCC"
+                app:pbhBgColorStart="#CCCCCC"
+                app:pbhBgRadius="27dp"
+                app:pbhCoverColorEnd="#FF8B18"
+                app:pbhCoverColorStart="#FF5D18"
+                app:pbhCoverRadius="27dp"
+                app:pbhProgress="50" />
 
             <TextView
                 android:id="@+id/exchangeCandy"
