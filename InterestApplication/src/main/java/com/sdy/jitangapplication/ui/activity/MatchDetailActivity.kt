@@ -1,8 +1,10 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -22,6 +24,7 @@ import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.SpanUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
@@ -48,15 +51,14 @@ import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.adapter.*
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.MoreActionDialog
-import com.sdy.jitangapplication.ui.dialog.RightSlideOutdDialog
-import com.sdy.jitangapplication.ui.dialog.SayHiDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.UserManager
+import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
 import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
+import kotlinx.android.synthetic.main.empty_gift.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.footer_tag_quality.view.*
 import org.greenrobot.eventbus.EventBus
@@ -70,32 +72,20 @@ import org.jetbrains.anko.startActivityForResult
  * 匹配详情页
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
-    View.OnClickListener,
-    ModuleProxy {
+    View.OnClickListener, ModuleProxy {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
-
     var photos: MutableList<String> = mutableListOf()
     private val photosAdapter by lazy { MatchImgsPagerAdapter(this, photos) }
-
-
     private val params by lazy {
-        hashMapOf(
+        hashMapOf<String, Any>(
             "accid" to UserManager.getAccid(),
             "token" to UserManager.getToken(),
-            "target_accid" to targetAccid,
-            "_timestamp" to System.currentTimeMillis()
+            "target_accid" to targetAccid
         )
     }
-    private val targetUserPramas by lazy {
-        hashMapOf(
-            "accid" to UserManager.getAccid(),
-            "token" to UserManager.getToken(),
-            "target_accid" to targetAccid,
-            "_timestamp" to System.currentTimeMillis()
-        )
-    }
+
 
     companion object {
         @JvmStatic
@@ -115,6 +105,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         initView()
 
         mPresenter.getUserDetailInfo(params)
+
     }
 
 
@@ -149,18 +140,21 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         paramsClUserInfo.height = LinearLayout.LayoutParams.WRAP_CONTENT
         clUserInfo.layoutParams = paramsClUserInfo
 
-//        vpUserDetail.setScrollable(false)
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
         detailUserLikeBtn.setOnClickListener(this)
         detailUserDislikeBtn.setOnClickListener(this)
         detailUserChatBtn.setOnClickListener(this)
         detailUserGreetBtn.setOnClickListener(this)
+        guidelWishHelp.setOnClickListener(this)
         giftAll.setOnClickListener(this)
         cancelBlack.setOnClickListener(this)
         backBtn.setOnClickListener(this)
         backBtn1.setOnClickListener(this)
         btnBack2.setOnClickListener(this)
+
+        guidelWishHelp.isVisible = !UserManager.isShowGuideHelpWish()
+
         //用户的广场预览界面
         detailThumbRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         detailThumbRv.addItemDecoration(
@@ -171,6 +165,41 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 resources.getColor(R.color.colorTransparent)
             )
         )
+        //用户心愿列表
+//        detailUserWishRv.viewTreeObserver.addOnGlobalLayoutListener(this)
+        detailUserWishRv.layoutManager =
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        CustomPagerSnapHelper().attachToRecyclerView(detailUserWishRv)
+        detailUserWishRv.adapter = wishGiftAdapter
+        wishGiftAdapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.helpWishBtn -> {
+                    HelpWishDialog(
+                        matchBean!!.mycandy_amount,
+                        matchBean!!.nickname ?: "",
+                        matchBean!!.accid,
+                        wishGiftAdapter.data[position],
+                        this
+                    ).show()
+                }
+            }
+        }
+        detailUserWishIndicator.typeface =
+            Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf")
+        detailUserWishRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                detailUserWishIndicator.text = SpanUtils.with(detailUserWishIndicator)
+                    .append("${(detailUserWishRv.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() + 1}")
+                    .setFontSize(14, true)
+                    .setBold()
+                    .append(" / ${matchBean!!.wish_cnt}")
+                    .setFontSize(10, true)
+                    .create()
+            }
+        })
+
+
         //用户详细信息列表
         detailUserInformationRv.layoutManager =
             LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -185,6 +214,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //用户兴趣
         detailRvTag.layoutManager = GridLayoutManager(this, 2)
         detailRvTag.adapter = userTagAdapter
+        userTagAdapter.setEmptyView(R.layout.empty_gift, detailRvTag)
+        userTagAdapter.emptyView.emptyTip.text = "暂时还没有添加兴趣"
+        userTagAdapter.isUseEmpty(false)
+
         //用户礼物墙
         rvGift.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         rvGift.adapter = usergiftAdapter
@@ -223,7 +256,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 view.expandAll.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     null,
-                    resources.getDrawable(R.drawable.down_icon),
+                    resources.getDrawable(R.drawable.icon_down_gray),
                     null
                 )
                 userTagAdapter.data.clear()
@@ -236,7 +269,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 view.expandAll.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     null,
-                    resources.getDrawable(R.drawable.up_icon),
+                    resources.getDrawable(R.drawable.icon_up_gray),
                     null
                 )
                 userTagAdapter.data.clear()
@@ -253,29 +286,16 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
 
     /**
-     * 切换tab
-     */
-
-    //fragment栈管理
-//    private val mStack = Stack<Fragment>()
-
-    /*
-      初始化Fragment栈管理
-   */
-    private fun initFragment() {
-//        mStack.add(ListSquareFragment(targetAccid))
-//        mStack.add(BlockSquareFragment(targetAccid))
-//        mStack.add(MatchDetailLabelFragment(targetAccid))
-//        vpUserDetail.offscreenPageLimit = 3
-//        vpUserDetail.adapter = MainPagerAdapter(supportFragmentManager, mStack)
-//        vpUserDetail.currentItem = 1
-    }
-
-
-    /**
      * 初始化个人信息数据
      */
     private val detailUserInformationAdapter by lazy { MatchDetailInfoAdapter() }
+
+    /**
+     *心愿礼物适配器
+     */
+    private val wishGiftAdapter by lazy {
+        WishGiftAdapter(this)
+    }
 
     private fun initUserInfomationData() {
         if (matchBean!!.base_info.height != 0)
@@ -360,23 +380,40 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             )
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initData() {
         val data = matchBean!!.label_quality
         if (!matchBean!!.label_quality.isNullOrEmpty() && matchBean!!.label_quality.size > 6) {
             userTagAdapter.setFooterView(initTagFooterView())
             userTagAdapter.addData(data.subList(0, 6))
+        } else if (matchBean!!.label_quality.isNullOrEmpty()) {
+            userTagAdapter.isUseEmpty(true)
         } else {
             userTagAdapter.addData(data)
         }
+
         if (matchBean!!.gift_list.isNullOrEmpty()) {
             usergiftAdapter.isUseEmpty(true)
         } else
             usergiftAdapter.setNewData(matchBean!!.gift_list)
 
-        initFragment()//初始化vp
+        if (matchBean!!.wish_list.isNullOrEmpty()) {
+            detailUserWishIndicator.isVisible = false
+        } else {
+            detailUserWishIndicator.isVisible = true
+            wishGiftAdapter.setNewData(matchBean!!.wish_list)
+            detailUserWishIndicator.text = SpanUtils.with(detailUserWishIndicator)
+                .append("1")
+                .setFontSize(14, true)
+                .setBold()
+                .append(" / ${matchBean!!.wish_cnt}")
+                .setFontSize(10, true)
+                .create()
+        }
+
         initUserInfomationData()//初始化个人信息数据
 //        EventBus.getDefault().post(UpdateSquareEvent())
-        gift.text = "礼物墙 ${matchBean!!.gift_cnt ?: 0}"
+        gift.text = "礼物墙 ${matchBean!!.gift_list.size}"
         squareCount.text = "动态 ${matchBean!!.square_cnt ?: 0}"
         detailUserName.text = matchBean!!.nickname
         titleUsername.text = matchBean!!.nickname
@@ -479,9 +516,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         if (photos.size > 1) {
             for (i in 0 until photos.size) {
-//                val width = ((ScreenUtils.getScreenWidth()
-//                        - SizeUtils.dp2px(15F) * 2
-//                        - (SizeUtils.dp2px(6F) * (photos.size - 1))) * 1F / photos.size).toInt()
                 val width = SizeUtils.dp2px(6F)
                 val height = SizeUtils.dp2px(6F)
 
@@ -766,6 +800,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.giftAll -> { //查看全部礼物
                 startActivity<SomeoneGetGiftActivity>("target_accid" to targetAccid)
             }
+            R.id.guidelWishHelp -> { //查看全部礼物
+                guidelWishHelp.isVisible = false
+                UserManager.saveShowGuideHelpWish(true)
+            }
         }
 
     }
@@ -785,7 +823,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         //拉黑
         dialog.llLahei.onClick {
-            mPresenter.shieldingFriend(targetUserPramas)
+            mPresenter.shieldingFriend(params)
             dialog.dismiss()
         }
         //举报
@@ -799,7 +837,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
         //解除配对
         dialog.llRemoveRelation.onClick {
-            mPresenter.dissolutionFriend(targetUserPramas)
+            mPresenter.dissolutionFriend(params)
             dialog.dismiss()
         }
         dialog.cancel.onClick {
@@ -884,6 +922,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateMyCandyAmountEvent(event: UpdateMyCandyAmountEvent) {
+        matchBean!!.mycandy_amount = matchBean!!.mycandy_amount - event.reduceAmout
+    }
+
+
     /*--------------------------消息代理------------------------*/
     private fun sendChatHiMessage(type: Int) {
         Log.d("OkHttp", matchBean?.accid ?: "")
@@ -947,5 +991,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     override fun onItemFooterClick(message: IMMessage?) {
 
     }
+
 
 }

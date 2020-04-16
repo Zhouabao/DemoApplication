@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg">
+
+    <View
+        android:id="@+id/view0"
+        android:layout_width="45dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rectangle_gray_3dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/wishHelpCl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view0">
+
+
+        <TextView
+            android:id="@+id/t1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="助力"
+            android:textColor="#ff191919"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/myCandyCount"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:drawableLeft="@drawable/icon_candy_me"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#ff191919"
+            android:textSize="14sp"
+            app:layout_constraintRight_toLeftOf="@id/chargeBtn"
+            app:layout_constraintTop_toTopOf="@id/t1" />
+
+        <TextView
+            android:id="@+id/chargeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            android:text="充值"
+            android:textColor="#ffff6318"
+            android:textSize="14sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/myCandyCount" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="17dp"
+            android:background="@color/colorDivider"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/t1" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/wishGiftCl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/shadow_115844"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view1">
+
+            <ImageView
+                android:id="@+id/giftImg"
+                android:layout_width="86dp"
+                android:layout_height="86dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/giftName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
+                android:ellipsize="end"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="2"
+                android:textColor="#ff191919"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/giftCandyAmount"
+                app:layout_constraintLeft_toRightOf="@id/giftImg"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/giftImg"
+                tools:text="德国进口Blink冰力克80g无糖薄荷糖星空礼盒果粉" />
+
+
+            <TextView
+                android:id="@+id/giftCandyAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:drawableRight="@drawable/icon_candy_small"
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:textColor="#ffff6318"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/giftImg"
+                app:layout_constraintLeft_toLeftOf="@id/giftName"
+                app:layout_constraintTop_toBottomOf="@id/giftName"
+                tools:text="1200" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/t2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="助力糖果数量"
+            android:textColor="#ff191919"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/t1"
+            app:layout_constraintTop_toBottomOf="@id/wishGiftCl" />
+
+        <TextView
+            android:id="@+id/maxHelpBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="最大量"
+            android:textColor="#ff6796fa"
+            android:textSize="14sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/t2" />
+
+        <com.warkiz.widget.IndicatorStayLayout
+            android:id="@+id/helpWishSeekBarIsl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/maxHelpBtn">
+
+            <com.warkiz.widget.IndicatorSeekBar
+                android:id="@+id/helpWishSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:isb_indicator_color="#ffffe0c8"
+                app:isb_indicator_text_color="@color/colorWhite"
+                app:isb_indicator_text_size="14sp"
+                app:isb_max="0"
+                app:isb_min="0"
+                app:isb_only_thumb_draggable="true"
+                app:isb_seek_smoothly="false"
+                app:isb_show_indicator="rounded_rectangle"
+                app:isb_show_thumb_text="false"
+                app:isb_show_tick_marks_type="none"
+                app:isb_show_tick_texts="true"
+                app:isb_thumb_drawable="@drawable/icon_filter_age"
+                app:isb_thumb_size="26dp"
+                app:isb_tick_texts_color="#ffc5c6c8"
+                app:isb_tick_texts_size="14sp"
+                app:isb_ticks_count="2"
+                app:isb_track_background_color="#F1F1F1"
+                app:isb_track_background_size="2dp"
+                app:isb_track_progress_color="@color/colorOrange"
+                app:isb_track_progress_size="2dp" />
+        </com.warkiz.widget.IndicatorStayLayout>
+
+
+        <TextView
+            android:id="@+id/t3"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Tips:糖果助力后将跳过匹配直接成为好友"
+            android:textColor="#ff191919"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="@id/helpWishSeekBarIsl"
+            app:layout_constraintTop_toBottomOf="@id/helpWishSeekBarIsl" />
+
+        <TextView
+            android:id="@+id/confirmHelp"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_rectangle_orange_25dp"
+            android:gravity="center"
+            android:text="确认助力"
+            android:textColor="#ffffffff"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/helpWishSeekBarIsl"
+            app:layout_constraintRight_toRightOf="@id/helpWishSeekBarIsl"
+            app:layout_constraintTop_toBottomOf="@id/t3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:id="@+id/wishHelpSuccessLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="糖果助力成功"
+            android:textColor="#ff191919"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/giftImg1"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginTop="30dp" />
+
+        <TextView
+            android:id="@+id/helpAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.1"
+            android:text="助力额度999,999糖果\n你与XXX已达成好友关系，快去聊聊吧"
+            android:textColor="#ff191919"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/gotoChat"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_rectangle_orange_25dp"
+            android:gravity="center"
+            android:text="去聊聊"
+            android:textColor="#ffffffff"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

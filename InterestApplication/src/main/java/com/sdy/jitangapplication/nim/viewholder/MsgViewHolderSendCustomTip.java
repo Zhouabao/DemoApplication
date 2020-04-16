@@ -19,6 +19,7 @@ import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.ui.activity.CandyMallActivity;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
+import com.sdy.jitangapplication.ui.activity.MyOrderActivity;
 import com.sdy.jitangapplication.ui.dialog.ChatSendGiftDialog;
 
 /**
@@ -92,6 +93,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                                 ds.setColor(Color.parseColor("#FF6796FA"));
                                 ds.setUnderlineText(false);
                             }
+
                             @Override
                             public void onClick(@NonNull View widget) {
                                 Intent intent = new Intent(context, IDVerifyActivity.class);
@@ -166,6 +168,30 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         .append("给她吧？")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
                         .create());
+                break;
+            case SendCustomTipAttachment.CUSTOME_TIP_ADD_ADDRESS://完善订单地址
+                notificationTextView.setText(SpanUtils.with(notificationTextView)
+                        .append("收件地址缺失，请在")
+                        .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                        .append("我的订单")
+                        .setClickSpan(new ClickableSpan() {
+                            @Override
+                            public void updateDrawState(@NonNull TextPaint ds) {
+                                ds.setColor(Color.parseColor("#FF6796FA"));
+                                ds.setUnderlineText(false);
+                            }
+
+                            @Override
+                            public void onClick(@NonNull View widget) {
+                                Intent intent = new Intent(context, MyOrderActivity.class);
+                                context.startActivity(intent);
+                            }
+                        })
+                        .setForegroundColor(Color.parseColor("#FF6796FA"))
+                        .append("处完善收货地址")
+                        .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                        .create());
+
                 break;
             default:
                 notificationTextView.setText(attachment.getContent());

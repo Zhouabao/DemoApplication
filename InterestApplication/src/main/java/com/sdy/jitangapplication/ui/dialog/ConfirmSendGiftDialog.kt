@@ -22,6 +22,7 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.event.UpdateSendGiftEvent
 import com.sdy.jitangapplication.model.GiftBean
+import com.sdy.jitangapplication.model.SendGiftOrderBean
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.customer_alert_dialog_layout.cancel
@@ -77,22 +78,24 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
         params["gift_id"] = giftName.id
         RetrofitFactory.instance.create(Api::class.java)
             .giveGift(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
-                override fun onNext(t: BaseResp<Any?>) {
+            .excute(object : BaseSubscriber<BaseResp<SendGiftOrderBean?>>(null) {
+                override fun onNext(t: BaseResp<SendGiftOrderBean?>) {
                     super.onNext(t)
-                    CommonFunction.toast(t.msg)
                     if (t.code == 200) {
-                        sendGiftMessage()
+                        sendGiftMessage(t.data?.order_id ?: 0)
+                        CommonFunction.toast(t.msg)
                     } else if (t.code == 419) {
                         AlertCandyEnoughDialog(context).show()
+                    } else {
+                        CommonFunction.toast(t.msg)
                     }
                 }
             })
 
     }
 
-    private fun sendGiftMessage() {
-        val shareSquareAttachment = SendGiftAttachment(giftName.title, giftName.icon, giftName.id)
+    private fun sendGiftMessage(orderId: Int) {
+        val shareSquareAttachment = SendGiftAttachment(orderId, false)
         val message = MessageBuilder.createCustomMessage(
             account,
             SessionTypeEnum.P2P,
@@ -100,6 +103,7 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
             shareSquareAttachment,
             CustomMessageConfig()
         )
+        message.localExtension = hashMapOf<String, Any>("giftReceiveStatus" to SendGiftAttachment.GiftReceiveStatusNormal)
         NIMClient.getService(MsgService::class.java).sendMessage(message, false)
             .setCallback(object :
                 RequestCallback<Void?> {

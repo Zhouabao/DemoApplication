@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.item_want_product.view.*
 class WantProductAdapter :
     BaseQuickAdapter<WantFriendBean, BaseViewHolder>(R.layout.item_want_product) {
     override fun convert(helper: BaseViewHolder, item: WantFriendBean) {
+        helper.addOnClickListener(R.id.donate)
         GlideUtil.loadCircleImg(mContext, item.avatar, helper.itemView.wantAvator)
         helper.itemView.wantName.text = item.nickname
         helper.itemView.wantRelationship.isVisible = item.isfriend

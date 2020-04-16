@@ -10,62 +10,53 @@ import com.sdy.jitangapplication.nim.extension.CustomAttachmentType;
  * version: 1.0
  */
 public class SendGiftAttachment extends CustomAttachment {
-    private final String KEY_TITLE = "title"; //分享的描述
-    private final String KEY_IMG = "icon";//分享的图片
-    private final String KEY_ID = "giftId";//分享的图片
+    private final String KEY_ORDER_ID = "orderId";//礼物的订单id
+    private final String KEY_IF_VIRTUAL = "ifVirtual";//是否是虚拟礼物
 
-    private String title;//匹配的兴趣
-    private String img;//分享的图片
-    private int giftId;//分享的广场id
+    private int orderId;//分享的广场id
+    private boolean ifVirtual;//是否是虚拟礼物
+    //礼物开启状态
+    public final static int GiftReceiveStatusNormal = 0;// 开启 待开启
+    public final static int GiftReceiveStatusHasOpen = 1; // 已开启
+    public final static int GiftReceiveStatusHasReturned = 2;// 已退回  超时已退回
 
     public SendGiftAttachment() {
         super(CustomAttachmentType.SendGift);
     }
 
-    public SendGiftAttachment(String title, String img, int giftId) {
+    public SendGiftAttachment(int orderId, boolean ifVirtual) {
         super(CustomAttachmentType.SendGift);
-        this.title = title;
-        this.img = img;
-        this.giftId = giftId;
+        this.orderId = orderId;
+        this.ifVirtual = ifVirtual;
     }
 
-    public String getTitle() {
-        return title;
+    public boolean isIfVirtual() {
+        return ifVirtual;
     }
 
-    public void setTitle(String desc) {
-        this.title = title;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
+    public void setIfVirtual(boolean ifVirtual) {
+        this.ifVirtual = ifVirtual;
     }
 
     public int getId() {
-        return giftId;
+        return orderId;
     }
 
     public void setId(int id) {
-        this.giftId = id;
+        this.orderId = id;
     }
 
     @Override
     protected void parseData(JSONObject data) {
-        title = data.getString(KEY_TITLE);
-        img = data.getString(KEY_IMG);
-        giftId = data.getInteger(KEY_ID);
+        orderId = data.getInteger(KEY_ORDER_ID);
+        ifVirtual = data.getBoolean(KEY_IF_VIRTUAL);
     }
 
     @Override
     protected JSONObject packData() {
         JSONObject data = new JSONObject();
-        data.put(KEY_TITLE, title);
-        data.put(KEY_IMG, img);
-        data.put(KEY_ID, giftId);
+        data.put(KEY_ORDER_ID, orderId);
+        data.put(KEY_IF_VIRTUAL, ifVirtual);
         return data;
     }
 }

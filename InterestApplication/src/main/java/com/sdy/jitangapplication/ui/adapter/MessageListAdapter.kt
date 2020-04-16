@@ -16,6 +16,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.Likelist
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
 import com.sdy.jitangapplication.utils.UserManager
@@ -27,7 +28,8 @@ import kotlinx.android.synthetic.main.item_message_list.view.*
  *    desc   :
  *    version: 1.0
  */
-class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.layout.item_message_list) {
+class MessageListAdapter :
+    BaseQuickAdapter<RecentContact, BaseViewHolder>(R.layout.item_message_list) {
     var greetList: MutableList<Likelist> = mutableListOf()//招呼列表
     var intentionMatchList: MutableList<String> = mutableListOf()//意向匹配列表
     var isapprove: Int = 0  //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
@@ -46,7 +48,11 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
         if (item.contactId != null) {
             holder.itemView.msgTitle.text = UserInfoHelper.getUserDisplayName(item.contactId)
         }
-        GlideUtil.loadAvatorImg(mContext, UserInfoHelper.getAvatar(item.contactId), holder.itemView.msgIcon)
+        GlideUtil.loadAvatorImg(
+            mContext,
+            UserInfoHelper.getAvatar(item.contactId),
+            holder.itemView.msgIcon
+        )
 
         if (CommonUtil.isTagSet(item, RecentContactsFragment.RECENT_TAG_STICKY)) {
             holder.itemView.menuTop.setImageResource(R.drawable.icon_top_cancel_msg)
@@ -72,6 +78,8 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
                     }
                 item.attachment is ShareSquareAttachment -> holder.itemView.text.text = "『动态分享内容』"
                 item.attachment is SendGiftAttachment -> holder.itemView.text.text = "『礼物消息』"
+                item.attachment is SendCustomTipAttachment -> holder.itemView.text.text =
+                    (item.attachment as SendCustomTipAttachment).content
                 else -> holder.itemView.text.text = item.content
             }
         }
@@ -98,7 +106,9 @@ class MessageListAdapter : BaseQuickAdapter<RecentContact, BaseViewHolder>(R.lay
         holder.itemView.msgOnLineState.isVisible =
             NimUIKitImpl.enableOnlineState()
                     && !NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.contactId).isNullOrEmpty()
-                    && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.contactId).contains("在线")
+                    && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.contactId).contains(
+                "在线"
+            )
 
 
     }

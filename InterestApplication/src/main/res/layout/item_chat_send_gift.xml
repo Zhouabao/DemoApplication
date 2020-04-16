@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="238dp"
+    android:layout_height="106dp"
+    android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/giftStatusBg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="14dp"
-        android:layout_marginBottom="5dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/gradient_orange_0_18_18_0"
         android:maxWidth="@dimen/max_bubble_width">
 
         <TextView
@@ -18,29 +17,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/giftImg"
-            android:layout_alignBottom="@id/giftImg"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="3dp"
             android:layout_marginRight="10dp"
             android:gravity="center"
-            android:text="送给想吃土豆的猪价值32颗糖果的香蕉"
-            android:textColor="#191919"
+            android:text="开启礼物"
+            android:textColor="@color/colorWhite"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/giftType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/giftTitle"
+            android:layout_alignBottom="@id/giftImg"
+            android:layout_marginBottom="3dp"
+            android:text="糖果礼物待开启"
+            android:textColor="#ffffffff"
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/giftImg"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_toRightOf="@id/giftTitle"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="14dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/icon_default_avator" />
+            android:src="@drawable/icon_send_gift" />
 
-        <TextView
-            android:id="@+id/giftReceiver"
-            android:layout_width="63dp"
-            android:layout_height="17dp"
-            android:layout_below="@id/giftImg"
-            android:layout_marginTop="20dp"
-            android:text="送礼物给Ta"
-            android:textColor="#ffc5c6c8"
-            android:textSize="12sp" />
+
     </RelativeLayout>
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/giftReceiver"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_below="@id/giftImg"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="14dp"
+        android:gravity="center_vertical"
+        android:text="积糖礼物"
+        android:textColor="#ffd2d3d5"
+        android:textSize="12sp" />
+</LinearLayout>

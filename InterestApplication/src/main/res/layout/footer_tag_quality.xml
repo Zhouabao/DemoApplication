@@ -12,7 +12,7 @@
         android:id="@+id/expandAll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableRight="@drawable/down_icon"
+        android:drawableRight="@drawable/icon_down_gray"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:text="展开全部"

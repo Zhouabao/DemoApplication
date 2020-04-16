@@ -106,7 +106,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userFoot.setOnClickListener(this)
         userVisit.setOnClickListener(this)
         userVerify.setOnClickListener(this)
-        userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
+        if (!UserManager.isShowGuideVerify())
+            userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
 
 
 
@@ -319,6 +320,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
         multiStateView.postDelayed({
             guideVerifyWindow.dismiss()
+            UserManager.saveShowGuideVerify(true)
             userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
         }, 3000L)
         if (userinfo != null) {
@@ -564,9 +566,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         }
     }
 
-    private var width = 0
     override fun onGlobalLayout() {
-        width = userVerify.left + userVerify.width
+        val width = userVerify.left + userVerify.width
         if (width > 0) {
             guideVerifyWindow.showAtLocation(
                 userVerify,

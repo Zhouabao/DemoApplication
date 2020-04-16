@@ -14,17 +14,23 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.model.GiftBean
 import com.sdy.jitangapplication.model.WantFriendBean
 import com.sdy.jitangapplication.presenter.WantProductListPresenter
 import com.sdy.jitangapplication.presenter.view.WantProductListView
 import com.sdy.jitangapplication.ui.adapter.WantProductAdapter
+import com.sdy.jitangapplication.ui.dialog.HelpWishDialog
 import kotlinx.android.synthetic.main.empty_layout_comment.view.*
 import kotlinx.android.synthetic.main.fragment_want_product_list.*
 
 /**
  * 想要
  */
-class WantProductListFragment(val goods_id: Int) :
+class WantProductListFragment(
+    val goods_id: Int,
+    var myCandyAmount: Int = 0,
+    var giftBean: GiftBean = GiftBean()
+) :
     BaseMvpLazyLoadFragment<WantProductListPresenter>(),
     WantProductListView,
     OnRefreshListener, OnLoadMoreListener {
@@ -63,7 +69,24 @@ class WantProductListFragment(val goods_id: Int) :
         wantProductAdapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_message)
         wantProductAdapter.emptyView.emptyTip.text = "暂时还没有人留言"
 
+        wantProductAdapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.donate -> {
+                    HelpWishDialog(
+                        myCandyAmount,
+                        wantProductAdapter.data[position].accid,
+                        wantProductAdapter.data[position].nickname,
+                        giftBean,
+                        activity!!
+                    ).show()
+                }
+
+            }
+        }
+
+
         mPresenter.goodsWishList(params)
+
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
@@ -98,6 +121,11 @@ class WantProductListFragment(val goods_id: Int) :
         if (data != null) {
             wantProductAdapter.addData(data)
         }
+
+    }
+
+    override fun onGiveGoods(success: Boolean) {
+
 
     }
 

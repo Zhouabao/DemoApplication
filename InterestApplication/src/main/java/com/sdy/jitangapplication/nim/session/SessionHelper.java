@@ -356,7 +356,7 @@ public class SessionHelper {
 
             @Override
             public boolean isShowGiftIcon(IMMessage message) {
-                if (message.getLocalExtension() != null && message.getLocalExtension().get("showGift") != null && ((Boolean) message.getLocalExtension().get("showGift")) == false) {
+                if (message.getRemoteExtension() != null && message.getRemoteExtension().get("showGift") != null && ((Boolean) message.getRemoteExtension().get("showGift")) == false) {
                     return false;
                 } else {
                     if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)

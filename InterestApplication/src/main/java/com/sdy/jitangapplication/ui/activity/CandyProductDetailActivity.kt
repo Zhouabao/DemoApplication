@@ -6,11 +6,8 @@ import android.os.Bundle
 import android.transition.Explode
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.Window
-import android.widget.LinearLayout
-import android.widget.RadioButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +22,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshCandyMallDetailEvent
+import com.sdy.jitangapplication.model.GiftBean
 import com.sdy.jitangapplication.model.ProductDetailBean
 import com.sdy.jitangapplication.presenter.CandyProductDetailPresenter
 import com.sdy.jitangapplication.presenter.view.CandyProductDetailView
@@ -120,17 +118,19 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
         bannerProduct.layoutManager = layoutmanager
         bannerProduct.adapter = bannerAdapter
         CustomPagerSnapHelper().attachToRecyclerView(bannerProduct)
+        bannerProductIndicator.typeface =
+            Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf")
         bannerProduct.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                for (child in 0 until bannerProductIndicator.childCount)
-                    (bannerProductIndicator.getChildAt(child) as RadioButton).isChecked =
-                        layoutmanager.findLastVisibleItemPosition() == child
-
+                bannerProductIndicator.text = SpanUtils.with(bannerProductIndicator)
+                    .append("${layoutmanager.findLastVisibleItemPosition() + 1}")
+                    .setFontSize(14, true)
+                    .setBold()
+                    .append(" / ${bannerAdapter.data.size}")
+                    .setFontSize(10, true)
+                    .create()
             }
         })
 
@@ -146,8 +146,9 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
 
     }
 
+    val wantProductListFragment by lazy { WantProductListFragment(goods_id) }
     private fun initVp() {
-        stack.add(WantProductListFragment(goods_id))
+        stack.add(wantProductListFragment)
         stack.add(MessageFragment(goods_id))
         stack.add(CommentFragment(goods_id))
         vpProductOptions.adapter = MainPagerAdapter(supportFragmentManager, stack)
@@ -210,32 +211,6 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
         vpProductOptions.currentItem = 0
     }
 
-    private fun initIndicatorView() {
-        if (bannerAdapter.data.size > 0) {
-            for (i in 0 until bannerAdapter.data.size) {
-                val indicator = RadioButton(this)
-                indicator.width = SizeUtils.dp2px(5F)
-                indicator.height = SizeUtils.dp2px(5F)
-                indicator.buttonDrawable = null
-                indicator.background =
-                    resources.getDrawable(R.drawable.selector_circle_indicator_product)
-
-                indicator.layoutParams =
-                    LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                val layoutParams: LinearLayout.LayoutParams =
-                    indicator.layoutParams as LinearLayout.LayoutParams
-                layoutParams.setMargins(0, 0, SizeUtils.dp2px(6f), 0)
-                indicator.layoutParams = layoutParams
-                indicator.isEnabled = false
-                indicator.isChecked = i == 0
-                bannerProductIndicator.addView(indicator)
-            }
-        }
-    }
-
 
     override fun onClick(v: View) {
         when (v.id) {
@@ -251,7 +226,7 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
 
             }
             R.id.exchangeCandy -> {
-                if (productBean.my_candy_amount >= productBean.amount) {
+                if (productBean.mycandy_amount >= productBean.amount) {
                     AddExchangeAddressDialog(this, goods_id).show()
                 } else {
                     AlertCandyEnoughDialog(this).show()
@@ -266,7 +241,28 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
     override fun onGoodsInfoResult(data: ProductDetailBean?) {
         if (data != null) {
             productBean = data
+            wantProductListFragment.myCandyAmount = productBean.mycandy_amount
+            wantProductListFragment.giftBean = GiftBean(
+                productBean.amount,
+                icon = productBean.icon,
+                id = productBean.id,
+                min_amount = productBean.min_amount,
+                title = productBean.title
+            )
             bannerAdapter.addData(data?.cover_list)
+            if (!data?.cover_list.isNullOrEmpty()) {
+                bannerProductIndicator.isVisible = true
+                bannerProductIndicator.text = SpanUtils.with(bannerProductIndicator)
+                    .append("1")
+                    .setFontSize(14, true)
+                    .setBold()
+                    .append(" / ${bannerAdapter.data.size}")
+                    .setFontSize(10, true)
+                    .create()
+            } else {
+                bannerProductIndicator.isVisible = false
+            }
+
             productCandyPrice.text = CommonFunction.num2thousand("${data!!.amount}")
             productRmbPrice.text = "价值¥${data!!.price}"
             productCollect.text = if (data.is_wished) {
@@ -284,7 +280,7 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
             productDesc.text = data.descr
             rbMessage.text = "留言(${data.msg_cnt})"
             rbComment.text = "评价(${data.comments_cnt})"
-            if (data.my_candy_amount >= data.amount) {
+            if (data.mycandy_amount >= data.amount) {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     exchangeProgress.setProgress(100, true)
@@ -300,22 +296,21 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
             } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     exchangeProgress.setProgress(
-                        (data.my_candy_amount * 1F / data.amount * 100).toInt(),
+                        (data.mycandy_amount * 1F / data.amount * 100).toInt(),
                         true
                     )
                 } else {
                     exchangeProgress.progress =
-                        (data.my_candy_amount * 1F / data.amount * 100).toInt()
+                        (data.mycandy_amount * 1F / data.amount * 100).toInt()
                 }
                 exchangeCandy.text = SpanUtils.with(exchangeCandy)
                     .append("还需要\t\t")
                     .appendImage(R.drawable.icon_candy_detail)
-                    .append("${CommonFunction.num2thousand("${data.amount - data.my_candy_amount}")}")
+                    .append("${CommonFunction.num2thousand("${data.amount - data.mycandy_amount}")}")
                     .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
                     .create()
             }
 
-            initIndicatorView()
             stateProductDetail.viewState = MultiStateView.VIEW_STATE_CONTENT
         } else {
             stateProductDetail.viewState = MultiStateView.VIEW_STATE_ERROR

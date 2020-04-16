@@ -210,7 +210,8 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
     public boolean collapse(boolean immediately) {
         boolean respond = (emoticonPickerView != null && emoticonPickerView.getVisibility() == View.VISIBLE
                 || audioRecordBtn != null && audioRecordBtn.getVisibility() == View.VISIBLE
-                || actionPanelBottomLayout != null && actionPanelBottomLayout.getVisibility() == View.VISIBLE);
+//                || actionPanelBottomLayout != null && actionPanelBottomLayout.getVisibility() == View.VISIBLE
+        );
 
         hideAllInputLayout(immediately);
 

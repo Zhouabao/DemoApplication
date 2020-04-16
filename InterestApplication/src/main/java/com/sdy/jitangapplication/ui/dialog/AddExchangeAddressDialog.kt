@@ -19,6 +19,7 @@ import com.sdy.jitangapplication.event.RefreshAddressvent
 import com.sdy.jitangapplication.model.AddressBean
 import com.sdy.jitangapplication.model.ExchangeOrderBean
 import com.sdy.jitangapplication.model.MyAddressBean
+import com.sdy.jitangapplication.ui.activity.AddAddressActivity
 import com.sdy.jitangapplication.ui.activity.AddressManagerActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_add_exchange_address.*
@@ -75,7 +76,11 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
          * 去地址管理界面
          */
         addressCl.onClick {
-            context1.startActivity<AddressManagerActivity>("address" to addressBean)
+            if (addressBean == null) {
+                context1.startActivity<AddAddressActivity>()
+            } else {
+                context1.startActivity<AddressManagerActivity>("address" to addressBean)
+            }
         }
         getAddress()
     }
@@ -95,7 +100,8 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
     fun onGetAddressvent(event: GetAddressvent) {
         addressBean = event.address
         addressNameAndPhone.text = "${addressBean!!.nickname}\t\t${addressBean!!.phone}"
-        addressDetail.text = "${addressBean!!.province_name}${addressBean!!.city_name}${addressBean!!.area_name}${addressBean!!.full_address}"
+        addressDetail.text =
+            "${addressBean!!.province_name}${addressBean!!.city_name}${addressBean!!.area_name}${addressBean!!.full_address}"
         exchangeBtn.isEnabled = true
     }
 

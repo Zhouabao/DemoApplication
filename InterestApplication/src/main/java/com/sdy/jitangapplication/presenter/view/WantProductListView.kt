@@ -13,4 +13,6 @@ interface WantProductListView : BaseView {
 
     fun onGoodsWishList(success: Boolean, data: MutableList<WantFriendBean>?)
 
+    fun onGiveGoods(success: Boolean)
+
 }

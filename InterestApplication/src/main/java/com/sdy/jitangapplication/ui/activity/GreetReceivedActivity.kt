@@ -178,7 +178,6 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
             EventBus.getDefault().postSticky(UpdateHiEvent())
             if (type == 1) {
                 ChatActivity.start(this, adapter.data[manager.topPosition - 1].accid)
-                finish()
             }
         }
     }

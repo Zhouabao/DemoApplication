@@ -24,10 +24,7 @@ class MatchDetailInfoAdapter : BaseQuickAdapter<DetailUserInfoBean, BaseViewHold
 
         val params = helper.itemView.layoutParams as RecyclerView.LayoutParams
         if (helper.layoutPosition == 0) {
-            params.topMargin = SizeUtils.dp2px(9F)
-        }
-        if (helper.layoutPosition == data.size - 1) {
-            params.bottomMargin = SizeUtils.dp2px(9F)
+            params.leftMargin = SizeUtils.dp2px(10F)
         }
 //        helper.itemView.infoContent.setContent(item.content)
     }

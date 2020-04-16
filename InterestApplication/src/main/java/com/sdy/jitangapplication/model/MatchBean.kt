@@ -79,7 +79,6 @@ data class MatchBean(
     var constellation: String? = null,
     var square: MutableList<Square>? = null,
     var square_cnt: Int? = 0,
-    var gift_cnt: Int? = 0,
     var tags: MutableList<TagBean>?,
     var lightningcnt: Int?,
     var countdown: Int = 0,
@@ -97,10 +96,13 @@ data class MatchBean(
     var interesttags: MutableList<TagBean>? = null,
     var newtags: MutableList<Newtag>? = null,
     var gift_list: MutableList<GiftBean> = mutableListOf(),
+    var wish_list: MutableList<GiftBean> = mutableListOf(),
+    var wish_cnt: Int = 0,
     var birth: Int = 0,
     var label_quality: MutableList<LabelQuality> = mutableListOf(),
     var jobname: String = "",
-    var label_quality_cnt: Int = 0
+    var label_quality_cnt: Int = 0,
+    var mycandy_amount: Int = 0
 ) : Serializable
 
 

@@ -64,8 +64,10 @@ data class ProductDetailBean(
     var is_recommend: Boolean = false,
     var is_wished: Boolean = false,
     var msg_cnt: Int = 0,
-    var my_candy_amount: Int = 0,
+    var mycandy_amount: Int = 0,
+    var min_amount: Int = 0,
     var price: Float = 0F,
+    var icon: String = "",
     var title: String = "",
     var visit_cnt: Int = 0,
     var wish_cnt: Int = 0
@@ -246,7 +248,13 @@ data class GiftBean(
     var count: Int = 0,
     var icon: String = "",
     var id: Int = 0,
-    var title: String = ""
+    var min_amount: Int = 0,
+    var title: String = "",
+    var cnt: Int = 0
+) : Serializable
+
+data class SendGiftOrderBean(
+    var order_id: Int = 0
 )
 
 data class GiftBeans(
@@ -254,3 +262,14 @@ data class GiftBeans(
     var candy_amount: Int = 0,
     var list: MutableList<GiftBean> = mutableListOf()
 )
+
+data class SomeOneGetGiftBean(
+    var accid: String = "",
+    var all_amount: Int = 0,
+    var avatar: String = "",
+    var gif_cnt: Int = 0,
+    var list: MutableList<GiftBean> = mutableListOf(),
+    var nickname: String = ""
+)
+
+

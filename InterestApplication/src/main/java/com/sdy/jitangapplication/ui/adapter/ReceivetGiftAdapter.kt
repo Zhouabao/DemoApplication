@@ -5,7 +5,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.GiftBean
-import kotlinx.android.synthetic.main.item_receive_gift.view.*
+import kotlinx.android.synthetic.main.item_receive_gift_child.view.*
 
 /**
  *    author : ZFM
@@ -13,11 +13,12 @@ import kotlinx.android.synthetic.main.item_receive_gift.view.*
  *    desc   :
  *    version: 1.0
  */
-class ReceiveGiftAdapter : BaseQuickAdapter<GiftBean, BaseViewHolder>(R.layout.item_receive_gift) {
+class ReceivetGiftAdapter :
+    BaseQuickAdapter<GiftBean, BaseViewHolder>(R.layout.item_receive_gift_child) {
     override fun convert(helper: BaseViewHolder, item: GiftBean) {
         GlideUtil.loadImg(mContext, item.icon, helper.itemView.giftImg)
         helper.itemView.giftName.text = item.title
-        helper.itemView.giftCount.text = "x${item.count}"
+        helper.itemView.giftCount.text = "x${item.cnt}"
     }
 
 }

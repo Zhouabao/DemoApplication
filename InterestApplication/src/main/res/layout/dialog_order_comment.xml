@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/shape_rectangle_white_top_left_right_15_corners_bg">
+    android:background="@drawable/shape_rectangle_white_top_left_right_25_corners_bg">
 
 
     <TextView

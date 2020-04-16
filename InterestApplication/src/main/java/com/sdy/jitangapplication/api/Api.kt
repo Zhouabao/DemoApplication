@@ -721,6 +721,7 @@ interface Api {
     @FormUrlEncoded
     @POST("Tidings/sendMsg${Constants.END_BASE_URL}")
     fun sendMsgRequest(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ResidueCountBean?>>
+
     /**
      * 小助手发消息请求服务器
      */
@@ -1013,6 +1014,17 @@ interface Api {
     fun goodsWishList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<WantFriendBean>?>>
 
     /**
+     * josn赠送商品给某人
+     * Goods/giveGoods
+     */
+    @FormUrlEncoded
+    @POST("Goods/giveGoods${Constants.END_BASE_URL}")
+    fun giveGoods(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+//    http://ppsns5.com/ppsns/Goods/giveGoods/v1.josn赠送商品给某人
+//http://ppsns5.com/ppsns/Goods/getGiftGoods/v1.json领取赠送商品
+//http://ppsns5.com/ppsns/Goods/backGiftGoods/v1.json退回赠送商品
+
+    /**
      * 商品留言列表
      */
     @FormUrlEncoded
@@ -1136,8 +1148,8 @@ interface Api {
      * MemberInfo/getGiftList/
      */
     @FormUrlEncoded
-    @POST("MemberInfo/getGiftList${Constants.END_BASE_URL}")
-    fun getSomeoneGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftBeans?>>
+    @POST("MemberInfo/getSomeoneGiftList${Constants.END_BASE_URL}")
+    fun getSomeoneGiftList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<SomeOneGetGiftBean>?>>
 
     /**
      * 获取礼物列表
@@ -1145,6 +1157,14 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Gift/giveGift${Constants.END_BASE_URL}")
-    fun giveGift(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    fun giveGift(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SendGiftOrderBean?>>
+
+    /**
+     * 助力心愿礼物
+     * ppsns/Candy/wishHelp
+     */
+    @FormUrlEncoded
+    @POST("Candy/wishHelp${Constants.END_BASE_URL}")
+    fun wishHelp(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 }

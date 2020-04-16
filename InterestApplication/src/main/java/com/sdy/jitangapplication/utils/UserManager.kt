@@ -270,7 +270,8 @@ object UserManager {
 
             if (data.userinfo.isfaced != -1)
                 saveUserVerify(data.userinfo.isfaced)
-            SPUtils.getInstance(Constants.SPNAME).put("userIntroduce", data.extra_data?.aboutme ?: "")
+            SPUtils.getInstance(Constants.SPNAME)
+                .put("userIntroduce", data.extra_data?.aboutme ?: "")
             if (!data.extra_data?.mytaglist.isNullOrEmpty()) {
                 saveLabels(data.extra_data?.mytaglist ?: mutableListOf())
             }
@@ -678,6 +679,30 @@ object UserManager {
 
     fun saveShowGuideGreet(isShow: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideGreet", isShow)
+    }
+
+
+    /**
+     * 是否展示助力礼物
+     */
+    fun isShowGuideHelpWish(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideHelpWish", false)
+    }
+
+    fun saveShowGuideHelpWish(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideHelpWish", isShow)
+    }
+
+
+    /**
+     * 是否展示助力礼物
+     */
+    fun isShowGuideVerify(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideVerify", false)
+    }
+
+    fun saveShowGuideVerify(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideVerify", isShow)
     }
 
 

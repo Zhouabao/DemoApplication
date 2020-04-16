@@ -136,7 +136,7 @@ object CommonFunction {
                                     t.data?.default_msg
                                 )
                                 val params = hashMapOf<String, Any>("showGift" to false)
-                                msg.localExtension = params
+                                msg.remoteExtension = params
                                 NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                     .setCallback(object : RequestCallback<Void> {
                                         override fun onSuccess(p0: Void?) {

@@ -11,6 +11,8 @@ class GreetTopEvent(val context: Context, val success: Boolean, val targetAccid:
 
 class GreetDetailSuccessEvent(val success: Boolean)
 
+class UpdateMyCandyAmountEvent(val reduceAmout: Int)
+
 
 class CloseDialogEvent()
 

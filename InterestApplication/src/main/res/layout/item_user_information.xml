@@ -1,86 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="147dp"
+    android:layout_height="80dp"
+    android:layout_marginRight="5dp"
+    android:background="@drawable/icon_shadow_detail_10dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/infoIv"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:scaleType="center"
+        android:src="@drawable/icon_detail_ami"
+        app:layout_constraintBottom_toBottomOf="@id/infoContent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/infoTitle" />
+
+    <TextView
+        android:id="@+id/infoTitle"
         android:layout_width="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:layout_marginRight="4dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="9dp"
-        app:cardBackgroundColor="@color/colorWhite"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="4dp"
-        app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true"
-        app:contentPadding="15dp">
+        android:gravity="center"
+        android:text="身高"
+        android:textColor="#ff888d92"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/infoIv"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:orientation="vertical"
-            android:layout_width="137dp"
-            android:layout_height="wrap_content">
-
-        <ImageView
-                android:id="@+id/infoIv"
-                android:src="@drawable/icon_detail_ami"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="center"
-                app:layout_constraintBottom_toBottomOf="@id/infoContent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@id/infoTitle"/>
-
-        <TextView
-                android:id="@+id/infoTitle"
-                android:gravity="center"
-                android:layout_marginLeft="15dp"
-                android:text="身高"
-                android:textColor="#ff888d92"
-                android:textSize="14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                app:layout_constraintLeft_toRightOf="@id/infoIv"
-                app:layout_constraintTop_toTopOf="parent"/>
-        <!--app:marqueeview_text_speed="0.5"
-                    app:marqueeview_text_color="#FF191919"
-                    android:layout_height="20dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    app:marqueeview_is_resetLocation="true"
-                     app:marqueeview_repet_type="repet_continuous"
-                    app:marqueeview_text_size="13"
-                    app:marqueeview_isclickalbe_stop="true"
-        -->
-        <TextView
-                android:id="@+id/infoContent"
-                android:textSize="13sp"
-                android:textColor="#FF191919"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:focusableInTouchMode="true"
-                android:ellipsize="marquee"
-                android:gravity="center_vertical|left"
-                android:focusable="true"
-                android:scrollHorizontally="true"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="@id/infoTitle"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/infoTitle"
-                tools:text="1999-07-15/天秤座"/>
+    <TextView
+        android:id="@+id/infoContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical|left"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="#FF191919"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/infoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/infoTitle"
+        tools:text="1999-07-15/天秤座" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
