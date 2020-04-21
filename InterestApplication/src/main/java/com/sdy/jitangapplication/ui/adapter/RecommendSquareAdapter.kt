@@ -135,7 +135,8 @@ class RecommendSquareAdapter :
         setLikeStatus(item.isliked, item.like_cnt, helper.itemView.squareLike)
         //点赞
         helper.itemView.squareLike.onClick {
-            clickZan(helper.itemView.squareLike, helper.layoutPosition - headerLayoutCount)
+            if (item.accid != UserManager.getAccid())
+                clickZan(helper.itemView.squareLike, helper.layoutPosition - headerLayoutCount)
         }
 
         //点击跳转
@@ -153,7 +154,7 @@ class RecommendSquareAdapter :
                     position = helper.layoutPosition - headerLayoutCount
                 )
                 if (item.type == 1) {
-                    if (!item.isliked)
+                    if (item.accid != UserManager.getAccid() && !item.isliked)
                         clickZan(
                             helper.itemView.squareLike,
                             helper.layoutPosition - headerLayoutCount
