@@ -77,7 +77,7 @@ class ReceiveCandyGiftDialog(
                             )
                         )
                     }
-                    else->{
+                    else -> {
                         EventBus.getDefault().post(
                             RefreshCandyMessageEvent(
                                 orderId,
@@ -93,10 +93,11 @@ class ReceiveCandyGiftDialog(
 
         //接收礼物
         receiveGiftBtn.onClick {
-            if (isReceive && giftStateBean.state == SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL){
-                getGift()}
-            else{}
+            if (isReceive && giftStateBean.state == SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL) {
+                getGift()
+            } else {
                 dismiss()
+            }
 
         }
         //暂不接收
@@ -255,7 +256,7 @@ class ReceiveCandyGiftDialog(
                     super.onNext(t)
                     receiveGiftBtn.isEnabled = true
                     if (t.code == 200) {
-                        if (giftStatus != giftStateBean.state) {
+                        if (giftStatus != giftStateBean.state || giftStateBean.state == SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL) {
                             when (giftStateBean.state) {
                                 SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL, SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
                                     EventBus.getDefault().post(
@@ -265,7 +266,7 @@ class ReceiveCandyGiftDialog(
                                         )
                                     )
                                 }
-                                else->{
+                                else -> {
                                     EventBus.getDefault().post(
                                         RefreshCandyMessageEvent(
                                             orderId,

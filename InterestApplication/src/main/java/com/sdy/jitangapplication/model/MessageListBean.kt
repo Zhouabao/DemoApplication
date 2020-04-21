@@ -84,8 +84,16 @@ data class MessageListBean1(
     var normal_percent_complete: Int = 0,
     var total_like_times: Int = 0,
     var approve_time: Long,
-    var isapprove: Int//0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
+    var isapprove: Int,//0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
+    var session_list_arr: MutableList<MessageGiftBean> = mutableListOf()
 
+
+)
+
+data class MessageGiftBean(
+    var mid: String = "",
+    var order_id: Int = 0,
+    var state: Int = 0////state  2领取  3过期
 )
 
 data class Likelist(

@@ -36,6 +36,7 @@ import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateContactBookEvent
+import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
 import com.sdy.jitangapplication.ui.activity.MainActivity
@@ -308,6 +309,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     override fun onBackPressed() {
         if (KeyboardUtils.isSoftInputVisible(this))
             KeyboardUtils.hideSoftInput(this)
+        EventBus.getDefault().postSticky(UpdateHiEvent())
         super.onBackPressed()
     }
 

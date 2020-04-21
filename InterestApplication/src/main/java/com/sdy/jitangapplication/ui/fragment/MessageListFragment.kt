@@ -281,6 +281,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     private var like_free_show: Boolean = false
 
     override fun onMessageCensusResult(data: MessageListBean1?) {
+
         UserManager.approveBean = ApproveBean(data?.approve_time ?: 0L, data?.isapprove ?: 0)
 
 
@@ -307,7 +308,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
             SPUtils.getInstance(Constants.SPNAME).put("isShowHarassment", true)
         }
         msgBean = data
-
+        adapter.session_list_arr = data?.session_list_arr ?: mutableListOf()
         adapter.greetList.clear()
         for (accid in data?.effective_greet ?: mutableListOf()) {
             adapter.greetList.add(accid)
