@@ -2,12 +2,10 @@ package com.sdy.jitangapplication.ui.fragment
 
 import android.app.Dialog
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -15,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
@@ -221,7 +218,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onProgressEvent(event: UploadEvent) {
-        if (event.from == 1)
+        if (event.from == UploadEvent.FROM_SQUARE)
             if (event.qnSuccess) {
                 llRetry.isVisible = false
                 btnClose.isVisible = false
@@ -286,10 +283,10 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     private var from = 1
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRePublishEvent(event: RePublishEvent) {
-        if (event.context == UserCenterFragment::class.java.simpleName) {
-            from = 2
+        from = if (event.context == MySquareFragment::class.java.simpleName) {
+            2
         } else {
-            from = 1
+            1
         }
         if (UserManager.publishState == 1) {//正在发布中
             CommonFunction.toast("还有动态正在发布哦~请稍候")
@@ -312,7 +309,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
                         uploadFl.isVisible = false
                         UserManager.clearPublishParams()
                         if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-                            if (event.context == UserCenterFragment::class.java.simpleName) {
+                            if (event.context == MySquareFragment::class.java.simpleName) {
                                 startActivity<PublishActivity>("from" to 2)
                             } else {
                                 startActivity<PublishActivity>()
@@ -325,14 +322,14 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
             SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
             UserManager.clearPublishParams()
             if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-                if (event.context == UserCenterFragment::class.java.simpleName) {
+                if (event.context == MySquareFragment::class.java.simpleName) {
                     startActivity<PublishActivity>("from" to 2)
                 } else {
                     startActivity<PublishActivity>()
                 }
             uploadFl.isVisible = false
         } else if (UserManager.publishState == 0) {
-            if (event.context == UserCenterFragment::class.java.simpleName) {
+            if (event.context == MySquareFragment::class.java.simpleName) {
                 startActivity<PublishActivity>("from" to 2)
             } else {
                 activity!!.intent.setClass(activity!!, PublishActivity::class.java)
@@ -425,7 +422,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     override fun onSquareAnnounceResult(type: Int, success: Boolean, code: Int) {
         onAnnounceEvent(AnnounceEvent(success, code))
         if (from == 2) {
-            EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
+            EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = UploadEvent.FROM_USERCENTER))
         }
         from = 1
     }
@@ -434,7 +431,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     //验证用户是否被封禁结果
     override fun onCheckBlockResult(result: Boolean) {
         if (result) {
-            onRePublishEvent(RePublishEvent(true, FriendSquareFragment::class.java.simpleName))
+            onRePublishEvent(RePublishEvent(true, ContentFragment::class.java.simpleName))
         }
     }
 

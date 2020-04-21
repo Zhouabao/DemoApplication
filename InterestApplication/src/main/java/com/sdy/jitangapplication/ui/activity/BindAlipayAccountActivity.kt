@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.RegexUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
@@ -56,16 +57,20 @@ class BindAlipayAccountActivity : BaseMvpActivity<BindAlipayAccountPresenter>(),
 
         if (alipay != null) {
             etAlipayAccount.setText(alipay?.ali_account)
+            etAlipayAccount.setSelection((alipay?.ali_account?:"").length)
             etAlipayName.setText(alipay?.nickname)
+            etAlipayName.setSelection((alipay?.nickname?:"").length)
             etTelephone.setText(alipay?.phone)
+            etTelephone.setSelection((alipay?.phone?:"").length)
             checkConfirm()
         }
     }
 
     fun checkConfirm() {
-        saveBtn.isEnabled = !etAlipayAccount.text.trim().isNullOrEmpty()
-                && !etAlipayName.text.trim().isNullOrEmpty()
-                && (!etTelephone.text.trim().isNullOrEmpty() && etTelephone.text.length == 11)
+        saveBtn.isEnabled =
+            !etAlipayAccount.text.trim().isNullOrEmpty() && !RegexUtils.isZh(etAlipayAccount.text.trim().toString())
+                    && !etAlipayName.text.trim().isNullOrEmpty()
+                    && (!etTelephone.text.trim().isNullOrEmpty() && etTelephone.text.length == 11)
     }
 
     override fun afterTextChanged(s: Editable?) {

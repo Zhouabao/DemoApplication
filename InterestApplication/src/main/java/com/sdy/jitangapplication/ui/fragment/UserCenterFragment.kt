@@ -20,16 +20,16 @@ import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.android.material.appbar.AppBarLayout
-import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.baselibrary.glide.GlideUtil
-import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.event.RefreshMyCandyEvent
+import com.sdy.jitangapplication.event.UpdateMyLabelEvent
+import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.model.VipDescr
@@ -319,19 +319,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
 
-    override fun onCheckBlockResult(b: Boolean) {
-        if (b) {
-            if (UserManager.publishState == 0) {
-                startActivity<PublishActivity>("from" to 2)
-            } else
-                EventBus.getDefault().post(
-                    RePublishEvent(
-                        true,
-                        UserCenterFragment::class.java.simpleName
-                    )
-                )
-        }
-    }
 
     override fun onError(text: String) {
         multiStateView.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -433,15 +420,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
 
-    //发布进度通知
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onProgressEvent(event: UploadEvent) {
-        if (event.from == 2) {
-//            multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.myInfoCandy()
-            EventBus.getDefault().post(RefreshEvent(true))
-        }
-    }
 
 
     //更新用户中心信息
@@ -459,130 +437,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         }
     }
 
-    /*-------------------------------------- 重新上传-----------------------------*/
-    private var uploadCount = 0
 
-    private fun retryPublish() {
-        if (!mPresenter.checkNetWork()) {
-            CommonFunction.toast("网络不可用,请检查网络设置")
-            return
-        }
-        uploadCount = 0
-        //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
-        UserManager.publishState = 1
-        when {
-            UserManager.publishParams["type"] == 0 -> publish()
-            UserManager.publishParams["type"] == 1 -> {
-                UserManager.cancelUpload = false
-                uploadPictures()
-            }
-            UserManager.publishParams["type"] == 2 -> {
-                UserManager.cancelUpload = false
-                //TODO上传视频
-                val videoQnPath =
-                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                        "accid"
-                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                        16
-                    )}"
-                mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, videoQnPath, 2)
-            }
-            UserManager.publishParams["type"] == 3 -> {
-                UserManager.cancelUpload = false
-                //TODO上传音频
-                val audioQnPath =
-                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                        "accid"
-                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                        16
-                    )}"
-                mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, audioQnPath, 3)
-            }
-        }
-    }
-
-
-    private fun uploadPictures() {
-        //上传图片
-        val imagePath =
-            "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                "accid"
-            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                16
-            )}"
-        mPresenter.uploadFile(
-            UserManager.mediaBeans.size,
-            uploadCount + 1,
-            UserManager.mediaBeans[uploadCount].url,
-            imagePath,
-            1
-        )
-    }
-
-    private fun publish() {
-        mPresenter.publishContent(
-            UserManager.publishParams["type"] as Int,
-            UserManager.publishParams,
-            UserManager.keyList
-        )
-    }
-
-
-    //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
-    override fun onQnUploadResult(success: Boolean, type: Int, key: String?) {
-        if (success) {
-            when (type) {
-                0 -> {
-                    publish()
-                }
-                1 -> {
-                    UserManager.mediaBeans[uploadCount].url = key ?: ""
-                    UserManager.keyList.add(Gson().toJson(UserManager.mediaBeans[uploadCount]))
-                    uploadCount++
-                    if (uploadCount == UserManager.mediaBeans.size) {
-                        publish()
-                    } else {
-                        uploadPictures()
-                    }
-                }
-                2 -> {
-                    UserManager.mediaBeans[uploadCount].url = key ?: ""
-                    UserManager.keyList.add(Gson().toJson(UserManager.mediaBeans[0]))
-                    publish()
-                }
-                3 -> {
-                    UserManager.mediaBeans[uploadCount].url = key ?: ""
-                    UserManager.keyList.add(Gson().toJson(UserManager.mediaBeans[0]))
-                    publish()
-                }
-            }
-        } else {
-            onProgressEvent(UploadEvent(qnSuccess = false))
-        }
-    }
-
-    override fun onSquareAnnounceResult(type: Int, success: Boolean, code: Int) {
-        onAnnounceEvent(AnnounceEvent(success, code))
-        EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
-
-    }
-
-
-    fun onAnnounceEvent(event: AnnounceEvent) {
-        if (event.serverSuccess) {
-            UserManager.clearPublishParams()
-            CommonFunction.toast("动态发布成功!")
-        } else {
-            UserManager.cancelUpload = true
-            if (event.code == 402) { //内容违规重新去编辑
-                UserManager.publishState = -1
-                CommonFunction.toast("内容违规请重新编辑")
-            } else { //发布失败重新发布
-                UserManager.publishState = -2
-                CommonFunction.toast("发布失败")
-            }
-        }
-    }
 
     override fun onGlobalLayout() {
 //        if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1) {

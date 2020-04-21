@@ -10,12 +10,12 @@ import com.sdy.jitangapplication.model.RecommendSquareListBean
  *    version: 1.0
  */
 interface MySquareView : BaseView {
-
-
-
     fun onGetSquareListResult(data: RecommendSquareListBean?, b: Boolean)
 
-
     fun onCheckBlockResult(b: Boolean)
+
+    fun onSquareAnnounceResult(i: Int, b: Boolean, code: Int)
+
+    fun onQnUploadResult(b: Boolean, type: Int, key: String?)
 
 }
