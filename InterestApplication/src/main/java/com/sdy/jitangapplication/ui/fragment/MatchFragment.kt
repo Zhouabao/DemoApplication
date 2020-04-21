@@ -183,24 +183,13 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 }
                 R.id.btnHiLottieView,
                 R.id.btnHi -> {
-                    //todo 配置次数
-                    //非真人头像打招呼提示去修改头像
-                    if (ranking_level == 2 && manager.topPosition == 0 && !isShowChangeAvatorRealMan) {
-                        ChangeAvatarRealManDialog(
-                            activity!!,
-                            ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN_GREET,
-                            matchBean = matchUserAdapter.data[manager.topPosition],
-                            view1 = view
-                        ).show()
-                        isShowChangeAvatorRealMan = true
-                    } else {
-                        CommonFunction.commonGreet(
-                            activity!!,
-                            matchUserAdapter.data[manager.topPosition].accid,
-                            targetAvator = matchUserAdapter.data[manager.topPosition].avatar ?: "",
-                            view = view, needSwipe = true
-                        )
-                    }
+
+                    CommonFunction.commonGreet(
+                        activity!!,
+                        matchUserAdapter.data[manager.topPosition].accid,
+                        targetAvator = matchUserAdapter.data[manager.topPosition].avatar ?: "",
+                        view = view, needSwipe = true
+                    )
                 }
                 R.id.nextImgBtn -> {
                     if (itemView != null) {
@@ -632,22 +621,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     override fun onCardSwiped(direction: Direction?) {
         if (UserManager.slide_times != -1) {
             UserManager.slide_times++
-            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //完善相册
+            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //补充照片库
                 EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
                 UserManager.slide_times = 0
             }
         }
-
-//        ChangeAvatarRealManDialog(
-//            activity!!,
-//            ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN,
-//            matchBean = matchUserAdapter.data[manager.topPosition],
-//            view1 = view
-//        ).show()
-
-
-
-
         resetAnimation()
         if (direction == Direction.Left) {//左滑不喜欢
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
@@ -656,6 +634,14 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             UserManager.saveSlideCount(UserManager.getSlideCount() + 1)
+            if (UserManager.motion == ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN && UserManager.getSlideCount() == UserManager.perfect_times) {//非真人头像（头像审核不通过）
+                ChangeAvatarRealManDialog(
+                    activity!!,
+                    ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN,
+                    matchBean = matchUserAdapter.data[manager.topPosition - 1],
+                    view1 = view
+                ).show()
+            }
             //保存剩余滑动次数
             if (UserManager.isUserVip() || UserManager.getLeftSlideCount() > 0) {
                 if (!UserManager.isUserVip() && UserManager.getLeftSlideCount() > 0) {

@@ -163,6 +163,7 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
                 R.id.menuDetele -> {
                     // 删除会话，删除后，消息历史被一起删除
                     NIMClient.getService(MsgService::class.java).deleteRecentContact(recentContact)
+//                    NIMClient.getService(MsgService::class.java).deleteRoamingRecentContact(recentContact.contactId,recentContact.sessionType)
                     adapter.remove(position)
                     refreshMessages()
                 }

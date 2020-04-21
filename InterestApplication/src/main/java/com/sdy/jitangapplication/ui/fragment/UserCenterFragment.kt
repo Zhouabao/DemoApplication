@@ -319,7 +319,6 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
 
-
     override fun onError(text: String) {
         multiStateView.viewState = MultiStateView.VIEW_STATE_ERROR
         multiStateView.errorMsg.text = if (mPresenter.checkNetWork()) {
@@ -390,7 +389,9 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                     "all" to userInfoBean?.userinfo?.allvisit,
                     "freeShow" to userInfoBean?.free_show
                 )
-                userVisit.isEnabled = true
+                userVisit.postDelayed({
+                    userVisit.isEnabled = true
+                }, 2000L)
             }
             //认证中心
             R.id.userVerify -> {
@@ -404,7 +405,9 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                     else -> {
                         userVerify.isEnabled = false
                         startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
-                        userVerify.isEnabled = true
+                        userVerify.postDelayed({
+                            userVerify.isEnabled = true
+                        }, 2000L)
                     }
 
                 }
@@ -414,12 +417,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             R.id.candyCl -> {
                 candyCl.isEnabled = false
                 startActivity<MyCandyActivity>()
-                candyCl.isEnabled = true
+                candyCl.postDelayed({
+                    candyCl.isEnabled = true
+                }, 2000L)
             }
         }
     }
-
-
 
 
     //更新用户中心信息
@@ -431,12 +434,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshMyCandyEvent(event: RefreshMyCandyEvent) {
-        if ((userInfoBean?.userinfo?.my_candy_amount ?: 0) >= event.candyCount && event.candyCount >= 0
+        if ((userInfoBean?.userinfo?.my_candy_amount
+                ?: 0) >= event.candyCount && event.candyCount >= 0
         ) {
             candyCount.text = "${(userInfoBean?.userinfo?.my_candy_amount ?: 0) - event.candyCount}"
         }
     }
-
 
 
     override fun onGlobalLayout() {
