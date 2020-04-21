@@ -78,6 +78,7 @@ class WantProductListFragment(
         wantProductAdapter.isUseEmpty(false)
 
         wantProductAdapter.setOnItemChildClickListener { _, view, position ->
+            view.isEnabled = false
             when (view.id) {
                 R.id.donate -> {
                     HelpWishDialog(
@@ -94,6 +95,7 @@ class WantProductListFragment(
                 }
 
             }
+            view.postDelayed({view.isEnabled =true},2000L)
         }
 
 

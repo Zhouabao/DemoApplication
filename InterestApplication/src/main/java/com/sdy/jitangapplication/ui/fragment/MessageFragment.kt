@@ -69,6 +69,7 @@ class MessageFragment(val goods_id: Int) : BaseMvpLazyLoadFragment<MessagePresen
         mPresenter.goodsMsgList(params)
 
         messageProductAdapter.setOnItemChildClickListener { _, view, position ->
+            view.isEnabled = false
             when (view.id) {
                 R.id.messageAvator -> {
                     MatchDetailActivity.start(
@@ -77,6 +78,7 @@ class MessageFragment(val goods_id: Int) : BaseMvpLazyLoadFragment<MessagePresen
                     )
                 }
             }
+            view.postDelayed({ view.isEnabled = true }, 2000L)
         }
 
     }
