@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:animateLayoutChanges="true"
+    android:layout_gravity="bottom"
+    android:animateLayoutChanges="false"
     android:background="@drawable/shape_rectangle_white_top_left_right_25_corners_bg"
     android:orientation="vertical">
 
@@ -110,7 +110,6 @@
         <EditText
             android:id="@+id/inputWithdrawMoney"
             android:layout_width="0dp"
-            app:layout_constraintRight_toRightOf="@id/withdrawAll"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:background="@null"
@@ -121,6 +120,7 @@
             android:textSize="25sp"
             app:layout_constraintBottom_toBottomOf="@id/t3"
             app:layout_constraintLeft_toRightOf="@id/t3"
+            app:layout_constraintRight_toRightOf="@id/withdrawAll"
             app:layout_constraintTop_toTopOf="@id/t3" />
 
         <TextView
@@ -136,16 +136,20 @@
 
         <TextView
             android:id="@+id/wirteAlipayAcount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
             android:drawableRight="@drawable/icon_more_right"
             android:drawablePadding="5dp"
-            android:hint="点击填写"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:gravity="right|center_vertical"
+            android:hint="点击填写"
             android:textColor="#191919"
             android:textColorHint="#ffc5c6c8"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/t4"
+            app:layout_constraintLeft_toRightOf="@id/t4"
             app:layout_constraintRight_toRightOf="@id/candyCount"
             app:layout_constraintTop_toTopOf="@id/t4" />
 
@@ -158,9 +162,9 @@
             android:layout_marginRight="15dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/selector_confirm_btn_25dp"
+            android:enabled="false"
             android:gravity="center"
             android:text="确认提现"
-            android:enabled="false"
             android:textColor="#ffffffff"
             android:textSize="17sp"
             android:textStyle="bold"
@@ -316,18 +320,18 @@
 
         <TextView
             android:id="@+id/successBtn"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_width="0dp"
             android:layout_height="47dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/selector_confirm_btn_25dp"
-            android:text="确定"
-            android:textStyle="bold"
             android:gravity="center"
+            android:text="确定"
             android:textColor="#ffffffff"
             android:textSize="17sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

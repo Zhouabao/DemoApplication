@@ -40,7 +40,7 @@ class ChangeAvatarRealManDialog(
     Dialog(context1, R.style.MyDialog) {
 
     companion object {
-        const val VERIFY_NEED_REAL_MAN = 0 //替换真人
+        const val VERIFY_NEED_REAL_MAN = 0 //替换真人（非真人）
         const val VERIFY_NEED_VALID_REAL_MAN = 1 //替换为合规的真人照片
         const val VERIFY_NEED_REAL_MAN_GREET = 2 //打招呼滑动时提示替换真人
     }
@@ -91,8 +91,8 @@ class ChangeAvatarRealManDialog(
                 }
                 close.isVisible = false
                 continueGreet.isVisible = false
-                accountDangerTitle.text = "您的头像为非真人"
-                accountDangerContent.text = "替换真人头像将会推荐显示到匹配首页，\n人气直线提升，获得超多喜欢关注"
+                accountDangerTitle.text = "头像审核未通过"
+                accountDangerContent.text = "本平台为真人社交平台，非真实头像用户打招呼回复几率偏低，且无法获得首页和广场内容推荐呈现机会"
                 accountDangerBtn.text = "立即替换"
             }
             VERIFY_NEED_VALID_REAL_MAN -> {

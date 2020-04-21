@@ -9,6 +9,7 @@ public interface CustomAttachmentType {
     int ShareSquare = 1;//分享
     int SendGift = 2; //赠送礼物
     int SendTip = 3; //发送tip消息
-    int Sticker = 4;
-    int ChatMatch = 5;//匹配
+    int WishHelp = 4; //心愿助力
+    int Sticker = 5;
+    int ChatMatch = 6;//匹配
 }

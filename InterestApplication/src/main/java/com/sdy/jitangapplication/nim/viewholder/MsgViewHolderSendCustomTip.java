@@ -19,8 +19,9 @@ import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.ui.activity.CandyMallActivity;
 import com.sdy.jitangapplication.ui.activity.IDVerifyActivity;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
-import com.sdy.jitangapplication.ui.activity.MyOrderActivity;
+import com.sdy.jitangapplication.ui.activity.MyCandyActivity;
 import com.sdy.jitangapplication.ui.dialog.ChatSendGiftDialog;
+import com.sdy.jitangapplication.ui.dialog.RechargeCandyDialog;
 
 /**
  * author : ZFM
@@ -54,10 +55,31 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
         attachment = (SendCustomTipAttachment) message.getAttachment();
         switch (attachment.getShowType()) {
             case SendCustomTipAttachment.CUSTOM_TIP_FIRST_SEND_MAN://男方发送第一条消息（仅第一次发送消息会显示，切换用户不重复发送） 1
-            case SendCustomTipAttachment.CUSTOM_TIP_NO_MONEY_MAN://男方发送消息余额不足 2
             case SendCustomTipAttachment.CUSTOME_TIP_RECEIVE_NOT_HUMAN://发件方 收件方非真人 8
             case SendCustomTipAttachment.CUSTOME_TIP_NORMAL://常规的tip 9
                 notificationTextView.setText(attachment.getContent());
+                break;
+            case SendCustomTipAttachment.CUSTOM_TIP_NO_MONEY_MAN://男方发送消息余额不足 2
+                notificationTextView.setText(SpanUtils.with(notificationTextView)
+                        .append("糖果余额不足消息未能发送，请")
+                        .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                        .append("充值糖果")
+                        .setClickSpan(new ClickableSpan() {
+                            @Override
+                            public void updateDrawState(@NonNull TextPaint ds) {
+                                ds.setColor(Color.parseColor("#FF6796FA"));
+                                ds.setUnderlineText(false);
+                            }
+
+                            @Override
+                            public void onClick(@NonNull View widget) {
+                                new RechargeCandyDialog(context).show();
+                            }
+                        })
+                        .setForegroundColor(Color.parseColor("#FF6796FA"))
+                        .append("后重试")
+                        .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                        .create());
                 break;
             case SendCustomTipAttachment.CUSTOME_TIP_RECEIVE_VERIFY_WOMAN://认证后的女方收到第一条消息（仅显示一次，切换用户不重复发送） 3
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
@@ -73,7 +95,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                             @Override
                             public void onClick(@NonNull View widget) {
-                                Intent intent = new Intent(context, CandyMallActivity.class);
+                                Intent intent = new Intent(context, MyCandyActivity.class);
                                 context.startActivity(intent);
                             }
                         })
@@ -130,7 +152,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("你们聊的还不错，")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
-                        .append("看看她喜欢什么东西吧！")
+                        .append("看看Ta喜欢什么东西吧！")
                         .setClickSpan(new ClickableSpan() {
                             @Override
                             public void updateDrawState(@NonNull TextPaint ds) {
@@ -169,11 +191,11 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
                         .create());
                 break;
-            case SendCustomTipAttachment.CUSTOME_TIP_ADD_ADDRESS://完善订单地址
+            case SendCustomTipAttachment.CUSTOME_TIP_RECEIVED_GIFT://已领取对方赠送的糖果礼物，可直接用于兑换商品和提现
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
-                        .append("收件地址缺失，请在")
+                        .append("已领取对方赠送的糖果礼物，可直接用于")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
-                        .append("我的订单")
+                        .append("兑换商品")
                         .setClickSpan(new ClickableSpan() {
                             @Override
                             public void updateDrawState(@NonNull TextPaint ds) {
@@ -183,15 +205,35 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
 
                             @Override
                             public void onClick(@NonNull View widget) {
-                                Intent intent = new Intent(context, MyOrderActivity.class);
+                                Intent intent = new Intent(context, MyCandyActivity.class);
                                 context.startActivity(intent);
                             }
                         })
                         .setForegroundColor(Color.parseColor("#FF6796FA"))
-                        .append("处完善收货地址")
+                        .append("和提现")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
                         .create());
+                break;
+            case SendCustomTipAttachment.CUSTOME_TIP_EXCHANGE_PRODUCT://已满足兑换所需糖果，立即兑换
+                notificationTextView.setText(SpanUtils.with(notificationTextView)
+                        .append("已满足兑换所需糖果，")
+                        .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                        .append("立即兑换")
+                        .setClickSpan(new ClickableSpan() {
+                            @Override
+                            public void updateDrawState(@NonNull TextPaint ds) {
+                                ds.setColor(Color.parseColor("#FF6796FA"));
+                                ds.setUnderlineText(false);
+                            }
 
+                            @Override
+                            public void onClick(@NonNull View widget) {
+                                Intent intent = new Intent(context, MyCandyActivity.class);
+                                context.startActivity(intent);
+                            }
+                        })
+                        .setForegroundColor(Color.parseColor("#FF6796FA"))
+                        .create());
                 break;
             default:
                 notificationTextView.setText(attachment.getContent());

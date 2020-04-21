@@ -11,6 +11,8 @@ class GreetTopEvent(val context: Context, val success: Boolean, val targetAccid:
 
 class GreetDetailSuccessEvent(val success: Boolean)
 
+class MatchByWishHelpEvent(val isFirend: Boolean,val target_accid: String = "")
+
 class UpdateMyCandyAmountEvent(val reduceAmout: Int)
 
 

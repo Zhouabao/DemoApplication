@@ -21,7 +21,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/llTitle"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/icon_bg_actionbar_my_candy"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -239,9 +239,10 @@
             android:id="@+id/guideCandyRecord"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             android:src="@drawable/icon_candy_guide_record"
             android:visibility="gone"
+            android:background="#A6000000"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

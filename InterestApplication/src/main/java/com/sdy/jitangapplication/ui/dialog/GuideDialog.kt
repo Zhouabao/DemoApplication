@@ -10,9 +10,14 @@ import android.view.animation.AnimationUtils
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
 import androidx.core.view.isVisible
+import com.kotlin.base.data.net.RetrofitFactory
+import com.kotlin.base.data.protocol.BaseResp
+import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
+import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.ui.activity.MyCandyActivity
+import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_guide.*
 import org.jetbrains.anko.startActivity
@@ -203,7 +208,8 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
                 detail.clearAnimation()
                 guide_dislike_hand_left.clearAnimation()
                 guide_like_hand_right.clearAnimation()
-                UserManager.saveShowGuideIndex(true)
+                completeGuide()
+
                 dismiss()
             }
 
@@ -215,18 +221,26 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
                 detail.clearAnimation()
                 guide_dislike_hand_left.clearAnimation()
                 guide_like_hand_right.clearAnimation()
-                UserManager.saveShowGuideIndex(true)
+                completeGuide()
                 dismiss()
             } else {
-                context.startActivity<MyCandyActivity>()
+                context.startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_CANDY_USAGE)
                 last.clearAnimation()
                 next.clearAnimation()
                 detail.clearAnimation()
                 guide_dislike_hand_left.clearAnimation()
                 guide_like_hand_right.clearAnimation()
-                UserManager.saveShowGuideIndex(true)
+                completeGuide()
                 dismiss()
             }
         }
+    }
+
+    private fun completeGuide(){
+        RetrofitFactory.instance.create(Api::class.java)
+            .completeGuide(UserManager.getSignParams())
+            .excute(object :BaseSubscriber<BaseResp<Any?>>(null){
+
+            })
     }
 }

@@ -17,6 +17,7 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.ProductCommentBean
 import com.sdy.jitangapplication.presenter.CommentPresenter
 import com.sdy.jitangapplication.presenter.view.CommentView
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.CommentProductAdapter
 import kotlinx.android.synthetic.main.empty_layout_comment.view.*
 import kotlinx.android.synthetic.main.fragment_comment.*
@@ -61,6 +62,17 @@ class CommentFragment(val goods_id: Int) : BaseMvpLazyLoadFragment<CommentPresen
         commentProductAdapter.emptyView.emptyTip.text = "暂时还没有评价"
         commentProductAdapter.isUseEmpty(false)
         mPresenter.goodscommentsList(params)
+
+        commentProductAdapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.commentAvator -> {
+                    MatchDetailActivity.start(
+                        activity!!,
+                        commentProductAdapter.data[position].accid
+                    )
+                }
+            }
+        }
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
@@ -77,21 +89,19 @@ class CommentFragment(val goods_id: Int) : BaseMvpLazyLoadFragment<CommentPresen
 
 
     override fun onGoodscommentsList(b: Boolean, data: MutableList<ProductCommentBean>?) {
-        if (refreshcomment.state == RefreshState.Refreshing) {
+        if (refreshcomment.state == RefreshState.Loading) {
+            if (b && (data ?: mutableListOf()).size < Constants.PAGESIZE) {
+                refreshcomment.finishRefreshWithNoMoreData()
+            } else {
+            }
+            refreshcomment.finishLoadMore(b)
+        } else {
             commentProductAdapter.data.clear()
             commentProductAdapter.notifyDataSetChanged()
             if (b && (data ?: mutableListOf()).size == 0) {
                 commentProductAdapter.isUseEmpty(true)
             }
-
             refreshcomment.finishRefresh(b)
-        }
-
-        if (refreshcomment.state == RefreshState.Loading) {
-            if (b && (data ?: mutableListOf()).size < Constants.PAGESIZE)
-                refreshcomment.finishRefreshWithNoMoreData()
-            else
-                refreshcomment.finishLoadMore(b)
         }
 
         commentProductAdapter.addData(data ?: mutableListOf())

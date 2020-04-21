@@ -16,7 +16,6 @@ import com.sdy.jitangapplication.event.RefreshCandyMallDetailEvent
 import com.sdy.jitangapplication.event.RefreshCandyMallEvent
 import com.sdy.jitangapplication.event.RefreshMyCandyEvent
 import com.sdy.jitangapplication.model.ExchangeOrderBean
-import com.sdy.jitangapplication.ui.activity.CandyMallActivity
 import com.sdy.jitangapplication.ui.activity.CandyProductDetailActivity
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.ui.activity.MyOrderActivity
@@ -53,8 +52,7 @@ class ExchangeSuccessDialog(var context1: Context, val exchangeSuccessBean: Exch
 
 
     fun initview() {
-        name.text = exchangeSuccessBean.receiver_name
-        phone.text = exchangeSuccessBean.phone
+        name.text = "${exchangeSuccessBean.receiver_name}\t${exchangeSuccessBean.phone}"
         address.text = exchangeSuccessBean.address
         GlideUtil.loadRoundImgCenterCrop(
             context1,
@@ -81,10 +79,11 @@ class ExchangeSuccessDialog(var context1: Context, val exchangeSuccessBean: Exch
             } else if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) {
                 //商品详情
                 EventBus.getDefault().post(RefreshCandyMallDetailEvent())
-            }else if (ActivityUtils.getTopActivity() is CandyMallActivity) {
-                //糖果商城
-                EventBus.getDefault().post(RefreshCandyMallEvent())
             }
+            //糖果商城、我的糖果
+            EventBus.getDefault().post(RefreshCandyMallEvent())
+            //更新个人中心糖果数量
+            EventBus.getDefault().post(RefreshMyCandyEvent(exchangeSuccessBean.goods_amount))
             dismiss()
         }
 

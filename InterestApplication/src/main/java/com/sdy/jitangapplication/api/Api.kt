@@ -251,6 +251,14 @@ interface Api {
     /**********************匹配**************************/
 
     /**
+     * 完成引导
+     * indexV2
+     */
+    @FormUrlEncoded
+    @POST("Index/completeGuide${Constants.END_BASE_URL}")
+    fun completeGuide(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
      * 匹配首页数据
      * indexV2
      */
@@ -530,8 +538,7 @@ interface Api {
      * 所有的消息列表
      */
     @FormUrlEncoded
-    @POST("Tidings/messageCensusV13${Constants.END_BASE_URL}")
-//    @POST("Tidings/messageCensusV3${Constants.END_BASE_URL}")
+    @POST("Tidings/messageCensusCandy${Constants.END_BASE_URL}")
     fun messageCensus(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MessageListBean1?>>
 
     /**
@@ -703,9 +710,8 @@ interface Api {
      * 聊天界面获取信息
      */
     @FormUrlEncoded
-    @POST("MemberInfo/getTargetInfoV13${Constants.END_BASE_URL}")
-//    @POST("MemberInfo/getTargetInfoV3${Constants.END_BASE_URL}")
-    fun getTargetInfo(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<NimBean?>>
+    @POST("MemberInfo/getTargetInfoCandy${Constants.END_BASE_URL}")
+    fun getTargetInfoCandy(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<NimBean?>>
 
 
     /**
@@ -1165,6 +1171,22 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Candy/wishHelp${Constants.END_BASE_URL}")
-    fun wishHelp(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    fun wishHelp(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SendGiftOrderBean?>>
+
+    /**
+     * 领取赠送虚拟礼物
+     * Gift/getGift
+     */
+    @FormUrlEncoded
+    @POST("Gift/getGift${Constants.END_BASE_URL}")
+    fun getGift(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+    /**
+     * 查询礼物领取状态
+     * Gift/checkGiftState
+     */
+    @FormUrlEncoded
+    @POST("Gift/checkGiftState${Constants.END_BASE_URL}")
+    fun checkGiftState(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GiftStateBean?>>
 
 }

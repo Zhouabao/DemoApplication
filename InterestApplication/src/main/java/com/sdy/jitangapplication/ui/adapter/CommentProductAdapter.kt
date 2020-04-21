@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.item_comment.view.*
 class CommentProductAdapter :
     BaseQuickAdapter<ProductCommentBean, BaseViewHolder>(R.layout.item_comment) {
     override fun convert(helper: BaseViewHolder, item: ProductCommentBean) {
+        helper.addOnClickListener(R.id.commentAvator)
         GlideUtil.loadCircleImg(mContext, item.avatar, helper.itemView.commentAvator)
         helper.itemView.commentName.text = item.nickname
         helper.itemView.commentStar.numStars = item.stars

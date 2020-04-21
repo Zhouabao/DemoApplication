@@ -107,6 +107,17 @@
             app:layout_constraintRight_toRightOf="@id/receiveCandyLight"
             app:layout_constraintTop_toBottomOf="@id/receiveCandyTop" />
 
+        <ImageView
+            android:id="@+id/receiveCandyReceived"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_gift_received"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/receiveCandyBottom"
+            app:layout_constraintLeft_toLeftOf="@id/receiveCandyBottom"
+            app:layout_constraintRight_toRightOf="@id/receiveCandyBottom"
+            app:layout_constraintTop_toTopOf="@id/receiveCandyBottom" />
+
 
         <TextView
             android:id="@+id/receiveGiftBtn"
@@ -137,16 +148,4 @@
             app:layout_constraintRight_toRightOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="data_receive.json"
-        app:lottie_imageAssetsFolder="images_receive/"
-        app:lottie_repeatCount="0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

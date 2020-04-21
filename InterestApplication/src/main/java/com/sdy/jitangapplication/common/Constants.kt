@@ -29,21 +29,9 @@ object Constants {
     const val ACCID = "664eb259a43464123843abbc7488b02b"
     const val QNTOKEN = "qntoken"
 
-    const val ANTI_ALIAS = true
-    const val DEFAULT_SIZE = 150F
-    const val DEFAULT_START_ANGLE = 270
-    const val DEFAULT_SWEEP_ANGLE = 360
-    const val DEFAULT_ANIM_TIME = 1000
-    const val DEFAULT_MAX_VALUE = 100
-    const val DEFAULT_VALUE = 0
-    const val DEFAULT_VALUE_SIZE = 7
-    const val DEFAULT_ARC_WIDTH = 10
-
 
     //官方助手id
     const val ASSISTANT_ACCID = "01"
-    //精选兴趣id
-    const val RECOMMEND_TAG_ID = 1
 
 
     //百度人脸认证

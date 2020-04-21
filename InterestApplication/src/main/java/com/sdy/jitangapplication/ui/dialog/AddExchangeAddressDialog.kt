@@ -1,11 +1,11 @@
 package com.sdy.jitangapplication.ui.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.core.view.isVisible
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -35,7 +35,7 @@ import org.jetbrains.anko.startActivity
  *    version: 1.0
  */
 class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
-    Dialog(context1, R.style.MyDialog) {
+    BottomSheetDialog(context1, R.style.BottomSheetDialog) {
 
     private var addressBean: AddressBean? = null
 
@@ -70,7 +70,11 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
          * 添加地址
          */
         addAdressBtn.onClick {
-            context1.startActivity<AddressManagerActivity>()
+            if (addressBean == null) {
+                context1.startActivity<AddAddressActivity>()
+            } else {
+                context1.startActivity<AddressManagerActivity>("address" to addressBean)
+            }
         }
         /**
          * 去地址管理界面
@@ -103,6 +107,7 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
         addressDetail.text =
             "${addressBean!!.province_name}${addressBean!!.city_name}${addressBean!!.area_name}${addressBean!!.full_address}"
         exchangeBtn.isEnabled = true
+        exchangeBtn.setBackgroundResource(R.drawable.gradient_rectangle_orange_27dp)
     }
 
 
@@ -139,10 +144,12 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
                                 "${addressBean!!.province_name}${addressBean!!.city_name}${addressBean!!.area_name}${addressBean!!.full_address}"
 
                             exchangeBtn.isEnabled = true
+                            exchangeBtn.setBackgroundResource(R.drawable.gradient_rectangle_orange_27dp)
                         } else {
                             addressCl.isVisible = false
                             addAdressBtn.isVisible = true
                             exchangeBtn.isEnabled = false
+                            exchangeBtn.setBackgroundResource(R.drawable.shape_rectangle_ccc_27dp)
                         }
                     }
                 }

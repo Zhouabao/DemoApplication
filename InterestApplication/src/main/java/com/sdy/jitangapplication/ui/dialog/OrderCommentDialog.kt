@@ -123,6 +123,7 @@ class OrderCommentDialog(var context1: Context, val position: Int, val goods_id:
         picAdapter.addData("")
 
         publishComment.onClick {
+            publishComment.isEnabled = false
             if (picAdapter.data.size > 1) {
                 if (picAdapter.data[photosNum] == "") {
                     photosNum++
@@ -167,12 +168,18 @@ class OrderCommentDialog(var context1: Context, val position: Int, val goods_id:
             .goodsAddcomments(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
                 override fun onNext(t: BaseResp<Any?>) {
+                    publishComment.isEnabled = true
                     super.onNext(t)
                     if (t.code == 200) {
                         CommonFunction.toast(t.msg)
                         EventBus.getDefault().post(RefreshOrderStateEvent(position, 4))
                         dismiss()
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    publishComment.isEnabled = true
                 }
             })
 
@@ -194,7 +201,7 @@ class OrderCommentDialog(var context1: Context, val position: Int, val goods_id:
                 if (info != null) {
                     if (info.isOK) {
                         photosNameArray.add(imageName)
-                        if ((photosNum + 1) == picAdapter.data.size ) {
+                        if ((photosNum + 1) == picAdapter.data.size) {
                             goodsAddcomments()
                         } else {
                             photosNum++
@@ -210,6 +217,8 @@ class OrderCommentDialog(var context1: Context, val position: Int, val goods_id:
                             }
                         }
                     }
+                } else {
+                    publishComment.isEnabled = true
                 }
             }, null
         )

@@ -1,13 +1,17 @@
 package com.sdy.jitangapplication.nim.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -70,6 +74,7 @@ import com.sdy.jitangapplication.nim.session.ChatChooseGiftAction;
 import com.sdy.jitangapplication.nim.session.ChatPickImageAction;
 import com.sdy.jitangapplication.nim.session.ChatTakeImageAction;
 import com.sdy.jitangapplication.nim.session.MyLocationAction;
+import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
@@ -172,6 +177,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
 
         });
+
+
         return rootView;
     }
 
@@ -259,6 +266,24 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             messageListPanel.setChattingBackground(customization.backgroundUri, customization.backgroundColor);
         }
 
+
+        //如果没有显示过礼物规则提醒
+        if (!UserManager.INSTANCE.isShowGuideGiftProtocol() && !sessionId.equals(Constants.ASSISTANT_ACCID)) {
+            Dialog dialog = new Dialog(getActivity(), R.style.MyDialog);
+            View guideGift = LayoutInflater.from(getActivity()).inflate(R.layout.popupwindow_guide_gift, null);
+            guideGift.setOnClickListener(v -> dialog.dismiss());
+            dialog.setContentView(guideGift);
+            Window window = dialog.getWindow();
+            window.setGravity(Gravity.BOTTOM | Gravity.RIGHT);
+            WindowManager.LayoutParams attrs = window.getAttributes();
+            attrs.width = WindowManager.LayoutParams.MATCH_PARENT;
+            attrs.height = WindowManager.LayoutParams.MATCH_PARENT;
+            window.setAttributes(attrs);
+            dialog.show();
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.setCancelable(true);
+            dialog.setOnDismissListener(dialog1 -> UserManager.INSTANCE.saveShowGuideGiftProtocol(true));
+        }
     }
 
 
@@ -551,7 +576,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         params.put("target_accid", target_accid);
         RetrofitFactory.Companion.getInstance()
                 .create(Api.class)
-                .getTargetInfo(UserManager.INSTANCE.getSignParams(params))
+                .getTargetInfoCandy(UserManager.INSTANCE.getSignParams(params))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new rx.Observer<BaseResp<NimBean>>() {
@@ -658,6 +683,11 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     @Override
                     public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
                         if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
+                            //如果糖果助力值大于0则证明是回复糖果助力消息，弹助力领取成功弹窗
+                            if (nimBeanBaseResp.getData().getGet_help_amount() > 0) {
+                                new HelpWishReceiveDialog(nimBeanBaseResp.getData().getGet_help_amount(), getActivity()).show();
+                            }
+
                             leftGreetCount = nimBeanBaseResp.getData().getResidue_msg_cnt();
                             if (nimBeanBaseResp.getCode() == 211) {
                                 sendTipMessage(nimBeanBaseResp.getMsg(), SendCustomTipAttachment.CUSTOME_TIP_NORMAL);

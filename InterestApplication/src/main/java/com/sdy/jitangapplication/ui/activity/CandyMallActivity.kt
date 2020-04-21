@@ -18,6 +18,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshCandyMallEvent
+import com.sdy.jitangapplication.event.UpdateWantStateEvent
 import com.sdy.jitangapplication.model.BannerProductBean
 import com.sdy.jitangapplication.model.GoodsCategoryBeans
 import com.sdy.jitangapplication.model.GoodsListBean
@@ -26,8 +27,6 @@ import com.sdy.jitangapplication.presenter.CandyMallPresenter
 import com.sdy.jitangapplication.presenter.view.CandyMallView
 import com.sdy.jitangapplication.ui.adapter.CandyProductAdapter
 import com.sdy.jitangapplication.ui.adapter.MatchLabelAdapter
-import com.sdy.jitangapplication.ui.dialog.AddExchangeAddressDialog
-import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog
 import com.sdy.jitangapplication.ui.holder.RecommendBannerHolderView
 import com.sdy.jitangapplication.widgets.CenterLayoutManager
 import com.zhpan.bannerview.BannerViewPager
@@ -77,6 +76,8 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
         refreshProduct.setOnLoadMoreListener(this)
         rvCategoryProduct.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvCategoryProduct.adapter = candyProductAdapter
+        candyProductAdapter.setEmptyView(R.layout.empty_layout,rvCategoryProduct)
+        candyProductAdapter.isUseEmpty(false)
         candyProductAdapter.setOnItemClickListener { _, view, position ->
             startActivity<CandyProductDetailActivity>("id" to candyProductAdapter.data[position].id)
         }
@@ -186,6 +187,12 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
         if (refreshProduct.state == RefreshState.Refreshing)
             refreshProduct.finishRefresh(goodsListBean != null)
         candyProductAdapter.addData(goodsListBean?.list ?: mutableListOf())
+
+        if (candyProductAdapter.data.isEmpty()) {
+            candyProductAdapter.isUseEmpty(true)
+        } else {
+            candyProductAdapter.isUseEmpty(false)
+        }
     }
 
 
@@ -194,6 +201,16 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
         refreshProduct.autoRefresh()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updateWantStateEvent(event: UpdateWantStateEvent) {
+        for (data in candyProductAdapter.data.withIndex()) {
+            if (data.value.id == event.id) {
+                data.value.is_wished = event.want
+                candyProductAdapter.notifyItemChanged(data.index)
+                break
+            }
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()

@@ -1,8 +1,10 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.SpanUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.netease.nim.uikit.business.recent.RecentContactsFragment
@@ -15,10 +17,7 @@ import com.netease.nimlib.sdk.msg.model.RecentContact
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.Likelist
-import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
-import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
-import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
-import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment
+import com.sdy.jitangapplication.nim.attachment.*
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_message_list.view.*
 
@@ -67,18 +66,51 @@ class MessageListAdapter :
             holder.itemView.msgNew.isVisible = true
         } else {
             holder.itemView.msgNew.isVisible = false
-            when {
-                item.attachment is ChatHiAttachment -> holder.itemView.text.text =
-                    when {
-                        (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
-                        (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
-                        (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
-                        (item.attachment as ChatHiAttachment).showType == ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
+            when (item.attachment) {
+                is ChatHiAttachment -> holder.itemView.text.text =
+                    when ((item.attachment as ChatHiAttachment).showType) {
+                        ChatHiAttachment.CHATHI_HI -> "『招呼消息』"
+                        ChatHiAttachment.CHATHI_MATCH -> "『匹配消息』"
+                        ChatHiAttachment.CHATHI_RFIEND -> "『好友消息』"
+                        ChatHiAttachment.CHATHI_OUTTIME -> "『消息过期』"
                         else -> ""
                     }
-                item.attachment is ShareSquareAttachment -> holder.itemView.text.text = "『动态分享内容』"
-                item.attachment is SendGiftAttachment -> holder.itemView.text.text = "『礼物消息』"
-                item.attachment is SendCustomTipAttachment -> holder.itemView.text.text =
+                is ShareSquareAttachment -> holder.itemView.text.text = "『动态分享内容』"
+                is SendGiftAttachment -> when ((item.attachment as SendGiftAttachment).giftStatus) {
+                    SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
+                        holder.itemView.text.text = SpanUtils.with(holder.itemView.text)
+                            .append("[礼物]")
+                            .setForegroundColor(Color.parseColor("#FFFD4417"))
+                            .append("糖果礼物待领取")
+                            .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                            .create()
+                    }
+                    SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
+                        holder.itemView.text.text = "[礼物]糖果礼物已领取"
+                    }
+                    SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_RETURNED -> {
+                        holder.itemView.text.text = "[礼物]糖果礼物已退回"
+                    }
+                }
+                is WishHelpAttachment -> when ((item.attachment as WishHelpAttachment).wishHelpStatus) {
+                    WishHelpAttachment.WISH_HELP_STATUS_NORMAL -> {
+                        holder.itemView.text.text = SpanUtils.with(holder.itemView.text)
+                            .append("[助力]")
+                            .setForegroundColor(Color.parseColor("#FFFD4417"))
+                            .append("助力额度${(item.attachment as WishHelpAttachment).amount}糖果")
+                            .setForegroundColor(Color.parseColor("#FFCCCDCF"))
+                            .create()
+                    }
+                    WishHelpAttachment.WISH_HELP_STATUS_HAS_OPEN -> {
+                        holder.itemView.text.text =
+                            "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
+                    }
+                    WishHelpAttachment.WISH_HELP_STATUS_HAS_RETURNED -> {
+                        holder.itemView.text.text =
+                            "[助力]助力额度${(item.attachment as WishHelpAttachment).amount}糖果"
+                    }
+                }
+                is SendCustomTipAttachment -> holder.itemView.text.text =
                     (item.attachment as SendCustomTipAttachment).content
                 else -> holder.itemView.text.text = item.content
             }

@@ -7,6 +7,7 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.RegexUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.lljjcoder.Interface.OnCityItemClickListener
@@ -98,6 +99,7 @@ class AddAddressActivity : BaseMvpActivity<AddAddressPresenter>(), AddAddressVie
                 mPresenter.editAddress(params)
         }
 
+        addressName.filters = arrayOf(InputFilter.LengthFilter(10))
         addressContact.filters = arrayOf(InputFilter.LengthFilter(11))
         addressPostNumber.filters = arrayOf(InputFilter.LengthFilter(6))
         if (address != null) {
@@ -131,8 +133,10 @@ class AddAddressActivity : BaseMvpActivity<AddAddressPresenter>(), AddAddressVie
                 params["province_name"] = province.name
                 params["city_name"] = city.name
                 params["area_name"] = district.name
-
-                addressContent.text = "${province.name}${city.name}${district.name}"
+                if (province.name == city.name) {
+                    addressContent.text = "${city.name}${district.name}"
+                } else
+                    addressContent.text = "${province.name}${city.name}${district.name}"
             }
         })
 
@@ -141,9 +145,11 @@ class AddAddressActivity : BaseMvpActivity<AddAddressPresenter>(), AddAddressVie
     fun saveBtnEnable() {
         saveBtn.isEnabled = !addressName.text.isNullOrEmpty()
                 && !addressContact.text.isNullOrEmpty()
+                && RegexUtils.isMobileSimple(addressContact.text.toString())
                 && !addressContent.text.isNullOrEmpty()
                 && !addressDetailContent.text.isNullOrEmpty()
                 && !addressPostNumber.text.isNullOrEmpty()
+                && addressPostNumber.text.length == 6
 
     }
 

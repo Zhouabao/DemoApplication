@@ -35,7 +35,11 @@ class CandyPriceAdapter :
         holder.itemView.candyCount.typeface =
             Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
         holder.itemView.candyCount.text = "${item.amount}"
-        holder.itemView.candyPrice.text = "¥${item.original_price}"
+        holder.itemView.candyPrice.text = "¥${if (item.discount_price != 0F) {
+            item.discount_price
+        } else {
+            item.original_price
+        }}"
         holder.itemView.candyDiscount.isVisible = item.giving_amount > 0
         holder.itemView.candyDiscount.text = "赠送${item.giving_amount}"
 

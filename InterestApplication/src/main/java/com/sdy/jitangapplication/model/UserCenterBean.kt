@@ -12,7 +12,7 @@ import java.io.Serializable
  */
 data class UserInfoBean(
     val mytags_count: Int = 0,//兴趣个数 *    desc   : 个人中心请求model
-    val mytags_list: MutableList<LabelQuality> = mutableListOf(),//展示的兴趣
+    val label_quality: MutableList<LabelQuality> = mutableListOf(),//展示的兴趣
     val userinfo: Userinfo? = null,
     val hide_distance: Boolean = false,//（true开启隐藏  false  关闭隐藏）
     val hide_book: Boolean = false,//（ true 屏蔽通讯录     false  关闭隐藏通讯录）

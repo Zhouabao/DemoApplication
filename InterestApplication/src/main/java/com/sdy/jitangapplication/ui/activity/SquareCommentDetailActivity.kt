@@ -32,9 +32,9 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshCommentEvent
+import com.sdy.jitangapplication.event.RefreshDeleteSquareEvent
 import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
-import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.AllCommentBean
 import com.sdy.jitangapplication.model.CommentBean
 import com.sdy.jitangapplication.model.SquareBean
@@ -80,13 +80,19 @@ import org.jetbrains.anko.startActivity
 /**
  * 广场详情页 包含内容详情以及点赞评论信息
  */
-class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView, View.OnClickListener,
+class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView,
+    View.OnClickListener,
     OnRefreshListener, OnLoadMoreListener {
     private val TAG = SquareCommentDetailActivity::class.java.simpleName
 
     //评论数据
     private var commentDatas: MutableList<CommentBean> = mutableListOf()
-    private val adapter: MultiListCommentAdapter by lazy { MultiListCommentAdapter(this, commentDatas) }
+    private val adapter: MultiListCommentAdapter by lazy {
+        MultiListCommentAdapter(
+            this,
+            commentDatas
+        )
+    }
 
     private var squareBean: SquareBean? = null
 
@@ -162,7 +168,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 audioRecordLl.isVisible = true
 //                initAudio()
                 initAudio(0)
-                mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+                mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "")
+                    .prepareMedia()
             }
         }
 
@@ -456,14 +463,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             when (squareBean!!.isPlayAudio) {
                 IjkMediaPlayerUtil.MEDIA_ERROR -> {
                     initAudio(0)
-                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "")
+                        .prepareMedia()
                 }
                 IjkMediaPlayerUtil.MEDIA_PREPARE -> {//准备中
                     mediaPlayer!!.prepareMedia()
                 }
                 IjkMediaPlayerUtil.MEDIA_STOP -> {//停止就重新准备
                     initAudio(0)
-                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "")
+                        .prepareMedia()
                 }
                 IjkMediaPlayerUtil.MEDIA_PLAY -> {//播放点击就暂停
                     mediaPlayer!!.pausePlay()
@@ -500,7 +509,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     /**
      * 初始化图片列表
      */
-    private val imgsAdapter by lazy { ListSquareImgsAdapter(this, squareBean!!.photo_json ?: mutableListOf()) }
+    private val imgsAdapter by lazy {
+        ListSquareImgsAdapter(
+            this,
+            squareBean!!.photo_json ?: mutableListOf()
+        )
+    }
 
     private fun initPics() {
         if (squareBean!!.photo_json != null && squareBean!!.photo_json!!.size > 0) {
@@ -522,7 +536,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                         },
                         "square_id" to squareBean!!.id!!
                     )
-                    mPresenter.getSquareLike(params)
+                    mPresenter.getSquareLike(params, true)
                 }
 
                 startActivity<BigImageActivity>(
@@ -676,7 +690,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             commentParams["page"] = page
             mPresenter.getCommentList(commentParams, true)
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.plus(1)
-            EventBus.getDefault().post(RefreshCommentEvent(squareBean!!.comment_cnt, intent.getIntExtra("position", 0)))
+            EventBus.getDefault().post(
+                RefreshCommentEvent(
+                    squareBean!!.comment_cnt,
+                    intent.getIntExtra("position", 0)
+                )
+            )
             squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         }
     }
@@ -701,7 +720,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.minus(1)
-            EventBus.getDefault().post(RefreshCommentEvent(squareBean!!.comment_cnt, intent.getIntExtra("position", 0)))
+            EventBus.getDefault().post(
+                RefreshCommentEvent(
+                    squareBean!!.comment_cnt,
+                    intent.getIntExtra("position", 0)
+                )
+            )
             squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         }
     }
@@ -862,7 +886,15 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (result) {
             CommonFunction.toast("动态删除成功!")
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
-            EventBus.getDefault().postSticky(UserCenterEvent(true))
+            EventBus.getDefault().post(
+                RefreshDeleteSquareEvent(
+                    if (squareBean != null) {
+                        squareBean!!.id ?: 0
+                    } else {
+                        intent.getIntExtra("square_id", 0)
+                    }
+                )
+            )
             finish()
         } else {
             CommonFunction.toast("动态删除失败！")

@@ -66,7 +66,7 @@ data class ProductDetailBean(
     var msg_cnt: Int = 0,
     var mycandy_amount: Int = 0,
     var min_amount: Int = 0,
-    var price: Float = 0F,
+    var price: String = "",
     var icon: String = "",
     var title: String = "",
     var visit_cnt: Int = 0,
@@ -97,6 +97,7 @@ data class ProductDetailMediaBean(
 data class WantFriendBean(
     var accid: String = "",
     var avatar: String = "",
+    var ship_str: String = "",
     var isfriend: Boolean = false,
     var nickname: String = ""
 )
@@ -254,7 +255,8 @@ data class GiftBean(
 ) : Serializable
 
 data class SendGiftOrderBean(
-    var order_id: Int = 0
+    var order_id: Int = 0,
+    var amount: Int = 0
 )
 
 data class GiftBeans(
@@ -270,6 +272,13 @@ data class SomeOneGetGiftBean(
     var gif_cnt: Int = 0,
     var list: MutableList<GiftBean> = mutableListOf(),
     var nickname: String = ""
+)
+
+data class GiftStateBean(
+    var amount: Int = 0,
+    var icon: String = "",
+    var state: Int = 0,
+    var title: String = ""
 )
 
 

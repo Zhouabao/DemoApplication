@@ -48,6 +48,12 @@ class RefreshMyCandyEvent(val candyCount: Int)
 
 
 /**
+ * 如果详情加入心愿列表，那列表也会随之更新状态
+ */
+class UpdateWantStateEvent(var want: Boolean, val id: Int)
+
+
+/**
  * 更新糖果商城
  */
 class RefreshCandyMallEvent()
@@ -56,3 +62,8 @@ class RefreshCandyMallEvent()
  * 更新糖果商城详情页
  */
 class RefreshCandyMallDetailEvent()
+
+/**
+ * 更新糖果商城详情页
+ */
+class RefreshCandyMessageEvent(val orderId: Int, val state: Int)

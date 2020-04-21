@@ -83,9 +83,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         //如果定位信息没有就重新定位
         AMapManager.initLocation(this)
         filterBtn.setOnClickListener(this)
-        if (!UserManager.isShowGuideIndex()) {
-            guideDialog.show()
-        }
+
         if (!UserManager.getAlertProtocol())
             PrivacyDialog(this).show()
 

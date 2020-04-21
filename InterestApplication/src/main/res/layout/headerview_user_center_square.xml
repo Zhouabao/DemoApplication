@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/publishCl"
         android:layout_width="345dp"
         android:layout_height="40dp"
@@ -12,6 +12,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/shape_rectangle_orange_white_25dp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -21,12 +22,7 @@
             android:id="@+id/publishImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="127dp"
-            android:src="@drawable/icon_edit_me"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/publishBtn"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:src="@drawable/icon_edit_me" />
 
         <TextView
             android:id="@+id/publishBtn"
@@ -36,12 +32,10 @@
             android:gravity="center"
             android:text="发布动态"
             android:textColor="#ffff6318"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toRightOf="@id/publishImg"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="16sp" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

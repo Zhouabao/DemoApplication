@@ -14,6 +14,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RePublishEvent
+import com.sdy.jitangapplication.event.RefreshDeleteSquareEvent
 import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.presenter.MySquarePresenter
@@ -130,6 +131,16 @@ class MySquareFragment : BaseMvpLazyLoadFragment<MySquarePresenter>(), MySquareV
             }
 
             adapter.refreshNotifyItemChanged(event.position)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun refreshDeleteSquareEvent(event: RefreshDeleteSquareEvent) {
+        for (data in adapter.data.withIndex()) {
+            if (data.value.id == event.squareId) {
+                adapter.remove(data.index)
+                break
+            }
         }
     }
 

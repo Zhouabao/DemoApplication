@@ -1,6 +1,5 @@
 package com.sdy.jitangapplication.ui.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -9,6 +8,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -35,7 +35,7 @@ import org.jetbrains.anko.startActivity
  *    desc   : 糖果提现人民币
  *    version: 1.0
  */
-class WithdrawCandyDialog(val myContext: Context) : Dialog(myContext, R.style.MyDialog),
+class WithdrawCandyDialog(val myContext: Context) : BottomSheetDialog(myContext, R.style.BottomSheetDialog),
     View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +50,7 @@ class WithdrawCandyDialog(val myContext: Context) : Dialog(myContext, R.style.My
     private fun initWindow() {
         val window = this.window
         window?.setGravity(Gravity.BOTTOM)
-        setCanceledOnTouchOutside(false)
+        setCanceledOnTouchOutside(true)
         val params = window?.attributes
         params?.width = WindowManager.LayoutParams.MATCH_PARENT
         params?.height = WindowManager.LayoutParams.WRAP_CONTENT

@@ -50,5 +50,24 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/t1" />
 
+    <TextView
+        android:id="@+id/confirmChargeBtn"
+        android:layout_width="0dp"
+        android:layout_height="47dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/gradient_rectangle_orange_27dp"
+        android:gravity="center"
+        android:text="确认充值"
+        android:textColor="#ffffffff"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rvRechargeCandy" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

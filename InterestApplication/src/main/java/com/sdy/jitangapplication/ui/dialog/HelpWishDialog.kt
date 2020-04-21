@@ -16,15 +16,22 @@ import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
+import com.netease.nimlib.sdk.NIMClient
+import com.netease.nimlib.sdk.RequestCallback
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.MsgService
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.event.CloseDialogEvent
-import com.sdy.jitangapplication.event.RefreshCandyMallDetailEvent
-import com.sdy.jitangapplication.event.UpdateMyCandyAmountEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.GiftBean
+import com.sdy.jitangapplication.model.SendGiftOrderBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment
 import com.sdy.jitangapplication.ui.activity.CandyProductDetailActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -44,7 +51,8 @@ class HelpWishDialog(
     val target_accid: String,
     val nickname: String,
     val giftBean: GiftBean,
-    context: Context
+    context: Context,
+    val isFriend: Boolean
 ) :
     BottomSheetDialog(context, R.style.BottomSheetDialog) {
 
@@ -98,6 +106,11 @@ class HelpWishDialog(
             dismiss()
         }
 
+        chargeBtn.onClick {
+            RechargeCandyDialog(context).show()
+
+        }
+
     }
 
 
@@ -118,8 +131,8 @@ class HelpWishDialog(
     private fun wishHelp(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
             .wishHelp(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
-                override fun onNext(t: BaseResp<Any?>) {
+            .excute(object : BaseSubscriber<BaseResp<SendGiftOrderBean?>>(null) {
+                override fun onNext(t: BaseResp<SendGiftOrderBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
                         wishHelpSuccessLl.isVisible = true
@@ -137,11 +150,19 @@ class HelpWishDialog(
                             .append("糖果\n你与${nickname}已达成好友关系，快去聊聊吧")
                             .create()
 
+                        if (!isFriend) {
+                            //如果不是好友并且停留在对方用户详情界面，就更改UI
+                            EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
+                            sendWishHelpFriendMessage(t.data?.order_id ?: 0)
+                        } else {
+                            sendWishHelpMessage(t.data?.order_id ?: 0)
+                        }
 
                         if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) {
                             EventBus.getDefault().post(RefreshCandyMallDetailEvent())
                         } else if (ActivityUtils.getTopActivity() is MatchDetailActivity) {
-                            EventBus.getDefault().post(UpdateMyCandyAmountEvent(helpWishSeekBar.progress))
+                            EventBus.getDefault()
+                                .post(UpdateMyCandyAmountEvent(helpWishSeekBar.progress))
                         }
 
                     } else {
@@ -149,6 +170,73 @@ class HelpWishDialog(
                     }
                 }
 
+            })
+    }
+
+
+    private fun sendWishHelpMessage(orderId: Int) {
+        val wishHelpAttachment =
+            WishHelpAttachment(
+                giftBean.icon,
+                helpWishSeekBar.progress,
+                orderId,
+                WishHelpAttachment.WISH_HELP_STATUS_NORMAL
+            )
+        val config = CustomMessageConfig()
+        config.enableUnreadCount = true
+        config.enablePush = false
+        val message = MessageBuilder.createCustomMessage(
+            target_accid,
+            SessionTypeEnum.P2P,
+            "",
+            wishHelpAttachment,
+            config
+        )
+        NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+            .setCallback(object :
+                RequestCallback<Void?> {
+                override fun onSuccess(param: Void?) {
+                    //更新消息列表
+                    EventBus.getDefault().post(UpdateSendGiftEvent(message))
+                }
+
+                override fun onFailed(code: Int) {
+                }
+
+                override fun onException(exception: Throwable) {
+
+                }
+            })
+    }
+
+    private fun sendWishHelpFriendMessage(orderId: Int) {
+        val wishHelpFirendAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_WISH_HELP)
+        val config = CustomMessageConfig()
+        config.enableUnreadCount = true
+        config.enablePush = true
+        val message = MessageBuilder.createCustomMessage(
+            target_accid,
+            SessionTypeEnum.P2P,
+            "",
+            wishHelpFirendAttachment,
+            config
+        )
+
+        NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+            .setCallback(object :
+                RequestCallback<Void?> {
+                override fun onSuccess(param: Void?) {
+                    //更新消息列表
+                    EventBus.getDefault().post(UpdateSendGiftEvent(message))
+                    sendWishHelpMessage(orderId)
+                }
+
+                override fun onFailed(code: Int) {
+                }
+
+                override fun onException(exception: Throwable) {
+
+                }
             })
     }
 

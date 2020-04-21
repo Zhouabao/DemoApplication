@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.google.android.material.appbar.AppBarLayout
 import com.google.gson.Gson
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
@@ -42,6 +43,7 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_user_center.*
+import kotlinx.android.synthetic.main.headerview_user_center_square.*
 import kotlinx.android.synthetic.main.item_marquee_power.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.UIUtil
@@ -56,6 +58,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.startActivityForResult
 import java.util.*
+import kotlin.math.abs
 
 /**
  * 我的用户中心
@@ -93,6 +96,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
 
+    private var tabMySquareAndTagHeight = 0
     private fun initView() {
         mPresenter = UserCenterPresenter()
         mPresenter.mView = this
@@ -106,9 +110,13 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         userFoot.setOnClickListener(this)
         userVisit.setOnClickListener(this)
         userVerify.setOnClickListener(this)
-        if (!UserManager.isShowGuideVerify())
-            userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
+        candyCount.typeface = Typeface.createFromAsset(activity!!.assets, "DIN_Alternate_Bold.ttf")
 
+        tabMySquareAndTag.viewTreeObserver.addOnGlobalLayoutListener {
+            if (tabMySquareAndTagHeight == 0) {
+                tabMySquareAndTagHeight = tabMySquareAndTag.top
+            }
+        }
 
 
         multiStateView.retryBtn.onClick {
@@ -121,6 +129,13 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         visitLayoutmanager.stackFromEnd = true
         userVisitRv.layoutManager = visitLayoutmanager
         userVisitRv.adapter = visitsAdapter
+
+
+        userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, p1 ->
+            Log.d("onGlobalLayout", "$tabMySquareAndTagHeight,${p1}")
+            if (tabMySquareAndTagHeight > 0)
+                userName1.isVisible = abs(p1) >= tabMySquareAndTagHeight
+        })
 
         initFragment()
     }
@@ -166,7 +181,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                     if (index == 1)
                         EventBus.getDefault().post(
                             UpdateMyLabelEvent(
-                                userInfoBean?.mytags_list ?: mutableListOf()
+                                userInfoBean?.label_quality ?: mutableListOf()
                             )
                         )
 
@@ -204,7 +219,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 if (position == 1) {
                     EventBus.getDefault().post(
                         UpdateMyLabelEvent(
-                            userInfoBean?.mytags_list ?: mutableListOf()
+                            userInfoBean?.label_quality ?: mutableListOf()
                         )
                     )
                 }
@@ -222,6 +237,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
     private fun initData() {
+
+
         //更新了信息之后更新本地缓存
         SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
 
@@ -229,17 +246,18 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
         GlideUtil.loadAvatorImg(activity!!, userInfoBean?.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean?.userinfo?.nickname ?: ""
-        candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount_str}"
+        userName1.text = userInfoBean?.userinfo?.nickname ?: ""
+        candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
 
-        // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
         checkVerify()
         checkVip()
         for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
             marqueeVipPower.addView(getMarqueeView(data))
 
-
+        if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
+            userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
     }
 
 
@@ -247,29 +265,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     private fun checkVerify() {
         if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
             userVerify.setImageResource(R.drawable.icon_verify_pass)
-//            userVerifyTipBtn.text = "已认证"
-//            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorWhite))
-//            userVerifyTipBtn.isEnabled = false
-//            userVerifyScore.isVisible = false
         } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) { //审核中
             userVerify.setImageResource(R.drawable.icon_verify_reject)
-//            userVerifyTipBtn.text = "认证审核中"
-//            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayTextBF))
-//            userVerifyTipBtn.isEnabled = false
-//            userVerifyScore.isVisible = false
         } else {
-            userVerify.setImageResource(R.drawable.icon_verify_reject)
-//            userVerifyTipBtn.isVisible = true
-//            userVerifyTipBtn.isEnabled = true
-//            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayTextBF))
-//
-//            if (userInfoBean?.userinfo?.isfaced == 4) {//审核不通过
-//                userVerifyTipBtn.text = "重新认证"
-//                userVerifyScore.isVisible = true
-//            } else {//未认证
-//                userVerifyTipBtn.text = "立即认证"
-//                userVerifyScore.isVisible = true
-//            }
+            userVerify.setImageResource(R.drawable.icon_verify_not)
         }
     }
 
@@ -278,15 +277,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         //是否会员
         if (userInfoBean?.userinfo?.isvip == 1) {
             userVip.visibility = View.VISIBLE
-//            isVipCl.visibility = View.VISIBLE
-//            isVipTimeout.text = "到期时间\t\t${userInfoBean?.userinfo?.vip_express ?: ""}"
-//            notVipPowerLl.visibility = View.GONE
             isVipPowerBtn.isVisible = true
             isVipPowerBtn.text = "会员权益"
         } else {
             userVip.visibility = View.GONE
-//            isVipCl.visibility = View.GONE
-//            notVipPowerLl.visibility = View.VISIBLE
             isVipPowerBtn.isVisible = true
             isVipPowerBtn.text = "开通会员"
 
@@ -390,28 +384,50 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //我的兴趣
             R.id.publishCl -> {
+                publishCl.isEnabled = false
                 startActivity<MyLabelActivity>()
+                publishCl.isEnabled = true
             }
             //我的足迹
             R.id.userFoot -> {
+                userFoot.isEnabled = false
                 startActivity<MyFootPrintActivity>()
+                userFoot.isEnabled = true
             }
             //我的来访
             R.id.userVisit -> {
+                userVisit.isEnabled = false
                 startActivity<MyVisitActivity>(
                     "isVip" to (userInfoBean?.userinfo?.isvip == 1),
                     "today" to userInfoBean?.userinfo?.todayvisit,
                     "all" to userInfoBean?.userinfo?.allvisit,
                     "freeShow" to userInfoBean?.free_show
                 )
+                userVisit.isEnabled = true
             }
             //认证中心
             R.id.userVerify -> {
-                startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
+                when (userInfoBean?.userinfo?.isfaced) {
+                    1 -> {
+                        CommonFunction.toast("您已通过认证")
+                    }
+                    2, 3 -> {
+                        CommonFunction.toast("认证审核中...")
+                    }
+                    else -> {
+                        userVerify.isEnabled = false
+                        startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
+                        userVerify.isEnabled = true
+                    }
+
+                }
+
             }
             //我的糖果
             R.id.candyCl -> {
+                candyCl.isEnabled = false
                 startActivity<MyCandyActivity>()
+                candyCl.isEnabled = true
             }
         }
     }
@@ -435,6 +451,13 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         mPresenter.myInfoCandy()
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshMyCandyEvent(event: RefreshMyCandyEvent) {
+        if ((userInfoBean?.userinfo?.my_candy_amount ?: 0) >= event.candyCount && event.candyCount >= 0
+        ) {
+            candyCount.text = "${(userInfoBean?.userinfo?.my_candy_amount ?: 0) - event.candyCount}"
+        }
+    }
 
     /*-------------------------------------- 重新上传-----------------------------*/
     private var uploadCount = 0
@@ -562,21 +585,27 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
     override fun onGlobalLayout() {
+//        if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1) {
         val width = userVerify.left + userVerify.width
         if (width > 0) {
-            guideVerifyWindow.showAtLocation(
-                userVerify,
-                Gravity.TOP and Gravity.LEFT,
-                width - SizeUtils.dp2px(154F),
-                SizeUtils.dp2px(-20F)
-            )
-            multiStateView.postDelayed({
-                guideVerifyWindow.dismiss()
-                UserManager.saveShowGuideVerify(true)
+            if (userInfoBean?.userinfo?.isfaced != 1) {
+                guideVerifyWindow.showAtLocation(
+                    userVerify,
+                    Gravity.TOP and Gravity.LEFT,
+                    width - SizeUtils.dp2px(154F),
+                    SizeUtils.dp2px(-20F)
+                )
+                multiStateView.postDelayed({
+                    guideVerifyWindow.dismiss()
+                    UserManager.saveShowGuideVerify(true)
+                    userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }, 3000L)
+            } else {
                 userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }, 3000L)
+            }
         }
-        Log.d("onGlobalLayout", "$width")
+        Log.d("onGlobalLayout", "width = $width")
+//        }
 
     }
 

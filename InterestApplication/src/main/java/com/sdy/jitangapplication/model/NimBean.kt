@@ -32,11 +32,19 @@ data class NimBean(
     var target_isfaced: Boolean = false,
     var target_want_cnt: Boolean = false,
     var tips_chat_cnt: Int = 0,
-    var tips_gift_cnt: Int = 0
+    var tips_gift_cnt: Int = 0,
+    var both_gift_list: MutableList<ChatGiftStateBean> = mutableListOf()
 ) : Serializable
 
+data class ChatGiftStateBean(
+    var cate_type: Int = 0,//cate_type  1 礼物  2助力
+    var id: Int = 0,
+    var state: Int = 0//state  2领取  3过期
+)
+
 data class ResidueCountBean(
-    var residue_msg_cnt: Int = 0//剩余可发送的招呼消息次数
+    var residue_msg_cnt: Int = 0,//剩余可发送的招呼消息次数
+    var get_help_amount: Int = 0
 )
 
 

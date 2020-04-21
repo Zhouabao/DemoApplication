@@ -85,7 +85,10 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
                         sendGiftMessage(t.data?.order_id ?: 0)
                         CommonFunction.toast(t.msg)
                     } else if (t.code == 419) {
-                        AlertCandyEnoughDialog(context).show()
+                        AlertCandyEnoughDialog(
+                            context,
+                            AlertCandyEnoughDialog.FROM_SEND_GIFT
+                        ).show()
                     } else {
                         CommonFunction.toast(t.msg)
                     }
@@ -95,15 +98,18 @@ class ConfirmSendGiftDialog(var context1: Context, val giftName: GiftBean, val a
     }
 
     private fun sendGiftMessage(orderId: Int) {
-        val shareSquareAttachment = SendGiftAttachment(orderId, false)
+        val config = CustomMessageConfig()
+        config.enableUnreadCount = true
+        config.enablePush = false
+        val shareSquareAttachment =
+            SendGiftAttachment(orderId, SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL)
         val message = MessageBuilder.createCustomMessage(
             account,
             SessionTypeEnum.P2P,
             "",
             shareSquareAttachment,
-            CustomMessageConfig()
+            config
         )
-        message.localExtension = hashMapOf<String, Any>("giftReceiveStatus" to SendGiftAttachment.GiftReceiveStatusNormal)
         NIMClient.getService(MsgService::class.java).sendMessage(message, false)
             .setCallback(object :
                 RequestCallback<Void?> {

@@ -53,6 +53,7 @@ class MyTagFragment : BaseMvpLazyLoadFragment<MyTagPresenter>(), MyTagView {
         tagAdapter.setHeaderAndEmpty(false)
         tagAdapter.setEmptyView(R.layout.empty_my_square_layout, rvMyTag)
         tagAdapter.emptyView.emptyPublishBtn.text = "添加兴趣"
+        tagAdapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_my_label_quality)
         tagAdapter.emptyView.emptyMySquareTip.text = "您还没有添加兴趣\n快去添加一些你喜欢的兴趣吧"
         tagAdapter.emptyView.emptyPublishBtn.onClick {
             startActivity<MyLabelActivity>()

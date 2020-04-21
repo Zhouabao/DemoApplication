@@ -557,6 +557,7 @@ object UserManager {
         /**
          * 认证相关缓存清空
          */
+        SPUtils.getInstance(Constants.SPNAME).remove("isShowGuideVerify")
         SPUtils.getInstance(Constants.SPNAME).remove("AlertProtocol")
         SPUtils.getInstance(Constants.SPNAME).remove("notice")
         cleanVerifyData()
@@ -639,17 +640,6 @@ object UserManager {
     /**
      * 是否展示首页的引导使用
      */
-    fun isShowGuideIndex(): Boolean {
-        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuide", false)
-    }
-
-    fun saveShowGuideIndex(isShow: Boolean) {
-        SPUtils.getInstance(Constants.SPNAME).put("isShowGuide", isShow)
-    }
-
-    /**
-     * 是否展示首页的引导使用
-     */
     fun isShowGuideCandy(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideCandy", false)
     }
@@ -695,7 +685,7 @@ object UserManager {
 
 
     /**
-     * 是否展示助力礼物
+     * 是否展示认证提醒
      */
     fun isShowGuideVerify(): Boolean {
         return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideVerify", false)
@@ -703,6 +693,17 @@ object UserManager {
 
     fun saveShowGuideVerify(isShow: Boolean) {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideVerify", isShow)
+    }
+
+    /**
+     * 是否展示赠送礼物规则提醒
+     */
+    fun isShowGuideGiftProtocol(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuideGiftProtocol", false)
+    }
+
+    fun saveShowGuideGiftProtocol(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuideGiftProtocol", isShow)
     }
 
 

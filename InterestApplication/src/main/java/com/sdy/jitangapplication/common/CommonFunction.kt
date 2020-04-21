@@ -19,19 +19,19 @@ import com.netease.nimlib.sdk.RequestCallback
 import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.model.GiftStateBean
 import com.sdy.jitangapplication.model.GreetTimesBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
+import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.activity.ContactBookActivity
 import com.sdy.jitangapplication.ui.activity.FindByTagListActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
-import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
-import com.sdy.jitangapplication.ui.dialog.GreetLimitlDialog
-import com.sdy.jitangapplication.ui.dialog.GreetUseUpDialog
-import com.sdy.jitangapplication.ui.dialog.HarassmentDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.utils.GlideEngine
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
@@ -130,6 +130,21 @@ object CommonFunction {
                     when {
                         t.code == 200 -> {//成功
                             if (!t.data?.default_msg.isNullOrEmpty()) {
+                                //发送招呼消息
+                                val chatHiAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_HI)
+                                val config = CustomMessageConfig()
+                                config.enableUnreadCount = false
+                                config.enablePush = false
+                                val message = MessageBuilder.createCustomMessage(
+                                    target_accid,
+                                    SessionTypeEnum.P2P,
+                                    "",
+                                    chatHiAttachment,
+                                    config
+                                )
+                                NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+
+                                //随机发送一条招呼文本消息
                                 val msg = MessageBuilder.createTextMessage(
                                     target_accid,
                                     SessionTypeEnum.P2P,
@@ -236,6 +251,53 @@ object CommonFunction {
 
                 }
             })
+    }
+
+
+    /**
+     * 打开礼物信封
+     * attachment.getOrderId()
+     *
+     */
+    fun openGiftLetter(
+        isReceive: Boolean,
+        giftStatus: Int,
+        order_id: Int,
+        context: Context,
+        view: View
+    ) {
+        val loadingDialog = LoadingDialog(context)
+        RetrofitFactory.instance.create(Api::class.java)
+            .checkGiftState(UserManager.getSignParams(hashMapOf("order_id" to order_id)))
+            .excute(object : BaseSubscriber<BaseResp<GiftStateBean?>>(null) {
+                override fun onStart() {
+                    super.onStart()
+                    view.isEnabled = false
+                    loadingDialog.show()
+                }
+
+                override fun onNext(t: BaseResp<GiftStateBean?>) {
+                    super.onNext(t)
+                    loadingDialog.dismiss()
+                    view.isEnabled = true
+                    if (t.code == 200) {
+                        ReceiveCandyGiftDialog(
+                            isReceive,
+                            giftStatus,
+                            t.data!!,
+                            order_id,
+                            context
+                        ).show()
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    super.onError(e)
+                    view.isEnabled = true
+                    loadingDialog.dismiss()
+                }
+            })
+
     }
 
     fun dissolveRelationship(target_accid: String, negative: Boolean = false) {

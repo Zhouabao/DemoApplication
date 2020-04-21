@@ -22,6 +22,7 @@ import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshCandyMallDetailEvent
+import com.sdy.jitangapplication.event.UpdateWantStateEvent
 import com.sdy.jitangapplication.model.GiftBean
 import com.sdy.jitangapplication.model.ProductDetailBean
 import com.sdy.jitangapplication.presenter.CandyProductDetailPresenter
@@ -281,21 +282,45 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
             rbMessage.text = "留言(${data.msg_cnt})"
             rbComment.text = "评价(${data.comments_cnt})"
             if (data.mycandy_amount >= data.amount) {
-
-                exchangeProgress.setProgress(100F)
+//                exchangeProgress.setProgress(100F)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    exchangeProgress.setProgress(
+                        100,
+                        true
+                    )
+                } else {
+                    exchangeProgress.progress = 100
+                }
                 exchangeCandy.text = SpanUtils.with(exchangeCandy)
                     .appendImage(R.drawable.icon_candy_detail)
-                    .append("\t\t${CommonFunction.num2thousand("${data!!.amount}")}\t\t")
+                    .append("\t${CommonFunction.num2thousand("${data!!.amount}")}\t")
                     .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
                     .append("兑换")
                     .create()
             } else {
-                exchangeProgress.setProgress((data.mycandy_amount * 1F / data.amount * 100))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    exchangeProgress.setProgress(
+                        if (data.mycandy_amount * 1F / data.amount > (27 / 232F)) {
+                            ((data.mycandy_amount * 1F / data.amount * 100).toInt())
+                        } else {
+                            (27 / 232F * 100).toInt()
+                        },
+                        true
+                    )
+                } else {
+                    exchangeProgress.progress =
+                        if (data.mycandy_amount * 1F / data.amount > (27 / 232F)) {
+                            ((data.mycandy_amount * 1F / data.amount * 100).toInt())
+                        } else {
+                            (27 / 232F * 100).toInt()
+                        }
+                }
+//                exchangeProgress.setProgress((data.mycandy_amount * 1F / data.amount * 100))
 
                 exchangeCandy.text = SpanUtils.with(exchangeCandy)
-                    .append("还需要\t\t")
+                    .append("还需要\t")
                     .appendImage(R.drawable.icon_candy_detail)
-                    .append("${CommonFunction.num2thousand("${data.amount - data.mycandy_amount}")}")
+                    .append("\t${CommonFunction.num2thousand("${data.amount - data.mycandy_amount}")}")
                     .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
                     .create()
             }
@@ -310,6 +335,7 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
 
     override fun onGoodsAddWishResult(success: Boolean) {
         if (success) {
+
             productBean.is_wished = !productBean.is_wished
             productCollect.text = if (productBean.is_wished) {
                 "已加入"
@@ -325,6 +351,8 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
             )
             if (productBean.is_wished)
                 AddAndMessageDialog(this, productBean.id).show()
+            //更新列表的商品状态
+            EventBus.getDefault().post(UpdateWantStateEvent(productBean.is_wished, productBean.id))
         }
 
     }

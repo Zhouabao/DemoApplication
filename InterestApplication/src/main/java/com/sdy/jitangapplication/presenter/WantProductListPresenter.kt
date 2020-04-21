@@ -43,27 +43,4 @@ class WantProductListPresenter : BasePresenter<WantProductListView>() {
             })
     }
 
-
-    /**
-     * 赠送商品给某人
-     */
-    fun giveGoods(params: HashMap<String, Any>) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .wishHelp(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
-                    super.onNext(t)
-                    mView.onGiveGoods(t.code == 200)
-                }
-
-                override fun onError(e: Throwable?) {
-                    super.onError(e)
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else {
-                        mView.onGiveGoods(false)
-                    }
-                }
-            })
-    }
 }

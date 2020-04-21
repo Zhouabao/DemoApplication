@@ -16,12 +16,14 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.CloseDialogEvent
 import com.sdy.jitangapplication.model.Paylist
 import com.sdy.jitangapplication.model.RechargeBean
+import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.ui.adapter.CandyPriceAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_recharge_candy_discount.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.startActivity
 
 
 /**
@@ -30,7 +32,8 @@ import org.greenrobot.eventbus.ThreadMode
  *    desc   : 糖果充值价格获取
  *    version: 1.0
  */
-class RechargeCandyDialog(val myContext: Context) : BottomSheetDialog(myContext, R.style.BottomSheetDialog) {
+class RechargeCandyDialog(val myContext: Context) :
+    BottomSheetDialog(myContext, R.style.BottomSheetDialog) {
     private val candyPriceAdapter by lazy { CandyPriceAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,21 +57,26 @@ class RechargeCandyDialog(val myContext: Context) : BottomSheetDialog(myContext,
     }
 
 
+    private var checkPosition = 0
     private fun initView() {
         rvRechargeCandy.layoutManager = GridLayoutManager(myContext, 2)
         rvRechargeCandy.adapter = candyPriceAdapter
 
         candyPriceAdapter.setOnItemClickListener { _, view, position ->
-            for (data in candyPriceAdapter.data) {
-                candyPriceAdapter.data[position].checked = true
+            checkPosition = position
+            for (data in candyPriceAdapter.data.withIndex()) {
+                data.value.checked = data.index == position
             }
             candyPriceAdapter.notifyDataSetChanged()
-            ConfirmPayCandyDialog(myContext, candyPriceAdapter.data[position], payments).show()
         }
 
-        //todo 糖果有什么用跳转H5页面
         candyUsage.onClick {
+            context.startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_CANDY_USAGE)
+        }
 
+        confirmChargeBtn.onClick {
+            ConfirmPayCandyDialog(myContext, candyPriceAdapter.data[checkPosition], payments).show()
+            dismiss()
         }
     }
 
@@ -80,6 +88,9 @@ class RechargeCandyDialog(val myContext: Context) : BottomSheetDialog(myContext,
                 override fun onNext(t: BaseResp<RechargeBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
+                        if (!t.data?.list.isNullOrEmpty()) {
+                            t.data!!.list[0].checked = true
+                        }
                         candyPriceAdapter.addData(t.data?.list ?: mutableListOf())
                         payments.addAll(t.data?.paylist ?: mutableListOf<Paylist>())
                     }

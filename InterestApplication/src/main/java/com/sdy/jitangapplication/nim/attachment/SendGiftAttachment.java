@@ -11,31 +11,31 @@ import com.sdy.jitangapplication.nim.extension.CustomAttachmentType;
  */
 public class SendGiftAttachment extends CustomAttachment {
     private final String KEY_ORDER_ID = "orderId";//礼物的订单id
-    private final String KEY_IF_VIRTUAL = "ifVirtual";//是否是虚拟礼物
+    private final String KEY_GIFT_STATUS = "giftStatus";//礼物状态
 
-    private int orderId;//分享的广场id
-    private boolean ifVirtual;//是否是虚拟礼物
+    private int orderId;//礼物的订单id
+    private int giftStatus;//礼物状态
     //礼物开启状态
-    public final static int GiftReceiveStatusNormal = 0;// 开启 待开启
-    public final static int GiftReceiveStatusHasOpen = 1; // 已开启
-    public final static int GiftReceiveStatusHasReturned = 2;// 已退回  超时已退回
+    public final static int GIFT_RECEIVE_STATUS_NORMAL = 1;// 开启 待开启  （待领取状态）
+    public final static int GIFT_RECEIVE_STATUS_HAS_OPEN = 2; // 已开启（领取成功 or 发送成功）
+    public final static int GIFT_RECEIVE_STATUS_HAS_RETURNED = 3;// 已退回  超时已退回（超时退回）
 
     public SendGiftAttachment() {
         super(CustomAttachmentType.SendGift);
     }
 
-    public SendGiftAttachment(int orderId, boolean ifVirtual) {
+    public SendGiftAttachment(int orderId, int giftStatus) {
         super(CustomAttachmentType.SendGift);
         this.orderId = orderId;
-        this.ifVirtual = ifVirtual;
+        this.giftStatus = giftStatus;
     }
 
-    public boolean isIfVirtual() {
-        return ifVirtual;
+    public int getGiftStatus() {
+        return giftStatus;
     }
 
-    public void setIfVirtual(boolean ifVirtual) {
-        this.ifVirtual = ifVirtual;
+    public void setGiftStatus(int giftStatus) {
+        this.giftStatus = giftStatus;
     }
 
     public int getId() {
@@ -49,14 +49,14 @@ public class SendGiftAttachment extends CustomAttachment {
     @Override
     protected void parseData(JSONObject data) {
         orderId = data.getInteger(KEY_ORDER_ID);
-        ifVirtual = data.getBoolean(KEY_IF_VIRTUAL);
+        giftStatus = data.getInteger(KEY_GIFT_STATUS);
     }
 
     @Override
     protected JSONObject packData() {
         JSONObject data = new JSONObject();
         data.put(KEY_ORDER_ID, orderId);
-        data.put(KEY_IF_VIRTUAL, ifVirtual);
+        data.put(KEY_GIFT_STATUS, giftStatus);
         return data;
     }
 }

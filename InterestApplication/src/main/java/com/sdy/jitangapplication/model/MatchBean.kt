@@ -30,7 +30,8 @@ data class MatchListBean(
     var interest_times: Int = 0,
     var is_human: Boolean = false,
     var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管
-    var is_full: Boolean = false//兴趣是否完整
+    var is_full: Boolean = false,//兴趣是否完整
+    var iscompleteguide: Boolean = false//是否引导过
 )
 
 

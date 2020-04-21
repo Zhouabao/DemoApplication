@@ -5,7 +5,7 @@
         <shape>
             <corners android:radius="27dp" />
             <gradient
-                android:angle="270"
+                android:angle="0"
                 android:centerColor="#CCCCCC"
                 android:centerY="0.75"
                 android:endColor="#CCCCCC"
@@ -14,29 +14,34 @@
     </item>
 
     <item android:id="@android:id/secondaryProgress">
-        <scale android:scaleWidth="100%">
+        <!--        <scale android:scaleWidth="100%">-->
+        <clip>
+
             <shape android:shape="rectangle">
                 <solid android:color="@color/colorOrange" />
 
                 <corners android:radius="27dp" />
 
             </shape>
-        </scale>
+        </clip>
+        <!--        </scale>-->
     </item>
 
     <item android:id="@android:id/progress">
-        <scale android:scaleWidth="100%">
+        <!--        <scale android:scaleWidth="100%">-->
+        <clip>
+
             <shape android:shape="rectangle">
-                <solid android:color="@color/colorOrange" />
+                <solid android:color="#FF5D18" />
                 <corners android:radius="27dp" />
                 <gradient
-                    android:angle="270"
+                    android:angle="0"
                     android:centerY="0.75"
-                    android:centerColor="#FFFF8127"
-                    android:endColor="#FFFF6318"
-                    android:startColor="#FFFF9C35" />
+                    android:endColor="#FF5D18"
+                    android:startColor="#FFA618" />
             </shape>
-        </scale>
+        </clip>
+        <!--        </scale>-->
     </item>
 
 </layer-list>

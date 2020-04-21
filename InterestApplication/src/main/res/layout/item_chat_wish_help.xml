@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="238dp"
+    android:layout_height="106dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/wishHelpStatusBg"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/gradient_white_0_18_18_0"
+        android:maxWidth="@dimen/max_bubble_width">
+
+        <TextView
+            android:id="@+id/wishHelpTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/wishHelpImg"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="心愿助力"
+            android:textColor="#ff191919"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/wishHelpAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/wishHelpTitle"
+            android:layout_alignBottom="@id/wishHelpImg"
+            android:layout_marginBottom="3dp"
+            android:text="助力额度80000000糖果"
+            android:textColor="#ff191919"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/wishHelpImg"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="14dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_send_gift" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/giftReceiver"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_below="@id/wishHelpImg"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="14dp"
+        android:gravity="center_vertical"
+        android:text="糖果商城"
+        android:textColor="#ffd2d3d5"
+        android:textSize="12sp" />
+</LinearLayout>

@@ -44,7 +44,7 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/shape_rectangle_orange_12dp"
         android:gravity="center"
-        android:text="赠送"
+        android:text="助力"
         android:textColor="#ffffffff"
         android:textSize="14sp"
         android:textStyle="bold"

@@ -16,6 +16,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshMyCandyEvent
+import com.sdy.jitangapplication.event.UpdateWantStateEvent
 import com.sdy.jitangapplication.model.GoodsCategoryBeans
 import com.sdy.jitangapplication.model.ProductBean
 import com.sdy.jitangapplication.model.PullWithdrawBean
@@ -45,8 +46,9 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_candy)
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             BarUtils.setStatusBarVisibility(this, false)
+        }
         initView()
         mPresenter.myCadny()
     }
@@ -75,7 +77,6 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
             startActivity<CandyProductDetailActivity>("id" to candyProductAdapter.data[position].id)
         }
 
-        guideCandyList.isVisible = !UserManager.isShowGuideCandy()
 
         guideCandyList.onClick {
             guideCandyList.isVisible = false
@@ -83,7 +84,10 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
         }
         guideCandyAll.onClick {
             guideCandyAll.isVisible = false
-            guideCandyWithdraw.isVisible = true
+            if (isWithdraw)
+                guideCandyWithdraw.isVisible = true
+            else
+                guideCandyRecord.isVisible = true
         }
         guideCandyWithdraw.onClick {
             guideCandyWithdraw.isVisible = false
@@ -106,6 +110,7 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
             }
             R.id.candyRecordBtn -> { //交易记录
                 startActivity<CandyRecordActivity>()
+                candyNewRecord.isVisible = false
             }
             R.id.rechargeCandy -> {//充值
                 RechargeCandyDialog(this).show()
@@ -131,12 +136,16 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
         }
     }
 
+    private var isWithdraw = false
     override fun onMyCadnyResult(candyCoun: PullWithdrawBean?) {
         if (candyCoun != null) {
             candyProductAdapter.mycandy = candyCoun!!.candy_amount
             candyCount.text = CommonFunction.num2thousand("${candyCoun.candy_amount}")
             candyNewRecord.isVisible = candyCoun.has_unread
             withdrawCandy.isVisible = candyCoun.is_withdraw
+            isWithdraw = candyCoun.is_withdraw
+            guideCandyList.isVisible = !UserManager.isShowGuideCandy()
+
         }
         mPresenter.goodsCategoryList(params)
     }
@@ -175,6 +184,17 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
             candyProductAdapter.data.clear()
             page = 1
             params["page"] = page
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updateWantStateEvent(event: UpdateWantStateEvent) {
+        for (data in candyProductAdapter.data.withIndex()) {
+            if (data.value.id == event.id) {
+                data.value.is_wished = event.want
+                candyProductAdapter.notifyItemChanged(data.index)
+                break
+            }
         }
     }
 

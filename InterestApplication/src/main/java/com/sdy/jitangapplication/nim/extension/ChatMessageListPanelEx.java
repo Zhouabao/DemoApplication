@@ -48,24 +48,40 @@ import com.netease.nim.uikit.common.util.sys.ClipboardUtil;
 import com.netease.nim.uikit.common.util.sys.NetworkUtil;
 import com.netease.nim.uikit.common.util.sys.ScreenUtil;
 import com.netease.nim.uikit.impl.NimUIKitImpl;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.NIMSDK;
 import com.netease.nimlib.sdk.Observer;
-import com.netease.nimlib.sdk.*;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
-import com.netease.nimlib.sdk.msg.constant.*;
-import com.netease.nimlib.sdk.msg.model.*;
+import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.AttachmentProgress;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
+import com.netease.nimlib.sdk.msg.model.RevokeMsgNotification;
+import com.netease.nimlib.sdk.msg.model.TeamMessageReceipt;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.netease.nimlib.sdk.robot.model.RobotMsgType;
 import com.netease.nimlib.sdk.team.constant.TeamMemberType;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.event.NimHeadEvent;
+import com.sdy.jitangapplication.event.RefreshCandyMessageEvent;
+import com.sdy.jitangapplication.model.ChatGiftStateBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
+import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity;
 import com.sdy.jitangapplication.ui.adapter.ChatTaregetSquareAdapter;
@@ -80,7 +96,12 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -1409,6 +1430,21 @@ public class ChatMessageListPanelEx {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshCandyMessageEvent(RefreshCandyMessageEvent event) {
+        for (int i = items.size() - 1; i >= 0; i--) {
+            IMMessage lastMessage = items.get(i);
+            if (lastMessage.getAttachment() instanceof SendGiftAttachment && ((SendGiftAttachment) lastMessage.getAttachment()).getId() == event.getOrderId()) {
+                ((SendGiftAttachment) lastMessage.getAttachment()).setGiftStatus(event.getState());
+                items.set(i, lastMessage);
+                refreshViewHolderByIndex(i);
+                break;
+            }
+        }
+
+
+    }
+
 
     private View initHeadView() {
         headView = LayoutInflater.from(container.activity).inflate(com.sdy.jitangapplication.R.layout.item_chat_head, messageListView, false);
@@ -1448,6 +1484,22 @@ public class ChatMessageListPanelEx {
             targetSquareAdapter.setNewData(nimBean.getSquare().subList(0, ChatTaregetSquareAdapter.MAX_SHOW_COUNT));
         } else {
             targetSquareAdapter.setNewData(nimBean.getSquare());
+        }
+
+        //both_gift_list
+        for (ChatGiftStateBean stateBean : nimBean.getBoth_gift_list()) {
+            for (int i = items.size() - 1; i >= 0; i--) {
+                IMMessage message = items.get(i);
+                if (message.getAttachment() instanceof SendGiftAttachment && ((SendGiftAttachment) message.getAttachment()).getId() == stateBean.getId()) {
+                    ((SendGiftAttachment) message.getAttachment()).setGiftStatus(stateBean.getState());
+                    items.set(i, message);
+                    refreshViewHolderByIndex(i);
+                } else if (message.getAttachment() instanceof WishHelpAttachment && ((WishHelpAttachment) message.getAttachment()).getOrderId() == stateBean.getId()) {
+                    ((WishHelpAttachment) message.getAttachment()).setWishHelpStatus(stateBean.getState());
+                    items.set(i, message);
+                    refreshViewHolderByIndex(i);
+                }
+            }
         }
     }
 

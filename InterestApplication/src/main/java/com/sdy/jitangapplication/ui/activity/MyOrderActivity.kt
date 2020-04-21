@@ -79,8 +79,9 @@ class MyOrderActivity : BaseMvpActivity<MyOrderPresenter>(), MyOrderView, OnLoad
             when (view.id) {
                 R.id.orderState -> {
                     //状态 1等待发货 2已经退货 3确认收货 4已收货、
-                    if (myOrderAdapter.data[position].state == 3)
+                    if (myOrderAdapter.data[position].state == 3) {
                         OrderCommentDialog(this, position, myOrderAdapter.data[position].id).show()
+                    }
                 }
             }
         }
@@ -122,17 +123,19 @@ class MyOrderActivity : BaseMvpActivity<MyOrderPresenter>(), MyOrderView, OnLoad
     override fun onMyGoodsList(success: Boolean, orders: MutableList<MyOrderBean>?) {
         if (success) {
             stateOrder.viewState = MultiStateView.VIEW_STATE_CONTENT
-            if (refreshOrder.state == RefreshState.Refreshing) {
-                myOrderAdapter.data.clear()
-                myOrderAdapter.notifyDataSetChanged()
-                refreshOrder.resetNoMoreData()
-                refreshOrder.finishRefresh()
-            }
             if (refreshOrder.state == RefreshState.Loading) {
                 if ((orders ?: mutableListOf<MyOrderBean>()).size < Constants.PAGESIZE) {
                     refreshOrder.finishLoadMoreWithNoMoreData()
                 } else {
                     refreshOrder.finishLoadMore(true)
+                }
+            } else {
+                myOrderAdapter.data.clear()
+                myOrderAdapter.notifyDataSetChanged()
+                refreshOrder.resetNoMoreData()
+                refreshOrder.finishRefresh()
+                if ((orders ?: mutableListOf()).size < Constants.PAGESIZE) {
+                    refreshOrder.finishRefreshWithNoMoreData()
                 }
             }
             myOrderAdapter.addData(orders ?: mutableListOf())

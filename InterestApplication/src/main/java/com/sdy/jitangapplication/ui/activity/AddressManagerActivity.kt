@@ -104,7 +104,7 @@ class AddressManagerActivity : BaseMvpActivity<AddressManagerPresenter>(), Addre
                 finish()
             }
             R.id.rightBtn -> {
-                if (addressAdapter.data.size - 1 < max_count) {
+                if (addressAdapter.data.size < max_count) {
                     startActivity<AddAddressActivity>()
                 } else {
                     CommonFunction.toast("最多可以拥有$max_count 地址")

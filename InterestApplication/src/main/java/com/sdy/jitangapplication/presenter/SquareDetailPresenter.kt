@@ -85,28 +85,34 @@ class SquareDetailPresenter : BasePresenter<SquareDetailView>() {
      * 点赞 取消点赞
      * 1 点赞 2取消点赞
      */
-    fun getSquareLike(params: HashMap<String, Any>) {
+    fun getSquareLike(params: HashMap<String, Any>, auto: Boolean = false) {
         RetrofitFactory.instance.create(Api::class.java)
             .getSquareLike(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
-                    if (t.code == 200) {
-                        mView.onGetSquareLikeResult(true)
-                    } else if (t.code == 403) {
-                        UserManager.startToLogin(context as Activity)
-                    } else {
-                        CommonFunction.toast(t.msg)
-                        mView.onGetSquareLikeResult(false)
-                    }
+                    if (!auto)
+                        when (t.code) {
+                            200 -> {
+                                mView.onGetSquareLikeResult(true)
+                            }
+                            403 -> {
+                                UserManager.startToLogin(context as Activity)
+                            }
+                            else -> {
+                                CommonFunction.toast(t.msg)
+                                mView.onGetSquareLikeResult(false)
+                            }
+                        }
                 }
 
                 override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else {
-                        mView.onError(context.getString(R.string.service_error))
-                    }
+                    if (!auto)
+                        if (e is BaseException) {
+                            TickDialog(context).show()
+                        } else {
+                            mView.onError(context.getString(R.string.service_error))
+                        }
                 }
             })
     }

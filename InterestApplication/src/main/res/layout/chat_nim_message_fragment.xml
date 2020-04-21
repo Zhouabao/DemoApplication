@@ -79,7 +79,7 @@
 
         <TextView
             android:id="@+id/btnMakeFriends"
-            android:layout_width="107dp"
+            android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_gravity="right"
             android:layout_marginTop="58dp"
@@ -102,5 +102,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

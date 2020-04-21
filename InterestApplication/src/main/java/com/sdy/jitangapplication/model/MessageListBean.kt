@@ -84,7 +84,8 @@ data class MessageListBean1(
     var normal_percent_complete: Int = 0,
     var total_like_times: Int = 0,
     var approve_time: Long,
-    var isapprove: Int //0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
+    var isapprove: Int//0 不验证  1去认证 2去开通会员  3去认证+去会员  4去会员+去认证
+
 )
 
 data class Likelist(

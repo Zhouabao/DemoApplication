@@ -155,7 +155,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         backBtn1.setOnClickListener(this)
         btnBack2.setOnClickListener(this)
 
-        guidelWishHelp.isVisible = !UserManager.isShowGuideHelpWish()
 
         //用户的广场预览界面
         detailThumbRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -178,10 +177,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 R.id.helpWishBtn -> {
                     HelpWishDialog(
                         matchBean!!.mycandy_amount,
-                        matchBean!!.nickname ?: "",
                         matchBean!!.accid,
+                        matchBean!!.nickname ?: "",
                         wishGiftAdapter.data[position],
-                        this
+                        this,
+                        matchBean!!.isfriend == 1
                     ).show()
                 }
             }
@@ -295,9 +295,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     /**
      *心愿礼物适配器
      */
-    private val wishGiftAdapter by lazy {
-        WishGiftAdapter(this)
-    }
+    private val wishGiftAdapter by lazy { WishGiftAdapter(this) }
 
     private fun initUserInfomationData() {
         if (matchBean!!.base_info.height != 0)
@@ -394,6 +392,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             userTagAdapter.addData(data)
         }
 
+        guidelWishHelp.isVisible =
+            !UserManager.isShowGuideHelpWish() && !matchBean!!.wish_list.isNullOrEmpty()
+
         if (matchBean!!.gift_list.isNullOrEmpty()) {
             usergiftAdapter.isUseEmpty(true)
         } else
@@ -401,7 +402,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         if (matchBean!!.wish_list.isNullOrEmpty()) {
             detailUserWishIndicator.isVisible = false
+            detailUserWishRv.isVisible = false
         } else {
+            detailUserWishRv.isVisible = true
             detailUserWishIndicator.isVisible = true
             wishGiftAdapter.setNewData(matchBean!!.wish_list)
             detailUserWishIndicator.text = SpanUtils.with(detailUserWishIndicator)
@@ -415,8 +418,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         initUserInfomationData()//初始化个人信息数据
 //        EventBus.getDefault().post(UpdateSquareEvent())
-        gift.text = "礼物墙 ${matchBean!!.gift_list.size}"
-        squareCount.text = "动态 ${matchBean!!.square_cnt ?: 0}"
         detailUserName.text = matchBean!!.nickname
         titleUsername.text = matchBean!!.nickname
         val left = resources.getDrawable(
@@ -648,11 +649,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (islike) {
             if (statusBean != null)
                 if (statusBean.code == 200) {
-
                     if (ActivityUtils.isActivityAlive(LikeMeReceivedActivity::class.java.newInstance())) {
                         EventBus.getDefault().post(UpdateLikeMeReceivedEvent())
                     }
-
                     if (statusBean.data?.residue == 0) {
                         ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, this).show()
                     } else {
@@ -944,6 +943,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (event.success) {
             matchBean!!.isgreeted = true
             updateLightCount(UserManager.getLightingCount() - 1)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMatchByWishHelpEvent(event: MatchByWishHelpEvent) {
+        if (event.isFirend) {
+            matchBean!!.isfriend = 1
+            showGreetAnimatioon()
+            updateLightCount(-1)
         }
     }
 
