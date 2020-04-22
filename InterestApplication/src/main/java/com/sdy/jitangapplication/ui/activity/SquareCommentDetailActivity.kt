@@ -142,13 +142,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             commentParams["square_id"] = "${squareBean!!.id}"
             mPresenter.getCommentList(commentParams, true)
         } else {
-            mPresenter.getSquareInfo(
-                hashMapOf(
-                    "token" to UserManager.getToken(),
-                    "accid" to UserManager.getAccid(),
-                    "square_id" to intent.getIntExtra("square_id", 0)
+            stateview.postDelayed({
+                mPresenter.getSquareInfo(
+                    hashMapOf(
+                        "token" to UserManager.getToken(),
+                        "accid" to UserManager.getAccid(),
+                        "square_id" to intent.getIntExtra("square_id", 0)
+                    )
                 )
-            )
+            }, 1000L)
+
         }
 
     }

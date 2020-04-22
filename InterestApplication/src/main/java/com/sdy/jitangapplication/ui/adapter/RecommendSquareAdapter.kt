@@ -148,11 +148,6 @@ class RecommendSquareAdapter :
                     fromRecommend = true
                 )
             else {//文本.语音.图片
-                SquareCommentDetailActivity.start(
-                    mContext,
-                    squareId = item.id,
-                    position = helper.layoutPosition - headerLayoutCount
-                )
                 if (item.type == 1) {
                     if (item.accid != UserManager.getAccid() && !item.isliked)
                         clickZan(
@@ -160,6 +155,12 @@ class RecommendSquareAdapter :
                             helper.layoutPosition - headerLayoutCount
                         )
                 }
+                SquareCommentDetailActivity.start(
+                    mContext,
+                    squareId = item.id,
+                    position = helper.layoutPosition - headerLayoutCount
+                )
+
             }
 
 
