@@ -11,6 +11,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.GetAddressvent
 import com.sdy.jitangapplication.event.RefreshAddressvent
 import com.sdy.jitangapplication.model.AddressBean
@@ -52,7 +53,13 @@ class AddressManagerActivity : BaseMvpActivity<AddressManagerPresenter>(), Addre
         rightBtn.text = "添加新地址"
         rightBtn.setTextColor(Color.parseColor("#FF191919"))
         hotT1.text = "收货地址"
-        rightBtn.setOnClickListener(this)
+        rightBtn.clickWithTrigger {
+            if (addressAdapter.data.size < max_count) {
+                startActivity<AddAddressActivity>()
+            } else {
+                CommonFunction.toast("最多可以拥有$max_count 地址")
+            }
+        }
         btnBack.setOnClickListener(this)
 
         stateAddress.retryBtn.onClick {
@@ -68,6 +75,7 @@ class AddressManagerActivity : BaseMvpActivity<AddressManagerPresenter>(), Addre
 
 
         addressAdapter.setOnItemChildClickListener { _, view, position ->
+            view.isEnabled = false
             when (view.id) {
                 R.id.addressEdit -> {//地址编辑
                     startActivity<AddAddressActivity>("address" to addressAdapter.data[position])
@@ -93,6 +101,7 @@ class AddressManagerActivity : BaseMvpActivity<AddressManagerPresenter>(), Addre
                     EventBus.getDefault().post(GetAddressvent(addressAdapter.data[position]))
                 }
             }
+            view.postDelayed({ view.isEnabled = true }, 2000L)
         }
         mPresenter.getAddress()
     }
@@ -102,13 +111,6 @@ class AddressManagerActivity : BaseMvpActivity<AddressManagerPresenter>(), Addre
         when (v.id) {
             R.id.btnBack -> {
                 finish()
-            }
-            R.id.rightBtn -> {
-                if (addressAdapter.data.size < max_count) {
-                    startActivity<AddAddressActivity>()
-                } else {
-                    CommonFunction.toast("最多可以拥有$max_count 地址")
-                }
             }
         }
     }

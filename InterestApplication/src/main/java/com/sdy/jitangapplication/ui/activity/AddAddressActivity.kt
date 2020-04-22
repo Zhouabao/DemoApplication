@@ -17,6 +17,7 @@ import com.lljjcoder.bean.ProvinceBean
 import com.lljjcoder.style.cityjd.JDCityConfig
 import com.lljjcoder.style.cityjd.JDCityPicker
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.RefreshAddressvent
 import com.sdy.jitangapplication.model.AddressBean
 import com.sdy.jitangapplication.presenter.AddAddressPresenter
@@ -51,7 +52,7 @@ class AddAddressActivity : BaseMvpActivity<AddAddressPresenter>(), AddAddressVie
         rightBtn.isVisible = address != null
         rightBtn.text = "删除"
         rightBtn.setTextColor(Color.parseColor("#FF000000"))
-        rightBtn.onClick {
+        rightBtn.clickWithTrigger {
             val deleteDialog = DeleteDialog(this)
             deleteDialog.show()
             deleteDialog.title.text = "提示"
@@ -74,12 +75,12 @@ class AddAddressActivity : BaseMvpActivity<AddAddressPresenter>(), AddAddressVie
 
         initPicker()
 
-        addressContent.onClick {
+        addressContent.clickWithTrigger {
             KeyboardUtils.hideSoftInput(addressContent)
             cityPicker.showCityPicker()
         }
 
-        saveBtn.onClick {
+        saveBtn.clickWithTrigger {
             if (address != null) {
                 params["id"] = address!!.id
             }
@@ -107,7 +108,7 @@ class AddAddressActivity : BaseMvpActivity<AddAddressPresenter>(), AddAddressVie
             addressName.setSelection(addressName.text.length)
             addressContact.setText(address!!.phone)
             addressContact.setSelection(addressContact.text.length)
-            addressContent.setText("${address!!.province_name}${address!!.city_name}${address!!.area_name}")
+            addressContent.text = "${address!!.province_name}${address!!.city_name}${address!!.area_name}"
             addressDetailContent.setText(address!!.full_address)
             addressDetailContent.setSelection(addressDetailContent.text.length)
             addressPostNumber.setText(address!!.postcode)

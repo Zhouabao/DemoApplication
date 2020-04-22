@@ -9,11 +9,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
-import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.GetAddressvent
 import com.sdy.jitangapplication.event.RefreshAddressvent
 import com.sdy.jitangapplication.model.AddressBean
@@ -62,14 +62,14 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
 
 
     fun initview() {
-        exchangeBtn.onClick {
+        exchangeBtn.clickWithTrigger(2000L) {
             createGoods()
         }
 
         /**
          * 添加地址
          */
-        addAdressBtn.onClick {
+        addAdressBtn.clickWithTrigger(2000L) {
             if (addressBean == null) {
                 context1.startActivity<AddAddressActivity>()
             } else {
@@ -79,7 +79,7 @@ class AddExchangeAddressDialog(var context1: Context, val goods_id: Int) :
         /**
          * 去地址管理界面
          */
-        addressCl.onClick {
+        addressCl.clickWithTrigger(2000L) {
             if (addressBean == null) {
                 context1.startActivity<AddAddressActivity>()
             } else {
