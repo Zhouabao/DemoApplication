@@ -341,7 +341,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                         EventBus.getDefault()
                             .postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
                     }
-                    GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//3//完善相册
+                    GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//3完善相册
                         UserManager.perfect_times = matchBeans.perfect_times
                     }
                     else -> {

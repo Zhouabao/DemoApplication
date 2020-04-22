@@ -48,6 +48,12 @@ class RefreshMyCandyEvent(val candyCount: Int)
 
 
 /**
+ * 设置我的糖果
+ */
+class SetMyCandyEvent(val candyCount: Int)
+
+
+/**
  * 如果详情加入心愿列表，那列表也会随之更新状态
  */
 class UpdateWantStateEvent(var want: Boolean, val id: Int)

@@ -83,7 +83,7 @@ class AddressManagerActivity : BaseMvpActivity<AddressManagerPresenter>(), Addre
                 R.id.menuDelete -> { //删除地址
                     val deleteDialog = DeleteDialog(this)
                     deleteDialog.show()
-                    deleteDialog.title.text = "提示"
+                    deleteDialog.title.text = "地址删除"
                     deleteDialog.tip.text = "确认删除该地址？"
                     deleteDialog.confirm.onClick {
                         mPresenter.delAddress(addressAdapter.data[position].id, position)
@@ -128,7 +128,7 @@ class AddressManagerActivity : BaseMvpActivity<AddressManagerPresenter>(), Addre
         if (data?.list.isNullOrEmpty()) {
             addressAdapter.isUseEmpty(true)
         } else {
-            addressAdapter.addData(data?.list ?: mutableListOf<AddressBean>())
+            addressAdapter.setNewData(data?.list ?: mutableListOf<AddressBean>())
         }
     }
 

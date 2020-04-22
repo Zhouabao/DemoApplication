@@ -33,7 +33,10 @@ data class NimBean(
     var target_want_cnt: Boolean = false,
     var tips_chat_cnt: Int = 0,
     var tips_gift_cnt: Int = 0,
-    var both_gift_list: MutableList<ChatGiftStateBean> = mutableListOf()
+    var both_gift_list: MutableList<ChatGiftStateBean> = mutableListOf(),
+    var is_send_msg: Boolean = false
+//    var is_send_msg: Boolean = false  //本用户是否发送过消息
+
 ) : Serializable
 
 data class ChatGiftStateBean(

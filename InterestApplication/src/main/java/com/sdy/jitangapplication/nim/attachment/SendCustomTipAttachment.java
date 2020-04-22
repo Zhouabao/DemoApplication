@@ -23,6 +23,7 @@ public class SendCustomTipAttachment extends CustomAttachment {
     public final static int CUSTOME_TIP_RECEIVED_GIFT = 9;//已领取对方赠送的糖果礼物，可直接用于兑换商品和提现
     public final static int CUSTOME_TIP_EXCHANGE_PRODUCT = 10;//已满足兑换所需糖果，立即兑换
     public final static int CUSTOME_TIP_NORMAL = 11;//常规的tip
+    public final static int CUSTOME_TIP_EXCHANGE_FOR_ASSISTANT = 12;//给小助手发的兑换
 
     private String content;//发送tip的内容
     private int showType;//是什么类型的tip

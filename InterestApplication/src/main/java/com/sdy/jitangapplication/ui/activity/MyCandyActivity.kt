@@ -15,7 +15,9 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshMyCandyEvent
+import com.sdy.jitangapplication.event.SetMyCandyEvent
 import com.sdy.jitangapplication.event.UpdateWantStateEvent
 import com.sdy.jitangapplication.model.GoodsCategoryBeans
 import com.sdy.jitangapplication.model.ProductBean
@@ -37,7 +39,7 @@ import org.jetbrains.anko.startActivity
 /**
  * 我的糖果中心
  */
-class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.OnClickListener,
+class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazyClickListener,
     OnLoadMoreListener {
 
     private val candyProductAdapter by lazy { CandyProductAdapter() }
@@ -100,27 +102,6 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
 
     }
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.allProductBtn -> {
-                startActivity<CandyMallActivity>()
-            }
-            R.id.btnBack -> {
-                finish()
-            }
-            R.id.candyRecordBtn -> { //交易记录
-                startActivity<CandyRecordActivity>()
-                candyNewRecord.isVisible = false
-            }
-            R.id.rechargeCandy -> {//充值
-                RechargeCandyDialog(this).show()
-            }
-            R.id.withdrawCandy -> {//提现
-                WithdrawCandyDialog(this).show()
-            }
-        }
-
-    }
 
     override fun ongoodsCategoryList(success: Boolean, data: GoodsCategoryBeans?) {
         if (success) {
@@ -139,6 +120,7 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
     private var isWithdraw = false
     override fun onMyCadnyResult(candyCoun: PullWithdrawBean?) {
         if (candyCoun != null) {
+            EventBus.getDefault().post(SetMyCandyEvent(candyCoun!!.candy_amount))
             candyProductAdapter.mycandy = candyCoun!!.candy_amount
             candyCount.text = CommonFunction.num2thousand("${candyCoun.candy_amount}")
             candyNewRecord.isVisible = candyCoun.has_unread
@@ -194,6 +176,27 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, View.O
                 data.value.is_wished = event.want
                 candyProductAdapter.notifyItemChanged(data.index)
                 break
+            }
+        }
+    }
+
+    override fun onLazyClick(v: View) {
+        when (v.id) {
+            R.id.allProductBtn -> {
+                startActivity<CandyMallActivity>()
+            }
+            R.id.btnBack -> {
+                finish()
+            }
+            R.id.candyRecordBtn -> { //交易记录
+                startActivity<CandyRecordActivity>()
+                candyNewRecord.isVisible = false
+            }
+            R.id.rechargeCandy -> {//充值
+                RechargeCandyDialog(this).show()
+            }
+            R.id.withdrawCandy -> {//提现
+                WithdrawCandyDialog(this).show()
             }
         }
     }

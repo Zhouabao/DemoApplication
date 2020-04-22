@@ -369,7 +369,7 @@ public class SessionHelper {
                 boolean sendMan = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount())).getGenderEnum() == GenderEnum.MALE;
                 boolean differentGender = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId())).getGenderEnum()
                         != ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(UserManager.INSTANCE.getAccid())).getGenderEnum();
-                if (message.getRemoteExtension() != null && message.getRemoteExtension().get("showGift") != null && ((Boolean) message.getRemoteExtension().get("showGift")) == false) {
+                if (message.getRemoteExtension() != null && message.getRemoteExtension().get("needCandyImg") != null && ((Boolean) message.getRemoteExtension().get("needCandyImg")) == false) {
                     return false;
                 } else {
                     if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)

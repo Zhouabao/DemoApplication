@@ -150,7 +150,7 @@ object CommonFunction {
                                     SessionTypeEnum.P2P,
                                     t.data?.default_msg
                                 )
-                                val params = hashMapOf<String, Any>("showGift" to false)
+                                val params = hashMapOf<String, Any>("needCandyImg" to false)
                                 msg.remoteExtension = params
                                 NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                     .setCallback(object : RequestCallback<Void> {
@@ -263,8 +263,7 @@ object CommonFunction {
         isReceive: Boolean,
         giftStatus: Int,
         order_id: Int,
-        context: Context,
-        view: View
+        context: Context
     ) {
         val loadingDialog = LoadingDialog(context)
         RetrofitFactory.instance.create(Api::class.java)
@@ -272,14 +271,12 @@ object CommonFunction {
             .excute(object : BaseSubscriber<BaseResp<GiftStateBean?>>(null) {
                 override fun onStart() {
                     super.onStart()
-                    view.isEnabled = false
                     loadingDialog.show()
                 }
 
                 override fun onNext(t: BaseResp<GiftStateBean?>) {
                     super.onNext(t)
                     loadingDialog.dismiss()
-                    view.isEnabled = true
                     if (t.code == 200) {
                         ReceiveCandyGiftDialog(
                             isReceive,
@@ -293,7 +290,6 @@ object CommonFunction {
 
                 override fun onError(e: Throwable?) {
                     super.onError(e)
-                    view.isEnabled = true
                     loadingDialog.dismiss()
                 }
             })

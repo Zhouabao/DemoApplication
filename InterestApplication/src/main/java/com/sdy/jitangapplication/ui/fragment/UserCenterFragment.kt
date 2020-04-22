@@ -28,6 +28,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.RefreshMyCandyEvent
+import com.sdy.jitangapplication.event.SetMyCandyEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.LabelQualityBean
@@ -439,6 +440,11 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         ) {
             candyCount.text = "${(userInfoBean?.userinfo?.my_candy_amount ?: 0) - event.candyCount}"
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSetMyCandyEvent(event: SetMyCandyEvent) {
+        candyCount.text = "${event.candyCount}"
     }
 
 

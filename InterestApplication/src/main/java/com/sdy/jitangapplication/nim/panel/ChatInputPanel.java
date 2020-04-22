@@ -713,7 +713,7 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
         }
     };
 
-    private void restoreText(boolean clearText) {
+    public void restoreText(boolean clearText) {
         if (clearText) {
             messageEditText.setText("");
         }

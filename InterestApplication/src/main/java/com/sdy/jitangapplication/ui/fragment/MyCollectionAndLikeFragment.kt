@@ -45,7 +45,8 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 我的点赞、我的收藏
  */
-class MyCollectionAndLikeFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPresenter>(), MyCollectionView,
+class MyCollectionAndLikeFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCollectionPresenter>(),
+    MyCollectionView,
     OnRefreshListener,
     OnLoadMoreListener, MultiListSquareAdapter.ResetAudioListener {
     companion object {
@@ -82,9 +83,18 @@ class MyCollectionAndLikeFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCol
     }
 
     //广场列表内容适配器
-    private val adapter by lazy { MultiListSquareAdapter(mutableListOf(), resetAudioListener = this) }
+    private val adapter by lazy {
+        MultiListSquareAdapter(
+            mutableListOf(),
+            resetAudioListener = this
+        )
+    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_my_collection, container, false)
     }
 
@@ -148,7 +158,8 @@ class MyCollectionAndLikeFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCol
         //限定范围为屏幕一半的上下偏移180 56+32=88
         val playTop = ScreenUtils.getScreenHeight() / 2 - ScreenUtils.getScreenHeight() / 4
         val playBottom = ScreenUtils.getScreenHeight() / 2 + ScreenUtils.getScreenHeight() / 4
-        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
+        scrollCalculatorHelper =
+            ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
         collectionRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
             var lastVisibleItem = 0
@@ -172,8 +183,14 @@ class MyCollectionAndLikeFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCol
         })
 
         adapter.setOnItemClickListener { _, view, position ->
+            view.isEnabled = false
             resetAudio()
-            SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
+            SquareCommentDetailActivity.start(
+                activity!!,
+                adapter.data[position],
+                position = position
+            )
+            view.postDelayed({ view.isEnabled = true }, 1000L)
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -183,7 +200,8 @@ class MyCollectionAndLikeFragment(val type: Int) : BaseMvpLazyLoadFragment<MyCol
                 R.id.audioPlayBtn -> {
                     if (currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
                         initAudio(position)
-                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "")
+                            .prepareMedia()
                         currPlayIndex = position
                     }
                     for (index in 0 until adapter.data.size) {

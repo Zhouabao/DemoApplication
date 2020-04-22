@@ -706,7 +706,6 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideGiftProtocol", isShow)
     }
 
-
     fun getBaseParams(): HashMap<String, Any> {
         return hashMapOf(
             "token" to getToken(),

@@ -384,7 +384,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public boolean sendMessage(IMMessage message) {
         Log.d("sendMessage", ".....");
-        if (isAllowSendMessage(message)) {
+        if (!sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.is_send_msg() && UserManager.INSTANCE.getGender() == 1) {
+            showConfirmSendDialog(message);
+        } else {
             if (sendAlready3Msgs())
                 if (sessionId.equals(Constants.ASSISTANT_ACCID))
                     sendMsgS(message, false);
@@ -395,18 +397,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                         sendMsgS(message, true);
                     }
                 }
-        } else {
-            // 替换成tip
-            message = MessageBuilder.createTipMessage(message.getSessionId(), message.getSessionType());
-            message.setContent("该消息无法发送");
-            message.setStatus(MsgStatusEnum.success);
-            NIMClient.getService(MsgService.class).saveMessageToLocal(message, false);
         }
-
-        if (aitManager != null) {
-            aitManager.reset();
-        }
-        return true;
+        return false;
     }
 
     private Boolean sendAlready3Msgs() {
@@ -682,6 +674,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
                     @Override
                     public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
+                        inputPanel.restoreText(true);
                         if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
                             //如果糖果助力值大于0则证明是回复糖果助力消息，弹助力领取成功弹窗
                             if (nimBeanBaseResp.getData().getGet_help_amount() > 0) {
@@ -703,6 +696,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                     sendTipMessage("您未通过真人认证，可能导致回复率偏低", SendCustomTipAttachment.CUSTOME_TIP_NORMAL);
                             }
                             nimBean.setIssended(true);
+                            nimBean.set_send_msg(true);
                         } else if (nimBeanBaseResp.getCode() == 409) {//用户被封禁
                             new CommonAlertDialog.Builder(getActivity())
                                     .setTitle("提示")
@@ -813,5 +807,30 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         }
     }
 
+
+    private void showConfirmSendDialog(final IMMessage message) {
+        new CommonAlertDialog.Builder(getActivity())
+                .setContent("为提高男性用户质量，将交友机会留给诚意用户。每次发送消息会消耗一个糖果")
+                .setTitle("发送消息")
+                .setCancelText("取消")
+                .setConfirmText("确认发送")
+                .setCancelIconIsVisibility(true)
+                .setOnConfirmListener(dialog -> {
+                    dialog.dismiss();
+                    if (sendAlready3Msgs())
+                        if (sessionId.equals(Constants.ASSISTANT_ACCID))
+                            sendMsgS(message, false);
+                        else {
+                            if (message.getMsgType() == MsgTypeEnum.text) {
+                                sendMsgRequest(message, sessionId);
+                            } else {
+                                sendMsgS(message, true);
+                            }
+                        }
+                })
+                .setOnCancelListener(dialog -> dialog.dismiss())
+                .create()
+                .show();
+    }
 
 }
