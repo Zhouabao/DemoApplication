@@ -309,7 +309,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
                 //如果没有显示过协议，那就协议先出，再弹引导。否则直接判断有没有显示过引导页面
                 if (!UserManager.getAlertProtocol()) {
-                    PrivacyDialog(activity!!,matchBeans.iscompleteguide).show()
+                    PrivacyDialog(activity!!, matchBeans.iscompleteguide).show()
                 } else if (!matchBeans.iscompleteguide) {
                     GuideDialog(activity!!).show()
                 }
@@ -376,12 +376,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
         if (data.code == 200) {
             if (data.data != null) {
-                if (UserManager.getCurrentSurveyVersion().isEmpty()) {
-                    UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
-                    EventBus.getDefault()
-                        .post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
-                }
-
                 if (data.data!!.residue == 0) {
                     card_stack_view.rewind()
                     ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
@@ -620,9 +614,10 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
     //此时已经飞出去了
     override fun onCardSwiped(direction: Direction?) {
+        //因为不要提示完善相册了，所以删除此段代码
         if (UserManager.slide_times != -1) {
             UserManager.slide_times++
-            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //补充照片库
+            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //3补充照片库
                 EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
                 UserManager.slide_times = 0
             }
@@ -635,7 +630,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             UserManager.saveSlideCount(UserManager.getSlideCount() + 1)
-            if (UserManager.motion == ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN && UserManager.getSlideCount() == UserManager.perfect_times) {//非真人头像（头像审核不通过）
+            if (UserManager.motion == ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN && UserManager.getSlideCount() == UserManager.perfect_times) {//2非真人头像（头像审核不通过）
                 ChangeAvatarRealManDialog(
                     activity!!,
                     ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN,

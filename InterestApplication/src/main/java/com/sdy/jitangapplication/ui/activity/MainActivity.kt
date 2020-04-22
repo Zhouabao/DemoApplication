@@ -563,7 +563,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 content = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
                 title = "认证审核不通过"
             }
-            GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//头像违规
+            GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7头像违规
                 content = "尊敬的用户，您上传的头像未使用真实照片或涉及违规，替换真实照片前您将持续对其他不可见"
                 title = "请替换头像"
                 confirmText = "修改头像"
@@ -599,7 +599,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             accountDangerDialog!!.dismiss()
             accountDangerDialog = null
         }
-        if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_REAL_NOT_VALID) {
+        if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_REAL_NOT_VALID) {//11
             UserManager.saveNeedChangeAvator(true)//需要换头像
             UserManager.saveForceChangeAvator(false)//是否强制替换过头像
             UserManager.saveChangeAvatorType(2)//真人不合规
@@ -610,7 +610,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             ).show()
         } else {
             when {
-                event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
+                event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7
                     UserManager.saveNeedChangeAvator(true)//需要换头像
                     UserManager.saveForceChangeAvator(false)//是否强制替换过头像
                     UserManager.saveChangeAvatorType(1)//头像不合规
