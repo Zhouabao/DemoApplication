@@ -307,11 +307,12 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 //头像等级
                 ranking_level = matchBeans.ranking_level
 
-                //如果没有显示过引导页面
-                if (!matchBeans.iscompleteguide) {
+                //如果没有显示过协议，那就协议先出，再弹引导。否则直接判断有没有显示过引导页面
+                if (!UserManager.getAlertProtocol()) {
+                    PrivacyDialog(activity!!,matchBeans.iscompleteguide).show()
+                } else if (!matchBeans.iscompleteguide) {
                     GuideDialog(activity!!).show()
                 }
-
 
                 //第一次加载的时候就显示顶部提示条
                 if (firstLoad) {

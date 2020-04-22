@@ -31,7 +31,10 @@ import com.sdy.jitangapplication.model.InvestigateBean
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
+import com.sdy.jitangapplication.ui.dialog.ChangeAvatarRealManDialog
+import com.sdy.jitangapplication.ui.dialog.GotoVerifyDialog
+import com.sdy.jitangapplication.ui.dialog.InvestigateDialog
 import com.sdy.jitangapplication.ui.fragment.ContentFragment
 import com.sdy.jitangapplication.ui.fragment.IndexFragment
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
@@ -61,13 +64,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val myFragment by lazy { UserCenterFragment() }
 
 
-    private val guideDialog by lazy { GuideDialog(this) }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
+
         //启动时间统计
         mPresenter.startupRecord(
             UserManager.getToken(),
@@ -84,8 +85,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         AMapManager.initLocation(this)
         filterBtn.setOnClickListener(this)
 
-        if (!UserManager.getAlertProtocol())
-            PrivacyDialog(this).show()
+
 
         if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
             //0未认证/认证不成功     1认证通过     2认证中
@@ -180,7 +180,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-
             }
 
             override fun onPageSelected(position: Int) {
@@ -432,10 +431,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private var firstClickTime = 0L
 
     override fun onBackPressed() {
-        if (guideDialog.isShowing) {
-            return
-        }
-
         if (GSYVideoManager.backFromWindowFull(this)) {
             return
         }

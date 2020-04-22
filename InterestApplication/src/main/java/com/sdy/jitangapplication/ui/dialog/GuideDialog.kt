@@ -17,6 +17,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_guide.*
@@ -51,17 +52,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
 
 
     private fun initView() {
-        onceAgain.text = if (UserManager.getGender() == 1) {
-            "没有看懂？再来一次"
-        } else {
-            "开启积糖之旅"
-        }
-        startUse.text = if (UserManager.getGender() == 1) {
-            "开启积糖之旅"
-        } else {
-            "糖果有什么用？"
-        }
-
         last.startAnimation(
             (AnimationUtils.loadAnimation(
                 context,
@@ -192,55 +182,41 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             useCl.isVisible = true
         }
 
-        onceAgain.onClick {
-            if (UserManager.getGender() == 1) { //1-男 2-女
-                guideCl.isVisible = true
-                guideLast.isVisible = true
-                guideNext.isVisible = false
-                guideDetail.isVisible = false
-                guideLike.isVisible = false
-                guideDislike.isVisible = false
-                useCl.isVisible = false
-                intentionMatchingCl.isVisible = false
-            } else {
-                last.clearAnimation()
-                next.clearAnimation()
-                detail.clearAnimation()
-                guide_dislike_hand_left.clearAnimation()
-                guide_like_hand_right.clearAnimation()
-                completeGuide()
-
-                dismiss()
-            }
-
-        }
         startUse.onClick {
+            last.clearAnimation()
+            next.clearAnimation()
+            detail.clearAnimation()
+            guide_dislike_hand_left.clearAnimation()
+            guide_like_hand_right.clearAnimation()
+            completeGuide()
+            dismiss()
+        }
+        useOfCandy.onClick {
             if (UserManager.getGender() == 1) {
-                last.clearAnimation()
-                next.clearAnimation()
-                detail.clearAnimation()
-                guide_dislike_hand_left.clearAnimation()
-                guide_like_hand_right.clearAnimation()
-                completeGuide()
-                dismiss()
-            } else {
                 context.startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_CANDY_USAGE)
-                last.clearAnimation()
-                next.clearAnimation()
-                detail.clearAnimation()
-                guide_dislike_hand_left.clearAnimation()
-                guide_like_hand_right.clearAnimation()
-                completeGuide()
-                dismiss()
+            } else {
+                context.startActivity<MyCandyActivity>()
             }
+//            last.clearAnimation()
+//            next.clearAnimation()
+//            detail.clearAnimation()
+//            guide_dislike_hand_left.clearAnimation()
+//            guide_like_hand_right.clearAnimation()
+//            completeGuide()
+//            dismiss()
         }
     }
 
-    private fun completeGuide(){
+    private fun completeGuide() {
         RetrofitFactory.instance.create(Api::class.java)
             .completeGuide(UserManager.getSignParams())
-            .excute(object :BaseSubscriber<BaseResp<Any?>>(null){
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
 
             })
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+
     }
 }

@@ -23,7 +23,8 @@ import kotlinx.android.synthetic.main.dialog_privacy.*
  *    desc   :隐私协议弹窗
  *    version: 1.0
  */
-class PrivacyDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) {
+class PrivacyDialog(val context1: Context, val completeGuide: Boolean) :
+    Dialog(context1, R.style.MyDialog) {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,6 +122,13 @@ class PrivacyDialog(val context1: Context) : Dialog(context1, R.style.MyDialog) 
         setCanceledOnTouchOutside(false)
         setOnKeyListener { dialogInterface, keyCode, event ->
             keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0
+        }
+    }
+
+    override fun dismiss() {
+        super.dismiss()
+        if (!completeGuide) {
+            GuideDialog(context1).show()
         }
     }
 }

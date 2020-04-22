@@ -505,13 +505,13 @@
                 app:layout_constraintTop_toBottomOf="@id/t3" />
 
             <TextView
-                android:id="@+id/startUse"
+                android:id="@+id/useOfCandy"
                 android:layout_width="242dp"
                 android:layout_height="46dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/shape_rectangle_orange_23dp"
                 android:gravity="center"
-                android:text="开启积糖之旅"
+                android:text="糖果有什么用？"
                 android:textColor="#ffffffff"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -520,16 +520,16 @@
                 app:layout_constraintTop_toBottomOf="@id/t4" />
 
             <TextView
-                android:id="@+id/onceAgain"
+                android:id="@+id/startUse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="没有看懂？再来一次"
+                android:text="开启积糖之旅"
                 android:textColor="#ffffffff"
                 android:textSize="14sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/startUse" />
+                app:layout_constraintTop_toBottomOf="@id/useOfCandy" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
