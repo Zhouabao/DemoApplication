@@ -42,7 +42,8 @@ import org.jetbrains.anko.startActivity
  *
  * type 1兴趣的 2话题
  */
-class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(), TagDetailCategoryView,
+class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
+    TagDetailCategoryView,
     OnRefreshListener,
     OnLoadMoreListener {
 
@@ -103,7 +104,8 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            (statusView.layoutParams as RelativeLayout.LayoutParams).height = BarUtils.getStatusBarHeight()
+            (statusView.layoutParams as RelativeLayout.LayoutParams).height =
+                BarUtils.getStatusBarHeight()
         } else {
             statusView.isVisible = false
         }
@@ -121,7 +123,8 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
         })
 
         sameAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
-            llTitle.isVisible = Math.abs(verticalOffset) >= SizeUtils.dp2px(56F) + BarUtils.getStatusBarHeight()
+            llTitle.isVisible =
+                Math.abs(verticalOffset) >= SizeUtils.dp2px(56F) + BarUtils.getStatusBarHeight()
 
             if (llTitle.isVisible) {
                 llSame.visibility = View.INVISIBLE
@@ -208,12 +211,19 @@ class TagDetailCategoryActivity : BaseMvpActivity<TagDetailCategoryPresenter>(),
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshLikeEvent(event: RefreshLikeEvent) {
         if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
+            adapter.data[event.position].originalLike = event.isLike == 1
             adapter.data[event.position].isliked = event.isLike == 1
-            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
-                adapter.data[event.position].like_cnt + 1
-            } else {
-                adapter.data[event.position].like_cnt - 1
-            }
+            adapter.data[event.position].like_cnt =
+                if (event.likeCount >= 0) {
+                    event.likeCount
+                } else {
+                    if (event.isLike == 1) {
+                        adapter.data[event.position].like_cnt + 1
+                    } else {
+                        adapter.data[event.position].like_cnt - 1
+                    }
+                }
+
 
             adapter.refreshNotifyItemChanged(event.position)
         }

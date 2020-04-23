@@ -150,7 +150,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                         "square_id" to intent.getIntExtra("square_id", 0)
                     )
                 )
-            }, 1000L)
+            }, 700L)
 
         }
 
@@ -214,6 +214,21 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         } else {
             squareBean!!.like_cnt
         }}"
+
+        if (intent.getIntExtra("position", -1) != -1)
+            EventBus.getDefault().post(
+                RefreshLikeEvent(
+                    squareBean?.id ?: 0,
+                    squareBean?.isliked ?: 0,
+                    intent.getIntExtra("position", -1),
+                    if (squareBean!!.like_cnt < 0) {
+                        0
+                    } else {
+                        squareBean!!.like_cnt
+                    }
+                )
+            )
+
         squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         squareContent1.isVisible = !squareBean!!.descr.isNullOrEmpty()
         if (!squareBean!!.descr.isNullOrEmpty()) {

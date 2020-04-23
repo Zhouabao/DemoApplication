@@ -49,7 +49,8 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 好友广场列表
  */
-class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView, OnRefreshListener,
+class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView,
+    OnRefreshListener,
     OnLoadMoreListener,
     MultiListSquareAdapter.ResetAudioListener {
     override fun loadData() {
@@ -66,7 +67,12 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
     }
 
     //广场列表内容适配器
-    private val adapter by lazy { MultiListSquareAdapter(mutableListOf(), resetAudioListener = this) }
+    private val adapter by lazy {
+        MultiListSquareAdapter(
+            mutableListOf(),
+            resetAudioListener = this
+        )
+    }
 
     private lateinit var scrollCalculatorHelper: ScrollCalculatorHelper
 
@@ -87,7 +93,11 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_square, container, false)
     }
 
@@ -124,7 +134,8 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
         //限定范围为屏幕一半的上下偏移180
         val playTop = ScreenUtils.getScreenHeight() / 2 - ScreenUtils.getScreenHeight() / 4
         val playBottom = ScreenUtils.getScreenHeight() / 2 + ScreenUtils.getScreenHeight() / 4
-        scrollCalculatorHelper = ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
+        scrollCalculatorHelper =
+            ScrollCalculatorHelper(R.id.llVideo, R.id.squareUserVideo, playTop, playBottom)
         squareDynamicRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             var firstVisibleItem = 0
             var lastVisibleItem = 0
@@ -153,7 +164,11 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
         adapter.setOnItemClickListener { _, view, position ->
             view.isEnabled = false
             resetAudio()
-            SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
+            SquareCommentDetailActivity.start(
+                activity!!,
+                adapter.data[position],
+                position = position
+            )
             view.postDelayed({ view.isEnabled = true }, 1000L)
         }
 
@@ -164,7 +179,8 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
                 R.id.audioPlayBtn -> {
                     if (currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
                         initAudio(position)
-                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "")
+                            .prepareMedia()
                         currPlayIndex = position
                     }
                     for (index in 0 until adapter.data.size) {
@@ -287,7 +303,8 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
     override fun onRefresh(refreshLayout: RefreshLayout) {
         page = 1
         listParams["page"] = page
-        listParams["gender"] = SPUtils.getInstance(Constants.SPNAME).getInt("filter_square_gender", 3)
+        listParams["gender"] =
+            SPUtils.getInstance(Constants.SPNAME).getInt("filter_square_gender", 3)
 
         resetAudio()
 
@@ -401,12 +418,18 @@ class FriendSquareFragment : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareV
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshLikeEvent(event: RefreshLikeEvent) {
         if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
+            adapter.data[event.position].originalLike = event.isLike
             adapter.data[event.position].isliked = event.isLike
-            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
-                adapter.data[event.position].like_cnt + 1
-            } else {
-                adapter.data[event.position].like_cnt - 1
-            }
+            adapter.data[event.position].like_cnt =
+                if (event.likeCount >= 0) {
+                    event.likeCount
+                } else {
+                    if (event.isLike == 1) {
+                        adapter.data[event.position].like_cnt + 1
+                    } else {
+                        adapter.data[event.position].like_cnt - 1
+                    }
+                }
 
             adapter.refreshNotifyItemChanged(event.position)
         }

@@ -125,12 +125,18 @@ class MySquareFragment : BaseMvpLazyLoadFragment<MySquarePresenter>(), MySquareV
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshLikeEvent(event: RefreshLikeEvent) {
         if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
+            adapter.data[event.position].originalLike = event.isLike == 1
             adapter.data[event.position].isliked = event.isLike == 1
-            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
-                adapter.data[event.position].like_cnt + 1
-            } else {
-                adapter.data[event.position].like_cnt - 1
-            }
+            adapter.data[event.position].like_cnt =
+                if (event.likeCount >= 0) {
+                    event.likeCount
+                } else {
+                    if (event.isLike == 1) {
+                        adapter.data[event.position].like_cnt + 1
+                    } else {
+                        adapter.data[event.position].like_cnt - 1
+                    }
+                }
 
             adapter.refreshNotifyItemChanged(event.position)
         }

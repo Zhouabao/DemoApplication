@@ -50,7 +50,8 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 列表形式的广场列表
  */
-class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment<SquarePresenter>(), SquareView,
+class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment<SquarePresenter>(),
+    SquareView,
     OnLoadMoreListener, MultiListSquareAdapter.ResetAudioListener {
     private var page = 1
     private val params by lazy {
@@ -82,7 +83,11 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list_square, container, false)
     }
@@ -121,7 +126,11 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
                 mediaPlayer!!.resetMedia()
                 mediaPlayer = null
             }
-            SquareCommentDetailActivity.start(activity!!, adapter.data[position], position = position)
+            SquareCommentDetailActivity.start(
+                activity!!,
+                adapter.data[position],
+                position = position
+            )
         }
 
         adapter.setOnItemChildClickListener { _, view, position ->
@@ -158,7 +167,8 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
                 R.id.audioPlayBtn -> {
                     if (currPlayIndex != position && squareBean.isPlayAudio != IjkMediaPlayerUtil.MEDIA_PLAY) {
                         initAudio(position)
-                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "").prepareMedia()
+                        mediaPlayer!!.setDataSource(squareBean.audio_json?.get(0)?.url ?: "")
+                            .prepareMedia()
                         currPlayIndex = position
                     }
                     for (index in 0 until adapter.data.size) {
@@ -183,7 +193,6 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
         initView()
         mPresenter.getSomeoneSquare(params)
     }
-
 
 
     override fun onGetSquareListResult(data: SquareListBean?, result: Boolean, isRefresh: Boolean) {
@@ -485,12 +494,18 @@ class ListSquareFragment(var targetAccid: String = "") : BaseMvpLazyLoadFragment
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshLikeEvent(event: RefreshLikeEvent) {
         if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
+            adapter.data[event.position].originalLike = event.isLike
             adapter.data[event.position].isliked = event.isLike
-            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
-                adapter.data[event.position].like_cnt + 1
-            } else {
-                adapter.data[event.position].like_cnt - 1
-            }
+            adapter.data[event.position].like_cnt =
+                if (event.likeCount >= 0) {
+                    event.likeCount
+                } else {
+                    if (event.isLike == 1) {
+                        adapter.data[event.position].like_cnt + 1
+                    } else {
+                        adapter.data[event.position].like_cnt - 1
+                    }
+                }
             adapter.refreshNotifyItemChanged(event.position)
         }
     }

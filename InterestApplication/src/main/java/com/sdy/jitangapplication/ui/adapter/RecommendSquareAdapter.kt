@@ -17,16 +17,13 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.RecommendSquareBean
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
@@ -238,18 +235,12 @@ class RecommendSquareAdapter :
                         UserManager.startToLogin(mContext as Activity)
 
                     } else {
-                        CommonFunction.toast(t.msg)
                         onGetSquareLikeResult(position, false)
                     }
 
                 }
 
                 override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(mContext).show()
-                    } else {
-                        CommonFunction.toast(mContext.getString(R.string.service_error))
-                    }
                 }
             })
     }
