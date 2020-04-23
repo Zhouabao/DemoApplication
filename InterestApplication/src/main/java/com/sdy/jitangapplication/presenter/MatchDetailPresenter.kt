@@ -173,6 +173,32 @@ class MatchDetailPresenter : BasePresenter<MatchDetailView>() {
     }
 
 
+    /**
+     * 通知提醒添加特质
+     */
+    fun needNotice(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .needNotice(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+                override fun onNext(t: BaseResp<Any?>) {
+                    if (t.code == 200) {
+                        mView.onNeedNoticeResult(true)
+                    } else {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else {
+                        mView.onNeedNoticeResult(false)
+                    }
+                }
+            })
+    }
+
+
     /*
      * 解除匹配
      */

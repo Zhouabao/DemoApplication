@@ -298,13 +298,23 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="20dp"
-                                android:text="兴趣"
+                                android:text="兴趣特质"
                                 android:textColor="#ff191919"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
                                 app:layout_constraintLeft_toLeftOf="@id/detailUserName"
                                 app:layout_constraintTop_toBottomOf="@id/detailUserInformationRv" />
 
+                            <TextView
+                                android:id="@+id/notifyAddTagBtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="希望Ta添加"
+                                android:textColor="#ff789eff"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toBottomOf="@id/tag1"
+                                app:layout_constraintRight_toRightOf="@id/detailUserSign"
+                                app:layout_constraintTop_toTopOf="@id/tag1" />
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/detailRvTag"

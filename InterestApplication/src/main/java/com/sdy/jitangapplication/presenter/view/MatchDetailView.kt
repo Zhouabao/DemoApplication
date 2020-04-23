@@ -24,6 +24,9 @@ interface MatchDetailView : BaseView {
     fun onRemoveBlockResult(success: Boolean)
 
 
+    fun onNeedNoticeResult(success: Boolean)
+
+
 
     /**
      * 获取广场列表

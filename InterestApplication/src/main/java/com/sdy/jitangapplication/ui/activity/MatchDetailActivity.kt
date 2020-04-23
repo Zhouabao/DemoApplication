@@ -44,6 +44,7 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
 import com.sdy.jitangapplication.model.MatchBean
@@ -74,7 +75,7 @@ import org.jetbrains.anko.startActivityForResult
  * 匹配详情页
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
-    View.OnClickListener, ModuleProxy {
+    OnLazyClickListener, ModuleProxy {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
@@ -154,6 +155,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         backBtn.setOnClickListener(this)
         backBtn1.setOnClickListener(this)
         btnBack2.setOnClickListener(this)
+        notifyAddTagBtn.setOnClickListener(this)
 
 
         //用户的广场预览界面
@@ -387,8 +389,21 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             userTagAdapter.setFooterView(initTagFooterView())
             userTagAdapter.addData(data.subList(0, 6))
         } else if (matchBean!!.label_quality.isNullOrEmpty()) {
+            notifyAddTagBtn.isVisible = true
+            if (matchBean!!.need_notice) {
+                notifyAddTagBtn.text = "希望${if (matchBean!!.gender == 1) {
+                    "他"
+                } else {
+                    "她"
+                }}添加"
+                notifyAddTagBtn.isEnabled = true
+            } else {
+                notifyAddTagBtn.text = "已通知"
+                notifyAddTagBtn.isEnabled = false
+            }
             userTagAdapter.isUseEmpty(true)
         } else {
+            notifyAddTagBtn.isVisible = false
             userTagAdapter.addData(data)
         }
 
@@ -418,6 +433,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
         initUserInfomationData()//初始化个人信息数据
 //        EventBus.getDefault().post(UpdateSquareEvent())
+
         detailUserName.text = matchBean!!.nickname
         titleUsername.text = matchBean!!.nickname
         val left = resources.getDrawable(
@@ -741,6 +757,15 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     }
 
+    override fun onNeedNoticeResult(success: Boolean) {
+        if (success) {
+            matchBean!!.need_notice = false
+            notifyAddTagBtn.text = "已通知"
+            CommonFunction.toast("已提示对方更新兴趣标签")
+            notifyAddTagBtn.isEnabled = false
+        }
+    }
+
     override fun onGetSquareListResult(
         data: RecommendSquareListBean?,
         result: Boolean,
@@ -772,8 +797,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     }
 
-
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             R.id.moreBtn,
             R.id.moreBtn1 -> {//更多
@@ -825,9 +849,13 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             R.id.giftAll -> { //查看全部礼物
                 startActivity<SomeoneGetGiftActivity>("target_accid" to targetAccid)
             }
-            R.id.guidelWishHelp -> { //查看全部礼物
+            R.id.guidelWishHelp -> {//查看全部礼物
                 guidelWishHelp.isVisible = false
                 UserManager.saveShowGuideHelpWish(true)
+            }
+            R.id.notifyAddTagBtn -> {//todo 通知添加兴趣
+                mPresenter.needNotice(hashMapOf<String, Any>("target_accid" to matchBean!!.accid))
+                notifyAddTagBtn.isEnabled = false
             }
         }
 

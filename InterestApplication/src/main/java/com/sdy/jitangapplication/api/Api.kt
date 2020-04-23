@@ -248,6 +248,15 @@ interface Api {
     fun squareAnnounce(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
+
+    /**
+     * 通知添加特质
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/needNotice${Constants.END_BASE_URL}")
+    fun needNotice(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
     /**********************匹配**************************/
 
     /**

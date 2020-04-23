@@ -58,7 +58,7 @@ class CommentFragment(val goods_id: Int) : BaseMvpLazyLoadFragment<CommentPresen
 
         commentProductAdapter.setEmptyView(R.layout.empty_layout_comment, rvComment)
         commentProductAdapter.emptyView.tv1.isVisible = false
-        commentProductAdapter.emptyView.emptyImg.setImageResource(R.drawable.icon_message_comment)
+        commentProductAdapter.emptyView.emptyImg.setImageResource(R.drawable.icon_emty_comment)
         commentProductAdapter.emptyView.emptyTip.text = "暂时还没有评价"
         commentProductAdapter.isUseEmpty(false)
         mPresenter.goodscommentsList(params)

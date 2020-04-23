@@ -103,7 +103,8 @@ data class MatchBean(
     var label_quality: MutableList<LabelQuality> = mutableListOf(),
     var jobname: String = "",
     var label_quality_cnt: Int = 0,
-    var mycandy_amount: Int = 0
+    var mycandy_amount: Int = 0,
+    var need_notice: Boolean = true
 ) : Serializable
 
 
