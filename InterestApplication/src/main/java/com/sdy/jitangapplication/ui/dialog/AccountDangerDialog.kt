@@ -106,6 +106,8 @@ class AccountDangerDialog(val context1: Context, var status: Int = VERIFY_NEED_A
                 accountDangerBtn.onClick {
                     if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
                         context1.startActivity<NewUserInfoSettingsActivity>()
+                    else
+                        dismiss()
                 }
                 humanVerify.onClick {
                     humanVerify(1)

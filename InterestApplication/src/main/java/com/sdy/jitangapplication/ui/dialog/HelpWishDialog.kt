@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -32,8 +31,6 @@ import com.sdy.jitangapplication.model.SendGiftOrderBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment
-import com.sdy.jitangapplication.ui.activity.CandyProductDetailActivity
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_help_wish.*
 import org.greenrobot.eventbus.EventBus
@@ -158,12 +155,9 @@ class HelpWishDialog(
                             sendWishHelpMessage(t.data?.order_id ?: 0)
                         }
 
-                        if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) {
-                            EventBus.getDefault().post(RefreshCandyMallDetailEvent())
-                        } else if (ActivityUtils.getTopActivity() is MatchDetailActivity) {
-                            EventBus.getDefault()
-                                .post(UpdateMyCandyAmountEvent(helpWishSeekBar.progress))
-                        }
+                        EventBus.getDefault().post(RefreshCandyMallDetailEvent())
+                        EventBus.getDefault().post(UpdateMyCandyAmountEvent(helpWishSeekBar.progress))
+                        EventBus.getDefault().post(RefreshMyCandyEvent(-1))
 
                     } else {
                         CommonFunction.toast(t.msg)
