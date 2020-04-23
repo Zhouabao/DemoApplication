@@ -35,6 +35,7 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
         setContentView(R.layout.dialog_guide)
         initWindow()
         initView()
+        completeGuide()
     }
 
     private fun initWindow() {
@@ -188,7 +189,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             detail.clearAnimation()
             guide_dislike_hand_left.clearAnimation()
             guide_like_hand_right.clearAnimation()
-            completeGuide()
             dismiss()
         }
         useOfCandy.onClick {
@@ -197,13 +197,13 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             } else {
                 context.startActivity<MyCandyActivity>()
             }
-//            last.clearAnimation()
-//            next.clearAnimation()
-//            detail.clearAnimation()
-//            guide_dislike_hand_left.clearAnimation()
-//            guide_like_hand_right.clearAnimation()
-//            completeGuide()
-//            dismiss()
+            last.clearAnimation()
+            next.clearAnimation()
+            detail.clearAnimation()
+            guide_dislike_hand_left.clearAnimation()
+            guide_like_hand_right.clearAnimation()
+            completeGuide()
+            dismiss()
         }
     }
 

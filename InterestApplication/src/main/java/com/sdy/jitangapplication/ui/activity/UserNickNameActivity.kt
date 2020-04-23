@@ -6,9 +6,11 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.StringUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
 import com.sdy.jitangapplication.presenter.view.UserNickNameView
 import com.sdy.jitangapplication.utils.ScrollSoftKeyBoardUtils
@@ -74,6 +76,7 @@ class UserNickNameActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickN
     override fun onUploadUserInfoResult(uploadResult: Boolean, msg: String?) {
         mPresenter.loadingDialg.dismiss()
         if (uploadResult) {
+            SPUtils.getInstance(Constants.SPNAME).put("nickname", nickNameEt.text.toString())
             startActivity<UserBirthActivity>()
             finish()
         } else {

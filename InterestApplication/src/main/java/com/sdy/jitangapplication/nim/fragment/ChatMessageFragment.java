@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
 import com.kotlin.base.data.net.RetrofitFactory;
 import com.kotlin.base.data.protocol.BaseResp;
+import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.UIKitOptions;
 import com.netease.nim.uikit.api.model.main.CustomPushContentProvider;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -51,6 +52,8 @@ import com.netease.nimlib.sdk.msg.model.MessageReceipt;
 import com.netease.nimlib.sdk.robot.model.NimRobotInfo;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.netease.nimlib.sdk.robot.model.RobotMsgType;
+import com.netease.nimlib.sdk.uinfo.constant.GenderEnum;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.api.Api;
 import com.sdy.jitangapplication.common.CommonFunction;
@@ -384,7 +387,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     @Override
     public boolean sendMessage(IMMessage message) {
         Log.d("sendMessage", ".....");
-        if (!sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.is_send_msg() && UserManager.INSTANCE.getGender() == 1) {
+        if (!sessionId.equals(Constants.ASSISTANT_ACCID)
+                && !nimBean.is_send_msg()
+                && UserManager.INSTANCE.getGender() == 1
+                && ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(sessionId)).getGenderEnum() == GenderEnum.FEMALE) {
             showConfirmSendDialog(message);
         } else {
             if (sendAlready3Msgs())

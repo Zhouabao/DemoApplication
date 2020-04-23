@@ -435,6 +435,7 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     override fun onUploadUserInfoResult(uploadResult: Boolean, msg: String?) {
         mPresenter.loadingDialg.dismiss()
         if (uploadResult) {
+            SPUtils.getInstance(Constants.SPNAME).put("avatar",  userProfile.toString())
             startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
             finish()
         } else {

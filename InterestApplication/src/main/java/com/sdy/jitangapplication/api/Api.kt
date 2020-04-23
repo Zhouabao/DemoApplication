@@ -913,7 +913,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Tags/saveRegisterInfo${Constants.END_BASE_URL}")
-    fun saveRegisterInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    fun saveRegisterInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Userinfo?>>
 
 
     /**

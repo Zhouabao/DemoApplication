@@ -913,6 +913,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             detailUserDislikeBtn.visibility = View.INVISIBLE
             detailUserLikeBtn.isVisible = false
             detailUserGreetBtn.isVisible = true
+            showGreetAnimatioon()
         } else {
             detailUserDislikeBtn.visibility = View.VISIBLE
             detailUserLikeBtn.isVisible = true

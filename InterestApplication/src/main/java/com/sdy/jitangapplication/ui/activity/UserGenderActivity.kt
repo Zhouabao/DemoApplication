@@ -3,10 +3,13 @@ package com.sdy.jitangapplication.ui.activity
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
 import com.sdy.jitangapplication.presenter.view.UserNickNameView
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.activity_user_gender.*
 import org.jetbrains.anko.startActivity
 
@@ -37,6 +40,7 @@ class UserGenderActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     override fun onUploadUserInfoResult(uploadResult: Boolean, msg: String?) {
         mPresenter.loadingDialg.dismiss()
         if (uploadResult) {
+            SPUtils.getInstance(Constants.SPNAME).put("gender", gender)
             startActivity<UserAvatorActivity>()
             finish()
         }

@@ -10,6 +10,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelQualityBean
+import com.sdy.jitangapplication.model.Userinfo
 import com.sdy.jitangapplication.presenter.view.MyIntentionView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -67,12 +68,12 @@ class MyIntentionPresenter : BasePresenter<MyIntentionView>() {
 
         RetrofitFactory.instance.create(Api::class.java)
             .saveRegisterInfo(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<Userinfo?>>(mView) {
                 override fun onStart() {
                     super.onStart()
                 }
 
-                override fun onNext(t: BaseResp<Any?>) {
+                override fun onNext(t: BaseResp<Userinfo?>) {
                     if (t.code == 200) {
                         mView.onSaveRegisterInfo(true)
                     } else {
