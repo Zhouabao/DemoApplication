@@ -122,19 +122,6 @@
         app:layout_constraintTop_toBottomOf="@id/etTelephone" />
 
 
-    <Button
-        android:id="@+id/saveBtn"
-        android:layout_width="345dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/selector_confirm_btn_25dp"
-        android:enabled="false"
-        android:text="保存"
-        android:textColor="#ffffffff"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

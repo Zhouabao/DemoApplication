@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.kotlin.base.ext.onClick
@@ -39,6 +40,9 @@ class BindAlipayAccountActivity : BaseMvpActivity<BindAlipayAccountPresenter>(),
             finish()
         }
         hotT1.text = "绑定支付宝"
+        rightBtn1.isVisible = true
+        rightBtn1.text = "保存"
+
 
         etTelephone.filters = arrayOf(InputFilter.LengthFilter(11))
 
@@ -46,7 +50,7 @@ class BindAlipayAccountActivity : BaseMvpActivity<BindAlipayAccountPresenter>(),
         etAlipayName.addTextChangedListener(this)
         etTelephone.addTextChangedListener(this)
 
-        saveBtn.onClick {
+        rightBtn1.onClick {
             val params = hashMapOf<String, Any>(
                 "ali_account" to etAlipayAccount.text.trim().toString(),
                 "nickname" to etAlipayName.text.toString(),
@@ -67,7 +71,7 @@ class BindAlipayAccountActivity : BaseMvpActivity<BindAlipayAccountPresenter>(),
     }
 
     fun checkConfirm() {
-        saveBtn.isEnabled =
+        rightBtn1.isEnabled =
             !etAlipayAccount.text.trim().isNullOrEmpty() && !RegexUtils.isZh(etAlipayAccount.text.trim().toString())
                     && !etAlipayName.text.trim().isNullOrEmpty()
                     && (!etTelephone.text.trim().isNullOrEmpty() && etTelephone.text.length == 11)
