@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -396,9 +397,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 } else {
                     "她"
                 }}添加"
+                notifyAddTagBtn.setTextColor(Color.parseColor("#789EFF"))
                 notifyAddTagBtn.isEnabled = true
             } else {
                 notifyAddTagBtn.text = "已通知"
+                notifyAddTagBtn.setTextColor(Color.parseColor("#A5A5A5"))
                 notifyAddTagBtn.isEnabled = false
             }
             userTagAdapter.isUseEmpty(true)
@@ -761,6 +764,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (success) {
             matchBean!!.need_notice = false
             notifyAddTagBtn.text = "已通知"
+            notifyAddTagBtn.setTextColor(Color.parseColor("#A5A5A5"))
             CommonFunction.toast("已提示对方更新兴趣标签")
             notifyAddTagBtn.isEnabled = false
         }

@@ -28,8 +28,10 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.GiftBean
 import com.sdy.jitangapplication.model.SendGiftOrderBean
+import com.sdy.jitangapplication.model.SendTipBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
 import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_help_wish.*
@@ -64,6 +66,12 @@ class HelpWishDialog(
         confirmHelp.onClick {
             dismiss()
         }
+
+        t3.text = SpanUtils.with(t3)
+            .append("Tips:糖果助力后将跳过匹配直接成为好友\n")
+            .append("对方2小时内未回复将退回糖果")
+            .setForegroundColor(Color.parseColor("#FF6796FA"))
+            .create()
 
         helpWishSeekBar.max = giftBean.amount.toFloat()
         helpWishSeekBar.min = giftBean.min_amount.toFloat()
@@ -150,13 +158,20 @@ class HelpWishDialog(
                         if (!isFriend) {
                             //如果不是好友并且停留在对方用户详情界面，就更改UI
                             EventBus.getDefault().post(MatchByWishHelpEvent(true, target_accid))
-                            sendWishHelpFriendMessage(t.data?.order_id ?: 0)
+                            sendWishHelpFriendMessage(
+                                t.data?.order_id ?: 0,
+                                t.data?.ret_tips_arr ?: mutableListOf()
+                            )
                         } else {
-                            sendWishHelpMessage(t.data?.order_id ?: 0)
+                            sendWishHelpMessage(
+                                t.data?.order_id ?: 0,
+                                t.data?.ret_tips_arr ?: mutableListOf()
+                            )
                         }
 
                         EventBus.getDefault().post(RefreshCandyMallDetailEvent())
-                        EventBus.getDefault().post(UpdateMyCandyAmountEvent(helpWishSeekBar.progress))
+                        EventBus.getDefault()
+                            .post(UpdateMyCandyAmountEvent(helpWishSeekBar.progress))
                         EventBus.getDefault().post(RefreshMyCandyEvent(-1))
 
                     } else {
@@ -168,7 +183,7 @@ class HelpWishDialog(
     }
 
 
-    private fun sendWishHelpMessage(orderId: Int) {
+    private fun sendWishHelpMessage(orderId: Int, ret_tips_arr: MutableList<SendTipBean>) {
         val wishHelpAttachment =
             WishHelpAttachment(
                 giftBean.icon,
@@ -190,6 +205,10 @@ class HelpWishDialog(
             .setCallback(object :
                 RequestCallback<Void?> {
                 override fun onSuccess(param: Void?) {
+                    if (ret_tips_arr.isNotEmpty()) {
+                        sendTips(ret_tips_arr)
+                    }
+
                     //更新消息列表
                     EventBus.getDefault().post(UpdateSendGiftEvent(message))
                 }
@@ -203,7 +222,38 @@ class HelpWishDialog(
             })
     }
 
-    private fun sendWishHelpFriendMessage(orderId: Int) {
+
+    /**
+     * 助力成功发送tip消息
+     */
+    private fun sendTips(retTipsArr: MutableList<SendTipBean>) {
+        for (tip in retTipsArr) {
+            val attachment = SendCustomTipAttachment(tip.content, tip.showType, tip.ifSendUserShow)
+            val tip =
+                MessageBuilder.createCustomMessage(target_accid, SessionTypeEnum.P2P, attachment)
+            val config = CustomMessageConfig()
+            config.enableUnreadCount = false
+            config.enablePush = false
+            tip.config = config
+            NIMClient.getService(MsgService::class.java).sendMessage(tip, false)
+                .setCallback(object :
+                    RequestCallback<Void?> {
+                    override fun onSuccess(param: Void?) {
+                        //更新消息列表
+                        EventBus.getDefault().post(UpdateSendGiftEvent(tip))
+                    }
+
+                    override fun onFailed(code: Int) {
+                    }
+
+                    override fun onException(exception: Throwable) {
+
+                    }
+                })
+        }
+    }
+
+    private fun sendWishHelpFriendMessage(orderId: Int, ret_tips_arr: MutableList<SendTipBean>) {
         val wishHelpFirendAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_WISH_HELP)
         val config = CustomMessageConfig()
         config.enableUnreadCount = true
@@ -222,7 +272,7 @@ class HelpWishDialog(
                 override fun onSuccess(param: Void?) {
                     //更新消息列表
                     EventBus.getDefault().post(UpdateSendGiftEvent(message))
-                    sendWishHelpMessage(orderId)
+                    sendWishHelpMessage(orderId, ret_tips_arr)
                 }
 
                 override fun onFailed(code: Int) {
