@@ -63,7 +63,7 @@ class CommentFragment(val goods_id: Int) : BaseMvpLazyLoadFragment<CommentPresen
         commentProductAdapter.isUseEmpty(false)
         mPresenter.goodscommentsList(params)
 
-        commentProductAdapter.setOnItemChildClickListener { _, view, position ->
+        commentProductAdapter.setOnItemClickListener { _, view, position ->
             view.isEnabled = false
             when (view.id) {
                 R.id.commentAvator -> {
@@ -73,7 +73,7 @@ class CommentFragment(val goods_id: Int) : BaseMvpLazyLoadFragment<CommentPresen
                     )
                 }
             }
-            view.postDelayed({view.isEnabled = true},2000L)
+            view.postDelayed({ view.isEnabled = true }, 2000L)
         }
     }
 

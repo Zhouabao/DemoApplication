@@ -90,12 +90,14 @@ class WantProductListFragment(
                         wantProductAdapter.data[position].isfriend
                     ).show()
                 }
-                R.id.wantAvator -> {
-                    MatchDetailActivity.start(activity!!,wantProductAdapter.data[position].accid)
-                }
-
             }
-            view.postDelayed({view.isEnabled =true},2000L)
+            view.postDelayed({ view.isEnabled = true }, 2000L)
+        }
+
+        wantProductAdapter.setOnItemClickListener { _, view, position ->
+            view.isEnabled = false
+            MatchDetailActivity.start(activity!!, wantProductAdapter.data[position].accid)
+            view.postDelayed({ view.isEnabled = false }, 2000L)
         }
 
 
@@ -148,7 +150,7 @@ class WantProductListFragment(
         for (data in wantProductAdapter.data.withIndex()) {
             if (data.value.accid == event.target_accid) {
                 data.value.isfriend = true
-                data.value.ship_str="他是你的好友"
+                data.value.ship_str = "他是你的好友"
                 wantProductAdapter.notifyItemChanged(data.index)
                 break
             }

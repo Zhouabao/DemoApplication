@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.item_message.view.*
 class MessageProductAdapter : BaseQuickAdapter<ProductMsgBean, BaseViewHolder>(R.layout.item_message) {
     override fun convert(helper: BaseViewHolder, item: ProductMsgBean) {
         GlideUtil.loadCircleImg(mContext, item.avatar, helper.itemView.messageAvator)
-        helper.addOnClickListener(R.id.messageAvator)
         helper.itemView.messageName.text = item.nickname
         helper.itemView.messageContent.text = item.content
         helper.itemView.messgaeTime.text = item.create_time

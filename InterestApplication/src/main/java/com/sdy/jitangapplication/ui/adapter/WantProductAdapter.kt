@@ -18,7 +18,6 @@ class WantProductAdapter :
     BaseQuickAdapter<WantFriendBean, BaseViewHolder>(R.layout.item_want_product) {
     override fun convert(helper: BaseViewHolder, item: WantFriendBean) {
         helper.addOnClickListener(R.id.donate)
-        helper.addOnClickListener(R.id.wantAvator)
         GlideUtil.loadCircleImg(mContext, item.avatar, helper.itemView.wantAvator)
         helper.itemView.wantName.text = item.nickname
         helper.itemView.wantRelationship.isVisible = !item.ship_str.isNullOrEmpty()
