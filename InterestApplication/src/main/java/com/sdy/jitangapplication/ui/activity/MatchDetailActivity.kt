@@ -913,7 +913,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             detailUserDislikeBtn.visibility = View.INVISIBLE
             detailUserLikeBtn.isVisible = false
             detailUserGreetBtn.isVisible = true
-            showGreetAnimatioon()
+            detailUserGreetBtn.setImageResource(R.drawable.icon_matchdetail_hi)
         } else {
             detailUserDislikeBtn.visibility = View.VISIBLE
             detailUserLikeBtn.isVisible = true
@@ -923,7 +923,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //判断是否为好友 是：显示聊天
         //              否: 判断是否开启招呼,是否喜欢过
         if (matchBean!!.isfriend == 1) {//是好友就显示聊天
-            detailUserChatBtn.text = "聊  天"
+            detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_chat)
             detailUserChatBtn.isVisible = true
             detailUserGreetBtn.isVisible = false
         } else {
@@ -937,14 +937,12 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 if (matchBean!!.isgreeted) {
                     detailUserGreetBtn.isVisible = false
                     detailUserChatBtn.isVisible = true
-                    detailUserChatBtn.text = "继续聊天"
+                    detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_continue_chat)
                 } else {
                     detailUserGreetBtn.isVisible = true
                     detailUserChatBtn.isVisible = false
                 }
             }
-
-
         }
     }
 

@@ -14,6 +14,7 @@
         android:id="@+id/stateview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         app:msv_animateViewChanges="false"
         app:msv_emptyView="@layout/empty_layout"
         app:msv_errorView="@layout/error_layout"
@@ -66,7 +67,7 @@
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:layout_marginLeft="14dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="39dp"
                     android:scaleType="center"
                     android:src="@drawable/icon_return_oval"
                     android:visibility="visible"
@@ -458,28 +459,12 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="90dp"
+                android:background="@drawable/icon_detail_bg1"
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_anchor="@id/listRefresh"
                 app:layout_anchorGravity="bottom">
-
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:background="@drawable/icon_detail_bg1"
-                    app:layout_constraintBottom_toTopOf="@id/view"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="match_parent"
-                    android:layout_height="49dp"
-                    android:background="@drawable/icon_detail_bg"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent" />
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/detailUserGreetBtn"
@@ -509,28 +494,18 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/detailUserChatBtn" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/detailUserChatBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@drawable/icon_orange_shadow"
-                    android:drawableLeft="@drawable/icon_chat_white"
-                    android:drawablePadding="15dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="40dp"
-                    android:paddingTop="6dp"
-                    android:text="聊  天"
-                    android:textColor="#ffffffff"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
+                    android:src="@drawable/icon_matchdetail_continue_chat"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="parent"
                     app:layout_constraintRight_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/detailUserDislikeBtn"></TextView>
+                    app:layout_constraintTop_toTopOf="@id/detailUserDislikeBtn" />
 
                 <ImageView
                     android:id="@+id/detailUserLikeBtn"
