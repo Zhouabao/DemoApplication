@@ -108,7 +108,7 @@ public class MsgViewHolderSendGift extends MsgViewHolderBase {
     protected void onItemClick() {
         contentContainer.setEnabled(false);
         attachment = (SendGiftAttachment) message.getAttachment();
-        CommonFunction.INSTANCE.openGiftLetter(isReceivedMessage(), attachment.getGiftStatus(), attachment.getId(), context);
+        CommonFunction.INSTANCE.openGiftLetter(isReceivedMessage(), attachment.getGiftStatus(), attachment.getId(), context, message.getSessionId());
         contentContainer.postDelayed(() -> contentContainer.setEnabled(true), 2000L);
     }
 }

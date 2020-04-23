@@ -25,9 +25,11 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.GiftStateBean
 import com.sdy.jitangapplication.model.GreetTimesBean
+import com.sdy.jitangapplication.model.SendTipBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.activity.MessageInfoActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
 import com.sdy.jitangapplication.ui.activity.ContactBookActivity
 import com.sdy.jitangapplication.ui.activity.FindByTagListActivity
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
@@ -142,7 +144,8 @@ object CommonFunction {
                                     chatHiAttachment,
                                     config
                                 )
-                                NIMClient.getService(MsgService::class.java).sendMessage(message, false)
+                                NIMClient.getService(MsgService::class.java)
+                                    .sendMessage(message, false)
 
                                 //随机发送一条招呼文本消息
                                 val msg = MessageBuilder.createTextMessage(
@@ -263,7 +266,8 @@ object CommonFunction {
         isReceive: Boolean,
         giftStatus: Int,
         order_id: Int,
-        context: Context
+        context: Context,
+        target_accid: String
     ) {
         val loadingDialog = LoadingDialog(context)
         RetrofitFactory.instance.create(Api::class.java)
@@ -283,7 +287,7 @@ object CommonFunction {
                             giftStatus,
                             t.data!!,
                             order_id,
-                            context
+                            context, target_accid
                         ).show()
                     }
                 }
@@ -293,8 +297,38 @@ object CommonFunction {
                     loadingDialog.dismiss()
                 }
             })
-
     }
+
+    /**
+     * 助力成功发送tip消息
+     */
+    fun sendTips(target_accid: String, retTipsArr: MutableList<SendTipBean>) {
+        for (tip in retTipsArr) {
+            val attachment = SendCustomTipAttachment(tip.content, tip.showType, tip.ifSendUserShow)
+            val tip =
+                MessageBuilder.createCustomMessage(target_accid, SessionTypeEnum.P2P, attachment)
+            val config = CustomMessageConfig()
+            config.enableUnreadCount = false
+            config.enablePush = false
+            tip.config = config
+            NIMClient.getService(MsgService::class.java).sendMessage(tip, false)
+                .setCallback(object :
+                    RequestCallback<Void?> {
+                    override fun onSuccess(param: Void?) {
+                        //更新消息列表
+                        EventBus.getDefault().post(UpdateSendGiftEvent(tip))
+                    }
+
+                    override fun onFailed(code: Int) {
+                    }
+
+                    override fun onException(exception: Throwable) {
+
+                    }
+                })
+        }
+    }
+
 
     fun dissolveRelationship(target_accid: String, negative: Boolean = false) {
         NIMClient.getService(MsgService::class.java)

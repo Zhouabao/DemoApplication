@@ -1188,7 +1188,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("Gift/getGift${Constants.END_BASE_URL}")
-    fun getGift(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    fun getGift(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<SendGiftOrderBean?>>
 
     /**
      * 查询礼物领取状态

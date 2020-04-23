@@ -68,6 +68,7 @@ import com.sdy.jitangapplication.event.UpdateSendGiftEvent;
 import com.sdy.jitangapplication.model.ApproveBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.model.ResidueCountBean;
+import com.sdy.jitangapplication.model.SendTipBean;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
 import com.sdy.jitangapplication.nim.extension.ChatMessageListPanelEx;
@@ -77,6 +78,7 @@ import com.sdy.jitangapplication.nim.session.ChatChooseGiftAction;
 import com.sdy.jitangapplication.nim.session.ChatPickImageAction;
 import com.sdy.jitangapplication.nim.session.ChatTakeImageAction;
 import com.sdy.jitangapplication.nim.session.MyLocationAction;
+import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
 import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
 import com.sdy.jitangapplication.utils.UserManager;
@@ -412,7 +414,7 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
         if (!sessionId.equals(Constants.ASSISTANT_ACCID) && !nimBean.getIsfriend() && nimBean.getIslimit() && leftGreetCount == 0) {
             if (!sendTip) {
                 inputPanel.collapse(true);
-                sendTipMessage("你已向对方打了招呼，对方回复后即可继续聊天", SendCustomTipAttachment.CUSTOME_TIP_NORMAL);
+                sendTipMessage("你已向对方打了招呼，对方回复后即可继续聊天", SendCustomTipAttachment.CUSTOME_TIP_NORMAL, true);
                 sendTip = true;
             }
             return false;
@@ -680,27 +682,32 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
                     @Override
                     public void onNext(BaseResp<ResidueCountBean> nimBeanBaseResp) {
-                        inputPanel.restoreText(true);
                         if (nimBeanBaseResp.getCode() == 200 || nimBeanBaseResp.getCode() == 211) {
+                            inputPanel.restoreText(true);
                             //如果糖果助力值大于0则证明是回复糖果助力消息，弹助力领取成功弹窗
                             if (nimBeanBaseResp.getData().getGet_help_amount() > 0) {
                                 new HelpWishReceiveDialog(nimBeanBaseResp.getData().getGet_help_amount(), getActivity()).show();
                             }
 
                             leftGreetCount = nimBeanBaseResp.getData().getResidue_msg_cnt();
-                            if (nimBeanBaseResp.getCode() == 211) {
-                                sendTipMessage(nimBeanBaseResp.getMsg(), SendCustomTipAttachment.CUSTOME_TIP_NORMAL);
-                            }
+
                             if (content.getMsgType() == MsgTypeEnum.text)
                                 sendMsgS(content, false);
+//                            if (nimBeanBaseResp.getCode() == 211) {
+                            if (!nimBeanBaseResp.getData().getRet_tips_arr().isEmpty())
+                                for (SendTipBean bean : nimBeanBaseResp.getData().getRet_tips_arr())
+                                    sendTipMessage(bean.getContent(), bean.getShowType(), bean.getIfSendUserShow());
+//                            }
+
+
                             // 若己方未认证，则发送  您未通过真人认证，可能导致回复率偏低
                             // 若对方未认证，则发送   对方账号未认证，请小心诈骗
-                            if (!nimBean.getIssended()) {//issended    bool  是否发送过消息  true发送过 false  没有发送过消息
-                                if (!nimBean.getTarget_isfaced()) {
-                                    sendTipMessage("对方账号未认证，请注意对方信息真实性", SendCustomTipAttachment.CUSTOME_TIP_RECEIVE_NOT_HUMAN);
-                                } else if (!nimBean.getMy_isfaced())
-                                    sendTipMessage("您未通过真人认证，可能导致回复率偏低", SendCustomTipAttachment.CUSTOME_TIP_NORMAL);
-                            }
+//                            if (!nimBean.getIssended()) {//issended    bool  是否发送过消息  true发送过 false  没有发送过消息
+//                                if (!nimBean.getTarget_isfaced()) {
+//                                    sendTipMessage("对方账号未认证，请注意对方信息真实性", SendCustomTipAttachment.CUSTOME_TIP_NORMAL,true);
+//                                } else if (!nimBean.getMy_isfaced())
+//                                    sendTipMessage("您未通过真人认证，可能导致回复率偏低", SendCustomTipAttachment.CUSTOME_TIP_NORMAL,true);
+//                            }
                             nimBean.setIssended(true);
                             nimBean.set_send_msg(true);
                         } else if (nimBeanBaseResp.getCode() == 409) {//用户被封禁
@@ -719,6 +726,8 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                                     .show();
                         } else if (nimBeanBaseResp.getCode() == 410) {
                             sendAlready3Msgs();
+                        } else if (nimBeanBaseResp.getCode() == 411) {//糖果余额不足
+                            new AlertCandyEnoughDialog(getActivity(), AlertCandyEnoughDialog.Companion.getFROM_SEND_GIFT()).show();
                         } else {
                             CommonFunction.INSTANCE.toast(nimBeanBaseResp.getMsg());
                         }
@@ -757,20 +766,9 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     }
 
 
-    private void sendTipMessage(String msg, int type) {
+    private void sendTipMessage(String msg, int type, boolean ifSendUserShow) {
         // 同时，本地插入被对方拒收的tip消息
-//        IMMessage tip = MessageBuilder.createTipMessage(sessionId, SessionTypeEnum.P2P);
-//        tip.setContent(msg);
-//        tip.setStatus(MsgStatusEnum.success);
-//        CustomMessageConfig config = new CustomMessageConfig();
-//        config.enableUnreadCount = false;
-//        config.enablePush = false;
-//        tip.setConfig(config);
-//        NIMClient.getService(MsgService.class).saveMessageToLocal(tip, true);
-//        messageListPanel.onMsgSend(tip);
-
-
-        SendCustomTipAttachment attachment = new SendCustomTipAttachment(msg, type);
+        SendCustomTipAttachment attachment = new SendCustomTipAttachment(msg, type, ifSendUserShow);
         IMMessage tip = MessageBuilder.createCustomMessage(sessionId, SessionTypeEnum.P2P, attachment);
         CustomMessageConfig config = new CustomMessageConfig();
         config.enableUnreadCount = false;

@@ -23,6 +23,8 @@ import com.sdy.jitangapplication.ui.activity.MyCandyActivity;
 import com.sdy.jitangapplication.ui.dialog.ChatSendGiftDialog;
 import com.sdy.jitangapplication.ui.dialog.RechargeCandyDialog;
 
+import java.util.StringTokenizer;
+
 /**
  * author : ZFM
  * date   : 2019/8/1015:35
@@ -54,12 +56,10 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
     protected void bindContentView() {
         attachment = (SendCustomTipAttachment) message.getAttachment();
         switch (attachment.getShowType()) {
-            case SendCustomTipAttachment.CUSTOM_TIP_FIRST_SEND_MAN://男方发送第一条消息（仅第一次发送消息会显示，切换用户不重复发送） 1
-            case SendCustomTipAttachment.CUSTOME_TIP_RECEIVE_NOT_HUMAN://发件方 收件方非真人 8
-            case SendCustomTipAttachment.CUSTOME_TIP_NORMAL://常规的tip 9
+            case SendCustomTipAttachment.CUSTOME_TIP_NORMAL://常规的tip 11
                 notificationTextView.setText(attachment.getContent());
                 break;
-            case SendCustomTipAttachment.CUSTOM_TIP_NO_MONEY_MAN://男方发送消息余额不足 2
+            case SendCustomTipAttachment.CUSTOM_TIP_NO_MONEY_MAN://男方发送消息余额不足 1
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("糖果余额不足消息未能发送，请")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
@@ -81,7 +81,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
                         .create());
                 break;
-            case SendCustomTipAttachment.CUSTOME_TIP_RECEIVE_VERIFY_WOMAN://认证后的女方收到第一条消息（仅显示一次，切换用户不重复发送） 3
+            case SendCustomTipAttachment.CUSTOME_TIP_RECEIVE_VERIFY_WOMAN://认证后的女方收到第一条消息（仅显示一次，切换用户不重复发送） 2
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("回复消息将获得一个对方赠送的糖果，糖果可以")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
@@ -104,7 +104,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
                         .create());
                 break;
-            case SendCustomTipAttachment.CUSTOME_TIP_RECEIVE_NOT_VERIFY_WOMAN://未认证的女方收到第一条消息（切换用户重复发送）4
+            case SendCustomTipAttachment.CUSTOME_TIP_RECEIVE_NOT_VERIFY_WOMAN://未认证的女方收到第一条消息（切换用户重复发送）3
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("认证后每次回复能收到对方糖果，")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
@@ -125,7 +125,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         .setForegroundColor(Color.parseColor("#FF6796FA"))
                         .create());
                 break;
-            case SendCustomTipAttachment.CUSTOME_TIP_WOMAN_CHAT_COUNT://女方聊天条数到达设定条数时,没有心愿礼物 5
+            case SendCustomTipAttachment.CUSTOME_TIP_WOMAN_CHAT_COUNT://女方聊天条数到达设定条数时,没有心愿礼物 4
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("你还没有心愿礼物，快去")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
@@ -148,7 +148,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
                         .create());
                 break;
-            case SendCustomTipAttachment.CUSTOME_TIP_MAN_BIGGER_CHAT_COUNT_HAS_GIFT://男方 双方聊天数>设定聊天条数  女方有心愿礼物 6
+            case SendCustomTipAttachment.CUSTOME_TIP_MAN_BIGGER_CHAT_COUNT_HAS_GIFT://男方 双方聊天数>设定聊天条数  女方有心愿礼物 5
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("你们聊的还不错，")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
@@ -168,7 +168,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         .setForegroundColor(Color.parseColor("#FF6796FA"))
                         .create());
                 break;
-            case SendCustomTipAttachment.CUSTOME_TIP_MAN_BIGGER_CHAT_COUNT_NOT_HAS_GIFT://男方 双方聊天数>设定聊天条数  女方没有心愿礼物 7
+            case SendCustomTipAttachment.CUSTOME_TIP_MAN_BIGGER_CHAT_COUNT_NOT_HAS_GIFT://男方 双方聊天数>设定聊天条数  女方没有心愿礼物 6
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("你们聊的好像还不错，要不")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
@@ -191,7 +191,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
                         .create());
                 break;
-            case SendCustomTipAttachment.CUSTOME_TIP_RECEIVED_GIFT://已领取对方赠送的糖果礼物，可直接用于兑换商品和提现
+            case SendCustomTipAttachment.CUSTOME_TIP_RECEIVED_GIFT://已领取对方赠送的糖果礼物，可直接用于兑换商品和提现 7
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("已领取对方赠送的糖果礼物，可直接用于")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
@@ -214,7 +214,7 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
                         .create());
                 break;
-            case SendCustomTipAttachment.CUSTOME_TIP_EXCHANGE_PRODUCT://已满足兑换所需糖果，立即兑换
+            case SendCustomTipAttachment.CUSTOME_TIP_EXCHANGE_PRODUCT://已满足兑换所需糖果，立即兑换 8
                 notificationTextView.setText(SpanUtils.with(notificationTextView)
                         .append("已满足兑换所需糖果，")
                         .setForegroundColor(Color.parseColor("#FFC5C6C8"))
@@ -234,6 +234,35 @@ public class MsgViewHolderSendCustomTip extends MsgViewHolderBase {
                         })
                         .setForegroundColor(Color.parseColor("#FF6796FA"))
                         .create());
+                break;
+            case SendCustomTipAttachment.CUSTOME_TIP_EXCHANGE_FOR_ASSISTANT://小助手发聊天糖果退回警告 9
+                StringTokenizer tokenizer = new StringTokenizer(attachment.getContent(), "立即认证");
+                try {
+                    notificationTextView.setText(SpanUtils.with(notificationTextView)
+                            .append(tokenizer.nextToken())
+                            .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                            .append("立即认证")
+                            .setClickSpan(new ClickableSpan() {
+                                @Override
+                                public void updateDrawState(@NonNull TextPaint ds) {
+                                    ds.setColor(Color.parseColor("#FF6796FA"));
+                                    ds.setUnderlineText(false);
+                                }
+
+                                @Override
+                                public void onClick(@NonNull View widget) {
+                                    Intent intent = new Intent(context, IDVerifyActivity.class);
+                                    context.startActivity(intent);
+                                }
+                            })
+                            .setForegroundColor(Color.parseColor("#FF6796FA"))
+                            .append(tokenizer.nextToken())
+                            .setForegroundColor(Color.parseColor("#FFC5C6C8"))
+                            .create());
+                } catch (Exception e) {
+                    notificationTextView.setText(attachment.getContent());
+                    e.printStackTrace();
+                }
                 break;
             default:
                 notificationTextView.setText(attachment.getContent());

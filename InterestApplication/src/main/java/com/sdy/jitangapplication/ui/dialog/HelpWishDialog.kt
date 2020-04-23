@@ -206,7 +206,7 @@ class HelpWishDialog(
                 RequestCallback<Void?> {
                 override fun onSuccess(param: Void?) {
                     if (ret_tips_arr.isNotEmpty()) {
-                        sendTips(ret_tips_arr)
+                        CommonFunction.sendTips(target_accid, ret_tips_arr)
                     }
 
                     //更新消息列表

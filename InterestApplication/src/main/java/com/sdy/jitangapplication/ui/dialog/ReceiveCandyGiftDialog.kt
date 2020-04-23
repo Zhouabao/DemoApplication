@@ -19,8 +19,10 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.event.RefreshCandyMessageEvent
 import com.sdy.jitangapplication.model.GiftStateBean
+import com.sdy.jitangapplication.model.SendGiftOrderBean
 import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_receive_candy_gift.*
@@ -43,7 +45,8 @@ class ReceiveCandyGiftDialog(
     val giftStatus: Int,
     val giftStateBean: GiftStateBean,
     val orderId: Int,
-    val context1: Context
+    val context1: Context,
+    val target_accid: String
 ) : Dialog(context1, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -246,16 +249,21 @@ class ReceiveCandyGiftDialog(
     private fun getGift() {
         RetrofitFactory.instance.create(Api::class.java)
             .getGift(UserManager.getSignParams(hashMapOf<String, Any>("id" to orderId)))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
+            .excute(object : BaseSubscriber<BaseResp<SendGiftOrderBean?>>(null) {
                 override fun onStart() {
                     super.onStart()
                     receiveGiftBtn.isEnabled = false
                 }
 
-                override fun onNext(t: BaseResp<Any?>) {
+                override fun onNext(t: BaseResp<SendGiftOrderBean?>) {
                     super.onNext(t)
                     receiveGiftBtn.isEnabled = true
                     if (t.code == 200) {
+                        if ((t.data?.ret_tips_arr ?: mutableListOf()).isNotEmpty())
+                            CommonFunction.sendTips(
+                                target_accid,
+                                t.data?.ret_tips_arr ?: mutableListOf()
+                            )
                         if (giftStatus != giftStateBean.state || giftStateBean.state == SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL) {
                             when (giftStateBean.state) {
                                 SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL, SendGiftAttachment.GIFT_RECEIVE_STATUS_HAS_OPEN -> {
@@ -318,5 +326,6 @@ class ReceiveCandyGiftDialog(
 //            )
 //        }
     }
+
 
 }

@@ -256,7 +256,8 @@ data class GiftBean(
 
 data class SendGiftOrderBean(
     var order_id: Int = 0,
-    var amount: Int = 0
+    var amount: Int = 0,
+    var ret_tips_arr: MutableList<SendTipBean> = mutableListOf()
 )
 
 data class GiftBeans(
@@ -281,4 +282,11 @@ data class GiftStateBean(
     var title: String = ""
 )
 
+
+//本地发送的tip内容
+data class SendTipBean(
+    var content: String = "",
+    var ifSendUserShow: Boolean = false,
+    var showType: Int = 0
+)
 

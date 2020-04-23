@@ -20,8 +20,8 @@ import kotlinx.android.synthetic.main.dialog_alert_candy_enough_layout.*
 class AlertCandyEnoughDialog(var context1: Context, var from: Int = FROM_PRODUCT) :
     Dialog(context1, R.style.MyDialog) {
     companion object {
-        val FROM_PRODUCT = 1
-        val FROM_SEND_GIFT = 2
+        public val FROM_PRODUCT = 1
+        public val FROM_SEND_GIFT = 2
     }
 
 

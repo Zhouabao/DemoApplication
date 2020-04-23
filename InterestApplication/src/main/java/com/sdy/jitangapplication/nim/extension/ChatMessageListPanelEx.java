@@ -351,7 +351,10 @@ public class ChatMessageListPanelEx {
             Iterator iterator = messages.iterator();
             while (iterator.hasNext()) {
                 IMMessage message = (IMMessage) iterator.next();
-                if (message.getAttachment() instanceof SendCustomTipAttachment && message.getDirect() == MsgDirectionEnum.In) {
+                boolean isSend = message.getDirect() == MsgDirectionEnum.Out;
+                if (message.getAttachment() instanceof SendCustomTipAttachment
+                        && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
+                        && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend) {
                     NIMClient.getService(MsgService.class).deleteChattingHistory(message);
                     iterator.remove();
                 }
@@ -389,6 +392,12 @@ public class ChatMessageListPanelEx {
     // 发送消息后，更新本地消息列表
     public void onMsgSend(IMMessage message) {
         if (!container.account.equals(message.getSessionId())) {
+            return;
+        }
+
+        if (message.getAttachment() instanceof SendCustomTipAttachment
+                && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
+                && !((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow()) {
             return;
         }
 
@@ -660,7 +669,11 @@ public class ChatMessageListPanelEx {
                         Iterator iterator = messages.iterator();
                         while (iterator.hasNext()) {
                             IMMessage message = (IMMessage) iterator.next();
-                            if (message.getAttachment() instanceof SendCustomTipAttachment && message.getDirect() == MsgDirectionEnum.In) {
+                            boolean isSend = message.getDirect() == MsgDirectionEnum.Out;
+                            //消息的来源是发送方 并且是发送显示就不剔除 反之则反
+                            if (message.getAttachment() instanceof SendCustomTipAttachment
+                                    && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
+                                    && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend) {
                                 NIMClient.getService(MsgService.class).deleteChattingHistory(message);
                                 iterator.remove();
                             }
