@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -678,7 +679,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                         if (statusBean.data?.status == 1) {  //喜欢成功
                             matchBean!!.isliked = 1
                             showGreetAnimatioon()
-                            updateLightCount(-1)
+//                            updateLightCount(-1)
                         } else if (statusBean.data?.status == 2) {//匹配成功
                             //如果是来自喜欢我的界面， 就刷新
                             if (intent.getIntExtra("parPos", -1) != -1) {
@@ -692,7 +693,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                             //喜欢过
                             matchBean!!.isfriend = 1
                             showGreetAnimatioon()
-                            updateLightCount(-1)
+//                            updateLightCount(-1)
                             sendChatHiMessage(ChatHiAttachment.CHATHI_MATCH)
                         }
                     }
@@ -742,6 +743,21 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         translateLike.duration = 250L
         translateLike.interpolator = LinearInterpolator()
         translateLike.start()
+        detailUserGreetBtn.addAnimatorListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                updateLightCount(-1)
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })
     }
 
 
@@ -913,41 +929,74 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         }
 
         //已感兴趣或者是好友不做操作
-        if (matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
-            detailUserDislikeBtn.visibility = View.INVISIBLE
-            detailUserLikeBtn.isVisible = false
-            detailUserGreetBtn.isVisible = true
-            detailUserGreetBtn.setImageResource(R.drawable.icon_matchdetail_hi)
-        } else {
-            detailUserDislikeBtn.visibility = View.VISIBLE
-            detailUserLikeBtn.isVisible = true
-            detailUserGreetBtn.isVisible = true
-        }
+        //1.是好友
+        //2.打过招呼
+        //3.喜欢过
+        //4.不喜欢
+        //5.normal状态
 
-        //判断是否为好友 是：显示聊天
-        //              否: 判断是否开启招呼,是否喜欢过
-        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
+        if (matchBean!!.isfriend == 1) {//是好友
             detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_chat)
             detailUserChatBtn.isVisible = true
             detailUserGreetBtn.isVisible = false
-        } else {
-            detailUserChatBtn.isVisible = false
-            detailUserGreetBtn.isVisible = true
-            detailUserLikeBtn.isVisible = matchBean!!.isliked != 1//喜欢过就不显示“感兴趣”
-            if (!matchBean!!.greet_switch) {//招呼未开启不显示打招呼
-                detailUserChatBtn.isVisible = false
+            detailUserLikeBtn.isVisible = false
+            detailUserDislikeBtn.visibility = View.INVISIBLE
+        } else {//不是好友,判断打过招呼没
+            if (matchBean!!.isgreeted) { //打过招呼
+                detailUserChatBtn.isVisible = true
+                detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_continue_chat)
                 detailUserGreetBtn.isVisible = false
-            } else {//招呼开启,   招呼有效 与 招呼无效
-                if (matchBean!!.isgreeted) {
-                    detailUserGreetBtn.isVisible = false
-                    detailUserChatBtn.isVisible = true
-                    detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_continue_chat)
-                } else {
-                    detailUserGreetBtn.isVisible = true
-                    detailUserChatBtn.isVisible = false
-                }
+            } else {//没打过招呼
+                detailUserGreetBtn.isVisible = matchBean!!.greet_switch
+                detailUserChatBtn.isVisible = false
+                if (matchBean!!.isliked == 1 || matchBean!!.isdisliked == 1)
+                    detailUserGreetBtn.setImageResource(R.drawable.icon_matchdetail_hi)
+            }
+            //喜欢或者不喜欢都关闭喜欢按钮
+            if (matchBean!!.isliked == 1 || matchBean!!.isdisliked == 1) {
+                detailUserLikeBtn.isVisible = false
+                detailUserDislikeBtn.visibility = View.INVISIBLE
+            } else {
+                detailUserLikeBtn.isVisible = true
+                detailUserDislikeBtn.visibility = View.VISIBLE
             }
         }
+
+//        if (matchBean!!.isdisliked == 1 || matchBean!!.isliked == 1 || matchBean!!.isfriend == 1) {
+//            detailUserDislikeBtn.visibility = View.INVISIBLE
+//            detailUserLikeBtn.isVisible = false
+//            detailUserGreetBtn.isVisible = true
+//            detailUserGreetBtn.setImageResource(R.drawable.icon_matchdetail_hi)
+//        } else {
+//            detailUserDislikeBtn.visibility = View.VISIBLE
+//            detailUserLikeBtn.isVisible = true
+//            detailUserGreetBtn.isVisible = true
+//        }
+
+        //判断是否为好友 是：显示聊天
+        //              否: 判断是否开启招呼,是否喜欢过
+//        if (matchBean!!.isfriend == 1) {//是好友就显示聊天
+//            detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_chat)
+//            detailUserChatBtn.isVisible = true
+//            detailUserGreetBtn.isVisible = false
+//        } else {
+//            detailUserChatBtn.isVisible = false
+//            detailUserGreetBtn.isVisible = true
+//            detailUserLikeBtn.isVisible = matchBean!!.isliked != 1 //喜欢过就不显示“感兴趣”
+//            if (!matchBean!!.greet_switch) {//招呼未开启不显示打招呼
+//                detailUserChatBtn.isVisible = false
+//                detailUserGreetBtn.isVisible = false
+//            } else {//招呼开启,   招呼有效 与 招呼无效
+//                if (matchBean!!.isgreeted) {
+//                    detailUserGreetBtn.isVisible = false
+//                    detailUserChatBtn.isVisible = true
+//                    detailUserChatBtn.setImageResource(R.drawable.icon_matchdetail_continue_chat)
+//                } else {
+//                    detailUserGreetBtn.isVisible = true
+//                    detailUserChatBtn.isVisible = false
+//                }
+//            }
+//        }
     }
 
 
@@ -982,7 +1031,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         if (event.isFirend) {
             matchBean!!.isfriend = 1
             showGreetAnimatioon()
-            updateLightCount(-1)
         }
     }
 

@@ -14,9 +14,11 @@
     <!-- Base application theme. -->
     <style name="SplashTheme" parent="MyAppTheme">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@drawable/icon_splash</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+<!--        <item name="android:windowFullscreen">false</item>-->
+<!--        <item name="android:windowIsTranslucent">false</item>-->
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
     </style>
 
 

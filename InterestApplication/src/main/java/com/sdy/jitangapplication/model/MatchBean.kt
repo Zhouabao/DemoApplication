@@ -70,7 +70,7 @@ data class MatchBean(
     var avatar: String? = null,
     var distance: String? = null,
     var gender: Int? = 0,
-    var isdislike: Int? = 0,
+    var isdisliked: Int? = 0,
     var isliked: Int? = 0,
     var member_level: Int? = 0,
     var nickname: String? = null,
