@@ -693,21 +693,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
 
                             if (content.getMsgType() == MsgTypeEnum.text)
                                 sendMsgS(content, false);
-//                            if (nimBeanBaseResp.getCode() == 211) {
                             if (!nimBeanBaseResp.getData().getRet_tips_arr().isEmpty())
                                 for (SendTipBean bean : nimBeanBaseResp.getData().getRet_tips_arr())
                                     sendTipMessage(bean.getContent(), bean.getShowType(), bean.getIfSendUserShow());
-//                            }
 
-
-                            // 若己方未认证，则发送  您未通过真人认证，可能导致回复率偏低
-                            // 若对方未认证，则发送   对方账号未认证，请小心诈骗
-//                            if (!nimBean.getIssended()) {//issended    bool  是否发送过消息  true发送过 false  没有发送过消息
-//                                if (!nimBean.getTarget_isfaced()) {
-//                                    sendTipMessage("对方账号未认证，请注意对方信息真实性", SendCustomTipAttachment.CUSTOME_TIP_NORMAL,true);
-//                                } else if (!nimBean.getMy_isfaced())
-//                                    sendTipMessage("您未通过真人认证，可能导致回复率偏低", SendCustomTipAttachment.CUSTOME_TIP_NORMAL,true);
-//                            }
                             nimBean.setIssended(true);
                             nimBean.set_send_msg(true);
                         } else if (nimBeanBaseResp.getCode() == 409) {//用户被封禁

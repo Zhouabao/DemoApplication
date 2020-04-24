@@ -322,6 +322,7 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
         return view;
     }
 
+
     private void initInputBarListener() {
 
 //        sendMessageButtonInInputBar.setOnClickListener(clickListener);
@@ -349,7 +350,8 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                messageEditText.setHint("");
+                if (!hasFocus)
+                    messageEditText.setHint("请输入消息");
                 checkSendButtonEnable(messageEditText);
             }
         });
@@ -397,20 +399,15 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
         });
 
 
-        messageEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    //检测是否可以发消息
-                    if (checkSendButtonEnable(messageEditText)) {
-                        onTextMessageSendButtonPressed();
-//                        messageEditText.setEnabled(false);
-                    }
-
-                    return true;
+        messageEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                //检测是否可以发消息
+                if (checkSendButtonEnable(messageEditText)) {
+                    onTextMessageSendButtonPressed();
                 }
-                return false;
+                return true;
             }
+            return false;
         });
     }
 
@@ -531,10 +528,13 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
     /**
      * 发送文本消息
      */
+    String previousContent = "";
+
     private void onTextMessageSendButtonPressed() {
 //        String text = messageEditText.getText().toString();
         String text = messageEditText.getText().toString().trim();
-        if (!text.isEmpty()) {
+        if (!text.isEmpty() && !previousContent.equals(text)) {
+            previousContent = text;
             IMMessage textMessage = createTextMessage(text);
             if (container.proxy.sendMessage(textMessage)) {
                 restoreText(true);
@@ -717,6 +717,7 @@ public class ChatInputPanel implements IAudioRecordCallback, AitTextChangeListen
         if (clearText) {
             messageEditText.setText("");
         }
+        previousContent = "";
 
         checkSendButtonEnable(messageEditText);
     }

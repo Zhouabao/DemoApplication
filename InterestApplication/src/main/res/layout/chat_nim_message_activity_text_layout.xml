@@ -28,7 +28,7 @@
         android:autoLink="web|email|phone"
         android:background="@drawable/shape_rectangle_white_24dp"
         android:gravity="center_vertical"
-        android:hint="说点什么吧"
+        android:hint="请输入消息"
         android:imeOptions="actionSend"
         android:minHeight="38dp"
         android:paddingLeft="15dp"
