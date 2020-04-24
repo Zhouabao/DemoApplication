@@ -31,10 +31,7 @@ import com.sdy.jitangapplication.model.InvestigateBean
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
-import com.sdy.jitangapplication.ui.dialog.ChangeAvatarRealManDialog
-import com.sdy.jitangapplication.ui.dialog.GotoVerifyDialog
-import com.sdy.jitangapplication.ui.dialog.InvestigateDialog
+import com.sdy.jitangapplication.ui.dialog.*
 import com.sdy.jitangapplication.ui.fragment.ContentFragment
 import com.sdy.jitangapplication.ui.fragment.IndexFragment
 import com.sdy.jitangapplication.ui.fragment.MessageListFragment
@@ -68,7 +65,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
-
         //启动时间统计
         mPresenter.startupRecord(
             UserManager.getToken(),
@@ -568,11 +564,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 title = "请替换头像"
                 confirmText = "修改头像"
             }
-            GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//完善相册
-                content = "完善相册会使你的信息更多在匹配页展示\n现在就去完善你的相册吧！"
-                title = "完善相册"
-                confirmText = "完善相册"
-            }
+//            GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//完善相册
+//                content = "完善相册会使你的信息更多在匹配页展示\n现在就去完善你的相册吧！"
+//                title = "完善相册"
+//                confirmText = "完善相册"
+//            }
 
         }
         if (gotoVerifyDialog != null) {
@@ -614,12 +610,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                     UserManager.saveNeedChangeAvator(true)//需要换头像
                     UserManager.saveForceChangeAvator(false)//是否强制替换过头像
                     UserManager.saveChangeAvatorType(1)//头像不合规
+                    showGotoVerifyDialog(event.type, event.avator)
                 }
-                event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> UserManager.saveAlertChangeAlbum(
-                    true
-                )
+                event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
+                    HumanVerifyDialog(this).apply {
+                        type = GotoVerifyDialog.TYPE_CHANGE_ABLUM
+                    }
+                        .show()
+                    UserManager.saveAlertChangeAlbum(true)
+                }
             }
-            showGotoVerifyDialog(event.type, event.avator)
         }
         if (EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java) != null) {
             // 若粘性事件存在，将其删除
