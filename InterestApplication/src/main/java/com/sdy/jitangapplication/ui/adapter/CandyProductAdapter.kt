@@ -60,22 +60,13 @@ class CandyProductAdapter :
         helper.itemView.ProductCandyPrice.text = CommonFunction.num2thousand("${item.amount}")
         helper.itemView.productDesc.text = "${item.title}"
 
-//        helper.itemView.addProductProgress.setProgress(   if (mycandy >= item.amount) {
-//            100F
-//        } else {
-//            ((mycandy * 1.0F / item.amount) * 100).toInt().toFloat()
-//        }
-//        )
-//        helper.itemView.addProductProgress.progress = if (mycandy >= item.amount) {
-//            100
-//        } else {
-//            ((mycandy * 1.0F / item.amount) * 100).toInt()
-//        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             helper.itemView.addProductProgress.setProgress(
                 if (mycandy >= item.amount) {
                     100
+                } else if ((mycandy * 1.0F / item.amount) < 5F / 125) {
+                    (5F / 125 * 100).toInt()
                 } else {
                     ((mycandy * 1.0F / item.amount) * 100).toInt()
                 }, true
@@ -83,10 +74,14 @@ class CandyProductAdapter :
         } else {
             helper.itemView.addProductProgress.progress = if (mycandy >= item.amount) {
                 100
+            } else if ((mycandy * 1.0F / item.amount) < 5F / 125) {
+                (5F / 125 * 100).toInt()
             } else {
                 ((mycandy * 1.0F / item.amount) * 100).toInt()
             }
         }
+
+
 
 
         helper.itemView.addProductProgressCount.text =
