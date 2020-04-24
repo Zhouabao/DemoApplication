@@ -67,11 +67,6 @@ class HelpWishDialog(
             dismiss()
         }
 
-        t3.text = SpanUtils.with(t3)
-            .append("Tips:糖果助力后将跳过匹配直接成为好友\n")
-            .append("对方2小时内未回复将退回糖果")
-            .setForegroundColor(Color.parseColor("#FF6796FA"))
-            .create()
 
         helpWishSeekBar.max = giftBean.amount.toFloat()
         helpWishSeekBar.min = giftBean.min_amount.toFloat()
