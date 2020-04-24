@@ -181,7 +181,7 @@
                                 android:id="@+id/detailUserInfoAge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="22dp"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="5dp"
                                 android:drawableLeft="@drawable/icon_gender_woman_gray_userdetail"
                                 android:drawablePadding="3dp"
                                 android:gravity="center"
@@ -197,14 +197,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="22dp"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginTop="15dp"
                                 android:drawableLeft="@drawable/icon_collapstation_userdetail"
                                 android:drawablePadding="3dp"
                                 android:gravity="center"
                                 android:textColor="#FF696E73"
                                 android:textSize="13sp"
                                 app:layout_constraintLeft_toRightOf="@id/detailUserInfoAge"
-                                app:layout_constraintTop_toBottomOf="@id/detailUserName"
+                                app:layout_constraintTop_toTopOf="@id/detailUserInfoAge"
                                 tools:text="天秤座" />
 
                             <TextView
@@ -212,21 +211,20 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="22dp"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginTop="15dp"
                                 android:drawableLeft="@drawable/icon_map_gray_userdetail"
                                 android:drawablePadding="3dp"
                                 android:gravity="center"
                                 android:textColor="#FF696E73"
                                 android:textSize="13sp"
                                 app:layout_constraintLeft_toRightOf="@id/detailUserConstellation"
-                                app:layout_constraintTop_toBottomOf="@id/detailUserName"
+                                app:layout_constraintTop_toTopOf="@id/detailUserInfoAge"
                                 tools:text="10KM" />
 
                             <com.ctetin.expandabletextviewlibrary.ExpandableTextView
                                 android:id="@+id/detailUserSign"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="20dp"
+                                android:layout_marginTop="15dp"
                                 android:layout_marginRight="15dp"
                                 android:ellipsize="end"
                                 android:lineSpacingMultiplier="1.1"
