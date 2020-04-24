@@ -140,7 +140,7 @@
                             android:background="@color/colorWhite"
                             android:orientation="horizontal"
                             android:paddingTop="10dp"
-                            app:bvp_auto_play="false"
+                            app:bvp_auto_play="true"
                             app:bvp_can_loop="true"
                             app:bvp_indicator_checked_color="@color/colorOrange"
                             app:bvp_indicator_gravity="center"
@@ -148,6 +148,7 @@
                             app:bvp_indicator_slide_mode="normal"
                             app:bvp_indicator_style="round_rect"
                             app:bvp_round_corner="10dp"
+                            app:bvp_scroll_duration="4000"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/t1" />
 
