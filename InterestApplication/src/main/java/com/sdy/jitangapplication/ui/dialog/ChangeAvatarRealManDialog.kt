@@ -8,6 +8,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -58,7 +59,8 @@ class ChangeAvatarRealManDialog(
             dismiss()
         }
         accountDangerBtn.onClick {
-            context1.startActivity<NewUserInfoSettingsActivity>()
+            if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
+                context1.startActivity<NewUserInfoSettingsActivity>()
             dismiss()
         }
 

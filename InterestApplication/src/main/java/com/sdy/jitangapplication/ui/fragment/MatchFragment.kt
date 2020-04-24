@@ -19,6 +19,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -256,7 +257,8 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             }
             R.id.changeAvatorBtn -> { //强制替换头像
                 if (ranking_level == 1 || ranking_level == 2) {
-                    startActivityForResult<NewUserInfoSettingsActivity>(100)
+                    if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
+                        startActivityForResult<NewUserInfoSettingsActivity>(100)
                 } else {
                     startActivity<MyLabelActivity>()
                 }
