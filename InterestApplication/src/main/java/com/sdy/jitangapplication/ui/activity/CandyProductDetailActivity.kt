@@ -281,16 +281,9 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
             productDesc.text = data.title
             rbMessage.text = "留言(${data.msg_cnt})"
             rbComment.text = "评价(${data.comments_cnt})"
-            if (data.mycandy_amount >= data.amount) {
-//                exchangeProgress.setProgress(100F)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    exchangeProgress.setProgress(
-                        100,
-                        true
-                    )
-                } else {
-                    exchangeProgress.progress = 100
-                }
+
+            if (!data.is_wished || data.mycandy_amount >= data.amount) {
+                exchangeProgress.progress = 100
                 exchangeCandy.text = SpanUtils.with(exchangeCandy)
                     .appendImage(R.drawable.icon_candy_detail)
                     .append("\t${CommonFunction.num2thousand("${data!!.amount}")}\t")
@@ -315,8 +308,6 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
                             (27 / 232F * 100).toInt()
                         }
                 }
-//                exchangeProgress.setProgress((data.mycandy_amount * 1F / data.amount * 100))
-
                 exchangeCandy.text = SpanUtils.with(exchangeCandy)
                     .append("还需要\t")
                     .appendImage(R.drawable.icon_candy_detail)
@@ -324,6 +315,8 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
                     .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
                     .create()
             }
+
+
 
             stateProductDetail.viewState = MultiStateView.VIEW_STATE_CONTENT
         } else {
