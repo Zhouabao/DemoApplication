@@ -258,6 +258,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
         if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
             userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
+
+        EventBus.getDefault().post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
     }
 
 

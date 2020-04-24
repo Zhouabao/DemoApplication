@@ -103,7 +103,7 @@ class MyTagFragment : BaseMvpLazyLoadFragment<MyTagPresenter>(), MyTagView {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateMyLabelEvent(event: UpdateMyLabelEvent) {
-        if (!event.tags.isNullOrEmpty())
-            setTagData(event.tags ?: mutableListOf<LabelQuality>())
+//        if (!event.tags.isNullOrEmpty())
+        setTagData(event.tags ?: mutableListOf<LabelQuality>())
     }
 }
