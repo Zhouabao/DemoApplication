@@ -30,7 +30,7 @@ class MessageSquarePresenter : BasePresenter<MessageSquareView>() {
             .excute(object : BaseSubscriber<BaseResp<MutableList<SquareMsgBean>?>>(mView) {
                 override fun onNext(t: BaseResp<MutableList<SquareMsgBean>?>) {
                     if (t.code == 200)
-                        mView.onSquareListsResult(t.data ?: null)
+                        mView.onSquareListsResult(t.data ?: mutableListOf())
                     else
                         mView.onError("")
                 }
