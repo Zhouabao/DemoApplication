@@ -79,7 +79,7 @@ class MessageListAdapter :
                 is SendGiftAttachment -> {
                     var hasList = false
                     for (data in session_list_arr) {
-                        if ((item.attachment as SendGiftAttachment).id == data.order_id) {
+                        if ((item.attachment as SendGiftAttachment).id == data.id) {
                             when (data.state) {
                                 SendGiftAttachment.GIFT_RECEIVE_STATUS_NORMAL -> {
                                     if (item.fromAccount == UserManager.getAccid()) {
@@ -134,7 +134,7 @@ class MessageListAdapter :
                 is WishHelpAttachment -> {
                     var hasList = false
                     for (data in session_list_arr) {
-                        if ((item.attachment as WishHelpAttachment).orderId == data.order_id) {
+                        if ((item.attachment as WishHelpAttachment).orderId == data.id) {
                             when (data.state) {
                                 WishHelpAttachment.WISH_HELP_STATUS_NORMAL -> {
                                     if (item.fromAccount == UserManager.getAccid()) {

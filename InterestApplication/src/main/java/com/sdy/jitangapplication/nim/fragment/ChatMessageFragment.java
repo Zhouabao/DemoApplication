@@ -396,9 +396,10 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
             showConfirmSendDialog(message);
         } else {
             if (sendAlready3Msgs())
-                if (sessionId.equals(Constants.ASSISTANT_ACCID))
+                if (sessionId.equals(Constants.ASSISTANT_ACCID)) {
                     sendMsgS(message, false);
-                else {
+                    return true;
+                } else {
                     if (message.getMsgType() == MsgTypeEnum.text) {
                         sendMsgRequest(message, sessionId);
                     } else {

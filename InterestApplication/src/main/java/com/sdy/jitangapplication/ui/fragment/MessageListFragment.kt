@@ -20,7 +20,6 @@ import com.netease.nim.uikit.api.model.contact.ContactChangedObserver
 import com.netease.nim.uikit.api.model.main.OnlineStateChangeObserver
 import com.netease.nim.uikit.api.model.user.UserInfoObserver
 import com.netease.nim.uikit.business.recent.RecentContactsFragment
-import com.netease.nim.uikit.business.recent.TeamMemberAitHelper
 import com.netease.nim.uikit.common.CommonUtil
 import com.netease.nim.uikit.common.ui.drop.DropCover
 import com.netease.nim.uikit.common.ui.drop.DropManager
@@ -30,6 +29,7 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.Observer
 import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.MsgServiceObserve
+import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.netease.nimlib.sdk.msg.model.MessageReceipt
@@ -480,17 +480,26 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
     private val messageReceiverObserver =
         Observer<List<IMMessage>> { imMessages ->
             if (imMessages != null) {
-                for (imMessage in imMessages) {
-                    if (!TeamMemberAitHelper.isAitMessage(imMessage)) {
-                        continue
+                //首先剔除自定义的tip消息
+                val iterator = imMessages.iterator()
+                while (iterator.hasNext()) {
+                    val message = iterator.next()
+                    val isSend = message.direct == MsgDirectionEnum.Out
+                    if (message.attachment is SendCustomTipAttachment && (message.attachment as SendCustomTipAttachment).ifSendUserShow != isSend) {
+                        NIMClient.getService(MsgService::class.java).deleteChattingHistory(message)
                     }
-                    var cacheMessageSet: MutableSet<IMMessage>? = cacheMessages[imMessage.sessionId]
-                    if (cacheMessageSet == null) {
-                        cacheMessageSet = HashSet()
-                        cacheMessages[imMessage.sessionId] = cacheMessageSet
-                    }
-                    cacheMessageSet.add(imMessage)
                 }
+//                for (imMessage in imMessages) {
+//                    if (!TeamMemberAitHelper.isAitMessage(imMessage)) {
+//                        continue
+//                    }
+//                    var cacheMessageSet: MutableSet<IMMessage>? = cacheMessages[imMessage.sessionId]
+//                    if (cacheMessageSet == null) {
+//                        cacheMessageSet = HashSet()
+//                        cacheMessages[imMessage.sessionId] = cacheMessageSet
+//                    }
+//                    cacheMessageSet.add(imMessage)
+//                }
             }
         }
 

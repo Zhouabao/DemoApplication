@@ -92,7 +92,7 @@ data class MessageListBean1(
 
 data class MessageGiftBean(
     var mid: String = "",
-    var order_id: Int = 0,
+    var id: Int = 0,
     var state: Int = 0////state  2领取  3过期
 )
 

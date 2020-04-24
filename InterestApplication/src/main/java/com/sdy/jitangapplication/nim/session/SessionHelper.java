@@ -366,25 +366,29 @@ public class SessionHelper {
                 //男的发的并且是(女的收的或者男方自己)
 //                   && ((message.getDirect() == MsgDirectionEnum.In && UserManager.INSTANCE.getGender() == 2)
 //                            || (message.getDirect() == MsgDirectionEnum.Out && UserManager.INSTANCE.getGender() == 1))
-                boolean sendMan = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount())).getGenderEnum() == GenderEnum.MALE;
-                boolean differentGender = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId())).getGenderEnum()
-                        != ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(UserManager.INSTANCE.getAccid())).getGenderEnum();
-                if (message.getRemoteExtension() != null && message.getRemoteExtension().get("needCandyImg") != null && ((Boolean) message.getRemoteExtension().get("needCandyImg")) == false) {
+                if (message.getSessionId().equals(Constants.ASSISTANT_ACCID)) {
                     return false;
                 } else {
-                    if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)
-                            && message.getMsgType() != MsgTypeEnum.tip
-                            && message.getMsgType() != MsgTypeEnum.custom
+                    boolean sendMan = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount())).getGenderEnum() == GenderEnum.MALE;
+                    boolean differentGender = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId())).getGenderEnum()
+                            != ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(UserManager.INSTANCE.getAccid())).getGenderEnum();
+                    if (message.getRemoteExtension() != null && message.getRemoteExtension().get("needCandyImg") != null && ((Boolean) message.getRemoteExtension().get("needCandyImg")) == false) {
+                        return false;
+                    } else {
+                        if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)
+                                && message.getMsgType() != MsgTypeEnum.tip
+                                && message.getMsgType() != MsgTypeEnum.custom
 //                            && !(message.getAttachment() instanceof ChatMatchAttachment)
 //                            && !(message.getAttachment() instanceof ChatHiAttachment)
 //                            && !(message.getAttachment() instanceof SendGiftAttachment)
 //                            && !(message.getAttachment() instanceof WishHelpAttachment)
 //                            && !(message.getAttachment() instanceof SendCustomTipAttachment)
-                            && sendMan
-                            && differentGender) {
-                        return true;
-                    } else {
-                        return false;
+                                && sendMan
+                                && differentGender) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 }
             }
