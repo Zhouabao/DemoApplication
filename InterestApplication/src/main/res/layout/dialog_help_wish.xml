@@ -202,7 +202,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Tips:糖果助力后将跳过匹配直接成为好友"
+            android:text="Tips:糖果助力后将跳过匹配直接成为好友，对方2小时内未回复将退回糖果"
             android:textColor="#ff191919"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="@id/helpWishSeekBarIsl"
