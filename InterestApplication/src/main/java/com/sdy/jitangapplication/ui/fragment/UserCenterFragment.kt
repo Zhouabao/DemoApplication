@@ -27,6 +27,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshMyCandyEvent
 import com.sdy.jitangapplication.event.SetMyCandyEvent
 import com.sdy.jitangapplication.event.UpdateMyLabelEvent
@@ -44,7 +45,6 @@ import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_user_center.*
-import kotlinx.android.synthetic.main.headerview_user_center_square.*
 import kotlinx.android.synthetic.main.item_marquee_power.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.UIUtil
@@ -65,7 +65,7 @@ import kotlin.math.abs
  * 我的用户中心
  */
 class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserCenterView,
-    View.OnClickListener, ViewTreeObserver.OnGlobalLayoutListener {
+    OnLazyClickListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     companion object {
         const val REQUEST_INFO_SETTING = 11
@@ -345,7 +345,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
 
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             //设置
             R.id.settingBtn -> {
@@ -370,28 +370,20 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //我的兴趣
             R.id.publishCl -> {
-                publishCl.isEnabled = false
                 startActivity<MyLabelActivity>()
-                publishCl.isEnabled = true
             }
             //我的足迹
             R.id.userFoot -> {
-                userFoot.isEnabled = false
                 startActivity<MyFootPrintActivity>()
-                userFoot.isEnabled = true
             }
             //我的来访
             R.id.userVisit -> {
-                userVisit.isEnabled = false
                 startActivity<MyVisitActivity>(
                     "isVip" to (userInfoBean?.userinfo?.isvip == 1),
                     "today" to userInfoBean?.userinfo?.todayvisit,
                     "all" to userInfoBean?.userinfo?.allvisit,
                     "freeShow" to userInfoBean?.free_show
                 )
-                userVisit.postDelayed({
-                    userVisit.isEnabled = true
-                }, 2000L)
             }
             //认证中心
             R.id.userVerify -> {
@@ -403,11 +395,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                         CommonFunction.toast("认证审核中...")
                     }
                     else -> {
-                        userVerify.isEnabled = false
                         startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
-                        userVerify.postDelayed({
-                            userVerify.isEnabled = true
-                        }, 2000L)
                     }
 
                 }
@@ -415,11 +403,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             }
             //我的糖果
             R.id.candyCl -> {
-                candyCl.isEnabled = false
                 startActivity<MyCandyActivity>()
-                candyCl.postDelayed({
-                    candyCl.isEnabled = true
-                }, 2000L)
             }
         }
     }
