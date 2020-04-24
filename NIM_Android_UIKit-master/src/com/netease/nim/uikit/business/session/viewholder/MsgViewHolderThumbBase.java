@@ -3,6 +3,7 @@ package com.netease.nim.uikit.business.session.viewholder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.common.ui.imageview.MsgThumbImageView;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
@@ -127,4 +128,15 @@ public abstract class MsgViewHolderThumbBase extends MsgViewHolderBase {
     }
 
     protected abstract String thumbFromSourceFile(String path);
+
+    @Override
+    protected int rightBackground() {
+        return R.drawable.shape_rectangle_chat_bg_right_gray;
+    }
+
+    @Override
+    protected int leftBackground() {
+        return R.drawable.shape_rectangle_chat_bg_right_gray;
+
+    }
 }

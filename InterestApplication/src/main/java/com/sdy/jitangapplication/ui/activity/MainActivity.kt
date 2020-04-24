@@ -150,7 +150,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         tabSquarePublish.onClick(
             object : CustomClickListener() {
                 override fun onSingleClick(view: View) {
-                    contentFragment.mPresenter.checkBlock()
+                    if (contentFragment.mPresenter != null)
+                        contentFragment.mPresenter.checkBlock()
                 }
             }
         )

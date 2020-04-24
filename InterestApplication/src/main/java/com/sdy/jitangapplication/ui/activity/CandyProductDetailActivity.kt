@@ -300,7 +300,7 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
         if (!productBean.is_wished || productBean.mycandy_amount >= productBean.amount) {
             exchangeProgress.progress = 100
             exchangeCandy.text = SpanUtils.with(exchangeCandy)
-                .appendImage(R.drawable.icon_candy_small)
+                .appendImage(R.drawable.icon_candy_detail)
                 .append("\t${CommonFunction.num2thousand("${productBean!!.amount}")}\t")
                 .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
                 .append("兑换")
@@ -325,7 +325,7 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
             }
             exchangeCandy.text = SpanUtils.with(exchangeCandy)
                 .append("还需要\t")
-                .appendImage(R.drawable.icon_candy_small)
+                .appendImage(R.drawable.icon_candy_detail)
                 .append("\t${CommonFunction.num2thousand("${productBean.amount - productBean.mycandy_amount}")}")
                 .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
                 .create()
