@@ -266,55 +266,12 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
 
             productCandyPrice.text = CommonFunction.num2thousand("${data!!.amount}")
             productRmbPrice.text = "价值¥${data!!.price}"
-            productCollect.text = if (data.is_wished) {
-                "已加入"
-            } else {
-                "加入心愿"
-            }
-            productCollect.setCompoundDrawablesWithIntrinsicBounds(
-                null, if (data.is_wished) {
-                    resources.getDrawable(R.drawable.icon_collected)
-                } else {
-                    resources.getDrawable(R.drawable.icon_collect)
-                }, null, null
-            )
+
             productDesc.text = data.title
             rbMessage.text = "留言(${data.msg_cnt})"
             rbComment.text = "评价(${data.comments_cnt})"
 
-            if (!data.is_wished || data.mycandy_amount >= data.amount) {
-                exchangeProgress.progress = 100
-                exchangeCandy.text = SpanUtils.with(exchangeCandy)
-                    .appendImage(R.drawable.icon_candy_detail)
-                    .append("\t${CommonFunction.num2thousand("${data!!.amount}")}\t")
-                    .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
-                    .append("兑换")
-                    .create()
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    exchangeProgress.setProgress(
-                        if (data.mycandy_amount * 1F / data.amount > (27 / 232F)) {
-                            ((data.mycandy_amount * 1F / data.amount * 100).toInt())
-                        } else {
-                            (27 / 232F * 100).toInt()
-                        },
-                        true
-                    )
-                } else {
-                    exchangeProgress.progress =
-                        if (data.mycandy_amount * 1F / data.amount > (27 / 232F)) {
-                            ((data.mycandy_amount * 1F / data.amount * 100).toInt())
-                        } else {
-                            (27 / 232F * 100).toInt()
-                        }
-                }
-                exchangeCandy.text = SpanUtils.with(exchangeCandy)
-                    .append("还需要\t")
-                    .appendImage(R.drawable.icon_candy_detail)
-                    .append("\t${CommonFunction.num2thousand("${data.amount - data.mycandy_amount}")}")
-                    .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
-                    .create()
-            }
+            updateWishState()
 
 
 
@@ -325,23 +282,61 @@ class CandyProductDetailActivity : BaseMvpActivity<CandyProductDetailPresenter>(
 
     }
 
+    private fun updateWishState() {
+        productCollect.text = if (productBean.is_wished) {
+            "已加入"
+        } else {
+            "加入心愿"
+        }
+
+        productCollect.setCompoundDrawablesWithIntrinsicBounds(
+            null, if (productBean.is_wished) {
+                resources.getDrawable(R.drawable.icon_collected)
+            } else {
+                resources.getDrawable(R.drawable.icon_collect)
+            }, null, null
+        )
+
+        if (!productBean.is_wished || productBean.mycandy_amount >= productBean.amount) {
+            exchangeProgress.progress = 100
+            exchangeCandy.text = SpanUtils.with(exchangeCandy)
+                .appendImage(R.drawable.icon_candy_small)
+                .append("\t${CommonFunction.num2thousand("${productBean!!.amount}")}\t")
+                .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
+                .append("兑换")
+                .create()
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                exchangeProgress.setProgress(
+                    if (productBean.mycandy_amount * 1F / productBean.amount > (27 / 232F)) {
+                        ((productBean.mycandy_amount * 1F / productBean.amount * 100).toInt())
+                    } else {
+                        (27 / 232F * 100).toInt()
+                    },
+                    true
+                )
+            } else {
+                exchangeProgress.progress =
+                    if (productBean.mycandy_amount * 1F / productBean.amount > (27 / 232F)) {
+                        ((productBean.mycandy_amount * 1F / productBean.amount * 100).toInt())
+                    } else {
+                        (27 / 232F * 100).toInt()
+                    }
+            }
+            exchangeCandy.text = SpanUtils.with(exchangeCandy)
+                .append("还需要\t")
+                .appendImage(R.drawable.icon_candy_small)
+                .append("\t${CommonFunction.num2thousand("${productBean.amount - productBean.mycandy_amount}")}")
+                .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
+                .create()
+        }
+    }
+
 
     override fun onGoodsAddWishResult(success: Boolean) {
         if (success) {
-
             productBean.is_wished = !productBean.is_wished
-            productCollect.text = if (productBean.is_wished) {
-                "已加入"
-            } else {
-                "加入心愿"
-            }
-            productCollect.setCompoundDrawablesWithIntrinsicBounds(
-                null, if (productBean.is_wished) {
-                    resources.getDrawable(R.drawable.icon_collected)
-                } else {
-                    resources.getDrawable(R.drawable.icon_collect)
-                }, null, null
-            )
+            updateWishState()
             if (productBean.is_wished)
                 AddAndMessageDialog(this, productBean.id).show()
             //更新列表的商品状态
