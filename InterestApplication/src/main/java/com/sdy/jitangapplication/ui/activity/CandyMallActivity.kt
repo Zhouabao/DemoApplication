@@ -76,7 +76,7 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
         refreshProduct.setOnLoadMoreListener(this)
         rvCategoryProduct.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvCategoryProduct.adapter = candyProductAdapter
-        candyProductAdapter.setEmptyView(R.layout.empty_layout,rvCategoryProduct)
+        candyProductAdapter.setEmptyView(R.layout.empty_layout, rvCategoryProduct)
         candyProductAdapter.isUseEmpty(false)
         candyProductAdapter.setOnItemClickListener { _, view, position ->
             startActivity<CandyProductDetailActivity>("id" to candyProductAdapter.data[position].id)
@@ -179,11 +179,12 @@ class CandyMallActivity : BaseMvpActivity<CandyMallPresenter>(), CandyMallView, 
             candyProductAdapter.notifyDataSetChanged()
         }
         if (refreshProduct.state == RefreshState.Loading) {
-            refreshProduct.finishLoadMore(goodsListBean != null)
+            if ((goodsListBean?.list ?: mutableListOf<ProductBean>()).size < Constants.PAGESIZE) {
+                refreshProduct.finishLoadMoreWithNoMoreData()
+            } else
+                refreshProduct.finishLoadMore(goodsListBean != null)
         }
-        if ((goodsListBean?.list ?: mutableListOf<ProductBean>()).size < Constants.PAGESIZE) {
-            refreshProduct.finishLoadMoreWithNoMoreData()
-        }
+
         if (refreshProduct.state == RefreshState.Refreshing)
             refreshProduct.finishRefresh(goodsListBean != null)
         candyProductAdapter.addData(goodsListBean?.list ?: mutableListOf())
