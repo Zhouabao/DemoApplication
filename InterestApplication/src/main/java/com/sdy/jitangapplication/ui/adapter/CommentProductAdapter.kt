@@ -5,7 +5,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.ProductCommentBean
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import kotlinx.android.synthetic.main.item_comment.view.*
 
 /**
@@ -23,9 +25,13 @@ class CommentProductAdapter :
         helper.itemView.commentContent.text = item.comments
         helper.itemView.commentTime.text = item.create_time
         helper.itemView.commentPicsRv.layoutManager = GridLayoutManager(mContext, 3)
-        val adapter  = CommentPicAdapter()
+        val adapter = CommentPicAdapter()
         adapter.addData(item.pic)
         helper.itemView.commentPicsRv.adapter = adapter
+
+        helper.itemView.clickWithTrigger {
+            MatchDetailActivity.start(mContext, item.accid)
+        }
 
     }
 }

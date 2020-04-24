@@ -17,7 +17,6 @@ import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.model.ProductCommentBean
 import com.sdy.jitangapplication.presenter.CommentPresenter
 import com.sdy.jitangapplication.presenter.view.CommentView
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.CommentProductAdapter
 import kotlinx.android.synthetic.main.empty_layout_comment.view.*
 import kotlinx.android.synthetic.main.fragment_comment.*
@@ -63,18 +62,6 @@ class CommentFragment(val goods_id: Int) : BaseMvpLazyLoadFragment<CommentPresen
         commentProductAdapter.isUseEmpty(false)
         mPresenter.goodscommentsList(params)
 
-        commentProductAdapter.setOnItemClickListener { _, view, position ->
-            view.isEnabled = false
-            when (view.id) {
-                R.id.commentAvator -> {
-                    MatchDetailActivity.start(
-                        activity!!,
-                        commentProductAdapter.data[position].accid
-                    )
-                }
-            }
-            view.postDelayed({ view.isEnabled = true }, 2000L)
-        }
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {

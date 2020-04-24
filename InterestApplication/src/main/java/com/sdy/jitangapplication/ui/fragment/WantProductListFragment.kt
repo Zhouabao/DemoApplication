@@ -19,7 +19,6 @@ import com.sdy.jitangapplication.model.GiftBean
 import com.sdy.jitangapplication.model.WantFriendBean
 import com.sdy.jitangapplication.presenter.WantProductListPresenter
 import com.sdy.jitangapplication.presenter.view.WantProductListView
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.WantProductAdapter
 import com.sdy.jitangapplication.ui.dialog.HelpWishDialog
 import kotlinx.android.synthetic.main.empty_layout_comment.view.*
@@ -94,11 +93,6 @@ class WantProductListFragment(
             view.postDelayed({ view.isEnabled = true }, 2000L)
         }
 
-        wantProductAdapter.setOnItemClickListener { _, view, position ->
-            view.isEnabled = false
-            MatchDetailActivity.start(activity!!, wantProductAdapter.data[position].accid)
-            view.postDelayed({ view.isEnabled = false }, 2000L)
-        }
 
 
         mPresenter.goodsWishList(params)

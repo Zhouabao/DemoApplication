@@ -5,7 +5,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.WantFriendBean
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import kotlinx.android.synthetic.main.item_want_product.view.*
 
 /**
@@ -22,5 +24,8 @@ class WantProductAdapter :
         helper.itemView.wantName.text = item.nickname
         helper.itemView.wantRelationship.isVisible = !item.ship_str.isNullOrEmpty()
         helper.itemView.wantRelationship.text = item.ship_str
+        helper.itemView.clickWithTrigger {
+            MatchDetailActivity.start(mContext, item.accid)
+        }
     }
 }

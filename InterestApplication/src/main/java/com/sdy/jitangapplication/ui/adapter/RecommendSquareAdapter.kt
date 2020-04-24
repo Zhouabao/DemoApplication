@@ -21,7 +21,9 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.RecommendSquareBean
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -137,7 +139,7 @@ class RecommendSquareAdapter :
         }
 
         //点击跳转
-        helper.itemView.onClick {
+        helper.itemView.clickWithTrigger {
             if (item.type == 2)  //视频
                 SquarePlayDetailActivity.startActivity(
                     mContext as Activity,
@@ -161,6 +163,10 @@ class RecommendSquareAdapter :
             }
 
 
+        }
+
+        helper.itemView.squareAvator.clickWithTrigger {
+            MatchDetailActivity.start(mContext, item.accid)
         }
     }
 

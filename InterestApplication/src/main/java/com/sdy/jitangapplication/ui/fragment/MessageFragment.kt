@@ -18,7 +18,6 @@ import com.sdy.jitangapplication.event.RefreshGoodsMessageEvent
 import com.sdy.jitangapplication.model.ProductMsgBean
 import com.sdy.jitangapplication.presenter.MessagePresenter
 import com.sdy.jitangapplication.presenter.view.MessageView
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.MessageProductAdapter
 import kotlinx.android.synthetic.main.empty_layout_comment.view.*
 import kotlinx.android.synthetic.main.fragment_message.*
@@ -67,12 +66,6 @@ class MessageFragment(val goods_id: Int) : BaseMvpLazyLoadFragment<MessagePresen
         messageProductAdapter.emptyView.emptyTip.text = "暂时还没有人留言"
         messageProductAdapter.isUseEmpty(false)
         mPresenter.goodsMsgList(params)
-
-        messageProductAdapter.setOnItemClickListener { _, view, position ->
-            view.isEnabled = false
-            MatchDetailActivity.start(activity!!, messageProductAdapter.data[position].accid)
-            view.postDelayed({ view.isEnabled = false }, 2000L)
-        }
 
     }
 
