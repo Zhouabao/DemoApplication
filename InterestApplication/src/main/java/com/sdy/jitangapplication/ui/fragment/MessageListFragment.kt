@@ -636,7 +636,11 @@ class MessageListFragment : BaseMvpLazyLoadFragment<MessageListPresenter>(), Mes
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onUpdateHiEvent(event: UpdateHiEvent) {
-        mPresenter.messageCensus(params)
+        try {
+            mPresenter.messageCensus(params)
+        } catch (e: Exception) {
+
+        }
     }
 
 

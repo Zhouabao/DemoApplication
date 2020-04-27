@@ -12,13 +12,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.animation.LinearInterpolator
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.get
 import androidx.core.view.isVisible
-import androidx.core.view.marginTop
 import androidx.core.view.size
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,7 +29,6 @@ import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.google.android.material.appbar.AppBarLayout
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.onClick
@@ -44,8 +43,11 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.DetailUserInfoBean
@@ -57,9 +59,9 @@ import com.sdy.jitangapplication.presenter.MatchDetailPresenter
 import com.sdy.jitangapplication.presenter.view.MatchDetailView
 import com.sdy.jitangapplication.ui.adapter.*
 import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
@@ -77,7 +79,7 @@ import org.jetbrains.anko.startActivityForResult
  * 匹配详情页
  */
 class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetailView,
-    OnLazyClickListener, ModuleProxy {
+    OnLazyClickListener, ModuleProxy, ViewTreeObserver.OnGlobalLayoutListener {
 
     private val targetAccid by lazy { intent.getStringExtra("target_accid") }
     private var matchBean: MatchBean? = null
@@ -124,6 +126,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     private val usergiftAdapter by lazy { UserCenteGiftAdapter() }
     private val adapter by lazy { RecommendSquareAdapter() }
 
+    private var setPadding = false
     private fun initView() {
         EventBus.getDefault().register(this)
 
@@ -132,18 +135,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         mPresenter.context = this
 
         //设置图片的宽度占满屏幕，宽高比9:16
-        val layoutParams = clPhotos.layoutParams
+        val layoutParams = clPhotos.layoutParams as ConstraintLayout.LayoutParams
         layoutParams.width = ScreenUtils.getScreenWidth()
         layoutParams.height = ScreenUtils.getScreenWidth()
-//        layoutParams.height = ScreenUtils.getScreenHeight() - SizeUtils.dp2px(197F)
         clPhotos.layoutParams = layoutParams
-
-        //设置个人信息距离顶部的距离
-//        val paramsClUserInfo = clUserInfo.layoutParams as LinearLayout.LayoutParams
-        val paramsClUserInfo = clUserInfo.layoutParams as FrameLayout.LayoutParams
-        paramsClUserInfo.topMargin = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(26F)
-        paramsClUserInfo.height = LinearLayout.LayoutParams.WRAP_CONTENT
-        clUserInfo.layoutParams = paramsClUserInfo
 
         moreBtn.setOnClickListener(this)
         moreBtn1.setOnClickListener(this)
@@ -158,18 +153,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         backBtn1.setOnClickListener(this)
         btnBack2.setOnClickListener(this)
         notifyAddTagBtn.setOnClickListener(this)
+        clUserInfoTop.viewTreeObserver.addOnGlobalLayoutListener(this)
 
 
-        //用户的广场预览界面
-        detailThumbRv.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        detailThumbRv.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(3F),
-                resources.getColor(R.color.colorTransparent)
-            )
-        )
         //用户心愿列表
 //        detailUserWishRv.viewTreeObserver.addOnGlobalLayoutListener(this)
         detailUserWishRv.layoutManager =
@@ -230,19 +216,31 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         usergiftAdapter.setEmptyView(R.layout.empty_gift, rvGift)
         usergiftAdapter.isUseEmpty(false)
 
-
-        userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, verticalOffset ->
-            if (Math.abs(verticalOffset) >= clUserInfo.marginTop) {
-                if (ScreenUtils.isFullScreen(this))
-                    ScreenUtils.setNonFullScreen(this)
-            } else {
-                if (!ScreenUtils.isFullScreen(this))
-                    ScreenUtils.setFullScreen(this)
+        listRefresh.setOnMultiPurposeListener(object : SimpleMultiPurposeListener() {
+            override fun onLoadMore(refreshLayout: RefreshLayout) {
+                if (adapter.data.size < page * Constants.PAGESIZE) {
+                    refreshLayout.finishLoadMoreWithNoMoreData()
+                } else {
+                    page += 1
+                    params1["page"] = page
+                    mPresenter.getSomeoneSquare(params1)
+                }
             }
-            //            detailActionbar.isVisible = Math.abs(verticalOffset) >= (userAppbar.totalScrollRange - SizeUtils.dp2px(60F))
-            detailActionbar.isVisible = Math.abs(verticalOffset) >= clUserInfo.marginTop
         })
 
+
+        scrollDetail.setZoomView(clPhotos)
+        scrollDetail.setOnScrollListener { scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (clTop in 1..scrollY) {
+                detailActionbar.alpha = 1F
+                if (!setPadding) {
+                    StatusBarUtil.setPaddingSmart(this, detailActionbar)
+                    setPadding = true
+                }
+            } else {
+                detailActionbar.alpha = 0F
+            }
+        }
         //重试
         stateview.retryBtn.onClick {
             stateview.viewState = MultiStateView.VIEW_STATE_LOADING
@@ -466,14 +464,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         //更新打招呼次数和状态
         updateLightCount(matchBean!!.lightningcnt ?: 0)
 
-//        用户动态封面图片（暂不展示）
-        detailThumbRv.visibility = View.GONE
-//        if (matchBean!!.square == null || matchBean!!.square!!.size == 0) {
-//            detailThumbRv.visibility = View.GONE
-//        } else {
-//            detailThumbRv.adapter = thumbAdapter
-//            thumbAdapter.setNewData(matchBean!!.square ?: mutableListOf())
-//        }
 
         //用户照片
         detailPhotosVp.adapter = photosAdapter
@@ -605,35 +595,31 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             1 -> {
                 userContent.isVisible = true
                 llBlackContent.isVisible = false
-                ScreenUtils.setFullScreen(this)
-
+                //状态栏透明和间距处理
+                StatusBarUtil.immersive(this)
+//                StatusBarUtil.setMargin(this, clPhotos)
             }
             2 -> {
                 llBlackContent.isVisible = true
                 userContent.isVisible = false
                 cancelBlack.isVisible = true
                 blackContent.text = "拉黑状态下双方主页互相不可见\n取消拉黑可恢复好友权益"
-                ScreenUtils.setNonFullScreen(this)
-
             }
             3 -> {
                 llBlackContent.isVisible = true
                 userContent.isVisible = false
                 cancelBlack.isVisible = false
                 blackContent.text = "对方已将你拉黑并限制访问其主页\n去看看其它感兴趣的人吧"
-                ScreenUtils.setNonFullScreen(this)
             }
             4 -> {
                 llBlackContent.isVisible = true
                 userContent.isVisible = false
                 cancelBlack.isVisible = true
                 blackContent.text = "拉黑状态下双方主页互相不可见\n取消拉黑可恢复好友权益"
-                ScreenUtils.setNonFullScreen(this)
             }
             else -> {
                 userContent.isVisible = true
                 llBlackContent.isVisible = false
-                ScreenUtils.setFullScreen(this)
             }
         }
     }
@@ -793,10 +779,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
     ) {
         if (result) {
             stateview.viewState = MultiStateView.VIEW_STATE_CONTENT
-            if (data == null || data.list == null || data!!.list!!.size == 0) {
+            if (data?.list == null || data!!.list!!.size == 0) {
                 if (adapter.data.isNullOrEmpty()) {
                     adapter.isUseEmpty(true)
                 }
+                adapter.notifyDataSetChanged()
                 listRefresh.finishLoadMoreWithNoMoreData()
             } else {
                 if (data?.list.size > 0) {
@@ -1103,6 +1090,14 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
 
     override fun onItemFooterClick(message: IMMessage?) {
 
+    }
+
+    var clTop = 0
+    override fun onGlobalLayout() {
+        clTop = clUserInfoTop.top
+        if (clTop > 0) {
+            clUserInfoTop.viewTreeObserver.removeOnGlobalLayoutListener(this)
+        }
     }
 
 

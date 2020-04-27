@@ -8,9 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
-import android.view.animation.LinearInterpolator
+import android.view.animation.*
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -201,11 +199,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                             val index = vpPhotos.currentItem
                             vpPhotos.setCurrentItem(index + 1, true)
                         } else {
-//                            EventBus.getDefault().post(ShakeEvent(true))
-                            YoYo.with(Techniques.Shake)
-                                .duration(300)
-                                .repeat(0)
-                                .playOn(itemView)
+                            itemView.startAnimation(shakeAnimation1())
                         }
 
                     }
@@ -218,17 +212,29 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                             val index = vpPhotos.currentItem
                             vpPhotos.setCurrentItem(index - 1, true)
                         } else {
-                            YoYo.with(Techniques.Shake)
-                                .duration(300)
-                                .repeat(0)
-                                .playOn(itemView)
-//                            EventBus.getDefault().post(ShakeEvent(true))
+                            itemView.startAnimation(shakeAnimation1())
                         }
                     }
                 }
             }
         }
 
+    }
+
+
+    fun shakeAnimation1(): Animation {
+        val ratation = RotateAnimation(
+            0F,
+            1F,
+            Animation.RELATIVE_TO_SELF,
+            0.5F,
+            Animation.RELATIVE_TO_SELF,
+            0.5F
+        )
+        ratation.interpolator = CycleInterpolator(4F)
+        ratation.repeatCount = 0
+        ratation.duration = 300
+        return ratation
     }
 
 
