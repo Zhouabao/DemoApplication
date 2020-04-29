@@ -79,7 +79,9 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
                                 .post(PayLabelResultEvent(code == BaseResp.ErrCode.ERR_OK))
                         } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {
                             EventBus.getDefault().post(UpdateMyLabelEvent())
-                        } else {
+                        } else if (ActivityUtils.getTopActivity() is MainActivity) {
+                            EventBus.getDefault().post(RefreshEvent(true))
+                        }else {
                             if (ActivityUtils.getTopActivity() !is MainActivity) {
                                 MainActivity.start(this@WXPayEntryActivity, Intent())
                             }

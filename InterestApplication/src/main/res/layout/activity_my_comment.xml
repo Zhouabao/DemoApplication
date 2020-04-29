@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.kennyc.view.MultiStateView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/stateview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:msv_errorView="@layout/error_layout"
-        android:fitsSystemWindows="true"
-        app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="loading">
+<com.kennyc.view.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/stateview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:msv_errorView="@layout/error_layout"
+    app:msv_loadingView="@layout/loading_layout"
+    app:msv_viewState="loading">
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srlDisableContentWhenLoading="false"
-            app:srlDisableContentWhenRefresh="false">
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlDisableContentWhenLoading="false"
+        app:srlDisableContentWhenRefresh="false">
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/commentRv"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+            android:id="@+id/commentRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:overScrollMode="never" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </com.kennyc.view.MultiStateView>
 

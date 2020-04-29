@@ -12,10 +12,13 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -202,18 +205,14 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             )
         }
         squareTitleRv.isVisible = !squareBean!!.title_list.isNullOrEmpty()
-        squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
-            resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
-            null,
-            null,
-            null
+        setLikeStatus(
+            squareBean!!.isliked,
+            squareBean!!.like_cnt,
+            squareDianzanBtn1,
+            squareDianzanAni,
+            squareDianzanImg,
+            false
         )
-
-        squareDianzanBtn1.text = "${if (squareBean!!.like_cnt < 0) {
-            0
-        } else {
-            squareBean!!.like_cnt
-        }}"
 
         if (intent.getIntExtra("position", -1) != -1)
             EventBus.getDefault().post(
@@ -270,6 +269,39 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
     }
 
+    private fun setLikeStatus(
+        isliked: Int,
+        likeCount: Int,
+        likeView: TextView,
+        likeAni: LottieAnimationView,
+        likeImg: ImageView,
+        animated: Boolean = true
+    ) {
+        likeAni.isVisible = isliked == 1 && animated
+        likeImg.visibility = if (likeAni.isVisible) {
+            View.INVISIBLE
+        } else {
+            View.VISIBLE
+        }
+
+        if (isliked == 1) {
+            if (animated) {
+                likeAni.playAnimation()
+            } else {
+                likeImg.setImageResource(R.drawable.icon_zan_clicked)
+            }
+        } else {
+            likeImg.setImageResource(R.drawable.icon_zan_normal)
+        }
+
+        likeView.text = "${if (likeCount < 0) {
+            0
+        } else {
+            likeCount
+        }}"
+    }
+
+
     private fun initView() {
         mPresenter = SquareDetailPresenter()
         mPresenter.mView = this
@@ -308,7 +340,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         btnBack.setOnClickListener(this)
         headBtnBack.setOnClickListener(this)
         squareZhuanfaBtn1.setOnClickListener(this)
-        squareDianzanBtn1.setOnClickListener(this)
+        squareDianzanAni.setOnClickListener(this)
+        squareDianzanImg.setOnClickListener(this)
         squareCommentBtn1.setOnClickListener(this)
         squareChatBtn1.setOnClickListener(this)
         headSquareChatBtn1.setOnClickListener(this)
@@ -565,6 +598,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
     }
 
+
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
         commentParams["page"] = page
@@ -674,12 +708,15 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 squareBean!!.like_cnt = squareBean!!.like_cnt?.minus(1)
                 0
             }
-            squareDianzanBtn1.text = "${squareBean!!.like_cnt}"
-            squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
-                resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
-                null,
-                null,
-                null
+
+
+            setLikeStatus(
+                squareBean!!.isliked,
+                squareBean!!.like_cnt,
+                squareDianzanBtn1,
+                squareDianzanAni,
+                squareDianzanImg,
+                true
             )
 
             if (intent.getIntExtra("position", -1) != -1)
@@ -761,7 +798,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             R.id.btnBack, R.id.headBtnBack -> {
                 onBackPressed()
             }
-            R.id.squareDianzanBtn1 -> {
+            R.id.squareDianzanAni, R.id.squareDianzanImg -> {
                 val params = hashMapOf(
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),

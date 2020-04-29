@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -46,6 +47,7 @@ import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_user_center.*
 import kotlinx.android.synthetic.main.item_marquee_power.view.*
+import kotlinx.android.synthetic.main.popupwindow_user_center_guide_verify.view.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.UIUtil
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
@@ -259,7 +261,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
             userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
 
-        EventBus.getDefault().post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
+        EventBus.getDefault()
+            .post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
     }
 
 
@@ -303,6 +306,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 .inflate(R.layout.popupwindow_user_center_guide_verify, null, false)
             width = ViewGroup.LayoutParams.WRAP_CONTENT
             height = ViewGroup.LayoutParams.WRAP_CONTENT
+            val params = contentView.iconGuideVerify.layoutParams as LinearLayout.LayoutParams
+            params.width = SizeUtils.dp2px(245F)
+            params.height = SizeUtils.dp2px(52F)
+            contentView.iconGuideVerify.layoutParams = params
             setBackgroundDrawable(null)
             animationStyle = R.style.MyDialogLeftBottomAnimation
             isFocusable = true
@@ -435,13 +442,14 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
 
     override fun onGlobalLayout() {
 //        if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1) {
-        val width = userVerify.left + userVerify.width
+        val width = userVerify.left
         if (width > 0) {
             if (userInfoBean?.userinfo?.isfaced != 1) {
+
                 guideVerifyWindow.showAtLocation(
                     userVerify,
                     Gravity.TOP and Gravity.LEFT,
-                    width - SizeUtils.dp2px(154F),
+                    width + SizeUtils.dp2px(11F) - SizeUtils.dp2px(170F),
                     SizeUtils.dp2px(-20F)
                 )
                 multiStateView.postDelayed({

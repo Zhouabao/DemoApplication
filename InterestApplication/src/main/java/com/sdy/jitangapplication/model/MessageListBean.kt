@@ -173,6 +173,18 @@ data class LikeMeOneDayBean(
 )
 
 
+
+data class MyLikedBean(
+    var accid: String = "",
+    var age: Int = 0,
+    var avatar: String = "",
+    var constellation: String = "",
+    var gender: Int = 0,
+    var isfaced: Boolean = false,
+    var isvip: Boolean = false,
+    var nickname: String = "",
+    var sign: String = ""
+)
 /**************广场消息列表*******************/
 
 /**

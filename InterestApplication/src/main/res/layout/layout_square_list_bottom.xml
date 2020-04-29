@@ -1,172 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:background="@color/colorWhite"
-        android:paddingTop="12dp"
-        android:descendantFocusability="afterDescendants"
-        android:layout_height="wrap_content">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:descendantFocusability="afterDescendants"
+    android:paddingTop="12dp">
 
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/squareTitleRv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="@id/squareContent1"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        android:id="@+id/squareTitleRv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/squareContent1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <com.ctetin.expandabletextviewlibrary.ExpandableTextView
-            android:id="@+id/squareContent1"
-            android:layout_width="match_parent"
+        android:id="@+id/squareContent1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="12dp"
+        android:ellipsize="end"
+        android:lineSpacingMultiplier="1.4"
+        android:textColor="#FF191919"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:ep_contract_color="@color/colorGrayText"
+        app:ep_contract_text="收起"
+        app:ep_expand_color="@color/colorGrayText"
+        app:ep_expand_text="...展开"
+        app:ep_max_line="3"
+        app:ep_need_always_showright="true"
+        app:ep_need_animation="true"
+        app:ep_need_contract="true"
+        app:ep_need_expand="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/squareTitleRv"
+        tools:text="在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品" />
+
+
+    <LinearLayout
+        android:id="@+id/squareLocationAndTime1Ll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintLeft_toRightOf="@id/squareTagLl"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/squareContent1">
+
+        <TextView
+            android:id="@+id/squareLocation"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_marginRight="12dp"
-            android:textColor="#FF191919"
-            android:textSize="16sp"
-            android:layout_marginLeft="15dp"
+            android:background="@drawable/shape_rectangle_f6f6f6_5dp"
+            android:drawableLeft="@drawable/icon_location_green"
+            android:drawablePadding="8dp"
             android:ellipsize="end"
-            android:lineSpacingMultiplier="1.4"
-            app:ep_contract_color="@color/colorGrayText"
-            app:ep_contract_text="收起"
-            app:ep_expand_color="@color/colorGrayText"
-            app:ep_expand_text="...展开"
-            app:ep_max_line="3"
-            app:ep_need_always_showright="true"
-            app:ep_need_animation="true"
-            app:ep_need_contract="true"
-            app:ep_need_expand="true"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/squareTitleRv"
-            tools:text="在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品在蚂蚁金服中后台产品"/>
-
-
-    <LinearLayout
-            android:id="@+id/squareLocationAndTime1Ll"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="15dp"
-            app:layout_constraintLeft_toRightOf="@id/squareTagLl"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/squareContent1">
-
-        <TextView
-                android:id="@+id/squareLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFC5C6C8"
-                android:textSize="12sp"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:paddingRight="8dp"
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/icon_location_green"
-                android:background="@drawable/shape_rectangle_f6f6f6_5dp"
-                tools:text="北京市北北京市北"
-                />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-            android:id="@+id/squareTagLl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/squareLocationAndTime1Ll"
-            app:layout_constraintTop_toBottomOf="@id/squareContent1">
-
-        <TextView
-                android:id="@+id/squareTagName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFC5C6C8"
-                android:textSize="12sp"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:paddingRight="8dp"
-                android:drawablePadding="8dp"
-                android:drawableRight="@drawable/icon_triangle_gray"
-                android:drawableLeft="@drawable/icon_tag_square"
-                android:background="@drawable/shape_rectangle_f6f6f6_5dp"
-                tools:text="玩游戏"
-                />
-
-    </LinearLayout>
-
-
-    <TextView
-            android:id="@+id/squareDianzanBtn1"
-            android:drawableLeft="@drawable/icon_dianzan"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:drawablePadding="4dp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="@color/colorBlack6f"
-            android:textSize="15sp"
-            android:layout_marginTop="15dp"
-            app:layout_constraintLeft_toLeftOf="@id/squareContent1"
-            app:layout_constraintTop_toBottomOf="@id/squareLocationAndTime1Ll"
-            tools:text="123"/>
-
-
-    <TextView
-            android:id="@+id/squareCommentBtn1"
-            android:drawableLeft="@drawable/icon_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:drawablePadding="4dp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="@color/colorBlack6f"
-            android:textSize="15sp"
-            android:layout_marginLeft="27dp"
-            android:layout_marginRight="18dp"
-            app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
-            app:layout_constraintLeft_toRightOf="@id/squareDianzanBtn1"
-            app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
-            tools:text="123"/>
-
-
-    <TextView
-            android:id="@+id/squareZhuanfaBtn1"
-            android:visibility="gone"
-            android:drawableLeft="@drawable/icon_zhuanfa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="4dp"
-            android:textStyle="bold"
-            android:layout_marginLeft="27dp"
             android:gravity="center_vertical"
-            android:textColor="@color/colorBlack6f"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
-            app:layout_constraintLeft_toRightOf="@id/squareCommentBtn1"
-            app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
-            tools:text="123"/>
+            android:maxLines="1"
+            android:paddingRight="8dp"
+            android:singleLine="true"
+            android:textColor="#FFC5C6C8"
+            android:textSize="12sp"
+            tools:text="北京市北北京市北" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/squareTagLl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/squareLocationAndTime1Ll"
+        app:layout_constraintTop_toBottomOf="@id/squareContent1">
+
+        <TextView
+            android:id="@+id/squareTagName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rectangle_f6f6f6_5dp"
+            android:drawableLeft="@drawable/icon_tag_square"
+            android:drawableRight="@drawable/icon_triangle_gray"
+            android:drawablePadding="8dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingRight="8dp"
+            android:singleLine="true"
+            android:textColor="#FFC5C6C8"
+            android:textSize="12sp"
+            tools:text="玩游戏" />
+
+    </LinearLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/squareDianzanAni"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+        app:layout_constraintLeft_toLeftOf="@id/squareContent1"
+        app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
+        app:lottie_fileName="data_click_zan.json" />
+
+    <ImageView
+        android:id="@+id/squareDianzanImg"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:src="@drawable/icon_zan_normal"
+        app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+        app:layout_constraintLeft_toLeftOf="@id/squareContent1"
+        app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1" />
+
+    <TextView
+        android:id="@+id/squareDianzanBtn1"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:textColor="@color/colorBlack6f"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/squareDianzanImg"
+        app:layout_constraintTop_toBottomOf="@id/squareLocationAndTime1Ll"
+        tools:text="123" />
+
+
+    <TextView
+        android:id="@+id/squareCommentBtn1"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginRight="18dp"
+        android:drawableLeft="@drawable/icon_comment"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:textColor="@color/colorBlack6f"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+        app:layout_constraintLeft_toRightOf="@id/squareDianzanBtn1"
+        app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
+        tools:text="123" />
+
+
+    <TextView
+        android:id="@+id/squareZhuanfaBtn1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="27dp"
+        android:drawableLeft="@drawable/icon_zhuanfa"
+        android:drawablePadding="4dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorBlack6f"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+        app:layout_constraintLeft_toRightOf="@id/squareCommentBtn1"
+        app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"
+        tools:text="123" />
 
 
     <ImageView
-            android:id="@+id/squareMoreBtn1"
-            android:layout_marginLeft="25dp"
-            android:src="@drawable/icon_more_black"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
-            app:layout_constraintLeft_toRightOf="@id/squareCommentBtn1"
-            app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1"/>
+        android:id="@+id/squareMoreBtn1"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginLeft="25dp"
+        android:src="@drawable/icon_more_black"
+        app:layout_constraintBottom_toBottomOf="@id/squareDianzanBtn1"
+        app:layout_constraintLeft_toRightOf="@id/squareCommentBtn1"
+        app:layout_constraintTop_toTopOf="@id/squareDianzanBtn1" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

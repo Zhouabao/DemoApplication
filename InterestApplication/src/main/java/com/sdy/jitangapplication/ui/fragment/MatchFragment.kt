@@ -323,6 +323,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                     GuideDialog(activity!!).show()
                 }
 
+                EventBus.getDefault().post(UpdateIndexCandyEvent(matchBeans.my_candy_amount))
                 //第一次加载的时候就显示顶部提示条
                 if (firstLoad) {
                     if (ranking_level == 2) {//2 真人提示

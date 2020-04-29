@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kennyc.view.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:msv_errorView="@layout/error_layout"
+    app:msv_loadingView="@layout/loading_layout"
+    app:msv_viewState="loading"
+    android:id="@+id/statePeopleNearby"
+    tools:context=".ui.fragment.PeopleNearbyFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshPeopleNearby"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srlDisableContentWhenLoading="true"
+            app:srlDisableContentWhenRefresh="true"
+            app:srlEnableLoadMore="true"
+            app:srlEnableRefresh="true">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:overScrollMode="never"
+                android:id="@+id/rvPeopleNearby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+        <LinearLayout
+            android:id="@+id/nearFilterLl"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#FFF0E8"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/nearFilterContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/icon_filter_small"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="同城筛选"
+                android:textColor="#191919"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+</com.kennyc.view.MultiStateView>

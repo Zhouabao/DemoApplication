@@ -221,11 +221,27 @@
 
     <ImageView
         android:id="@+id/publishGuideIv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="186dp"
+        android:layout_height="121dp"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="55dp"
-        android:layout_marginBottom="44dp"
+        android:layout_marginBottom="49dp"
         android:src="@drawable/icon_publish_guide"
+        android:visibility="visible" />
+<!--    <FrameLayout-->
+<!--        android:id="@+id/main_frag_content"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
+    <TextView
+        android:id="@+id/totalNearOnlineTv"
+        android:layout_width="196dp"
+        android:layout_height="96dp"
+        android:layout_marginLeft="43dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/icon_guide_near_people"
+        android:gravity="center"
+        android:text="你身边有105个女性在线\n最近的离你只有102m"
+        android:textColor="#fff17413"
+        android:textSize="13sp"
         android:visibility="gone" />
+
 </FrameLayout>

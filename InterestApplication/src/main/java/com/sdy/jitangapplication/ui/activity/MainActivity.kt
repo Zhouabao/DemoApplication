@@ -1,11 +1,17 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
@@ -27,7 +33,9 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
+import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.InvestigateBean
+import com.sdy.jitangapplication.model.NearCountBean
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
@@ -65,6 +73,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
+//        TodayFateDialog(this).show()
+
+//
+
+
         //启动时间统计
         mPresenter.startupRecord(
             UserManager.getToken(),
@@ -129,6 +142,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         NIMClient.getService(MsgServiceObserve::class.java)
             .observeReceiveMessage(incomingMessageObserver, true)
 
+
         //首页禁止滑动
         setSwipeBackEnable(false)
         labelAddBtn.setOnClickListener(this)
@@ -138,6 +152,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         initFragment()
         //进入页面弹消息提醒
         mPresenter.msgList()
+
+        //进页面首页开屏推荐内容
+        mPresenter.todayRecommend()
     }
 
 
@@ -238,8 +255,48 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             1 -> {
-                publishGuideIv.isVisible = !UserManager.isShowGuidePublish()
+                if (!UserManager.isShowGuidePublish()) {
+                    publishGuideIv.isVisible = true
+                    val params = publishGuideIv.layoutParams as FrameLayout.LayoutParams
+                    params.width = SizeUtils.dp2px(186F)
+                    params.height = SizeUtils.dp2px(121F)
+                    params.leftMargin =
+                        ((1 / 4F + 1 / 8F) * ScreenUtils.getScreenWidth() - SizeUtils.dp2px(186 / 2F)).toInt()
+                    publishGuideIv.layoutParams = params
 
+                    val trans = ObjectAnimator.ofFloat(
+                        publishGuideIv,
+                        "translationY",
+                        SizeUtils.dp2px(-5F).toFloat(),
+                        SizeUtils.dp2px(0F).toFloat(),
+                        SizeUtils.dp2px(-5F).toFloat()
+                    )
+                    trans.duration = 500
+                    trans.repeatCount = 6
+                    trans.interpolator = LinearInterpolator()
+                    trans.addListener(object : Animator.AnimatorListener {
+                        override fun onAnimationRepeat(animation: Animator?) {
+
+                        }
+
+                        override fun onAnimationEnd(animation: Animator?) {
+                            publishGuideIv.isVisible = false
+                        }
+
+                        override fun onAnimationCancel(animation: Animator?) {
+                        }
+
+                        override fun onAnimationStart(animation: Animator?) {
+                        }
+
+                    })
+                    trans.start()
+                    publishGuideIv.onClick {
+                        startActivity<PublishActivity>()
+                    }
+                } else {
+                    publishGuideIv.isVisible = false
+                }
                 tabMatch.isVisible = false
                 tabMatchCount.text = "首页"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
@@ -483,6 +540,37 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
     }
 
+
+    /**
+     * 今日推荐获取结果
+     */
+    override fun onTodayRecommend(data: MutableList<IndexRecommendBean>?) {
+        if (!data.isNullOrEmpty()) {
+            TodayFateDialog(this, data!!).show()
+        }
+    }
+
+    override fun startupRecordResult(data: NearCountBean?) {
+        if (data != null) {
+            totalNearOnlineTv.text = SpanUtils.with(totalNearOnlineTv)
+                .append("你身边有")
+                .append("${data.count}")
+                .setFontSize(15,true)
+                .setForegroundColor(Color.parseColor("#FD4417"))
+                .append(
+                    "个${if (UserManager.getGender() == 1) {
+                        "女"
+                    } else {
+                        "男"
+                    }}性在线\n最近的离你只有"
+                )
+                .append("${data.dictance}")
+                .setFontSize(15,true)
+                .setForegroundColor(Color.parseColor("#FD4417"))
+                .create()
+        }
+    }
+
     /**
      * 展示调查问卷dialog
      */
@@ -534,6 +622,64 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (event.slideCount == UserManager.getShowSurveyCount()) {
             showInvestigateDialog()
         }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onShowNearCountEvent(event: ShowNearCountEvent) {
+        totalNearOnlineTv.isVisible = true
+        val animatorSet = AnimatorSet()
+        animatorSet.duration = 300L
+        animatorSet.playTogether(
+            ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleX", 0.45f, 1F),
+            ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleY", 0.45f, 1F),
+            ObjectAnimator.ofFloat(totalNearOnlineTv, "alpha", 0F, 1F)
+        )
+        animatorSet.start()
+
+        val trans = ObjectAnimator.ofFloat(
+            totalNearOnlineTv,
+            "translationY",
+            SizeUtils.dp2px(-5F).toFloat(),
+            SizeUtils.dp2px(0F).toFloat(),
+            SizeUtils.dp2px(-5F).toFloat()
+        )
+        trans.duration = 750
+        trans.repeatCount = 4
+        trans.interpolator = LinearInterpolator()
+        trans.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                totalNearOnlineTv.isVisible = false
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })
+
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                trans.start()
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })
     }
 
 

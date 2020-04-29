@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
@@ -89,7 +90,8 @@ class MultiListSquareAdapter(
         holder.itemView.squareUserName1.text = item.nickname ?: ""
         GlideUtil.loadAvatorImg(mContext, item.avatar, holder.itemView.squareUserIv1)
 
-        holder.itemView.squareOfficialTv.isVisible = holder.itemViewType == SquareBean.OFFICIAL_NOTICE
+        holder.itemView.squareOfficialTv.isVisible =
+            holder.itemViewType == SquareBean.OFFICIAL_NOTICE
         holder.itemView.squareChatBtn1.isVisible = holder.itemViewType != SquareBean.OFFICIAL_NOTICE
         holder.itemView.squareTime.isVisible = holder.itemViewType != SquareBean.OFFICIAL_NOTICE
         if (holder.itemViewType == SquareBean.OFFICIAL_NOTICE) {
@@ -101,7 +103,8 @@ class MultiListSquareAdapter(
             }
 
             holder.itemView.squareOfficialContent.text = "${item.descr}"
-            val layoutParams = holder.itemView.squareOfficialPic.layoutParams as LinearLayout.LayoutParams
+            val layoutParams =
+                holder.itemView.squareOfficialPic.layoutParams as LinearLayout.LayoutParams
             layoutParams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)
             layoutParams.height = layoutParams.width
             layoutParams.leftMargin = SizeUtils.dp2px(15F)
@@ -126,7 +129,14 @@ class MultiListSquareAdapter(
 
 
             //设置点赞状态
-            setLikeStatus(item.isliked, item.like_cnt, holder.itemView.squareDianzanBtn1)
+            setLikeStatus(
+                item.isliked,
+                item.like_cnt,
+                holder.itemView.squareDianzanBtn1,
+                holder.itemView.squareDianzanAni,
+                holder.itemView.squareDianzanImg,
+                false
+            )
             //为自己，不能聊天（用户详情界面），未开启招呼，非好友   聊天按钮不可见
             if (item.isfriend)
                 holder.itemView.squareChatBtn1.visibility = View.VISIBLE
@@ -195,8 +205,29 @@ class MultiListSquareAdapter(
             }
 
             //点赞
-            holder.itemView.squareDianzanBtn1.onClick {
-                clickZan(holder.itemView.squareDianzanBtn1, holder.layoutPosition - headerLayoutCount)
+//            holder.itemView.squareDianzanBtn1.onClick {
+//                clickZan(
+//                    holder.itemView.squareDianzanAni,
+//                    holder.itemView.squareDianzanImg,
+//                    holder.itemView.squareDianzanBtn1,
+//                    holder.layoutPosition - headerLayoutCount
+//                )
+//            }
+            holder.itemView.squareDianzanAni.onClick {
+                clickZan(
+                    holder.itemView.squareDianzanAni,
+                    holder.itemView.squareDianzanImg,
+                    holder.itemView.squareDianzanBtn1,
+                    holder.layoutPosition - headerLayoutCount
+                )
+            }
+            holder.itemView.squareDianzanImg.onClick {
+                clickZan(
+                    holder.itemView.squareDianzanAni,
+                    holder.itemView.squareDianzanImg,
+                    holder.itemView.squareDianzanBtn1,
+                    holder.layoutPosition - headerLayoutCount
+                )
             }
 
 
@@ -207,14 +238,20 @@ class MultiListSquareAdapter(
             manager.justifyContent = JustifyContent.FLEX_START
             holder.itemView.squareTitleRv.layoutManager = manager
             val adapter = SquareTitleAdapter()
-            adapter.addData(item.title_list?: mutableListOf())
+            adapter.addData(item.title_list ?: mutableListOf())
             holder.itemView.squareTitleRv.adapter = adapter
             adapter.setOnItemClickListener { _, view, position ->
-                mContext.startActivity<TagDetailCategoryActivity>("id" to adapter.data[position].id, "type" to TagDetailCategoryActivity.TYPE_TOPIC)
+                mContext.startActivity<TagDetailCategoryActivity>(
+                    "id" to adapter.data[position].id,
+                    "type" to TagDetailCategoryActivity.TYPE_TOPIC
+                )
             }
 
             holder.itemView.squareTagName.onClick {
-                mContext.startActivity<TagDetailCategoryActivity>("id" to item.tag_id, "type" to TagDetailCategoryActivity.TYPE_TAG)
+                mContext.startActivity<TagDetailCategoryActivity>(
+                    "id" to item.tag_id,
+                    "type" to TagDetailCategoryActivity.TYPE_TAG
+                )
             }
 
             holder.itemView.squareUserIv1.onClick {
@@ -229,7 +266,8 @@ class MultiListSquareAdapter(
                         holder.itemView.squareUserPics1.visibility = View.VISIBLE
                         holder.itemView.squareUserPics1.layoutManager =
                             LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false)
-                        val adapter = ListSquareImgsAdapter(mContext, item.photo_json ?: mutableListOf())
+                        val adapter =
+                            ListSquareImgsAdapter(mContext, item.photo_json ?: mutableListOf())
                         holder.itemView.squareUserPics1.adapter = adapter
 
                         //分页滑动效果
@@ -239,7 +277,12 @@ class MultiListSquareAdapter(
                         holder.itemView.squareUserPics1.addOnScrollListener(GalleryOnScrollListener())
                         adapter.setOnItemClickListener { adapter, view, position ->
                             if (data[holder.layoutPosition - headerLayoutCount].isliked != 1)
-                                clickZan(holder.itemView.squareDianzanBtn1, holder.layoutPosition - headerLayoutCount)
+                                clickZan(
+                                    holder.itemView.squareDianzanAni,
+                                    holder.itemView.squareDianzanImg,
+                                    holder.itemView.squareDianzanBtn1,
+                                    holder.layoutPosition - headerLayoutCount
+                                )
                             if (resetAudioListener != null) {
                                 resetAudioListener!!.resetAudioState()
                             }
@@ -256,7 +299,12 @@ class MultiListSquareAdapter(
                 SquareBean.VIDEO -> {
                     //增加封面
                     val imageview = ImageView(mContext)
-                    GlideUtil.loadRoundImgCenterCrop(mContext, item.cover_url ?: "", imageview, SizeUtils.dp2px(15F))
+                    GlideUtil.loadRoundImgCenterCrop(
+                        mContext,
+                        item.cover_url ?: "",
+                        imageview,
+                        SizeUtils.dp2px(15F)
+                    )
                     if (imageview.parent != null) {
                         val vg = imageview.parent as ViewGroup
                         vg.removeView(imageview)
@@ -277,7 +325,8 @@ class MultiListSquareAdapter(
                     }
                     holder.itemView.squareUserVideo.playTag = TAG
                     holder.itemView.squareUserVideo.playPosition = holder.layoutPosition
-                    holder.itemView.squareUserVideo.setVideoAllCallBack(object : GSYSampleCallBack() {
+                    holder.itemView.squareUserVideo.setVideoAllCallBack(object :
+                        GSYSampleCallBack() {
                         override fun onStartPrepared(url: String?, vararg objects: Any?) {
                             super.onStartPrepared(url, *objects)
                             if (resetAudioListener != null) {
@@ -331,17 +380,22 @@ class MultiListSquareAdapter(
                     if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PLAY) { //播放中
                         holder.itemView.voicePlayView.playAnimation()
 
-                        audioTimeView.startTime((item.audio_json?.get(0)?.leftTime ?: 0).toLong(), "3")
+                        audioTimeView.startTime(
+                            (item.audio_json?.get(0)?.leftTime ?: 0).toLong(),
+                            "3"
+                        )
                         holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_pause_audio)
                     } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PAUSE) {//暂停中
                         holder.itemView.voicePlayView.pauseAnimation()
                         audioTimeView.stopTime()
-                        item.audio_json?.get(0)?.leftTime = UriUtils.stringToTimeInt(audioTimeView.text.toString())
+                        item.audio_json?.get(0)?.leftTime =
+                            UriUtils.stringToTimeInt(audioTimeView.text.toString())
                         holder.itemView.audioPlayBtn.setImageResource(R.drawable.icon_play_audio)
                     } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_STOP || item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_ERROR) {//停止中
                         audioTimeView.stopTime()
                         item.audio_json?.get(0)?.leftTime = item.audio_json?.get(0)?.duration ?: 0
-                        audioTimeView.text = UriUtils.getShowTime(item.audio_json?.get(0)?.leftTime ?: 0)
+                        audioTimeView.text =
+                            UriUtils.getShowTime(item.audio_json?.get(0)?.leftTime ?: 0)
 
                         holder.itemView.voicePlayView.pauseAnimation()
                         holder.itemView.voicePlayView.cancelAnimation()
@@ -349,7 +403,8 @@ class MultiListSquareAdapter(
                     } else if (item.isPlayAudio == IjkMediaPlayerUtil.MEDIA_PREPARE) {
                         audioTimeView.stopTime()
                         item.audio_json?.get(0)?.leftTime = item.audio_json?.get(0)?.duration ?: 0
-                        audioTimeView.text = UriUtils.getShowTime(item.audio_json?.get(0)?.leftTime ?: 0)
+                        audioTimeView.text =
+                            UriUtils.getShowTime(item.audio_json?.get(0)?.leftTime ?: 0)
 
                         holder.itemView.voicePlayView.pauseAnimation()
                         holder.itemView.voicePlayView.cancelAnimation()
@@ -360,7 +415,10 @@ class MultiListSquareAdapter(
                         if (resetAudioListener != null) {
                             resetAudioListener!!.resetAudioState()
                         }
-                        mContext.startActivity<SquarePlayListDetailActivity>("item" to item, "from" to "squareFragment")
+                        mContext.startActivity<SquarePlayListDetailActivity>(
+                            "item" to item,
+                            "from" to "squareFragment"
+                        )
                     }
                 }
             }
@@ -372,11 +430,31 @@ class MultiListSquareAdapter(
     /**
      * 设置点赞状态
      */
-    private fun setLikeStatus(isliked: Int, likeCount: Int, likeView: TextView) {
-        val drawable1 =
-            mContext.resources.getDrawable(if (isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan)
-        drawable1!!.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)    //需要设置图片的大小才能显示
-        likeView.setCompoundDrawables(drawable1, null, null, null)
+    private fun setLikeStatus(
+        isliked: Int,
+        likeCount: Int,
+        likeView: TextView,
+        likeAni: LottieAnimationView,
+        likeImg: ImageView,
+        animated: Boolean = true
+    ) {
+        likeAni.isVisible = isliked == 1 && animated
+        likeImg.visibility = if (likeAni.isVisible) {
+            View.INVISIBLE
+        } else {
+            View.VISIBLE
+        }
+
+        if (isliked == 1) {
+            if (animated) {
+                likeAni.playAnimation()
+            } else {
+                likeImg.setImageResource(R.drawable.icon_zan_clicked)
+            }
+        } else {
+            likeImg.setImageResource(R.drawable.icon_zan_normal)
+        }
+
         likeView.text = "${if (likeCount < 0) {
             0
         } else {
@@ -387,7 +465,12 @@ class MultiListSquareAdapter(
     /**
      * 点赞按钮
      */
-    private fun clickZan(likeBtn: TextView, position: Int) {
+    private fun clickZan(
+        likeAni: LottieAnimationView,
+        likeImg: ImageView,
+        likeBtn: TextView,
+        position: Int
+    ) {
         if (data[position].isliked == 1) {
             data[position].isliked = 0
             data[position].like_cnt = data[position].like_cnt!!.minus(1)
@@ -395,7 +478,7 @@ class MultiListSquareAdapter(
             data[position].isliked = 1
             data[position].like_cnt = data[position].like_cnt!!.plus(1)
         }
-        setLikeStatus(data[position].isliked, data[position].like_cnt, likeBtn)
+        setLikeStatus(data[position].isliked, data[position].like_cnt, likeBtn, likeAni, likeImg)
 
         likeBtn.postDelayed({
             if (data.isEmpty() || data.size - 1 < position)
@@ -435,9 +518,7 @@ class MultiListSquareAdapter(
                         onGetSquareLikeResult(position, true)
                     } else if (t.code == 403) {
                         UserManager.startToLogin(mContext as Activity)
-
                     } else {
-                        CommonFunction.toast(t.msg)
                         onGetSquareLikeResult(position, false)
                     }
 

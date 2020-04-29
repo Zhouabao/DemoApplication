@@ -794,4 +794,27 @@ object UserManager {
         NIMClient.updateStatusBarNotificationConfig(statusBarNotificationConfig)
 
     }
+
+    fun saveNearFilterParams(params: HashMap<String, Int>) {
+        params.forEach {
+            SPUtils.getInstance(Constants.SPNAME).put(it.key, it.value)
+        }
+    }
+
+
+    fun getNearFilterParams(): HashMap<String, Int> {
+        return hashMapOf(
+            "limit_age_low_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("limit_age_low_nearly",18),
+            "limit_age_high_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("limit_age_high_nearly",35),
+            "rank_type_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("rank_type_nearly",1),
+            "gender_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("gender_nearly",3)
+        )
+    }
+
+    fun clearNearFilterParams() {
+        SPUtils.getInstance(Constants.SPNAME).remove("limit_age_low_nearly")
+        SPUtils.getInstance(Constants.SPNAME).remove("limit_age_high_nearly")
+        SPUtils.getInstance(Constants.SPNAME).remove("rank_type_nearly")
+        SPUtils.getInstance(Constants.SPNAME).remove("gender_nearly")
+    }
 }

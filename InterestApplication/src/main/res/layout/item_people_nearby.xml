@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:background="@drawable/icon_bg_people_near"
+    android:paddingBottom="10dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/nearPeopleAvator"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/icon_default_avator"
+        app:layout_constraintBottom_toTopOf="@id/nearPeoplePhotos"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nearPeopleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="梁薇"
+        android:textColor="#ff191919"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/nearPeopleAvator"
+        app:layout_constraintTop_toTopOf="@id/nearPeopleAvator" />
+
+    <TextView
+        android:id="@+id/nearPeopleDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:text="300m·在线"
+        android:textColor="#ffc5c6c8"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/nearPeopleName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/nearPeopleName" />
+
+
+    <TextView
+        android:id="@+id/nearPeopleGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/icon_gender_man_gray"
+        android:drawablePadding="3dp"
+        android:gravity="center"
+        android:text="23岁"
+        android:textColor="#ffc5c6c8"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/nearPeopleName"
+        app:layout_constraintTop_toBottomOf="@id/nearPeopleName" />
+
+    <TextView
+        android:id="@+id/nearPeopleCollapstation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:drawableLeft="@drawable/icon_collapstation"
+        android:gravity="center"
+        android:text="处女座"
+        android:textColor="#ffc5c6c8"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="@id/nearPeopleGender"
+        app:layout_constraintTop_toTopOf="@id/nearPeopleGender" />
+
+    <TextView
+        android:id="@+id/nearPeopleSign"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="即使第一百次跌倒，我还可以第一百我还可以第一百我还可以第一百"
+        android:textColor="#ff888d92"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/nearPeopleName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nearPeopleGender" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/nearPeoplePhotos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/icon_bg_near_people_bottom"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nearPeopleAvator" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

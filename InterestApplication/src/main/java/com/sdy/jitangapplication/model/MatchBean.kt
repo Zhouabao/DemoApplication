@@ -30,6 +30,7 @@ data class MatchListBean(
     var interest_times: Int = 0,
     var is_human: Boolean = false,
     var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管
+    var my_candy_amount: Int = 0,//我的糖果数量
     var is_full: Boolean = false,//兴趣是否完整
     var iscompleteguide: Boolean = false//是否引导过
 )
@@ -190,4 +191,46 @@ data class DetailUserInfoBean(
     var icon: Int,
     var title: String,
     var content: String
+)
+
+
+/**
+ * 附近的人
+ */
+data class NearPersonBean(
+    var accid: String = "",
+    var age: Int = 0,
+    var avatar: String = "",
+    var birth: Int = 0,
+    var constellation: String = "",
+    var gender: Int = 0,
+    var juli: Int = 0,
+    var nickname: String = "",
+    var photos: MutableList<String> = mutableListOf(),
+    var sign: String = "",
+    var distance: String = ""
+)
+
+
+/**
+ * 开屏页推荐
+ */
+data class IndexRecommendBean(
+    var accid: String = "",
+    var age: Int = 0,
+    var avatar: String = "",
+    var constellation: String = "",
+    var gender: Int = 0,
+    var distance: Int = 0,
+    var nickname: String = "",
+    var checked: Boolean = true
+)
+
+
+/**
+ * 批量打招呼
+ */
+data class BatchGreetBean(
+    var accid: String = "",
+    var msg: String = ""
 )

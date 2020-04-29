@@ -1,49 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@color/colorWhite"
-              tools:context=".ui.fragment.IndexFragment">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    tools:context=".ui.fragment.IndexFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_height="34dp">
+            android:layout_marginBottom="10dp">
 
-        <androidx.recyclerview.widget.RecyclerView
+            <net.lucode.hackware.magicindicator.MagicIndicator
                 android:id="@+id/titleIndex"
-                android:layout_width="152dp"
-                android:layout_height="34dp"
-                android:background="@drawable/shape_rectangle_f6f6f6_6dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/colorWhite"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
-
-        <TextView
-                android:id="@+id/filterBtn"
-                android:textSize="15sp"
-                android:textColor="#FF191919"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/icon_filter"
+            <TextView
+                android:id="@+id/myCandyAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/titleIndex"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/shape_rectangle_orange_white_15dp"
+                android:drawableLeft="@drawable/icon_candy_small"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:paddingTop="4dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="4dp"
+                android:text="3999  充值"
+                android:textColor="#ffff6318"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/filterBtn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/filterBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/icon_filter"
+                android:textColor="#FF191919"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/titleIndex"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.sdy.jitangapplication.widgets.NoScrollViewPager
+        <com.sdy.jitangapplication.widgets.NoScrollViewPager
             android:id="@+id/vpIndex"
-            android:background="@color/colorWhite"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite" />
+    </LinearLayout>
 
-</LinearLayout>
+
+
+
+</FrameLayout>

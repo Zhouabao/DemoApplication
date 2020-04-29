@@ -29,6 +29,22 @@ interface Api {
 
 
     /**
+     * 每天首次开屏推荐
+     */
+    @FormUrlEncoded
+    @POST("Index/todayRecommend${Constants.END_BASE_URL}")
+    fun todayRecommend(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<MutableList<IndexRecommendBean>?>>
+
+
+    /**
+     * 批量打招呼
+     */
+    @FormUrlEncoded
+    @POST("Relationship/batchGreet${Constants.END_BASE_URL}")
+    fun batchGreet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<MutableList<BatchGreetBean>?>>
+
+
+    /**
      * 获取调查问卷
      */
     @POST("OpenApi/getHelpCenter${Constants.END_BASE_URL}")
@@ -48,7 +64,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("MemberInfo/startupRecord${Constants.END_BASE_URL}")
-    fun startupRecord(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    fun startupRecord(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NearCountBean?>>
 
 
     /**
@@ -248,7 +264,6 @@ interface Api {
     fun squareAnnounce(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
-
     /**
      * 通知添加特质
      */
@@ -283,6 +298,15 @@ interface Api {
     @FormUrlEncoded
     @POST("Tags/lookForAllTags${Constants.END_BASE_URL}")
     fun lookForAllTags(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<AddLabelBean>>
+
+
+    /**
+     * 获取附近的人
+     *
+     */
+    @FormUrlEncoded
+    @POST("Index/nearlyIndex${Constants.END_BASE_URL}")
+    fun nearlyIndex(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<NearPersonBean>?>>
 
 
     /**
@@ -579,6 +603,14 @@ interface Api {
     @FormUrlEncoded
     @POST("relationship/likeLists${Constants.END_BASE_URL}")
     fun likeLists(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<LikeMeListBean?>>
+
+
+    /**
+     * 我喜欢过的
+     */
+    @FormUrlEncoded
+    @POST("Tidings/myLikedList${Constants.END_BASE_URL}")
+    fun myLikedLis(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<MyLikedBean>?>>
 
 
     /**

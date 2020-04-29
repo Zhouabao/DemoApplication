@@ -17,8 +17,9 @@ import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.NotifyEvent
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.fragment.MyCommentFragment
 import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
+import com.sdy.jitangapplication.ui.fragment.MyCommentFragment
+import com.sdy.jitangapplication.ui.fragment.MyLikedFragment
 import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_my_foot_print.*
@@ -56,7 +57,7 @@ class MyFootPrintActivity : BaseActivity() {
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    private val titles = arrayOf("点赞", "评论", "收藏")
+    private val titles = arrayOf("点赞", "评论", "收藏", "喜欢")
 
     private fun initIndicator() {
         tabMyFootprint.setBackgroundColor(Color.WHITE)
@@ -71,7 +72,8 @@ class MyFootPrintActivity : BaseActivity() {
                 simplePagerTitleView.text = titles[index]
                 simplePagerTitleView.minScale = 0.88F
                 simplePagerTitleView.textSize = 18F
-                simplePagerTitleView.width = (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)) / 3
+                simplePagerTitleView.width =
+                    (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(40F)) / 4
                 simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                 simplePagerTitleView.normalColor = Color.parseColor("#FF7E8183")
                 simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlack)
@@ -104,8 +106,9 @@ class MyFootPrintActivity : BaseActivity() {
         mStack.add(MyCollectionAndLikeFragment(MyCollectionAndLikeFragment.TYPE_LIKE))   //我的点赞
         mStack.add(MyCommentFragment())   //我的评论
         mStack.add(MyCollectionAndLikeFragment(MyCollectionAndLikeFragment.TYPE_COLLECT))//我的收藏
+        mStack.add(MyLikedFragment())//我喜欢的
         vpMyFootPrint.adapter = MainPagerAdapter(supportFragmentManager, mStack, titles)
-        vpMyFootPrint.offscreenPageLimit = 3
+        vpMyFootPrint.offscreenPageLimit = 4
         initIndicator()
         vpMyFootPrint.currentItem = 0
     }
@@ -123,7 +126,12 @@ class MyFootPrintActivity : BaseActivity() {
         if (resultCode == Activity.RESULT_OK)
             if (requestCode == SquarePlayDetailActivity.REQUEST_CODE) {
                 EventBus.getDefault()
-                    .post(NotifyEvent(data!!.getIntExtra("position", -1), data!!.getIntExtra("type", 0)))
+                    .post(
+                        NotifyEvent(
+                            data!!.getIntExtra("position", -1),
+                            data!!.getIntExtra("type", 0)
+                        )
+                    )
             }
     }
 

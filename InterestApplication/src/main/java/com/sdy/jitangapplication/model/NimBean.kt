@@ -65,7 +65,10 @@ data class CustomerMsgBean(
     val msg: String = "",
     val accid: String? = "",
     val type: Int = 0,
-    val extra: Any?
+    val extra: Any?,
+    val avatar: String,
+    val content: String,
+    val title: String
 )
 
 /**
@@ -76,3 +79,8 @@ data class AllMsgCount(
     val likecount: Int = 0,//点赞未读
     val square_count: Int = 0//
 )
+
+/**
+ * 附近的人的个数
+ */
+data class NearCountBean(val count: Int, val dictance: String)

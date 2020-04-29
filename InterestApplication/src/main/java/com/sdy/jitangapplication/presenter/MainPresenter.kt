@@ -7,7 +7,9 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.model.AllMsgCount
+import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.InvestigateBean
+import com.sdy.jitangapplication.model.NearCountBean
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.utils.UserManager
 
@@ -51,9 +53,9 @@ class MainPresenter : BasePresenter<MainView>() {
         params["city_name"] = city_name ?: ""
         RetrofitFactory.instance.create(Api::class.java)
             .startupRecord(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
-
+            .excute(object : BaseSubscriber<BaseResp<NearCountBean?>>(mView) {
+                override fun onNext(t: BaseResp<NearCountBean?>) {
+                    mView.startupRecordResult(t.data)
                 }
 
                 override fun onError(e: Throwable?) {
@@ -76,6 +78,25 @@ class MainPresenter : BasePresenter<MainView>() {
                     if (t.code == 200 && t.data != null) {
                         mView.onInvestigateResult(t.data!!)
                     }
+                }
+
+                override fun onError(e: Throwable?) {
+
+                }
+
+            })
+    }
+
+
+    /**
+     * 今日推荐
+     */
+    fun todayRecommend() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .todayRecommend(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<MutableList<IndexRecommendBean>?>>(mView) {
+                override fun onNext(t: BaseResp<MutableList<IndexRecommendBean>?>) {
+                    mView.onTodayRecommend(t.data)
                 }
 
                 override fun onError(e: Throwable?) {

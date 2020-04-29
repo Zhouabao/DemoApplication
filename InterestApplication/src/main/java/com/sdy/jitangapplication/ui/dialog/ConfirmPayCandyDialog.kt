@@ -23,15 +23,13 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.CloseDialogEvent
-import com.sdy.jitangapplication.event.RefreshCandyMallDetailEvent
-import com.sdy.jitangapplication.event.RefreshCandyMallEvent
-import com.sdy.jitangapplication.event.RefreshMyCandyEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.PayBean
 import com.sdy.jitangapplication.model.Paylist
 import com.sdy.jitangapplication.model.RechargeCandyBean
 import com.sdy.jitangapplication.ui.activity.CandyMallActivity
 import com.sdy.jitangapplication.ui.activity.CandyProductDetailActivity
+import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -232,6 +230,8 @@ class ConfirmPayCandyDialog(
                             EventBus.getDefault().post(RefreshCandyMallEvent())
                         } else if (ActivityUtils.getTopActivity() is MyCandyActivity) {
                             EventBus.getDefault().post(RefreshMyCandyEvent(-1))
+                        } else if (ActivityUtils.getTopActivity() is MainActivity) {
+                            EventBus.getDefault().post(RefreshEvent(true))
                         }
                         EventBus.getDefault().post(CloseDialogEvent())
                         dismiss()
