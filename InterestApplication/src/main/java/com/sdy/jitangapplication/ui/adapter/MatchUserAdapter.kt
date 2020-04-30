@@ -234,6 +234,7 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         holder.itemView.ivVerify.isVisible = item.isfaced == 1
         holder.itemView.btnHi.isVisible = item.greet_switch
         holder.itemView.btnHiView.isVisible = item.greet_switch
+        holder.itemView.btnHiLottieView.isVisible = item.greet_switch
         if (!item.newtags.isNullOrEmpty() && item.newtags!![0].label_quality.isNotEmpty()) {
             (holder.itemView.matchUserLocalTagCharacter.layoutParams as ConstraintLayout.LayoutParams).topMargin =
                 SizeUtils.dp2px(5F)

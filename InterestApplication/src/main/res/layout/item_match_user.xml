@@ -284,7 +284,7 @@
             android:layout_width="51dp"
             android:layout_height="51dp"
             android:background="@drawable/icon_oval_orange_hi_bg"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/matchUserLocalTagCl"
             app:layout_constraintLeft_toLeftOf="@id/btnHiLottieView"
             app:layout_constraintRight_toRightOf="@id/btnHiLottieView"
@@ -310,7 +310,7 @@
                 android:textColor="#ffffffff"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -330,7 +330,7 @@
             app:lottie_autoPlay="false"
             app:lottie_fileName="data_greet.json"
             app:lottie_imageAssetsFolder="images_hi/"
-            app:lottie_loop="false"
+            app:lottie_loop="true"
             app:lottie_speed="1" />
 
 

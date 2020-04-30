@@ -125,7 +125,6 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
     }
 
 
-
     override fun getMyTagsListResult(result: Boolean, datas: MyLabelsBean?) {
         if (result) {
             stateMyLabel.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -142,6 +141,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
                 adapter.emptyView.emptyLabelTip.isVisible = true
                 adapter.emptyView.emptyTip.isVisible = true
                 adapter.emptyView.addLabelBtn.text = "添加兴趣"
+                rightBtn.isVisible = false
             } else {
                 addLabelBtn.isVisible = true
                 adapter.setNewData(datas?.is_using ?: mutableListOf())
@@ -160,10 +160,6 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
             EventBus.getDefault().post(UpdateFindByTagEvent())
         }
     }
-
-
-
-
 
 
     private val deleteDialog by lazy { DeleteDialog(this) }

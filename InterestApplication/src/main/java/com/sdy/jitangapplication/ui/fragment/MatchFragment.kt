@@ -1,15 +1,12 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
-import android.animation.Animator
-import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.*
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -690,128 +687,130 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
         Log.d("CardStackView", "onCardAppeared: ($position)")
         if (view != null) {
             if (matchUserAdapter.data[manager.topPosition].greet_switch) {
-                (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
+//                (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
                 (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible = true
-                (view.findViewById<TextView>(R.id.btnHiLeftTime)).text =
-                    "${UserManager.getLightingCount()}"
-
-                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).addAnimatorListener(
-                    object :
-                        Animator.AnimatorListener {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility =
-                                View.VISIBLE
-                            (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).visibility =
-                                View.INVISIBLE
-
-
-                            //透明度起始为1，结束时为0
-                            val animator =
-                                ObjectAnimator.ofFloat(
-                                    view.findViewById<ImageView>(R.id.btnHiIv),
-                                    "alpha",
-                                    1f,
-                                    0f
-                                )
-                            val animator1 =
-                                ObjectAnimator.ofFloat(
-                                    view.findViewById<TextView>(R.id.btnHiLeftTime),
-                                    "alpha",
-                                    0f,
-                                    1f
-                                )
-                            val animator2 =
-                                ObjectAnimator.ofFloat(
-                                    view.findViewById<ImageView>(R.id.btnHiIv),
-                                    "alpha",
-                                    0f,
-                                    1f
-                                )
-                            val animator3 =
-                                ObjectAnimator.ofFloat(
-                                    view.findViewById<TextView>(R.id.btnHiLeftTime),
-                                    "alpha",
-                                    1f,
-                                    0f
-                                )
-                            animator1.duration = animator.duration//时间1s
-                            animator2.duration = animator.duration//时间1s
-                            animator3.duration = animator.duration//时间1s
-                            animator.addListener(object : Animator.AnimatorListener {
-                                override fun onAnimationRepeat(animation: Animator?) {
-
-                                }
-
-                                override fun onAnimationEnd(animation: Animator?) {
-                                    animator1.start()
-                                }
-
-                                override fun onAnimationCancel(animation: Animator?) {
-                                }
-
-                                override fun onAnimationStart(animation: Animator?) {
-                                }
-
-                            })
-                            animator1.addListener(object : Animator.AnimatorListener {
-                                override fun onAnimationRepeat(animation: Animator?) {
-
-                                }
-
-                                override fun onAnimationEnd(animation: Animator?) {
-                                    view.postDelayed({
-                                        animator2.start()
-                                        animator3.start()
-                                    }, 1000L)
-                                }
-
-                                override fun onAnimationCancel(animation: Animator?) {
-
-                                }
-
-                                override fun onAnimationStart(animation: Animator?) {
-                                }
-
-                            })
-                            animator2.addListener(object : Animator.AnimatorListener {
-                                override fun onAnimationRepeat(animation: Animator?) {
-
-                                }
-
-                                override fun onAnimationEnd(animation: Animator?) {
-                                    (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility =
-                                        View.INVISIBLE
-                                    (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible =
-                                        true
-
-                                    (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).playAnimation()
-                                }
-
-                                override fun onAnimationCancel(animation: Animator?) {
-
-                                }
-
-                                override fun onAnimationStart(animation: Animator?) {
-                                }
-
-                            })
-
-                            view.postDelayed({
-                                animator.start()
-                            }, 2000L)
-                        }
-
-                        override fun onAnimationCancel(animation: Animator?) {
-                        }
-
-                        override fun onAnimationStart(animation: Animator?) {
-                        }
-
-                        override fun onAnimationRepeat(animation: Animator?) {
-
-                        }
-
-                    })
+//                (view.findViewById<TextView>(R.id.btnHiLeftTime)).text =
+////                    "${UserManager.getLightingCount()}"
+////
+////                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).addAnimatorListener(
+////                    object :
+////                        Animator.AnimatorListener {
+////                        override fun onAnimationEnd(animation: Animator?) {
+////                            (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility =
+////                                View.VISIBLE
+////                            (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).visibility =
+////                                View.INVISIBLE
+////
+////
+////                            //透明度起始为1，结束时为0
+////                            val animator =
+////                                ObjectAnimator.ofFloat(
+////                                    view.findViewById<ImageView>(R.id.btnHiIv),
+////                                    "alpha",
+////                                    1f,
+////                                    0f
+////                                )
+////                            val animator1 =
+////                                ObjectAnimator.ofFloat(
+////                                    view.findViewById<TextView>(R.id.btnHiLeftTime),
+////                                    "alpha",
+////                                    0f,
+////                                    1f
+////                                )
+////                            val animator2 =
+////                                ObjectAnimator.ofFloat(
+////                                    view.findViewById<ImageView>(R.id.btnHiIv),
+////                                    "alpha",
+////                                    0f,
+////                                    1f
+////                                )
+////                            val animator3 =
+////                                ObjectAnimator.ofFloat(
+////                                    view.findViewById<TextView>(R.id.btnHiLeftTime),
+////                                    "alpha",
+////                                    1f,
+////                                    0f
+////                                )
+////                            animator1.duration = animator.duration//时间1s
+////                            animator2.duration = animator.duration//时间1s
+////                            animator3.duration = animator.duration//时间1s
+////                            animator.addListener(object : Animator.AnimatorListener {
+////                                override fun onAnimationRepeat(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationEnd(animation: Animator?) {
+//////                                    animator1.start()
+////                                    animator2.start()
+////                                    animator3.start()
+////                                }
+////
+////                                override fun onAnimationCancel(animation: Animator?) {
+////                                }
+////
+////                                override fun onAnimationStart(animation: Animator?) {
+////                                }
+////
+////                            })
+////                            animator1.addListener(object : Animator.AnimatorListener {
+////                                override fun onAnimationRepeat(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationEnd(animation: Animator?) {
+////                                    view.postDelayed({
+////                                        animator2.start()
+////                                        animator3.start()
+////                                    }, 1000L)
+////                                }
+////
+////                                override fun onAnimationCancel(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationStart(animation: Animator?) {
+////                                }
+////
+////                            })
+////                            animator2.addListener(object : Animator.AnimatorListener {
+////                                override fun onAnimationRepeat(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationEnd(animation: Animator?) {
+////                                    (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility =
+////                                        View.INVISIBLE
+////                                    (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible =
+////                                        true
+////
+////                                    (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).playAnimation()
+////                                }
+////
+////                                override fun onAnimationCancel(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationStart(animation: Animator?) {
+////                                }
+////
+////                            })
+////
+////                            view.postDelayed({
+////                                animator.start()
+////                            }, 2000L)
+////                        }
+////
+////                        override fun onAnimationCancel(animation: Animator?) {
+////                        }
+////
+////                        override fun onAnimationStart(animation: Animator?) {
+////                        }
+////
+////                        override fun onAnimationRepeat(animation: Animator?) {
+////
+////                        }
+////
+////                    })
                 (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).playAnimation()
             }
         }
