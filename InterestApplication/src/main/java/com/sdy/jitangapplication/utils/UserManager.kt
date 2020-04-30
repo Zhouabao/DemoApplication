@@ -295,8 +295,8 @@ object UserManager {
                 SPUtils.getInstance(Constants.SPNAME).getString("avatar").contains(Constants.DEFAULT_AVATAR) ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("gender") == 0 ||
                 SPUtils.getInstance(Constants.SPNAME).getInt("birth", 0) == 0 ||
-                SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce").isNullOrEmpty() ||
-                getSpLabels().isNullOrEmpty()
+                SPUtils.getInstance(Constants.SPNAME).getString("userIntroduce").isNullOrEmpty()
+//                || getSpLabels().isNullOrEmpty()
                 )
 
     }
