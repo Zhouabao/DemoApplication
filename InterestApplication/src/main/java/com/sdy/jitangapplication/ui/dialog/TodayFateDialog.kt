@@ -22,14 +22,12 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.clickWithTrigger
-import com.sdy.jitangapplication.event.UpdateHiCountEvent
 import com.sdy.jitangapplication.model.BatchGreetBean
 import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.ui.adapter.FateAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_today_fate.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  *    author : ZFM
@@ -61,6 +59,12 @@ class TodayFateDialog(val context1: Context, val data: MutableList<IndexRecommen
     }
 
     private fun initView() {
+        t2.text = "快给${if (UserManager.getGender() == 1) {
+            "她"
+        } else {
+            "他"
+        }}们打个招呼吧"
+
         rvFate.layoutManager = GridLayoutManager(context1, 3)
         rvFate.adapter = adapter
         adapter.setNewData(data)
@@ -149,8 +153,8 @@ class TodayFateDialog(val context1: Context, val data: MutableList<IndexRecommen
                                 NIMClient.getService(MsgService::class.java).sendMessage(msg, false)
                                     .setCallback(object : RequestCallback<Void> {
                                         override fun onSuccess(p0: Void?) {
-                                            UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
-                                            EventBus.getDefault().post(UpdateHiCountEvent())
+//                                            UserManager.saveLightingCount(UserManager.getLightingCount() - 1)
+//                                            EventBus.getDefault().post(UpdateHiCoumntEvent())
                                             if (data.index == (t.data?.size ?: 0) - 1) {
                                                 loadingDialog.dismiss()
                                                 CommonFunction.toast("送出招呼成功！")

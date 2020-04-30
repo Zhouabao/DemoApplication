@@ -250,6 +250,8 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
 
+        EventBus.getDefault()
+            .post(UpdateIndexCandyEvent(userInfoBean?.userinfo?.my_candy_amount ?: 0))
         checkVerify()
         checkVip()
         for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
@@ -431,12 +433,20 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 ?: 0) >= event.candyCount && event.candyCount >= 0
         ) {
             candyCount.text = "${(userInfoBean?.userinfo?.my_candy_amount ?: 0) - event.candyCount}"
+            EventBus.getDefault().post(
+                UpdateIndexCandyEvent(
+                    (userInfoBean?.userinfo?.my_candy_amount ?: 0) - event.candyCount
+                )
+            )
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSetMyCandyEvent(event: SetMyCandyEvent) {
         candyCount.text = "${event.candyCount}"
+        EventBus.getDefault().post(
+            UpdateIndexCandyEvent(event.candyCount)
+        )
     }
 
 
