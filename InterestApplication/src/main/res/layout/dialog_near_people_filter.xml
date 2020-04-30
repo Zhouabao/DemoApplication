@@ -161,7 +161,7 @@
         app:rsb_gravity="center"
         app:rsb_max="35"
         app:rsb_min="18"
-        app:rsb_min_interval="3"
+        app:rsb_min_interval="2"
         app:rsb_mode="range"
         app:rsb_progress_drawable="@drawable/color_progress_age"
         app:rsb_progress_drawable_default="@drawable/color_progress_age_background"

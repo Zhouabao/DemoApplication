@@ -77,7 +77,7 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
         refreshPeopleNearby.setOnLoadMoreListener(this)
 
 
-        nearFilterContent.clickWithTrigger {
+        nearFilterLl.clickWithTrigger {
             NearPeopleFilterDialog(activity!!).show()
         }
 
@@ -132,6 +132,7 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
             if (refreshPeopleNearby.state == RefreshState.Refreshing) {
                 adapter.data.clear()
                 adapter.notifyDataSetChanged()
+                rvPeopleNearby.scrollToPosition(0)
                 refreshPeopleNearby.finishRefresh(success)
             }
             if (mutableList?.size ?: 0 < Constants.PAGESIZE) {

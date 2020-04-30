@@ -63,7 +63,8 @@ import com.sdy.jitangapplication.widgets.CustomPagerSnapHelper
 import com.umeng.socialize.UMShareAPI
 import kotlinx.android.synthetic.main.activity_match_detail.*
 import kotlinx.android.synthetic.main.dialog_more_action.*
-import kotlinx.android.synthetic.main.empty_gift.view.*
+import kotlinx.android.synthetic.main.empty_gift.view.emptyTip
+import kotlinx.android.synthetic.main.empty_layout_block.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.footer_tag_quality.view.*
 import org.greenrobot.eventbus.EventBus
@@ -199,6 +200,8 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         listSquareRv.adapter = adapter
         adapter.setEmptyView(R.layout.empty_layout_block, listSquareRv)
+        adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_other_square)
+
         adapter.isUseEmpty(false)
         adapter.bindToRecyclerView(listSquareRv)
         //用户兴趣
