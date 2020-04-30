@@ -114,12 +114,15 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
-        params["page"] = 1
+        page = 1
+        params["page"] = page
         refreshPeopleNearby.resetNoMoreData()
         mPresenter.nearlyIndex(params)
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
+        page += 1
+        params["page"] = page
         mPresenter.nearlyIndex(params)
     }
 
