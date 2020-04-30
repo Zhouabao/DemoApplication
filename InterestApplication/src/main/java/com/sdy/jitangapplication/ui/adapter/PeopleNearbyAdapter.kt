@@ -6,6 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import kotlinx.android.synthetic.main.item_people_nearby.view.*
@@ -48,7 +49,7 @@ class PeopleNearbyAdapter :
         }
         itemView.nearPeopleCollapstation.text = item.constellation
         itemView.nearPeoplePhotos.layoutManager = GridLayoutManager(mContext, 5)
-        val adapter = PeopleNearbyPhotosAdapter()
+        val adapter = PeopleNearbyPhotosAdapter(item.accid)
         itemView.nearPeoplePhotos.adapter = adapter
         adapter.dataSize = item.photos.size
         adapter.setNewData(
@@ -58,7 +59,11 @@ class PeopleNearbyAdapter :
                 item.photos
             }
         )
-        adapter.setOnItemClickListener { _, view, position ->
+//        adapter.setOnItemClickListener { _, view, position ->
+//            MatchDetailActivity.start(mContext, item.accid)
+//        }
+
+        itemView.clickWithTrigger {
             MatchDetailActivity.start(mContext, item.accid)
         }
     }

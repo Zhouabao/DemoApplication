@@ -8,6 +8,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.item_people_nearby_photos.view.*
 
@@ -17,7 +19,7 @@ import kotlinx.android.synthetic.main.item_people_nearby_photos.view.*
  *    desc   :
  *    version: 1.0
  */
-class PeopleNearbyPhotosAdapter :
+class PeopleNearbyPhotosAdapter(val accid: String) :
     BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_people_nearby_photos) {
     var dataSize = 0
     override fun convert(helper: BaseViewHolder, item: String) {
@@ -57,6 +59,10 @@ class PeopleNearbyPhotosAdapter :
                         helper.itemView.nearPeoplePhoto
                     )
             }
+        }
+
+        helper.itemView.clickWithTrigger {
+            MatchDetailActivity.start(mContext,accid)
         }
     }
 }

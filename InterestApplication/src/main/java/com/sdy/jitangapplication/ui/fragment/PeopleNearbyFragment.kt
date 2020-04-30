@@ -22,7 +22,6 @@ import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
 import com.sdy.jitangapplication.model.NearPersonBean
 import com.sdy.jitangapplication.presenter.PeopleNearbyPresenter
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
-import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.adapter.PeopleNearbyAdapter
 import com.sdy.jitangapplication.ui.dialog.NearPeopleFilterDialog
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
@@ -89,9 +88,7 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
         adapter.emptyView.emptyFriendTip.text = "过会儿再来看看吧"
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.setHeaderAndEmpty(true)
-        adapter.setOnItemClickListener { _, view, position ->
-            MatchDetailActivity.start(activity!!, adapter.data[position].accid)
-        }
+
 
         rvPeopleNearby.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
