@@ -204,7 +204,7 @@ data class NearPersonBean(
     var birth: Int = 0,
     var constellation: String = "",
     var gender: Int = 0,
-    var juli: Int = 0,
+    var juli: String = "",
     var nickname: String = "",
     var photos: MutableList<String> = mutableListOf(),
     var sign: String = "",

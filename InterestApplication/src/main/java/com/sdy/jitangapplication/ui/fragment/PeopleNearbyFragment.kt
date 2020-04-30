@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.kennyc.view.MultiStateView
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.constant.RefreshState
@@ -25,6 +26,7 @@ import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.adapter.PeopleNearbyAdapter
 import com.sdy.jitangapplication.ui.dialog.NearPeopleFilterDialog
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_people_nearby.*
 import kotlinx.android.synthetic.main.header_item_near_by.view.*
 import org.greenrobot.eventbus.EventBus
@@ -75,6 +77,11 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
         refreshPeopleNearby.setOnRefreshListener(this)
         refreshPeopleNearby.setOnLoadMoreListener(this)
 
+        statePeopleNearby.retryBtn.onClick {
+            statePeopleNearby.viewState = MultiStateView.VIEW_STATE_LOADING
+            refreshPeopleNearby.autoRefresh()
+        }
+
 
         nearFilterLl.clickWithTrigger {
             NearPeopleFilterDialog(activity!!).show()
@@ -88,6 +95,7 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
         adapter.emptyView.emptyFriendTip.text = "过会儿再来看看吧"
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.setHeaderAndEmpty(true)
+
 
 
         rvPeopleNearby.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -143,6 +151,8 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
                 adapter.isUseEmpty(true)
             }
         } else {
+            refreshPeopleNearby.finishLoadMore(false)
+            refreshPeopleNearby.finishRefresh(false)
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_ERROR
         }
 
