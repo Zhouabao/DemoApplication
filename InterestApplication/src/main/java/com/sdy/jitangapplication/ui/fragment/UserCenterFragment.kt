@@ -29,10 +29,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
-import com.sdy.jitangapplication.event.RefreshMyCandyEvent
-import com.sdy.jitangapplication.event.SetMyCandyEvent
-import com.sdy.jitangapplication.event.UpdateMyLabelEvent
-import com.sdy.jitangapplication.event.UserCenterEvent
+import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.LabelQualityBean
 import com.sdy.jitangapplication.model.UserInfoBean
 import com.sdy.jitangapplication.model.VipDescr
@@ -269,12 +266,15 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     //是否认证 0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     private fun checkVerify() {
         if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
-            userVerify.setImageResource(R.drawable.icon_verify_pass)
+            userVerify.imageAssetsFolder = "images_verify"
+            userVerify.setAnimation("data_verify.json")
+            userVerify.playAnimation()
         } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) { //审核中
             userVerify.setImageResource(R.drawable.icon_verify_reject)
         } else {
             userVerify.setImageResource(R.drawable.icon_verify_not)
         }
+
     }
 
     //是否认证
@@ -439,6 +439,11 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         candyCount.text = "${event.candyCount}"
     }
 
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("onpause", "onpause=====")
+    }
 
     override fun onGlobalLayout() {
 //        if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1) {

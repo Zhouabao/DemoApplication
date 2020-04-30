@@ -181,27 +181,19 @@ class MyApplication : BaseApplication() {
                         EventBus.getDefault()
                             .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
                     }
-
-                    //发消息
+                    SnackBarFragment.SOMEONE_LIKE_YOU,
+                    SnackBarFragment.SOMEONE_MATCH_SUCCESS,
+                    SnackBarFragment.GREET_SUCCESS,
+                    SnackBarFragment.FLASH_SUCCESS,
                     SnackBarFragment.CHAT_SUCCESS,
-                        //助力
                     SnackBarFragment.HELP_CANDY,
-                        //赠送礼物
                     SnackBarFragment.GIVE_GIFT -> {
-                        if (ActivityUtils.getTopActivity() !is ChatActivity)
+                        if (ActivityUtils.getTopActivity() is MainActivity)
                             FragmentUtils.add(
                                 (ActivityUtils.getTopActivity() as AppCompatActivity).supportFragmentManager,
                                 SnackBarFragment(customerMsgBean),
                                 android.R.id.content
                             )
-
-                    }
-                    else -> {
-                        FragmentUtils.add(
-                            (ActivityUtils.getTopActivity() as AppCompatActivity).supportFragmentManager,
-                            SnackBarFragment(customerMsgBean),
-                            android.R.id.content
-                        )
 
                     }
 

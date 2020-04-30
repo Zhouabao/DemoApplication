@@ -17,6 +17,7 @@ import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
+import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -36,6 +37,7 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
         initWindow()
         initView()
         completeGuide()
+        todayRecommend()
     }
 
     private fun initWindow() {
@@ -215,8 +217,44 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             })
     }
 
+
+
+    fun todayRecommend() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .todayRecommend(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<MutableList<IndexRecommendBean>?>>() {
+                override fun onNext(t: BaseResp<MutableList<IndexRecommendBean>?>) {
+                    onTodayRecommend(t.data)
+                }
+
+                override fun onError(e: Throwable?) {
+
+                }
+
+            })
+    }
+
+
+
+
+    /**
+     * 今日推荐
+     */
+    private var todayFate: MutableList<IndexRecommendBean> = mutableListOf()
+    /**
+     * 今日推荐获取结果
+     */
+    fun onTodayRecommend(data: MutableList<IndexRecommendBean>?) {
+        if (!data.isNullOrEmpty()) {
+            todayFate = data
+        }
+    }
+
+
     override fun dismiss() {
         super.dismiss()
-
+        if (!todayFate.isNullOrEmpty()) {
+            TodayFateDialog(context, todayFate).show()
+        }
     }
 }

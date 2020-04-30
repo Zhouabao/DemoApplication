@@ -17,10 +17,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
-import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.*
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
@@ -234,6 +231,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
         ratation.interpolator = CycleInterpolator(4F)
         ratation.repeatCount = 0
         ratation.duration = 300
+        VibrateUtils.vibrate(50L)
         return ratation
     }
 

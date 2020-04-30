@@ -175,11 +175,12 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
             params["page"] = 1
             params["pagesize"] = Constants.PAGESIZE
         } else {
+//            1智能 2距离 3在线
             adapter.headerLayout.headFilterContent.text =
                 "已筛选\t${when (event.params["rank_type_nearly"]) {
-                    1 -> "距离优先"
-                    2 -> "在线优先"
-                    else -> "智能推荐"
+                    1 -> "智能推荐"
+                    2 -> "距离优先"
+                    else -> "在线优先"
                 }}\t${when (event.params["gender_nearly"]) {
                     1 -> "男"
                     2 -> "女"

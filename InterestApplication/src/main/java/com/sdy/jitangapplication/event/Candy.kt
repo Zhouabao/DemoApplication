@@ -53,6 +53,9 @@ class RefreshMyCandyEvent(val candyCount: Int)
 class SetMyCandyEvent(val candyCount: Int)
 
 
+class CancelPopEvent(val cancel: Boolean)
+
+
 /**
  * 如果详情加入心愿列表，那列表也会随之更新状态
  */

@@ -1,102 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:background="@color/colorWhite"
-              android:orientation="vertical"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
 
 
     <FrameLayout
-            android:background="@color/colorWhite"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite">
 
         <LinearLayout
-                android:id="@+id/contentLayout"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".ui.fragment.MatchFragment">
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:context=".ui.fragment.MatchFragment">
 
 
             <RelativeLayout
-                    android:clipChildren="false"
-                    android:visibility="visible"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipChildren="false"
+                android:visibility="visible">
 
                 <LinearLayout
-                        android:id="@+id/lieAvatorLl"
-                        android:background="#1AFF6318"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="41dp">
+                    android:id="@+id/lieAvatorLl"
+                    android:layout_width="match_parent"
+                    android:layout_height="41dp"
+                    android:background="#1AFF6318"
+                    android:orientation="horizontal">
 
                     <TextView
-                            android:id="@+id/lieAvatorContent"
-                            android:layout_marginLeft="15dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:text="当前头像非真实头像，替换后可获得首页推荐"
-                            android:textColor="#ffff6318"
-                            android:textSize="12sp"
-                            />
+                        android:id="@+id/lieAvatorContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:text="当前头像非真实头像，替换后可获得首页推荐"
+                        android:textColor="#ffff6318"
+                        android:textSize="12sp" />
 
                     <TextView
-                            android:id="@+id/changeAvatorBtn"
-                            android:layout_marginRight="15dp"
-                            android:paddingBottom="3dp"
-                            android:paddingTop="3dp"
-                            android:paddingRight="7dp"
-                            android:paddingLeft="7dp"
-                            android:background="@drawable/shape_rectangle_orange_12dp"
-                            android:layout_gravity="right|center_vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="立即替换"
-                            android:textColor="#ffffffff"
-                            android:textSize="11sp"
-                            />
+                        android:id="@+id/changeAvatorBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/shape_rectangle_orange_12dp"
+                        android:paddingLeft="7dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="7dp"
+                        android:paddingBottom="3dp"
+                        android:text="立即替换"
+                        android:textColor="#ffffffff"
+                        android:textSize="11sp" />
 
                     <ImageView
-                            android:id="@+id/changeAvatorCloseBtn"
-                            android:layout_marginRight="15dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/icon_close_small"
-                            android:layout_width="9dp"
-                            android:layout_height="9dp"/>
+                        android:id="@+id/changeAvatorCloseBtn"
+                        android:layout_width="9dp"
+                        android:layout_height="9dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="15dp"
+                        android:src="@drawable/icon_close_small" />
                 </LinearLayout>
 
-                <com.yuyakaido.android.cardstackview.CardStackView
-                        android:id="@+id/card_stack_view"
-                        android:clipToPadding="false"
-                        android:layout_below="@id/lieAvatorLl"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        />
+                <com.sdy.jitangapplication.widgets.HorizontalRecyclerView
+                    android:id="@+id/card_stack_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/lieAvatorLl"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:clipToPadding="false" />
 
 
                 <ImageView
-                        android:id="@+id/animation_like"
-                        android:alpha="0"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/icon_like_match"
-                        android:layout_width="50dp"
-                        android:layout_centerVertical="true"
-                        android:layout_height="50dp"/>
+                    android:id="@+id/animation_like"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:alpha="0"
+                    android:src="@drawable/icon_like_match" />
 
                 <ImageView
-                        android:id="@+id/animation_dislike"
-                        android:alpha="0"
-                        android:src="@drawable/icon_dislike_match"
-                        android:layout_width="0dp"
-                        android:layout_centerVertical="true"
-                        android:layout_height="0dp"/>
+                    android:id="@+id/animation_dislike"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerVertical="true"
+                    android:alpha="0"
+                    android:src="@drawable/icon_dislike_match" />
 
             </RelativeLayout>
 
@@ -104,19 +105,19 @@
         </LinearLayout>
 
         <include
-                android:id="@+id/loadingLayout"
-                layout="@layout/loading_layout_match_lottie"
-                android:visibility="visible"/>
+            android:id="@+id/loadingLayout"
+            layout="@layout/loading_layout_match_lottie"
+            android:visibility="visible" />
 
         <include
-                android:id="@+id/errorLayout"
-                layout="@layout/error_layout"
-                android:visibility="gone"/>
+            android:id="@+id/errorLayout"
+            layout="@layout/error_layout"
+            android:visibility="gone" />
 
         <include
-                android:id="@+id/emptyLayout"
-                layout="@layout/empty_friend_layout"
-                android:visibility="gone"/>
+            android:id="@+id/emptyLayout"
+            layout="@layout/empty_friend_layout"
+            android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>
 

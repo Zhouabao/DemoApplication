@@ -208,7 +208,10 @@ data class NearPersonBean(
     var nickname: String = "",
     var photos: MutableList<String> = mutableListOf(),
     var sign: String = "",
-    var distance: String = ""
+    var distance: String = "",
+    var online_time: String = "",
+    var isfaced: Boolean = false,
+    var isvip: Boolean = false
 )
 
 

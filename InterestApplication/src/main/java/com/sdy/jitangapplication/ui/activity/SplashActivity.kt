@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.AppUtils
@@ -17,13 +16,14 @@ import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.utils.AMapManager
+import com.sina.weibo.sdk.share.BaseActivity
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import org.jetbrains.anko.startActivity
 
 /**
  * 启动页面
  */
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : BaseActivity() {
 
     private val handler = Handler()
 

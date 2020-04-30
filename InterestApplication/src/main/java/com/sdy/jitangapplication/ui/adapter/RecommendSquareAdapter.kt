@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.MultiTransformation
@@ -220,10 +221,12 @@ class RecommendSquareAdapter :
         likeAnim.isVisible = isliked && animate
         likeImg.isVisible = !likeAnim.isVisible
         if (isliked) {
-            if (animate)
+            if (animate) {
                 likeAnim.playAnimation()
-            else
+                VibrateUtils.vibrate(50L)
+            } else {
                 likeImg.setImageResource(R.drawable.icon_zan_clicked)
+            }
         } else {
             likeImg.setImageResource(R.drawable.icon_zan_normal)
         }

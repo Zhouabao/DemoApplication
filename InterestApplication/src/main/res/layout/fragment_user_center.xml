@@ -151,12 +151,11 @@
                             app:layout_constraintLeft_toRightOf="@id/userName"
                             app:layout_constraintTop_toTopOf="@id/userName" />
 
-                        <ImageView
+                        <com.airbnb.lottie.LottieAnimationView
                             android:id="@+id/userVerify"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_marginLeft="8dp"
-                            android:src="@drawable/icon_verify_pass"
                             app:layout_constraintBottom_toBottomOf="@id/userName"
                             app:layout_constraintLeft_toRightOf="@id/userVip"
                             app:layout_constraintTop_toTopOf="@id/userName" />

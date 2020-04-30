@@ -1,9 +1,9 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.NearPersonBean
@@ -23,17 +23,14 @@ class PeopleNearbyAdapter :
         GlideUtil.loadCircleImg(mContext, item.avatar, itemView.nearPeopleAvator)
         itemView.nearPeopleName.text = item.nickname
         itemView.nearPeopleSign.text = item.sign
-        itemView.nearPeopleDistance.text = "${item.distance}·${if (NimUIKitImpl.enableOnlineState()
-            && !NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid).isNullOrEmpty()
-            && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid).contains(
-                "在线"
-            )
-        ) {
-            "在线"
-        } else {
-            "离线"
-        }}"
-
+        itemView.nearPeopleVerify.isVisible = item.isfaced
+        itemView.nearPeopleVip.isVisible = item.isvip
+        itemView.nearPeopleDistance.text =
+            "${item.distance}${if (!item.online_time.isNullOrEmpty()) {
+                "·${item.online_time}"
+            } else {
+                ""
+            }}"
         itemView.nearPeopleGender.text = "${item.age}岁"
         if (item.gender == 1) {
             itemView.nearPeopleGender.setCompoundDrawablesWithIntrinsicBounds(

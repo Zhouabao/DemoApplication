@@ -4,11 +4,13 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.FragmentUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.kotlin.base.ui.fragment.BaseFragment
@@ -17,7 +19,9 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.ui.activity.GreetReceivedActivity
 import com.sdy.jitangapplication.ui.activity.LikeMeReceivedActivity
+import com.sdy.jitangapplication.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.fragment_snack_bar.*
 import org.jetbrains.anko.support.v4.startActivity
 
@@ -59,9 +63,26 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
     }
 
     private fun initView() {
-//        EventBus.getDefault().register(this)
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            StatusBarUtil.setMargin(activity!!, contentView)
+        }
 
-        contentView.setCardBackgroundColor(colors[(0..2).random()])
+//        contentView
+//        EventBus.getDefault().register(this)
+        when (msgBean.type) {
+            SOMEONE_LIKE_YOU, SOMEONE_MATCH_SUCCESS -> {
+                contentView.setCardBackgroundColor(colors[0])
+            }
+            GREET_SUCCESS,
+            FLASH_SUCCESS,
+            CHAT_SUCCESS -> {
+                contentView.setCardBackgroundColor(colors[1])
+            }
+            HELP_CANDY,
+            GIVE_GIFT -> {
+                contentView.setCardBackgroundColor(colors[2])
+            }
+        }
 
         contentView.clickWithTrigger {
             contentView.isVisible = false
@@ -79,19 +100,26 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
             when (msgBean.type) {
                 //喜欢了你
                 SOMEONE_LIKE_YOU -> {
-                    startActivity<LikeMeReceivedActivity>()
+                    if (ActivityUtils.getTopActivity() !is LikeMeReceivedActivity)
+                        startActivity<LikeMeReceivedActivity>()
                 }
-                //招呼
-                GREET_SUCCESS,
-                    //发消息
-                CHAT_SUCCESS,
-                    //助力
+
+
+                //助力
                 HELP_CANDY,
                     //赠送礼物
                 GIVE_GIFT,
+                    //发消息
+                CHAT_SUCCESS,
                     //匹配成功
                 SOMEONE_MATCH_SUCCESS -> {
                     ChatActivity.start(activity!!, msgBean.accid ?: "")
+                }
+
+                //招呼
+                GREET_SUCCESS -> {
+                    if (ActivityUtils.getTopActivity() !is GreetReceivedActivity)
+                        startActivity<GreetReceivedActivity>()
                 }
                 //闪聊
                 FLASH_SUCCESS -> {

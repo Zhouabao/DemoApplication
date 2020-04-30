@@ -77,6 +77,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="3dp"
+        android:animateLayoutChanges="true"
         app:layout_constraintLeft_toLeftOf="@id/t2"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/t3">

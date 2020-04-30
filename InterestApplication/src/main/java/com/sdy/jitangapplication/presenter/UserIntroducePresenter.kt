@@ -41,9 +41,11 @@ class UserIntroducePresenter : BasePresenter<UserIntroduceView>() {
             .excute(object : BaseSubscriber<BaseResp<Userinfo?>>(mView) {
                 override fun onStart() {
                     super.onStart()
+                    mView.showLoading()
                 }
 
                 override fun onNext(t: BaseResp<Userinfo?>) {
+                    mView.hideLoading()
                     if (t.code == 200) {
                         mView.onSaveRegisterInfo(true)
                         SPUtils.getInstance(Constants.SPNAME).put("nickname", t.data?.nickname)
@@ -64,6 +66,7 @@ class UserIntroducePresenter : BasePresenter<UserIntroduceView>() {
                 }
 
                 override fun onError(e: Throwable?) {
+                    mView.hideLoading()
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {

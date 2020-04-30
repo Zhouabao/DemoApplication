@@ -73,10 +73,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
-//        TodayFateDialog(this).show()
-
-//
-
 
         //启动时间统计
         mPresenter.startupRecord(
@@ -152,9 +148,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         initFragment()
         //进入页面弹消息提醒
         mPresenter.msgList()
-
-        //进页面首页开屏推荐内容
-        mPresenter.todayRecommend()
     }
 
 
@@ -167,8 +160,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         tabSquarePublish.onClick(
             object : CustomClickListener() {
                 override fun onSingleClick(view: View) {
-                    if (contentFragment.mPresenter != null)
+                    try {
                         contentFragment.mPresenter.checkBlock()
+                    } catch (e: Exception) {
+
+                    }
                 }
             }
         )
@@ -198,11 +194,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
             override fun onPageSelected(position: Int) {
                 if (position == 3) {
+//                    CancelPopEvent
                     EventBus.getDefault().postSticky(UserCenterEvent(true))
                 }
                 switchTab(position)
             }
         })
+
     }
 
 
@@ -281,6 +279,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
                         override fun onAnimationEnd(animation: Animator?) {
                             publishGuideIv.isVisible = false
+                            UserManager.saveShowGuidePublish(true)
                         }
 
                         override fun onAnimationCancel(animation: Animator?) {
@@ -550,12 +549,14 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         }
     }
 
+    private var canShowNear = false
     override fun startupRecordResult(data: NearCountBean?) {
-        if (data != null) {
+        if (data != null && data.nearly_tips_cnt > 0) {
+            canShowNear = true
             totalNearOnlineTv.text = SpanUtils.with(totalNearOnlineTv)
                 .append("你身边有")
-                .append("${data.count}")
-                .setFontSize(15,true)
+                .append("${data.nearly_tips_cnt}")
+                .setFontSize(15, true)
                 .setForegroundColor(Color.parseColor("#FD4417"))
                 .append(
                     "个${if (UserManager.getGender() == 1) {
@@ -564,10 +565,12 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                         "男"
                     }}性在线\n最近的离你只有"
                 )
-                .append("${data.dictance}")
-                .setFontSize(15,true)
+                .append("${data.nearly_tips_str}")
+                .setFontSize(15, true)
                 .setForegroundColor(Color.parseColor("#FD4417"))
                 .create()
+        } else {
+            canShowNear = false
         }
     }
 
@@ -625,63 +628,66 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
+    private var showNear = false
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onShowNearCountEvent(event: ShowNearCountEvent) {
-        totalNearOnlineTv.isVisible = true
-        val animatorSet = AnimatorSet()
-        animatorSet.duration = 300L
-        animatorSet.playTogether(
-            ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleX", 0.45f, 1F),
-            ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleY", 0.45f, 1F),
-            ObjectAnimator.ofFloat(totalNearOnlineTv, "alpha", 0F, 1F)
-        )
-        animatorSet.start()
+        if (canShowNear && !showNear) {
+            showNear = true
+            totalNearOnlineTv.isVisible = true
+            val animatorSet = AnimatorSet()
+            animatorSet.duration = 300L
+            animatorSet.playTogether(
+                ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleX", 0.45f, 1F),
+                ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleY", 0.45f, 1F),
+                ObjectAnimator.ofFloat(totalNearOnlineTv, "alpha", 0F, 1F)
+            )
+            animatorSet.start()
 
-        val trans = ObjectAnimator.ofFloat(
-            totalNearOnlineTv,
-            "translationY",
-            SizeUtils.dp2px(-5F).toFloat(),
-            SizeUtils.dp2px(0F).toFloat(),
-            SizeUtils.dp2px(-5F).toFloat()
-        )
-        trans.duration = 750
-        trans.repeatCount = 4
-        trans.interpolator = LinearInterpolator()
-        trans.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
+            val trans = ObjectAnimator.ofFloat(
+                totalNearOnlineTv,
+                "translationY",
+                SizeUtils.dp2px(-5F).toFloat(),
+                SizeUtils.dp2px(0F).toFloat(),
+                SizeUtils.dp2px(-5F).toFloat()
+            )
+            trans.duration = 750
+            trans.repeatCount = 4
+            trans.interpolator = LinearInterpolator()
+            trans.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
 
-            }
+                }
 
-            override fun onAnimationEnd(animation: Animator?) {
-                totalNearOnlineTv.isVisible = false
-            }
+                override fun onAnimationEnd(animation: Animator?) {
+                    totalNearOnlineTv.isVisible = false
+                }
 
-            override fun onAnimationCancel(animation: Animator?) {
-            }
+                override fun onAnimationCancel(animation: Animator?) {
+                }
 
-            override fun onAnimationStart(animation: Animator?) {
-            }
+                override fun onAnimationStart(animation: Animator?) {
+                }
 
-        })
+            })
 
-        animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
+            animatorSet.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
 
-            }
+                }
 
-            override fun onAnimationEnd(animation: Animator?) {
-                trans.start()
-            }
+                override fun onAnimationEnd(animation: Animator?) {
+                    trans.start()
+                }
 
-            override fun onAnimationCancel(animation: Animator?) {
-            }
+                override fun onAnimationCancel(animation: Animator?) {
+                }
 
-            override fun onAnimationStart(animation: Animator?) {
-            }
+                override fun onAnimationStart(animation: Animator?) {
+                }
 
-        })
+            })
+        }
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onGetMSGEvent(event: GetNewMsgEvent) {

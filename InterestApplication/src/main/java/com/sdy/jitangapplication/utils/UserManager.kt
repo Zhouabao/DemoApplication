@@ -754,7 +754,7 @@ object UserManager {
         //初始化消息提醒配置
         initNotificationConfig()
 
-        //昵称 生日 性别 头像
+        //昵称 生日 性别 头像 个签
         if (data?.userinfo == null || data.userinfo.nickname.isNullOrEmpty()) {
             context.startActivity<UserNickNameActivity>()
             return
@@ -770,10 +770,12 @@ object UserManager {
         } else if (data.extra_data?.aboutme.isNullOrEmpty() || data.extra_data?.aboutme?.trim().isNullOrEmpty()) {//个人介绍未填写
             context.startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
             return
-        } else if (data.extra_data?.mytaglist.isNullOrEmpty()) {//兴趣没有选择
-            context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
-            return
-        } else {//跳到主页
+        }
+//        else if (data.extra_data?.mytaglist.isNullOrEmpty()) {//兴趣没有选择
+//            context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
+//            return
+//        }
+        else {//跳到主页
             saveUserInfo(data)
             AppManager.instance.finishAllActivity()
             context.startActivity<MainActivity>()

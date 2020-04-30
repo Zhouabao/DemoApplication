@@ -12,6 +12,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
@@ -37,6 +38,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Li
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.sdk27.coroutines.onTouch
 import java.util.*
 
 /**
@@ -48,7 +50,7 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
     private val titles by lazy { arrayOf("匹配", "附近") }
     private val matchFragment by lazy { MatchFragment() }
     //    private val findByTagFragment by lazy { FindByTagFragment() }
-    private val findByTagFragment by lazy { PeopleNearbyFragment() }
+    private val peopleNearByFragment by lazy { PeopleNearbyFragment() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,19 +78,39 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
         }
     }
 
+
     private fun initFragments() {
 
 
         fragments.add(matchFragment)
-        fragments.add(findByTagFragment)
+        fragments.add(peopleNearByFragment)
 
         vpIndex.setScrollable(true)
         vpIndex.offscreenPageLimit = 2
         vpIndex.adapter = MainPagerAdapter(activity!!.supportFragmentManager, fragments)
+        vpIndex.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                filterBtn.isVisible = position == 0
+            }
+        })
 
         initIndicator()
-
         vpIndex.currentItem = 0
+
+        vpIndex.onTouch { v, event ->
+
+        }
     }
 
     private fun initIndicator() {

@@ -83,4 +83,7 @@ data class AllMsgCount(
 /**
  * 附近的人的个数
  */
-data class NearCountBean(val count: Int, val dictance: String)
+data class NearCountBean(
+    val nearly_tips_cnt: Int,
+    val nearly_tips_str: String
+)

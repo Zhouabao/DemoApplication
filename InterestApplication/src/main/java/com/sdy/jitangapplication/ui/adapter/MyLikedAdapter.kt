@@ -7,6 +7,8 @@ import com.kotlin.base.common.BaseApplication.Companion.context
 import com.netease.nim.uikit.impl.NimUIKitImpl
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.MyLikedBean
 import kotlinx.android.synthetic.main.item_my_liked.view.*
 
@@ -19,10 +21,10 @@ import kotlinx.android.synthetic.main.item_my_liked.view.*
 class MyLikedAdapter : BaseQuickAdapter<MyLikedBean, BaseViewHolder>(R.layout.item_my_liked) {
 
     override fun convert(holder: BaseViewHolder, item: MyLikedBean) {
-        holder.addOnClickListener(R.id.likedHi)
         GlideUtil.loadAvatorImg(context, item.avatar, holder.itemView.likedIcon)
         holder.itemView.likedName.text = item.nickname
         holder.itemView.likedSign.text = item.sign
+        holder.itemView.likedSign.isVisible = !item.sign.isNullOrEmpty()
         holder.itemView.likedIsVip.isVisible = item.isvip
         holder.itemView.likedAge.text = "${item.age}岁"
         if (item.gender == 1) {
@@ -46,6 +48,16 @@ class MyLikedAdapter : BaseQuickAdapter<MyLikedBean, BaseViewHolder>(R.layout.it
                     && NimUIKitImpl.getOnlineStateContentProvider().getSimpleDisplay(item.accid).contains(
                 "在线"
             )
+
+        holder.itemView.likedHi.clickWithTrigger {
+            CommonFunction.commonGreet(
+                mContext,
+                item.accid,
+                holder.itemView.likedHi,
+                holder.layoutPosition,
+                item.avatar
+            )
+        }
     }
 
 }

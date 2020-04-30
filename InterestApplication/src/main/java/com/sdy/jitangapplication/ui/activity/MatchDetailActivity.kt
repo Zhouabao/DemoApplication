@@ -43,8 +43,6 @@ import com.netease.nimlib.sdk.msg.MsgService
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
@@ -216,20 +214,18 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         usergiftAdapter.setEmptyView(R.layout.empty_gift, rvGift)
         usergiftAdapter.isUseEmpty(false)
 
-        listRefresh.setOnMultiPurposeListener(object : SimpleMultiPurposeListener() {
-            override fun onLoadMore(refreshLayout: RefreshLayout) {
-                if (adapter.data.size < page * Constants.PAGESIZE) {
-                    refreshLayout.finishLoadMoreWithNoMoreData()
-                } else {
-                    page += 1
-                    params1["page"] = page
-                    mPresenter.getSomeoneSquare(params1)
-                }
+
+        adapter.setOnLoadMoreListener({
+            if (adapter.data.size < page * Constants.PAGESIZE) {
+                adapter.loadMoreEnd()
+            } else {
+                page += 1
+                params1["page"] = page
+                mPresenter.getSomeoneSquare(params1)
             }
-        })
+        }, listSquareRv)
 
-
-        scrollDetail.setZoomView(clPhotos)
+        scrollDetail.setZoomView(detailPhotosVp)
         scrollDetail.setOnScrollListener { scrollX, scrollY, oldScrollX, oldScrollY ->
             if (clTop in 1..scrollY) {
                 detailActionbar.alpha = 1F
@@ -782,9 +778,9 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             if (data?.list == null || data!!.list!!.size == 0) {
                 if (adapter.data.isNullOrEmpty()) {
                     adapter.isUseEmpty(true)
+                    adapter.loadMoreEnd()
                 }
                 adapter.notifyDataSetChanged()
-                listRefresh.finishLoadMoreWithNoMoreData()
             } else {
                 if (data?.list.size > 0) {
                     for (data in data?.list) {
@@ -793,11 +789,11 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                     }
                     adapter.addData(data?.list)
                 }
-                listRefresh.finishLoadMore(true)
+                adapter.loadMoreComplete()
             }
         } else {
-            if (listRefresh != null && page > 1)
-                listRefresh.finishLoadMore(false)
+            if (page > 1)
+                adapter.loadMoreFail()
             else
                 stateview.viewState = MultiStateView.VIEW_STATE_ERROR
         }

@@ -13,6 +13,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.google.android.flexbox.*
@@ -448,6 +449,7 @@ class MultiListSquareAdapter(
         if (isliked == 1) {
             if (animated) {
                 likeAni.playAnimation()
+                VibrateUtils.vibrate(50L)
             } else {
                 likeImg.setImageResource(R.drawable.icon_zan_clicked)
             }

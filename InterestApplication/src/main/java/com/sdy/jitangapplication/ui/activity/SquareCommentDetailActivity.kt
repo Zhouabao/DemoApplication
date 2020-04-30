@@ -22,6 +22,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
@@ -287,6 +288,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (isliked == 1) {
             if (animated) {
                 likeAni.playAnimation()
+                VibrateUtils.vibrate(50L)
             } else {
                 likeImg.setImageResource(R.drawable.icon_zan_clicked)
             }

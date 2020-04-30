@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
@@ -35,8 +36,10 @@
         android:textColor="#ff191919"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/likedAge"
         app:layout_constraintLeft_toRightOf="@id/likedIcon"
-        app:layout_constraintTop_toTopOf="@id/likedIcon" />
+        app:layout_constraintTop_toTopOf="@id/likedIcon"
+        tools:text="昵称恁" />
 
     <ImageView
         android:id="@+id/likedIsVip"
@@ -44,6 +47,7 @@
         android:layout_height="18dp"
         android:layout_marginLeft="5dp"
         android:src="@drawable/icon_vip"
+        app:layout_constraintBottom_toBottomOf="@id/likedName"
         app:layout_constraintLeft_toRightOf="@id/likedName"
         app:layout_constraintTop_toTopOf="@id/likedName" />
 
@@ -55,11 +59,12 @@
         android:drawableLeft="@drawable/icon_gender_man_gray"
         android:drawablePadding="3dp"
         android:gravity="center"
-        android:text="23岁"
         android:textColor="#ffc5c6c8"
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/likedName"
-        app:layout_constraintTop_toBottomOf="@id/likedName" />
+        app:layout_constraintTop_toBottomOf="@id/likedName"
+        app:layout_constraintBottom_toTopOf="@id/likedSign"
+        tools:text="23岁" />
 
     <TextView
         android:id="@+id/likedCollapstation"
@@ -70,11 +75,12 @@
         android:drawableLeft="@drawable/icon_collapstation"
         android:drawablePadding="3dp"
         android:gravity="center"
-        android:text="处女座"
         android:textColor="#ffc5c6c8"
         android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/likedAge"
         app:layout_constraintLeft_toRightOf="@id/likedAge"
-        app:layout_constraintTop_toBottomOf="@id/likedName" />
+        app:layout_constraintTop_toTopOf="@id/likedAge"
+        tools:text="处女座" />
 
     <TextView
         android:id="@+id/likedSign"
@@ -84,12 +90,13 @@
         android:layout_marginRight="15dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="你感觉不舒服的时候，就是成长..."
         android:textColor="#ff888d92"
         android:textSize="13sp"
         app:layout_constraintLeft_toLeftOf="@id/likedName"
         app:layout_constraintRight_toLeftOf="@id/likedHi"
-        app:layout_constraintTop_toBottomOf="@id/likedAge" />
+        app:layout_constraintTop_toBottomOf="@id/likedAge"
+        app:layout_constraintBottom_toBottomOf="@id/likedIcon"
+        tools:text="你感觉不舒服的时候，就是成长..." />
 
     <TextView
         android:id="@+id/likedHi"

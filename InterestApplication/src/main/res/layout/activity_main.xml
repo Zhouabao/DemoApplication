@@ -226,7 +226,7 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="49dp"
         android:src="@drawable/icon_publish_guide"
-        android:visibility="visible" />
+        android:visibility="gone" />
 <!--    <FrameLayout-->
 <!--        android:id="@+id/main_frag_content"-->
 <!--        android:layout_width="match_parent"-->

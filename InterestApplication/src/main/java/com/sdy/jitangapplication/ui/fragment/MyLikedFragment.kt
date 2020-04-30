@@ -81,6 +81,8 @@ class MyLikedFragment : BaseMvpLazyLoadFragment<MyLikedPresenter>(), MyLikedView
         adapter.setOnItemClickListener { _, view, position ->
             MatchDetailActivity.start(activity!!, adapter.data[position].accid)
         }
+
+
     }
 
 

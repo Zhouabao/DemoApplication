@@ -154,14 +154,13 @@ class NearPeopleFilterDialog(var context1: Context) :
             params.clear()
             EventBus.getDefault().post(UpdateNearPeopleParamsEvent(params))
             UserManager.clearNearFilterParams()
-
-//            dismiss()
+            dismiss()
         }
 
         //limit_age_low
         //limit_age_high
         //gender
-        //rank_type  1距离 2在线 3智能
+        //rank_type  1智能 2距离 3在线
         //确认筛选
         confirmFilterBtn.clickWithTrigger {
             params["limit_age_low_nearly"] = seekBarAge.leftSeekBar.progress.toInt()
