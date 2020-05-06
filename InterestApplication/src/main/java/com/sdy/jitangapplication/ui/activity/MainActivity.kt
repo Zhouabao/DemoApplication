@@ -17,7 +17,6 @@ import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.*
-import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -494,8 +493,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             firstClickTime = secondTime
         } else {
             SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
-            AppManager.instance.finishAllActivity()
-            System.exit(0)//正常退出
+            ActivityUtils.finishAllActivities()
+//            AppManager.instance.finishAllActivity()
+//            System.exit(0)//正常退出
 //            AppManager.instance.exitApp(this)
         }
     }

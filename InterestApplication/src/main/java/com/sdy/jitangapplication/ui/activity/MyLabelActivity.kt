@@ -143,6 +143,7 @@ class MyLabelActivity : BaseMvpActivity<MyLabelPresenter>(), MyLabelView, View.O
                 adapter.emptyView.addLabelBtn.text = "添加兴趣"
                 rightBtn.isVisible = false
             } else {
+                rightBtn.isVisible = true
                 addLabelBtn.isVisible = true
                 adapter.setNewData(datas?.is_using ?: mutableListOf())
             }

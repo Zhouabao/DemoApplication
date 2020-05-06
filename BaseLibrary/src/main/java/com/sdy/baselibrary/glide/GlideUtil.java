@@ -96,17 +96,19 @@ public class GlideUtil {
      * @param url
      * @param targetImg
      */
+//    circleCrop().
     public static void loadCircleImg(Context context, Object url, ImageView targetImg) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().circleCrop().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
+                .apply(getOptions().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
                 .into(targetImg);
     }
 
+//    circleCrop().
     public static void loadCircleImg(Context context, int url, ImageView targetImg) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().circleCrop().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
+                .apply(getOptions().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
                 .into(targetImg);
     }
 
