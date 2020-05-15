@@ -30,7 +30,7 @@
             app:layout_constraintTop_toBottomOf="@id/v1"/>
 
     <TextView
-            android:id="@+id/t1"
+            android:id="@+id/moreInfoTitle"
             android:textColor="@color/colorWhite"
             android:layout_marginTop="15dp"
             android:text="在这里\t遇到和你一样特别的人"

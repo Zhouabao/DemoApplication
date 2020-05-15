@@ -8,7 +8,7 @@
         android:layout_height="wrap_content">
 
     <TextView
-            android:id="@+id/t1"
+            android:id="@+id/moreInfoTitle"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:layout_marginTop="20dp"

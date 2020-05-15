@@ -7,7 +7,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.RechargeCandyBean
+import com.sdy.jitangapplication.model.ChargeWayBean
 import kotlinx.android.synthetic.main.item_candy_price.view.*
 
 /**
@@ -18,9 +18,9 @@ import kotlinx.android.synthetic.main.item_candy_price.view.*
  *
  */
 class CandyPriceAdapter :
-    BaseQuickAdapter<RechargeCandyBean, BaseViewHolder>(R.layout.item_candy_price) {
+    BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_candy_price) {
 
-    override fun convert(holder: BaseViewHolder, item: RechargeCandyBean) {
+    override fun convert(holder: BaseViewHolder, item: ChargeWayBean) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
         if ((holder.layoutPosition) % 2 == 0) {
             params.leftMargin = SizeUtils.dp2px(15F)
@@ -35,7 +35,7 @@ class CandyPriceAdapter :
         holder.itemView.candyCount.typeface =
             Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
         holder.itemView.candyCount.text = "${item.amount}"
-        holder.itemView.candyPrice.text = "¥${if (item.discount_price != 0F) {
+        holder.itemView.candyPrice.text = "¥${if (item.discount_price != 0.0) {
             item.discount_price
         } else {
             item.original_price

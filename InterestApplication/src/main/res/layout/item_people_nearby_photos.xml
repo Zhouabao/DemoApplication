@@ -23,7 +23,6 @@
         android:text="+2"
         android:textColor="#ffffffff"
         android:textSize="15sp"
-        android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/nearPeoplePhoto"
         app:layout_constraintLeft_toLeftOf="@id/nearPeoplePhoto"

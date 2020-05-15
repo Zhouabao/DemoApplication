@@ -10,18 +10,15 @@ import android.view.animation.AnimationUtils
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
 import androidx.core.view.isVisible
-import com.kotlin.base.data.net.RetrofitFactory
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.model.IndexRecommendBean
+import com.sdy.jitangapplication.event.GetRecommendEvent
+import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.ui.activity.MyCandyActivity
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_guide.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -30,14 +27,15 @@ import org.jetbrains.anko.startActivity
  *    desc   :
  *    version: 1.0
  */
-class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
+class GuideDialog(
+    context: Context,
+    val presenter: MatchPresenter
+) : Dialog(context, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_guide)
         initWindow()
         initView()
-        completeGuide()
-        todayRecommend()
     }
 
     private fun initWindow() {
@@ -99,7 +97,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            intentionMatchingCl.isVisible = false
         }
 
         guideNext.onClick {
@@ -111,7 +108,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            intentionMatchingCl.isVisible = false
         }
 
         guideDetail.onClick {
@@ -124,7 +120,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            intentionMatchingCl.isVisible = false
 
         }
 
@@ -139,7 +134,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideLike.isVisible = true
             guideDislike.isVisible = false
             useCl.isVisible = false
-            intentionMatchingCl.isVisible = false
         }
 
         btnChat.onClick {
@@ -153,7 +147,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideLike.isVisible = true
             guideDislike.isVisible = false
             useCl.isVisible = false
-            intentionMatchingCl.isVisible = false
         }
 
         guideLike.onClick {
@@ -161,7 +154,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideLike.isVisible = false
             guideDislike.isVisible = true
             useCl.isVisible = false
-            intentionMatchingCl.isVisible = false
 
         }
         guideDislike.onClick {
@@ -169,20 +161,9 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideLike.isVisible = false
             guideDislike.isVisible = false
 //            useCl.isVisible = false
-            useCl.isVisible = true
-            welldone.playAnimation()
-
-            intentionMatchingCl.isVisible = false
-//            intentionMatchingCl.isVisible = true
-        }
-
-
-        intentionMatchingCl.onClick {
-            guideCl.isVisible = false
-            guideLike.isVisible = false
-            guideDislike.isVisible = false
-            intentionMatchingCl.isVisible = false
-            useCl.isVisible = true
+            dismiss()
+//            useCl.isVisible = true
+//            welldone.playAnimation()
         }
 
         startUse.onClick {
@@ -204,57 +185,13 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             detail.clearAnimation()
             guide_dislike_hand_left.clearAnimation()
             guide_like_hand_right.clearAnimation()
-            completeGuide()
             dismiss()
-        }
-    }
-
-    private fun completeGuide() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .completeGuide(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(null) {
-
-            })
-    }
-
-
-
-    fun todayRecommend() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .todayRecommend(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<MutableList<IndexRecommendBean>?>>() {
-                override fun onNext(t: BaseResp<MutableList<IndexRecommendBean>?>) {
-                    onTodayRecommend(t.data)
-                }
-
-                override fun onError(e: Throwable?) {
-
-                }
-
-            })
-    }
-
-
-
-
-    /**
-     * 今日推荐
-     */
-    private var todayFate: MutableList<IndexRecommendBean> = mutableListOf()
-    /**
-     * 今日推荐获取结果
-     */
-    fun onTodayRecommend(data: MutableList<IndexRecommendBean>?) {
-        if (!data.isNullOrEmpty()) {
-            todayFate = data
         }
     }
 
 
     override fun dismiss() {
         super.dismiss()
-        if (!todayFate.isNullOrEmpty()) {
-            TodayFateDialog(context, todayFate).show()
-        }
+        EventBus.getDefault().post(GetRecommendEvent())
     }
 }

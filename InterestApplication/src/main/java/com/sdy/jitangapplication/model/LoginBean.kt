@@ -22,7 +22,12 @@ data class ExtraBean(
     val msg: String = "",
     val mytaglist: MutableList<TagBean>,
     val myinterest: Boolean = false,
-    val aboutme: String = ""
+    val aboutme: String = "",
+    val city_name: String = "",
+    val people_amount: Int = 0,
+    val gender_str: String = "",
+    var force_vip: Boolean = false,
+    val want_steps: Boolean = false
 )
 
 
@@ -43,7 +48,7 @@ data class Userinfo(
     var intention: LabelQualityBean? = null, //意向
     var my_candy_amount: Int = 0,
     var my_candy_amount_str: String = ""
-    )
+)
 
 data class TagBean(
     var id: Int = 0,

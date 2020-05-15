@@ -13,7 +13,6 @@ import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import com.alipay.sdk.app.PayTask
-import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -23,14 +22,10 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.*
+import com.sdy.jitangapplication.event.CloseDialogEvent
+import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.model.PayBean
-import com.sdy.jitangapplication.model.Paylist
-import com.sdy.jitangapplication.model.RechargeCandyBean
-import com.sdy.jitangapplication.ui.activity.CandyMallActivity
-import com.sdy.jitangapplication.ui.activity.CandyProductDetailActivity
-import com.sdy.jitangapplication.ui.activity.MainActivity
-import com.sdy.jitangapplication.ui.activity.MyCandyActivity
+import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.sdy.jitangapplication.wxapi.PayResult
@@ -50,8 +45,8 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class ConfirmPayCandyDialog(
     val myContext: Context,
-    val chargeBean: RechargeCandyBean,
-    val payways: MutableList<Paylist>
+    val chargeBean: ChargeWayBean,
+    val payways: MutableList<PaywayBean>
 ) : Dialog(myContext, R.style.MyDialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +70,7 @@ class ConfirmPayCandyDialog(
 
 
     private fun initView() {
-        price.text = "¥${if (chargeBean.discount_price != 0F) {
+        price.text = "¥${if (chargeBean.discount_price != 0.0) {
             chargeBean.discount_price
         } else {
             chargeBean.original_price
@@ -224,16 +219,7 @@ class ConfirmPayCandyDialog(
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
                     if (result) {
-                        if (ActivityUtils.getTopActivity() is CandyProductDetailActivity) {
-                            EventBus.getDefault().post(RefreshCandyMallDetailEvent())
-                        } else if (ActivityUtils.getTopActivity() is CandyMallActivity) {
-                            EventBus.getDefault().post(RefreshCandyMallEvent())
-                        } else if (ActivityUtils.getTopActivity() is MyCandyActivity) {
-                            EventBus.getDefault().post(RefreshMyCandyEvent(-1))
-                        } else if (ActivityUtils.getTopActivity() is MainActivity) {
-                            EventBus.getDefault().post(RefreshEvent(true))
-                        }
-                        EventBus.getDefault().post(CloseDialogEvent())
+                        CommonFunction.payResultNotify(myContext)
                         dismiss()
                     }
                 }

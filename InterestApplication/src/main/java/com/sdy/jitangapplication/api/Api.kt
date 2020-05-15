@@ -40,7 +40,7 @@ interface Api {
      * 批量打招呼
      */
     @FormUrlEncoded
-    @POST("Relationship/batchGreet${Constants.END_BASE_URL}")
+    @POST("Relationship/batchGreetCandy${Constants.END_BASE_URL}")
     fun batchGreet(@FieldMap params: HashMap<String, Any>): Observable<BaseResp<MutableList<BatchGreetBean>?>>
 
 
@@ -119,8 +119,8 @@ interface Api {
      * 上传个人信息
      */
     @FormUrlEncoded
-    @POST("member_info/setProfileV2${Constants.END_BASE_URL}")
-    fun setProfileV2(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+    @POST("MemberInfo/setProfileCandy${Constants.END_BASE_URL}")
+    fun setProfileCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MoreMatchBean?>>
 
 
     /**
@@ -129,6 +129,23 @@ interface Api {
     @FormUrlEncoded
     @POST("MemberInfo/checkAvatar${Constants.END_BASE_URL}")
     fun checkAvatar(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
+
+
+    /**
+     * 注册完善用户的交友意向
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/getMyTaps${Constants.END_BASE_URL}")
+    fun getMyTaps(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<MyTapsBean>?>>
+
+
+    /**
+     * 添加交友目的
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/addWant${Constants.END_BASE_URL}")
+    fun addWant(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MoreMatchBean?>>
+
 
     /************************广场列表*****************************/
     /**
@@ -305,8 +322,24 @@ interface Api {
      *
      */
     @FormUrlEncoded
-    @POST("Index/nearlyIndex${Constants.END_BASE_URL}")
-    fun nearlyIndex(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<NearPersonBean>?>>
+    @POST("Index/nearlyIndexEnd${Constants.END_BASE_URL}")
+    fun nearlyIndexEnd(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<NearBean?>>
+
+
+    /**
+     * 获取今日意向
+     */
+    @FormUrlEncoded
+    @POST("Index/getIntention${Constants.END_BASE_URL}")
+    fun getIntention(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MutableList<CheckBean>?>>
+
+
+    /**
+     * 添加今日意向
+     */
+    @FormUrlEncoded
+    @POST("Index/addIntention${Constants.END_BASE_URL}")
+    fun addIntention(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<Any?>>
 
 
     /**
@@ -338,7 +371,7 @@ interface Api {
      * 匹配详情数据
      */
     @FormUrlEncoded
-    @POST("MemberInfo/usrInfoCandy${Constants.END_BASE_URL}")
+    @POST("MemberInfo/userInfoCandy${Constants.END_BASE_URL}")
     fun getMatchUserInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MatchBean?>>
 
 
@@ -362,8 +395,17 @@ interface Api {
      * 打招呼、上滑
      */
     @FormUrlEncoded
-    @POST("Relationship/greetV13${Constants.END_BASE_URL}")
+    @POST("Relationship/greetCandy${Constants.END_BASE_URL}")
     fun greet(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetTimesBean?>>
+
+
+
+    /**
+     * 打招呼验证是否能打
+     */
+    @FormUrlEncoded
+    @POST("Relationship/checkGreetStateCandy${Constants.END_BASE_URL}")
+    fun checkGreetStateCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<GreetCheckBean?>>
 
 
     /**
@@ -488,8 +530,8 @@ interface Api {
      * 个人信息
      */
     @FormUrlEncoded
-    @POST("memberInfo/personalInfo${Constants.END_BASE_URL}")
-    fun personalInfo(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoSettingBean?>>
+    @POST("MemberInfo/personalInfoCandy${Constants.END_BASE_URL}")
+    fun personalInfoCandy(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<UserInfoSettingBean?>>
 
 
     /**
@@ -518,7 +560,7 @@ interface Api {
      *   保存相册信息
      */
     @FormUrlEncoded
-    @POST("MemberInfo/addPhotoV2${Constants.END_BASE_URL}")
+    @POST("MemberInfo/savePersonalCandy${Constants.END_BASE_URL}")
     fun addPhotoV2(@FieldMap params: MutableMap<String, Any?>?): Observable<BaseResp<Any?>>
 
 
@@ -528,6 +570,16 @@ interface Api {
     @FormUrlEncoded
     @POST("MemberInfo/addPhotoWall${Constants.END_BASE_URL}")
     fun addPhotoWall(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MyPhotoBean?>>
+
+
+    /**
+     * 注册上传头像和相册
+     * moreMatchBean: MoreMatchBean? = null
+     */
+    @FormUrlEncoded
+    @POST("MemberInfo/registerAddPhoto${Constants.END_BASE_URL}")
+    fun registerAddPhoto(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<MoreMatchBean?>>
+
 
 
     /**
@@ -1172,7 +1224,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("PayOrder/giftRechargeList${Constants.END_BASE_URL}")
-    fun giftRechargeList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<RechargeBean?>>
+    fun giftRechargeList(@FieldMap params: MutableMap<String, Any>): Observable<BaseResp<ChargeWayBeans?>>
 
     /**
      * 绑定支付宝账号

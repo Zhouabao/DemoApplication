@@ -2,6 +2,7 @@ package com.sdy.jitangapplication.utils
 
 import android.app.Activity
 import android.content.Context
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SPUtils
 import com.ishumei.smantifraud.SmAntiFraud
@@ -11,13 +12,11 @@ import com.netease.nimlib.sdk.NIMClient
 import com.netease.nimlib.sdk.auth.LoginInfo
 import com.qiniu.android.storage.UpCancellationSignal
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.model.ApproveBean
-import com.sdy.jitangapplication.model.LoginBean
-import com.sdy.jitangapplication.model.MediaParamBean
-import com.sdy.jitangapplication.model.TagBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.DemoCache
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.*
+import com.sdy.jitangapplication.ui.dialog.OpenVipDialog
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import java.util.*
@@ -35,6 +34,9 @@ object UserManager {
     var slide_times = 0
     var perfect_times = 0 //滑动x次数跳【完善相册】
     var replace_times = 0 //滑动x次数跳【替换头像】
+
+    //每次进入APP弹完善个人资料弹窗
+    var showCompleteUserCenterDialog: Boolean = false
 
 
     //手动取消上传
@@ -258,8 +260,8 @@ object UserManager {
     /**
      * 登录成功保存用户信息
      */
-    fun saveUserInfo(data: LoginBean) {
-        if (data.userinfo != null) {
+    fun saveUserInfo(data: LoginBean?) {
+        if (data?.userinfo != null) {
             SPUtils.getInstance(Constants.SPNAME).put("nickname", data.userinfo.nickname)
             SPUtils.getInstance(Constants.SPNAME).put("avatar", data.userinfo.avatar)
             data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
@@ -279,11 +281,11 @@ object UserManager {
     }
 
     fun saveLabels(data: MutableList<TagBean>) {
-        val savaLabels = mutableSetOf<String>()
-        for (label in data) {
-            savaLabels.add(SharedPreferenceUtil.Object2String(label))
-        }
-        SPUtils.getInstance(Constants.SPNAME).put("myLabels", savaLabels)
+//        val savaLabels = mutableSetOf<String>()
+//        for (label in data) {
+//            savaLabels.add(SharedPreferenceUtil.Object2String(label))
+//        }
+//        SPUtils.getInstance(Constants.SPNAME).put("myLabels", savaLabels)
     }
 
     /**
@@ -508,6 +510,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("nickname")
         SPUtils.getInstance(Constants.SPNAME).remove("avatar")
         SPUtils.getInstance(Constants.SPNAME).remove("gender")
+        SPUtils.getInstance(Constants.SPNAME).remove("isForceOpenVip")
         SPUtils.getInstance(Constants.SPNAME).remove("birth")
         SPUtils.getInstance(Constants.SPNAME).remove("isvip")
         SPUtils.getInstance(Constants.SPNAME).remove("verify")
@@ -528,6 +531,7 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).remove("myLabels")
         SPUtils.getInstance(Constants.SPNAME).remove("maxInterestLabelCount")
         SPUtils.getInstance(Constants.SPNAME).remove("isShowGuidePublish")
+        SPUtils.getInstance(Constants.SPNAME).remove("isShowGuide")
 
 
         //位置信息
@@ -637,6 +641,18 @@ object UserManager {
         return SPUtils.getInstance(Constants.SPNAME).getInt("lightingCount", 0)
     }
 
+
+    /**
+     * 是否展示首页的引导使用
+     */
+    fun isShowGuideIndex(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isShowGuide", false)
+    }
+
+    fun saveShowGuideIndex(isShow: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isShowGuide", isShow)
+    }
+
     /**
      * 是否展示首页的引导使用
      */
@@ -706,6 +722,18 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("isShowGuideGiftProtocol", isShow)
     }
 
+    /**
+     * 是否展示赠送礼物规则提醒
+     */
+    fun isForceOpenVip(): Boolean {
+        return SPUtils.getInstance(Constants.SPNAME).getBoolean("isForceOpenVip", false)
+    }
+
+    fun saveForceOpenVip(isForceOpenVip: Boolean) {
+        SPUtils.getInstance(Constants.SPNAME).put("isForceOpenVip", isForceOpenVip)
+    }
+
+
     fun getBaseParams(): HashMap<String, Any> {
         return hashMapOf(
             "token" to getToken(),
@@ -750,34 +778,57 @@ object UserManager {
         SPUtils.getInstance(Constants.SPNAME).put("qntoken", data?.qntk)
         SPUtils.getInstance(Constants.SPNAME).put("token", data?.token)
         SPUtils.getInstance(Constants.SPNAME).put("accid", data?.accid)
+        saveForceOpenVip(data?.extra_data?.force_vip ?: false)
+        if (!(data?.userinfo?.avatar.isNullOrEmpty() || (data?.userinfo?.avatar ?: "").contains(
+                Constants.DEFAULT_AVATAR
+            ))
+        )
+            SPUtils.getInstance(Constants.SPNAME).put("avatar", data?.userinfo?.avatar)
         DemoCache.setAccount(nothing?.account)
         //初始化消息提醒配置
         initNotificationConfig()
 
+
         //昵称 生日 性别 头像 个签
-        if (data?.userinfo == null || data.userinfo.nickname.isNullOrEmpty()) {
-            context.startActivity<UserNickNameActivity>()
-            return
-        } else if (data.userinfo.birth == 0) {//生日没填写
-            context.startActivity<UserBirthActivity>()
-            return
-        } else if (data.userinfo.gender == 0) {//性别没选择
-            context.startActivity<UserGenderActivity>()
+        if (data?.userinfo == null
+            || data.userinfo.nickname.isNullOrEmpty()
+            || data.userinfo.birth == 0
+            || data.userinfo.gender == 0
+            || data.extra_data?.aboutme.isNullOrEmpty()
+            || data.extra_data?.aboutme?.trim().isNullOrEmpty()
+        ) {
+            context.startActivity<RegisterInfoActivity>()
             return
         } else if (data.userinfo.avatar.isNullOrEmpty() || data.userinfo.avatar!!.contains(Constants.DEFAULT_AVATAR)) {//头像未选择
             context.startActivity<UserAvatorActivity>()
             return
-        } else if (data.extra_data?.aboutme.isNullOrEmpty() || data.extra_data?.aboutme?.trim().isNullOrEmpty()) {//个人介绍未填写
-            context.startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
+        } else if (data.extra_data?.want_steps != true) {
+            data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
+            context.startActivity<GetMoreMatchActivity>(
+                "moreMatch" to MoreMatchBean(
+                    data.extra_data?.city_name ?: "",
+                    data.extra_data?.gender_str ?: "",
+                    data?.extra_data?.people_amount?:0
+                ),
+                "force_vip" to data.extra_data?.force_vip
+            )
             return
-        }
-//        else if (data.extra_data?.mytaglist.isNullOrEmpty()) {//兴趣没有选择
-//            context.startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
-//            return
-//        }
-        else {//跳到主页
+        } else if (data.extra_data?.force_vip) {
+            data.userinfo.gender?.let { SPUtils.getInstance(Constants.SPNAME).put("gender", it) }
+
+            OpenVipDialog(
+                ActivityUtils.getTopActivity(), MoreMatchBean(
+                    data.extra_data?.city_name ?: "",
+                    data.extra_data?.gender_str ?: "",
+                    data?.extra_data?.people_amount?:0
+                ),
+                force_vip = isForceOpenVip()
+            ).show()
+        } else {
+            //跳到主页
+            //保存个人信息
             saveUserInfo(data)
-            AppManager.instance.finishAllActivity()
+//            AppManager.instance.finishAllActivity()
             context.startActivity<MainActivity>()
 
         }
@@ -806,10 +857,19 @@ object UserManager {
 
     fun getNearFilterParams(): HashMap<String, Int> {
         return hashMapOf(
-            "limit_age_low_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("limit_age_low_nearly",18),
-            "limit_age_high_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("limit_age_high_nearly",35),
-            "rank_type_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("rank_type_nearly",1),
-            "gender_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("gender_nearly",3)
+            "limit_age_low_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt(
+                "limit_age_low_nearly",
+                18
+            ),
+            "limit_age_high_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt(
+                "limit_age_high_nearly",
+                35
+            ),
+            "rank_type_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt(
+                "rank_type_nearly",
+                1
+            ),
+            "gender_nearly" to SPUtils.getInstance(Constants.SPNAME).getInt("gender_nearly", 3)
         )
     }
 

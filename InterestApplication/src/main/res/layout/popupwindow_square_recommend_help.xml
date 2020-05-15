@@ -9,7 +9,7 @@
 
 
     <TextView
-            android:id="@+id/t1"
+            android:id="@+id/moreInfoTitle"
             android:gravity="center"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
@@ -30,6 +30,6 @@
             android:layout_height="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/t1"/>
+            app:layout_constraintTop_toBottomOf="@id/moreInfoTitle"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

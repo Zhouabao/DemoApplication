@@ -356,12 +356,12 @@
                     android:src="@drawable/icon_guide_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@id/t1"
+                    app:layout_constraintBottom_toTopOf="@id/moreInfoTitle"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"/>
 
             <TextView
-                    android:id="@+id/t1"
+                    android:id="@+id/moreInfoTitle"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -89,7 +89,15 @@
         android:theme="@style/MyAppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:theme,android:icon">
-        <activity android:name=".ui.activity.AddressManagerActivity"></activity>
+
+        <activity android:name=".ui.activity.GetRelationshipActivity">
+
+        </activity>
+        <activity android:name=".ui.activity.GetMoreMatchActivity">
+
+        </activity>
+        <activity android:name=".ui.activity.RegisterInfoActivity" />
+        <activity android:name=".ui.activity.AddressManagerActivity" />
         <activity android:name=".ui.activity.SomeoneGetGiftActivity" />
         <activity
             android:name=".ui.activity.MyOrderActivity"
@@ -192,12 +200,7 @@
         <activity
             android:name=".ui.activity.UserAvatorActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UserGenderActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UserNickNameActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.ModelAboutMeActivity"
             android:screenOrientation="portrait" />
@@ -218,11 +221,7 @@
             android:name=".ui.activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <intent-filter>
                 <data android:scheme="growing.fb176594ca56d270" />
 
@@ -231,6 +230,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.activity.NotificationActivity"
@@ -331,9 +337,7 @@
         <activity
             android:name=".ui.activity.MatchDetailActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UserBirthActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.VerifyCodeActivity"
             android:screenOrientation="portrait" />

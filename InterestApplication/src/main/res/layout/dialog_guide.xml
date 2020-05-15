@@ -375,12 +375,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
                 android:src="@drawable/icon_guide_right"
-                app:layout_constraintBottom_toTopOf="@id/t1"
+                app:layout_constraintBottom_toTopOf="@id/moreInfoTitle"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
-                android:id="@+id/t1"
+                android:id="@+id/moreInfoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="向右滑动表示好感"
@@ -484,7 +484,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="您已完成教程"
+                android:text="您已完成注册"
                 android:textColor="#ffffffff"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -511,7 +511,7 @@
                 android:layout_marginTop="30dp"
                 android:background="@drawable/shape_rectangle_orange_23dp"
                 android:gravity="center"
-                android:text="糖果有什么用？"
+                android:text="糖果有什么用"
                 android:textColor="#ffffffff"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -535,46 +535,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/intentionMatchingCl"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_marginRight="56dp"
-            android:src="@drawable/icon_matching_default_black"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/iv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
-            android:layout_marginRight="77dp"
-            android:src="@drawable/icon_guide_arrow_top"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="144dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="33dp"
-            android:gravity="center"
-            android:lineSpacingMultiplier="1.2"
-            android:text="选择后将持续匹配跟你意向相同的用户"
-            android:textColor="#ffffffff"
-            android:textSize="16sp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv1" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

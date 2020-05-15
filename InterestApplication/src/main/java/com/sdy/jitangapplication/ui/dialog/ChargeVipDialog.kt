@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -35,10 +34,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.CloseDialogEvent
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.*
-import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.ui.adapter.VipBannerAdapter
 import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
@@ -66,18 +62,27 @@ class ChargeVipDialog(
 ) :
     Dialog(context1, R.style.MyDialog) {
     companion object {
-        const val VIP_LOGO = 0//会员logo
-        const val INFINITE_SLIDE = 1//无限滑动
-        const val FILTER_LOCAL_CITY = 2//筛选同城
-        const val FILTER_ONLINE = 3//筛选在线
-        const val DOUBLE_HI = 4//加倍招呼
-        const val INFINITE_CHAT = 5//无限畅聊
 
-
-        const val LIKED_ME = 6//喜欢我的
+        //         (1, '解锁无限制畅聊');
+// (2, '出现权重提升');
+// (3, '查看在意我的');
+// (4, '更多匹配机会');
+// (5, '尊享VIP身份标示');
+// (6, '会员独享筛选项');
+// (7, '看过我的');
+// (8, '广场评论');
+        const val INFINITE_CHAT = 1//解锁无限制畅聊
+        const val DOUBLE_HI = 1//加倍招呼
+        const val MORE_EXPODE = 2//出现权重提升
+        const val LIKED_ME = 3//喜欢我的
+        const val INFINITE_SLIDE = 4//更多匹配机会
+        const val VIP_LOGO = 5//尊享VIP身份标示
+        const val FILTER_LOCAL_CITY = 6//会员独享筛选项
+        const val FILTER_ONLINE = 6//会员独享筛选项
         const val LOOKED_ME = 7//看过我的
-        const val FILTER = 8//已读功能
+        const val COMMENT_FREE = 8//广场评论
 
+        const val FILTER = 8//已读功能
         //购买类型
         const val PURCHASE_VIP = 100//VIP购买
         const val PURCHASE_GREET_COUNT = 200//招呼次数购买
@@ -177,8 +182,15 @@ class ChargeVipDialog(
                 completeInfoBtn.isVisible = position == INFINITE_SLIDE
             }
         })
-        if (banners.size > currentPos)
-            bannerVip.setCurrentItem(currentPos, false)
+//        if (banners.size > currentPos)
+//            bannerVip.setCurrentItem(currentPos, false)
+        for (banner in banners.withIndex()) {
+            if (banner.value.id == currentPos) {
+                bannerVip.setCurrentItem(banner.index, false)
+                break
+            }
+        }
+
     }
 
 
@@ -478,11 +490,7 @@ class ChargeVipDialog(
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
                     if (result) {
-                        if (ActivityUtils.getTopActivity() !is MainActivity) {
-                            MainActivity.start(context1, Intent())
-                        }
-                        EventBus.getDefault().postSticky(RefreshEvent(true))
-                        EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        CommonFunction.payResultNotify(context1)
                         dismiss()
                     }
                 }
@@ -501,7 +509,6 @@ class ChargeVipDialog(
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCloseDialogEvent(event: CloseDialogEvent) {

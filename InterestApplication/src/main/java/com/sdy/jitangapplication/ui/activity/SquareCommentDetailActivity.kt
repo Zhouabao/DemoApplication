@@ -35,6 +35,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshCommentEvent
 import com.sdy.jitangapplication.event.RefreshDeleteSquareEvent
 import com.sdy.jitangapplication.event.RefreshLikeEvent
@@ -85,7 +86,7 @@ import org.jetbrains.anko.startActivity
  * 广场详情页 包含内容详情以及点赞评论信息
  */
 class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView,
-    View.OnClickListener,
+    OnLazyClickListener,
     OnRefreshListener, OnLoadMoreListener {
     private val TAG = SquareCommentDetailActivity::class.java.simpleName
 
@@ -792,7 +793,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
 
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             R.id.squareZhuanfaBtn1 -> {
                 showTranspondDialog()
@@ -842,7 +843,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                         "reply_id" to reply_id
                     )
                 )
-                sendCommentBtn.isEnabled = false
 
             }
         }
@@ -1191,6 +1191,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         return super.dispatchTouchEvent(ev)
     }
+
 
 
 }

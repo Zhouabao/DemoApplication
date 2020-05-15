@@ -56,14 +56,14 @@ class HumanVerifyDialog(val context1: Context) :
                 accountDangerIv.isVisible = true
                 accountDangerLogo.setImageResource(R.drawable.icon_bg_verify)
                 accountDangerIv.setImageResource(R.drawable.icon_verify_human)
-                t1.text = "账号未认证"
+                moreInfoTitle.text = "账号未认证"
                 t2.text = "为保证双方社交体验\n聊天功能仅对已通过认证的用户开启"
                 verifyBtn.text = "立即认证"
             }
             GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
                 accountDangerIv.isVisible = false
                 accountDangerLogo.setImageResource(R.drawable.icon_complete_album)
-                t1.text = "完善相册"
+                moreInfoTitle.text = "完善相册"
                 t2.text = "完善相册会使你的信息更多在匹配页展示\n现在就去完善你的相册吧！"
                 verifyBtn.text = "立即完善"
             }

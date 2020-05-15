@@ -953,10 +953,10 @@ public class ChatMessageListPanelEx {
             MsgTypeEnum msgType = selectedItem.getMsgType();
 
             MessageAudioControl.getInstance(container.activity).stopAudio();
-            // 0 delete 删除
-            longClickItemDelete(selectedItem, alertDialog);
-            // 1 copy 复制文本
+            // 0 copy 复制文本
             longClickItemCopy(selectedItem, alertDialog, msgType);
+            // 1 delete 删除
+            longClickItemDelete(selectedItem, alertDialog);
             // 2 EarPhoneMode 扬声器
             longClickItemEarPhoneMode(alertDialog, msgType);
             // 3 resend 重新发送

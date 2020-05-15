@@ -11,7 +11,7 @@
     android:paddingRight="15dp">
 
     <TextView
-        android:id="@+id/tv1"
+        android:id="@+id/tv11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -33,7 +33,7 @@
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv1" />
+        app:layout_constraintTop_toBottomOf="@id/tv11" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPersons"

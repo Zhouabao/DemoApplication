@@ -14,8 +14,8 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.event.CloseDialogEvent
-import com.sdy.jitangapplication.model.Paylist
-import com.sdy.jitangapplication.model.RechargeBean
+import com.sdy.jitangapplication.model.ChargeWayBeans
+import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.ui.adapter.CandyPriceAdapter
 import com.sdy.jitangapplication.utils.UserManager
@@ -80,19 +80,19 @@ class RechargeCandyDialog(val myContext: Context) :
         }
     }
 
-    private val payments by lazy { mutableListOf<Paylist>() }
+    private val payments by lazy { mutableListOf<PaywayBean>() }
     fun giftRechargeList() {
         RetrofitFactory.instance.create(Api::class.java)
             .giftRechargeList(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<RechargeBean?>>(null) {
-                override fun onNext(t: BaseResp<RechargeBean?>) {
+            .excute(object : BaseSubscriber<BaseResp<ChargeWayBeans?>>(null) {
+                override fun onNext(t: BaseResp<ChargeWayBeans?>) {
                     super.onNext(t)
                     if (t.code == 200) {
                         if (!t.data?.list.isNullOrEmpty()) {
-                            t.data!!.list[0].checked = true
+                            t.data!!.list!![0].checked = true
                         }
                         candyPriceAdapter.addData(t.data?.list ?: mutableListOf())
-                        payments.addAll(t.data?.paylist ?: mutableListOf<Paylist>())
+                        payments.addAll(t.data?.paylist ?: mutableListOf<PaywayBean>())
                     }
                 }
 

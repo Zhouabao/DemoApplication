@@ -29,7 +29,7 @@ class UserPhotoAdapter(datas: MutableList<MyPhotoBean>) :
     override fun convert(holder: BaseViewHolder, item: MyPhotoBean) {
         val layoutParams = holder.itemView.layoutParams
         layoutParams.width = (ScreenUtils.getScreenWidth() - 4 * SizeUtils.dp2px(15F)) / 3
-        layoutParams.height = (16 / 9F * layoutParams.width).toInt()
+        layoutParams.height = (5 / 4F * layoutParams.width).toInt()
         holder.itemView.layoutParams = layoutParams
         when (holder.itemViewType) {
             MyPhotoBean.PHOTO -> {

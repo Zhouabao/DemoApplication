@@ -2,8 +2,10 @@ package com.sdy.jitangapplication.ui.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
+import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.DetailUserInfoBean
 import kotlinx.android.synthetic.main.item_user_information.view.*
@@ -17,7 +19,7 @@ import kotlinx.android.synthetic.main.item_user_information.view.*
 class MatchDetailInfoAdapter : BaseQuickAdapter<DetailUserInfoBean, BaseViewHolder>(R.layout.item_user_information) {
 
     override fun convert(helper: BaseViewHolder, item: DetailUserInfoBean) {
-        helper.itemView.infoIv.setImageResource(item.icon)
+        GlideUtil.loadImg(mContext,item.icon,helper.itemView.infoIv)
         helper.itemView.infoTitle.text = item.title
         helper.itemView.infoContent.text = item.content
         helper.itemView.infoContent.isSelected = true

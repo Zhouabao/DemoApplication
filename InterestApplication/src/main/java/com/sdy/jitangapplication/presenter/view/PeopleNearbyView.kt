@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.presenter.view
 
 import com.kotlin.base.presenter.view.BaseView
-import com.sdy.jitangapplication.model.NearPersonBean
+import com.sdy.jitangapplication.model.NearBean
 
 /**
  *    author : ZFM
@@ -10,5 +10,5 @@ import com.sdy.jitangapplication.model.NearPersonBean
  *    version: 1.0
  */
 interface PeopleNearbyView : BaseView {
-    fun nearlyIndexResult(success: Boolean, mutableList: MutableList<NearPersonBean>?)
+    fun nearlyIndexResult(success: Boolean, mutableList: NearBean?)
 }

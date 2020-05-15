@@ -33,7 +33,7 @@ class GreetUserAdapter : BaseQuickAdapter<GreetedListBean, BaseViewHolder>(R.lay
         helper.itemView.matchUserAge.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
 
 
-        helper.itemView.matchUserDistance.text = "${item.distance}"
+        helper.itemView.matchUserOnline.text = "${item.distance}"
         helper.itemView.ivVip.isVisible = item.isvip == 1
         helper.itemView.ivVerify.isVisible = item.isfaced == 1
         helper.itemView.matchAim.isVisible = false

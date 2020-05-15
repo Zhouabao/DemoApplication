@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <ImageView
+        android:id="@+id/relationIv"
+        android:layout_width="325dp"
+        android:layout_height="145dp"
+        android:src="@drawable/icon_female_like_dog"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/relationCheckedCover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/relationIv"
+        app:layout_constraintLeft_toLeftOf="@id/relationIv"
+        app:layout_constraintRight_toRightOf="@id/relationIv"
+        app:layout_constraintTop_toTopOf="@id/relationIv" />
+
+    <TextView
+        android:id="@+id/relationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="性感火爆"
+        android:textColor="#ffffffff"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/relationIv"
+        app:layout_constraintLeft_toLeftOf="@id/relationIv" />
+
+    <ImageView
+        android:id="@+id/relationChecked"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/icon_checked_relation"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/relationIv"
+        app:layout_constraintLeft_toLeftOf="@id/relationIv"
+        app:layout_constraintRight_toRightOf="@id/relationIv"
+        app:layout_constraintTop_toTopOf="@id/relationIv" />
+</androidx.constraintlayout.widget.ConstraintLayout>

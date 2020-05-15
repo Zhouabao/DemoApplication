@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.presenter
 
+import android.util.Log
+import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -8,14 +10,20 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.model.MoreMatchBean
+import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.presenter.view.UserNickNameView
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
+import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UserManager
 
 class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
+
+    val loadingDialg by lazy { LoadingDialog(context) }
     // 必传参数 1昵称 2生日 3性别 4头像
-    fun uploadUserInfo(step: Int, params: HashMap<String, Any>) {
+    fun setProfileCandy(step: Int, params: HashMap<String, Any>) {
         if (!checkNetWork()) {
             return
         }
@@ -27,12 +35,22 @@ class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
         params["step"] = step
 
         RetrofitFactory.instance.create(Api::class.java)
-            .setProfileV2(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
+            .setProfileCandy(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<MoreMatchBean?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                    loadingDialg.show()
+                }
+
+                override fun onCompleted() {
+                    super.onCompleted()
+                    loadingDialg.dismiss()
+                }
+
+                override fun onNext(t: BaseResp<MoreMatchBean?>) {
                     super.onNext(t)
                     if (t.code == 200) {
-                        mView.onUploadUserInfoResult(true, t.msg)
+                        mView.onUploadUserInfoResult(true, t.msg, t.data)
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onUploadUserInfoResult(false, t.msg)
@@ -40,6 +58,7 @@ class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
                 }
 
                 override fun onError(e: Throwable?) {
+                    loadingDialg.dismiss()
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {
@@ -52,7 +71,110 @@ class UserNickNamePresenter : BasePresenter<UserNickNameView>() {
     }
 
 
-    public val loadingDialg by lazy { LoadingDialog(context) }
+    /**
+     * 上传照片
+     * imagePath 文件名格式： ppns/文件类型名/用户ID/当前时间戳/16位随机字符串
+     */
+    fun uploadProfile(filePath: String, imageName: String) {
+        if (!checkNetWork()) {
+            return
+        }
+
+        QNUploadManager.getInstance().put(
+            filePath, imageName, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
+            { key, info, response ->
+                Log.d(
+                    "OkHttp",
+                    "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}"
+                )
+                Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
+                if (info != null) {
+                    mView.uploadImgResult(info.isOK, key)
+                    if (!info.isOK) {
+                        if (loadingDialg.isShowing)
+                            loadingDialg.dismiss()
+                    }
+                }
+            }, null
+        )
+    }
 
 
+    /**
+     * 保存头像
+     */
+    fun registerAddPhoto(params: HashMap<String, Any>) {
+        RetrofitFactory.instance.create(Api::class.java)
+            .registerAddPhoto(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<MoreMatchBean?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                    loadingDialg.show()
+                }
+
+                override fun onCompleted() {
+                    super.onCompleted()
+                    if (loadingDialg.isShowing)
+                        loadingDialg.dismiss()
+                }
+
+                override fun onNext(t: BaseResp<MoreMatchBean?>) {
+                    if (t.code == 200 && t.data != null) {
+                        mView.onRegisterAddPhoto(t.data!!)
+                    } else {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (loadingDialg.isShowing)
+                        loadingDialg.dismiss()
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                }
+            })
+    }
+
+
+    /**
+     * 检验相册是否合规
+     */
+    fun addPhotoWall(key: String) {
+        val params = UserManager.getBaseParams()
+        params["photo"] = key
+        RetrofitFactory.instance.create(Api::class.java)
+            .addPhotoWall(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<MyPhotoBean?>>(mView) {
+                override fun onStart() {
+                    super.onStart()
+                    if (!loadingDialg.isShowing)
+                        loadingDialg.show()
+                }
+
+                override fun onCompleted() {
+                    super.onCompleted()
+                    if (loadingDialg.isShowing)
+                        loadingDialg.dismiss()
+                }
+
+                override fun onNext(t: BaseResp<MyPhotoBean?>) {
+                    if (t.code == 200 && t.data != null) {
+                        mView.onAddPhotoWallResult(t.data!!)
+                    } else {
+                        CommonFunction.toast(t.msg)
+                    }
+                }
+
+                override fun onError(e: Throwable?) {
+                    if (loadingDialg.isShowing)
+                        loadingDialg.dismiss()
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        CommonFunction.toast(CommonFunction.getErrorMsg(context))
+                }
+            })
+    }
 }

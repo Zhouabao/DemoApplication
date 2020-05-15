@@ -81,6 +81,7 @@ import com.sdy.jitangapplication.nim.session.MyLocationAction;
 import com.sdy.jitangapplication.ui.dialog.AlertCandyEnoughDialog;
 import com.sdy.jitangapplication.ui.dialog.HelpWishReceiveDialog;
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog;
+import com.sdy.jitangapplication.ui.dialog.OpenVipDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 
@@ -385,7 +386,6 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
     /**
      * ********************** implements ModuleProxy *********************
      */
-
     @Override
     public boolean sendMessage(IMMessage message) {
         Log.d("sendMessage", ".....");
@@ -400,10 +400,16 @@ public class ChatMessageFragment extends TFragment implements ModuleProxy {
                     sendMsgS(message, false);
                     return true;
                 } else {
-                    if (message.getMsgType() == MsgTypeEnum.text) {
-                        sendMsgRequest(message, sessionId);
+                    //男性,非会员 弹充值界面
+                    if (nimBean.getForce_isvip()) {
+                        new OpenVipDialog(getActivity(), null, OpenVipDialog.FROM_P2P_CHAT, -1, false).show();
                     } else {
-                        sendMsgS(message, true);
+                        if (message.getMsgType() == MsgTypeEnum.text) {
+                            sendMsgRequest(message, sessionId);
+                        } else {
+                            sendMsgS(message, true);
+                        }
+
                     }
                 }
         }

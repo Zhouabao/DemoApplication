@@ -58,6 +58,7 @@
                 android:background="@drawable/icon_filter"
                 android:textColor="#FF191919"
                 android:textSize="15sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -73,6 +74,43 @@
     </LinearLayout>
 
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/todayWantCl"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
+        android:layout_marginBottom="167dp"
+        android:layout_gravity="bottom|right"
+        android:background="@drawable/icon_today_want_bg">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/todayWantIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_today_want"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/todayWantContent"
+            android:layout_width="62dp"
+            android:layout_height="18dp"
+            android:background="@drawable/gradient_pink_11dp"
+            android:gravity="center"
+            android:shadowColor="#29b40549"
+            android:shadowDy="2"
+            android:text="选择意向"
+            android:textColor="#ffffffff"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/todayWantIcon"
+            app:layout_constraintRight_toRightOf="@id/todayWantIcon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>

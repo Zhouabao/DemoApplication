@@ -81,6 +81,10 @@ public class MsgViewHolderChatHi extends MsgViewHolderBase {
             targetMatchIv.setImageResource(R.drawable.icon_like);
             chatHiMatch.setText("匹配成功");
             targetMatchContent.setText("你们已通过心愿助力成为好友");
+        } else if (attachment.getShowType() == ChatHiAttachment.CHATHI_WANT_MATCH) {
+            targetMatchIv.setImageResource(R.drawable.icon_match_want);
+            chatHiMatch.setText("意向匹配");
+            targetMatchContent.setText("聊聊你们想做的事吧");
         }
     }
 

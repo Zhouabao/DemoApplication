@@ -10,6 +10,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.MatchListBean
 import com.sdy.jitangapplication.model.StatusBean
@@ -44,7 +45,11 @@ class MatchPresenter : BasePresenter<MatchView>() {
                             mView.onGetMatchListResult(true, t.data)
                         }
                     } else if (t.code == 410) {
-                        ChargeLabelDialog(context, params["tag_id"] as Int, ChargeLabelDialog.FROM_INDEX).show()
+                        ChargeLabelDialog(
+                            context,
+                            params["tag_id"] as Int,
+                            ChargeLabelDialog.FROM_INDEX
+                        ).show()
                         mView.onGetMatchListResult(true, t.data)
 
                     } else
@@ -116,5 +121,23 @@ class MatchPresenter : BasePresenter<MatchView>() {
             })
     }
 
+
+    /**
+     * 获取今日缘分
+     */
+    fun todayRecommend() {
+        RetrofitFactory.instance.create(Api::class.java)
+            .todayRecommend(UserManager.getSignParams())
+            .excute(object : BaseSubscriber<BaseResp<MutableList<IndexRecommendBean>?>>() {
+                override fun onNext(t: BaseResp<MutableList<IndexRecommendBean>?>) {
+                    mView.onTodayRecommendResult(t.data)
+                }
+
+                override fun onError(e: Throwable?) {
+
+                }
+
+            })
+    }
 
 }

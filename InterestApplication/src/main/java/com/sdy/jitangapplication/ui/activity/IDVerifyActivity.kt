@@ -60,6 +60,12 @@ import java.net.URL
 class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
     private lateinit var mHelper: SwipeBackActivityHelper
 
+
+    companion object {
+        const val TYPE_ACCOUNT_DANGER = 1 //账户异常发起
+        const val TYPE_ACCOUNT_NORMAL = 2  //用户主动发起
+    }
+
     override fun getSwipeBackLayout(): SwipeBackLayout {
         return mHelper.swipeBackLayout
     }
@@ -139,7 +145,8 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         // 应用上下文
         // 申请License取得的APPID
         // assets目录下License文件名
-        FaceSDKManager.getInstance().initialize(this, Constants.licenseID, Constants.licenseFileName)
+        FaceSDKManager.getInstance()
+            .initialize(this, Constants.licenseID, Constants.licenseFileName)
 
 
         CommonAlertDialog.Builder(this)
@@ -154,7 +161,8 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                     dialog.dismiss()
                 }
             })
-            .setOnCancelListener(object : CommonAlertDialog.OnConfirmListener, CommonAlertDialog.OnCancelListener {
+            .setOnCancelListener(object : CommonAlertDialog.OnConfirmListener,
+                CommonAlertDialog.OnCancelListener {
                 override fun onClick(dialog: Dialog) {
                     finish()
                 }
@@ -249,7 +257,10 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
         QNUploadManager.getInstance().put(
             filePath, imagePath, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
             { key, info, response ->
-                Log.d("OkHttp", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
+                Log.d(
+                    "OkHttp",
+                    "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}"
+                )
                 Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null && info.isOK) {
                     savePersonal(
@@ -257,7 +268,7 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                             "token" to UserManager.getToken(),
                             "accid" to UserManager.getAccid(),
                             "face" to key,
-                            "face_source_type" to intent.getIntExtra("face_source_type",0)
+                            "face_source_type" to intent.getIntExtra("face_source_type", 0)
                         )
                     )
                 } else {
@@ -282,7 +293,16 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                             UserManager.saveUserVerify(2)
                             setResult(Activity.RESULT_OK)
                             finish()
-                            EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
+                            if (intent.getIntExtra(
+                                    "type",
+                                    TYPE_ACCOUNT_NORMAL
+                                ) == TYPE_ACCOUNT_DANGER
+                            )
+                                EventBus.getDefault().postSticky(
+                                    AccountDangerEvent(
+                                        AccountDangerDialog.VERIFY_ING
+                                    )
+                                )
                         }
                         t.code == 403 -> UserManager.startToLogin(context as Activity)
                         else -> {
@@ -328,7 +348,10 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
 
                 override fun parseNetworkResponse(response: Response?, id: Int): AccessTokenBean? {
                     if (response != null) {
-                        return Gson().fromJson(response.body()!!.string(), AccessTokenBean::class.java)
+                        return Gson().fromJson(
+                            response.body()!!.string(),
+                            AccessTokenBean::class.java
+                        )
                     }
                     return null
                 }
@@ -405,7 +428,10 @@ class IDVerifyActivity : FaceLivenessActivity(), SwipeBackActivityBase {
                 override fun parseNetworkResponse(response: Response?, id: Int): MatchFaceBean? {
                     if (response != null) {
                         Log.d("OkHttp", response.toString())
-                        return Gson().fromJson(response.body()!!.string(), MatchFaceBean::class.java)
+                        return Gson().fromJson(
+                            response.body()!!.string(),
+                            MatchFaceBean::class.java
+                        )
                     }
                     return null
                 }

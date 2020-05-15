@@ -115,7 +115,7 @@
                         android:elevation="2dp">
 
                         <TextView
-                            android:id="@+id/t1"
+                            android:id="@+id/moreInfoTitle"
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:background="@drawable/icon_recommend_product_bg"
@@ -150,7 +150,7 @@
                             app:bvp_round_corner="10dp"
                             app:bvp_scroll_duration="4000"
                             app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/t1" />
+                            app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
@@ -28,12 +31,9 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.MatchBean
-import com.sdy.jitangapplication.model.MatchListBean
-import com.sdy.jitangapplication.model.Newtag
-import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
@@ -57,12 +57,22 @@ import org.jetbrains.anko.support.v4.startActivityForResult
 /**
  * 匹配页面(新版)
  */
-class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View.OnClickListener,
+class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, OnLazyClickListener,
     CardStackListener {
 
 
     override fun loadData() {
         initView()
+        if (!UserManager.isShowGuideIndex()) {
+            GuideDialog(activity!!, mPresenter).show()
+            UserManager.saveShowGuideIndex(true)
+        } else {
+            //获取今日缘分
+            mPresenter.todayRecommend()
+        }
+
+        mPresenter.getMatchList(matchParams)
+
     }
 
 
@@ -93,12 +103,10 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     //请求广场的参数 TODO要更新tagid
     private val matchParams by lazy {
         hashMapOf(
-            "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-            "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-            "_timestamp" to System.currentTimeMillis(),
             "lng" to UserManager.getlongtitude().toFloat(),
-            "lat" to UserManager.getlatitude().toFloat(),
-            "city_code" to UserManager.getCityCode(),
+            "lng" to UserManager.getlongtitude().toFloat(),
+            "city_name" to UserManager.getCity(),
+            "province_name" to UserManager.getProvince(),
             "type" to 1
         )
 
@@ -157,7 +165,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
         updateLocation()
 
-        mPresenter.getMatchList(matchParams)
 
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
             val item = matchUserAdapter.data[manager.topPosition]
@@ -213,6 +220,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             }
         }
 
+
     }
 
 
@@ -243,7 +251,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     }
 
 
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             R.id.retryBtn -> {
                 setViewState(LOADING)
@@ -310,13 +318,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 //头像等级
                 ranking_level = matchBeans.ranking_level
 
-                //如果没有显示过协议，那就协议先出，再弹引导。
-                //否则直接判断有没有显示过引导页面
-                if (!UserManager.getAlertProtocol()) {
-                    PrivacyDialog(activity!!, matchBeans.iscompleteguide).show()
-                } else if (!matchBeans.iscompleteguide) {
-                    GuideDialog(activity!!).show()
-                }
 
                 EventBus.getDefault().post(UpdateIndexCandyEvent(matchBeans.my_candy_amount))
                 //第一次加载的时候就显示顶部提示条
@@ -353,6 +354,8 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                         UserManager.cleanVerifyData()
                     }
                 }
+
+
             }
 
             if (matchBeans == null || (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty())) {
@@ -428,6 +431,15 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
         } else if (data.code == 405) {
             CommonFunction.toast(data.msg)
             card_stack_view.rewind()
+        }
+    }
+
+    override fun onTodayRecommendResult(data: MutableList<IndexRecommendBean>?) {
+        /**
+         * 今日推荐获取结果
+         */
+        if (!data.isNullOrEmpty()) {
+            TodayFateDialog(activity!!, data).show()
         }
     }
 
@@ -527,6 +539,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onGetRecommendEvent(event: GetRecommendEvent) {
+        mPresenter.todayRecommend()
+    }
+
 
     /*---------------------卡片参数和方法------------------------------*/
     private fun initialize() {
@@ -618,15 +635,15 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     }
 
     //此时已经飞出去了
+//
     override fun onCardSwiped(direction: Direction?) {
-        //因为不要提示完善相册了，所以删除此段代码
-        if (UserManager.slide_times != -1) {
-            UserManager.slide_times++
-            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //3补充照片库
-                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
-                UserManager.slide_times = 0
-            }
-        }
+//        if (UserManager.slide_times != -1) {
+//            UserManager.slide_times++
+//            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //3补充照片库
+//                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
+//                UserManager.slide_times = 0
+//            }
+//        }
         resetAnimation()
         if (direction == Direction.Left) {//左滑不喜欢
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""

@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/t1"
+                android:id="@+id/moreInfoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginLeft="15dp"
@@ -48,17 +48,17 @@
                 android:textColor="#ff191919"
                 android:textColorHint="#ffc5c6c8"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@id/t1"
+                app:layout_constraintBottom_toBottomOf="@id/moreInfoTitle"
                 app:layout_constraintLeft_toRightOf="@id/t2"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/t1" />
+                app:layout_constraintTop_toTopOf="@id/moreInfoTitle" />
 
             <View
                 android:id="@+id/view1"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="@color/colorDivider"
-                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
                 app:layout_constraintRight_toRightOf="@id/addressName"
                 app:layout_constraintTop_toBottomOf="@id/addressName" />
 
@@ -99,7 +99,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="@color/colorDivider"
-                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
                 app:layout_constraintRight_toRightOf="@id/addressName"
                 app:layout_constraintTop_toBottomOf="@id/addressContact" />
 
@@ -140,7 +140,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="@color/colorDivider"
-                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
                 app:layout_constraintRight_toRightOf="@id/addressName"
                 app:layout_constraintTop_toBottomOf="@id/addressContent" />
 
@@ -182,7 +182,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="@color/colorDivider"
-                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
                 app:layout_constraintRight_toRightOf="@id/addressName"
                 app:layout_constraintTop_toBottomOf="@id/addressDetailContent" />
 
@@ -223,7 +223,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="@color/colorDivider"
-                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
                 app:layout_constraintRight_toRightOf="@id/addressName"
                 app:layout_constraintTop_toBottomOf="@id/addressPostNumber" />
 
@@ -235,7 +235,7 @@
                 android:text="设为默认地址"
                 android:textColor="#ff191919"
                 android:textSize="14sp"
-                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
                 app:layout_constraintTop_toBottomOf="@id/t5" />
 
             <Switch
@@ -255,7 +255,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="@color/colorDivider"
-                app:layout_constraintLeft_toLeftOf="@id/t1"
+                app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
                 app:layout_constraintRight_toRightOf="@id/addressName"
                 app:layout_constraintTop_toBottomOf="@id/t6" />
 

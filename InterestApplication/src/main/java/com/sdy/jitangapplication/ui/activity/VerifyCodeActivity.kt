@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -27,7 +28,8 @@ import org.jetbrains.anko.startActivity
  *
  * // 新增账号注销界面，待完善注销逻辑:填写验证码之后给一个提示  然后跳转到登录/注册的首页
  */
-class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickListener, VerifyCodeView {
+class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickListener,
+    VerifyCodeView {
 
     private lateinit var verifyCode: String
     private val phone by lazy { intent.getStringExtra("phone") }
@@ -45,6 +47,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         setContentView(R.layout.activity_verify_code)
         initView()
     }
+
 
     private fun initView() {
         mPresenter = VerifyCodePresenter()
@@ -69,9 +72,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         countVerifyCodeTime.setOnClickListener(this)
         //设置手机号
         onGetPhoneNum()
-        //获取验证码
         mPresenter.getVerifyCode(phone)
-
         inputVerifyCode.isEnabled = true
         inputVerifyCode.setOnCompleteListener(object : VerificationCodeInput.Listener {
             override fun onComplete(complete: Boolean, content: String?) {
@@ -95,13 +96,19 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
                         )
                 }
             }
-
         })
 
+        CommonFunction.startAnimation(tv1)
+        clSend.postDelayed({
+            CommonFunction.startAnimation(clSend)
+        }, 50L)
+        inputVerifyCode.postDelayed({
+            CommonFunction.startAnimation(inputVerifyCode)
+        }, 100L)
     }
 
     /** 倒计时60秒，一次1秒 */
-    val timer =  object : CountDownTimer(60 * 1000, 1000) {
+    val timer = object : CountDownTimer(60 * 1000, 1000) {
         override fun onFinish() {
             tvPhone.text = "$phone"
             countVerifyCodeTime.text = SpanUtils.with(countVerifyCodeTime)
@@ -121,6 +128,7 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
         }
 
     }
+
     override fun onCountTime() {
         timer.cancel()
         timer.start()
@@ -171,7 +179,12 @@ class VerifyCodeActivity : BaseMvpActivity<VerifyCodePresenter>(), View.OnClickL
 
     override fun onGetVerifyCode(data: BaseResp<Any?>?) {
         if (data != null && data.code == 200) {
-            tvPhone.text = "验证码已发至 $phone"
+            tvPhone.text = SpanUtils.with(tvPhone)
+                .append("验证码已发至 ")
+                .append("$phone")
+                .setTypeface(Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf"))
+                .setFontSize(18, true)
+                .create()
             countVerifyCodeTime.isEnabled = false
             onCountTime()
         } else {

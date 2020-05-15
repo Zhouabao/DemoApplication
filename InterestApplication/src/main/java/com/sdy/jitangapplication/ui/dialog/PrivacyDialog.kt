@@ -10,15 +10,9 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import com.blankj.utilcode.util.SpanUtils
-import com.kotlin.base.data.net.RetrofitFactory
-import com.kotlin.base.data.protocol.BaseResp
-import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_privacy.*
@@ -29,19 +23,19 @@ import kotlinx.android.synthetic.main.dialog_privacy.*
  *    desc   :隐私协议弹窗
  *    version: 1.0
  */
-class PrivacyDialog(val context1: Context, val completeGuide: Boolean) :
+class PrivacyDialog(
+    val context1: Context,
+    var completeGuide: Boolean = false,
+    var showPull: Boolean = true,
+    val todayWantDialog: TodayWantDialog
+) :
     Dialog(context1, R.style.MyDialog) {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_privacy)
 
         initWindow()
         initView()
-        //获取今日推荐
-        if (completeGuide)
-            todayRecommend()
     }
 
     private fun initView() {
@@ -136,42 +130,8 @@ class PrivacyDialog(val context1: Context, val completeGuide: Boolean) :
 
     override fun dismiss() {
         super.dismiss()
-        if (!completeGuide) {
-            GuideDialog(context1).show()
-        } else {
-            if (!todayFate.isNullOrEmpty()) {
-                TodayFateDialog(context, todayFate).show()
-            }
-        }
-    }
-
-
-    /**
-     * 今日推荐
-     */
-    private var todayFate: MutableList<IndexRecommendBean> = mutableListOf()
-
-    fun todayRecommend() {
-        RetrofitFactory.instance.create(Api::class.java)
-            .todayRecommend(UserManager.getSignParams())
-            .excute(object : BaseSubscriber<BaseResp<MutableList<IndexRecommendBean>?>>() {
-                override fun onNext(t: BaseResp<MutableList<IndexRecommendBean>?>) {
-                    onTodayRecommend(t.data)
-                }
-
-                override fun onError(e: Throwable?) {
-
-                }
-
-            })
-    }
-
-    /**
-     * 今日推荐获取结果
-     */
-    fun onTodayRecommend(data: MutableList<IndexRecommendBean>?) {
-        if (!data.isNullOrEmpty()) {
-            todayFate = data
+        if (showPull) {
+            todayWantDialog.show()
         }
     }
 

@@ -71,6 +71,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         initView()
 
         //启动时间统计
@@ -102,6 +104,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 onAccountDangerEvent(AccountDangerEvent(AccountDangerDialog.VERIFY_ING))
             }
         }
+
 
     }
 
@@ -209,29 +212,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun switchTab(position: Int) {
         when (position) {
             0 -> {
-                if (!UserManager.isUserVip()) {
-                    tabMatch.isVisible = true
-                    tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
-                    tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
-                    tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
-                    tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
-                        null,
-                        null,
-                        null,
-                        null
-                    )
-                } else {
-                    tabMatch.isVisible = false
-                    tabMatchCount.text = "首页"
-                    tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
-                    tabMatchCount.setPadding(0)
-                    tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
-                        null,
-                        resources.getDrawable(R.drawable.icon_tab_match_checked),
-                        null,
-                        null
-                    )
-                }
+                onUpdateSlideCountEvent(UpdateSlideCountEvent(indexFragment.currentPos == 1))
 
                 publishGuideIv.isVisible = false
                 tabSquarePublish.isVisible = false
@@ -389,7 +370,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateSlideCountEvent(event: UpdateSlideCountEvent) {
         if (vpMain.currentItem == 0) {
-            if (!UserManager.isUserVip()) {
+            if (!UserManager.isUserVip() && event.showCardTimes) {
                 tabMatch.isVisible = true
                 tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
@@ -492,6 +473,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             CommonFunction.toast("再按一次退出程序")
             firstClickTime = secondTime
         } else {
+            UserManager.showCompleteUserCenterDialog = false
             SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
             ActivityUtils.finishAllActivities()
 //            AppManager.instance.finishAllActivity()

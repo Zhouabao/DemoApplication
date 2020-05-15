@@ -21,7 +21,7 @@ class ReVerifyEvent(val type: Int, var avator: String = UserManager.getAvator())
 class AccountDangerEvent(val type: Int)
 
 //更新首页滑动次数
-class UpdateSlideCountEvent
+class UpdateSlideCountEvent(var showCardTimes: Boolean = true)
 
 
 //展示调研弹窗的event

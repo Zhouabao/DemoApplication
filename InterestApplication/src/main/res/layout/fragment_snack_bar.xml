@@ -38,12 +38,12 @@
             android:textColor="#ffffffff"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/t1"
+            app:layout_constraintBottom_toTopOf="@id/moreInfoTitle"
             app:layout_constraintLeft_toRightOf="@id/matchIcon"
             app:layout_constraintTop_toTopOf="@id/matchIcon" />
 
         <TextView
-            android:id="@+id/t1"
+            android:id="@+id/moreInfoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"

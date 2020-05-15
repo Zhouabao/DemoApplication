@@ -11,5 +11,19 @@ data class CheckBean(
     var checkedIcon: Int = -1,
     var title: String = "",
     var checked: Boolean = false,
-    var icon: String = ""
+    var icon: String = "",
+    var id: Int = -1
+)
+
+data class RelationshipBean(val title: String, val relationships: MutableList<CheckBean>)
+
+
+data class MyTapsBean(
+    var icon: String = "",
+    var id: Int = 0,
+    var steps: Int = 0,
+    var use_cnt: Int = 0,
+    var title: String = "",
+    var checked: Boolean = false,
+    var child: MutableList<MyTapsBean>
 )

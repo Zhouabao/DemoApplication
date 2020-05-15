@@ -25,6 +25,7 @@ import com.sdy.jitangapplication.model.PullWithdrawBean
 import com.sdy.jitangapplication.presenter.MyCandyPresenter
 import com.sdy.jitangapplication.presenter.view.MyCandyView
 import com.sdy.jitangapplication.ui.adapter.CandyProductAdapter
+import com.sdy.jitangapplication.ui.dialog.AddWishGiftDialog
 import com.sdy.jitangapplication.ui.dialog.RechargeCandyDialog
 import com.sdy.jitangapplication.ui.dialog.WithdrawCandyDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -55,6 +56,7 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazy
         mPresenter.myCadny()
     }
 
+    private var hasGuideCandy = false
     private fun initView() {
         EventBus.getDefault().register(this)
 
@@ -97,9 +99,20 @@ class MyCandyActivity : BaseMvpActivity<MyCandyPresenter>(), MyCandyView, OnLazy
         }
         guideCandyRecord.onClick {
             guideCandyRecord.isVisible = false
+            hasGuideCandy = true
             UserManager.saveShowGuideCandy(true)
         }
 
+    }
+
+
+    override fun finish() {
+        if (UserManager.getGender() == 2 && hasGuideCandy) {
+            AddWishGiftDialog(this).show()
+            hasGuideCandy = false
+        } else {
+            super.finish()
+        }
     }
 
 

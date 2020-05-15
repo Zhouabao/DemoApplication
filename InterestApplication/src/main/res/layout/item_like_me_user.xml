@@ -139,7 +139,7 @@
                     app:layout_constraintTop_toTopOf="@id/matchUserAge"/>
 
             <TextView
-                    android:id="@+id/matchUserDistance"
+                    android:id="@+id/matchUserOnline"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
                     android:textSize="14sp"

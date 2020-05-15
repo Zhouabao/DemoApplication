@@ -198,4 +198,11 @@
             <enum name="wrap_content" value="1" />
         </attr>
     </declare-styleable>
+
+
+    <!--数字翻页动画-->
+    <declare-styleable name="DancingNumberView">
+        <attr name="dnv_duration" format="integer" />
+        <attr name="dnv_format" format="string" />
+    </declare-styleable>
 </resources>

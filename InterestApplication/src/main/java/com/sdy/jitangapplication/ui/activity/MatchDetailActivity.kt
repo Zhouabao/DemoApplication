@@ -1,6 +1,7 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -48,7 +49,6 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.DetailUserInfoBean
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.model.StatusBean
@@ -298,88 +298,6 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
      */
     private val wishGiftAdapter by lazy { WishGiftAdapter(this) }
 
-    private fun initUserInfomationData() {
-        if (matchBean!!.base_info.height != 0)
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_height,
-                    "身高",
-                    "${matchBean!!.base_info.height}"
-                )
-            )
-        if (!matchBean!!.base_info.emotion.isNullOrEmpty())
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_emotion,
-                    "感情状态",
-                    "${matchBean!!.base_info.emotion}"
-                )
-            )
-        if (!matchBean!!.base_info.hometown.isNullOrEmpty())
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_hometown,
-                    "家乡",
-                    "${matchBean!!.base_info.hometown}"
-                )
-            )
-        if (!matchBean!!.base_info.present_address.isNullOrEmpty())
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_living,
-                    "现居地",
-                    "${matchBean!!.base_info.present_address}"
-                )
-            )
-        if (!matchBean!!.base_info.personal_job.isNullOrEmpty())
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_job,
-                    "职业",
-                    "${matchBean!!.base_info.personal_job}"
-                )
-            )
-        if (!matchBean!!.base_info.making_friends.isNullOrEmpty())
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_ami,
-                    "交友目的",
-                    "${matchBean!!.base_info.making_friends}"
-                )
-            )
-        if (!matchBean!!.base_info.personal_school.isNullOrEmpty())
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_school,
-                    "学校",
-                    "${matchBean!!.base_info.personal_school}"
-                )
-            )
-        if (!matchBean!!.base_info.personal_drink.isNullOrEmpty())
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_drink,
-                    "喝酒",
-                    "${matchBean!!.base_info.personal_drink}"
-                )
-            )
-        if (!matchBean!!.base_info.personal_smoke.isNullOrEmpty())
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_smoke,
-                    "抽烟",
-                    "${matchBean!!.base_info.personal_smoke}"
-                )
-            )
-        if (!matchBean!!.base_info.personal_schedule.isNullOrEmpty())
-            detailUserInformationAdapter.addData(
-                DetailUserInfoBean(
-                    R.drawable.icon_detail_schedule,
-                    "作息时间",
-                    "${matchBean!!.base_info.personal_schedule}"
-                )
-            )
-    }
 
     @SuppressLint("SetTextI18n")
     private fun initData() {
@@ -408,13 +326,41 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
             userTagAdapter.addData(data)
         }
 
-        guidelWishHelp.isVisible =
-            !UserManager.isShowGuideHelpWish() && !matchBean!!.wish_list.isNullOrEmpty()
+        guidelWishHelp.isVisible = !UserManager.isShowGuideHelpWish() && !matchBean!!.wish_list.isNullOrEmpty()
+        val scaleAni = ObjectAnimator.ofFloat(guidelWishHelp, "scaleX", 0.9F, 1F, 0.9F)
+        scaleAni.repeatCount = 2
+        scaleAni.duration = 1500L
+        val scaleAni1 = ObjectAnimator.ofFloat(guidelWishHelp, "scaleY", 0.9F, 1F, 0.9F)
+        scaleAni1.repeatCount = 2
+        scaleAni1.duration = 1500L
+        val set = AnimatorSet()
+        set.playTogether(scaleAni, scaleAni1)
+        set.start()
+        set.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                guidelWishHelp.isVisible = false
+                UserManager.saveShowGuideHelpWish(true)
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })
+
 
         if (matchBean!!.gift_list.isNullOrEmpty()) {
             usergiftAdapter.isUseEmpty(true)
         } else
             usergiftAdapter.setNewData(matchBean!!.gift_list)
+
+        detailUserInformationAdapter.setNewData(matchBean!!.personal_info)
 
         if (matchBean!!.wish_list.isNullOrEmpty()) {
             detailUserWishIndicator.isVisible = false
@@ -432,11 +378,40 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 .create()
         }
 
-        initUserInfomationData()//初始化个人信息数据
 //        EventBus.getDefault().post(UpdateSquareEvent())
 
-        detailUserName.text = matchBean!!.nickname
-        titleUsername.text = matchBean!!.nickname
+        detailUserName.text = matchBean!!.nickname ?: ""
+        titleUsername.text = matchBean!!.nickname ?: ""
+        if (matchBean!!.intention_title.isNullOrEmpty()) {
+            detailUserIntention1.isVisible = false
+        } else {
+            detailUserIntention1.isVisible = true
+            detailUserIntention.text = matchBean!!.intention_title
+            matchAimIv.addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    matchAimIv.postDelayed({
+                        matchAimIv.playAnimation()
+                    }, 1000L)
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+            })
+            matchAimIv.playAnimation()
+        }
+        if (matchBean!!.online_time.isNullOrEmpty()) {
+            detailUserOnline.isVisible = false
+        } else {
+            detailUserOnline.text = matchBean!!.online_time
+            detailUserOnline.isVisible = true
+        }
         val left = resources.getDrawable(
             if (matchBean!!.gender == 1) {
                 R.drawable.icon_gender_man_gray_userdetail
@@ -447,7 +422,10 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
         detailUserInfoAge.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
         detailUserInfoAge.text = "${matchBean!!.age}"
         detailUserConstellation.text = "${matchBean!!.constellation}"
+        detailUserDistance.isVisible = !matchBean!!.distance.isNullOrEmpty()
         detailUserDistance.text = "${matchBean!!.distance}"
+        detailUserOnline.isVisible = !matchBean!!.online_time.isNullOrEmpty()
+        detailUserOnline.text = "${matchBean!!.online_time}"
         detailUserSign.apply {
             setContent("${matchBean!!.sign}")
             isVisible = !(matchBean!!.sign.isNullOrBlank())
@@ -859,7 +837,7 @@ class MatchDetailActivity : BaseMvpActivity<MatchDetailPresenter>(), MatchDetail
                 guidelWishHelp.isVisible = false
                 UserManager.saveShowGuideHelpWish(true)
             }
-            R.id.notifyAddTagBtn -> {//todo 通知添加兴趣
+            R.id.notifyAddTagBtn -> {//
                 mPresenter.needNotice(hashMapOf<String, Any>("target_accid" to matchBean!!.accid))
                 notifyAddTagBtn.isEnabled = false
             }

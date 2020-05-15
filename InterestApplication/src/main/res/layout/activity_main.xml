@@ -102,8 +102,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:visibility="gone"
-            android:background="@color/colorDivider" />
+            android:background="@color/colorDivider"
+            android:visibility="gone" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -117,7 +117,7 @@
                 android:layout_width="0dp"
                 android:layout_height="41dp"
                 android:src="@drawable/icon_tab_match_checked1"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -130,16 +130,15 @@
                 android:layout_height="41dp"
                 android:drawableTop="@drawable/icon_tab_match_checked"
                 android:gravity="center_horizontal|bottom"
-                android:paddingBottom="3dp"
-                android:textColor="@color/colorWhite"
+                android:text="首页"
+                android:textColor="@color/colorOrange"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/tabSquare"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="32" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tabSquare"
@@ -227,15 +226,14 @@
         android:layout_marginBottom="49dp"
         android:src="@drawable/icon_publish_guide"
         android:visibility="gone" />
-<!--    <FrameLayout-->
-<!--        android:id="@+id/main_frag_content"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" />-->
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/main_frag_content"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent" />-->
     <TextView
         android:id="@+id/totalNearOnlineTv"
         android:layout_width="196dp"
         android:layout_height="96dp"
-        android:layout_marginLeft="43dp"
         android:layout_marginTop="48dp"
         android:background="@drawable/icon_guide_near_people"
         android:gravity="center"

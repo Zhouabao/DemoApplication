@@ -21,7 +21,7 @@ class LikeMeUserAdapter : BaseQuickAdapter<PositiveLikeBean, BaseViewHolder>(R.l
         helper.addOnClickListener(R.id.v1)
         helper.itemView.matchUserName.text = item.nickname
         helper.itemView.matchUserConstellation.text = item.constellation
-        helper.itemView.matchUserDistance.text = "${item.distance}"
+        helper.itemView.matchUserOnline.text = "${item.distance}"
         helper.itemView.ivVip.isVisible = item.isvip
         helper.itemView.ivVerify.isVisible = item.isfaced
         helper.itemView.matchUserAge.text = "${item.age}"

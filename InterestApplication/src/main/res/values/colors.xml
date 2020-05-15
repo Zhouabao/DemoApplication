@@ -6,6 +6,8 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorLightGray">#EFEFEF</color>
     <color name="colorBlack">#FF000000</color>
+    <color name="colorHalfBlack">#80000000</color>
+    <color name="color80Black">#CC000000</color>
     <color name="colorOrange">#FF6318</color>
     <color name="colorOrangeVip">#FFF4BA6B</color>
     <color name="colorBlackText">#888B91</color>

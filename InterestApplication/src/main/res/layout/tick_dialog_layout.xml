@@ -19,7 +19,7 @@
             >
 
         <TextView
-                android:id="@+id/t1"
+                android:id="@+id/moreInfoTitle"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:textColor="@color/color_333333"
@@ -34,7 +34,7 @@
 
         <View
                 android:id="@+id/view"
-                android:layout_below="@id/t1"
+                android:layout_below="@id/moreInfoTitle"
                 android:layout_marginTop="20dp"
                 android:background="@color/colorDivider"
                 android:layout_width="match_parent"

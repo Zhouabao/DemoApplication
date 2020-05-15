@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.animation.Animator
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -55,7 +56,11 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
 
 
         holder.itemView.vpPhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -173,10 +178,12 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
                 val height = SizeUtils.dp2px(6F)
                 val indicator = RadioButton(mContext)
                 indicator.buttonDrawable = null
-                indicator.background = mContext.resources.getDrawable(R.drawable.selector_round_indicator)
+                indicator.background =
+                    mContext.resources.getDrawable(R.drawable.selector_round_indicator)
 
                 indicator.layoutParams = LinearLayout.LayoutParams(width, height)
-                val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
+                val layoutParams: LinearLayout.LayoutParams =
+                    indicator.layoutParams as LinearLayout.LayoutParams
                 layoutParams.setMargins(
                     if (i == 0) {
                         SizeUtils.dp2px(15F)
@@ -256,11 +263,33 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
             holder.itemView.matchUserLocalTagCl.visibility = View.GONE
         }
 
+        if (!item.intention_title.isNullOrEmpty()) {
+            holder.itemView.matchAimTv.text = item.intention_title
+            holder.itemView.matchAim.isVisible = true
+            holder.itemView.matchAimIv.addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
 
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    holder.itemView.matchAimIv.postDelayed({
+                        holder.itemView.matchAimIv.playAnimation()
+                    }, 1000L)
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+            })
+        } else {
+            holder.itemView.matchAim.isVisible = false
+        }
         holder.itemView.btnHiLeftTime.text = "${UserManager.getLightingCount()}"
-        GlideUtil.loadCircleImg(mContext, item.intention_icon, holder.itemView.matchAimIv)
         holder.itemView.matchUserLocalTagContent.text = item.sign ?: ""
-        holder.itemView.matchBothIntersetLl.isVisible = !item.matching_content.isNullOrEmpty() //撮合兴趣
+        holder.itemView.matchBothIntersetLl.isVisible =
+            !item.matching_content.isNullOrEmpty() //撮合兴趣
         holder.itemView.matchBothIntersetContent.text = "${item.matching_content}"
         GlideUtil.loadImg(mContext, item.matching_icon, holder.itemView.matchBothIntersetIv)
 
@@ -300,8 +329,12 @@ class MatchUserAdapter(data: MutableList<MatchBean>) :
         )
         holder.itemView.matchUserAge.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null)
 
-        holder.itemView.matchUserConstellation.text = "${item.constellation}"
-        holder.itemView.matchUserDistance.text = "${item.distance}"
+        holder.itemView.matchUserConstellation.text = "${item.constellation ?: ""}"
+
+        holder.itemView.matchUserOnline.isVisible = !item.online_time.isNullOrEmpty()
+        holder.itemView.matchUserOnline.text = "${item.online_time ?: ""}"
+        holder.itemView.matchUserDistance.isVisible = !item.distance.isNullOrEmpty()
+        holder.itemView.matchUserDistance.text = "${item.distance ?: ""}"
     }
 
 }

@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -302,16 +301,29 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     }
 
 
+    private val guideContent by lazy {
+        if (UserManager.getGender() == 1) {
+            "完成认证获取更多曝光"
+        } else {
+            "完成认证获取打招呼权限"
+        }
+    }
     private val guideVerifyWindow by lazy {
         PopupWindow(activity!!).apply {
             contentView = LayoutInflater.from(activity!!)
                 .inflate(R.layout.popupwindow_user_center_guide_verify, null, false)
             width = ViewGroup.LayoutParams.WRAP_CONTENT
             height = ViewGroup.LayoutParams.WRAP_CONTENT
-            val params = contentView.iconGuideVerify.layoutParams as LinearLayout.LayoutParams
-            params.width = SizeUtils.dp2px(245F)
-            params.height = SizeUtils.dp2px(52F)
-            contentView.iconGuideVerify.layoutParams = params
+//            val params = contentView.iconGuideVerify.layoutParams as LinearLayout.LayoutParams
+//            params.width = SizeUtils.dp2px(245F)
+//            params.height = SizeUtils.dp2px(46F)
+//            contentView.iconGuideVerify.layoutParams = params
+            contentView.iconGuideVerify.text = guideContent
+            contentView.iconGuideVerify.setOnClickListener {
+                UserManager.saveShowGuideVerify(true)
+                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this@UserCenterFragment)
+                dismiss()
+            }
             setBackgroundDrawable(null)
             animationStyle = R.style.MyDialogLeftBottomAnimation
             isFocusable = true
@@ -371,7 +383,7 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
             //会员权益
             R.id.isVipPowerBtn -> {
                 if (userInfoBean?.userinfo?.isvip != 1) {
-                    ChargeVipDialog(ChargeVipDialog.VIP_LOGO, activity!!).show()
+                    ChargeVipDialog(ChargeVipDialog.MORE_EXPODE, activity!!).show()
                 } else {
                     startActivity<VipPowerActivity>(
                         "nickname" to userInfoBean?.userinfo?.nickname,
@@ -464,13 +476,15 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 guideVerifyWindow.showAtLocation(
                     userVerify,
                     Gravity.TOP and Gravity.LEFT,
-                    width + SizeUtils.dp2px(11F) - SizeUtils.dp2px(170F),
+                    width + SizeUtils.dp2px(14F) - SizeUtils.dp2px(162F / 12 * guideContent.length),
                     SizeUtils.dp2px(-20F)
                 )
                 multiStateView.postDelayed({
-                    guideVerifyWindow.dismiss()
-                    UserManager.saveShowGuideVerify(true)
-                    userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    if (guideVerifyWindow.isShowing) {
+                        guideVerifyWindow.dismiss()
+                        UserManager.saveShowGuideVerify(true)
+                        userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
                 }, 3000L)
             } else {
                 userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)

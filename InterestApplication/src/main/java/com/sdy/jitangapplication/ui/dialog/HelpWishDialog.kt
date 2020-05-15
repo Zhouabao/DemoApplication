@@ -51,7 +51,8 @@ class HelpWishDialog(
     val nickname: String,
     val giftBean: GiftBean,
     context: Context,
-    val isFriend: Boolean
+    val isFriend: Boolean,
+    val wantMatch: Boolean = false
 ) :
     BottomSheetDialog(context, R.style.BottomSheetDialog) {
 
@@ -249,7 +250,13 @@ class HelpWishDialog(
     }
 
     private fun sendWishHelpFriendMessage(orderId: Int, ret_tips_arr: MutableList<SendTipBean>) {
-        val wishHelpFirendAttachment = ChatHiAttachment(ChatHiAttachment.CHATHI_WISH_HELP)
+        val wishHelpFirendAttachment = ChatHiAttachment(
+            if (wantMatch) {
+                ChatHiAttachment.CHATHI_WANT_MATCH
+            } else {
+                ChatHiAttachment.CHATHI_WISH_HELP
+            }
+        )
         val config = CustomMessageConfig()
         config.enableUnreadCount = true
         config.enablePush = true

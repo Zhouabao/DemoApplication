@@ -34,7 +34,8 @@ data class NimBean(
     var tips_chat_cnt: Int = 0,
     var tips_gift_cnt: Int = 0,
     var both_gift_list: MutableList<ChatGiftStateBean> = mutableListOf(),
-    var is_send_msg: Boolean = false
+    var is_send_msg: Boolean = false,
+    var force_isvip: Boolean = false
 //    var is_send_msg: Boolean = false  //本用户是否发送过消息
 
 ) : Serializable

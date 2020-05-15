@@ -159,6 +159,44 @@
                             app:layout_constraintTop_toTopOf="@id/detailUserVip" />
 
 
+                        <LinearLayout
+                            android:id="@+id/detailUserIntention1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/gradient_pink_11dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="@id/detailUserName"
+                            app:layout_constraintLeft_toRightOf="@id/detailUserVerify"
+                            app:layout_constraintTop_toTopOf="@id/detailUserName">
+
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:id="@+id/matchAimIv"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                app:lottie_autoPlay="true"
+                                app:lottie_fileName="data_want_heart.json"
+                                app:lottie_imageAssetsFolder="images_want_heart/"
+                                app:lottie_loop="false" />
+
+                            <TextView
+                                android:id="@+id/detailUserIntention"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginBottom="2dp"
+                                android:gravity="center"
+                                android:text="一起运动"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="10sp"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
                         <TextView
                             android:id="@+id/detailUserInfoAge"
                             android:layout_width="wrap_content"
@@ -201,6 +239,23 @@
                             app:layout_constraintLeft_toRightOf="@id/detailUserConstellation"
                             app:layout_constraintTop_toTopOf="@id/detailUserInfoAge"
                             tools:text="10KM" />
+
+                        <TextView
+                            android:id="@+id/detailUserOnline"
+                            android:layout_width="0dp"
+                            android:layout_height="22dp"
+                            android:layout_marginLeft="10dp"
+                            android:drawableLeft="@drawable/icon_online_state"
+                            android:drawablePadding="3dp"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical|left"
+                            android:maxLines="1"
+                            android:textColor="#FF696E73"
+                            android:textSize="13sp"
+                            app:layout_constraintLeft_toRightOf="@id/detailUserDistance"
+                            app:layout_constraintRight_toRightOf="@id/detailUserSign"
+                            app:layout_constraintTop_toTopOf="@id/detailUserInfoAge"
+                            tools:text="十分钟前在线" />
 
                         <com.ctetin.expandabletextviewlibrary.ExpandableTextView
                             android:id="@+id/detailUserSign"
@@ -361,7 +416,6 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/rvGift" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
                     <androidx.recyclerview.widget.RecyclerView

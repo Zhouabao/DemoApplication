@@ -20,11 +20,14 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.UpdateNearPeopleParamsEvent
-import com.sdy.jitangapplication.model.NearPersonBean
+import com.sdy.jitangapplication.event.UpdateTodayWantEvent
+import com.sdy.jitangapplication.model.CheckBean
+import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.presenter.PeopleNearbyPresenter
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
 import com.sdy.jitangapplication.ui.adapter.PeopleNearbyAdapter
-import com.sdy.jitangapplication.ui.dialog.NearPeopleFilterDialog
+import com.sdy.jitangapplication.ui.dialog.*
+import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.empty_friend_layout.view.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_people_nearby.*
@@ -46,6 +49,10 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
     private var page = 1
     private val params by lazy {
         hashMapOf<String, Any>(
+            "lng" to UserManager.getlongtitude().toFloat(),
+            "lat" to UserManager.getlatitude().toFloat(),
+            "city_name" to UserManager.getCity(),
+            "province_name" to UserManager.getProvince(),
             "page" to page,
             "pagesize" to Constants.PAGESIZE
         )
@@ -68,6 +75,7 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
     }
 
     override fun loadData() {
+
         EventBus.getDefault().register(this)
 
         mPresenter = PeopleNearbyPresenter()
@@ -86,6 +94,7 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
         nearFilterLl.clickWithTrigger {
             NearPeopleFilterDialog(activity!!).show()
         }
+
 
         rvPeopleNearby.layoutManager = linearLayoutManager
         rvPeopleNearby.adapter = adapter
@@ -131,8 +140,43 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
         mPresenter.nearlyIndex(params)
     }
 
-    override fun nearlyIndexResult(success: Boolean, mutableList: MutableList<NearPersonBean>?) {
+
+    private val todayWantDialog by lazy { TodayWantDialog(activity!!) }
+    override fun nearlyIndexResult(success: Boolean, nearBean: NearBean?) {
         if (success) {
+            //如果没有显示过协议，那就协议先出，再弹引导。
+//            否则直接判断有没有显示过引导页面
+            if (!UserManager.getAlertProtocol()) {
+                PrivacyDialog(
+                    activity!!, nearBean?.iscompleteguide ?: false,
+                    nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull, todayWantDialog
+                ).show()
+            } else if (nearBean?.iscompleteguide != true) {
+                GuideSendCandyDialog(
+                    activity!!,
+                    nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull,
+                    todayWantDialog
+                ).show()
+            } else if (nearBean!!.today_find!!.id == -1 && !nearBean?.today_find_pull) {
+                todayWantDialog.show()
+            } else if (nearBean!!.complete_percent < nearBean!!.complete_percent_normal && !UserManager.showCompleteUserCenterDialog) {
+                //如果自己的完善度小于标准值的完善度，就弹出完善个人资料的弹窗
+                CompleteUserCenterDialog(activity!!).show()
+            }
+
+
+            if (nearBean?.today_find != null && !nearBean?.today_find?.title.isNullOrEmpty()) {
+                EventBus.getDefault().post(
+                    UpdateTodayWantEvent(
+                        CheckBean(
+                            icon = nearBean?.today_find?.icon ?: "",
+                            title = nearBean?.today_find?.title ?: "",
+                            checked = true,
+                            id = nearBean!!.today_find!!.id
+                        )
+                    )
+                )
+            }
             statePeopleNearby.viewState = MultiStateView.VIEW_STATE_CONTENT
             if (refreshPeopleNearby.state == RefreshState.Refreshing) {
                 adapter.data.clear()
@@ -140,12 +184,12 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
                 rvPeopleNearby.scrollToPosition(0)
                 refreshPeopleNearby.finishRefresh(success)
             }
-            if (mutableList?.size ?: 0 < Constants.PAGESIZE) {
+            if (nearBean != null && nearBean.list?.size < Constants.PAGESIZE) {
                 refreshPeopleNearby.finishLoadMoreWithNoMoreData()
             } else {
                 refreshPeopleNearby.finishLoadMore(true)
             }
-            adapter.addData(mutableList ?: mutableListOf())
+            adapter.addData(nearBean?.list ?: mutableListOf())
 
             if (adapter.data.isNullOrEmpty()) {
                 adapter.isUseEmpty(true)
@@ -214,4 +258,5 @@ class PeopleNearbyFragment : BaseMvpLazyLoadFragment<PeopleNearbyPresenter>(), P
         }
         refreshPeopleNearby.autoRefresh()
     }
+
 }

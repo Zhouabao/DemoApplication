@@ -77,31 +77,40 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/shape_rectangle_blue"
+            android:background="@drawable/gradient_pink_11dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingLeft="1dp"
-            android:paddingTop="1dp"
-            android:paddingRight="6dp"
-            android:paddingBottom="1dp"
-            android:visibility="gone"
+            android:text="找人一起玩"
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp"
+            android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/matchAimIv"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:src="@drawable/icon_match_aim" />
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="data_want_heart.json"
+                app:lottie_imageAssetsFolder="images_want_heart/"
+                app:lottie_loop="false" />
+
 
             <TextView
                 android:id="@+id/matchAimTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
                 android:gravity="center"
+                android:paddingLeft="1dp"
                 android:text="找人一起玩"
-                android:textColor="@color/colorWhite" />
+                android:textColor="@color/colorWhite"
+                android:textSize="10sp" />
         </LinearLayout>
 
 
@@ -183,6 +192,23 @@
             android:textColor="#FFEEEEEE"
             android:textSize="14sp"
             app:layout_constraintLeft_toRightOf="@id/matchUserConstellation"
+            app:layout_constraintTop_toTopOf="@id/matchUserAge"
+            tools:text="10KM" />
+
+        <TextView
+            android:id="@+id/matchUserOnline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:drawableLeft="@drawable/icon_online_state_gray"
+            android:drawablePadding="3dp"
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
+            android:textColor="#FFEEEEEE"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toRightOf="@id/matchUserDistance"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/matchUserAge"
             tools:text="10KM" />
 

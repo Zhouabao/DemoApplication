@@ -55,6 +55,7 @@ data class VipDescr(
     val url: String? = "",
     val icon_vip: String? = "",
     var countdown: Int = 0,
+    var id: Int = 0,
     val title_pay: String = ""
 )
 
@@ -98,36 +99,48 @@ data class MyCommentList(
  * 个人中心信息
  */
 data class UserInfoSettingBean(
-    val qiniu_domain: String? = "",
-    val job: String? = "",
-    val sign: String? = "",
-    val avatar: String? = "",
-    val face_state: Boolean = false,
-    val photos: MutableList<String>? = mutableListOf(),
-    val photos_wall: MutableList<MyPhotoBean?>? = mutableListOf(),
-    val nickname: String? = "",
-    val gender: Int? = 0,
-    val birth: String? = "",
-    val constellation: String? = "",
-    val height: Int = 0,
-    val emotion_state: Int = 0,
-    val emotion_list: MutableList<String> = mutableListOf(),
-    val hometown: String? = "",
-    val present_address: String? = "",
-    val personal_job: String? = "",
-    val making_friends: Int = 0,
-    val personal_school: String? = "",
-    val personal_drink: Int = 0,
-    val personal_smoke: Int = 0,
-    val personal_schedule: Int = 0,
-    val making_friends_list: MutableList<String> = mutableListOf(),
-    val personal_drink_list: MutableList<String> = mutableListOf(),
-    val personal_smoke_list: MutableList<String> = mutableListOf(),
-    val personal_schedule_list: MutableList<String> = mutableListOf(),
-    val score_rule: ScoreRule? = null
-
+    var answer_list: MutableList<AnswerBean> = mutableListOf(),
+    var avatar: String = "",
+    var birth: String = "",
+    var constellation: String = "",
+    var face_state: Boolean = false,
+    var gender: Int = 0,
+    var job: String = "",
+    var nickname: String = "",
+    var photos: MutableList<String> = mutableListOf(),
+    var photos_wall: MutableList<MyPhotoBean> = mutableListOf(),
+    var qiniu_domain: String = "",
+    var score_rule: ScoreRule = ScoreRule(),
+    var sign: String = ""
 )
 
+
+data class AnswerBean(
+    var child: MutableList<FindTagBean> = mutableListOf(),
+    var find_tag: FindTagBean? = null,
+    var id: Int = 0,
+    var title: String = "",
+    var point: Int = 0,
+    var descr: String = ""
+)
+
+data class FindTagBean(
+    var id: Int = -1,
+    var title: String = ""
+) : IPickerViewData {
+    override fun getPickerViewText(): String {
+        return title
+    }
+}
+
+data class ScoreRule(
+    var about: Int = 0,
+    var base: Int = 0,
+    var base_total: Int = 0,
+    var me: Int = 0,
+    var photo: Int = 0,
+    var total: Int = 0
+)
 
 data class BaseInfo(
     val height: Int = 0,
@@ -144,33 +157,13 @@ data class BaseInfo(
 )
 
 
-data class ScoreRule(
-    var about: Int = 0,
-    var base: Int = 0,
-    var emotion: Int = 0,
-    var height: Int = 0,
-    var hometown: Int = 0,
-    var making_friends: Int = 0,
-    var personal_drink: Int = 0,
-    var personal_schedule: Int = 0,
-    var personal_job: Int = 0,
-    var personal_school: Int = 0,
-    var personal_smoke: Int = 0,
-    var photo: Int = 0,
-    var present_address: Int = 0,
-    var total: Int = 0,
-    var base_total: Int = 0,
-    var percent_complete: Int = 0
-)
-
-
 /**
  * 照片墙
  */
 data class MyPhotoBean(
     var has_face: Int = 0,//1 没有 2 有
     var id: Int = 0,
-    var type: Int,
+    var type: Int = PHOTO,
     var url: String = "",
     var photoScore: Int = 0
 ) : MultiItemEntity {
@@ -219,4 +212,13 @@ data class HelpBean(
     val qntk: String = "",
 //    val content: String = ""
     val list: MutableList<LoginHelpBean>
+) : Serializable
+
+
+data class MoreMatchBean(
+    var city_name: String = "",
+    var gender_str: String = "",
+    var people_amount: Int = 0,
+    var avatar: String = "",
+    var isvip: Boolean = false
 ) : Serializable

@@ -21,6 +21,7 @@ data class MatchListBean(
     var like_times: Int = 0, //剩余滑动次数
     var highlight_times: Int = 0,//提示剩余次数的节点
     val my_percent_complete: Int,//（我的资料完整度）
+    val complete_percent_normal: Int,//（标准完整度新的）
     val normal_percent_complete: Int,//（标准完整度）
     val my_like_times: Int,//（我的次数）
     val total_like_times: Int,//  total_like_times（最高次数）
@@ -70,6 +71,7 @@ data class MatchBean(
     var age: Int? = 0,
     var avatar: String? = null,
     var distance: String? = null,
+    var online_time: String? = null,
     var gender: Int? = 0,
     var isdisliked: Int? = 0,
     var isliked: Int? = 0,
@@ -90,7 +92,6 @@ data class MatchBean(
     var greet_switch: Boolean = true,//接收招呼开关   true  接收招呼      false   不接受招呼
     var greet_state: Boolean = true,// 认证招呼开关   true  开启认证      flase   不开启认证
     var isgreeted: Boolean = true,//招呼是否仍然有效
-    val base_info: BaseInfo,
     val my_percent_complete: Int,//（我的资料完整度）
     val normal_percent_complete: Int,//（标准完整度）
     val my_like_times: Int,//（我的次数）
@@ -105,15 +106,17 @@ data class MatchBean(
     var jobname: String = "",
     var label_quality_cnt: Int = 0,
     var mycandy_amount: Int = 0,
-    var need_notice: Boolean = true
+    var need_notice: Boolean = true,
+    var intention_title: String = "",
+    var personal_info: MutableList<DetailUserInfoBean> = mutableListOf()
 ) : Serializable
 
 
 data class LabelQuality(
     var icon: String = "",
+    var icon2: String = "",
     var title: String = ""
 ) : Serializable
-
 
 data class Newtag(
     var id: Int = 0,
@@ -147,6 +150,15 @@ data class GreetTimesBean(
     val isfaced: Int = 0,
     val isvip: Int = 0,
     val default_msg: String = ""
+)
+
+data class GreetCheckBean(
+    var type: Int = -1,//1 免费   2 消耗糖果打招呼   3有今日意愿选项打招呼
+    var greet_amount: Int,
+    var goodswish: GiftBean? = null,
+    var nickname: String,
+    var mycandy_amount: Int,
+    var people_amount: Int
 )
 
 /**
@@ -188,17 +200,27 @@ data class GreetBean(
 
 
 data class DetailUserInfoBean(
-    var icon: Int,
-    var title: String,
-    var content: String
+    var icon: String = "",
+    var title: String = "",
+    var content: String = ""
 )
 
 
 /**
  * 附近的人
  */
+data class NearBean(
+    var list: MutableList<NearPersonBean> = mutableListOf(),
+    var today_find: CheckBean? = null,
+    var iscompleteguide: Boolean = false,
+    var today_find_pull: Boolean = false,
+    val complete_percent: Int,//（我的资料完整度）
+    val complete_percent_normal: Int//（标准完整度新的）
+)
+
 data class NearPersonBean(
     var accid: String = "",
+    var intention_title: String = "",
     var age: Int = 0,
     var avatar: String = "",
     var birth: Int = 0,
@@ -211,7 +233,9 @@ data class NearPersonBean(
     var distance: String = "",
     var online_time: String = "",
     var isfaced: Boolean = false,
-    var isvip: Boolean = false
+    var isvip: Boolean = false,
+    var wish_data: MutableList<GiftBean> = mutableListOf(),
+    var plus_photo: Int = 0
 )
 
 

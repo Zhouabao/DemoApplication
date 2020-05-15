@@ -1,7 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -13,7 +12,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alipay.sdk.app.PayTask
-import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SnackbarUtils.dismiss
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
@@ -28,15 +26,13 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.RefreshEvent
-import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.ChargeWayBeans
 import com.sdy.jitangapplication.model.PayBean
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.presenter.VipPowerPresenter
 import com.sdy.jitangapplication.presenter.view.VipPowerView
+import com.sdy.jitangapplication.ui.adapter.VipChargeAdapter
 import com.sdy.jitangapplication.ui.adapter.VipPowerAdapter
-import com.sdy.jitangapplication.ui.adapter.VipPowerChargeAdapter
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -46,7 +42,6 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import kotlinx.android.synthetic.main.activity_vip_power.*
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.layout_actionbar.*
-import org.greenrobot.eventbus.EventBus
 
 /**
  * 会员权益
@@ -68,9 +63,12 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
     }
 
     private val vipChargeAdapter by lazy {
-        VipPowerChargeAdapter().apply {
+        VipChargeAdapter().apply {
             purchaseType = ChargeVipDialog.PURCHASE_RENEW_VIP
         }
+//        VipPowerChargeAdapter().apply {
+//            purchaseType = ChargeVipDialog.PURCHASE_RENEW_VIP
+//        }
     }
     private val vipPowerAdapter by lazy { VipPowerAdapter() }
 
@@ -305,11 +303,7 @@ class VipPowerActivity : BaseMvpActivity<VipPowerPresenter>(), VipPowerView, Vie
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
                     if (result) {
-                        if (ActivityUtils.getTopActivity() !is MainActivity) {
-                            MainActivity.start(this@VipPowerActivity, Intent())
-                        }
-                        EventBus.getDefault().postSticky(RefreshEvent(true))
-                        EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        CommonFunction.payResultNotify(this@VipPowerActivity)
                         dismiss()
                     }
                 }

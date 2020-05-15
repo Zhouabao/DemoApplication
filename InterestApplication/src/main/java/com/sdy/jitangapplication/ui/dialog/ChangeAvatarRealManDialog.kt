@@ -15,10 +15,10 @@ import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
-import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -64,19 +64,17 @@ class ChangeAvatarRealManDialog(
             dismiss()
         }
 
-        continueGreet.onClick(object : CustomClickListener() {
-            override fun onSingleClick(view: View) {
-                if (matchBean != null)
-                    CommonFunction.commonGreet(
-                        context1,
-                        matchBean!!.accid,
-                        view1,
-                        targetAvator = matchBean!!.avatar ?: "",
-                        needSwipe = true
-                    )
-                dismiss()
-            }
-        })
+        continueGreet.clickWithTrigger {
+            if (matchBean != null)
+                CommonFunction.commonGreet(
+                    context1,
+                    matchBean!!.accid,
+                    view1,
+                    targetAvator = matchBean!!.avatar ?: "",
+                    needSwipe = true
+                )
+            dismiss()
+        }
 
         if (UserManager.getGender() == 1) {
             standardImg.setImageResource(R.drawable.icon_standard_man_avator)

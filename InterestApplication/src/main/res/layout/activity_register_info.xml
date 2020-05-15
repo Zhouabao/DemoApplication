@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.RegisterInfoActivity">
+
+    <TextView
+        android:id="@+id/moreInfoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="60dp"
+        android:text="介绍一下自己吧"
+        android:textColor="#ff000000"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/t2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="填写辅助信息让别人更了解你"
+        android:textColor="#ff4c4c4c"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t2">
+
+        <TextView
+            android:id="@+id/t3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="昵称"
+            android:textColor="#ff000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/userNickName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="25dp"
+            android:background="@null"
+            android:hint="大家该怎么称呼你呢"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc5c6c8"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@id/t3"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/t3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clGender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clName">
+
+        <TextView
+            android:id="@+id/t4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="性别"
+            android:textColor="#ff000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/userGender"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="25dp"
+            android:hint="选择您的性别"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc5c6c8"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@id/t4"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/t4" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clBirth"
+        android:layout_width="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintTop_toBottomOf="@id/clGender">
+
+        <TextView
+            android:id="@+id/t5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="生日"
+            android:textColor="#ff000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/userBirth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="25dp"
+            android:hint="满18岁才可以使用软件哦"
+            android:textColor="@color/colorBlack19"
+            android:textColorHint="#ffc5c6c8"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toRightOf="@id/t5"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/t6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="关于你"
+        android:textColor="#ff000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintTop_toBottomOf="@id/clBirth" />
+
+
+    <EditText
+        android:id="@+id/userSign"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/shape_rectangle_gray_9dp"
+        android:gravity="start"
+        android:hint="简单的介绍一下自己吧"
+        android:lineSpacingMultiplier="1.4"
+        android:maxLength="200"
+        android:padding="10dp"
+        android:textColor="@color/colorBlack19"
+        android:textColorHint="#C5C6C8"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/t6" />
+
+    <TextView
+        android:id="@+id/nextBtn"
+        android:layout_width="0dp"
+        android:layout_height="83dp"
+        android:layout_marginTop="82dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/selector_confirm_btn1"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="下一步"
+        android:textColor="@color/colorWhite"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userSign" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

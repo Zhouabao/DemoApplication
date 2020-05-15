@@ -4,11 +4,13 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.presenter.BasePresenter
+import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.model.NearPersonBean
+import com.sdy.jitangapplication.model.NearBean
 import com.sdy.jitangapplication.presenter.view.PeopleNearbyView
+import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
 /**
@@ -24,16 +26,19 @@ class PeopleNearbyPresenter : BasePresenter<PeopleNearbyView>() {
      */
     fun nearlyIndex(params: HashMap<String, Any>) {
         RetrofitFactory.instance.create(Api::class.java)
-            .nearlyIndex(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<MutableList<NearPersonBean>?>>(mView) {
-                override fun onNext(t: BaseResp<MutableList<NearPersonBean>?>) {
+            .nearlyIndexEnd(UserManager.getSignParams(params))
+            .excute(object : BaseSubscriber<BaseResp<NearBean?>>(mView) {
+                override fun onNext(t: BaseResp<NearBean?>) {
                     super.onNext(t)
                     mView.nearlyIndexResult(t.code == 200, t.data)
                 }
 
                 override fun onError(e: Throwable?) {
                     super.onError(e)
-                    CommonFunction.getErrorMsg(context)
+                    if (e is BaseException) {
+                        TickDialog(context).show()
+                    } else
+                        CommonFunction.getErrorMsg(context)
                 }
             })
     }

@@ -94,7 +94,7 @@ class SnackBarFragment(val msgBean: CustomerMsgBean) : BaseFragment() {
 
         GlideUtil.loadCircleImg(activity!!, msgBean.avatar, matchIcon)
         matchName.text = msgBean.title
-        t1.text = msgBean.content
+        moreInfoTitle.text = msgBean.content
 
         contentView.clickWithTrigger {
             when (msgBean.type) {

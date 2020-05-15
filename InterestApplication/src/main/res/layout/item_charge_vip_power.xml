@@ -1,77 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/vipCl"
-            android:layout_marginTop="13dp"
-            android:orientation="vertical"
-            android:background="@drawable/shape_vip_charge_normal_bg"
-            android:layout_width="match_parent"
-            android:gravity="center_horizontal"
+        android:id="@+id/vipCl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/shape_vip_charge_normal_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/vipLong"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorBlackTitle"
+            android:textSize="12sp"
+            android:textStyle="normal"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="三个月" />
 
         <TextView
-                android:id="@+id/vipLong"
-                android:textStyle="normal"
-                android:textColor="@color/colorBlackTitle"
-                android:textSize="12sp"
-                android:layout_marginTop="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="三个月"/>
+            android:id="@+id/vipNowPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="@color/colorBlack4a"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vipLong"
+            tools:text="¥9.99" />
+
 
         <TextView
-                android:id="@+id/vipNowPrice"
-                android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textColor="@color/colorBlack4a"
-                android:textSize="14sp"
-                android:gravity="center"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vipLong"
-                tools:text="¥9.99"
-                />
+            android:id="@+id/vipOriginalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="@color/colorBlack4a"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vipNowPrice"
+            tools:text="¥9.99" />
 
         <TextView
-                android:id="@+id/vipDiscount"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="#ff333333"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:background="@null"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vipNowPrice"
-                tools:text="优惠50%"
-                />
+            android:id="@+id/vipDiscount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="#ff333333"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vipOriginalPrice"
+            tools:text="优惠50%" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-            android:id="@+id/vipSaleType"
-            android:visibility="gone"
-            android:background="@drawable/shape_vip_charge_power_popular_bg"
-            android:textColor="@color/colorWhite"
-            android:layout_width="72dp"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:layout_height="25dp"
-            tools:text="限时特惠"/>
+        android:id="@+id/vipSaleType"
+        android:layout_width="72dp"
+        android:layout_height="25dp"
+        android:background="@drawable/shape_vip_charge_power_popular_bg"
+        android:gravity="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="12sp"
+        android:visibility="gone"
+        tools:text="限时特惠" />
 </RelativeLayout>

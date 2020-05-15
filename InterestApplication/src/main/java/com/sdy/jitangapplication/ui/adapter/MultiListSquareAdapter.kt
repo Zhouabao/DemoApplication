@@ -28,6 +28,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.player.IjkMediaPlayerUtil
@@ -187,12 +188,12 @@ class MultiListSquareAdapter(
                 showMoreDialog(holder.layoutPosition - headerLayoutCount)
             }
             //点击转发
-            holder.itemView.squareZhuanfaBtn1.onClick {
+            holder.itemView.squareZhuanfaBtn1.clickWithTrigger {
                 showTranspondDialog(item)
             }
 
             //进入聊天界面
-            holder.itemView.squareChatBtn1.onClick {
+            holder.itemView.squareChatBtn1.clickWithTrigger {
                 if (resetAudioListener != null) {
                     resetAudioListener!!.resetAudioState()
                 }

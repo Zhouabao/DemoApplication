@@ -17,15 +17,19 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
+import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.event.ShowNearCountEvent
 import com.sdy.jitangapplication.event.UpdateIndexCandyEvent
+import com.sdy.jitangapplication.event.UpdateSlideCountEvent
+import com.sdy.jitangapplication.event.UpdateTodayWantEvent
 import com.sdy.jitangapplication.presenter.IndexPresenter
 import com.sdy.jitangapplication.presenter.view.IndexView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.dialog.FilterUserDialog
 import com.sdy.jitangapplication.ui.dialog.RechargeCandyDialog
+import com.sdy.jitangapplication.ui.dialog.TodayWantDialog
 import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_index.*
 import net.lucode.hackware.magicindicator.ViewPagerHelper
@@ -38,7 +42,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Li
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.sdk27.coroutines.onTouch
 import java.util.*
 
 /**
@@ -46,8 +49,11 @@ import java.util.*
  */
 class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
 
+    var currentPos = 0
+
+
     private val fragments by lazy { Stack<Fragment>() }
-    private val titles by lazy { arrayOf("匹配", "附近") }
+    private val titles by lazy { arrayOf("附近", "匹配") }
     private val matchFragment by lazy { MatchFragment() }
     //    private val findByTagFragment by lazy { FindByTagFragment() }
     private val peopleNearByFragment by lazy { PeopleNearbyFragment() }
@@ -61,7 +67,8 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
         return inflater.inflate(R.layout.fragment_index, container, false)
     }
 
-//    val titleAdapter by lazy { IndexSwitchAdapter() }
+    //    val titleAdapter by lazy { IndexSwitchAdapter() }
+    private val todayWantDialog by lazy { TodayWantDialog(activity!!) }
 
     override fun loadData() {
         EventBus.getDefault().register(this)
@@ -76,14 +83,20 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
         myCandyAmount.clickWithTrigger {
             RechargeCandyDialog(activity!!).show()
         }
+
+
+        //选择今日意向
+        todayWantCl.clickWithTrigger {
+            todayWantDialog.show()
+        }
     }
 
 
     private fun initFragments() {
 
 
-        fragments.add(matchFragment)
         fragments.add(peopleNearByFragment)
+        fragments.add(matchFragment)
 
         vpIndex.setScrollable(true)
         vpIndex.offscreenPageLimit = 2
@@ -101,16 +114,17 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
             }
 
             override fun onPageSelected(position: Int) {
-                filterBtn.isVisible = position == 0
+                filterBtn.isVisible = position == 1
+                if (position == 0) {
+                    EventBus.getDefault().post(ShowNearCountEvent())
+                }
+                EventBus.getDefault().post(UpdateSlideCountEvent(position == 1))
+                currentPos = position
             }
         })
 
         initIndicator()
         vpIndex.currentItem = 0
-
-        vpIndex.onTouch { v, event ->
-
-        }
     }
 
     private fun initIndicator() {
@@ -129,10 +143,8 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
                 simplePagerTitleView.selectedColor = Color.parseColor("#FF6318")
                 simplePagerTitleView.setPadding(SizeUtils.dp2px(5F), 0, 0, 0)
                 simplePagerTitleView.onClick {
-                    if (index == 1) {
-                        EventBus.getDefault().post(ShowNearCountEvent())
-                    }
                     vpIndex.currentItem = index
+                    currentPos = index
                 }
                 return simplePagerTitleView
             }
@@ -173,5 +185,17 @@ class IndexFragment : BaseMvpLazyLoadFragment<IndexPresenter>(), IndexView {
             .setFontSize(12, true)
             .setVerticalAlign(SpanUtils.ALIGN_CENTER)
             .create()
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateTodayWantEvent(event: UpdateTodayWantEvent) {
+        if (event.todayWantBean != null) {
+            todayWantContent.text = event.todayWantBean.title
+            GlideUtil.loadCircleImg(activity!!, event.todayWantBean.icon, todayWantIcon)
+        } else {
+            todayWantContent.text = "选择意向"
+            todayWantIcon.setImageResource(R.drawable.icon_today_want)
+        }
     }
 }

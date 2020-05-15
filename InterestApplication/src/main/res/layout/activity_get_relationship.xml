@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    android:overScrollMode="never"
+    tools:context=".ui.activity.GetRelationshipActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.sdy.jitangapplication.widgets.DancingNumberView
+            android:id="@+id/watingMatchCount"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:gravity="center"
+            android:text="4230"
+            android:textColor="@color/colorOrange"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:dnv_duration="1000"
+            app:dnv_format="%.0f"
+            app:layout_constraintRight_toLeftOf="@id/t1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/t1"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="个待筛选用户"
+            android:textColor="@color/colorBlack19"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginLeft="40dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/watingMatchCount" />
+
+        <ProgressBar
+            android:id="@+id/completeProgress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginRight="25dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/progress_horizontal_no_radius"
+            app:layout_constraintBottom_toBottomOf="@id/step1"
+            app:layout_constraintLeft_toLeftOf="@id/step1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/step1" />
+
+        <TextView
+            android:id="@+id/step1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_oval_orange"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/watingMatchCount" />
+
+        <TextView
+            android:id="@+id/step2"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/shape_oval_1dp_c5c6c8"
+            android:gravity="center"
+            android:text="2"
+            android:textColor="#C5C6C8"
+            app:layout_constraintLeft_toLeftOf="@id/completeProgress"
+            app:layout_constraintRight_toRightOf="@id/completeProgress"
+            app:layout_constraintTop_toTopOf="@id/step1" />
+
+        <TextView
+            android:id="@+id/step3"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/shape_oval_1dp_c5c6c8"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="#C5C6C8"
+            app:layout_constraintRight_toRightOf="@id/completeProgress"
+            app:layout_constraintTop_toTopOf="@id/step1" />
+
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpRelationship"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:overScrollMode="never"
+            app:layout_constraintTop_toBottomOf="@id/step1" />
+
+
+        <TextView
+            android:id="@+id/nextStep"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/selector_confirm_btn1"
+            android:gravity="center"
+            android:text="下一步"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vpRelationship" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

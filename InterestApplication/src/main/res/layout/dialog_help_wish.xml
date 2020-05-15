@@ -28,7 +28,7 @@
 
 
         <TextView
-            android:id="@+id/t1"
+            android:id="@+id/moreInfoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -50,7 +50,7 @@
             android:textColor="#ff191919"
             android:textSize="14sp"
             app:layout_constraintRight_toLeftOf="@id/chargeBtn"
-            app:layout_constraintTop_toTopOf="@id/t1" />
+            app:layout_constraintTop_toTopOf="@id/moreInfoTitle" />
 
         <TextView
             android:id="@+id/chargeBtn"
@@ -73,7 +73,7 @@
             android:background="@color/colorDivider"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/t1" />
+            app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,7 +144,7 @@
             android:text="助力糖果数量"
             android:textColor="#ff191919"
             android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="@id/t1"
+            app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
             app:layout_constraintTop_toBottomOf="@id/wishGiftCl" />
 
         <TextView
@@ -199,7 +199,9 @@
 
         <TextView
             android:id="@+id/t3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_marginRight="15dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Tips:糖果助力后将跳过匹配直接成为好友，对方2小时内未回复将退回糖果"
