@@ -33,7 +33,7 @@
             android:id="@+id/moreInfoTitle"
             android:textColor="@color/colorWhite"
             android:layout_marginTop="15dp"
-            android:text="在这里\t遇到和你一样特别的人"
+            android:text="遇见你就是最好的礼物"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

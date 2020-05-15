@@ -37,6 +37,7 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //setContentView(R.layout.activity_splash)
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //            BarUtils.setStatusBarVisibility(this, false)
