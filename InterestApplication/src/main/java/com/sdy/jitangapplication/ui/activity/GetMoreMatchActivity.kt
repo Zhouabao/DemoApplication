@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
@@ -49,8 +50,12 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
 
 
         if (moreMatch != null) {
-            t2.text =
-                "在${moreMatch!!.city_name}找到${moreMatch!!.people_amount}个待筛选${moreMatch!!.gender_str}用户\n我们将进一步问您一些问题\n提供给你更精准的配对需求"
+            SpanUtils.with(t2)
+                .append("在${moreMatch!!.city_name}找到")
+                .append("${moreMatch!!.people_amount}")
+                .setBold()
+                .setBackgroundColor(resources.getColor(R.color.colorOrange))
+                .append("个待筛选${moreMatch!!.gender_str}用户\n我们将进一步问您一些问题\n提供给你更精准的配对需求")
         }
 
         nextStep.setOnClickListener(this)
