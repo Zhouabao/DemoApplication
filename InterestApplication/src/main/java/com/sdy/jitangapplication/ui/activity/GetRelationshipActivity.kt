@@ -45,10 +45,6 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
         vpRelationship.isUserInputEnabled = false
 
         nextStep.setOnClickListener(this)
-        watingMatchCount.text =
-            "${(intent.getSerializableExtra("moreMatch") as MoreMatchBean?)?.people_amount
-                ?: 0}"
-        watingMatchCount.dance()
 
         mPresenter.getMyTaps()
     }
@@ -88,7 +84,7 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
                     currentPos += 1
                     vpRelationship.setCurrentItem(currentPos, true)
                     watingMatchCount.text = "${getRelationshipVpAdapter.data[currentPos].use_cnt}"
-                    watingMatchCount.dance()
+                    watingMatchCount.dance(getRelationshipVpAdapter.data[currentPos - 1].use_cnt * 1f / getRelationshipVpAdapter.data[currentPos].use_cnt)
                 } else { //
                     mPresenter.addWant(
                         hashMapOf(
@@ -119,7 +115,14 @@ class GetRelationshipActivity : BaseMvpActivity<GetRelationshipPresenter>(), Get
 
     override fun onGetMyTaps(data: MutableList<MyTapsBean>) {
         getRelationshipVpAdapter.setNewData(data)
-
+        if (!data.isNullOrEmpty() && data.size > 0) {
+            watingMatchCount.text = "${data[0].use_cnt}"
+        } else {
+            watingMatchCount.text =
+                "${(intent.getSerializableExtra("moreMatch") as MoreMatchBean?)?.people_amount
+                    ?: 0}"
+        }
+        watingMatchCount.dance()
     }
 
     override fun onBackPressed() {

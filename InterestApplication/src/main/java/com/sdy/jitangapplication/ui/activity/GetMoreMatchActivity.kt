@@ -54,8 +54,9 @@ class GetMoreMatchActivity : BaseMvpActivity<GetMoreMatchPresenter>(), GetMoreMa
                 .append("在${moreMatch!!.city_name}找到")
                 .append("${moreMatch!!.people_amount}")
                 .setBold()
-                .setBackgroundColor(resources.getColor(R.color.colorOrange))
+                .setForegroundColor(resources.getColor(R.color.colorOrange))
                 .append("个待筛选${moreMatch!!.gender_str}用户\n我们将进一步问您一些问题\n提供给你更精准的配对需求")
+                .create()
         }
 
         nextStep.setOnClickListener(this)

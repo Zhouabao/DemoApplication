@@ -82,8 +82,7 @@ public class DancingNumberView extends AppCompatTextView {
         objectAnimator.start();
     }
 
-    public void dance() {
-
+    public void dance(float factor) {
         text = getText().toString();
         numbers = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\d+(\\.\\d+)?");
@@ -94,7 +93,25 @@ public class DancingNumberView extends AppCompatTextView {
         textPattern = text.replaceAll("\\d+(\\.\\d+)?", PLACEHOLDER);
         numberTemp = new float[numbers.size()];
 
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(this, "factor", 0, 1);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(this, "factor", factor, 1f);
+        objectAnimator.setDuration(duration);
+        objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        objectAnimator.start();
+    }
+
+
+    public void dance() {
+        text = getText().toString();
+        numbers = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\d+(\\.\\d+)?");
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            numbers.add(Float.parseFloat(matcher.group()));
+        }
+        textPattern = text.replaceAll("\\d+(\\.\\d+)?", PLACEHOLDER);
+        numberTemp = new float[numbers.size()];
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(this, "factor", 0, 1f);
         objectAnimator.setDuration(duration);
         objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         objectAnimator.start();
