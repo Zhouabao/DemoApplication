@@ -36,6 +36,7 @@ import com.sdy.baselibrary.widgets.swipeback.app.SwipeBackActivityHelper
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.UpdateContactBookEvent
+import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.fragment.ChatMessageFragment
 import com.sdy.jitangapplication.ui.activity.MainActivity
@@ -163,8 +164,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     /**
      * 好友在线状态观察者
      */
-    private
-    val onlineStateChangeObserver =
+    private val onlineStateChangeObserver =
         OnlineStateChangeObserver { accounts ->
             if (!accounts.contains(sessionId)) {
                 return@OnlineStateChangeObserver
@@ -185,7 +185,6 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
         mHelper = SwipeBackActivityHelper(this)
         mHelper.onActivityCreate()
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT)
-
 
         // 单聊特例话数据，包括个人信息，
         requestBuddyInfo()
@@ -310,6 +309,7 @@ class ChatActivity : ChatBaseMessageActivity(), SwipeBackActivityBase {
     override fun onBackPressed() {
         if (KeyboardUtils.isSoftInputVisible(this))
             KeyboardUtils.hideSoftInput(this)
+        EventBus.getDefault().postSticky(UpdateHiEvent())
         super.onBackPressed()
     }
 

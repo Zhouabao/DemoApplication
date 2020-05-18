@@ -1639,9 +1639,10 @@ class PublishActivity : BaseMvpActivity<PublishPresenter>(), PublishView,
      */
     override fun onSquareAnnounceResult(type: Int, success: Boolean, code: Int) {
         EventBus.getDefault().postSticky(AnnounceEvent(success, code))
+
         if (success) {
             if (intent.getIntExtra("from", 1) == 2) {
-                EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
+                EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = UploadEvent.FROM_USERCENTER))
             }
             if (!this.isFinishing)
                 finish()

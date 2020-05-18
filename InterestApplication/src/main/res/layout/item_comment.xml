@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/commentAvator"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/icon_default_avator"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/commentName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="2dp"
+        android:text="豆炎"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@id/commentAvator"
+        app:layout_constraintTop_toTopOf="@id/commentAvator" />
+
+    <RatingBar
+        android:id="@+id/commentStar"
+        style="?android:attr/ratingBarStyleIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="11dp"
+        android:layout_marginTop="2dp"
+        android:progressDrawable="@drawable/ratingbar_bg_small"
+        android:rating="5"
+        app:layout_constraintLeft_toLeftOf="@id/commentName"
+        app:layout_constraintTop_toBottomOf="@id/commentName" />
+
+    <TextView
+        android:id="@+id/commentTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:text="2020-02-28 13:06"
+        android:textColor="#ff888d92"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/commentStar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/commentName" />
+
+    <TextView
+        android:id="@+id/commentContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="跟我双十一买的质量不一样，明明我还是在上一次买的链接进去重新买的，感觉没有上次买的质量好呀，也还是不错"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/commentName"
+        app:layout_constraintRight_toRightOf="@id/commentTime"
+        app:layout_constraintTop_toBottomOf="@id/commentStar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentPicsRv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="@id/commentName"
+        app:layout_constraintRight_toRightOf="@id/commentTime"
+        app:layout_constraintTop_toBottomOf="@id/commentContent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

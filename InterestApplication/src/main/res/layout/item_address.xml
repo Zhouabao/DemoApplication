@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sdy.jitangapplication.widgets.swipemenu.EasySwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:contentView="@id/content"
+    app:rightMenuView="@id/right">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/addressChecked"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/icon_location_address"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/addressName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="习蓉习\t\t17123585545"
+            android:textColor="#ff191919"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/addressChecked"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/addressDefault"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/shape_rectangle_light_yellow_4dp"
+            android:paddingLeft="6dp"
+            android:paddingTop="2dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="2dp"
+            android:gravity="center"
+            android:text="默认"
+            android:textColor="#ffff6318"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@id/addressName"
+            app:layout_constraintLeft_toRightOf="@id/addressName"
+            app:layout_constraintTop_toTopOf="@id/addressName" />
+
+
+        <TextView
+            android:id="@+id/addressContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:ellipsize="end"
+            android:lineSpacingMultiplier="1.1"
+            android:maxLines="3"
+            android:text="甘肃省平凉市庄浪县世纪路977号甘肃省平凉市庄浪县世纪路977号甘肃省平凉市庄浪县世纪路977号"
+            android:textColor="#ff696e73"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="@id/addressName"
+            app:layout_constraintRight_toLeftOf="@id/view"
+            app:layout_constraintTop_toBottomOf="@id/addressName" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/colorDivider"
+            app:layout_constraintBottom_toBottomOf="@id/addressEdit"
+            app:layout_constraintRight_toLeftOf="@id/addressEdit"
+            app:layout_constraintTop_toTopOf="@id/addressEdit" />
+
+        <TextView
+            android:id="@+id/addressEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="编辑"
+            android:textColor="#ffc5c6c8"
+            android:textSize="12sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/addressContent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorDivider"
+            app:layout_constraintLeft_toLeftOf="@id/addressName"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addressContent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/menuDefault"
+            android:layout_width="78dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#FFCCCCCC"
+            android:gravity="center"
+            android:text="设为默认"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/menuDelete"
+            android:layout_width="78dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#FFFD4417"
+            android:gravity="center"
+            android:text="删除"
+            android:textColor="#ffffffff"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</com.sdy.jitangapplication.widgets.swipemenu.EasySwipeMenuLayout>

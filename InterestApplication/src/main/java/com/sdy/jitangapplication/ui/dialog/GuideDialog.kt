@@ -12,8 +12,14 @@ import android.view.animation.TranslateAnimation
 import androidx.core.view.isVisible
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.event.GetRecommendEvent
+import com.sdy.jitangapplication.presenter.MatchPresenter
+import com.sdy.jitangapplication.ui.activity.MyCandyActivity
+import com.sdy.jitangapplication.ui.activity.ProtocolActivity
 import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.dialog_guide.*
+import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.startActivity
 
 /**
  *    author : ZFM
@@ -21,7 +27,10 @@ import kotlinx.android.synthetic.main.dialog_guide.*
  *    desc   :
  *    version: 1.0
  */
-class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
+class GuideDialog(
+    context: Context,
+    val presenter: MatchPresenter
+) : Dialog(context, R.style.MyDialog) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_guide)
@@ -44,9 +53,24 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
 
 
     private fun initView() {
-        last.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
-        next.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
-        detail.startAnimation((AnimationUtils.loadAnimation(context, R.anim.anim_small_to_big) as ScaleAnimation))
+        last.startAnimation(
+            (AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_small_to_big
+            ) as ScaleAnimation)
+        )
+        next.startAnimation(
+            (AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_small_to_big
+            ) as ScaleAnimation)
+        )
+        detail.startAnimation(
+            (AnimationUtils.loadAnimation(
+                context,
+                R.anim.anim_small_to_big
+            ) as ScaleAnimation)
+        )
 
         guide_dislike_hand_left.startAnimation(
             (AnimationUtils.loadAnimation(
@@ -73,7 +97,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            intentionMatchingCl.isVisible = false
         }
 
         guideNext.onClick {
@@ -85,7 +108,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            intentionMatchingCl.isVisible = false
         }
 
         guideDetail.onClick {
@@ -98,7 +120,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             useCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            intentionMatchingCl.isVisible = false
 
         }
 
@@ -113,7 +134,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideLike.isVisible = true
             guideDislike.isVisible = false
             useCl.isVisible = false
-            intentionMatchingCl.isVisible = false
         }
 
         btnChat.onClick {
@@ -127,7 +147,6 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideLike.isVisible = true
             guideDislike.isVisible = false
             useCl.isVisible = false
-            intentionMatchingCl.isVisible = false
         }
 
         guideLike.onClick {
@@ -135,47 +154,44 @@ class GuideDialog(context: Context) : Dialog(context, R.style.MyDialog) {
             guideLike.isVisible = false
             guideDislike.isVisible = true
             useCl.isVisible = false
-            intentionMatchingCl.isVisible = false
 
         }
         guideDislike.onClick {
             guideCl.isVisible = false
             guideLike.isVisible = false
             guideDislike.isVisible = false
-            useCl.isVisible = false
-            useCl.isVisible = true
-
-            intentionMatchingCl.isVisible = false
-//            intentionMatchingCl.isVisible = true
+//            useCl.isVisible = false
+            dismiss()
+//            useCl.isVisible = true
+//            welldone.playAnimation()
         }
 
-
-        intentionMatchingCl.onClick {
-            guideCl.isVisible = false
-            guideLike.isVisible = false
-            guideDislike.isVisible = false
-            intentionMatchingCl.isVisible = false
-            useCl.isVisible = true
-        }
-
-        onceAgain.onClick {
-            guideCl.isVisible = true
-            guideLast.isVisible = true
-            guideNext.isVisible = false
-            guideDetail.isVisible = false
-            guideLike.isVisible = false
-            guideDislike.isVisible = false
-            useCl.isVisible = false
-            intentionMatchingCl.isVisible = false
-        }
         startUse.onClick {
             last.clearAnimation()
             next.clearAnimation()
             detail.clearAnimation()
             guide_dislike_hand_left.clearAnimation()
             guide_like_hand_right.clearAnimation()
-            UserManager.saveShowGuideIndex(true)
             dismiss()
         }
+        useOfCandy.onClick {
+            if (UserManager.getGender() == 1) {
+                context.startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_CANDY_USAGE)
+            } else {
+                context.startActivity<MyCandyActivity>()
+            }
+            last.clearAnimation()
+            next.clearAnimation()
+            detail.clearAnimation()
+            guide_dislike_hand_left.clearAnimation()
+            guide_like_hand_right.clearAnimation()
+            dismiss()
+        }
+    }
+
+
+    override fun dismiss() {
+        super.dismiss()
+        EventBus.getDefault().post(GetRecommendEvent())
     }
 }

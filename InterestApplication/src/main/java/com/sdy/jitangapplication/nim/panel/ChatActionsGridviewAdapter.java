@@ -6,8 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.airbnb.lottie.LottieAnimationView;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.nim.session.ChatBaseAction;
 
@@ -49,17 +50,29 @@ public class ChatActionsGridviewAdapter extends BaseAdapter {
             itemlayout = convertView;
         }
 
-        itemlayout.setEnabled(viewHolder.isEnable());
-        if (viewHolder.isEnable()) {
-            if (viewHolder.isCheck()) {
-                ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdChoose());
+        if (position != getCount() - 1) {
+            if (viewHolder.isEnable()) {
+                if (viewHolder.isCheck()) {
+                    ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdChoose());
+                } else {
+                    ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdChoose());
+                }
             } else {
-                ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResId());
+                ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResId());
             }
         } else {
-            ((ImageView) itemlayout.findViewById(R.id.imageView)).setImageResource(viewHolder.getIconResIdDisable());
+            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setImageAssetsFolder("images_gift");
+            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setRepeatCount(-1);
+            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).setAnimation("data_gift.json");
+            ((LottieAnimationView) itemlayout.findViewById(R.id.imageView)).playAnimation();
         }
         ((TextView) itemlayout.findViewById(R.id.textView)).setText(context.getString(viewHolder.getTitleId()));
+
+        if (position == getCount() - 1) {
+            itemlayout.setEnabled(true);
+        } else {
+            itemlayout.setEnabled(viewHolder.isEnable());
+        }
         return itemlayout;
     }
 }

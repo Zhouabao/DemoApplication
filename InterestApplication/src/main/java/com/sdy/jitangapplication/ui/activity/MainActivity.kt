@@ -1,17 +1,22 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.*
-import com.kotlin.base.common.AppManager
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.netease.nimlib.sdk.NIMClient
@@ -27,7 +32,9 @@ import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.AllMsgCount
+import com.sdy.jitangapplication.model.IndexRecommendBean
 import com.sdy.jitangapplication.model.InvestigateBean
+import com.sdy.jitangapplication.model.NearCountBean
 import com.sdy.jitangapplication.presenter.MainPresenter
 import com.sdy.jitangapplication.presenter.view.MainView
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
@@ -61,13 +68,13 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private val myFragment by lazy { UserCenterFragment() }
 
 
-    private val guideDialog by lazy { GuideDialog(this) }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         initView()
+
         //启动时间统计
         mPresenter.startupRecord(
             UserManager.getToken(),
@@ -83,11 +90,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         //如果定位信息没有就重新定位
         AMapManager.initLocation(this)
         filterBtn.setOnClickListener(this)
-        if (!UserManager.isShowGuideIndex()) {
-            guideDialog.show()
-        }
-        if (!UserManager.getAlertProtocol())
-            PrivacyDialog(this).show()
+
+
 
         if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
             //0未认证/认证不成功     1认证通过     2认证中
@@ -101,6 +105,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             }
         }
 
+
     }
 
 
@@ -113,7 +118,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun parseIntents() {
         // 可以获取消息的发送者，跳转到指定的单聊、群聊界面。
         if (intent != null && intent.hasExtra(NimIntent.EXTRA_NOTIFY_CONTENT)) {
-            val messages = intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT) as ArrayList<IMMessage>?
+            val messages =
+                intent.getSerializableExtra(NimIntent.EXTRA_NOTIFY_CONTENT) as ArrayList<IMMessage>?
             if (messages != null && messages.size > 0) {
                 val message = messages[0]
                 intent.removeExtra(NimIntent.EXTRA_NOTIFY_CONTENT)
@@ -131,7 +137,9 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
     private fun initView() {
         EventBus.getDefault().register(this)
-        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, true)
+        NIMClient.getService(MsgServiceObserve::class.java)
+            .observeReceiveMessage(incomingMessageObserver, true)
+
 
         //首页禁止滑动
         setSwipeBackEnable(false)
@@ -154,7 +162,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         tabSquarePublish.onClick(
             object : CustomClickListener() {
                 override fun onSingleClick(view: View) {
-                    contentFragment.mPresenter.checkBlock()
+                    try {
+                        contentFragment.mPresenter.checkBlock()
+                    } catch (e: Exception) {
+
+                    }
                 }
             }
         )
@@ -175,17 +187,22 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
 
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
 
             override fun onPageSelected(position: Int) {
                 if (position == 3) {
+//                    CancelPopEvent
                     EventBus.getDefault().postSticky(UserCenterEvent(true))
                 }
                 switchTab(position)
             }
         })
+
     }
 
 
@@ -195,29 +212,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private fun switchTab(position: Int) {
         when (position) {
             0 -> {
-                if (!UserManager.isUserVip()) {
-                    tabMatch.isVisible = true
-                    tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
-                    tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
-                    tabMatchCount.setPadding(0, 0, 0, SizeUtils.dp2px(3F))
-                    tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
-                        null,
-                        null,
-                        null,
-                        null
-                    )
-                } else {
-                    tabMatch.isVisible = false
-                    tabMatchCount.text = "首页"
-                    tabMatchCount.setTextColor(resources.getColor(R.color.colorOrange))
-                    tabMatchCount.setPadding(0)
-                    tabMatchCount.setCompoundDrawablesWithIntrinsicBounds(
-                        null,
-                        resources.getDrawable(R.drawable.icon_tab_match_checked),
-                        null,
-                        null
-                    )
-                }
+                onUpdateSlideCountEvent(UpdateSlideCountEvent(indexFragment.currentPos == 1))
 
                 publishGuideIv.isVisible = false
                 tabSquarePublish.isVisible = false
@@ -238,8 +233,49 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 )
             }
             1 -> {
-                publishGuideIv.isVisible = !UserManager.isShowGuidePublish()
+                if (!UserManager.isShowGuidePublish()) {
+                    publishGuideIv.isVisible = true
+                    val params = publishGuideIv.layoutParams as FrameLayout.LayoutParams
+                    params.width = SizeUtils.dp2px(186F)
+                    params.height = SizeUtils.dp2px(121F)
+                    params.leftMargin =
+                        ((1 / 4F + 1 / 8F) * ScreenUtils.getScreenWidth() - SizeUtils.dp2px(186 / 2F)).toInt()
+                    publishGuideIv.layoutParams = params
 
+                    val trans = ObjectAnimator.ofFloat(
+                        publishGuideIv,
+                        "translationY",
+                        SizeUtils.dp2px(-5F).toFloat(),
+                        SizeUtils.dp2px(0F).toFloat(),
+                        SizeUtils.dp2px(-5F).toFloat()
+                    )
+                    trans.duration = 500
+                    trans.repeatCount = 6
+                    trans.interpolator = LinearInterpolator()
+                    trans.addListener(object : Animator.AnimatorListener {
+                        override fun onAnimationRepeat(animation: Animator?) {
+
+                        }
+
+                        override fun onAnimationEnd(animation: Animator?) {
+                            publishGuideIv.isVisible = false
+                            UserManager.saveShowGuidePublish(true)
+                        }
+
+                        override fun onAnimationCancel(animation: Animator?) {
+                        }
+
+                        override fun onAnimationStart(animation: Animator?) {
+                        }
+
+                    })
+                    trans.start()
+                    publishGuideIv.onClick {
+                        startActivity<PublishActivity>()
+                    }
+                } else {
+                    publishGuideIv.isVisible = false
+                }
                 tabMatch.isVisible = false
                 tabMatchCount.text = "首页"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorGrayCCC))
@@ -334,7 +370,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUpdateSlideCountEvent(event: UpdateSlideCountEvent) {
         if (vpMain.currentItem == 0) {
-            if (!UserManager.isUserVip()) {
+            if (!UserManager.isUserVip() && event.showCardTimes) {
                 tabMatch.isVisible = true
                 tabMatchCount.text = "${UserManager.getLeftSlideCount()}"
                 tabMatchCount.setTextColor(resources.getColor(R.color.colorWhite))
@@ -390,7 +426,10 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         if (UserManager.isNeedChangeAvator())
             if (!UserManager.isForceChangeAvator()) {
                 if (UserManager.getChangeAvatorType() == 1)
-                    showGotoVerifyDialog(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS, UserManager.getChangeAvator())
+                    showGotoVerifyDialog(
+                        GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS,
+                        UserManager.getChangeAvator()
+                    )
                 else
                     ChangeAvatarRealManDialog(
                         this,
@@ -414,7 +453,8 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             gotoVerifyDialog = null
         }
         EventBus.getDefault().unregister(this)
-        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(incomingMessageObserver, false)
+        NIMClient.getService(MsgServiceObserve::class.java)
+            .observeReceiveMessage(incomingMessageObserver, false)
     }
 
 
@@ -424,10 +464,6 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     private var firstClickTime = 0L
 
     override fun onBackPressed() {
-        if (guideDialog.isShowing) {
-            return
-        }
-
         if (GSYVideoManager.backFromWindowFull(this)) {
             return
         }
@@ -437,9 +473,11 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             CommonFunction.toast("再按一次退出程序")
             firstClickTime = secondTime
         } else {
+            UserManager.showCompleteUserCenterDialog = false
             SPUtils.getInstance(Constants.SPNAME).remove("AlertChangeAlbum")
-            AppManager.instance.finishAllActivity()
-            System.exit(0)//正常退出
+            ActivityUtils.finishAllActivities()
+//            AppManager.instance.finishAllActivity()
+//            System.exit(0)//正常退出
 //            AppManager.instance.exitApp(this)
         }
     }
@@ -480,6 +518,41 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
         UserManager.saveShowSurveyCount(investigateBean.showcard_cnt)
         if (investigateDialog == null) {
             investigateDialog = InvestigateDialog(this, investigateBean)
+        }
+    }
+
+
+    /**
+     * 今日推荐获取结果
+     */
+    override fun onTodayRecommend(data: MutableList<IndexRecommendBean>?) {
+        if (!data.isNullOrEmpty()) {
+            TodayFateDialog(this, data!!).show()
+        }
+    }
+
+    private var canShowNear = false
+    override fun startupRecordResult(data: NearCountBean?) {
+        if (data != null && data.nearly_tips_cnt > 0) {
+            canShowNear = true
+            totalNearOnlineTv.text = SpanUtils.with(totalNearOnlineTv)
+                .append("你身边有")
+                .append("${data.nearly_tips_cnt}")
+                .setFontSize(15, true)
+                .setForegroundColor(Color.parseColor("#FD4417"))
+                .append(
+                    "个${if (UserManager.getGender() == 1) {
+                        "女"
+                    } else {
+                        "男"
+                    }}性在线\n最近的离你只有"
+                )
+                .append("${data.nearly_tips_str}")
+                .setFontSize(15, true)
+                .setForegroundColor(Color.parseColor("#FD4417"))
+                .create()
+        } else {
+            canShowNear = false
         }
     }
 
@@ -537,6 +610,67 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
     }
 
 
+    private var showNear = false
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onShowNearCountEvent(event: ShowNearCountEvent) {
+        if (canShowNear && !showNear) {
+            showNear = true
+            totalNearOnlineTv.isVisible = true
+            val animatorSet = AnimatorSet()
+            animatorSet.duration = 300L
+            animatorSet.playTogether(
+                ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleX", 0.45f, 1F),
+                ObjectAnimator.ofFloat(totalNearOnlineTv, "scaleY", 0.45f, 1F),
+                ObjectAnimator.ofFloat(totalNearOnlineTv, "alpha", 0F, 1F)
+            )
+            animatorSet.start()
+
+            val trans = ObjectAnimator.ofFloat(
+                totalNearOnlineTv,
+                "translationY",
+                SizeUtils.dp2px(-5F).toFloat(),
+                SizeUtils.dp2px(0F).toFloat(),
+                SizeUtils.dp2px(-5F).toFloat()
+            )
+            trans.duration = 750
+            trans.repeatCount = 4
+            trans.interpolator = LinearInterpolator()
+            trans.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    totalNearOnlineTv.isVisible = false
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+
+            })
+
+            animatorSet.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    trans.start()
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+
+            })
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onGetMSGEvent(event: GetNewMsgEvent) {
         mPresenter.msgList()
@@ -560,16 +694,16 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
                 content = "您当前头像无法通过人脸对比\n请更换本人头像重新进行认证审核"
                 title = "认证审核不通过"
             }
-            GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//头像违规
+            GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7头像违规
                 content = "尊敬的用户，您上传的头像未使用真实照片或涉及违规，替换真实照片前您将持续对其他不可见"
                 title = "请替换头像"
                 confirmText = "修改头像"
             }
-            GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//完善相册
-                content = "完善相册会使你的信息更多在匹配页展示\n现在就去完善你的相册吧！"
-                title = "完善相册"
-                confirmText = "完善相册"
-            }
+//            GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//完善相册
+//                content = "完善相册会使你的信息更多在匹配页展示\n现在就去完善你的相册吧！"
+//                title = "完善相册"
+//                confirmText = "完善相册"
+//            }
 
         }
         if (gotoVerifyDialog != null) {
@@ -596,7 +730,7 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             accountDangerDialog!!.dismiss()
             accountDangerDialog = null
         }
-        if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_REAL_NOT_VALID) {
+        if (event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_REAL_NOT_VALID) {//11
             UserManager.saveNeedChangeAvator(true)//需要换头像
             UserManager.saveForceChangeAvator(false)//是否强制替换过头像
             UserManager.saveChangeAvatorType(2)//真人不合规
@@ -607,18 +741,25 @@ class MainActivity : BaseMvpActivity<MainPresenter>(), MainView, View.OnClickLis
             ).show()
         } else {
             when {
-                event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {
+                event.type == GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7
                     UserManager.saveNeedChangeAvator(true)//需要换头像
                     UserManager.saveForceChangeAvator(false)//是否强制替换过头像
                     UserManager.saveChangeAvatorType(1)//头像不合规
+                    showGotoVerifyDialog(event.type, event.avator)
                 }
-                event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> UserManager.saveAlertChangeAlbum(true)
+                event.type == GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {
+                    HumanVerifyDialog(this).apply {
+                        type = GotoVerifyDialog.TYPE_CHANGE_ABLUM
+                    }
+                        .show()
+                    UserManager.saveAlertChangeAlbum(true)
+                }
             }
-            showGotoVerifyDialog(event.type, event.avator)
         }
         if (EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java) != null) {
             // 若粘性事件存在，将其删除
-            EventBus.getDefault().removeStickyEvent(EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java))
+            EventBus.getDefault()
+                .removeStickyEvent(EventBus.getDefault().getStickyEvent(ReVerifyEvent::class.java))
         }
     }
 

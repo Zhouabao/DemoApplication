@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:background="@drawable/shape_rectangle_gray_white_10dp">
+
+    <com.sdy.baselibrary.widgets.RoundImageView
+        android:id="@+id/giftImg"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:borderRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:type="round" />
+
+
+    <TextView
+        android:id="@+id/giftDesc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="德国进口Blink冰力克80…"
+        android:textColor="#ffacadb4"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/giftImg"
+        app:layout_constraintLeft_toRightOf="@id/giftImg"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/giftImg" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

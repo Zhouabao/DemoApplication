@@ -12,13 +12,17 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.google.android.flexbox.*
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.data.protocol.BaseResp
@@ -31,10 +35,11 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshCommentEvent
+import com.sdy.jitangapplication.event.RefreshDeleteSquareEvent
 import com.sdy.jitangapplication.event.RefreshLikeEvent
 import com.sdy.jitangapplication.event.RefreshSquareEvent
-import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.AllCommentBean
 import com.sdy.jitangapplication.model.CommentBean
 import com.sdy.jitangapplication.model.SquareBean
@@ -80,13 +85,19 @@ import org.jetbrains.anko.startActivity
 /**
  * 广场详情页 包含内容详情以及点赞评论信息
  */
-class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView, View.OnClickListener,
+class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), SquareDetailView,
+    OnLazyClickListener,
     OnRefreshListener, OnLoadMoreListener {
     private val TAG = SquareCommentDetailActivity::class.java.simpleName
 
     //评论数据
     private var commentDatas: MutableList<CommentBean> = mutableListOf()
-    private val adapter: MultiListCommentAdapter by lazy { MultiListCommentAdapter(this, commentDatas) }
+    private val adapter: MultiListCommentAdapter by lazy {
+        MultiListCommentAdapter(
+            this,
+            commentDatas
+        )
+    }
 
     private var squareBean: SquareBean? = null
 
@@ -136,13 +147,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             commentParams["square_id"] = "${squareBean!!.id}"
             mPresenter.getCommentList(commentParams, true)
         } else {
-            mPresenter.getSquareInfo(
-                hashMapOf(
-                    "token" to UserManager.getToken(),
-                    "accid" to UserManager.getAccid(),
-                    "square_id" to intent.getIntExtra("square_id", 0)
+            stateview.postDelayed({
+                mPresenter.getSquareInfo(
+                    hashMapOf(
+                        "token" to UserManager.getToken(),
+                        "accid" to UserManager.getAccid(),
+                        "square_id" to intent.getIntExtra("square_id", 0)
+                    )
                 )
-            )
+            }, 700L)
+
         }
 
     }
@@ -162,7 +176,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 audioRecordLl.isVisible = true
 //                initAudio()
                 initAudio(0)
-                mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+                mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "")
+                    .prepareMedia()
             }
         }
 
@@ -192,18 +207,29 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             )
         }
         squareTitleRv.isVisible = !squareBean!!.title_list.isNullOrEmpty()
-        squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
-            resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
-            null,
-            null,
-            null
+        setLikeStatus(
+            squareBean!!.isliked,
+            squareBean!!.like_cnt,
+            squareDianzanBtn1,
+            squareDianzanAni,
+            squareDianzanImg,
+            false
         )
 
-        squareDianzanBtn1.text = "${if (squareBean!!.like_cnt < 0) {
-            0
-        } else {
-            squareBean!!.like_cnt
-        }}"
+        if (intent.getIntExtra("position", -1) != -1)
+            EventBus.getDefault().post(
+                RefreshLikeEvent(
+                    squareBean?.id ?: 0,
+                    squareBean?.isliked ?: 0,
+                    intent.getIntExtra("position", -1),
+                    if (squareBean!!.like_cnt < 0) {
+                        0
+                    } else {
+                        squareBean!!.like_cnt
+                    }
+                )
+            )
+
         squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         squareContent1.isVisible = !squareBean!!.descr.isNullOrEmpty()
         if (!squareBean!!.descr.isNullOrEmpty()) {
@@ -245,6 +271,40 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         }
     }
 
+    private fun setLikeStatus(
+        isliked: Int,
+        likeCount: Int,
+        likeView: TextView,
+        likeAni: LottieAnimationView,
+        likeImg: ImageView,
+        animated: Boolean = true
+    ) {
+        likeAni.isVisible = isliked == 1 && animated
+        likeImg.visibility = if (likeAni.isVisible) {
+            View.INVISIBLE
+        } else {
+            View.VISIBLE
+        }
+
+        if (isliked == 1) {
+            if (animated) {
+                likeAni.playAnimation()
+                VibrateUtils.vibrate(50L)
+            } else {
+                likeImg.setImageResource(R.drawable.icon_zan_clicked)
+            }
+        } else {
+            likeImg.setImageResource(R.drawable.icon_zan_normal)
+        }
+
+        likeView.text = "${if (likeCount < 0) {
+            0
+        } else {
+            likeCount
+        }}"
+    }
+
+
     private fun initView() {
         mPresenter = SquareDetailPresenter()
         mPresenter.mView = this
@@ -283,7 +343,8 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         btnBack.setOnClickListener(this)
         headBtnBack.setOnClickListener(this)
         squareZhuanfaBtn1.setOnClickListener(this)
-        squareDianzanBtn1.setOnClickListener(this)
+        squareDianzanAni.setOnClickListener(this)
+        squareDianzanImg.setOnClickListener(this)
         squareCommentBtn1.setOnClickListener(this)
         squareChatBtn1.setOnClickListener(this)
         headSquareChatBtn1.setOnClickListener(this)
@@ -456,14 +517,16 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             when (squareBean!!.isPlayAudio) {
                 IjkMediaPlayerUtil.MEDIA_ERROR -> {
                     initAudio(0)
-                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "")
+                        .prepareMedia()
                 }
                 IjkMediaPlayerUtil.MEDIA_PREPARE -> {//准备中
                     mediaPlayer!!.prepareMedia()
                 }
                 IjkMediaPlayerUtil.MEDIA_STOP -> {//停止就重新准备
                     initAudio(0)
-                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "").prepareMedia()
+                    mediaPlayer!!.setDataSource(squareBean!!.audio_json?.get(0)?.url ?: "")
+                        .prepareMedia()
                 }
                 IjkMediaPlayerUtil.MEDIA_PLAY -> {//播放点击就暂停
                     mediaPlayer!!.pausePlay()
@@ -500,7 +563,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     /**
      * 初始化图片列表
      */
-    private val imgsAdapter by lazy { ListSquareImgsAdapter(this, squareBean!!.photo_json ?: mutableListOf()) }
+    private val imgsAdapter by lazy {
+        ListSquareImgsAdapter(
+            this,
+            squareBean!!.photo_json ?: mutableListOf()
+        )
+    }
 
     private fun initPics() {
         if (squareBean!!.photo_json != null && squareBean!!.photo_json!!.size > 0) {
@@ -522,7 +590,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                         },
                         "square_id" to squareBean!!.id!!
                     )
-                    mPresenter.getSquareLike(params)
+                    mPresenter.getSquareLike(params, true)
                 }
 
                 startActivity<BigImageActivity>(
@@ -532,6 +600,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             }
         }
     }
+
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         page++
@@ -642,12 +711,15 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                 squareBean!!.like_cnt = squareBean!!.like_cnt?.minus(1)
                 0
             }
-            squareDianzanBtn1.text = "${squareBean!!.like_cnt}"
-            squareDianzanBtn1.setCompoundDrawablesWithIntrinsicBounds(
-                resources.getDrawable(if (squareBean!!.isliked == 1) R.drawable.icon_dianzan_red else R.drawable.icon_dianzan),
-                null,
-                null,
-                null
+
+
+            setLikeStatus(
+                squareBean!!.isliked,
+                squareBean!!.like_cnt,
+                squareDianzanBtn1,
+                squareDianzanAni,
+                squareDianzanImg,
+                true
             )
 
             if (intent.getIntExtra("position", -1) != -1)
@@ -676,7 +748,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             commentParams["page"] = page
             mPresenter.getCommentList(commentParams, true)
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.plus(1)
-            EventBus.getDefault().post(RefreshCommentEvent(squareBean!!.comment_cnt, intent.getIntExtra("position", 0)))
+            EventBus.getDefault().post(
+                RefreshCommentEvent(
+                    squareBean!!.comment_cnt,
+                    intent.getIntExtra("position", 0)
+                )
+            )
             squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         }
     }
@@ -701,7 +778,12 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             adapter.data.removeAt(position)
             adapter.notifyItemRemoved(position)
             squareBean!!.comment_cnt = squareBean!!.comment_cnt.minus(1)
-            EventBus.getDefault().post(RefreshCommentEvent(squareBean!!.comment_cnt, intent.getIntExtra("position", 0)))
+            EventBus.getDefault().post(
+                RefreshCommentEvent(
+                    squareBean!!.comment_cnt,
+                    intent.getIntExtra("position", 0)
+                )
+            )
             squareCommentBtn1.text = "${squareBean!!.comment_cnt}"
         }
     }
@@ -711,7 +793,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
     }
 
 
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             R.id.squareZhuanfaBtn1 -> {
                 showTranspondDialog()
@@ -719,7 +801,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
             R.id.btnBack, R.id.headBtnBack -> {
                 onBackPressed()
             }
-            R.id.squareDianzanBtn1 -> {
+            R.id.squareDianzanAni, R.id.squareDianzanImg -> {
                 val params = hashMapOf(
                     "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
                     "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
@@ -761,7 +843,6 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
                         "reply_id" to reply_id
                     )
                 )
-                sendCommentBtn.isEnabled = false
 
             }
         }
@@ -862,7 +943,15 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
         if (result) {
             CommonFunction.toast("动态删除成功!")
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
-            EventBus.getDefault().postSticky(UserCenterEvent(true))
+            EventBus.getDefault().post(
+                RefreshDeleteSquareEvent(
+                    if (squareBean != null) {
+                        squareBean!!.id ?: 0
+                    } else {
+                        intent.getIntExtra("square_id", 0)
+                    }
+                )
+            )
             finish()
         } else {
             CommonFunction.toast("动态删除失败！")
@@ -1102,6 +1191,7 @@ class SquareCommentDetailActivity : BaseMvpActivity<SquareDetailPresenter>(), Sq
 
         return super.dispatchTouchEvent(ev)
     }
+
 
 
 }

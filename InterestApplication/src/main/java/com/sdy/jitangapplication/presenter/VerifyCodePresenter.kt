@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import android.util.Log
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -78,7 +79,8 @@ class VerifyCodePresenter : BasePresenter<VerifyCodeView>() {
                 override fun onNext(t: BaseResp<Any>) {
                     mView.onConfirmVerifyCode(null, t.code == 200)
                     if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
+
                     } else if (t.code != 200) {
                         CommonFunction.toast(t.msg)
                     }

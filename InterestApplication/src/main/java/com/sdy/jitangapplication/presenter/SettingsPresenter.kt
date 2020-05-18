@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -143,7 +144,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 override fun onNext(t: BaseResp<SettingsBean?>) {
                     mView.onSettingsBeanResult(t.code == 200, t.data)
                     if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
+
                     } else if (t.code != 200) {
                         CommonFunction.toast(t.msg)
                     }

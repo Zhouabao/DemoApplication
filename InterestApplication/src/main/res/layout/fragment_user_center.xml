@@ -1,463 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.kennyc.view.MultiStateView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/multiStateView"
-        android:background="@color/colorWhite"
+<com.kennyc.view.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/multiStateView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    app:msv_errorView="@layout/error_layout"
+    app:msv_loadingView="@layout/loading_layout"
+    app:msv_viewState="loading">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:msv_errorView="@layout/error_layout"
-        app:msv_loadingView="@layout/loading_layout"
-        app:msv_viewState="content">
+        android:orientation="vertical">
 
-
-    <androidx.core.widget.NestedScrollView
-            android:id="@+id/refreshLayout"
-            android:scrollbars="none"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settingCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:paddingBottom="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/userName1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ff191919"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/settingBtn"
+                tools:text="Username" />
+
+            <ImageView
+                android:id="@+id/userInfoSettingBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="5dp"
+                android:src="@drawable/icon_edit_black"
+                app:layout_constraintRight_toLeftOf="@id/settingBtn"
+                app:layout_constraintTop_toTopOf="@id/settingBtn" />
+
+            <ImageView
+                android:id="@+id/settingBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="15dp"
+                android:src="@drawable/icon_setting_black"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#FFF7F8F9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/settingCl">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/userAppbar"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
-                android:layout_height="wrap_content">
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/userInfoCl"
+                <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
-                    android:background="@drawable/gradient_orange"
                     android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                <View
-                        android:id="@+id/customStatusBar"
-                        android:visibility="visible"
-                        android:background="@color/colorTransparent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/userAvator"
-                        android:src="@drawable/icon_default_avator"
-                        android:layout_marginLeft="15dp"
-                        android:layout_width="64dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_height="64dp"
-                        app:civ_border_color="#99FFFFFF"
-                        app:civ_border_width="2dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/customStatusBar"
-                        />
-
-
-                <TextView
-                        android:id="@+id/userName"
-                        android:layout_marginLeft="10dp"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="21sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toTopOf="@id/userVerify"
-                        app:layout_constraintLeft_toRightOf="@id/userAvator"
-                        app:layout_constraintTop_toTopOf="@id/userAvator"
-                        tools:text="Username"/>
-
-                <ImageView
-                        android:id="@+id/userVip"
-                        android:layout_marginLeft="5dp"
-                        android:src="@drawable/icon_vip"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userName"
-                        app:layout_constraintLeft_toRightOf="@id/userName"
-                        app:layout_constraintTop_toTopOf="@id/userName"/>
-
-                <ImageView
-                        android:id="@+id/userVerify"
-                        android:src="@drawable/icon_verify_reject"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userAvator"
-                        app:layout_constraintLeft_toLeftOf="@id/userName"
-                        app:layout_constraintLeft_toRightOf="@id/userVip"
-                        app:layout_constraintTop_toBottomOf="@id/userName"/>
-
-                <TextView
-                        android:id="@+id/userVerifyTipBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="未认证"
-                        android:textColor="@color/colorGrayTextBF"
-                        android:textSize="12sp"
-                        android:layout_marginLeft="5dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userVerify"
-                        app:layout_constraintLeft_toRightOf="@id/userVerify"
-                        app:layout_constraintTop_toTopOf="@id/userVerify"
-                        />
-
-                <TextView
-                        android:id="@+id/userVerifyScore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:drawableLeft="@drawable/icon_smile_orange"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:drawablePadding="2dp"
-                        android:textColor="@color/colorOrange"
-                        android:background="@drawable/rectangle_white_3dp"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="5dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userVerify"
-                        app:layout_constraintLeft_toRightOf="@id/userVerifyTipBtn"
-                        app:layout_constraintTop_toTopOf="@id/userVerify"
-                        tools:text="+10"
-                        />
-
-                <ImageView
-                        android:id="@+id/settingBtn"
-                        android:paddingRight="15dp"
-                        android:paddingLeft="15dp"
-                        android:src="@drawable/icon_setting"
-                        android:layout_width="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_height="match_parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/userAvator"/>
-
-
-                <TextView
-                        android:id="@+id/userInfoSettingBtn"
-                        android:paddingRight="10dp"
-                        android:gravity="center"
-                        android:drawablePadding="4dp"
-                        android:textSize="12sp"
-                        android:drawableLeft="@drawable/icon_edit_white"
-                        android:textColor="@color/colorWhite"
-                        android:paddingLeft="10dp"
-                        android:background="@drawable/shape_rectangle_user_finish"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        app:layout_constraintBottom_toBottomOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="parent"
-                        tools:text="完成度：80%"/>
-
-
-                <LinearLayout
-                        android:layout_marginTop="18dp"
-                        android:background="@drawable/shape_rectangle_orange_usersetting"
-                        android:layout_width="0dp"
-                        android:layout_height="70dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginRight="15dp"
-                        app:layout_constraintLeft_toLeftOf="@id/userAvator"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/userAvator">
-
-                    <ImageView
-                            android:id="@+id/isVipIcon"
-                            android:layout_marginLeft="15dp"
-                            android:src="@drawable/icon_vip_big"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            />
+                    android:fitsSystemWindows="true"
+                    android:minHeight="0dp"
+                    app:collapsedTitleGravity="left"
+                    app:contentScrim="@color/colorTransparent"
+                    app:expandedTitleGravity="center"
+                    app:expandedTitleMarginEnd="64dp"
+                    app:expandedTitleMarginStart="48dp"
+                    app:expandedTitleTextAppearance="@style/matchdetailTitleExpandStyle"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/isVipCl"
-                            android:visibility="gone"
+                        android:id="@+id/userInfoCl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite">
+
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/userAvator"
+                            android:layout_width="76dp"
+                            android:layout_height="76dp"
+                            android:layout_marginLeft="15dp"
+                            android:src="@drawable/icon_default_avator"
+                            app:civ_border_color="#99FFFFFF"
+                            app:civ_border_width="2dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <TextView
+                            android:id="@+id/userName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
-                            android:layout_weight="1"
-                            app:layout_constraintLeft_toRightOf="@id/isVipIcon"
-                            app:layout_constraintTop_toTopOf="@id/isVipIcon">
+                            android:text="Barry Frank"
+                            android:textColor="#ff191919"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@id/userSign"
+                            app:layout_constraintLeft_toRightOf="@id/userAvator"
+                            app:layout_constraintTop_toTopOf="@id/userAvator"
+                            tools:text="Username" />
 
                         <TextView
-                                android:id="@+id/isVipType"
-                                android:text="超级会员"
-                                android:textColor="@color/colorWhite"
-                                android:textSize="14sp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:layout_constraintLeft_toLeftOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                />
+                            android:id="@+id/userSign"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:layout_marginRight="15dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="#ff888d92"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="@id/userAvator"
+                            app:layout_constraintLeft_toLeftOf="@id/userName"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/userName"
+                            tools:text="不要给失败找理由，要为成功找方向" />
 
-                        <TextView
-                                android:id="@+id/isVipTimeout"
-                                android:text="到期时间 2020-01-01"
-                                android:textColor="#ffffccac"
-                                android:textSize="12sp"
-                                android:layout_marginTop="4dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:layout_constraintLeft_toLeftOf="@id/isVipType"
-                                app:layout_constraintTop_toBottomOf="@id/isVipType"/>
+                        <ImageView
+                            android:id="@+id/userVip"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_marginLeft="8dp"
+                            android:src="@drawable/icon_vip"
+                            app:layout_constraintBottom_toBottomOf="@id/userName"
+                            app:layout_constraintLeft_toRightOf="@id/userName"
+                            app:layout_constraintTop_toTopOf="@id/userName" />
 
-                        <TextView
-                                android:id="@+id/isVipProblem"
-                                android:layout_marginLeft="5dp"
-                                android:text="\?"
-                                android:background="@drawable/shape_oval_light_orange"
-                                android:layout_width="16dp"
-                                android:layout_height="0dp"
-                                android:textSize="10sp"
-                                android:gravity="center"
-                                android:visibility="gone"
-                                android:textColor="@color/colorOrange"
-                                app:layout_constraintBottom_toBottomOf="@id/isVipTimeout"
-                                app:layout_constraintLeft_toRightOf="@id/isVipTimeout"
-                                app:layout_constraintTop_toTopOf="@id/isVipTimeout"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/userVerify"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_marginLeft="8dp"
+                            app:layout_constraintBottom_toBottomOf="@id/userName"
+                            app:layout_constraintLeft_toRightOf="@id/userVip"
+                            app:layout_constraintTop_toTopOf="@id/userName" />
 
-                    <LinearLayout
-                            android:id="@+id/notVipPowerLl"
-                            android:layout_width="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:layout_marginLeft="15dp"
-                            android:layout_height="match_parent">
-
-                        <androidx.viewpager.widget.ViewPager
-                                android:id="@+id/notVipPowerVp"
-                                android:layout_weight="1"
-                                android:layout_marginTop="10dp"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"/>
 
                         <LinearLayout
-                                android:id="@+id/notVipPowerIndicator"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="10dp"
-                                android:gravity="center"
-                                android:layout_gravity="center"
-                                android:orientation="horizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="5dp"/>
-
-                    </LinearLayout>
-
-                    <TextView
-                            android:id="@+id/isVipPowerBtn"
-                            android:background="@drawable/gradient_is_vip_quanyi_bg"
-                            android:gravity="center"
-                            android:textColor="@color/colorWhite"
-                            android:text="会员权益"
-                            android:layout_width="70dp"
-                            android:layout_height="26dp"
-                            android:textSize="12sp"
-                            android:visibility="gone"
-                            android:layout_marginLeft="5dp"
+                            android:id="@+id/vipPowerLl"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="20dp"
                             android:layout_marginRight="15dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:background="@drawable/shape_rectangle_light_orange_10dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            app:layout_constraintLeft_toLeftOf="@id/userAvator"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                            app:layout_constraintTop_toBottomOf="@id/userAvator">
 
-            <TextView
-                    android:id="@+id/userTagsBtn"
-                    android:text="兴趣管理 10"
-                    android:textColor="#ff19191a"
-                    android:textSize="16sp"
-                    android:gravity="center_vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:textStyle="bold"
-                    android:drawableRight="@drawable/icon_more_right"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginLeft="15dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/userInfoCl"
-                    />
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/userTagRv"
-                    android:layout_width="0dp"
-                    android:orientation="horizontal"
-                    android:overScrollMode="never"
-                    android:layout_marginTop="15dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
-                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/userTagsBtn"/>
+                            <ImageView
+                                android:id="@+id/isVipIcon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="12dp"
+                                android:src="@drawable/icon_vip_me" />
 
 
-            <TextView
-                    android:id="@+id/userSquareCount"
-                    android:textColor="#ff19191a"
-                    android:textSize="16sp"
-                    android:gravity="center_vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:textStyle="bold"
-                    android:text="我的动态"
-                    android:drawableRight="@drawable/icon_more_right"
-                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
-                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/userTagRv"/>
+                            <ViewFlipper
+                                android:id="@+id/marqueeVipPower"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:autoStart="true"
+                                android:flipInterval="3000"
+                                android:inAnimation="@anim/push_up_in"
+                                android:outAnimation="@anim/push_up_out" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/userSquaresRv"
-                    android:layout_width="0dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
-                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/userSquareCount"/>
-
-            <TextView
-                    android:id="@+id/userIntention"
-                    android:textColor="#ff19191a"
-                    android:textSize="16sp"
-                    android:drawablePadding="12dp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="25dp"
-                    android:drawableLeft="@drawable/icon_my_intention"
-                    android:text="我的意向"
-                    android:layout_width="0dp"
-                    android:visibility="gone"
-                    android:gravity="center_vertical"
-                    android:drawableRight="@drawable/icon_more_right"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
-                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/userSquaresRv"/>
+                            <TextView
+                                android:id="@+id/isVipPowerBtn"
+                                android:layout_width="70dp"
+                                android:layout_height="26dp"
+                                android:layout_marginRight="15dp"
+                                android:background="@drawable/gradient_is_vip_quanyi_bg"
+                                android:gravity="center"
+                                android:text="会员权益"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="12sp"
+                                android:visibility="visible" />
+                        </LinearLayout>
 
 
-            <TextView
-                    android:id="@+id/userFoot"
-                    android:textColor="#ff19191a"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="25dp"
-                    android:text="我的足迹"
-                    android:layout_width="0dp"
-                    android:gravity="center_vertical"
-                    android:drawableRight="@drawable/icon_more_right"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
-                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/userIntention"/>
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/candyCl"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/icon_shadow_usercenter_10"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toLeftOf="@id/userVisit"
+                            app:layout_constraintTop_toBottomOf="@id/vipPowerLl">
+
+                            <TextView
+                                android:id="@+id/tvCandy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:drawableLeft="@drawable/icon_candy_me"
+                                android:drawablePadding="6dp"
+                                android:text="我的糖果"
+                                android:textColor="#ff191919"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/candyCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="8dp"
+                                android:gravity="center"
+                                android:text="365.22k"
+                                android:textColor="#ffff6318"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                app:layout_constraintLeft_toLeftOf="@id/tvCandy"
+                                app:layout_constraintTop_toBottomOf="@id/tvCandy" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/userVisit"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:background="@drawable/icon_shadow_usercenter_10"
+                            app:layout_constraintBottom_toBottomOf="@id/candyCl"
+                            app:layout_constraintLeft_toRightOf="@id/candyCl"
+                            app:layout_constraintRight_toLeftOf="@id/userFoot"
+                            app:layout_constraintTop_toTopOf="@id/candyCl">
+
+                            <TextView
+                                android:id="@+id/tvVisit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:drawableLeft="@drawable/icon_foot_me"
+                                android:drawablePadding="6dp"
+                                android:text="看过我的"
+                                android:textColor="#ff191919"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/userVisitRv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="24dp"
+                                android:layout_marginTop="7dp"
+                                android:orientation="horizontal"
+                                android:overScrollMode="never"
+                                app:layout_constraintLeft_toLeftOf="@id/tvVisit"
+                                app:layout_constraintTop_toBottomOf="@id/tvVisit" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/userFoot"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/icon_shadow_usercenter_10"
+                            app:layout_constraintBottom_toBottomOf="@id/candyCl"
+                            app:layout_constraintLeft_toRightOf="@id/userVisit"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/candyCl">
+
+                            <TextView
+                                android:id="@+id/tvFoot"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:drawableLeft="@drawable/icon_foot_me"
+                                android:drawablePadding="6dp"
+                                android:text="我的足迹"
+                                android:textColor="#ff191919"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tvFoot1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="9dp"
+                                android:text="点赞、评论、…"
+                                android:textColor="#ff888d92"
+                                android:textSize="12sp"
+                                app:layout_constraintLeft_toLeftOf="@id/tvFoot"
+                                app:layout_constraintTop_toBottomOf="@id/tvFoot" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/userVisitRv"
-                    android:layout_marginRight="33dp"
-                    android:orientation="horizontal"
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+                <net.lucode.hackware.magicindicator.MagicIndicator
+                    android:id="@+id/tabMySquareAndTag"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    app:layout_constraintBottom_toBottomOf="@id/userVisit"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/userVisit">
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/colorWhite" />
+            </com.google.android.material.appbar.AppBarLayout>
 
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <TextView
-                    android:id="@+id/userVisit"
-                    android:textColor="#ff19191a"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_width="0dp"
-                    android:gravity="center_vertical"
-                    android:text="看过我的"
-                    android:layout_marginTop="25dp"
-                    android:drawableRight="@drawable/icon_more_right"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
-                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/userFoot"
-                    />
+            <!--        <androidx.core.widget.NestedScrollView-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="match_parent"-->
+            <!--            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
 
-            <Button
-                    android:id="@+id/feedBack"
-                    android:layout_marginTop="25dp"
-                    android:layout_width="0dp"
-                    android:background="@drawable/fankui"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
-                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/userVisit"
-                    />
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/vpMySquareAndTag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            <TextView
-                    android:id="@+id/t1"
-                    android:visibility="gone"
-                    android:text="我的问题"
-                    android:textColor="#ff222222"
-                    android:textSize="16sp"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/feedBack"/>
-
-            <TextView
-                    android:id="@+id/userQuestions"
-                    android:visibility="gone"
-                    android:text="设置问题让沟通更简单"
-                    android:textColor="#ffff6318"
-                    android:textSize="14sp"
-                    android:layout_width="wrap_content"
-                    android:gravity="center_vertical"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/icon_more_right"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@id/t1"
-                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toTopOf="@id/t1"
-                    />
+            <!--        </androidx.core.widget.NestedScrollView>-->
 
 
-            <TextView
-                    android:id="@+id/t2"
-                    android:visibility="gone"
-                    android:text="推荐给朋友"
-                    android:textColor="#ff222222"
-                    android:textSize="16sp"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center_vertical"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toBottomOf="@id/t1"/>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <TextView
-                    android:id="@+id/userRecommend"
-                    android:visibility="gone"
-                    android:text="限时送会员"
-                    android:textColor="#ffff6318"
-                    android:textSize="14sp"
-                    android:layout_width="wrap_content"
-                    android:gravity="center_vertical"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/icon_more_right"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@id/t2"
-                    app:layout_constraintRight_toRightOf="@id/userTagsBtn"
-                    app:layout_constraintTop_toTopOf="@id/t2"
-                    />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </com.kennyc.view.MultiStateView>

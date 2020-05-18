@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -11,6 +12,7 @@ import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.SquareBean
 import com.sdy.jitangapplication.presenter.view.SquarePlayDetailView
+import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 
@@ -32,7 +34,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                 override fun onNext(t: BaseResp<SquareBean?>) {
                     if (t.code == 200) {
                         mView.onGetSquareInfoResults(t.data)
-                    } else  {
+                    } else {
                         mView.onError(t.msg)
                     }
                 }
@@ -60,7 +62,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     if (t.code == 200) {
                         mView.onGetSquareLikeResult(position, true)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onError(t.msg)
                         mView.onGetSquareLikeResult(position, false)
@@ -89,7 +91,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onGetSquareCollectResult(position, t)
-                    else  {
+                    else {
                         mView.onGetSquareCollectResult(position, t)
                     }
                 }
@@ -114,10 +116,12 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                 override fun onNext(t: BaseResp<Any?>) {
                     super.onNext(t)
                     if (t.code == 200)
-                        mView.onAddCommentResult(position, t,true)
-                    else  {
+                        mView.onAddCommentResult(position, t, true)
+                    else if (t.code == 202) {
+                        ChargeVipDialog(ChargeVipDialog.COMMENT_FREE, context).show()
+                    } else {
                         CommonFunction.toast(t.msg)
-                        mView.onAddCommentResult(position, t,false)
+                        mView.onAddCommentResult(position, t, false)
                     }
                 }
 
@@ -126,7 +130,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                         TickDialog(context).show()
                     } else
                         mView.onError(context.getString(R.string.service_error))
-                    mView.onAddCommentResult(position, null,false)
+                    mView.onAddCommentResult(position, null, false)
                 }
             })
     }
@@ -143,7 +147,7 @@ class SquarePlayDetaiPresenter : BasePresenter<SquarePlayDetailView>() {
                     super.onNext(t)
                     if (t.code == 200)
                         mView.onRemoveMySquareResult(true, position)
-                    else  {
+                    else {
                         CommonFunction.toast(t.msg)
                         mView.onRemoveMySquareResult(false, position)
                     }

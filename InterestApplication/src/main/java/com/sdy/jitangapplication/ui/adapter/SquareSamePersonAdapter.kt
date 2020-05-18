@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.adapter
 
+import android.app.Activity
 import android.view.View
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
@@ -116,7 +117,8 @@ class SquareSamePersonAdapter(var hasmore: Boolean = true) :
                     if (t.code == 200) {
                         onGetSquareLikeResult(position, true)
                     } else if (t.code == 403) {
-                        TickDialog(mContext).show()
+                        UserManager.startToLogin(mContext as Activity)
+
                     } else {
                         CommonFunction.toast(t.msg)
                         onGetSquareLikeResult(position, false)

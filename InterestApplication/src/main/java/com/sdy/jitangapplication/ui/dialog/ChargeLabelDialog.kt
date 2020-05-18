@@ -33,7 +33,6 @@ import com.sdy.jitangapplication.model.LabelChargeWayBean
 import com.sdy.jitangapplication.model.PayBean
 import com.sdy.jitangapplication.model.PaywayBean
 import com.sdy.jitangapplication.ui.activity.AddLabelActivity
-import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
@@ -315,13 +314,7 @@ class ChargeLabelDialog(val context1: Context, val tag_id: Int, var from: Int = 
                 override fun onClick(dialog: Dialog) {
                     dialog.cancel()
                     if (result) {
-                        if (ActivityUtils.getTopActivity() is AddLabelActivity) {
-                            EventBus.getDefault().post(PayLabelResultEvent(true))
-                        } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {
-                            EventBus.getDefault().post(UpdateMyLabelEvent())
-                        }
-                        EventBus.getDefault().postSticky(RefreshEvent(true))
-                        EventBus.getDefault().postSticky(UserCenterEvent(true))
+                        CommonFunction.payResultNotify(context1)
                         dismiss()
                     }
                 }

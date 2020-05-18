@@ -13,19 +13,17 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.presenter.LoginPresenter
-import com.sdy.jitangapplication.presenter.view.LoginView
 import com.sdy.jitangapplication.utils.AMapManager
+import com.sina.weibo.sdk.share.BaseActivity
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import org.jetbrains.anko.startActivity
 
 /**
  * 启动页面
  */
-class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
+class SplashActivity : BaseActivity() {
 
     private val handler = Handler()
 
@@ -39,6 +37,11 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //setContentView(R.layout.activity_splash)
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            BarUtils.setStatusBarVisibility(this, false)
+//        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
             (!PermissionUtils.isGranted(PermissionConstants.LOCATION) ||
                     !PermissionUtils.isGranted(PermissionConstants.PHONE) ||
@@ -168,7 +171,7 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         handler.postDelayed({
             startActivity<LoginActivity>()
             finish()
-        }, 2000)
+        }, 1000)
     }
 
 
@@ -191,7 +194,11 @@ class SplashActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
         ActivityCompat.requestPermissions(this, permissions, 100)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == 100) {
             if (grantResults.isNotEmpty()) {
                 for (i in 0 until grantResults.size) {

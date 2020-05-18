@@ -15,6 +15,7 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.model.ChargeWayBean
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import kotlinx.android.synthetic.main.item_charge_vip.view.*
+import java.math.BigDecimal
 
 /**
  *    author : ZFM
@@ -22,23 +23,45 @@ import kotlinx.android.synthetic.main.item_charge_vip.view.*
  *    desc   : 会员支付购买时间适配器
  *    version: 1.0
  */
-class VipChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_charge_vip) {
+class VipChargeAdapter() :
+    BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_charge_vip) {
     var purchaseType = ChargeVipDialog.PURCHASE_VIP
     override fun convert(holder: BaseViewHolder, item: ChargeWayBean) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-        params.width =
-            ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
-        if (holder.layoutPosition == 0) {
-            params.leftMargin = SizeUtils.dp2px(17F)
-            params.rightMargin = SizeUtils.dp2px(10F)
-        } else if (holder.layoutPosition == mData.size - 1) {
-            params.rightMargin = SizeUtils.dp2px(17F)
-            params.leftMargin = SizeUtils.dp2px(10F)
-        } else {
-            params.rightMargin = SizeUtils.dp2px(0F)
-            params.leftMargin = SizeUtils.dp2px(0F)
+        when (purchaseType) {
+            ChargeVipDialog.PURCHASE_RENEW_VIP -> {
+                params.width =
+                    ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F) * 2 - SizeUtils.dp2px(9F) * 2) / 3F).toInt()
+                if (holder.layoutPosition == 0) {
+                    params.leftMargin = SizeUtils.dp2px(17F)
+                    params.rightMargin = SizeUtils.dp2px(9F)
+                } else if (holder.layoutPosition == mData.size - 1) {
+                    params.rightMargin = SizeUtils.dp2px(17F)
+                    params.leftMargin = SizeUtils.dp2px(9F)
+                } else {
+                    params.rightMargin = SizeUtils.dp2px(0F)
+                    params.leftMargin = SizeUtils.dp2px(0F)
+                }
+            }
+            else -> {
+                params.width =
+                    ((ScreenUtils.getScreenWidth() - SizeUtils.dp2px(37F) * 2 - SizeUtils.dp2px(10F) * 2) / 3F).toInt()
+                if (holder.layoutPosition == 0) {
+                    params.leftMargin = SizeUtils.dp2px(17F)
+                    params.rightMargin = SizeUtils.dp2px(10F)
+                } else if (holder.layoutPosition == mData.size - 1) {
+                    params.rightMargin = SizeUtils.dp2px(17F)
+                    params.leftMargin = SizeUtils.dp2px(10F)
+                } else {
+                    params.rightMargin = SizeUtils.dp2px(0F)
+                    params.leftMargin = SizeUtils.dp2px(0F)
+                }
+            }
         }
         holder.itemView.layoutParams = params
+
+
+
 
         holder.itemView.vipNowPrice.text =
             SpanUtils.with(holder.itemView.vipNowPrice)
@@ -47,42 +70,46 @@ class VipChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layou
                 .setBold()
                 .append(
                     "${if (item.type == 1) {
-                        item.original_price
+                        BigDecimal(item.original_price).setScale(0)
                     } else {
-                        item.discount_price
+                        BigDecimal(item.discount_price).setScale(0)
                     }}"
                 )
                 .setFontSize(28, true)
                 .setBold()
                 .create()
-        holder.itemView.originalPrice.isVisible = item.type != 1
-        holder.itemView.originalPrice.text =
-            SpanUtils.with(holder.itemView.originalPrice)
-                .append("¥${item.original_price}")
-                .setStrikethrough()
-                .create()
-        holder.itemView.vipNowPrice.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
-        holder.itemView.vipDiscount.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
+        holder.itemView.originalPrice.isVisible = item.type != 1 || item.giving_amount > 0
+        if (item.giving_amount > 0) {
+            holder.itemView.originalPrice.text =
+                SpanUtils.with(holder.itemView.originalPrice)
+                    .append("赠送${item.giving_amount}")
+                    .appendImage(R.drawable.icon_candy_small)
+                    .create()
+        } else {
+            holder.itemView.originalPrice.text =
+                SpanUtils.with(holder.itemView.originalPrice)
+                    .append("¥${item.original_price}")
+                    .setStrikethrough()
+                    .create()
+        }
+
+
+
+        holder.itemView.vipNowPrice.typeface =
+            Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
+
 
         holder.itemView.vipLong.text = item.ename ?: ""
         holder.itemView.vipSaleType.text = item.descr ?: ""
         if (item.is_promote) {
             holder.itemView.vipDiscount.visibility = View.VISIBLE
-            if (item.type == 1) {//	1 原价售卖 2折扣价售卖 3限时折扣
-                holder.itemView.vipDiscount.text = "原价购买"
-            } else {
-                holder.itemView.vipDiscount.text =
-                    SpanUtils.with(holder.itemView.vipDiscount)
-                        .append("节省\t¥")
-                        .append("${item.original_price - item.discount_price}")
-                        .setBold()
-                        .create()
-            }
+            holder.itemView.vipDiscount.text = item.descr
 
-
-            holder.itemView.vipSaleType.isVisible = !item.descr.isNullOrEmpty()
+//            holder.itemView.vipSaleType.isVisible = !item.descr.isNullOrEmpty()
+            holder.itemView.vipSaleType.isVisible = false
 //            holder.itemView.vipSaleType.isVisible = item.type == 3
-            (holder.itemView.vipDiscount.layoutParams as ConstraintLayout.LayoutParams).topMargin = SizeUtils.dp2px(10F)
+            (holder.itemView.vipDiscount.layoutParams as ConstraintLayout.LayoutParams).topMargin =
+                SizeUtils.dp2px(8F)
             when (purchaseType) {
                 ChargeVipDialog.PURCHASE_VIP -> {
                     holder.itemView.vipSaleType.setBackgroundResource(R.drawable.shape_vip_charge_popular_bg)
@@ -117,7 +144,8 @@ class VipChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layou
             }
         } else {
             holder.itemView.vipDiscount.visibility = View.GONE
-            (holder.itemView.vipDiscount.layoutParams as ConstraintLayout.LayoutParams).topMargin = SizeUtils.dp2px(0F)
+            (holder.itemView.vipDiscount.layoutParams as ConstraintLayout.LayoutParams).topMargin =
+                SizeUtils.dp2px(0F)
             when (purchaseType) {
                 ChargeVipDialog.PURCHASE_RENEW_VIP -> {
                     holder.itemView.vipSaleType.visibility = View.INVISIBLE

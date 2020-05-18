@@ -8,19 +8,16 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.baidu.idl.face.platform.LivenessTypeEnum
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.CrashUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ThreadUtils
+import com.blankj.utilcode.util.*
 import com.google.gson.Gson
 import com.growingio.android.sdk.collection.Configuration
 import com.growingio.android.sdk.collection.GrowingIO
 import com.ishumei.smantifraud.SmAntiFraud
 import com.kotlin.base.common.BaseApplication
 import com.leon.channel.helper.ChannelReaderUtil
-import com.netease.nim.uikit.R
 import com.netease.nim.uikit.api.NimUIKit
 import com.netease.nim.uikit.api.UIKitOptions
 import com.netease.nimlib.sdk.NIMClient
@@ -32,6 +29,7 @@ import com.netease.nimlib.sdk.util.NIMUtil
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
+import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.CustomerMsgBean
 import com.sdy.jitangapplication.nim.DemoCache
@@ -46,6 +44,7 @@ import com.sdy.jitangapplication.nim.session.SessionHelper
 import com.sdy.jitangapplication.nim.sp.UserPreferences
 import com.sdy.jitangapplication.ui.activity.MainActivity
 import com.sdy.jitangapplication.ui.dialog.AccountDangerDialog
+import com.sdy.jitangapplication.ui.fragment.SnackBarFragment
 import com.sdy.jitangapplication.utils.UriUtils
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
@@ -62,12 +61,14 @@ import org.greenrobot.eventbus.EventBus
 class MyApplication : BaseApplication() {
     init {
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, layout ->
-            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite).setReboundDuration(200)
+            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
+                .setReboundDuration(200)
             ClassicsHeader(context).setFinishDuration(200)
 
         }
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context, layout ->
-            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite).setReboundDuration(200)
+            layout.setPrimaryColorsId(com.sdy.jitangapplication.R.color.colorWhite)
+                .setReboundDuration(200)
             ClassicsFooter(context).setFinishDuration(200).setDrawableSize(20F)
         }
 
@@ -87,18 +88,24 @@ class MyApplication : BaseApplication() {
         Observer { customNotification ->
             if (customNotification.content != null) {
                 val customerMsgBean =
-                    Gson().fromJson<CustomerMsgBean>(customNotification.content, CustomerMsgBean::class.java)
-                Log.d("OkHttp", "${customerMsgBean.type}====,${customerMsgBean.msg}==================================")
+                    Gson().fromJson<CustomerMsgBean>(
+                        customNotification.content,
+                        CustomerMsgBean::class.java
+                    )
+                Log.d("OkHttp", "${customerMsgBean.toString()}====")
                 when (customerMsgBean.type) {
-                    1 -> {//系统通知新的消息数量
+                    //1.系统通知新的消息数量
+                    1 -> {
                         EventBus.getDefault().postSticky(GetNewMsgEvent())
                         EventBus.getDefault().postSticky(UpdateHiEvent())
                         initNotificationManager(customerMsgBean.msg)
                     }
-                    2 -> {//对方删除自己,本地不删除会话列表
+                    //2.对方删除自己,本地不删除会话列表
+                    2 -> {
                         CommonFunction.dissolveRelationship(customerMsgBean.accid ?: "", true)
                     }
-                    3 -> { //新的招呼刷新界面
+                    //3.新的招呼刷新界面
+                    3 -> {
                         EventBus.getDefault().postSticky(UpdateHiEvent())
                     }
                     //4人脸认证不通过
@@ -113,20 +120,28 @@ class MyApplication : BaseApplication() {
                         }
                         //如果账号存在异常，就发送认证不通过弹窗
                         if (UserManager.getAccountDanger() || UserManager.getAccountDangerAvatorNotPass()) {
-                            EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
+                            EventBus.getDefault()
+                                .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NOT_PASS))
                         } else {
-                            EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                            EventBus.getDefault().postSticky(
+                                ReVerifyEvent(
+                                    customerMsgBean.type,
+                                    customerMsgBean.msg
+                                )
+                            )
                         }
                     }
                     //7强制替换头像
                     7 -> {
-                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                        EventBus.getDefault()
+                            .postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
                         UserManager.saveChangeAvator(customerMsgBean.msg)
                         UserManager.saveChangeAvatorType(1)
                     }
                     //11真人头像不通过弹窗
                     11 -> {
-                        EventBus.getDefault().postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
+                        EventBus.getDefault()
+                            .postSticky(ReVerifyEvent(customerMsgBean.type, customerMsgBean.msg))
                         UserManager.saveChangeAvator(customerMsgBean.msg)
                         UserManager.saveChangeAvatorType(2)
                     }
@@ -157,13 +172,29 @@ class MyApplication : BaseApplication() {
                             if (ActivityUtils.getTopActivity() is ChatActivity)
                                 EventBus.getDefault().postSticky(UpdateApproveEvent())
                         }
-                        EventBus.getDefault().postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
+                        EventBus.getDefault()
+                            .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_PASS))
                     }
                     //10头像未通过审核去进行人脸认证
                     10 -> {
                         UserManager.saveAccountDangerAvatorNotPass(true)
                         EventBus.getDefault()
                             .postSticky(AccountDangerEvent(AccountDangerDialog.VERIFY_NEED_AVATOR_INVALID))
+                    }
+                    SnackBarFragment.SOMEONE_LIKE_YOU,
+                    SnackBarFragment.SOMEONE_MATCH_SUCCESS,
+                    SnackBarFragment.GREET_SUCCESS,
+                    SnackBarFragment.FLASH_SUCCESS,
+                    SnackBarFragment.CHAT_SUCCESS,
+                    SnackBarFragment.HELP_CANDY,
+                    SnackBarFragment.GIVE_GIFT -> {
+                        if (ActivityUtils.getTopActivity() is MainActivity)
+                            FragmentUtils.add(
+                                (ActivityUtils.getTopActivity() as AppCompatActivity).supportFragmentManager,
+                                SnackBarFragment(customerMsgBean),
+                                android.R.id.content
+                            )
+
                     }
 
                 }
@@ -176,7 +207,8 @@ class MyApplication : BaseApplication() {
     private fun initNotificationManager(msg: String) {
         val msgs = msg.split("\\n")
 
-        var manager: NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        var manager: NotificationManager =
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         //8.0 以后需要加上channelId 才能正常显示
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "subscribe"
@@ -191,7 +223,8 @@ class MyApplication : BaseApplication() {
         }
         //为了版本兼容  选择V7包下的NotificationCompat进行构造
         val intent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent =
+            PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification = NotificationCompat.Builder(this, "subscribe")
             .setContentText(
                 if (msgs.size > 1) {
@@ -357,7 +390,7 @@ class MyApplication : BaseApplication() {
         val options = UIKitOptions()
         options.appCacheDir = UriUtils.getCacheDir(this)
         options.messageLeftBackground = R.drawable.shape_rectangle_share_square_bg_left
-        options.messageRightBackground = R.drawable.shape_rectangle_share_square_bg
+        options.messageRightBackground = R.drawable.shape_rectangle_chat_bg_right
         return options
     }
 

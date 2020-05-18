@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import android.util.Log
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.data.net.RetrofitFactory
@@ -35,7 +36,7 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
                     if (t.code == 200) {
                         mView.getTagTraitInfoResult(true, t.data ?: mutableListOf())
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.getTagTraitInfoResult(false, null)
                         CommonFunction.toast(t.msg)
@@ -75,7 +76,7 @@ class AddLabelSuccessPresenter : BasePresenter<AddLabelSuccessView>() {
                     if (t.code == 200) {
                         mView.onSquareAnnounceResult(true, 200)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onError(t.msg)
                         mView.onSquareAnnounceResult(false, t.code)

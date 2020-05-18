@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -32,7 +33,7 @@ class AllTitlePresenter : BasePresenter<AllTitleView>() {
                     if (t.code == 200) {
                         mView.onGetTitleMenuListResult(true, t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onGetTitleMenuListResult(false, null)
                         CommonFunction.toast(t.msg)
@@ -69,7 +70,7 @@ class AllTitlePresenter : BasePresenter<AllTitleView>() {
                     if (t.code == 200) {
                         mView.onGetTitleListsResult(true, t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onGetTitleListsResult(false, null)
                         CommonFunction.toast(t.msg)

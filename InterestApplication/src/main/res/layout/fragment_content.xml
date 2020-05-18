@@ -1,124 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@color/colorWhite"
-              tools:context=".ui.fragment.ContentFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    tools:context=".ui.fragment.ContentFragment">
 
-    <View
-            android:id="@+id/customStatusBar"
-            android:background="@color/colorTransparent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
 
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rgSquare"
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content"/>
+        <net.lucode.hackware.magicindicator.MagicIndicator
+            android:id="@+id/rgSquare"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_height="38dp"
+            android:orientation="horizontal" />
 
         <ImageView
-                android:id="@+id/filterGenderBtn"
-                android:paddingRight="15dp"
-                android:scaleType="center"
-                android:layout_width="wrap_content"
-                android:paddingLeft="15dp"
-                android:src="@drawable/icon_square_filter_gender"
-                android:layout_height="match_parent"
-                />
-    </LinearLayout>
+            android:id="@+id/filterGenderBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="15dp"
+            android:scaleType="center"
+            android:src="@drawable/icon_square_filter_gender" />
+    </RelativeLayout>
 
     <FrameLayout
-            android:id="@+id/uploadFl"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="25dp">
+        android:id="@+id/uploadFl"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:visibility="gone">
 
 
         <ProgressBar
-                android:id="@+id/uploadProgressBar"
-                style="@style/uploadProgress"
-                android:max="100"
-                android:progress="0"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/uploadProgressBar"
+            style="@style/uploadProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="0" />
 
         <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <TextView
-                    android:id="@+id/uploadProgressTv"
-                    android:layout_marginLeft="15dp"
-                    android:textColor="#ffffffff"
-                    android:textSize="12sp"
-                    android:text="正在发布"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                android:id="@+id/uploadProgressTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:text="正在发布"
+                android:textColor="#ffffffff"
+                android:textSize="12sp" />
 
             <LinearLayout
-                    android:id="@+id/llRetry"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/uploadProgressTv"
-                    android:orientation="horizontal"
-                    android:background="@drawable/shape_rectangle_gray_white_10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:paddingLeft="6dp"
-                    android:layout_marginLeft="5dp"
-                    android:paddingRight="6dp"
-                    android:paddingTop="1dp"
-                    android:visibility="gone"
-                    android:paddingBottom="1dp"
-                    android:layout_height="15dp">
+                android:id="@+id/llRetry"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/uploadProgressTv"
+                android:background="@drawable/shape_rectangle_gray_white_10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="6dp"
+                android:paddingTop="1dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="1dp"
+                android:visibility="gone">
 
                 <ImageView
-                        android:id="@+id/iconRetry"
-                        android:src="@drawable/icon_edit_retry"
-                        android:layout_width="10dp"
-                        android:layout_marginRight="4dp"
-                        android:layout_height="10dp"/>
+                    android:id="@+id/iconRetry"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginRight="4dp"
+                    android:src="@drawable/icon_edit_retry" />
 
                 <TextView
-                        android:id="@+id/editRetry"
-                        android:layout_width="20dp"
-                        android:layout_height="14dp"
-                        android:text="编辑"
-                        android:textColor="#ff919191"
-                        android:textSize="10sp"
-                        />
+                    android:id="@+id/editRetry"
+                    android:layout_width="20dp"
+                    android:layout_height="14dp"
+                    android:text="编辑"
+                    android:textColor="#ff919191"
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <ImageView
-                    android:id="@+id/btnClose"
-                    android:visibility="gone"
-                    android:layout_marginRight="15dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/icon_close_publish"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"/>
+                android:id="@+id/btnClose"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/icon_close_publish"
+                android:visibility="gone" />
         </RelativeLayout>
     </FrameLayout>
+
     <com.sdy.jitangapplication.widgets.CommonNoScrollViewPager
-            android:id="@+id/squareVp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+        android:id="@+id/squareVp"
+        android:layout_width="match_parent"
+        android:overScrollMode="never"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

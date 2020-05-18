@@ -13,7 +13,7 @@ public class MyLocationAction extends ChatBaseAction {
     private final static String TAG = "LocationAction";
 
     public MyLocationAction() {
-        super(R.drawable.send_location_uncheck, R.drawable.send_location_uncheck,R.string.input_panel_location);
+        super(R.drawable.send_location_normal, R.drawable.send_location_uncheck,R.string.input_panel_location);
     }
 
     @Override

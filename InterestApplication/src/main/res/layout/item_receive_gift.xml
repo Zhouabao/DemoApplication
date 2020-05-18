@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp">
+
+
+    <ImageView
+        android:id="@+id/donateAvator"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/icon_default_avator"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iconScore"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/icon_num1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/donateNickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textColor="#ff191919"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/donateNum"
+        app:layout_constraintLeft_toRightOf="@id/donateAvator"
+        app:layout_constraintTop_toTopOf="@id/donateAvator"
+        tools:text="Raymond Pope" />
+
+    <TextView
+        android:id="@+id/donateNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ff888d92"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/donateAvator"
+        app:layout_constraintLeft_toLeftOf="@id/donateNickname"
+        app:layout_constraintTop_toBottomOf="@id/donateNickname"
+        tools:text="送出了5种礼物" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:text="共计"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/donateAvator"
+        app:layout_constraintRight_toLeftOf="@id/donateCandyAmount"
+        app:layout_constraintTop_toTopOf="@id/donateAvator" />
+
+    <TextView
+        android:id="@+id/donateCandyAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:drawableLeft="@drawable/icon_candy_small"
+        android:drawablePadding="5dp"
+        android:textColor="#ffff6318"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/donateAvator"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/donateAvator"
+        tools:text="36000" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/donateGiftRv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/donateAvator" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorDivider"
+        app:layout_constraintLeft_toLeftOf="@id/donateAvator"
+        app:layout_constraintRight_toRightOf="@id/donateCandyAmount"
+        app:layout_constraintTop_toBottomOf="@id/donateGiftRv" />
+</androidx.constraintlayout.widget.ConstraintLayout>

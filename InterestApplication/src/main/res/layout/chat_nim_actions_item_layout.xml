@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="center"
-              android:orientation="vertical">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <ImageView
-            android:id="@+id/imageView"
-            android:layout_gravity="center"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:contentDescription="@string/empty"/>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_speed="1"
+        app:lottie_repeatCount="-1"
+        android:layout_gravity="center"
+        android:contentDescription="@string/empty" />
 
     <TextView
-            android:id="@+id/textView"
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ff696e73"
-            android:textSize="12sp"/>
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="#ff696e73"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
 </LinearLayout>

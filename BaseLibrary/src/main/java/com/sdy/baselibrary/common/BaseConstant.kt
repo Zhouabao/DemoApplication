@@ -17,5 +17,6 @@ class BaseConstant {
         //Token Key
         const val KEY_SP_TOKEN = "token"
 
+
     }
 }

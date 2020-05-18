@@ -6,10 +6,10 @@ import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.google.android.flexbox.*
-import com.kotlin.base.ext.onClick
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.MatchBean
 import kotlinx.android.synthetic.main.item_find_by_tag.view.*
 
@@ -51,7 +51,7 @@ class FindByTagListAdapter(var hasmore: Boolean = true) :
             adapter.setNewData(item.newtags!![0].label_quality)
         } else
             helper.itemView.rvLabelQuality.isVisible = false
-        helper.itemView.sameLike.onClick {
+        helper.itemView.sameLike.clickWithTrigger {
             CommonFunction.commonGreet(mContext, item.accid, helper.itemView.sameLike, helper.layoutPosition,item.avatar?:"")
         }
     }

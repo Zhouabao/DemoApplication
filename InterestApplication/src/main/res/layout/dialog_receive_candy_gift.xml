@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/colorTransparent"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/receiveCandyLight"
+            android:layout_width="309dp"
+            android:layout_height="309dp"
+            android:layout_marginTop="200dp"
+            android:layout_marginBottom="79dp"
+            android:src="@drawable/icon_animation_gift_bottom_light"
+            app:layout_constraintBottom_toTopOf="@id/receiveGiftBtn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/receiveCandyTop"
+            android:layout_width="259dp"
+            android:layout_height="102dp"
+            android:layout_marginTop="27dp"
+            android:src="@drawable/icon_animation_gift_gift_box_top"
+            app:layout_constraintLeft_toLeftOf="@id/receiveCandyLight"
+            app:layout_constraintRight_toRightOf="@id/receiveCandyLight"
+            app:layout_constraintTop_toTopOf="@id/receiveCandyLight" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/receiveCandyCl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/shape_rectangle_white_top_left_right_15_corners_bg"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="@id/receiveCandyBottom"
+            app:layout_constraintRight_toRightOf="@id/receiveCandyBottom"
+            app:layout_constraintTop_toTopOf="@id/receiveCandyBottom">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/shape_rectangle_ffbc3e_top_left_right_15_corners_bg"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/giftImg"
+                android:layout_width="79dp"
+                android:layout_height="79dp"
+                android:layout_marginTop="14dp"
+                android:src="@drawable/icon_gift"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/giftName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="红玫瑰"
+                android:textColor="#ff191919"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/giftImg" />
+
+            <TextView
+                android:id="@+id/giftCandyAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="27dp"
+                android:drawableLeft="@drawable/icon_candy_small"
+                android:drawablePadding="5dp"
+                android:text="1200"
+                android:textColor="#ffff6318"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/giftName" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ImageView
+            android:id="@+id/receiveCandyBottom"
+            android:layout_width="219dp"
+            android:layout_height="133dp"
+            android:src="@drawable/icon_animation_gift_box_bottom"
+            app:layout_constraintLeft_toLeftOf="@id/receiveCandyLight"
+            app:layout_constraintRight_toRightOf="@id/receiveCandyLight"
+            app:layout_constraintTop_toBottomOf="@id/receiveCandyTop" />
+
+        <ImageView
+            android:id="@+id/receiveCandyReceived"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_gift_received"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/receiveCandyBottom"
+            app:layout_constraintLeft_toLeftOf="@id/receiveCandyBottom"
+            app:layout_constraintRight_toRightOf="@id/receiveCandyBottom"
+            app:layout_constraintTop_toTopOf="@id/receiveCandyBottom" />
+
+
+        <TextView
+            android:id="@+id/receiveGiftBtn"
+            android:layout_width="298dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/gradient_rectangle_orange_27dp"
+            android:gravity="center"
+            android:text="接收糖果礼物"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tempRefuseBtn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tempRefuseBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:text="暂不接收"
+            android:textColor="#ffc5c6c8"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

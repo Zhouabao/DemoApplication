@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.event
 
+import com.sdy.jitangapplication.model.LabelQuality
+
 /**
  *    author : ZFM
  *    date   : 2019/10/159:38
@@ -7,7 +9,8 @@ package com.sdy.jitangapplication.event
  *    version: 1.0
  */
 
-class UpdateMyLabelEvent
+
+class UpdateMyLabelEvent(var tags: MutableList<LabelQuality>? = null)
 
 //兴趣支付结果
 class PayLabelResultEvent(val success: Boolean)

@@ -16,7 +16,6 @@ import com.sdy.jitangapplication.model.LoginBean
 import com.sdy.jitangapplication.model.WechatNameBean
 import com.sdy.jitangapplication.ui.activity.PhoneActivity
 import com.sdy.jitangapplication.ui.dialog.LoadingDialog
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import com.tencent.mm.opensdk.constants.ConstantsAPI.COMMAND_SENDAUTH
 import com.tencent.mm.opensdk.modelbase.BaseResp
@@ -76,7 +75,8 @@ class WXEntryActivity : WXCallbackActivity() {
                     } else if (t.code == 400) {
                         CommonFunction.toast(t.msg)
                     } else if (t.code == 403) {
-                        TickDialog(this@WXEntryActivity).show()
+                        UserManager.startToLogin(this@WXEntryActivity)
+
                     }
                     finish()
                 }

@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.nim.session;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -26,7 +27,7 @@ public class ChatPickImageAction extends ChatBaseAction {
     private static final int PICK_IMAGE_COUNT = 9;
 
     public ChatPickImageAction() {
-        super(R.drawable.send_img_check, R.drawable.send_img_uncheck, R.string.input_panel_photo);
+        super(R.drawable.send_img_normal, R.drawable.send_img_uncheck, R.string.input_panel_photo);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ChatPickImageAction extends ChatBaseAction {
     private void onTakePhoto() {
         int requestCode = makeRequestCode(RequestCode.PICK_IMAGE);
 
-        CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode, PictureMimeType.ofImage() & PictureMimeType.ofVideo(), true, true);
+        CommonFunction.INSTANCE.onTakePhoto(getActivity(), 9, requestCode, PictureMimeType.ofImage() & PictureMimeType.ofVideo(), true, true, false, false);
 
     }
 

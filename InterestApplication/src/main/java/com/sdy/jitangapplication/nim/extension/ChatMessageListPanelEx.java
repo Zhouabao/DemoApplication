@@ -13,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.blankj.utilcode.util.SizeUtils;
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
@@ -46,23 +48,40 @@ import com.netease.nim.uikit.common.util.sys.ClipboardUtil;
 import com.netease.nim.uikit.common.util.sys.NetworkUtil;
 import com.netease.nim.uikit.common.util.sys.ScreenUtil;
 import com.netease.nim.uikit.impl.NimUIKitImpl;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.NIMSDK;
 import com.netease.nimlib.sdk.Observer;
-import com.netease.nimlib.sdk.*;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
-import com.netease.nimlib.sdk.msg.constant.*;
-import com.netease.nimlib.sdk.msg.model.*;
+import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.AttachmentProgress;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
+import com.netease.nimlib.sdk.msg.model.RevokeMsgNotification;
+import com.netease.nimlib.sdk.msg.model.TeamMessageReceipt;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
 import com.netease.nimlib.sdk.robot.model.RobotMsgType;
 import com.netease.nimlib.sdk.team.constant.TeamMemberType;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 import com.sdy.baselibrary.glide.GlideUtil;
 import com.sdy.jitangapplication.event.NimHeadEvent;
+import com.sdy.jitangapplication.event.RefreshCandyMessageEvent;
+import com.sdy.jitangapplication.model.ChatGiftStateBean;
 import com.sdy.jitangapplication.model.NimBean;
 import com.sdy.jitangapplication.nim.adapter.ChatMsgAdapter;
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
+import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity;
 import com.sdy.jitangapplication.ui.adapter.ChatTaregetSquareAdapter;
@@ -70,13 +89,19 @@ import com.sdy.jitangapplication.ui.dialog.ReportChatContentDialog;
 import com.sdy.jitangapplication.utils.UserManager;
 import com.sdy.jitangapplication.widgets.CommonAlertDialog;
 import com.sdy.jitangapplication.widgets.DividerItemDecoration;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -198,14 +223,7 @@ public class ChatMessageListPanelEx {
 
     private void initListView(IMMessage anchor) {
 
-
         ivBackground = rootView.findViewById(R.id.message_activity_background);
-
-        //倒计时进度条
-//        countDownProgress = rootView.findViewById(com.sdy.jitangapplication.R.id.outdateTime);
-//        outdateTimeText = rootView.findViewById(com.sdy.jitangapplication.R.id.outdateTimeText);
-//        countDownProgress.setVisibility(View.GONE);
-//        outdateTimeText.setVisibility(View.GONE);
 
 
         // RecyclerView
@@ -329,6 +347,19 @@ public class ChatMessageListPanelEx {
 
     public void onIncomingMessage(List<IMMessage> messages) {
         try {
+            //首先剔除自定义的tip消息
+            Iterator iterator = messages.iterator();
+            while (iterator.hasNext()) {
+                IMMessage message = (IMMessage) iterator.next();
+                boolean isSend = message.getDirect() == MsgDirectionEnum.Out;
+                if (message.getAttachment() instanceof SendCustomTipAttachment
+                        && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
+                        && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend) {
+                    NIMClient.getService(MsgService.class).deleteChattingHistory(message);
+                    iterator.remove();
+                }
+            }
+
             boolean needRefresh = false;
             List<IMMessage> addedListItems = new ArrayList<>(messages.size());
             for (IMMessage message : messages) {
@@ -361,6 +392,12 @@ public class ChatMessageListPanelEx {
     // 发送消息后，更新本地消息列表
     public void onMsgSend(IMMessage message) {
         if (!container.account.equals(message.getSessionId())) {
+            return;
+        }
+
+        if (message.getAttachment() instanceof SendCustomTipAttachment
+                && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
+                && !((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow()) {
             return;
         }
 
@@ -629,6 +666,18 @@ public class ChatMessageListPanelEx {
                     }
 
                     if (messages != null) {
+                        Iterator iterator = messages.iterator();
+                        while (iterator.hasNext()) {
+                            IMMessage message = (IMMessage) iterator.next();
+                            boolean isSend = message.getDirect() == MsgDirectionEnum.Out;
+                            //消息的来源是发送方 并且是发送显示就不剔除 反之则反
+                            if (message.getAttachment() instanceof SendCustomTipAttachment
+                                    && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != null
+                                    && ((SendCustomTipAttachment) message.getAttachment()).getIfSendUserShow() != isSend) {
+                                NIMClient.getService(MsgService.class).deleteChattingHistory(message);
+                                iterator.remove();
+                            }
+                        }
                         onMessageLoaded(messages);
                     }
                 } catch (Exception e) {
@@ -692,6 +741,7 @@ public class ChatMessageListPanelEx {
                 Collections.reverse(messages);
             }
 
+
             // 在第一次加载的过程中又收到了新消息，做一下去重
             if (firstLoad && items.size() > 0) {
                 for (IMMessage message : messages) {
@@ -742,10 +792,10 @@ public class ChatMessageListPanelEx {
             }
 
             // 如果是第一次加载，updateShowTimeItem返回的就是lastShowTimeItem
-//            if (firstLoad) {
-            doScrollToBottom();
-            sendReceipt(); // 发送已读回执
-//            }
+            if (firstLoad) {
+                doScrollToBottom();
+                sendReceipt(); // 发送已读回执
+            }
 
             // 通过历史记录加载的群聊消息，需要刷新一下已读未读最新数据
             if (container.sessionType == SessionTypeEnum.Team) {
@@ -903,10 +953,10 @@ public class ChatMessageListPanelEx {
             MsgTypeEnum msgType = selectedItem.getMsgType();
 
             MessageAudioControl.getInstance(container.activity).stopAudio();
-            // 0 delete 删除
-            longClickItemDelete(selectedItem, alertDialog);
-            // 1 copy 复制文本
+            // 0 copy 复制文本
             longClickItemCopy(selectedItem, alertDialog, msgType);
+            // 1 delete 删除
+            longClickItemDelete(selectedItem, alertDialog);
             // 2 EarPhoneMode 扬声器
             longClickItemEarPhoneMode(alertDialog, msgType);
             // 3 resend 重新发送
@@ -1262,6 +1312,7 @@ public class ChatMessageListPanelEx {
                 && msg.getDirect() == MsgDirectionEnum.Out
                 && msg.getMsgType() != MsgTypeEnum.tip
                 && msg.getMsgType() != MsgTypeEnum.notification
+                && !(msg.getAttachment() instanceof SendCustomTipAttachment)
                 && msg.isRemoteRead();
 
     }
@@ -1392,6 +1443,21 @@ public class ChatMessageListPanelEx {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshCandyMessageEvent(RefreshCandyMessageEvent event) {
+        for (int i = items.size() - 1; i >= 0; i--) {
+            IMMessage lastMessage = items.get(i);
+            if (lastMessage.getAttachment() instanceof SendGiftAttachment && ((SendGiftAttachment) lastMessage.getAttachment()).getId() == event.getOrderId()) {
+                ((SendGiftAttachment) lastMessage.getAttachment()).setGiftStatus(event.getState());
+                items.set(i, lastMessage);
+                refreshViewHolderByIndex(i);
+                break;
+            }
+        }
+
+
+    }
+
 
     private View initHeadView() {
         headView = LayoutInflater.from(container.activity).inflate(com.sdy.jitangapplication.R.layout.item_chat_head, messageListView, false);
@@ -1431,6 +1497,22 @@ public class ChatMessageListPanelEx {
             targetSquareAdapter.setNewData(nimBean.getSquare().subList(0, ChatTaregetSquareAdapter.MAX_SHOW_COUNT));
         } else {
             targetSquareAdapter.setNewData(nimBean.getSquare());
+        }
+
+        //both_gift_list
+        for (ChatGiftStateBean stateBean : nimBean.getBoth_gift_list()) {
+            for (int i = items.size() - 1; i >= 0; i--) {
+                IMMessage message = items.get(i);
+                if (message.getAttachment() instanceof SendGiftAttachment && ((SendGiftAttachment) message.getAttachment()).getId() == stateBean.getId()) {
+                    ((SendGiftAttachment) message.getAttachment()).setGiftStatus(stateBean.getState());
+                    items.set(i, message);
+                    refreshViewHolderByIndex(i);
+                } else if (message.getAttachment() instanceof WishHelpAttachment && ((WishHelpAttachment) message.getAttachment()).getOrderId() == stateBean.getId()) {
+                    ((WishHelpAttachment) message.getAttachment()).setWishHelpStatus(stateBean.getState());
+                    items.set(i, message);
+                    refreshViewHolderByIndex(i);
+                }
+            }
         }
     }
 

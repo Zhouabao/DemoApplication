@@ -7,10 +7,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
-import com.sdy.jitangapplication.model.SquarePicBean
 import com.sdy.jitangapplication.model.SquareTagBean
 import com.sdy.jitangapplication.ui.activity.TagDetailCategoryActivity
-import com.sdy.jitangapplication.utils.UserManager
 import kotlinx.android.synthetic.main.item_layout_tag_square.view.*
 import org.jetbrains.anko.sdk27.coroutines.onTouch
 import org.jetbrains.anko.startActivity
@@ -18,19 +16,15 @@ import org.jetbrains.anko.startActivity
 /**
  * 兴趣标签适配器
  */
-class TagSquareAdapter : BaseQuickAdapter<SquareTagBean, BaseViewHolder>(R.layout.item_layout_tag_square) {
+class TagSquareAdapter :
+    BaseQuickAdapter<SquareTagBean, BaseViewHolder>(R.layout.item_layout_tag_square) {
     override fun convert(helper: BaseViewHolder, item: SquareTagBean) {
         val itemview = helper.itemView
         helper.addOnClickListener(R.id.btnTagMore)
         helper.addOnClickListener(R.id.rvTagSquareImg)
         itemview.rvTagSquareImg.layoutManager = GridLayoutManager(mContext, 3)
         val adapter = TagSquarePicAdapter(3)
-        if (item.cover_list.isNullOrEmpty()) {
-            adapter.addData(SquarePicBean(UserManager.getAvator()))
-            adapter.addData(SquarePicBean(UserManager.getAvator()))
-            adapter.addData(SquarePicBean(UserManager.getAvator()))
-        } else
-            adapter.addData(item.cover_list)
+        adapter.addData(item.cover_list)
 
         itemview.rvTagSquareImg.onTouch { _, event ->
             helper.itemView.onTouchEvent(event)

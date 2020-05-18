@@ -34,7 +34,8 @@ class SquareSamePersonPresenter : BasePresenter<SquareSamePersonView>() {
                     if (t.code == 200) {
                         mView.onGetTitleInfoResult(true, t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
+
                     } else {
                         mView.onGetTitleInfoResult(false, null)
                         CommonFunction.toast(t.msg)

@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.ui.activity
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +10,7 @@ import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.RegexUtils
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
+import com.sdy.jitangapplication.common.CommonFunction
 import kotlinx.android.synthetic.main.activity_phone.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -34,7 +36,17 @@ class PhoneActivity : BaseActivity(), View.OnClickListener {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+    }
+
     private fun initView() {
+        countryCode.typeface = Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf")
         wxcode = intent.getStringExtra("wxcode") ?: ""
         login_type = intent.getStringExtra("type") ?: "1"
         if (login_type == "3") {
@@ -58,15 +70,18 @@ class PhoneActivity : BaseActivity(), View.OnClickListener {
                 }
 
                 if (!edit.trim().isNullOrEmpty()) {
+                    etPhone.typeface = Typeface.createFromAsset(assets, "DIN_Alternate_Bold.ttf")
                     nickNameBg.setBackgroundColor(resources.getColor(R.color.colorOrange))
                     nickNameClean.isVisible = true
                 } else {
+                    etPhone.typeface = Typeface.DEFAULT
                     nickNameBg.setBackgroundColor(resources.getColor(R.color.colorDividerC4))
                     nickNameClean.isVisible = false
                 }
 
 
-                btnVerifyCode.isEnabled = etPhone.text.toString().isNotEmpty() && etPhone.text.toString().length == 11
+                btnVerifyCode.isEnabled =
+                    etPhone.text.toString().isNotEmpty() && etPhone.text.toString().length == 11
 
             }
 
@@ -78,11 +93,22 @@ class PhoneActivity : BaseActivity(), View.OnClickListener {
 
         })
 
-
-//        ScrollSoftKeyBoardUtils.addLayoutListener(rootview, btnVerifyCode)
+//        btnVerifyCode
+//        ScrollSoftKeyBoardUtils.addLayoutListener(rootView, btnVerifyCode)
         etPhone.postDelayed({
             KeyboardUtils.showSoftInput(etPhone, 0)
         }, 200)
+        titleTv.postDelayed({
+            CommonFunction.startAnimation(titleTv)
+        }, 250L)
+
+        tipTv.postDelayed({
+            CommonFunction.startAnimation(tipTv)
+        }, 300L)
+
+        clPhone.postDelayed({
+            CommonFunction.startAnimation(clPhone)
+        }, 350L)
     }
 
 

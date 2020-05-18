@@ -59,7 +59,7 @@
                             />
 
                     <TextView
-                            android:id="@+id/t1"
+                            android:id="@+id/moreInfoTitle"
                             android:layout_width="match_parent"
                             android:layout_marginTop="20dp"
                             android:paddingLeft="15dp"

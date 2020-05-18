@@ -18,12 +18,14 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
  * 用户隐私政策  https://devppsns.duluduludala.com/ppsns/protocol/privacyProtocol/v1.json   1
  * 用户协议 https://devppsns.duluduludala.com/ppsns/protocol/userProtocol/v1.json   2
  * 防骗子 /ppsns/protocol/bewareFraud/v1.json
+ * 防骗子 /ppsns/protocol/candyHelp/v1.json
  */
 class ProtocolActivity : BaseActivity() {
     companion object {
         const val TYPE_PRIVACY_PROTOCOL = 1
         const val TYPE_USER_PROTOCOL = 2
         const val TYPE_OTHER = 3
+        const val TYPE_CANDY_USAGE = 4
     }
 
     private val type by lazy { intent.getIntExtra("type", TYPE_PRIVACY_PROTOCOL) }
@@ -35,6 +37,14 @@ class ProtocolActivity : BaseActivity() {
     }
 
     private fun initView() {
+        when (type) {
+            TYPE_PRIVACY_PROTOCOL -> {
+                hotT1.text = "隐私条款"
+            }
+            TYPE_USER_PROTOCOL -> {
+                hotT1.text = "用户协议"
+            }
+        }
 
         btnBack.onClick {
             finish()
@@ -98,9 +108,8 @@ class ProtocolActivity : BaseActivity() {
         when (type) {
             TYPE_PRIVACY_PROTOCOL -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/privacyProtocol${Constants.END_BASE_URL}")
             TYPE_USER_PROTOCOL -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/userProtocol${Constants.END_BASE_URL}")
-            TYPE_OTHER -> webView.loadUrl(
-                intent.getStringExtra("url")
-            )
+            TYPE_CANDY_USAGE -> webView.loadUrl("${BaseConstant.SERVER_ADDRESS}protocol/candyHelp${Constants.END_BASE_URL}")
+            TYPE_OTHER -> webView.loadUrl(intent.getStringExtra("url"))
         }
 
 

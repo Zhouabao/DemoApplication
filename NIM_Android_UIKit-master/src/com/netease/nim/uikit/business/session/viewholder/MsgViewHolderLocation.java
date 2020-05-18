@@ -1,6 +1,7 @@
 package com.netease.nim.uikit.business.session.viewholder;
 
 import android.widget.TextView;
+
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.common.ui.imageview.MsgThumbImageView;
 import com.netease.nim.uikit.common.ui.recyclerview.adapter.BaseMultiItemFetchLoadAdapter;
@@ -58,5 +59,15 @@ public class MsgViewHolderLocation extends MsgViewHolderBase {
 
     public static int getLocationDefEdge() {
         return (int) (0.5 * ScreenUtil.screenWidth);
+    }
+
+    @Override
+    protected int leftBackground() {
+        return R.drawable.shape_rectangle_chat_bg_right_gray;
+    }
+
+    @Override
+    protected int rightBackground() {
+        return R.drawable.shape_rectangle_chat_bg_right_gray;
     }
 }

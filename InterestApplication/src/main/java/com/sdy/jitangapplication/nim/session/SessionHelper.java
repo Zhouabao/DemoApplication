@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
+
 import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.api.model.recent.RecentCustomization;
 import com.netease.nim.uikit.api.model.session.SessionCustomization;
@@ -32,6 +33,8 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.LocalAntiSpamResult;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
+import com.netease.nimlib.sdk.uinfo.constant.GenderEnum;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.sdy.jitangapplication.R;
 import com.sdy.jitangapplication.common.Constants;
 import com.sdy.jitangapplication.nim.DemoCache;
@@ -39,12 +42,19 @@ import com.sdy.jitangapplication.nim.activity.MessageInfoActivity;
 import com.sdy.jitangapplication.nim.activity.SearchMessageActivity;
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment;
 import com.sdy.jitangapplication.nim.attachment.ChatMatchAttachment;
+import com.sdy.jitangapplication.nim.attachment.CustomAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment;
+import com.sdy.jitangapplication.nim.attachment.SendGiftAttachment;
 import com.sdy.jitangapplication.nim.attachment.ShareSquareAttachment;
 import com.sdy.jitangapplication.nim.attachment.StickerAttachment;
+import com.sdy.jitangapplication.nim.attachment.WishHelpAttachment;
 import com.sdy.jitangapplication.nim.extension.CustomAttachParser;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderChatHi;
+import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderSendCustomTip;
+import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderSendGift;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderShareSquare;
 import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderTip;
+import com.sdy.jitangapplication.nim.viewholder.MsgViewHolderWishHelp;
 import com.sdy.jitangapplication.ui.activity.MatchDetailActivity;
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog;
 import com.sdy.jitangapplication.ui.dialog.ChatToViplDialog;
@@ -256,11 +266,19 @@ public class SessionHelper {
                             return "『好友消息』";
                         } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_OUTTIME) {
                             return "『消息过期』";
+                        } else if (((ChatHiAttachment) recent.getAttachment()).getShowType() == ChatHiAttachment.CHATHI_WANT_MATCH) {
+                            return "『意向匹配』";
                         }
 
                     } else if (recent.getAttachment() instanceof ShareSquareAttachment) {
                         return "『转发动态』";
 
+                    } else if (recent.getAttachment() instanceof SendGiftAttachment) {
+                        return "『礼物』";
+                    } else if (recent.getAttachment() instanceof WishHelpAttachment) {
+                        return "『助力』";
+                    } else if (recent.getAttachment() instanceof SendCustomTipAttachment) {
+                        return ((SendCustomTipAttachment) recent.getAttachment()).getContent();
                     }
                     return super.getDefaultDigest(recent);
                 }
@@ -273,6 +291,9 @@ public class SessionHelper {
     //自定义消息界面
     private static void registerViewHolders() {
 //        NimUIKit.registerMsgItemViewHolder(ChatMatchAttachment.class, MsgViewHolderMatch.class);
+        NimUIKit.registerMsgItemViewHolder(SendGiftAttachment.class, MsgViewHolderSendGift.class);
+        NimUIKit.registerMsgItemViewHolder(WishHelpAttachment.class, MsgViewHolderWishHelp.class);
+        NimUIKit.registerMsgItemViewHolder(SendCustomTipAttachment.class, MsgViewHolderSendCustomTip.class);
         NimUIKit.registerMsgItemViewHolder(ShareSquareAttachment.class, MsgViewHolderShareSquare.class);
         NimUIKit.registerMsgItemViewHolder(ChatHiAttachment.class, MsgViewHolderChatHi.class);
         NimUIKit.registerTipMsgViewHolder(MsgViewHolderTip.class);
@@ -343,6 +364,38 @@ public class SessionHelper {
             }
 
             @Override
+            public boolean isShowGiftIcon(IMMessage message) {
+                //男的发的并且是(女的收的或者男方自己)
+//                   && ((message.getDirect() == MsgDirectionEnum.In && UserManager.INSTANCE.getGender() == 2)
+//                            || (message.getDirect() == MsgDirectionEnum.Out && UserManager.INSTANCE.getGender() == 1))
+                if (message.getSessionId().equals(Constants.ASSISTANT_ACCID)) {
+                    return false;
+                } else {
+                    boolean sendMan = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getFromAccount())).getGenderEnum() == GenderEnum.MALE;
+                    boolean differentGender = ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(message.getSessionId())).getGenderEnum()
+                            != ((NimUserInfo) NimUIKit.getUserInfoProvider().getUserInfo(UserManager.INSTANCE.getAccid())).getGenderEnum();
+                    if (message.getRemoteExtension() != null && message.getRemoteExtension().get("needCandyImg") != null && ((Boolean) message.getRemoteExtension().get("needCandyImg")) == false) {
+                        return false;
+                    } else {
+                        if (!message.getFromAccount().equals(Constants.ASSISTANT_ACCID)
+                                && message.getMsgType() != MsgTypeEnum.tip
+                                && message.getMsgType() != MsgTypeEnum.custom
+//                            && !(message.getAttachment() instanceof ChatMatchAttachment)
+//                            && !(message.getAttachment() instanceof ChatHiAttachment)
+//                            && !(message.getAttachment() instanceof SendGiftAttachment)
+//                            && !(message.getAttachment() instanceof WishHelpAttachment)
+//                            && !(message.getAttachment() instanceof SendCustomTipAttachment)
+                                && sendMan
+                                && differentGender) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            @Override
             public long approveTime() {
                 if (UserManager.INSTANCE.getApproveBean() != null) {
                     return UserManager.INSTANCE.getApproveBean().getApprove_time();
@@ -389,6 +442,8 @@ public class SessionHelper {
             public boolean shouldIgnore(IMMessage message) {
                 if (DemoCache.getAccount().equals(message.getSessionId())) {
                     // 发给我的电脑 不允许撤回
+                    return true;
+                } else if (message.getAttachment() instanceof CustomAttachment) {
                     return true;
                 }
                 return false;

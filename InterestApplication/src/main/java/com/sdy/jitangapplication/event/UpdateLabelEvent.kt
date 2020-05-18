@@ -1,7 +1,7 @@
 package com.sdy.jitangapplication.event
 
 import com.sdy.jitangapplication.model.WechatNameBean
-import com.sdy.jitangapplication.ui.fragment.MySquareFragment.Companion.TYPE_SQUARE
+import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment.Companion.TYPE_SQUARE
 
 /**
  *    author : ZFM
@@ -18,7 +18,17 @@ class RefreshEvent(val refresh: Boolean)
 
 
 //刷新点赞等事件
-class RefreshLikeEvent(val squareId: Int, val isLike: Int, val position: Int)
+class RefreshLikeEvent(
+    val squareId: Int,
+    val isLike: Int,
+    val position: Int,
+    var likeCount: Int = -1
+)
+
+
+//刷新删除动态事件
+class RefreshDeleteSquareEvent(val squareId: Int)
+
 
 //刷新评论数量
 class RefreshCommentEvent(val commentNum: Int, val position: Int)
@@ -37,8 +47,13 @@ class UploadEvent(
     var currentFileIndex: Int = 0,
     var progress: Double = 0.0,
     var qnSuccess: Boolean = true,
-    var from: Int = 1
-)
+    var from: Int = FROM_SQUARE
+) {
+    companion object {
+        val FROM_SQUARE = 1
+        val FROM_USERCENTER = 2
+    }
+}
 
 
 //上传成功或者失败事件

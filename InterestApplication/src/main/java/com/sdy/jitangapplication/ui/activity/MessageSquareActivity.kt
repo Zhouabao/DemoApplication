@@ -30,7 +30,8 @@ import kotlinx.android.synthetic.main.layout_actionbar.*
  * 发现消息列表
  * /ppsns/tidings/squareListsV3/v1.json  type=1  点赞的  type=2 评论的
  */
-class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), MessageSquareView, OnRefreshListener,
+class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), MessageSquareView,
+    OnRefreshListener,
     OnLoadMoreListener {
 
 
@@ -159,16 +160,19 @@ class MessageSquareActivity : BaseMvpActivity<MessageSquarePresenter>(), Message
         if (data != null) {
             //进入页面就标记已读
             mPresenter.markSquareRead(params)
-            if (refreshLayout.state == RefreshState.Refreshing) {
-                refreshLayout.finishRefresh(true)
-                adapter.data.clear()
-            } else {
-                refreshLayout.finishLoadMoreWithNoMoreData()
-            }
+
             if (data.isNullOrEmpty()) {
-                if (refreshLayout.state == RefreshState.Refreshing)
+                if (refreshLayout.state == RefreshState.Loading)
+                    refreshLayout.finishLoadMoreWithNoMoreData()
+                else
                     adapter.isUseEmpty(true)
             } else {
+                if (refreshLayout.state == RefreshState.Refreshing) {
+                    refreshLayout.finishRefresh(true)
+                    adapter.data.clear()
+                } else {
+                    refreshLayout.finishLoadMore(true)
+                }
                 for (msg in data.withIndex()) {
                     if (msg.value.is_read == false && unread == -1) {
                         msg.value.pos = 0

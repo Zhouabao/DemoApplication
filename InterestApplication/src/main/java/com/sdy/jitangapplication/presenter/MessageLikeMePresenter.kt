@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
@@ -33,7 +34,7 @@ class MessageLikeMePresenter : BasePresenter<MessageLikeMeView>() {
                         SPUtils.getInstance(Constants.SPNAME).put("isvip", t.data?.isvip ?: 0)
                         mView.onLikeListsResult(t.data!!)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onError("")
                     }

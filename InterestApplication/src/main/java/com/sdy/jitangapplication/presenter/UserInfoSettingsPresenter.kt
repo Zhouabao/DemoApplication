@@ -34,7 +34,7 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
         val params = UserManager.getBaseParams()
         params.putAll(param)
         RetrofitFactory.instance.create(Api::class.java)
-            .personalInfo(UserManager.getSignParams(params))
+            .personalInfoCandy(UserManager.getSignParams(params))
             .excute(object : BaseSubscriber<BaseResp<UserInfoSettingBean?>>(mView) {
                 override fun onNext(t: BaseResp<UserInfoSettingBean?>) {
                     if (t.code == 200) {
@@ -53,50 +53,6 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
             })
     }
 
-    /**
-     * 保存个人信息
-     */
-    fun savePersonal(params: HashMap<String, Any>) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .savePersonal(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
-                    if (t.code == 200) {
-                        mView.onSavePersonalResult(true, 1)
-                    } else {
-                        mView.onSavePersonalResult(false, 1)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(context).show()
-                    } else
-                        mView.onSavePersonalResult(false, 1)
-                }
-            })
-    }
-
-    /**
-     * 保存头像
-     */
-    fun addPhotos(token: String, accid: String, photos: Array<String?>) {
-        RetrofitFactory.instance.create(Api::class.java)
-            .addPhotos(UserManager.getSignParams(), photos)
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
-                override fun onNext(t: BaseResp<Any?>) {
-                    if (t.code == 200) {
-                        mView.onSavePersonalResult(true, 2)
-                    } else {
-                        mView.onSavePersonalResult(false, 2)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    mView.onSavePersonalResult(false, 2)
-                }
-            })
-    }
 
 
     /**
@@ -104,8 +60,6 @@ class UserInfoSettingsPresenter : BasePresenter<UserInfoSettingsView>() {
      */
     fun addPhotoV2(
         params: HashMap<String, Any?> = hashMapOf(),
-        token: String,
-        accid: String,
         photos: MutableList<Int?>,
         type: Int
     ) {

@@ -13,6 +13,7 @@ open class BasePresenter<T:BaseView>{
 
     lateinit var context:Context
 
+
     /*
         检查网络是否可用
      */

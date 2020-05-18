@@ -3,6 +3,7 @@ package com.sdy.jitangapplication.presenter.view
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.presenter.view.BaseView
 import com.sdy.jitangapplication.model.MatchBean
+import com.sdy.jitangapplication.model.RecommendSquareListBean
 import com.sdy.jitangapplication.model.StatusBean
 
 /**
@@ -23,5 +24,13 @@ interface MatchDetailView : BaseView {
     fun onRemoveBlockResult(success: Boolean)
 
 
+    fun onNeedNoticeResult(success: Boolean)
+
+
+
+    /**
+     * 获取广场列表
+     */
+    fun onGetSquareListResult(data: RecommendSquareListBean?, result: Boolean, isRefresh: Boolean = false)
 
 }

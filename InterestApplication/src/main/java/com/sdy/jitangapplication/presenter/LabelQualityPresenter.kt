@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -36,7 +37,8 @@ class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
                     if (t.code == 200) {
                         mView.getQualityResult(true, t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
+
                     } else {
                         mView.getQualityResult(false, null)
                         CommonFunction.toast(t.msg)
@@ -71,7 +73,8 @@ class LabelQualityPresenter : BasePresenter<LabelQualityView>() {
                     if (t.code == 200) {
                         mView.addTagResult(true, t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
+
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.addTagResult(false, null)

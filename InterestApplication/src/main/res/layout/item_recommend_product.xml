@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/productImg"
+        android:layout_width="0dp"
+        android:scaleType="centerCrop"
+        android:layout_height="103dp"
+        android:src="@drawable/icon_bg_actionbar_candy_mall"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="蕉下BANANAUN..."
+        android:textColor="#ff2d2f30"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/productImg"
+        app:layout_constraintRight_toRightOf="@id/productImg"
+        app:layout_constraintTop_toBottomOf="@id/productImg" />
+</androidx.constraintlayout.widget.ConstraintLayout>

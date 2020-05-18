@@ -7,8 +7,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
@@ -17,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.NotificationTarget;
@@ -24,9 +27,10 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.sdy.baselibrary.R;
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import java.io.File;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * @author Zhou Fengmei
@@ -92,17 +96,27 @@ public class GlideUtil {
      * @param url
      * @param targetImg
      */
+//    circleCrop().
     public static void loadCircleImg(Context context, Object url, ImageView targetImg) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().circleCrop().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
+                .apply(getOptions().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
                 .into(targetImg);
     }
 
+    public static void loadCircleImg(Context context, boolean circle, Object url, ImageView targetImg) {
+        Glide.with(context)
+                .load(url)
+                .circleCrop()
+                .apply(getOptions().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
+                .into(targetImg);
+    }
+
+    //    circleCrop().
     public static void loadCircleImg(Context context, int url, ImageView targetImg) {
         Glide.with(context)
                 .load(url)
-                .apply(getOptions().circleCrop().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
+                .apply(getOptions().placeholder(R.drawable.icon_default_avator).error(R.drawable.icon_default_avator))
                 .into(targetImg);
     }
 
@@ -155,7 +169,20 @@ public class GlideUtil {
      * @param type       圆角的方式
      */
     public static void loadRoundImgCenterCrop(Context context, Object url, ImageView tartgetImg, int radius, RoundedCornersTransformation.CornerType type) {
-        MultiTransformation multiTransformation = new MultiTransformation(new CenterCrop(), new RoundedCornersTransformation(radius, 0,type));
+        MultiTransformation multiTransformation = new MultiTransformation(new CenterCrop(), new RoundedCornersTransformation(radius, 0, type));
+        Glide.with(context)
+                .load(url)
+                .priority(Priority.NORMAL)
+//                .placeholder(R.drawable.default_image)
+//                .error(R.drawable.default_image)
+                .thumbnail(0.5F)
+                .transform(multiTransformation)
+                .into(tartgetImg);
+
+    }
+
+    public static void loadRoundImgFitcenter(Context context, Object url, ImageView tartgetImg, int radius, RoundedCornersTransformation.CornerType type) {
+        MultiTransformation multiTransformation = new MultiTransformation(new FitCenter(), new RoundedCornersTransformation(radius, 0, type));
         Glide.with(context)
                 .load(url)
                 .priority(Priority.NORMAL)

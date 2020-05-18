@@ -1,21 +1,19 @@
 package com.sdy.jitangapplication.ui.fragment
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.widget.PopupWindow
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
@@ -29,16 +27,22 @@ import com.sdy.jitangapplication.event.AnnounceEvent
 import com.sdy.jitangapplication.event.RePublishEvent
 import com.sdy.jitangapplication.event.RefreshSquareByGenderEvent
 import com.sdy.jitangapplication.event.UploadEvent
-import com.sdy.jitangapplication.model.SquareTitleBean
 import com.sdy.jitangapplication.presenter.ContentPresenter
 import com.sdy.jitangapplication.presenter.view.ContentView
 import com.sdy.jitangapplication.ui.activity.PublishActivity
 import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
-import com.sdy.jitangapplication.ui.adapter.SquareSwitchAdapter
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
+import com.sdy.jitangapplication.widgets.CustomScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.fragment_content.*
 import kotlinx.android.synthetic.main.popupwindow_square_filter_gender.view.*
+import net.lucode.hackware.magicindicator.ViewPagerHelper
+import net.lucode.hackware.magicindicator.buildins.UIUtil
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -55,7 +59,8 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     private val filterPopupWindow by lazy {
         PopupWindow(activity!!).apply {
             contentView =
-                LayoutInflater.from(activity!!).inflate(R.layout.popupwindow_square_filter_gender, null, false)
+                LayoutInflater.from(activity!!)
+                    .inflate(R.layout.popupwindow_square_filter_gender, null, false)
             width = ViewGroup.LayoutParams.WRAP_CONTENT
             height = ViewGroup.LayoutParams.WRAP_CONTENT
             setBackgroundDrawable(null)
@@ -93,7 +98,6 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     }
 
 
-
     override fun loadData() {
         initView()
 
@@ -101,12 +105,6 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
     private fun initView() {
         EventBus.getDefault().register(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val param = customStatusBar.layoutParams as LinearLayout.LayoutParams
-            param.height = BarUtils.getStatusBarHeight()
-        } else {
-            customStatusBar.isVisible = false
-        }
         mPresenter = ContentPresenter()
         mPresenter.mView = this
         mPresenter.context = activity!!
@@ -131,19 +129,31 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
             } else {
                 filterPopupWindow.showAsDropDown(filterGenderBtn, 0, SizeUtils.dp2px(-15F))
                 if (sp.getInt("filter_square_gender", 3) == 3) {
-                    filterPopupWindow.contentView.genderAll.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                    filterPopupWindow.contentView.genderAll.setTextColor(
+                        activity!!.resources.getColor(
+                            R.color.colorOrange
+                        )
+                    )
                     filterPopupWindow.contentView.genderMan.setTextColor(Color.parseColor("#191919"))
                     filterPopupWindow.contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
                     filterGenderBtn.setImageResource(R.drawable.icon_square_filter_gender)
 
                 } else if (sp.getInt("filter_square_gender", 3) == 1) {
-                    filterPopupWindow.contentView.genderMan.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                    filterPopupWindow.contentView.genderMan.setTextColor(
+                        activity!!.resources.getColor(
+                            R.color.colorOrange
+                        )
+                    )
                     filterPopupWindow.contentView.genderAll.setTextColor(Color.parseColor("#191919"))
                     filterPopupWindow.contentView.genderWoman.setTextColor(Color.parseColor("#191919"))
                     filterGenderBtn.setImageResource(R.drawable.icon_square_filter_man)
 
                 } else if (sp.getInt("filter_square_gender", 3) == 2) {
-                    filterPopupWindow.contentView.genderWoman.setTextColor(activity!!.resources.getColor(R.color.colorOrange))
+                    filterPopupWindow.contentView.genderWoman.setTextColor(
+                        activity!!.resources.getColor(
+                            R.color.colorOrange
+                        )
+                    )
                     filterPopupWindow.contentView.genderAll.setTextColor(Color.parseColor("#191919"))
                     filterPopupWindow.contentView.genderMan.setTextColor(Color.parseColor("#191919"))
                     filterGenderBtn.setImageResource(R.drawable.icon_square_filter_woman)
@@ -158,7 +168,11 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_content, container, false)
     }
@@ -166,14 +180,10 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
     //fragment栈管理
     private val mStack = Stack<Fragment>()
-    val titleAdapter by lazy { SquareSwitchAdapter() }
+    val titles by lazy { arrayOf("最新", "推荐", "兴趣", "附近") }
 
 
     private fun initFragments() {
-        titleAdapter.addData(SquareTitleBean("最新", false))
-        titleAdapter.addData(SquareTitleBean("推荐", true))
-        titleAdapter.addData(SquareTitleBean("兴趣", false))
-        titleAdapter.addData(SquareTitleBean("附近", false))
 
         mStack.add(FriendSquareFragment())
         mStack.add(RecommendSquareFragment())
@@ -184,38 +194,65 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     private fun initViewpager() {
         squareVp.setScrollable(true)
         squareVp.adapter = MainPagerAdapter(activity!!.supportFragmentManager, mStack)
-        squareVp.currentItem = 1
         squareVp.offscreenPageLimit = 4
 
-        rgSquare.layoutManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        rgSquare.adapter = titleAdapter
-        titleAdapter.setOnItemClickListener { _, view, position ->
-            for (data in titleAdapter.data) {
-                data.checked = data == titleAdapter.data[position]
-                squareVp.currentItem = position
-            }
-            filterGenderBtn.isVisible = position != 2
-            titleAdapter.notifyDataSetChanged()
-        }
-
-        squareVp.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+        squareVp.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
 
             override fun onPageSelected(position: Int) {
-                for (data in titleAdapter.data) {
-                    data.checked = data == titleAdapter.data[position]
-                    squareVp.currentItem = position
-                }
                 filterGenderBtn.isVisible = position != 2
-                titleAdapter.notifyDataSetChanged()
             }
 
         })
+        initIndicator()
+        squareVp.currentItem = 1
+    }
+
+    private fun initIndicator() {
+        val commonNavigator = CommonNavigator(activity!!)
+        commonNavigator.adapter = object : CommonNavigatorAdapter() {
+            override fun getCount(): Int {
+                return mStack.size
+            }
+
+            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
+                val simplePagerTitleView = CustomScaleTransitionPagerTitleView(context)
+                simplePagerTitleView.text = titles[index]
+                simplePagerTitleView.minScale = 0.66F
+                simplePagerTitleView.textSize = 24F
+                simplePagerTitleView.normalColor = Color.parseColor("#191919")
+                simplePagerTitleView.selectedColor = Color.parseColor("#FF6318")
+                simplePagerTitleView.setPadding(SizeUtils.dp2px(5F), 0, 0, 0)
+                simplePagerTitleView.onClick {
+                    squareVp.currentItem = index
+                    filterGenderBtn.isVisible = index != 2
+                }
+                return simplePagerTitleView
+            }
+
+            override fun getIndicator(context: Context): IPagerIndicator {
+                val indicator = LinePagerIndicator(context)
+                indicator.mode = LinePagerIndicator.MODE_EXACTLY
+                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
+                indicator.lineWidth = UIUtil.dip2px(context, 16.0).toFloat()
+                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
+                indicator.startInterpolator = AccelerateInterpolator()
+                indicator.endInterpolator = DecelerateInterpolator(1.0f)
+                indicator.setColors(resources.getColor(R.color.colorOrange))
+                return indicator
+            }
+        }
+        rgSquare.navigator = commonNavigator
+        ViewPagerHelper.bind(rgSquare, squareVp)
     }
 
 
@@ -227,7 +264,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onProgressEvent(event: UploadEvent) {
-        if (event.from == 1)
+        if (event.from == UploadEvent.FROM_SQUARE)
             if (event.qnSuccess) {
                 llRetry.isVisible = false
                 btnClose.isVisible = false
@@ -264,7 +301,8 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
                 iconRetry.setImageResource(R.drawable.icon_edit_retry)
                 editRetry.text = "编辑"
                 llRetry.onClick {
-                    SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
+                    SPUtils.getInstance(Constants.SPNAME)
+                        .put("draft", UserManager.publishParams["descr"] as String)
                     UserManager.clearPublishParams()
 
                     startActivity<PublishActivity>()
@@ -292,10 +330,10 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     private var from = 1
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRePublishEvent(event: RePublishEvent) {
-        if (event.context == UserCenterFragment::class.java.simpleName) {
-            from = 2
+        from = if (event.context == MySquareFragment::class.java.simpleName) {
+            2
         } else {
-            from = 1
+            1
         }
         if (UserManager.publishState == 1) {//正在发布中
             CommonFunction.toast("还有动态正在发布哦~请稍候")
@@ -318,7 +356,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
                         uploadFl.isVisible = false
                         UserManager.clearPublishParams()
                         if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-                            if (event.context == UserCenterFragment::class.java.simpleName) {
+                            if (event.context == MySquareFragment::class.java.simpleName) {
                                 startActivity<PublishActivity>("from" to 2)
                             } else {
                                 startActivity<PublishActivity>()
@@ -328,17 +366,18 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
                 .create()
                 .show()
         } else if (UserManager.publishState == -1) { //400
-            SPUtils.getInstance(Constants.SPNAME).put("draft", UserManager.publishParams["descr"] as String)
+            SPUtils.getInstance(Constants.SPNAME)
+                .put("draft", UserManager.publishParams["descr"] as String)
             UserManager.clearPublishParams()
             if (!ActivityUtils.isActivityExistsInStack(PublishActivity::class.java))
-                if (event.context == UserCenterFragment::class.java.simpleName) {
+                if (event.context == MySquareFragment::class.java.simpleName) {
                     startActivity<PublishActivity>("from" to 2)
                 } else {
                     startActivity<PublishActivity>()
                 }
             uploadFl.isVisible = false
         } else if (UserManager.publishState == 0) {
-            if (event.context == UserCenterFragment::class.java.simpleName) {
+            if (event.context == MySquareFragment::class.java.simpleName) {
                 startActivity<PublishActivity>("from" to 2)
             } else {
                 activity!!.intent.setClass(activity!!, PublishActivity::class.java)
@@ -431,7 +470,8 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     override fun onSquareAnnounceResult(type: Int, success: Boolean, code: Int) {
         onAnnounceEvent(AnnounceEvent(success, code))
         if (from == 2) {
-            EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
+            EventBus.getDefault()
+                .postSticky(UploadEvent(1, 1, 1.0, from = UploadEvent.FROM_USERCENTER))
         }
         from = 1
     }
@@ -440,7 +480,7 @@ class ContentFragment : BaseMvpLazyLoadFragment<ContentPresenter>(), ContentView
     //验证用户是否被封禁结果
     override fun onCheckBlockResult(result: Boolean) {
         if (result) {
-            onRePublishEvent(RePublishEvent(true, FriendSquareFragment::class.java.simpleName))
+            onRePublishEvent(RePublishEvent(true, ContentFragment::class.java.simpleName))
         }
     }
 

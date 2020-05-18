@@ -24,7 +24,8 @@ import org.jetbrains.anko.startActivityForResult
 /**
  * 个人介绍
  */
-class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserIntroduceView, View.OnClickListener {
+class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserIntroduceView,
+    View.OnClickListener {
 
     companion object {
         const val REGISTER = 1
@@ -46,7 +47,10 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
 
     override fun onResume() {
         super.onResume()
-        labelIntroduceContent.postDelayed({ KeyboardUtils.showSoftInput(labelIntroduceContent) }, 200L)
+        labelIntroduceContent.postDelayed(
+            { KeyboardUtils.showSoftInput(labelIntroduceContent) },
+            200L
+        )
     }
 
     private fun initView() {
@@ -70,12 +74,12 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
 
         if (from == REGISTER) {
             btnBack.isVisible = false
-            t1.isVisible = true
+            moreInfoTitle.isVisible = true
 //            labelPurposeCl.isVisible = true
             hotT1.visibility = View.INVISIBLE
         } else {
             btnBack.isVisible = true
-            t1.isVisible = false
+            moreInfoTitle.isVisible = false
 //            labelPurposeCl.isVisible = false
             hotT1.visibility = View.VISIBLE
             hotT1.text = "关于我"
@@ -124,7 +128,10 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
                 finish()
             }
             labelPurposeBtn -> {//兴趣意向
-                startActivityForResult<MyIntentionActivity>(100, "from" to MyIntentionActivity.FROM_REGISTER)
+                startActivityForResult<MyIntentionActivity>(
+                    100,
+                    "from" to MyIntentionActivity.FROM_REGISTER
+                )
             }
             rightBtn1 -> { //保存个人介绍
                 if (from == REGISTER)
@@ -162,8 +169,11 @@ class UserIntroduceActivity : BaseMvpActivity<UserIntroducePresenter>(), UserInt
 
     override fun onSaveRegisterInfo(success: Boolean) {
         if (success) {
-            startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
+            startActivity<MainActivity>()
             finish()
+
+//            startActivity<AddLabelActivity>("from" to AddLabelActivity.FROM_REGISTER)
+//            finish()
         }
     }
 

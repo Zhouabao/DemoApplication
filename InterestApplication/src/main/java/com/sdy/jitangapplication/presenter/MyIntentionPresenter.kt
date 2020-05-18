@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -9,6 +10,7 @@ import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.model.LabelQualityBean
+import com.sdy.jitangapplication.model.Userinfo
 import com.sdy.jitangapplication.presenter.view.MyIntentionView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -30,7 +32,8 @@ class MyIntentionPresenter : BasePresenter<MyIntentionView>() {
                     if (t.code == 200) {
                         mView.onGetIntentionListResult(t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
+
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onGetIntentionListResult(null)
@@ -65,16 +68,14 @@ class MyIntentionPresenter : BasePresenter<MyIntentionView>() {
 
         RetrofitFactory.instance.create(Api::class.java)
             .saveRegisterInfo(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<Userinfo?>>(mView) {
                 override fun onStart() {
                     super.onStart()
                 }
 
-                override fun onNext(t: BaseResp<Any?>) {
+                override fun onNext(t: BaseResp<Userinfo?>) {
                     if (t.code == 200) {
                         mView.onSaveRegisterInfo(true)
-                    } else if (t.code == 403) {
-                        TickDialog(context).show()
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onSaveRegisterInfo(false)

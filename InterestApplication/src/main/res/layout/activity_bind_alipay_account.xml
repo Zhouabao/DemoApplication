@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.BindAlipayAccountActivity">
+
+    <include layout="@layout/layout_actionbar" />
+
+    <TextView
+        android:id="@+id/moreInfoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="25dp"
+        android:text="支付宝账号"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTitle" />
+
+    <EditText
+        android:id="@+id/etAlipayAccount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="15dp"
+        android:background="@null"
+        android:hint="填写支付宝账号"
+        android:textColor="#191919"
+        android:textColorHint="#ffc5c6c8"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/moreInfoTitle" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="#f6f6f6"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="@id/etAlipayAccount"
+        app:layout_constraintTop_toBottomOf="@id/etAlipayAccount" />
+
+    <TextView
+        android:id="@+id/t2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="姓名"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintTop_toBottomOf="@id/view1" />
+
+    <EditText
+        android:id="@+id/etAlipayName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="15dp"
+        android:background="@null"
+        android:hint="支付宝实名认证的姓名"
+        android:textColor="#191919"
+        android:textColorHint="#ffc5c6c8"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/t2" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="#f6f6f6"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="@id/etAlipayName"
+        app:layout_constraintTop_toBottomOf="@id/etAlipayName" />
+
+    <TextView
+        android:id="@+id/t3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="联系方式"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintTop_toBottomOf="@id/view2" />
+
+    <EditText
+        android:id="@+id/etTelephone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="15dp"
+        android:background="@null"
+        android:hint="填写您的联系方式"
+        android:inputType="number"
+        android:textColor="#191919"
+        android:textColorHint="#ffc5c6c8"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/t3" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="#f6f6f6"
+        app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+        app:layout_constraintRight_toRightOf="@id/etTelephone"
+        app:layout_constraintTop_toBottomOf="@id/etTelephone" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

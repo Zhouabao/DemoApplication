@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context=".ui.activity.AddressManagerActivity">
+
+    <include layout="@layout/layout_actionbar" />
+
+    <com.kennyc.view.MultiStateView
+        android:id="@+id/stateAddress"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTitle">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAddress"
+            android:overScrollMode="never"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.kennyc.view.MultiStateView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

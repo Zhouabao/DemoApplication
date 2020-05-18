@@ -21,6 +21,7 @@ data class MatchListBean(
     var like_times: Int = 0, //剩余滑动次数
     var highlight_times: Int = 0,//提示剩余次数的节点
     val my_percent_complete: Int,//（我的资料完整度）
+    val complete_percent_normal: Int,//（标准完整度新的）
     val normal_percent_complete: Int,//（标准完整度）
     val my_like_times: Int,//（我的次数）
     val total_like_times: Int,//  total_like_times（最高次数）
@@ -30,7 +31,9 @@ data class MatchListBean(
     var interest_times: Int = 0,
     var is_human: Boolean = false,
     var ranking_level: Int = 1,//ranking_level  int型 1 审核中ing      2    //非真人提示    其他不管
-    var is_full: Boolean = false//兴趣是否完整
+    var my_candy_amount: Int = 0,//我的糖果数量
+    var is_full: Boolean = false,//兴趣是否完整
+    var iscompleteguide: Boolean = false//是否引导过
 )
 
 
@@ -62,15 +65,15 @@ data class MatchBean(
     var matching_icon: String = "",
     var face_auditing_state: Int = 0,
     var intention_icon: String = "",
-    var label_quality: MutableList<LabelQualityBean> = mutableListOf(),
     var isvip: Int = 0,    //是否会员 true是 false不是
     var isfaced: Int = 0,  //0未认证/认证不成功     1认证通过     2认证中
     var accid: String = "",
     var age: Int? = 0,
     var avatar: String? = null,
     var distance: String? = null,
+    var online_time: String? = null,
     var gender: Int? = 0,
-    var isdislike: Int? = 0,
+    var isdisliked: Int? = 0,
     var isliked: Int? = 0,
     var member_level: Int? = 0,
     var nickname: String? = null,
@@ -89,17 +92,31 @@ data class MatchBean(
     var greet_switch: Boolean = true,//接收招呼开关   true  接收招呼      false   不接受招呼
     var greet_state: Boolean = true,// 认证招呼开关   true  开启认证      flase   不开启认证
     var isgreeted: Boolean = true,//招呼是否仍然有效
-    val base_info: BaseInfo,
     val my_percent_complete: Int,//（我的资料完整度）
     val normal_percent_complete: Int,//（标准完整度）
     val my_like_times: Int,//（我的次数）
     val total_like_times: Int,//  total_like_times（最高次数）
     var interesttags: MutableList<TagBean>? = null,
     var newtags: MutableList<Newtag>? = null,
-    var other_tags: MutableList<MyLabelBean> = mutableListOf(),
-    var other_interest: MutableList<LabelQualityBean> = mutableListOf()
+    var gift_list: MutableList<GiftBean> = mutableListOf(),
+    var wish_list: MutableList<GiftBean> = mutableListOf(),
+    var wish_cnt: Int = 0,
+    var birth: Int = 0,
+    var label_quality: MutableList<LabelQuality> = mutableListOf(),
+    var jobname: String = "",
+    var label_quality_cnt: Int = 0,
+    var mycandy_amount: Int = 0,
+    var need_notice: Boolean = true,
+    var intention_title: String = "",
+    var personal_info: MutableList<DetailUserInfoBean> = mutableListOf()
 ) : Serializable
 
+
+data class LabelQuality(
+    var icon: String = "",
+    var icon2: String = "",
+    var title: String = ""
+) : Serializable
 
 data class Newtag(
     var id: Int = 0,
@@ -128,7 +145,21 @@ data class StatusBean(val status: Int, val residue: Int = 0)
 /**
  * 获取招呼的次数
  */
-data class GreetTimesBean(val normal_cnt: Int, val isfaced: Int = 0, val isvip: Int = 0, val default_msg: String = "")
+data class GreetTimesBean(
+    val normal_cnt: Int,
+    val isfaced: Int = 0,
+    val isvip: Int = 0,
+    val default_msg: String = ""
+)
+
+data class GreetCheckBean(
+    var type: Int = -1,//1 免费   2 消耗糖果打招呼   3有今日意愿选项打招呼
+    var greet_amount: Int,
+    var goodswish: GiftBean? = null,
+    var nickname: String,
+    var mycandy_amount: Int,
+    var people_amount: Int
+)
 
 /**
  * 用戶標簽
@@ -169,7 +200,64 @@ data class GreetBean(
 
 
 data class DetailUserInfoBean(
-    var icon: Int,
-    var title: String,
-    var content: String
+    var icon: String = "",
+    var title: String = "",
+    var content: String = ""
+)
+
+
+/**
+ * 附近的人
+ */
+data class NearBean(
+    var list: MutableList<NearPersonBean> = mutableListOf(),
+    var today_find: CheckBean? = null,
+    var iscompleteguide: Boolean = false,
+    var today_find_pull: Boolean = false,
+    val complete_percent: Int,//（我的资料完整度）
+    val complete_percent_normal: Int//（标准完整度新的）
+)
+
+data class NearPersonBean(
+    var accid: String = "",
+    var intention_title: String = "",
+    var age: Int = 0,
+    var avatar: String = "",
+    var birth: Int = 0,
+    var constellation: String = "",
+    var gender: Int = 0,
+    var juli: String = "",
+    var nickname: String = "",
+    var photos: MutableList<String> = mutableListOf(),
+    var sign: String = "",
+    var distance: String = "",
+    var online_time: String = "",
+    var isfaced: Boolean = false,
+    var isvip: Boolean = false,
+    var wish_data: MutableList<GiftBean> = mutableListOf(),
+    var plus_photo: Int = 0
+)
+
+
+/**
+ * 开屏页推荐
+ */
+data class IndexRecommendBean(
+    var accid: String = "",
+    var age: Int = 0,
+    var avatar: String = "",
+    var constellation: String = "",
+    var gender: Int = 0,
+    var distance: Int = 0,
+    var nickname: String = "",
+    var checked: Boolean = true
+)
+
+
+/**
+ * 批量打招呼
+ */
+data class BatchGreetBean(
+    var accid: String = "",
+    var msg: String = ""
 )

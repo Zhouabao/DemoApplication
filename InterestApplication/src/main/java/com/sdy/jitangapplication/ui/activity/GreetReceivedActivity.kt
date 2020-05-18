@@ -32,6 +32,7 @@ import com.sdy.jitangapplication.event.UpdateHiEvent
 import com.sdy.jitangapplication.model.GreetedListBean
 import com.sdy.jitangapplication.nim.activity.ChatActivity
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
+import com.sdy.jitangapplication.nim.attachment.SendCustomTipAttachment
 import com.sdy.jitangapplication.presenter.GreetReceivedPresenter
 import com.sdy.jitangapplication.presenter.view.GreetReceivedView
 import com.sdy.jitangapplication.ui.adapter.GreetUserAdapter
@@ -48,7 +49,8 @@ import org.jetbrains.anko.startActivityForResult
 /**
  * 收到的招呼列表
  */
-class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetReceivedView, CardStackListener {
+class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetReceivedView,
+    CardStackListener {
 
     private var page = 1
     private val params by lazy {
@@ -130,7 +132,9 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                 EventBus.getDefault().post(GetNewMsgEvent())
             }
 
-            if (t.data.isNullOrEmpty() || (page == 1 && (t.data ?: mutableListOf()).size < Constants.PAGESIZE)) {
+            if (t.data.isNullOrEmpty() || (page == 1 && (t.data
+                    ?: mutableListOf()).size < Constants.PAGESIZE)
+            ) {
                 hasMore = false
             }
             stateGreet.viewState = MultiStateView.VIEW_STATE_CONTENT
@@ -148,14 +152,18 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                         if (data.send_msg.isNullOrEmpty()) {
                             if (!contact.content.isNullOrEmpty()) {
                                 when {
-                                    contact.attachment is ChatHiAttachment -> data.send_msg = "对方向你打了个招呼"
+                                    contact.attachment is ChatHiAttachment -> data.send_msg =
+                                        "对方向你打了个招呼"
+                                    contact.attachment is SendCustomTipAttachment ->
+                                        ((contact.attachment as SendCustomTipAttachment).content)
                                     else -> data.send_msg = contact.content
                                 }
                             } else {
                                 data.send_msg = "对方向你打了个招呼"
                             }
                         }
-                        NIMClient.getService(MsgService::class.java).clearUnreadCount(data.accid,SessionTypeEnum.P2P)
+                        NIMClient.getService(MsgService::class.java)
+                            .clearUnreadCount(data.accid, SessionTypeEnum.P2P)
                         break
                     }
                 }
@@ -178,7 +186,6 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
             EventBus.getDefault().postSticky(UpdateHiEvent())
             if (type == 1) {
                 ChatActivity.start(this, adapter.data[manager.topPosition - 1].accid)
-                finish()
             }
         }
     }
@@ -262,7 +269,8 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                 val params = animation_dislike.layoutParams as ConstraintLayout.LayoutParams
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.leftMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                params.leftMargin =
+                    ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
                 animation_dislike.layoutParams = params
 
             }
@@ -279,7 +287,8 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                 val params = animation_like.layoutParams as ConstraintLayout.LayoutParams
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                params.rightMargin =
+                    ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
                 animation_like.layoutParams = params
             }
         }
@@ -341,7 +350,8 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
      */
 
     private fun registerObservers(register: Boolean) {
-        NIMClient.getService(MsgServiceObserve::class.java).observeReceiveMessage(messageReceiverObserver, register)
+        NIMClient.getService(MsgServiceObserve::class.java)
+            .observeReceiveMessage(messageReceiverObserver, register)
     }
 
 
@@ -352,7 +362,11 @@ class GreetReceivedActivity : BaseMvpActivity<GreetReceivedPresenter>(), GreetRe
                 for (contact in adapter.data) {
                     for (imMessage in imMessages) {
                         if (contact.accid == imMessage.fromAccount) {
-                            contact.send_msg = imMessage.content ?: ""
+                            if (imMessage.attachment is SendCustomTipAttachment)
+                                contact.send_msg =
+                                    ((imMessage.attachment as SendCustomTipAttachment).content)
+                            else
+                                contact.send_msg = imMessage.content ?: ""
                         }
                     }
                 }

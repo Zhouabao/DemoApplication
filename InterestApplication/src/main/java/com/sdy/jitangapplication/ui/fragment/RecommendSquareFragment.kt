@@ -1,6 +1,8 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -95,6 +97,7 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
         adapter.emptyView.emptyFriendTip.text = "一会儿再回来看看吧"
         adapter.emptyView.emptyImg.setImageResource(R.drawable.icon_empty_friend)
         adapter.isUseEmpty(false)
+
     }
 
 
@@ -113,10 +116,15 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
             .setIndicatorHeight(SizeUtils.dp2px(6f))
             .setOnPageClickListener {
                 //广告类型默认1   1.只是展示图  2.跳转外连  3.内部跳转   4发布+话题 5发布+兴趣
-                if (banner[it].adv_type == 3) {
+                if (banner[it].adv_type == 2) {
+                    val intent = Intent()
+                    intent.action = "android.intent.action.VIEW"
+                    intent.data = Uri.parse(banner[it].link_url)//此处填链接
+                    startActivity(intent)
+                } else if (banner[it].adv_type == 3) {
                     startActivity<ProtocolActivity>(
-                        "url" to banner[it].link_url,
-                        "type" to ProtocolActivity.TYPE_OTHER
+                        "type" to ProtocolActivity.TYPE_OTHER,
+                        "url" to banner[it].link_url
                     )
                 } else if (banner[it].adv_type == 4) {//4发布+话题
                     mPresenter.checkBlock(banner[it])
@@ -218,13 +226,18 @@ class RecommendSquareFragment : BaseMvpLazyLoadFragment<RecommendSquarePresenter
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshLikeEvent(event: RefreshLikeEvent) {
         if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
+            adapter.data[event.position].originalLike = event.isLike == 1
             adapter.data[event.position].isliked = event.isLike == 1
-            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
-                adapter.data[event.position].like_cnt + 1
-            } else {
-                adapter.data[event.position].like_cnt - 1
-            }
-
+            adapter.data[event.position].like_cnt =
+                if (event.likeCount >= 0) {
+                    event.likeCount
+                } else {
+                    if (event.isLike == 1) {
+                        adapter.data[event.position].like_cnt + 1
+                    } else {
+                        adapter.data[event.position].like_cnt - 1
+                    }
+                }
             adapter.refreshNotifyItemChanged(event.position)
         }
     }

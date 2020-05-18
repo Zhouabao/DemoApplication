@@ -2,13 +2,13 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.os.Bundle
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SpanUtils
-import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseActivity
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.clickWithTrigger
+import com.sdy.jitangapplication.utils.StatusBarUtil
 import com.sdy.jitangapplication.utils.UserManager
 import com.sdy.jitangapplication.wxapi.WXEntryActivity
 import com.umeng.socialize.UMShareAPI
@@ -20,7 +20,9 @@ class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        ScreenUtils.setFullScreen(this)
+//        BarUtils.setStatusBarLightMode(this,true)
+//        ScreenUtils.setFullScreen(this)
+        StatusBarUtil.immersive(this)
 
         userAgreement.text = SpanUtils.with(userAgreement).append("积糖用户协议").setUnderline().create()
         privacyPolicy.text = SpanUtils.with(privacyPolicy).append("隐私协议").setUnderline().create()
@@ -43,21 +45,21 @@ class LoginActivity : BaseActivity() {
 
 
         //手机登录
-        phoneLoginBtn.onClick {
+        phoneLoginBtn.clickWithTrigger {
             startActivity<PhoneActivity>()
         }
 
         //微信登录
-        wechatLoginBtn.onClick {
+        wechatLoginBtn.clickWithTrigger {
             CommonFunction.wechatLogin(this, WXEntryActivity.WECHAT_LOGIN)
         }
 
         //隐私协议
-        privacyPolicy.onClick {
+        privacyPolicy.clickWithTrigger {
             startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_PRIVACY_PROTOCOL)
         }
         //用户协议
-        userAgreement.onClick {
+        userAgreement.clickWithTrigger {
             startActivity<ProtocolActivity>("type" to ProtocolActivity.TYPE_USER_PROTOCOL)
         }
 

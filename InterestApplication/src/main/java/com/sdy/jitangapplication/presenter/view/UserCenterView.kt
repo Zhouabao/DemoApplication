@@ -7,10 +7,5 @@ interface UserCenterView : BaseView {
 
     fun onGetMyInfoResult(userinfo: UserInfoBean?)
 
-    fun onCheckBlockResult(b: Boolean)
-
-    fun onSquareAnnounceResult(i: Int, b: Boolean, code: Int)
-
-    fun onQnUploadResult(b: Boolean, type: Int, key: String?)
 
 }

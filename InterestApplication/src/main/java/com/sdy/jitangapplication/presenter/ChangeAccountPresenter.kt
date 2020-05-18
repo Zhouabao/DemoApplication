@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -37,7 +38,7 @@ class ChangeAccountPresenter : BasePresenter<ChangeAccountView>() {
                     if (t.code == 200) {
                         mView.onChangeAccountResult(true)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onChangeAccountResult(false)
                     }
@@ -70,7 +71,7 @@ class ChangeAccountPresenter : BasePresenter<ChangeAccountView>() {
                     if (t.code == 200) {
                         mView.onSendSmsResult(true)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         mView.onSendSmsResult(false)
                     }
@@ -105,7 +106,7 @@ class ChangeAccountPresenter : BasePresenter<ChangeAccountView>() {
                     if (t.code == 200) {
                         mView.onCauseListResult(t.data)
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
                     } else {
                         CommonFunction.toast(t.msg)
                     }

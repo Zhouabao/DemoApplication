@@ -32,6 +32,9 @@ public interface SessionEventListener {
     //聊天是否需要付费和认证才能查看
     boolean isApprove(IMMessage message);
 
+    //聊天是否需要显示礼物icon
+    boolean isShowGiftIcon(IMMessage message);
+
     long approveTime();
 
     String robotAccount();

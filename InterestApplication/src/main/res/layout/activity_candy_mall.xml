@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kennyc.view.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stateProduct"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    app:msv_errorView="@layout/error_layout"
+    app:msv_loadingView="@layout/loading_layout"
+    app:msv_viewState="loading"
+    tools:context=".ui.activity.CandyMallActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="false">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/llTitle"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/icon_bg_actionbar_candy_mall"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+            <ImageView
+                android:id="@+id/btnBack"
+                style="@style/BckBtnStyle"
+                android:layout_below="@id/view"
+                android:src="@drawable/icon_back_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_alignTop="@id/btnBack"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_vertical"
+                android:text="糖果商城"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/myOrderBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:layout_alignTop="@id/btnBack"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="我的订单"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#FFFAFAFA"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llTitle">
+
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/userAppbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    android:minHeight="0dp"
+                    app:collapsedTitleGravity="left"
+                    app:contentScrim="@color/colorTransparent"
+                    app:expandedTitleGravity="center"
+                    app:expandedTitleMarginEnd="64dp"
+                    app:expandedTitleMarginStart="48dp"
+                    app:expandedTitleTextAppearance="@style/matchdetailTitleExpandStyle"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/icon_bg_candy_mall" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="201dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/rectangle_white_10dp"
+                        android:elevation="2dp">
+
+                        <TextView
+                            android:id="@+id/moreInfoTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/icon_recommend_product_bg"
+                            android:drawableLeft="@drawable/icon_recommend_product"
+                            android:drawablePadding="5dp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:text="推荐商品"
+                            android:textColor="#ffffffff"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <com.zhpan.bannerview.BannerViewPager
+                            android:id="@+id/bannerRecommendProduct"
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@color/colorWhite"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp"
+                            app:bvp_auto_play="true"
+                            app:bvp_can_loop="true"
+                            app:bvp_indicator_checked_color="@color/colorOrange"
+                            app:bvp_indicator_gravity="center"
+                            app:bvp_indicator_normal_color="#F0F0F0"
+                            app:bvp_indicator_slide_mode="normal"
+                            app:bvp_indicator_style="round_rect"
+                            app:bvp_round_corner="10dp"
+                            app:bvp_scroll_duration="4000"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/moreInfoTitle" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCandyCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="#FAFAFA" />
+            </com.google.android.material.appbar.AppBarLayout>
+
+
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refreshProduct"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCategoryProduct"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.kennyc.view.MultiStateView>
+

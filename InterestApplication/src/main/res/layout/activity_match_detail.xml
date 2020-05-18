@@ -1,585 +1,614 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context=".ui.activity.MatchDetailActivity">
+
+    <com.kennyc.view.MultiStateView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stateview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:fitsSystemWindows="true"
+        app:msv_animateViewChanges="false"
+        app:msv_emptyView="@layout/empty_layout"
+        app:msv_errorView="@layout/error_layout"
+        app:msv_loadingView="@layout/loading_layout"
+        app:msv_viewState="loading"
         tools:context=".ui.activity.MatchDetailActivity">
 
-    <com.kennyc.view.MultiStateView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/stateview"
+
+        <FrameLayout
+            android:id="@+id/userContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:msv_animateViewChanges="false"
-            app:msv_emptyView="@layout/empty_layout"
-            app:msv_errorView="@layout/error_layout"
-            app:msv_loadingView="@layout/loading_layout"
-            app:msv_viewState="loading"
-            tools:context=".ui.activity.MatchDetailActivity">
+            android:background="@color/colorWhite"
+            android:visibility="visible">
 
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:id="@+id/userContent"
+            <com.sdy.jitangapplication.widgets.HeadZoomScrollView
+                android:id="@+id/scrollDetail"
                 android:layout_width="match_parent"
-                android:visibility="gone"
                 android:layout_height="match_parent">
 
-
-            <!--照片系列布局固定不滑动-->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clPhotos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-
-                <com.sdy.jitangapplication.widgets.CommonNoScrollViewPager
-                        android:id="@+id/detailPhotosVp"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-
-                <LinearLayout
-                        android:id="@+id/detailPhotosIndicator"
-                        android:layout_marginBottom="37dp"
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:gravity="center"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        />
-
-
-                <ImageView
-                        android:id="@+id/backBtn"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:layout_marginLeft="14dp"
-                        android:layout_marginTop="15dp"
-                        android:scaleType="center"
-                        android:src="@drawable/icon_return_oval"
-                        android:visibility="visible"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-
-                <ImageView
-                        android:id="@+id/moreBtn"
-                        android:src="@drawable/icon_more_oval"
-                        android:layout_width="26dp"
-                        android:scaleType="centerInside"
-                        android:elevation="1dp"
-                        android:layout_height="26dp"
-                        android:layout_marginRight="15dp"
-                        app:layout_constraintBottom_toBottomOf="@id/backBtn"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/backBtn"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/detailThumbRv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="44dp"
-                        android:padding="3dp"
-                        android:layout_marginLeft="15dp"
-                        android:orientation="horizontal"
-                        android:background="@drawable/shape_rectangle_transparent"
-                        app:layout_constraintBottom_toBottomOf="@id/detailPhotosVp"
-                        app:layout_constraintStart_toStartOf="parent"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.google.android.material.appbar.AppBarLayout
-                    android:id="@+id/userAppbar"
-                    android:background="@color/colorTransparent"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    <!--照片系列布局固定不滑动-->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clPhotos"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:minHeight="?attr/actionBarSize"
-                        app:collapsedTitleGravity="left"
-                        app:collapsedTitleTextAppearance="@style/matchdetailTitleCollpseStyle"
-                        app:contentScrim="@color/colorTransparent"
-                        app:expandedTitleGravity="center"
-                        app:expandedTitleMarginEnd="64dp"
-                        app:expandedTitleMarginStart="48dp"
-                        app:expandedTitleTextAppearance="@style/matchdetailTitleExpandStyle"
-                        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <FrameLayout
+
+                        <com.sdy.jitangapplication.widgets.CommonNoScrollViewPager
+                            android:id="@+id/detailPhotosVp"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                                android:id="@+id/clUserInfo"
-                                android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                            <View
-                                    android:id="@+id/clUserInfoTop"
-                                    android:layout_marginTop="10dp"
-                                    android:background="@drawable/rectangle_gray_3dp"
-                                    android:layout_width="45dp"
-                                    android:layout_height="5dp"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"/>
-
-                            <TextView
-                                    android:id="@+id/detailUserName"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/colorBlackTitle"
-                                    android:textSize="25sp"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_marginLeft="15dp"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/clUserInfoTop"
-                                    tools:text="用户名最大长度十个字"
-                                    />
-
-                            <ImageView
-                                    android:id="@+id/detailUserVip"
-                                    android:src="@drawable/icon_vip"
-                                    android:layout_width="24dp"
-                                    android:layout_marginLeft="5dp"
-                                    android:layout_height="24dp"
-                                    android:visibility="gone"
-                                    app:layout_constraintBottom_toBottomOf="@id/detailUserName"
-                                    app:layout_constraintLeft_toRightOf="@id/detailUserName"
-                                    app:layout_constraintTop_toTopOf="@id/detailUserName"/>
-
-                            <ImageView
-                                    android:id="@+id/detailUserVerify"
-                                    android:src="@drawable/icon_verify_pass"
-                                    android:layout_width="25dp"
-                                    android:layout_marginLeft="5dp"
-                                    android:layout_height="25dp"
-                                    android:visibility="gone"
-                                    app:layout_constraintBottom_toBottomOf="@id/detailUserVip"
-                                    app:layout_constraintLeft_toRightOf="@id/detailUserVip"
-                                    app:layout_constraintTop_toTopOf="@id/detailUserVip"/>
-
-
-                            <TextView
-                                    android:id="@+id/detailUserInfoAge"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="22dp"
-                                    android:gravity="center"
-                                    android:drawablePadding="3dp"
-                                    android:textColor="#FF696E73"
-                                    android:textSize="13sp"
-                                    android:layout_marginTop="15dp"
-                                    android:drawableLeft="@drawable/icon_gender_woman_gray_userdetail"
-                                    app:layout_constraintStart_toStartOf="@id/detailUserName"
-                                    app:layout_constraintTop_toBottomOf="@id/detailUserName"
-                                    tools:text="女"/>
-
-
-                            <TextView
-                                    android:id="@+id/detailUserConstellation"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="22dp"
-                                    android:gravity="center"
-                                    android:drawablePadding="3dp"
-                                    android:textColor="#FF696E73"
-                                    android:textSize="13sp"
-                                    android:layout_marginLeft="10dp"
-                                    android:drawableLeft="@drawable/icon_collapstation_userdetail"
-                                    android:layout_marginTop="15dp"
-                                    app:layout_constraintLeft_toRightOf="@id/detailUserInfoAge"
-                                    app:layout_constraintTop_toBottomOf="@id/detailUserName"
-                                    tools:text="天秤座"/>
-
-                            <TextView
-                                    android:id="@+id/detailUserDistance"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="22dp"
-                                    android:gravity="center"
-                                    android:drawablePadding="3dp"
-                                    android:textColor="#FF696E73"
-                                    android:textSize="13sp"
-                                    android:layout_marginLeft="10dp"
-                                    android:drawableLeft="@drawable/icon_map_gray_userdetail"
-                                    android:layout_marginTop="15dp"
-                                    app:layout_constraintLeft_toRightOf="@id/detailUserConstellation"
-                                    app:layout_constraintTop_toBottomOf="@id/detailUserName"
-                                    tools:text="10KM"/>
-
-                            <com.ctetin.expandabletextviewlibrary.ExpandableTextView
-                                    android:id="@+id/detailUserSign"
-                                    android:layout_marginTop="20dp"
-                                    android:layout_width="0dp"
-                                    android:layout_marginRight="15dp"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="#FF696E73"
-                                    android:textSize="15sp"
-                                    android:ellipsize="end"
-                                    android:lineSpacingMultiplier="1.1"
-                                    app:ep_contract_color="@color/colorBlueSky1"
-                                    app:ep_contract_text="收起"
-                                    app:ep_expand_color="@color/colorBlueSky1"
-                                    app:ep_expand_text="   展开"
-                                    app:ep_max_line="3"
-                                    app:ep_need_always_showright="true"
-                                    app:ep_need_animation="true"
-                                    app:ep_need_contract="true"
-                                    app:ep_need_expand="true"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="@id/detailUserName"
-                                    app:layout_constraintTop_toBottomOf="@id/detailUserInfoAge"
-                                    tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。"
-                                    />
-
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/detailUserInformationRv"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:overScrollMode="never"
-                                    android:background="@color/colorWhite"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/detailUserSign"/>
-
-                            <TextView
-                                    android:id="@+id/tag1"
-                                    android:text="兴趣"
-                                    android:textColor="#ff191919"
-                                    android:textSize="20sp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textStyle="bold"
-                                    android:layout_marginTop="20dp"
-                                    app:layout_constraintLeft_toLeftOf="@id/detailUserName"
-                                    app:layout_constraintTop_toBottomOf="@id/detailUserInformationRv"/>
-
-
-                            <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/detailRvTag"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="15dp"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/tag1"
-                                    />
-
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </FrameLayout>
-
-                    <RelativeLayout
-                            android:id="@+id/detailActionbar"
+                            android:layout_height="0dp"
                             android:orientation="horizontal"
-                            android:visibility="gone"
-                            android:layout_width="match_parent"
-                            android:gravity="center_vertical"
-                            android:layout_height="56dp"
-                            android:background="@color/colorWhite"
-                            app:layout_collapseMode="pin">
-
-                        <ImageView
-                                android:id="@+id/btnBack2"
-                                android:src="@drawable/icon_return"
-                                android:layout_width="wrap_content"
-                                android:paddingLeft="15dp"
-                                android:layout_alignParentLeft="true"
-                                android:paddingRight="15dp"
-                                android:layout_height="match_parent"/>
-
-                        <TextView
-                                android:id="@+id/titleUsername"
-                                android:text="用户名"
-                                android:textStyle="bold"
-                                android:textColor="@color/colorBlack"
-                                android:textSize="17sp"
-                                android:layout_weight="1"
-                                android:layout_centerInParent="true"
-                                android:gravity="center"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"/>
-
-                        <ImageView
-                                android:id="@+id/moreBtn1"
-                                android:paddingLeft="15dp"
-                                android:paddingRight="15dp"
-                                android:layout_centerVertical="true"
-                                android:layout_alignParentRight="true"
-                                android:src="@drawable/icon_more_black"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"/>
-                    </RelativeLayout>
-
-                </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/t2"
-                        android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:background="@color/colorWhite"
-                        android:layout_gravity="bottom"
-                        android:layout_height="44dp">
-
-                    <TextView
-                            android:id="@+id/squareCount"
-                            android:gravity="center_vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="动态"
-                            android:textStyle="bold"
-                            android:textColor="#ff191919"
-                            android:layout_marginLeft="15dp"
-                            android:textSize="20sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            />
-
-                    <RadioGroup
-                            android:id="@+id/detailSquareSwitchRg"
-                            android:layout_marginRight="15dp"
-                            android:layout_width="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_height="24dp"
-                            android:visibility="visible"
-                            app:layout_constraintBottom_toBottomOf="@id/squareCount"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/squareCount"
-                            >
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <RadioButton
-                                android:id="@+id/rbBlock"
-                                android:background="@drawable/selector_block"
-                                android:button="@null"
-                                android:layout_width="24dp"
-                                android:layout_marginRight="10dp"
-                                android:layout_height="24dp"/>
+                        <LinearLayout
+                            android:id="@+id/detailPhotosIndicator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="37dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent" />
 
-                        <RadioButton
-                                android:id="@+id/rbList"
-                                android:background="@drawable/selector_list"
-                                android:button="@null"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"/>
-                    </RadioGroup>
 
+                        <ImageView
+                            android:id="@+id/backBtn"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_marginLeft="14dp"
+                            android:layout_marginTop="39dp"
+                            android:scaleType="center"
+                            android:src="@drawable/icon_return_oval"
+                            android:visibility="visible"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/moreBtn"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_marginRight="15dp"
+                            android:elevation="1dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/icon_more_oval"
+                            app:layout_constraintBottom_toBottomOf="@id/backBtn"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/backBtn" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/clUserInfoTop"
+                        android:layout_width="match_parent"
+                        android:layout_height="27dp"
+                        android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="@id/clPhotos"
+                        app:layout_constraintLeft_toLeftOf="parent">
+
+                        <View
+                            android:layout_width="45dp"
+                            android:layout_height="5dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/rectangle_gray_3dp" />
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clUserInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clUserInfoTop">
+
+
+                        <TextView
+                            android:id="@+id/detailUserName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:textColor="@color/colorBlackTitle"
+                            android:textSize="25sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="用户名最大长度十个字" />
+
+                        <ImageView
+                            android:id="@+id/detailUserVip"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="5dp"
+                            android:src="@drawable/icon_vip"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="@id/detailUserName"
+                            app:layout_constraintLeft_toRightOf="@id/detailUserName"
+                            app:layout_constraintTop_toTopOf="@id/detailUserName" />
+
+                        <ImageView
+                            android:id="@+id/detailUserVerify"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="5dp"
+                            android:src="@drawable/icon_verify_pass"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="@id/detailUserVip"
+                            app:layout_constraintLeft_toRightOf="@id/detailUserVip"
+                            app:layout_constraintTop_toTopOf="@id/detailUserVip" />
+
+
+                        <LinearLayout
+                            android:id="@+id/detailUserIntention1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/gradient_pink_11dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="@id/detailUserName"
+                            app:layout_constraintLeft_toRightOf="@id/detailUserVerify"
+                            app:layout_constraintTop_toTopOf="@id/detailUserName">
+
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:id="@+id/matchAimIv"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                app:lottie_autoPlay="true"
+                                app:lottie_fileName="data_want_heart.json"
+                                app:lottie_imageAssetsFolder="images_want_heart/"
+                                app:lottie_loop="false" />
+
+                            <TextView
+                                android:id="@+id/detailUserIntention"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginBottom="2dp"
+                                android:gravity="center"
+                                android:text="一起运动"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="10sp"
+                                android:visibility="visible" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/detailUserInfoAge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="22dp"
+                            android:layout_marginTop="5dp"
+                            android:drawableLeft="@drawable/icon_gender_woman_gray_userdetail"
+                            android:drawablePadding="3dp"
+                            android:gravity="center"
+                            android:textColor="#FF696E73"
+                            android:textSize="13sp"
+                            app:layout_constraintStart_toStartOf="@id/detailUserName"
+                            app:layout_constraintTop_toBottomOf="@id/detailUserName"
+                            tools:text="女" />
+
+
+                        <TextView
+                            android:id="@+id/detailUserConstellation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="22dp"
+                            android:layout_marginLeft="10dp"
+                            android:drawableLeft="@drawable/icon_collapstation_userdetail"
+                            android:drawablePadding="3dp"
+                            android:gravity="center"
+                            android:textColor="#FF696E73"
+                            android:textSize="13sp"
+                            app:layout_constraintLeft_toRightOf="@id/detailUserInfoAge"
+                            app:layout_constraintTop_toTopOf="@id/detailUserInfoAge"
+                            tools:text="天秤座" />
+
+                        <TextView
+                            android:id="@+id/detailUserDistance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="22dp"
+                            android:layout_marginLeft="10dp"
+                            android:drawableLeft="@drawable/icon_map_gray_userdetail"
+                            android:drawablePadding="3dp"
+                            android:gravity="center"
+                            android:textColor="#FF696E73"
+                            android:textSize="13sp"
+                            app:layout_constraintLeft_toRightOf="@id/detailUserConstellation"
+                            app:layout_constraintTop_toTopOf="@id/detailUserInfoAge"
+                            tools:text="10KM" />
+
+                        <TextView
+                            android:id="@+id/detailUserOnline"
+                            android:layout_width="0dp"
+                            android:layout_height="22dp"
+                            android:layout_marginLeft="10dp"
+                            android:drawableLeft="@drawable/icon_online_state"
+                            android:drawablePadding="3dp"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical|left"
+                            android:maxLines="1"
+                            android:textColor="#FF696E73"
+                            android:textSize="13sp"
+                            app:layout_constraintLeft_toRightOf="@id/detailUserDistance"
+                            app:layout_constraintRight_toRightOf="@id/detailUserSign"
+                            app:layout_constraintTop_toTopOf="@id/detailUserInfoAge"
+                            tools:text="十分钟前在线" />
+
+                        <com.ctetin.expandabletextviewlibrary.ExpandableTextView
+                            android:id="@+id/detailUserSign"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginRight="15dp"
+                            android:ellipsize="end"
+                            android:lineSpacingMultiplier="1.1"
+                            android:textColor="#FF696E73"
+                            android:textSize="15sp"
+                            app:ep_contract_color="@color/colorBlueSky1"
+                            app:ep_contract_text="收起"
+                            app:ep_expand_color="@color/colorBlueSky1"
+                            app:ep_expand_text="   展开"
+                            app:ep_max_line="3"
+                            app:ep_need_always_showright="true"
+                            app:ep_need_animation="true"
+                            app:ep_need_contract="true"
+                            app:ep_need_expand="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@id/detailUserName"
+                            app:layout_constraintTop_toBottomOf="@id/detailUserInfoAge"
+                            tools:text="从 2015 年 4 月起，Ant Design 在蚂蚁金服中后台产品线迅速推广，对接多条业务线，覆盖系统 800 个以上。定位于中台业务的 Ant Design 兼顾专业和非专业的设计人员，具有学习成本低、上手速度快、实现效果好等特点，并且提供从界面设计到前端开发的全链路生态，可以大大提升设计和开发的效率。" />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/detailUserWishRv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:background="@color/colorWhite"
+                            android:overScrollMode="never"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/detailUserSign" />
+
+                        <TextView
+                            android:id="@+id/detailUserWishIndicator"
+                            android:layout_width="38dp"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginRight="15dp"
+                            android:background="@drawable/rectangle_cover_bg_left_10dp"
+                            android:gravity="center"
+                            android:text="0/6"
+                            android:textColor="#ffffffff"
+                            android:textSize="14sp"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/detailUserWishRv" />
+
+                        <ImageView
+                            android:id="@+id/guidelWishHelp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginBottom="66dp"
+                            android:src="@drawable/icon_guide_wish_help"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="@id/detailUserWishRv"
+                            app:layout_constraintRight_toRightOf="@id/detailUserWishRv" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/detailUserInformationRv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/colorWhite"
+                            android:nestedScrollingEnabled="false"
+                            android:overScrollMode="never"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/detailUserWishRv" />
+
+                        <TextView
+                            android:id="@+id/tag1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="23dp"
+                            android:text="兴趣特质"
+                            android:textColor="#ff191919"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                            app:layout_constraintTop_toBottomOf="@id/detailUserInformationRv" />
+
+                        <TextView
+                            android:id="@+id/notifyAddTagBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="希望Ta添加"
+                            android:textColor="#ff789eff"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/tag1"
+                            app:layout_constraintRight_toRightOf="@id/detailUserSign"
+                            app:layout_constraintTop_toTopOf="@id/tag1" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/detailRvTag"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:nestedScrollingEnabled="false"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tag1" />
+
+
+                        <TextView
+                            android:id="@+id/gift"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:text="礼物墙"
+                            android:textColor="#ff191919"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="@id/detailUserName"
+                            app:layout_constraintTop_toBottomOf="@id/detailRvTag" />
+
+                        <TextView
+                            android:id="@+id/giftAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:drawableRight="@drawable/icon_more_right_gray"
+                            android:text="查看全部"
+                            android:textColor="#ffa5a5a5"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="@id/gift"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/gift" />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvGift"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:nestedScrollingEnabled="false"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/gift" />
+
+
+                        <TextView
+                            android:id="@+id/squareCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="30dp"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center_vertical"
+                            android:text="动态"
+                            android:textColor="#ff191919"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/rvGift" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listSquareRv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="8dp"
+                        android:nestedScrollingEnabled="true"
+                        android:overScrollMode="never"
+                        android:scrollbars="none"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clUserInfo" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="90dp"
+                        android:background="@color/colorTransparent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/listSquareRv" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.sdy.jitangapplication.widgets.HeadZoomScrollView>
 
 
-            </com.google.android.material.appbar.AppBarLayout>
+            <RelativeLayout
+                android:id="@+id/detailActionbar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:alpha="0"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_collapseMode="pin">
 
-            <com.sdy.jitangapplication.widgets.CommonNoScrollViewPager
-                    android:id="@+id/vpUserDetail"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/btnBack2"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="49dp"
-                    android:background="@color/colorWhite"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_height="110dp"
-                    app:layout_anchor="@id/vpUserDetail"
-                    app:layout_anchorGravity="bottom">
-
-
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:background="@drawable/icon_detail_bg1"
-                        app:layout_constraintBottom_toTopOf="@id/view"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
-
-                <View
-                        android:id="@+id/view"
-                        android:background="@drawable/icon_detail_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="49dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"/>
-                <ImageView
-                        android:id="@+id/detailUserDislikeBtn"
-                        android:layout_marginBottom="5dp"
-                        android:layout_width="wrap_content"
-                        android:visibility="visible"
-                        android:src="@drawable/icon_dislike_shadow"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@id/detailUserChatBtn"/>
-
-                <ImageView
-                        android:id="@+id/detailUserGreetBtn"
-                        android:layout_marginBottom="5dp"
-                        android:layout_width="wrap_content"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icon_hi_shadow"
-                        android:layout_marginRight="4dp"
-                        android:layout_marginLeft="4dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toRightOf="@id/detailUserChatBtn"
-                        app:layout_constraintRight_toLeftOf="@id/detailUserChatBtn"
-                        />
-
+                    android:layout_alignParentLeft="true"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:src="@drawable/icon_return" />
 
                 <TextView
-                        android:id="@+id/detailUserChatBtn"
-                        android:background="@drawable/icon_orange_shadow"
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="40dp"
-                        android:paddingTop="6dp"
-                        android:drawableLeft="@drawable/icon_chat_white"
-                        android:layout_marginRight="4dp"
-                        android:layout_marginLeft="4dp"
-                        android:textColor="#ffffffff"
-                        android:textSize="15sp"
-                        android:text="聊  天"
-                        android:drawablePadding="15dp"
-                        android:gravity="center_vertical"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toRightOf="parent"
-                        app:layout_constraintRight_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/detailUserDislikeBtn">
-                </TextView>
+                    android:id="@+id/titleUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="用户名"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
                 <ImageView
-                        android:id="@+id/detailUserLikeBtn"
-                        android:layout_marginBottom="5dp"
-                        android:layout_width="wrap_content"
-                        android:visibility="visible"
-                        android:src="@drawable/icon_like_shadow"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toRightOf="@id/detailUserChatBtn"
-                        app:layout_constraintRight_toRightOf="parent"/>
+                    android:id="@+id/moreBtn1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:src="@drawable/icon_more_black" />
+            </RelativeLayout>
 
-                <!--<LinearLayout-->
-                        <!--android:id="@+id/detailUserChatLl"-->
-                        <!--android:background="@drawable/gradient_rectangle_orange_27dp"-->
-                        <!--android:orientation="horizontal"-->
-                        <!--android:layout_width="232dp"-->
-                        <!--android:layout_height="53dp"-->
-                        <!--android:gravity="center"-->
-                        <!--android:layout_marginBottom="5dp"-->
-                        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                        <!--app:layout_constraintLeft_toRightOf="parent"-->
-                        <!--app:layout_constraintRight_toLeftOf="parent"-->
-                        <!--&gt;-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/icon_detail_bg1"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                    <!--<ImageView-->
-                            <!--android:id="@+id/detailChatTypeIcon"-->
-                            <!--android:src="@drawable/icon_chat_white"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="center_vertical"-->
-                            <!--/>-->
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/detailUserGreetBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="73dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginBottom="5dp"
+                    android:scaleType="centerInside"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/detailUserChatBtn"
+                    app:layout_constraintRight_toLeftOf="@id/detailUserChatBtn"
+                    app:lottie_autoPlay="false"
+                    app:lottie_fileName="data_greet_match_detail.json"
+                    app:lottie_imageAssetsFolder="images_greet_match_detail/" />
 
-                    <!--<TextView-->
-                            <!--android:id="@+id/detailUserChatBtn"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:textColor="#ffffffff"-->
-                            <!--android:textSize="15sp"-->
-                            <!--android:text="聊天"-->
-                            <!--android:layout_marginLeft="10dp"-->
-                            <!--android:gravity="center"-->
-                            <!--android:textStyle="bold"-->
-                            <!--&gt;-->
-                    <!--</TextView>-->
+                <ImageView
+                    android:id="@+id/detailUserDislikeBtn"
+                    android:layout_width="73dp"
+                    android:layout_height="73dp"
+                    android:layout_marginBottom="5dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_dislike_shadow"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/detailUserChatBtn" />
 
+                <ImageView
+                    android:id="@+id/detailUserChatBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:src="@drawable/icon_matchdetail_continue_chat"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="parent"
+                    app:layout_constraintRight_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/detailUserDislikeBtn" />
 
-                <!--</LinearLayout>-->
+                <ImageView
+                    android:id="@+id/detailUserLikeBtn"
+                    android:layout_width="73dp"
+                    android:layout_height="73dp"
+                    android:layout_marginBottom="5dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_like_shadow"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/detailUserChatBtn"
+                    app:layout_constraintRight_toRightOf="parent" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        </FrameLayout>
 
 
     </com.kennyc.view.MultiStateView>
 
     <LinearLayout
-            android:id="@+id/llBlackContent"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:fitsSystemWindows="true"
-            android:background="@color/colorWhite"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:id="@+id/llBlackContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
-                android:id="@+id/backBtn1"
-                android:layout_width="wrap_content"
-                android:layout_height="56dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:scaleType="center"
-                android:src="@drawable/icon_return"
-                android:visibility="visible"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+            android:id="@+id/backBtn1"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:scaleType="center"
+            android:src="@drawable/icon_return"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-                android:layout_marginTop="140dp"
-                android:layout_gravity="center"
-                android:src="@drawable/icon_sad_blacklist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="140dp"
+            android:src="@drawable/icon_sad_blacklist" />
 
         <TextView
-                android:id="@+id/blackContent"
-                android:layout_marginLeft="33dp"
-                android:layout_marginRight="33dp"
-                android:layout_marginTop="50dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:lineSpacingMultiplier="1.2"
-                android:gravity="center"
-                android:text="你已将对方拉黑，拉黑状态下，双方均不可查看对方主页，取消拉黑可恢复好友权益"
-                android:textColor="#ff999999"
-                android:textSize="16sp"
-                />
+            android:id="@+id/blackContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="33dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="33dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="你已将对方拉黑，拉黑状态下，双方均不可查看对方主页，取消拉黑可恢复好友权益"
+            android:textColor="#ff999999"
+            android:textSize="16sp" />
 
         <Button
-                android:id="@+id/cancelBlack"
-                android:text="取消拉黑"
-                android:layout_marginTop="80dp"
-                android:layout_marginLeft="72dp"
-                android:layout_marginRight="72dp"
-                android:textColor="#ffffffff"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:background="@drawable/shape_rectangle_orange_25dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/cancelBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="72dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="72dp"
+            android:background="@drawable/shape_rectangle_orange_25dp"
+            android:text="取消拉黑"
+            android:textColor="#ffffffff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
 
     </LinearLayout>

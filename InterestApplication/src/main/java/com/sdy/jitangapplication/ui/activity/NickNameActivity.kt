@@ -61,7 +61,7 @@ class NickNameActivity : BaseActivity() {
             override fun afterTextChanged(p0: Editable) {
                 saveChangeBtn.isEnabled = !StringUtils.isTrimEmpty(p0.toString())
                 changeEtInputLength.text = SpanUtils.with(changeEtInputLength)
-                    .append(changeEt.toString().trim().length.toString())
+                    .append("${p0.trim().length}")
                     .setFontSize(14, true)
                     .setForegroundColor(resources.getColor(R.color.colorOrange))
                     .setBold()

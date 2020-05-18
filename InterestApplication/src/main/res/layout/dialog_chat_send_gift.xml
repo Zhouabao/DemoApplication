@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="341dp"
+    android:layout_gravity="bottom"
+    android:background="@drawable/shape_rectangle_top_left_right_25_corners_bg">
+
+    <TextView
+        android:id="@+id/moreInfoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="送给"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/targetAvator"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/targetAvator" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/targetAvator"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="17dp"
+        android:src="@drawable/icon_default_avator"
+        app:layout_constraintLeft_toRightOf="@id/moreInfoTitle"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/targetNickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="想吃土豆的猪"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/targetAvator"
+        app:layout_constraintLeft_toRightOf="@id/targetAvator"
+        app:layout_constraintTop_toTopOf="@id/targetAvator" />
+
+
+    <TextView
+        android:id="@+id/candyCount"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:drawableLeft="@drawable/icon_candy_me"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="#ff191919"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/targetAvator"
+        app:layout_constraintRight_toLeftOf="@id/chargeBtn"
+        app:layout_constraintTop_toTopOf="@id/targetAvator" />
+
+    <TextView
+        android:id="@+id/chargeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:text="充值"
+        android:textColor="#ffff6318"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/targetAvator"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/targetAvator" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="17dp"
+        android:background="@color/colorDivider"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/targetAvator" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/giftRv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:background="@color/colorWhite"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view1" />
+</androidx.constraintlayout.widget.ConstraintLayout>

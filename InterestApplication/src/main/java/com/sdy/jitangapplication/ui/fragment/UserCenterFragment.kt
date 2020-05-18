@@ -1,71 +1,69 @@
 package com.sdy.jitangapplication.ui.fragment
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.util.Log
+import android.view.*
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.widget.PopupWindow
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.google.gson.Gson
+import com.google.android.material.appbar.AppBarLayout
 import com.kennyc.view.MultiStateView
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.fragment.BaseMvpLazyLoadFragment
 import com.sdy.baselibrary.glide.GlideUtil
-import com.sdy.baselibrary.utils.CustomClickListener
-import com.sdy.baselibrary.utils.RandomUtils
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
 import com.sdy.jitangapplication.model.LabelQualityBean
-import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.model.UserInfoBean
-import com.sdy.jitangapplication.nim.activity.ChatActivity
+import com.sdy.jitangapplication.model.VipDescr
 import com.sdy.jitangapplication.presenter.UserCenterPresenter
 import com.sdy.jitangapplication.presenter.view.UserCenterView
 import com.sdy.jitangapplication.ui.activity.*
-import com.sdy.jitangapplication.ui.adapter.UserCenteTagAdapter
-import com.sdy.jitangapplication.ui.adapter.UserCenterCoverAdapter
+import com.sdy.jitangapplication.ui.adapter.MainPagerAdapter
 import com.sdy.jitangapplication.ui.adapter.VisitUserAvatorAdater
-import com.sdy.jitangapplication.ui.dialog.ChargeLabelDialog
 import com.sdy.jitangapplication.ui.dialog.ChargeVipDialog
 import com.sdy.jitangapplication.utils.UserManager
-import com.sdy.jitangapplication.widgets.DividerItemDecoration
-import kotlinx.android.synthetic.main.activity_main.*
+import com.sdy.jitangapplication.widgets.ScaleTransitionPagerTitleView
 import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.fragment_user_center.*
-import kotlinx.android.synthetic.main.item_not_vip_viewpager.view.*
+import kotlinx.android.synthetic.main.item_marquee_power.view.*
+import kotlinx.android.synthetic.main.popupwindow_user_center_guide_verify.view.*
+import net.lucode.hackware.magicindicator.ViewPagerHelper
+import net.lucode.hackware.magicindicator.buildins.UIUtil
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.startActivityForResult
+import java.util.*
+import kotlin.math.abs
 
 /**
  * 我的用户中心
  */
-class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserCenterView, View.OnClickListener {
-
-    private val params by lazy {
-        hashMapOf(
-            "accid" to UserManager.getAccid(),
-            "token" to UserManager.getToken(),
-            "_timestamp" to System.currentTimeMillis()
-        )
-    }
-
+class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserCenterView,
+    OnLazyClickListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     companion object {
         const val REQUEST_INFO_SETTING = 11
@@ -75,24 +73,160 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         const val REQUEST_INTENTION = 15
     }
 
-    private val tagAdapter by lazy { UserCenteTagAdapter() }
-    //动态封面适配器
-    private val coverAdapter by lazy { UserCenterCoverAdapter() }
     //我的访客adapter
     private val visitsAdapter by lazy { VisitUserAvatorAdater() }
 
     private var userInfoBean: UserInfoBean? = null
 
-    override fun loadData() {
-        EventBus.getDefault().register(this)
-        initView()
-        mPresenter.getMemberInfo(params)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+//        activity!!.mainRoot.setBackgroundResource(R.color.colorWhite)
+        return inflater.inflate(R.layout.fragment_user_center, container, false)
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-//        activity!!.mainRoot.setBackgroundResource(R.color.colorWhite)
-        return inflater.inflate(R.layout.fragment_user_center, container, false)
+    override fun loadData() {
+        EventBus.getDefault().register(this)
+        initView()
+//        mPresenter.getMemberInfo(params)
+    }
+
+
+    private var tabMySquareAndTagHeight = 0
+    private fun initView() {
+        mPresenter = UserCenterPresenter()
+        mPresenter.mView = this
+        mPresenter.context = activity!!
+
+        settingBtn.setOnClickListener(this)
+        userInfoSettingBtn.setOnClickListener(this)
+        userAvator.setOnClickListener(this)
+        isVipPowerBtn.setOnClickListener(this)
+        candyCl.setOnClickListener(this)
+        userFoot.setOnClickListener(this)
+        userVisit.setOnClickListener(this)
+        userVerify.setOnClickListener(this)
+        candyCount.typeface = Typeface.createFromAsset(activity!!.assets, "DIN_Alternate_Bold.ttf")
+
+        tabMySquareAndTag.viewTreeObserver.addOnGlobalLayoutListener {
+            if (tabMySquareAndTagHeight == 0) {
+                tabMySquareAndTagHeight = tabMySquareAndTag.top
+            }
+        }
+
+
+        multiStateView.retryBtn.onClick {
+            multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
+            mPresenter.myInfoCandy()
+        }
+
+        //我的访客封面
+        val visitLayoutmanager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
+        visitLayoutmanager.stackFromEnd = true
+        userVisitRv.layoutManager = visitLayoutmanager
+        userVisitRv.adapter = visitsAdapter
+
+
+        userAppbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { p0, p1 ->
+            Log.d("onGlobalLayout", "$tabMySquareAndTagHeight,${p1}")
+            if (tabMySquareAndTagHeight > 0)
+                userName1.isVisible = abs(p1) >= tabMySquareAndTagHeight
+        })
+
+        initFragment()
+    }
+
+    private val myTagFragment by lazy { MyTagFragment() }
+    private val mySquareFragment by lazy { MySquareFragment() }
+
+    private fun initFragment() {
+        mStack.add(mySquareFragment)  //我的广场
+        mStack.add(myTagFragment)   //我的兴趣
+        vpMySquareAndTag.adapter =
+            MainPagerAdapter(activity!!.supportFragmentManager, mStack, titles)
+        vpMySquareAndTag.offscreenPageLimit = 2
+        initIndicator()
+        vpMySquareAndTag.currentItem = 0
+    }
+
+
+    //fragment栈管理
+    private val mStack = Stack<Fragment>()
+    private val titles = arrayOf("动态", "兴趣")
+
+    private fun initIndicator() {
+        tabMySquareAndTag.setBackgroundColor(Color.WHITE)
+        val commonNavigator = CommonNavigator(activity!!)
+        commonNavigator.adapter = object : CommonNavigatorAdapter() {
+            override fun getCount(): Int {
+                return mStack.size
+            }
+
+            override fun getTitleView(context: Context, index: Int): IPagerTitleView {
+                val simplePagerTitleView = ScaleTransitionPagerTitleView(context)
+                simplePagerTitleView.text = titles[index]
+                simplePagerTitleView.minScale = 0.88F
+                simplePagerTitleView.textSize = 18F
+                simplePagerTitleView.width =
+                    (ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30F)) / 3
+                simplePagerTitleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+                simplePagerTitleView.normalColor = Color.parseColor("#FF7E8183")
+                simplePagerTitleView.selectedColor = resources.getColor(R.color.colorBlack)
+                simplePagerTitleView.onClick {
+                    vpMySquareAndTag.currentItem = index
+                    if (index == 1)
+                        EventBus.getDefault().post(
+                            UpdateMyLabelEvent(
+                                userInfoBean?.label_quality ?: mutableListOf()
+                            )
+                        )
+
+                }
+                return simplePagerTitleView
+            }
+
+            override fun getIndicator(context: Context): IPagerIndicator {
+                val indicator = LinePagerIndicator(context)
+                indicator.mode = LinePagerIndicator.MODE_EXACTLY
+                indicator.lineHeight = UIUtil.dip2px(context, 4.0).toFloat()
+                indicator.lineWidth = UIUtil.dip2px(context, 25.0).toFloat()
+                indicator.roundRadius = UIUtil.dip2px(context, 2.0).toFloat()
+                indicator.startInterpolator = AccelerateInterpolator()
+                indicator.endInterpolator = DecelerateInterpolator(1.0f)
+                indicator.setColors(resources.getColor(R.color.colorOrange))
+                return indicator
+            }
+        }
+        tabMySquareAndTag.navigator = commonNavigator
+        ViewPagerHelper.bind(tabMySquareAndTag, vpMySquareAndTag)
+        vpMySquareAndTag.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                if (position == 1) {
+                    EventBus.getDefault().post(
+                        UpdateMyLabelEvent(
+                            userInfoBean?.label_quality ?: mutableListOf()
+                        )
+                    )
+                }
+            }
+
+
+        })
+
     }
 
 
@@ -104,53 +238,44 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
     private fun initData() {
         //更新了信息之后更新本地缓存
         SPUtils.getInstance(Constants.SPNAME).put("avatar", userInfoBean!!.userinfo?.avatar)
-        coverAdapter.setNewData(userInfoBean?.squarelist?.list ?: mutableListOf())
-        tagAdapter.setNewData(userInfoBean?.mytags_list ?: mutableListOf())
+
         visitsAdapter.freeShow = userInfoBean?.free_show ?: false
         visitsAdapter.setNewData(userInfoBean?.visitlist ?: mutableListOf())
         GlideUtil.loadAvatorImg(activity!!, userInfoBean?.userinfo?.avatar ?: "", userAvator)
         userName.text = userInfoBean?.userinfo?.nickname ?: ""
-        userTagsBtn.text = "兴趣管理 ${userInfoBean?.mytags_count}"
-//        userSquareCount.text = "我的动态 ${userInfoBean?.squarelist?.count}"
+        userName1.text = userInfoBean?.userinfo?.nickname ?: ""
+        userSign.text = userInfoBean?.sign ?: ""
+        candyCount.text = "${userInfoBean?.userinfo?.my_candy_amount}"
         UserManager.saveUserVip(userInfoBean?.userinfo?.isvip ?: 0)
         UserManager.saveUserVerify(userInfoBean?.userinfo?.isfaced ?: 0)
-        userInfoSettingBtn.text = "完成度：${userInfoBean?.userinfo?.percent_complete}%"
-        userVerifyScore.text = "+${userInfoBean?.userinfo?.identification}"
 
-        // userVisitCount.text = "今日总来访${userInfoBean.userinfo?.todayvisit}\t\t总来访${userInfoBean.userinfo?.allvisit}"
+        EventBus.getDefault()
+            .post(UpdateIndexCandyEvent(userInfoBean?.userinfo?.my_candy_amount ?: 0))
         checkVerify()
         checkVip()
+        for (data in userInfoBean?.vip_descr ?: mutableListOf<VipDescr>())
+            marqueeVipPower.addView(getMarqueeView(data))
+
+        if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1)
+            userVerify.viewTreeObserver.addOnGlobalLayoutListener(this)
+
+        EventBus.getDefault()
+            .post(UpdateMyLabelEvent(userInfoBean?.label_quality ?: mutableListOf()))
     }
 
 
     //是否认证 0 未认证 1通过 2机审中 3人审中 4被拒（弹框）
     private fun checkVerify() {
         if (userInfoBean?.userinfo?.isfaced == 1) {//已认证
-            userVerify.setImageResource(R.drawable.icon_verify_pass)
-            userVerifyTipBtn.text = "已认证"
-            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorWhite))
-            userVerifyTipBtn.isEnabled = false
-            userVerifyScore.isVisible = false
+            userVerify.imageAssetsFolder = "images_verify"
+            userVerify.setAnimation("data_verify.json")
+            userVerify.playAnimation()
         } else if (userInfoBean?.userinfo?.isfaced == 2 || userInfoBean?.userinfo?.isfaced == 3) { //审核中
             userVerify.setImageResource(R.drawable.icon_verify_reject)
-            userVerifyTipBtn.text = "认证审核中"
-            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayTextBF))
-            userVerifyTipBtn.isEnabled = false
-            userVerifyScore.isVisible = false
         } else {
-            userVerify.setImageResource(R.drawable.icon_verify_reject)
-            userVerifyTipBtn.isVisible = true
-            userVerifyTipBtn.isEnabled = true
-            userVerifyTipBtn.setTextColor(resources.getColor(R.color.colorGrayTextBF))
-
-            if (userInfoBean?.userinfo?.isfaced == 4) {//审核不通过
-                userVerifyTipBtn.text = "重新认证"
-                userVerifyScore.isVisible = true
-            } else {//未认证
-                userVerifyTipBtn.text = "立即认证"
-                userVerifyScore.isVisible = true
-            }
+            userVerify.setImageResource(R.drawable.icon_verify_not)
         }
+
     }
 
     //是否认证
@@ -158,210 +283,64 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
         //是否会员
         if (userInfoBean?.userinfo?.isvip == 1) {
             userVip.visibility = View.VISIBLE
-            isVipCl.visibility = View.VISIBLE
-            isVipTimeout.text = "到期时间\t\t${userInfoBean?.userinfo?.vip_express ?: ""}"
-            notVipPowerLl.visibility = View.GONE
             isVipPowerBtn.isVisible = true
             isVipPowerBtn.text = "会员权益"
         } else {
             userVip.visibility = View.GONE
-            isVipCl.visibility = View.GONE
-            notVipPowerLl.visibility = View.VISIBLE
             isVipPowerBtn.isVisible = true
             isVipPowerBtn.text = "开通会员"
-            initViewPager()
+
         }
     }
 
-    private fun initViewPager() {
-        /*生成indicator*/
-        if (notVipPowerIndicator.childCount == 0)
-            if ((userInfoBean?.vip_descr ?: mutableListOf<MatchBean>()).size > 1) {
-                val size = (userInfoBean?.vip_descr ?: mutableListOf<MatchBean>()).size
-                for (i in 0 until size) {
-                    val indicator = RadioButton(activity!!)
-                    indicator.width = SizeUtils.dp2px(5F)
-                    indicator.height = SizeUtils.dp2px(5F)
-                    indicator.buttonDrawable = null
-                    indicator.background = resources.getDrawable(R.drawable.selector_circle_indicator)
 
-                    indicator.layoutParams =
-                        LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                        )
-                    val layoutParams: LinearLayout.LayoutParams = indicator.layoutParams as LinearLayout.LayoutParams
-                    layoutParams.setMargins(0, 0, SizeUtils.dp2px(6f), 0)
-                    indicator.layoutParams = layoutParams
-                    indicator.isEnabled = false
-                    indicator.isChecked = i == 0
-                    notVipPowerIndicator.addView(indicator)
-                }
-            }
-
-        notVipPowerVp.adapter = object : PagerAdapter() {
-            override fun isViewFromObject(view: View, `object`: Any): Boolean {
-                return view == `object`
-            }
-
-            override fun getCount(): Int {
-                return (userInfoBean?.vip_descr ?: mutableListOf<MatchBean>()).size
-            }
-
-            override fun instantiateItem(container: ViewGroup, position: Int): Any {
-                val view = layoutInflater.inflate(R.layout.item_not_vip_viewpager, null)
-                view.vpTitle.text = userInfoBean?.vip_descr?.get(position)?.title ?: ""
-                view.vpMsg.text = userInfoBean?.vip_descr?.get(position)?.rule ?: ""
-                view.setOnClickListener {
-                    ChargeVipDialog(ChargeVipDialog.VIP_LOGO, activity!!).show()
-                }
-                container.addView(view)
-                return view
-            }
-
-            override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-                container.removeView(`object` as View)
-            }
-
-        }
-
-        notVipPowerVp.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            }
-
-            override fun onPageSelected(position: Int) {
-                for (child in 0 until notVipPowerIndicator.childCount)
-                    (notVipPowerIndicator.getChildAt(child) as RadioButton).isChecked = position == child
-            }
-
-        })
+    private fun getMarqueeView(content: VipDescr): View {
+        val view = layoutInflater.inflate(R.layout.item_marquee_power, null, false)
+        view.powerContent.text = content.title
+        return view
     }
 
-    private fun initView() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val param = customStatusBar.layoutParams as ConstraintLayout.LayoutParams
-            param.height = BarUtils.getStatusBarHeight()
+    private val guideContent by lazy {
+        if (UserManager.getGender() == 1) {
+            "完成认证获取更多曝光"
         } else {
-            customStatusBar.isVisible = false
+            "完成认证获取打招呼权限"
         }
-
-        mPresenter = UserCenterPresenter()
-        mPresenter.mView = this
-        mPresenter.context = activity!!
-
-        settingBtn.setOnClickListener(this)
-        userInfoSettingBtn.setOnClickListener(this)
-        userAvator.setOnClickListener(this)
-        isVipProblem.setOnClickListener(this)
-        isVipPowerBtn.setOnClickListener(this)
-        userFoot.setOnClickListener(this)
-        userTagsBtn.setOnClickListener(this)
-        userSquareCount.setOnClickListener(this)
-        userIntention.setOnClickListener(this)
-        userQuestions.setOnClickListener(this)
-        userRecommend.setOnClickListener(this)
-        userVisit.setOnClickListener(this)
-        userVerifyTipBtn.setOnClickListener(this)
-        feedBack.setOnClickListener(this)
-
-
-        multiStateView.retryBtn.onClick {
-            multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-            activity!!.mainRoot.setBackgroundResource(R.color.colorWhite)
-            mPresenter.getMemberInfo(params)
-        }
-
-        //用户标签
-        val tagManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        userTagRv.layoutManager = tagManager
-        userTagRv.addItemDecoration(
-            DividerItemDecoration(
-                activity!!,
-                DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(10F),
-                resources.getColor(R.color.colorWhite)
-            )
-        )
-        userTagRv.adapter = tagAdapter
-        tagAdapter.setOnItemClickListener { _, view, position ->
-            if (tagAdapter.data[position].is_expire) {
-                ChargeLabelDialog(activity!!,tagAdapter.data[position].tag_id).show()
-            } else {
-                val intent = Intent()
-                intent.putExtra("aimData", tagAdapter.data[position])
-                intent.putExtra(
-                    "mode", if (tagAdapter.data[position].label_quality.isNullOrEmpty()) {
-                        LabelQualityActivity.MODE_NEW
-                    } else {
-                        LabelQualityActivity.MODE_EDIT
-                    }
-                )
-                intent.setClass(activity!!, LabelQualityActivity::class.java)
-                startActivity(intent)
+    }
+    private val guideVerifyWindow by lazy {
+        PopupWindow(activity!!).apply {
+            contentView = LayoutInflater.from(activity!!)
+                .inflate(R.layout.popupwindow_user_center_guide_verify, null, false)
+            width = ViewGroup.LayoutParams.WRAP_CONTENT
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+//            val params = contentView.iconGuideVerify.layoutParams as LinearLayout.LayoutParams
+//            params.width = SizeUtils.dp2px(245F)
+//            params.height = SizeUtils.dp2px(46F)
+//            contentView.iconGuideVerify.layoutParams = params
+            contentView.iconGuideVerify.text = guideContent
+            contentView.iconGuideVerify.setOnClickListener {
+                UserManager.saveShowGuideVerify(true)
+                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this@UserCenterFragment)
+                dismiss()
             }
+            setBackgroundDrawable(null)
+            animationStyle = R.style.MyDialogLeftBottomAnimation
+            isFocusable = true
+            isOutsideTouchable = true
         }
-
-
-        //用户动态照片
-        val squareManager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        userSquaresRv.layoutManager = squareManager
-        userSquaresRv.addItemDecoration(
-            DividerItemDecoration(
-                activity!!,
-                DividerItemDecoration.VERTICAL_LIST,
-                SizeUtils.dp2px(10F),
-                resources.getColor(R.color.colorWhite)
-            )
-        )
-        userSquaresRv.adapter = coverAdapter
-        val headView = LayoutInflater.from(activity!!).inflate(R.layout.empty_cover_layout, userSquaresRv, false)
-        val params = headView.layoutParams as RecyclerView.LayoutParams
-        params.width = SizeUtils.dp2px(98F)
-        params.height = SizeUtils.dp2px(98F)
-        headView.layoutParams = params
-        coverAdapter.addHeaderView(headView, 0, LinearLayout.HORIZONTAL)
-        coverAdapter.headerLayout.onClick(object : CustomClickListener() {
-            override fun onSingleClick(view: View) {
-                mPresenter.checkBlock()
-            }
-        })
-
-        coverAdapter.setOnItemClickListener { _, view, position ->
-            if (position == coverAdapter.data.size - 1) {
-                startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to MySquareFragment.TYPE_MINE)
-            }
-        }
-
-        //我的访客封面
-        val visitLayoutmanager = LinearLayoutManager(activity!!, RecyclerView.HORIZONTAL, false)
-        visitLayoutmanager.stackFromEnd = true
-        userVisitRv.layoutManager = visitLayoutmanager
-        userVisitRv.adapter = visitsAdapter
-
     }
 
     override fun onGetMyInfoResult(userinfo: UserInfoBean?) {
         multiStateView.viewState = MultiStateView.VIEW_STATE_CONTENT
+//        guideVerifyWindow.showAsDropDown(userVerify, 0, 0, Gravity.NO_GRAVITY)
+
         if (userinfo != null) {
             userInfoBean = userinfo
             initData()
         }
     }
 
-
-    override fun onCheckBlockResult(b: Boolean) {
-        if (b) {
-            if (UserManager.publishState == 0) {
-                startActivity<PublishActivity>("from" to 2)
-            } else
-                EventBus.getDefault().post(RePublishEvent(true, UserCenterFragment::class.java.simpleName))
-        }
-    }
 
     override fun onError(text: String) {
         multiStateView.viewState = MultiStateView.VIEW_STATE_ERROR
@@ -382,13 +361,14 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 checkVerify()
             } else if (requestCode == REQUEST_INTENTION) {
                 if (data != null && data.getSerializableExtra("intention") != null)
-                    userInfoBean?.userinfo?.intention = data.getSerializableExtra("intention") as LabelQualityBean?
+                    userInfoBean?.userinfo?.intention =
+                        data.getSerializableExtra("intention") as LabelQualityBean?
             }
         }
     }
 
 
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             //设置
             R.id.settingBtn -> {
@@ -400,13 +380,10 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 startActivityForResult<NewUserInfoSettingsActivity>(REQUEST_INFO_SETTING)
 
             }
-            //会员问题
-            R.id.isVipProblem -> {
-            }
             //会员权益
             R.id.isVipPowerBtn -> {
                 if (userInfoBean?.userinfo?.isvip != 1) {
-                    ChargeVipDialog(ChargeVipDialog.VIP_LOGO, activity!!).show()
+                    ChargeVipDialog(ChargeVipDialog.MORE_EXPODE, activity!!).show()
                 } else {
                     startActivity<VipPowerActivity>(
                         "nickname" to userInfoBean?.userinfo?.nickname,
@@ -415,24 +392,12 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                 }
             }
             //我的兴趣
-            R.id.userTagsBtn -> {
+            R.id.publishCl -> {
                 startActivity<MyLabelActivity>()
-            }
-            //我的动态 1,我的所有动态 2我点过赞的 3 我收藏的
-            R.id.userSquareCount -> {
-                startActivityForResult<MyCollectionEtcActivity>(REQUEST_MY_SQUARE, "type" to MySquareFragment.TYPE_MINE)
             }
             //我的足迹
             R.id.userFoot -> {
                 startActivity<MyFootPrintActivity>()
-            }
-            // 我的意愿
-            R.id.userIntention -> {
-                startActivityForResult<MyIntentionActivity>(
-                    REQUEST_INTENTION,
-                    "id" to userInfoBean?.userinfo?.intention?.id,
-                    "from" to MyIntentionActivity.FROM_USERCENTER
-                )
             }
             //我的来访
             R.id.userVisit -> {
@@ -443,167 +408,91 @@ class UserCenterFragment : BaseMvpLazyLoadFragment<UserCenterPresenter>(), UserC
                     "freeShow" to userInfoBean?.free_show
                 )
             }
-            //我的问题
-            R.id.userQuestions -> {
-                startActivity<MyQuestionActivity>()
-            }
-            //推荐给朋友
-            R.id.userRecommend -> {
-            }
             //认证中心
-            R.id.userVerifyTipBtn -> {
-                startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
-            }
-            //意见反馈
-            R.id.feedBack -> {
-                ChatActivity.start(activity!!, Constants.ASSISTANT_ACCID)
-            }
-        }
-    }
+            R.id.userVerify -> {
+                when (userInfoBean?.userinfo?.isfaced) {
+                    1 -> {
+                        CommonFunction.toast("您已通过认证")
+                    }
+                    2, 3 -> {
+                        CommonFunction.toast("认证审核中...")
+                    }
+                    else -> {
+                        startActivityForResult<IDVerifyActivity>(REQUEST_ID_VERIFY)
+                    }
 
+                }
 
-    //发布进度通知
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onProgressEvent(event: UploadEvent) {
-        if (event.from == 2) {
-//            multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-            mPresenter.getMemberInfo(params)
-            EventBus.getDefault().post(RefreshEvent(true))
+            }
+            //我的糖果
+            R.id.candyCl -> {
+                startActivity<MyCandyActivity>()
+            }
         }
     }
 
 
     //更新用户中心信息
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshEvent(event: UserCenterEvent) {
 //        multiStateView.viewState = MultiStateView.VIEW_STATE_LOADING
-        mPresenter.getMemberInfo(params)
+        mPresenter.myInfoCandy()
     }
 
-
-    /*-------------------------------------- 重新上传-----------------------------*/
-    private var uploadCount = 0
-
-    private fun retryPublish() {
-        if (!mPresenter.checkNetWork()) {
-            CommonFunction.toast("网络不可用,请检查网络设置")
-            return
-        }
-        uploadCount = 0
-        //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
-        UserManager.publishState = 1
-        when {
-            UserManager.publishParams["type"] == 0 -> publish()
-            UserManager.publishParams["type"] == 1 -> {
-                UserManager.cancelUpload = false
-                uploadPictures()
-            }
-            UserManager.publishParams["type"] == 2 -> {
-                UserManager.cancelUpload = false
-                //TODO上传视频
-                val videoQnPath =
-                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                        "accid"
-                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                        16
-                    )}"
-                mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, videoQnPath, 2)
-            }
-            UserManager.publishParams["type"] == 3 -> {
-                UserManager.cancelUpload = false
-                //TODO上传音频
-                val audioQnPath =
-                    "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                        "accid"
-                    )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                        16
-                    )}"
-                mPresenter.uploadFile(1, 1, UserManager.mediaBeans[0].url, audioQnPath, 3)
-            }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRefreshMyCandyEvent(event: RefreshMyCandyEvent) {
+        if ((userInfoBean?.userinfo?.my_candy_amount
+                ?: 0) >= event.candyCount && event.candyCount >= 0
+        ) {
+            candyCount.text = "${(userInfoBean?.userinfo?.my_candy_amount ?: 0) - event.candyCount}"
+            EventBus.getDefault().post(
+                UpdateIndexCandyEvent(
+                    (userInfoBean?.userinfo?.my_candy_amount ?: 0) - event.candyCount
+                )
+            )
         }
     }
 
-
-    private fun uploadPictures() {
-        //上传图片
-        val imagePath =
-            "${Constants.FILE_NAME_INDEX}${Constants.PUBLISH}${SPUtils.getInstance(Constants.SPNAME).getString(
-                "accid"
-            )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                16
-            )}"
-        mPresenter.uploadFile(
-            UserManager.mediaBeans.size,
-            uploadCount + 1,
-            UserManager.mediaBeans[uploadCount].url,
-            imagePath,
-            1
-        )
-    }
-
-    private fun publish() {
-        mPresenter.publishContent(
-            UserManager.publishParams["type"] as Int,
-            UserManager.publishParams,
-            UserManager.keyList
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSetMyCandyEvent(event: SetMyCandyEvent) {
+        candyCount.text = "${event.candyCount}"
+        EventBus.getDefault().post(
+            UpdateIndexCandyEvent(event.candyCount)
         )
     }
 
 
-    //发布消息的类型0,纯文本的 1，照片 2，视频 3，声音
-    override fun onQnUploadResult(success: Boolean, type: Int, key: String?) {
-        if (success) {
-            when (type) {
-                0 -> {
-                    publish()
-                }
-                1 -> {
-                    UserManager.mediaBeans[uploadCount].url = key ?: ""
-                    UserManager.keyList.add(Gson().toJson(UserManager.mediaBeans[uploadCount]))
-                    uploadCount++
-                    if (uploadCount == UserManager.mediaBeans.size) {
-                        publish()
-                    } else {
-                        uploadPictures()
+    override fun onPause() {
+        super.onPause()
+        Log.d("onpause", "onpause=====")
+    }
+
+    override fun onGlobalLayout() {
+//        if (!UserManager.isShowGuideVerify() && UserManager.isUserVerify() != 1) {
+        val width = userVerify.left
+        if (width > 0) {
+            if (userInfoBean?.userinfo?.isfaced != 1) {
+
+                guideVerifyWindow.showAtLocation(
+                    userVerify,
+                    Gravity.TOP and Gravity.LEFT,
+                    width + SizeUtils.dp2px(14F) - SizeUtils.dp2px(162F / 12 * guideContent.length),
+                    SizeUtils.dp2px(-20F)
+                )
+                multiStateView.postDelayed({
+                    if (guideVerifyWindow.isShowing) {
+                        guideVerifyWindow.dismiss()
+                        UserManager.saveShowGuideVerify(true)
+                        userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
-                }
-                2 -> {
-                    UserManager.mediaBeans[uploadCount].url = key ?: ""
-                    UserManager.keyList.add(Gson().toJson(UserManager.mediaBeans[0]))
-                    publish()
-                }
-                3 -> {
-                    UserManager.mediaBeans[uploadCount].url = key ?: ""
-                    UserManager.keyList.add(Gson().toJson(UserManager.mediaBeans[0]))
-                    publish()
-                }
-            }
-        } else {
-            onProgressEvent(UploadEvent(qnSuccess = false))
-        }
-    }
-
-    override fun onSquareAnnounceResult(type: Int, success: Boolean, code: Int) {
-        onAnnounceEvent(AnnounceEvent(success, code))
-        EventBus.getDefault().postSticky(UploadEvent(1, 1, 1.0, from = 2))
-
-    }
-
-
-    fun onAnnounceEvent(event: AnnounceEvent) {
-        if (event.serverSuccess) {
-            UserManager.clearPublishParams()
-            CommonFunction.toast("动态发布成功!")
-        } else {
-            UserManager.cancelUpload = true
-            if (event.code == 402) { //内容违规重新去编辑
-                UserManager.publishState = -1
-                CommonFunction.toast("内容违规请重新编辑")
-            } else { //发布失败重新发布
-                UserManager.publishState = -2
-                CommonFunction.toast("发布失败")
+                }, 3000L)
+            } else {
+                userVerify.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         }
+        Log.d("onGlobalLayout", "width = $width")
+//        }
+
     }
 
 

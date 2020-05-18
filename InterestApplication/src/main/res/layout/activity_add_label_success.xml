@@ -32,7 +32,7 @@
                 tools:text="兴趣"/>
 
         <TextView
-                android:id="@+id/t1"
+                android:id="@+id/moreInfoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -55,7 +55,7 @@
                 android:textSize="17sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/t1"
+                app:layout_constraintTop_toBottomOf="@id/moreInfoTitle"
                 />
 
         <TextView

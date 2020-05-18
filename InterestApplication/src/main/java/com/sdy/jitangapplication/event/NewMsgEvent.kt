@@ -1,5 +1,6 @@
 package com.sdy.jitangapplication.event
 
+import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.utils.UserManager
 
 /**
@@ -20,10 +21,21 @@ class ReVerifyEvent(val type: Int, var avator: String = UserManager.getAvator())
 class AccountDangerEvent(val type: Int)
 
 //更新首页滑动次数
-class UpdateSlideCountEvent
+class UpdateSlideCountEvent(var showCardTimes: Boolean = true)
 
 
 //展示调研弹窗的event
 class ShowSurveyDialogEvent(val slideCount: Int)
 
+
+/**
+ * 展示附近的数量
+ */
+class ShowNearCountEvent()
+
 class UpdateApproveEvent()
+
+/**
+ * 更新发送礼物的事件
+ */
+class UpdateSendGiftEvent(val message: IMMessage)

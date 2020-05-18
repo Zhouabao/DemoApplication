@@ -20,6 +20,7 @@ import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.RefreshSquareEvent
 import com.sdy.jitangapplication.event.UserCenterEvent
 import com.sdy.jitangapplication.model.SquareBean
@@ -29,7 +30,7 @@ import com.sdy.jitangapplication.switchplay.SwitchUtil
 import com.sdy.jitangapplication.ui.dialog.DeleteDialog
 import com.sdy.jitangapplication.ui.dialog.MoreActionNewDialog
 import com.sdy.jitangapplication.ui.dialog.TranspondDialog
-import com.sdy.jitangapplication.ui.fragment.MySquareFragment
+import com.sdy.jitangapplication.ui.fragment.MyCollectionAndLikeFragment
 import com.sdy.jitangapplication.utils.UserManager
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack
@@ -45,7 +46,7 @@ import org.greenrobot.eventbus.EventBus
  * 点击图片、视频、录音进入详情页面，并且支持点击左右切换好友动态
  */
 class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), SquarePlayDetailView,
-    View.OnClickListener {
+    OnLazyClickListener {
 
     private val TAG = SquarePlayDetailActivity::class.java.simpleName
     override fun onGetSquareInfoResults(squareBean: SquareBean?) {
@@ -73,7 +74,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             transactionView: View? = null,
             data: SquareBean? = null,
             position: Int? = -1,
-            type: Int = MySquareFragment.TYPE_SQUARE,
+            type: Int = MyCollectionAndLikeFragment.TYPE_SQUARE,
             id: Int? = -1,
             fromRecommend: Boolean = false
         ) {
@@ -364,8 +365,7 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
             EventBus.getDefault().post(RefreshSquareEvent(true, TAG))
     }
 
-
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             R.id.detailPlayUserAvatar -> {
                 if (UserManager.getAccid() != squareBean.accid) {
@@ -407,7 +407,6 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
                             "content" to detailPlayComment.text.toString()
                         ), 0
                     )
-                    detailPlayCommentSend.isEnabled = false
                 } else
                     CommonFunction.toast("说点什么吧")
             }
@@ -474,4 +473,5 @@ class SquarePlayDetailActivity : BaseMvpActivity<SquarePlayDetaiPresenter>(), Sq
 
         super.finish()
     }
+
 }

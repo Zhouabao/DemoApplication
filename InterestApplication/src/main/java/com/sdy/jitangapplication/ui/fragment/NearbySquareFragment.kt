@@ -32,13 +32,18 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * 附近广场
  */
-class NearbySquareFragment : BaseMvpLazyLoadFragment<TagDetailCategoryPresenter>(), TagDetailCategoryView,
+class NearbySquareFragment : BaseMvpLazyLoadFragment<TagDetailCategoryPresenter>(),
+    TagDetailCategoryView,
     OnRefreshListener, OnLoadMoreListener {
 
 
     private var page = 1
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_nearby_square, container, false)
     }
 
@@ -114,7 +119,9 @@ class NearbySquareFragment : BaseMvpLazyLoadFragment<TagDetailCategoryPresenter>
             rvNearbySquare.scrollToPosition(0)
             refreshNearbySquare.finishRefresh(b)
         } else {
-            if (data?.list.isNullOrEmpty() || (data?.list ?: mutableListOf()).size < Constants.PAGESIZE)
+            if (data?.list.isNullOrEmpty() || (data?.list
+                    ?: mutableListOf()).size < Constants.PAGESIZE
+            )
                 refreshNearbySquare.finishLoadMoreWithNoMoreData()
             else
                 refreshNearbySquare.finishLoadMore(b)
@@ -145,12 +152,18 @@ class NearbySquareFragment : BaseMvpLazyLoadFragment<TagDetailCategoryPresenter>
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRefreshLikeEvent(event: RefreshLikeEvent) {
         if (event.position != -1 && event.squareId == adapter.data[event.position].id) {
-            adapter.data[event.position].isliked = event.isLike==1
-            adapter.data[event.position].like_cnt = if (event.isLike == 1) {
-                adapter.data[event.position].like_cnt + 1
-            } else {
-                adapter.data[event.position].like_cnt - 1
-            }
+            adapter.data[event.position].originalLike = event.isLike == 1
+            adapter.data[event.position].isliked = event.isLike == 1
+            adapter.data[event.position].like_cnt =
+                if (event.likeCount >= 0) {
+                    event.likeCount
+                } else {
+                    if (event.isLike == 1) {
+                        adapter.data[event.position].like_cnt + 1
+                    } else {
+                        adapter.data[event.position].like_cnt - 1
+                    }
+                }
             adapter.refreshNotifyItemChanged(event.position)
         }
     }

@@ -4,20 +4,15 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.ui.activity.BaseActivity
+import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
-import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.ui.activity.AddLabelActivity
-import com.sdy.jitangapplication.ui.activity.MainActivity
-import com.sdy.jitangapplication.ui.activity.MyLabelActivity
 import com.sdy.jitangapplication.widgets.CommonAlertDialog
 import com.tencent.mm.opensdk.constants.ConstantsAPI
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
-import org.greenrobot.eventbus.EventBus
 
 class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
     private val wxApi by lazy { WXAPIFactory.createWXAPI(this, Constants.WECHAT_APP_ID) }
@@ -69,18 +64,7 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
                     finish()
                     overridePendingTransition(0, 0)
                     if (code == BaseResp.ErrCode.ERR_OK) {
-                        if (ActivityUtils.getTopActivity() is AddLabelActivity) {
-                            EventBus.getDefault().post(PayLabelResultEvent(code == BaseResp.ErrCode.ERR_OK))
-                        } else if (ActivityUtils.getTopActivity() is MyLabelActivity) {
-                            EventBus.getDefault().post(UpdateMyLabelEvent())
-                        } else {
-                            if (ActivityUtils.getTopActivity() !is MainActivity) {
-                                MainActivity.start(this@WXPayEntryActivity, Intent())
-                            }
-                        }
-                        EventBus.getDefault().postSticky(RefreshEvent(true))
-                        EventBus.getDefault().postSticky(UserCenterEvent(true))
-                        EventBus.getDefault().post(CloseDialogEvent())
+                        CommonFunction.payResultNotify(this@WXPayEntryActivity)
                     }
                 }
             })

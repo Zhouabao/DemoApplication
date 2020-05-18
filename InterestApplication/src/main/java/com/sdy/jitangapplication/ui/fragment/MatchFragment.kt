@@ -1,17 +1,12 @@
 package com.sdy.jitangapplication.ui.fragment
 
 
-import android.animation.Animator
-import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
-import android.view.animation.LinearInterpolator
-import android.widget.ImageView
+import android.view.animation.*
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,9 +14,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
-import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.kotlin.base.data.protocol.BaseResp
@@ -35,12 +31,9 @@ import com.netease.nimlib.sdk.msg.model.CustomMessageConfig
 import com.netease.nimlib.sdk.msg.model.IMMessage
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.common.CommonFunction
-import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.common.OnLazyClickListener
 import com.sdy.jitangapplication.event.*
-import com.sdy.jitangapplication.model.MatchBean
-import com.sdy.jitangapplication.model.MatchListBean
-import com.sdy.jitangapplication.model.Newtag
-import com.sdy.jitangapplication.model.StatusBean
+import com.sdy.jitangapplication.model.*
 import com.sdy.jitangapplication.nim.attachment.ChatHiAttachment
 import com.sdy.jitangapplication.presenter.MatchPresenter
 import com.sdy.jitangapplication.presenter.view.MatchView
@@ -64,11 +57,22 @@ import org.jetbrains.anko.support.v4.startActivityForResult
 /**
  * 匹配页面(新版)
  */
-class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View.OnClickListener, CardStackListener {
+class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, OnLazyClickListener,
+    CardStackListener {
 
 
     override fun loadData() {
         initView()
+        if (!UserManager.isShowGuideIndex()) {
+            GuideDialog(activity!!, mPresenter).show()
+            UserManager.saveShowGuideIndex(true)
+        } else {
+            //获取今日缘分
+            mPresenter.todayRecommend()
+        }
+
+        mPresenter.getMatchList(matchParams)
+
     }
 
 
@@ -99,12 +103,10 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     //请求广场的参数 TODO要更新tagid
     private val matchParams by lazy {
         hashMapOf(
-            "accid" to SPUtils.getInstance(Constants.SPNAME).getString("accid"),
-            "token" to SPUtils.getInstance(Constants.SPNAME).getString("token"),
-            "_timestamp" to System.currentTimeMillis(),
             "lng" to UserManager.getlongtitude().toFloat(),
-            "lat" to UserManager.getlatitude().toFloat(),
-            "city_code" to UserManager.getCityCode(),
+            "lng" to UserManager.getlongtitude().toFloat(),
+            "city_name" to UserManager.getCity(),
+            "province_name" to UserManager.getProvince(),
             "type" to 1
         )
 
@@ -116,7 +118,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     }
 
     //    private val matchUserAdapter by lazy { CardAdapter() }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_match, container, false)
 
     }
@@ -159,7 +165,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
         updateLocation()
 
-        mPresenter.getMatchList(matchParams)
 
         matchUserAdapter.setOnItemChildClickListener { _, view, position ->
             val item = matchUserAdapter.data[manager.topPosition]
@@ -167,43 +172,35 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             when (view.id) {
                 R.id.v1 -> {
                     (itemView.findViewById<ConstraintLayout>(R.id.v1)).isEnabled = false
-                    if ((matchUserAdapter.data[manager.topPosition].accid ?: "") != UserManager.getAccid())
-                        MatchDetailActivity.start(activity!!, matchUserAdapter.data[manager.topPosition].accid)
+                    if ((matchUserAdapter.data[manager.topPosition].accid
+                            ?: "") != UserManager.getAccid()
+                    )
+                        MatchDetailActivity.start(
+                            activity!!,
+                            matchUserAdapter.data[manager.topPosition].accid
+                        )
                     (itemView.findViewById<ConstraintLayout>(R.id.v1)).isEnabled = true
                 }
                 R.id.btnHiLottieView,
                 R.id.btnHi -> {
-                    //非真人头像打招呼提示去修改头像
-                    if (ranking_level == 2 && manager.topPosition == 0 && !isShowChangeAvatorRealMan) {
-                        ChangeAvatarRealManDialog(
-                            activity!!,
-                            ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN_GREET,
-                            matchBean = matchUserAdapter.data[manager.topPosition],
-                            view1 = view
-                        ).show()
-                        isShowChangeAvatorRealMan = true
-                    } else {
-                        //保存剩余滑动次数
-                        CommonFunction.commonGreet(
-                            activity!!,
-                            matchUserAdapter.data[manager.topPosition].accid,
-                            targetAvator = matchUserAdapter.data[manager.topPosition].avatar ?: "",
-                            view = view, needSwipe = true
-                        )
-                    }
+
+                    CommonFunction.commonGreet(
+                        activity!!,
+                        matchUserAdapter.data[manager.topPosition].accid,
+                        targetAvator = matchUserAdapter.data[manager.topPosition].avatar ?: "",
+                        view = view, needSwipe = true
+                    )
                 }
                 R.id.nextImgBtn -> {
                     if (itemView != null) {
                         val vpPhotos = itemView.findViewById<ViewPager>(R.id.vpPhotos)
-                        if (vpPhotos.currentItem < (item.photos ?: mutableListOf<MatchBean>()).size - 1) {
+                        if (vpPhotos.currentItem < (item.photos
+                                ?: mutableListOf<MatchBean>()).size - 1
+                        ) {
                             val index = vpPhotos.currentItem
                             vpPhotos.setCurrentItem(index + 1, true)
                         } else {
-//                            EventBus.getDefault().post(ShakeEvent(true))
-                            YoYo.with(Techniques.Shake)
-                                .duration(300)
-                                .repeat(0)
-                                .playOn(itemView)
+                            itemView.startAnimation(shakeAnimation1())
                         }
 
                     }
@@ -216,17 +213,31 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                             val index = vpPhotos.currentItem
                             vpPhotos.setCurrentItem(index - 1, true)
                         } else {
-                            YoYo.with(Techniques.Shake)
-                                .duration(300)
-                                .repeat(0)
-                                .playOn(itemView)
-//                            EventBus.getDefault().post(ShakeEvent(true))
+                            itemView.startAnimation(shakeAnimation1())
                         }
                     }
                 }
             }
         }
 
+
+    }
+
+
+    fun shakeAnimation1(): Animation {
+        val ratation = RotateAnimation(
+            0F,
+            1F,
+            Animation.RELATIVE_TO_SELF,
+            0.5F,
+            Animation.RELATIVE_TO_SELF,
+            0.5F
+        )
+        ratation.interpolator = CycleInterpolator(4F)
+        ratation.repeatCount = 0
+        ratation.duration = 300
+        VibrateUtils.vibrate(50L)
+        return ratation
     }
 
 
@@ -240,7 +251,7 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     }
 
 
-    override fun onClick(view: View) {
+    override fun onLazyClick(view: View) {
         when (view.id) {
             R.id.retryBtn -> {
                 setViewState(LOADING)
@@ -255,7 +266,8 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             }
             R.id.changeAvatorBtn -> { //强制替换头像
                 if (ranking_level == 1 || ranking_level == 2) {
-                    startActivityForResult<NewUserInfoSettingsActivity>(100)
+                    if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
+                        startActivityForResult<NewUserInfoSettingsActivity>(100)
                 } else {
                     startActivity<MyLabelActivity>()
                 }
@@ -306,6 +318,8 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 //头像等级
                 ranking_level = matchBeans.ranking_level
 
+
+                EventBus.getDefault().post(UpdateIndexCandyEvent(matchBeans.my_candy_amount))
                 //第一次加载的时候就显示顶部提示条
                 if (firstLoad) {
                     if (ranking_level == 2) {//2 真人提示
@@ -330,15 +344,18 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 }
                 when (matchBeans.motion) {
                     GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS -> {//7头像违规替换
-                        EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
+                        EventBus.getDefault()
+                            .postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_AVATOR_NOT_PASS))
                     }
-                    GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//3//完善相册
+                    GotoVerifyDialog.TYPE_CHANGE_ABLUM -> {//3完善相册
                         UserManager.perfect_times = matchBeans.perfect_times
                     }
                     else -> {
                         UserManager.cleanVerifyData()
                     }
                 }
+
+
             }
 
             if (matchBeans == null || (matchBeans!!.list.isNullOrEmpty() && matchUserAdapter.data.isNullOrEmpty())) {
@@ -367,11 +384,6 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
         if (data.code == 200) {
             if (data.data != null) {
-                if (UserManager.getCurrentSurveyVersion().isEmpty()) {
-                    UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
-                    EventBus.getDefault().post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
-                }
-
                 if (data.data!!.residue == 0) {
                     card_stack_view.rewind()
                     ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, activity!!).show()
@@ -388,12 +400,17 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     //status :1.喜欢成功  2.匹配成功
     //201 不是会员
     //405 封禁
-    override fun onGetLikeResult(success: Boolean, data: BaseResp<StatusBean?>, matchBean: MatchBean) {
+    override fun onGetLikeResult(
+        success: Boolean,
+        data: BaseResp<StatusBean?>,
+        matchBean: MatchBean
+    ) {
         if (data.code == 200) {
             if (data.data != null) {
                 if (UserManager.getCurrentSurveyVersion().isEmpty()) {
                     UserManager.saveSlideSurveyCount(UserManager.getSlideSurveyCount().plus(1))
-                    EventBus.getDefault().post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
+                    EventBus.getDefault()
+                        .post(ShowSurveyDialogEvent(UserManager.getSlideSurveyCount()))
                 }
 
                 if (data.data!!.status == 2) {//status :1.喜欢成功  2.匹配成功
@@ -414,6 +431,15 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
         } else if (data.code == 405) {
             CommonFunction.toast(data.msg)
             card_stack_view.rewind()
+        }
+    }
+
+    override fun onTodayRecommendResult(data: MutableList<IndexRecommendBean>?) {
+        /**
+         * 今日推荐获取结果
+         */
+        if (!data.isNullOrEmpty()) {
+            TodayFateDialog(activity!!, data).show()
         }
     }
 
@@ -495,7 +521,8 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             UserManager.saveLightingCount(0)
         }
         if (manager.topView != null)
-            (manager.topView.findViewById<TextView>(R.id.btnHiLeftTime)).text = "${UserManager.getLightingCount()}"
+            (manager.topView.findViewById<TextView>(R.id.btnHiLeftTime)).text =
+                "${UserManager.getLightingCount()}"
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -510,6 +537,11 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             manager.setSwipeAnimationSetting(setting)
             card_stack_view.swipe()
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onGetRecommendEvent(event: GetRecommendEvent) {
+        mPresenter.todayRecommend()
     }
 
 
@@ -527,9 +559,9 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 //        manager.setMaxDegree(5F)
         //滑动的方向
 //        manager.setDirections(mutableListOf(Direction.Left, Direction.Right, Direction.Top))
-        manager.setDirections(Direction.HORIZONTAL)
-        manager.setCanScrollHorizontal(true)
-        manager.setCanScrollVertical(false)
+        manager.setDirections(Direction.FREEDOM)
+//        manager.setCanScrollHorizontal(true)
+//        manager.setCanScrollVertical(false)
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
 
@@ -574,7 +606,8 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 val params = animation_dislike.layoutParams as RelativeLayout.LayoutParams
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.leftMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                params.leftMargin =
+                    ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
                 animation_dislike.layoutParams = params
 
             }
@@ -591,7 +624,8 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
                 val params = animation_like.layoutParams as RelativeLayout.LayoutParams
                 params.width = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
                 params.height = (SizeUtils.dp2px(50F) + SizeUtils.dp2px(50f) * ratio).toInt()
-                params.rightMargin = ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
+                params.rightMargin =
+                    ((ScreenUtils.getScreenWidth() / 2F * ratio) - params.width / 2F).toInt()
                 animation_like.layoutParams = params
             }
 
@@ -601,17 +635,15 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
     }
 
     //此时已经飞出去了
+//
     override fun onCardSwiped(direction: Direction?) {
-        if (UserManager.slide_times != -1) {
-            UserManager.slide_times++
-            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //完善相册
-                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
-                UserManager.slide_times = 0
-            }
-        }
-
-
-
+//        if (UserManager.slide_times != -1) {
+//            UserManager.slide_times++
+//            if (UserManager.motion == GotoVerifyDialog.TYPE_CHANGE_ABLUM && UserManager.slide_times == UserManager.perfect_times && !UserManager.getAlertChangeAlbum()) { //3补充照片库
+//                EventBus.getDefault().postSticky(ReVerifyEvent(GotoVerifyDialog.TYPE_CHANGE_ABLUM))
+//                UserManager.slide_times = 0
+//            }
+//        }
         resetAnimation()
         if (direction == Direction.Left) {//左滑不喜欢
             params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid ?: ""
@@ -620,6 +652,14 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
             mPresenter.dislikeUser(params)
         } else if (direction == Direction.Right) {//右滑喜欢
             UserManager.saveSlideCount(UserManager.getSlideCount() + 1)
+            if (UserManager.motion == ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN && UserManager.getSlideCount() == UserManager.perfect_times) {//2非真人头像（头像审核不通过）
+                ChangeAvatarRealManDialog(
+                    activity!!,
+                    ChangeAvatarRealManDialog.VERIFY_NEED_REAL_MAN,
+                    matchBean = matchUserAdapter.data[manager.topPosition - 1],
+                    view1 = view
+                ).show()
+            }
             //保存剩余滑动次数
             if (UserManager.isUserVip() || UserManager.getLeftSlideCount() > 0) {
                 if (!UserManager.isUserVip() && UserManager.getLeftSlideCount() > 0) {
@@ -629,7 +669,8 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
 
                 params["target_accid"] = matchUserAdapter.data[manager.topPosition - 1].accid
                 if (!matchUserAdapter.data[manager.topPosition - 1].newtags.isNullOrEmpty())
-                    params["tag_id"] = matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
+                    params["tag_id"] =
+                        matchUserAdapter.data[manager.topPosition - 1].newtags!![0].id
                 mPresenter.likeUser(params, matchUserAdapter.data[manager.topPosition - 1])
             } else {
                 card_stack_view.postDelayed({ card_stack_view.rewind() }, 100)
@@ -663,102 +704,130 @@ class MatchFragment : BaseMvpLazyLoadFragment<MatchPresenter>(), MatchView, View
         Log.d("CardStackView", "onCardAppeared: ($position)")
         if (view != null) {
             if (matchUserAdapter.data[manager.topPosition].greet_switch) {
-                (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
+//                (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
                 (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible = true
-                (view.findViewById<TextView>(R.id.btnHiLeftTime)).text = "${UserManager.getLightingCount()}"
-
-                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).addAnimatorListener(object :
-                    Animator.AnimatorListener {
-                    override fun onAnimationEnd(animation: Animator?) {
-                        (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.VISIBLE
-                        (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).visibility = View.INVISIBLE
-
-
-                        //透明度起始为1，结束时为0
-                        val animator =
-                            ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiIv), "alpha", 1f, 0f)
-                        val animator1 =
-                            ObjectAnimator.ofFloat(view.findViewById<TextView>(R.id.btnHiLeftTime), "alpha", 0f, 1f)
-                        val animator2 =
-                            ObjectAnimator.ofFloat(view.findViewById<ImageView>(R.id.btnHiIv), "alpha", 0f, 1f)
-                        val animator3 =
-                            ObjectAnimator.ofFloat(view.findViewById<TextView>(R.id.btnHiLeftTime), "alpha", 1f, 0f)
-                        animator1.duration = animator.duration//时间1s
-                        animator2.duration = animator.duration//时间1s
-                        animator3.duration = animator.duration//时间1s
-                        animator.addListener(object : Animator.AnimatorListener {
-                            override fun onAnimationRepeat(animation: Animator?) {
-
-                            }
-
-                            override fun onAnimationEnd(animation: Animator?) {
-                                animator1.start()
-                            }
-
-                            override fun onAnimationCancel(animation: Animator?) {
-                            }
-
-                            override fun onAnimationStart(animation: Animator?) {
-                            }
-
-                        })
-                        animator1.addListener(object : Animator.AnimatorListener {
-                            override fun onAnimationRepeat(animation: Animator?) {
-
-                            }
-
-                            override fun onAnimationEnd(animation: Animator?) {
-                                view.postDelayed({
-                                    animator2.start()
-                                    animator3.start()
-                                }, 1000L)
-                            }
-
-                            override fun onAnimationCancel(animation: Animator?) {
-
-                            }
-
-                            override fun onAnimationStart(animation: Animator?) {
-                            }
-
-                        })
-                        animator2.addListener(object : Animator.AnimatorListener {
-                            override fun onAnimationRepeat(animation: Animator?) {
-
-                            }
-
-                            override fun onAnimationEnd(animation: Animator?) {
-                                (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility = View.INVISIBLE
-                                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible = true
-
-                                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).playAnimation()
-                            }
-
-                            override fun onAnimationCancel(animation: Animator?) {
-
-                            }
-
-                            override fun onAnimationStart(animation: Animator?) {
-                            }
-
-                        })
-
-                        view.postDelayed({
-                            animator.start()
-                        }, 2000L)
-                    }
-
-                    override fun onAnimationCancel(animation: Animator?) {
-                    }
-
-                    override fun onAnimationStart(animation: Animator?) {
-                    }
-
-                    override fun onAnimationRepeat(animation: Animator?) {
-
-                    }
-
-                })
+//                (view.findViewById<TextView>(R.id.btnHiLeftTime)).text =
+////                    "${UserManager.getLightingCount()}"
+////
+////                (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).addAnimatorListener(
+////                    object :
+////                        Animator.AnimatorListener {
+////                        override fun onAnimationEnd(animation: Animator?) {
+////                            (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility =
+////                                View.VISIBLE
+////                            (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).visibility =
+////                                View.INVISIBLE
+////
+////
+////                            //透明度起始为1，结束时为0
+////                            val animator =
+////                                ObjectAnimator.ofFloat(
+////                                    view.findViewById<ImageView>(R.id.btnHiIv),
+////                                    "alpha",
+////                                    1f,
+////                                    0f
+////                                )
+////                            val animator1 =
+////                                ObjectAnimator.ofFloat(
+////                                    view.findViewById<TextView>(R.id.btnHiLeftTime),
+////                                    "alpha",
+////                                    0f,
+////                                    1f
+////                                )
+////                            val animator2 =
+////                                ObjectAnimator.ofFloat(
+////                                    view.findViewById<ImageView>(R.id.btnHiIv),
+////                                    "alpha",
+////                                    0f,
+////                                    1f
+////                                )
+////                            val animator3 =
+////                                ObjectAnimator.ofFloat(
+////                                    view.findViewById<TextView>(R.id.btnHiLeftTime),
+////                                    "alpha",
+////                                    1f,
+////                                    0f
+////                                )
+////                            animator1.duration = animator.duration//时间1s
+////                            animator2.duration = animator.duration//时间1s
+////                            animator3.duration = animator.duration//时间1s
+////                            animator.addListener(object : Animator.AnimatorListener {
+////                                override fun onAnimationRepeat(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationEnd(animation: Animator?) {
+//////                                    animator1.start()
+////                                    animator2.start()
+////                                    animator3.start()
+////                                }
+////
+////                                override fun onAnimationCancel(animation: Animator?) {
+////                                }
+////
+////                                override fun onAnimationStart(animation: Animator?) {
+////                                }
+////
+////                            })
+////                            animator1.addListener(object : Animator.AnimatorListener {
+////                                override fun onAnimationRepeat(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationEnd(animation: Animator?) {
+////                                    view.postDelayed({
+////                                        animator2.start()
+////                                        animator3.start()
+////                                    }, 1000L)
+////                                }
+////
+////                                override fun onAnimationCancel(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationStart(animation: Animator?) {
+////                                }
+////
+////                            })
+////                            animator2.addListener(object : Animator.AnimatorListener {
+////                                override fun onAnimationRepeat(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationEnd(animation: Animator?) {
+////                                    (view.findViewById<ConstraintLayout>(R.id.btnHi)).visibility =
+////                                        View.INVISIBLE
+////                                    (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).isVisible =
+////                                        true
+////
+////                                    (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).playAnimation()
+////                                }
+////
+////                                override fun onAnimationCancel(animation: Animator?) {
+////
+////                                }
+////
+////                                override fun onAnimationStart(animation: Animator?) {
+////                                }
+////
+////                            })
+////
+////                            view.postDelayed({
+////                                animator.start()
+////                            }, 2000L)
+////                        }
+////
+////                        override fun onAnimationCancel(animation: Animator?) {
+////                        }
+////
+////                        override fun onAnimationStart(animation: Animator?) {
+////                        }
+////
+////                        override fun onAnimationRepeat(animation: Animator?) {
+////
+////                        }
+////
+////                    })
                 (view.findViewById<LottieAnimationView>(R.id.btnHiLottieView)).playAnimation()
             }
         }

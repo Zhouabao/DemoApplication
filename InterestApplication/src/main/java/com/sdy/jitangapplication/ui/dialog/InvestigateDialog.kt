@@ -33,7 +33,7 @@ import org.jetbrains.anko.sdk27.coroutines.onFocusChange
 /**
  *    author : ZFM
  *    date   : 2019/10/2111:41
- *    desc   : 调查问卷dialog
+ *    desc   : 渠道调研 第 10 次右滑时弹，每次出现
  *    version: 1.0
  */
 class InvestigateDialog(private val contex1t: Context, private val investigateBean: InvestigateBean) :

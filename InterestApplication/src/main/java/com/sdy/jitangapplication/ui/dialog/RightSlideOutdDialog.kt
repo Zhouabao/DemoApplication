@@ -7,6 +7,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SpanUtils
 import com.kotlin.base.ext.onClick
 import com.sdy.jitangapplication.R
@@ -32,13 +33,19 @@ class RightSlideOutdDialog(val myContext: Context, var myCount: Int = 0, var max
 
     private fun initView() {
         slideOutBtn.onClick {
-            myContext.startActivity<NewUserInfoSettingsActivity>()
+            if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
+                myContext.startActivity<NewUserInfoSettingsActivity>()
+            dismiss()
         }
         slideOutClose.onClick {
             dismiss()
         }
         gotoPurchase.onClick {
-            ChargeVipDialog(ChargeVipDialog.INFINITE_SLIDE, myContext, ChargeVipDialog.PURCHASE_VIP).show()
+            ChargeVipDialog(
+                ChargeVipDialog.INFINITE_SLIDE,
+                myContext,
+                ChargeVipDialog.PURCHASE_VIP
+            ).show()
         }
 
 

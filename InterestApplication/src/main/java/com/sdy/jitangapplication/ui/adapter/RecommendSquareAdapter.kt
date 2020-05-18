@@ -2,11 +2,14 @@ package com.sdy.jitangapplication.ui.adapter
 
 import android.app.Activity
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import com.airbnb.lottie.LottieAnimationView
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.MultiTransformation
@@ -17,16 +20,15 @@ import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
-import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
-import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.RecommendSquareBean
+import com.sdy.jitangapplication.ui.activity.MatchDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquareCommentDetailActivity
 import com.sdy.jitangapplication.ui.activity.SquarePlayDetailActivity
-import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
@@ -132,14 +134,47 @@ class RecommendSquareAdapter :
         helper.itemView.squareName.text = item.nickname
         GlideUtil.loadCircleImg(mContext, item.avatar, helper.itemView.squareAvator)
         //设置点赞状态
-        setLikeStatus(item.isliked, item.like_cnt, helper.itemView.squareLike)
+        setLikeStatus(
+            item.isliked,
+            item.like_cnt,
+            helper.itemView.clickZanViewImg,
+            helper.itemView.clickZanViewAni,
+            helper.itemView.squareLike, false
+        )
         //点赞
-        helper.itemView.squareLike.onClick {
-            clickZan(helper.itemView.squareLike, helper.layoutPosition - headerLayoutCount)
+        helper.itemView.clickZanViewImg.onClick {
+            if (item.accid != UserManager.getAccid()) {
+                clickZan(
+                    helper.itemView.clickZanViewImg,
+                    helper.itemView.clickZanViewAni,
+                    helper.itemView.squareLike,
+                    helper.layoutPosition - headerLayoutCount
+                )
+            }
         }
+        helper.itemView.clickZanViewAni.onClick {
+            if (item.accid != UserManager.getAccid()) {
+                clickZan(
+                    helper.itemView.clickZanViewImg,
+                    helper.itemView.clickZanViewAni,
+                    helper.itemView.squareLike,
+                    helper.layoutPosition - headerLayoutCount
+                )
+            }
+        }
+//        helper.itemView.squareLike.onClick {
+//            if (item.accid != UserManager.getAccid()) {
+//                clickZan(
+//                    helper.itemView.clickZanViewImg,
+//                    helper.itemView.clickZanViewAni,
+//                    helper.itemView.squareLike,
+//                    helper.layoutPosition - headerLayoutCount
+//                )
+//            }
+//        }
 
         //点击跳转
-        helper.itemView.onClick {
+        helper.itemView.clickWithTrigger {
             if (item.type == 2)  //视频
                 SquarePlayDetailActivity.startActivity(
                     mContext as Activity,
@@ -147,37 +182,55 @@ class RecommendSquareAdapter :
                     fromRecommend = true
                 )
             else {//文本.语音.图片
+                if (item.type == 1) {
+                    if (item.accid != UserManager.getAccid() && !item.isliked)
+                        clickZan(
+                            helper.itemView.clickZanViewImg,
+                            helper.itemView.clickZanViewAni,
+                            helper.itemView.squareLike,
+                            helper.layoutPosition - headerLayoutCount
+                        )
+                }
                 SquareCommentDetailActivity.start(
                     mContext,
                     squareId = item.id,
                     position = helper.layoutPosition - headerLayoutCount
                 )
-                if (item.type == 1) {
-                    if (!item.isliked)
-                        clickZan(
-                            helper.itemView.squareLike,
-                            helper.layoutPosition - headerLayoutCount
-                        )
-                }
+
             }
 
 
+        }
+
+        helper.itemView.squareAvator.clickWithTrigger {
+            MatchDetailActivity.start(mContext, item.accid)
         }
     }
 
     /**
      * 设置点赞状态
      */
-    private fun setLikeStatus(isliked: Boolean, likeCount: Int, likeView: TextView) {
-        val drawable1 =
-            mContext.resources.getDrawable(if (isliked) R.drawable.icon_zan_clicked else R.drawable.icon_zan_normal)
-        drawable1!!.setBounds(
-            0,
-            0,
-            drawable1.intrinsicWidth,
-            drawable1.intrinsicHeight
-        )    //需要设置图片的大小才能显示
-        likeView.setCompoundDrawables(drawable1, null, null, null)
+    private fun setLikeStatus(
+        isliked: Boolean,
+        likeCount: Int,
+        likeImg: ImageView,
+        likeAnim: LottieAnimationView,
+        likeView: TextView,
+        animate: Boolean = true
+    ) {
+        likeAnim.isVisible = isliked && animate
+        likeImg.isVisible = !likeAnim.isVisible
+        if (isliked) {
+            if (animate) {
+                likeAnim.playAnimation()
+                VibrateUtils.vibrate(50L)
+            } else {
+                likeImg.setImageResource(R.drawable.icon_zan_clicked)
+            }
+        } else {
+            likeImg.setImageResource(R.drawable.icon_zan_normal)
+        }
+
         likeView.text = "${if (likeCount < 0) {
             0
         } else {
@@ -189,7 +242,12 @@ class RecommendSquareAdapter :
     /**
      * 点赞按钮
      */
-    private fun clickZan(likeBtn: TextView, position: Int) {
+    private fun clickZan(
+        likeImg: ImageView,
+        likeAnim: LottieAnimationView,
+        likeBtn: TextView,
+        position: Int
+    ) {
         if (data[position].isliked) {
             data[position].isliked = !data[position].isliked
             data[position].like_cnt = data[position].like_cnt!!.minus(1)
@@ -197,7 +255,7 @@ class RecommendSquareAdapter :
             data[position].isliked = !data[position].isliked
             data[position].like_cnt = data[position].like_cnt!!.plus(1)
         }
-        setLikeStatus(data[position].isliked, data[position].like_cnt, likeBtn)
+        setLikeStatus(data[position].isliked, data[position].like_cnt, likeImg, likeAnim, likeBtn)
 
         likeBtn.postDelayed({
             if (data.isEmpty() || data.size - 1 < position)
@@ -233,20 +291,14 @@ class RecommendSquareAdapter :
                     if (t.code == 200) {
                         onGetSquareLikeResult(position, true)
                     } else if (t.code == 403) {
-                        TickDialog(mContext).show()
+                        UserManager.startToLogin(mContext as Activity)
                     } else {
-                        CommonFunction.toast(t.msg)
                         onGetSquareLikeResult(position, false)
                     }
 
                 }
 
                 override fun onError(e: Throwable?) {
-                    if (e is BaseException) {
-                        TickDialog(mContext).show()
-                    } else {
-                        CommonFunction.toast(mContext.getString(R.string.service_error))
-                    }
                 }
             })
     }

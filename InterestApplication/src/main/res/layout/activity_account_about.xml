@@ -28,7 +28,7 @@
                 >
 
             <TextView
-                    android:id="@+id/t1"
+                    android:id="@+id/moreInfoTitle"
                     android:paddingLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="账号相关"
@@ -49,7 +49,7 @@
                     android:layout_width="46dp"
                     android:layout_height="46dp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/t1"/>
+                    app:layout_constraintTop_toBottomOf="@id/moreInfoTitle"/>
 
             <TextView
                     android:id="@+id/telTitle"

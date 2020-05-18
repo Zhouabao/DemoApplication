@@ -8,16 +8,17 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ActivityUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
 import com.kotlin.base.ext.onClick
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.baselibrary.glide.GlideUtil
-import com.sdy.baselibrary.utils.CustomClickListener
 import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.clickWithTrigger
 import com.sdy.jitangapplication.model.MatchBean
 import com.sdy.jitangapplication.ui.activity.NewUserInfoSettingsActivity
 import com.sdy.jitangapplication.utils.UserManager
@@ -40,9 +41,9 @@ class ChangeAvatarRealManDialog(
     Dialog(context1, R.style.MyDialog) {
 
     companion object {
-        const val VERIFY_NEED_REAL_MAN = 0 //替换真人
         const val VERIFY_NEED_VALID_REAL_MAN = 1 //替换为合规的真人照片
-        const val VERIFY_NEED_REAL_MAN_GREET = 2 //打招呼滑动时提示替换真人
+        const val VERIFY_NEED_REAL_MAN = 2 //替换真人（非真人）
+        const val VERIFY_NEED_REAL_MAN_GREET = 0 //打招呼滑动时提示替换真人
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,23 +59,22 @@ class ChangeAvatarRealManDialog(
             dismiss()
         }
         accountDangerBtn.onClick {
-            context1.startActivity<NewUserInfoSettingsActivity>()
+            if (ActivityUtils.getTopActivity() !is NewUserInfoSettingsActivity)
+                context1.startActivity<NewUserInfoSettingsActivity>()
             dismiss()
         }
 
-        continueGreet.onClick(object : CustomClickListener() {
-            override fun onSingleClick(view: View) {
-                if (matchBean != null)
-                    CommonFunction.commonGreet(
-                        context1,
-                        matchBean!!.accid,
-                        view1,
-                        targetAvator = matchBean!!.avatar ?: "",
-                        needSwipe = true
-                    )
-                dismiss()
-            }
-        })
+        continueGreet.clickWithTrigger {
+            if (matchBean != null)
+                CommonFunction.commonGreet(
+                    context1,
+                    matchBean!!.accid,
+                    view1,
+                    targetAvator = matchBean!!.avatar ?: "",
+                    needSwipe = true
+                )
+            dismiss()
+        }
 
         if (UserManager.getGender() == 1) {
             standardImg.setImageResource(R.drawable.icon_standard_man_avator)
@@ -91,8 +91,8 @@ class ChangeAvatarRealManDialog(
                 }
                 close.isVisible = false
                 continueGreet.isVisible = false
-                accountDangerTitle.text = "您的头像为非真人"
-                accountDangerContent.text = "替换真人头像将会推荐显示到匹配首页，\n人气直线提升，获得超多喜欢关注"
+                accountDangerTitle.text = "头像审核未通过"
+                accountDangerContent.text = "非真人头像可能导致匹配率偏低\n请替换后再进行匹配"
                 accountDangerBtn.text = "立即替换"
             }
             VERIFY_NEED_VALID_REAL_MAN -> {

@@ -22,7 +22,8 @@ import kotlinx.android.synthetic.main.item_charge_vip_power.view.*
  *    desc   : 会员支付购买时间适配器
  *    version: 1.0
  */
-class VipPowerChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_charge_vip_power) {
+class VipPowerChargeAdapter :
+    BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.layout.item_charge_vip_power) {
     var purchaseType = ChargeVipDialog.PURCHASE_VIP
     override fun convert(holder: BaseViewHolder, item: ChargeWayBean) {
         val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
@@ -40,35 +41,61 @@ class VipPowerChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.
         }
         holder.itemView.layoutParams = params
 
-        holder.itemView.vipNowPrice.text =
-            SpanUtils.with(holder.itemView.vipNowPrice)
-                .append("¥")
-                .setFontSize(14, true)
-                .setBold()
-                .append("${item.unit_price}")
-                .setFontSize(28, true)
-                .setBold()
+        SpanUtils.with(holder.itemView.vipNowPrice)
+            .append("¥")
+            .setFontSize(13, true)
+            .setBold()
+            .append(
+                "${if (item.type == 1) {
+                    item.original_price
+                } else {
+                    item.discount_price
+                }}"
+            )
+            .setFontSize(28, true)
+            .setTypeface(Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf"))
+            .setBold()
+            .create()
+
+        if (item.giving_amount > 0) {
+            SpanUtils.with(holder.itemView.vipOriginalPrice)
+                .append("赠送${item.giving_amount}")
+                .appendImage(R.drawable.icon_candy_small)
                 .create()
-        holder.itemView.vipNowPrice.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
-        holder.itemView.vipDiscount.typeface = Typeface.createFromAsset(mContext.assets, "DIN_Alternate_Bold.ttf")
-        if (item.save_percent == 0) {//	1 原价售卖 2折扣价售卖 3限时折扣
-            holder.itemView.vipDiscount.visibility = View.INVISIBLE
         } else {
+            SpanUtils.with(holder.itemView.vipOriginalPrice)
+                .append("¥${item.original_price}")
+                .setStrikethrough()
+                .create()
+        }
+
+        if (item.type == 1) {//	1 原价售卖 2折扣价售卖 3限时折扣
+            holder.itemView.vipDiscount.isVisible = false
+            holder.itemView.vipOriginalPrice.setPadding(0, 0, 0, SizeUtils.dp2px(20F))
+        } else {
+            holder.itemView.vipOriginalPrice.setPadding(0, 0, 0, 0)
             holder.itemView.vipDiscount.visibility = View.VISIBLE
             holder.itemView.vipDiscount.text =
                 SpanUtils.with(holder.itemView.vipDiscount)
-                    .append("节省")
-                    .append("${item.save_percent}")
+                    .append("节省\t¥")
+                    .append("${item.original_price - item.discount_price}")
+                    .setTypeface(
+                        Typeface.createFromAsset(
+                            mContext.assets,
+                            "DIN_Alternate_Bold.ttf"
+                        )
+                    )
                     .setBold()
-                    .append("%")
                     .create()
         }
+
         holder.itemView.vipLong.text = item.ename ?: ""
         holder.itemView.vipSaleType.text = item.descr ?: ""
         if (item.is_promote) {
             holder.itemView.vipSaleType.isVisible = !item.descr.isNullOrEmpty()
 //            holder.itemView.vipSaleType.isVisible = item.type == 3
-            (holder.itemView.vipDiscount.layoutParams as ConstraintLayout.LayoutParams).topMargin = SizeUtils.dp2px(10F)
+            (holder.itemView.vipDiscount.layoutParams as ConstraintLayout.LayoutParams).topMargin =
+                SizeUtils.dp2px(10F)
             when (purchaseType) {
                 ChargeVipDialog.PURCHASE_VIP -> {
                     holder.itemView.vipSaleType.setBackgroundResource(R.drawable.shape_vip_charge_popular_bg)
@@ -93,19 +120,22 @@ class VipPowerChargeAdapter : BaseQuickAdapter<ChargeWayBean, BaseViewHolder>(R.
                     holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_vip_renew_charge_checked_bg)
                     holder.itemView.vipLong.setTextColor(mContext.resources.getColor(R.color.colorOrangeVip))
                     holder.itemView.vipNowPrice.setTextColor(mContext.resources.getColor(R.color.colorOrangeVip))
+                    holder.itemView.vipOriginalPrice.setTextColor(mContext.resources.getColor(R.color.colorOrangeVip))
                     holder.itemView.vipDiscount.setTextColor(Color.parseColor("#FF313437"))
                     holder.itemView.vipSaleType.setTextColor(Color.parseColor("#FF313437"))
                     holder.itemView.vipDiscount.setBackgroundResource(R.drawable.shape_vip_charge_discount_checked_bg)
                 }
             }
         } else {
-            (holder.itemView.vipDiscount.layoutParams as ConstraintLayout.LayoutParams).topMargin = SizeUtils.dp2px(0F)
+            (holder.itemView.vipDiscount.layoutParams as ConstraintLayout.LayoutParams).topMargin =
+                SizeUtils.dp2px(0F)
             when (purchaseType) {
                 ChargeVipDialog.PURCHASE_RENEW_VIP -> {
                     holder.itemView.vipSaleType.visibility = View.INVISIBLE
                     holder.itemView.vipCl.setBackgroundResource(R.drawable.shape_vip_renew_charge_normal_bg)
                     holder.itemView.vipLong.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.vipNowPrice.setTextColor(mContext.resources.getColor(R.color.colorWhite))
+                    holder.itemView.vipOriginalPrice.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.vipDiscount.setTextColor(mContext.resources.getColor(R.color.colorWhite))
                     holder.itemView.vipDiscount.background = null
                 }

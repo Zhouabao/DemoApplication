@@ -2,24 +2,21 @@ package com.sdy.jitangapplication.ui.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SpanUtils
+import com.google.gson.Gson
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -35,9 +32,12 @@ import com.sdy.jitangapplication.R
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
 import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.model.MoreMatchBean
+import com.sdy.jitangapplication.model.MyPhotoBean
 import com.sdy.jitangapplication.presenter.UserNickNamePresenter
 import com.sdy.jitangapplication.presenter.view.UserNickNameView
 import com.sdy.jitangapplication.ui.adapter.UploadAvatorAdapter
+import com.sdy.jitangapplication.ui.adapter.UserUploadPicAdapter
 import com.sdy.jitangapplication.ui.dialog.UploadAvatorDialog
 import com.sdy.jitangapplication.utils.QNUploadManager
 import com.sdy.jitangapplication.utils.UriUtils
@@ -47,16 +47,17 @@ import kotlinx.android.synthetic.main.dialog_upload_avator.*
 import org.jetbrains.anko.startActivity
 import top.zibin.luban.OnCompressListener
 import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * 用户头像
  */
-class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNameView, View.OnClickListener {
+class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNameView,
+    View.OnClickListener {
 
     companion object {
         const val REQUEST_CODE_TAKE_PHOTO = 1
+        const val REQUEST_PIC_CODE = 111
 
     }
 
@@ -66,6 +67,26 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         initView()
     }
 
+    private val adapter by lazy {
+        UserUploadPicAdapter()
+            .apply {
+                addData(
+                    mutableListOf(
+                        MyPhotoBean(id = -1),
+                        MyPhotoBean(id = -1),
+                        MyPhotoBean(id = -1),
+                        MyPhotoBean(id = -1),
+                        MyPhotoBean(id = -1),
+                        MyPhotoBean(id = -1),
+                        MyPhotoBean(id = -1),
+                        MyPhotoBean(id = -1)
+                    )
+                )
+            }
+    }
+
+
+    private var clickPos = 0
     private fun initView() {
         setSwipeBackEnable(false)
         mPresenter = UserNickNamePresenter()
@@ -73,8 +94,9 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         mPresenter.context = this
 
         userAvatorTake.setOnClickListener(this)
+        userAvator.setOnClickListener(this)
         btnNextStep.setOnClickListener(this)
-        help.setOnClickListener(this)
+
 
         userAvatorTitle.text = SpanUtils.with(userAvatorTitle)
             .append("上传")
@@ -84,12 +106,24 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
             .append("推荐")
             .setForegroundColor(resources.getColor(R.color.colorOrange))
             .create()
+        userPhotosRv.layoutManager = GridLayoutManager(this, 4, RecyclerView.VERTICAL, false)
+        userPhotosRv.adapter = adapter
+
+        adapter.setOnItemClickListener { _, view, position ->
+            clickPos = position
+            showAvatorDialog(false, REQUEST_PIC_CODE)
+        }
+
 
     }
 
+
     private val uploadAvatorDialog by lazy { UploadAvatorDialog(this) }
-    private fun showAvatorDialog() {
+    private fun showAvatorDialog(showAlert: Boolean = true, requestCode: Int) {
         uploadAvatorDialog!!.show()
+        uploadAvatorDialog.rvPersons.isVisible = showAlert
+        uploadAvatorDialog.tv11.isVisible = showAlert
+        uploadAvatorDialog.tv2.isVisible = showAlert
         val imgs = mutableListOf<Int>(
             R.drawable.icon_pass_person,
             R.drawable.icon_huangse_person,
@@ -98,7 +132,8 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         )
         val adapter = UploadAvatorAdapter()
         adapter.setNewData(imgs)
-        uploadAvatorDialog.rvPersons.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        uploadAvatorDialog.rvPersons.layoutManager =
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         uploadAvatorDialog.rvPersons.adapter = adapter
 
         uploadAvatorDialog.choosePhoto.onClick {
@@ -116,8 +151,10 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                                             CommonFunction.onTakePhoto(
                                                 this@UserAvatorActivity,
                                                 1,
-                                                PictureConfig.CHOOSE_REQUEST,
-                                                PictureMimeType.ofImage()
+                                                requestCode,
+                                                PictureMimeType.ofImage(),
+                                                rotateEnable = true,
+                                                cropEnable = true
                                             )
                                             uploadAvatorDialog.cancel()
                                         }
@@ -141,14 +178,18 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                 CommonFunction.onTakePhoto(
                     this@UserAvatorActivity,
                     1,
-                    PictureConfig.CHOOSE_REQUEST,
-                    PictureMimeType.ofImage()
+                    requestCode,
+                    PictureMimeType.ofImage(),
+                    rotateEnable = true,
+                    cropEnable = true
                 )
                 uploadAvatorDialog.cancel()
             }
         }
         uploadAvatorDialog.takePhoto.onClick {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (!PermissionUtils.isGranted(PermissionConstants.CAMERA) ||
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (!PermissionUtils.isGranted(
+                    PermissionConstants.CAMERA
+                ) ||
                         !PermissionUtils.isGranted(PermissionConstants.STORAGE))
             ) {
                 PermissionUtils.permission(PermissionConstants.CAMERA)
@@ -158,7 +199,15 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                                 PermissionUtils.permission(PermissionConstants.STORAGE)
                                     .callback(object : PermissionUtils.SimpleCallback {
                                         override fun onGranted() {
-                                            takePhoto()
+                                            CommonFunction.openCamera(
+                                                this@UserAvatorActivity,
+                                                requestCode,
+                                                1,
+                                                compress = false,
+                                                rotateEnable = true,
+                                                cropEnable = true
+                                            )
+//                                            takePhoto()
                                             uploadAvatorDialog.cancel()
                                         }
 
@@ -180,7 +229,15 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                     })
                     .request()
             } else {
-                takePhoto()
+//                takePhoto()
+                CommonFunction.openCamera(
+                    this@UserAvatorActivity,
+                    requestCode,
+                    1,
+                    compress = false,
+                    rotateEnable = true,
+                    cropEnable = true
+                )
                 uploadAvatorDialog.cancel()
             }
         }
@@ -190,52 +247,16 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
 
     }
 
-    private var imageFile: File? = null     //拍照后保存的照片
-    private var imgUri: Uri? = null         //拍照后保存的照片的uri
-    private fun takePhoto() {
-        imageFile = createImageFile()
-        imageFile?.let {
-            var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {  //如果是7.0以上，使用FileProvider，否则会报错
-                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                imgUri = FileProvider.getUriForFile(this, PublishActivity.AUTHORITY, it)
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri) //设置拍照后图片保存的位置
-            } else {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(it)) //设置拍照后图片保存的位置
-            }
-            intent.resolveActivity(packageManager)?.let {
-                startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO) //调起系统相机
-            }
-        }
-    }
-
-    /**
-     * 创建文件夹来保存照片
-     */
-    private fun createImageFile(): File? {
-        return try {
-            var rootFile = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
-                "jitangapplicaiton/camera"
-            )
-            if (!rootFile.exists())
-                rootFile.mkdirs()
-            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-            val fileName = "IMG_$timeStamp.jpg"
-            File(rootFile.absolutePath + File.separator + fileName)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                PictureConfig.CHOOSE_REQUEST -> {
+
+                //相册拍摄
+                PictureConfig.CHOOSE_REQUEST,
+                    //选择照片
+                REQUEST_CODE_TAKE_PHOTO -> {
                     if (data != null) {
                         startAnimation(false)
                         var path =
@@ -254,9 +275,15 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                                     if (file != null) {
                                         path = file.absolutePath
                                     }
-                                    GlideUtil.loadCircleImg(this@UserAvatorActivity, path, userAvatorTake)
+                                    GlideUtil.loadCircleImg(
+                                        this@UserAvatorActivity, path, userAvator
+                                    )
+                                    userAvator.isVisible = true
+                                    userAvatorTip.setImageResource(R.drawable.icon_bg_transparent_avator_change_bg)
                                     val key =
-                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
+                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(
+                                            Constants.SPNAME
+                                        ).getString(
                                             "accid"
                                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                             16
@@ -266,9 +293,17 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
 
                                 override fun onError(e: Throwable?) {
                                     Log.d("SetInfoActivity", "$path===========================")
-                                    GlideUtil.loadCircleImg(this@UserAvatorActivity, path, userAvatorTake)
+                                    GlideUtil.loadCircleImg(
+                                        this@UserAvatorActivity, path,
+                                        userAvator
+                                    )
+                                    userAvator.isVisible = true
+                                    userAvatorTip.setImageResource(R.drawable.icon_bg_transparent_avator_change_bg)
+
                                     val key =
-                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
+                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(
+                                            Constants.SPNAME
+                                        ).getString(
                                             "accid"
                                         )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
                                             16
@@ -287,44 +322,27 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
                     }
                 }
 
-                REQUEST_CODE_TAKE_PHOTO -> {
-                    if (imageFile != null) {
-                        startAnimation(false)
-                        var path = imageFile!!.absolutePath
-                        UriUtils.getLubanBuilder(this)
-                            .load(path)
-                            .setCompressListener(object : OnCompressListener {
-                                override fun onSuccess(file: File?) {
-                                    if (file != null) {
-                                        path = file.absolutePath
-                                    }
-                                    GlideUtil.loadCircleImg(this@UserAvatorActivity, path, userAvatorTake)
-                                    val key =
-                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
-                                            "accid"
-                                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                                            16
-                                        )}"
-                                    uploadProfile(path, key.toString())
-                                }
 
-                                override fun onError(e: Throwable?) {
-                                    GlideUtil.loadCircleImg(this@UserAvatorActivity, path, userAvatorTake)
-                                    val key =
-                                        "${Constants.FILE_NAME_INDEX}${Constants.AVATOR}${SPUtils.getInstance(Constants.SPNAME).getString(
-                                            "accid"
-                                        )}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
-                                            16
-                                        )}"
-                                    uploadProfile(path, key.toString())
-                                }
+                //上传相册
+                REQUEST_PIC_CODE -> {
+                    if (data != null) {
+                        var path =
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !PictureSelector.obtainMultipleResult(
+                                    data
+                                )[0].androidQToPath.isNullOrEmpty()
+                            ) {
+                                PictureSelector.obtainMultipleResult(data)[0].androidQToPath
+                            } else {
+                                PictureSelector.obtainMultipleResult(data)[0].path
+                            }
 
-                                override fun onStart() {
+                        val qnPath =
+                            "${Constants.FILE_NAME_INDEX}${Constants.USERCENTER}${UserManager.getAccid()}/${System.currentTimeMillis()}/${RandomUtils.getRandomString(
+                                16
+                            )}"
+                        mPresenter.loadingDialg.show()
+                        mPresenter.uploadProfile(path, qnPath)
 
-                                }
-
-                            })
-                            .launch()
 
                     }
                 }
@@ -371,7 +389,10 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
         QNUploadManager.getInstance().put(
             filePath, imagePath, SPUtils.getInstance(Constants.SPNAME).getString("qntoken"),
             { key, info, response ->
-                Log.d("OkHttp", "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}")
+                Log.d(
+                    "OkHttp",
+                    "token = ${SPUtils.getInstance(Constants.SPNAME).getString("qntoken")}"
+                )
                 Log.d("OkHttp", "key=$key\ninfo=$info\nresponse=$response")
                 if (info != null) {
                     if (!info.isOK) {
@@ -432,10 +453,38 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     }
 
 
-    override fun onUploadUserInfoResult(uploadResult: Boolean, msg: String?) {
-        mPresenter.loadingDialg.dismiss()
-        if (uploadResult) {
-            startActivity<UserIntroduceActivity>("from" to UserIntroduceActivity.REGISTER)
+    override fun onUploadUserInfoResult(
+        uploadResult: Boolean,
+        msg: String?,
+        moreMatchBean: MoreMatchBean?
+    ) {
+
+    }
+
+    override fun uploadImgResult(b: Boolean, key: String) {
+        if (b) {
+            mPresenter.addPhotoWall(key)
+        }
+    }
+
+    override fun onAddPhotoWallResult(data: MyPhotoBean) {
+        if ((clickPos > 0 && adapter.data[clickPos - 1].id != -1) || clickPos == 0) {
+            adapter.setData(clickPos, data)
+        } else {
+            for (tData in adapter.data.withIndex()) {
+                if (tData.value.id == -1) {
+                    adapter.setData(tData.index, data)
+                    break
+                }
+            }
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun onRegisterAddPhoto(data: MoreMatchBean?) {
+        if (data != null && data!!.gender_str.isNotEmpty()) {
+            SPUtils.getInstance(Constants.SPNAME).put("avatar", data?.avatar)
+            startActivity<GetMoreMatchActivity>("moreMatch" to data)
             finish()
         } else {
             btnNextStep.isEnabled = true
@@ -445,15 +494,23 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.userAvatorTake -> {
-                showAvatorDialog()
+            R.id.userAvatorTake,
+            R.id.userAvator -> {
+                showAvatorDialog(true, PictureConfig.CHOOSE_REQUEST)
             }
             R.id.help -> {
                 startActivity<LoginHelpActivity>()
             }
             R.id.btnNextStep -> {
-                mPresenter.loadingDialg.show()
-                mPresenter.uploadUserInfo(4, hashMapOf("avatar" to userProfile.toString()))
+                val params = hashMapOf<String, Any>("avatar" to userProfile.toString())
+                val registerPhotos = mutableListOf<Int>()
+                for (data in adapter.data) {
+                    if (data.id != -1) {
+                        registerPhotos.add(data.id)
+                    }
+                }
+                params["photos"] = Gson().toJson(registerPhotos)
+                mPresenter.registerAddPhoto(params)
             }
         }
     }
@@ -461,5 +518,6 @@ class UserAvatorActivity : BaseMvpActivity<UserNickNamePresenter>(), UserNickNam
     override fun onBackPressed() {
 
     }
+
 
 }

@@ -1,5 +1,7 @@
 package com.sdy.jitangapplication.presenter
 
+import android.app.Activity
+import com.blankj.utilcode.util.SPUtils
 import com.kotlin.base.data.net.RetrofitFactory
 import com.kotlin.base.data.protocol.BaseResp
 import com.kotlin.base.ext.excute
@@ -8,6 +10,8 @@ import com.kotlin.base.rx.BaseException
 import com.kotlin.base.rx.BaseSubscriber
 import com.sdy.jitangapplication.api.Api
 import com.sdy.jitangapplication.common.CommonFunction
+import com.sdy.jitangapplication.common.Constants
+import com.sdy.jitangapplication.model.Userinfo
 import com.sdy.jitangapplication.presenter.view.UserIntroduceView
 import com.sdy.jitangapplication.ui.dialog.TickDialog
 import com.sdy.jitangapplication.utils.UserManager
@@ -34,16 +38,27 @@ class UserIntroducePresenter : BasePresenter<UserIntroduceView>() {
 
         RetrofitFactory.instance.create(Api::class.java)
             .saveRegisterInfo(UserManager.getSignParams(params))
-            .excute(object : BaseSubscriber<BaseResp<Any?>>(mView) {
+            .excute(object : BaseSubscriber<BaseResp<Userinfo?>>(mView) {
                 override fun onStart() {
                     super.onStart()
+                    mView.showLoading()
                 }
 
-                override fun onNext(t: BaseResp<Any?>) {
+                override fun onNext(t: BaseResp<Userinfo?>) {
+                    mView.hideLoading()
                     if (t.code == 200) {
                         mView.onSaveRegisterInfo(true)
+                        SPUtils.getInstance(Constants.SPNAME).put("nickname", t.data?.nickname)
+                        SPUtils.getInstance(Constants.SPNAME).put("avatar", t.data?.avatar)
+                        t.data?.gender?.let {
+                            SPUtils.getInstance(Constants.SPNAME).put("gender", it)
+                        }
+                        t.data?.birth?.let {
+                            SPUtils.getInstance(Constants.SPNAME).put("birth", it)
+                        }
                     } else if (t.code == 403) {
-                        TickDialog(context).show()
+                        UserManager.startToLogin(context as Activity)
+
                     } else {
                         CommonFunction.toast(t.msg)
                         mView.onSaveRegisterInfo(false)
@@ -51,6 +66,7 @@ class UserIntroducePresenter : BasePresenter<UserIntroduceView>() {
                 }
 
                 override fun onError(e: Throwable?) {
+                    mView.hideLoading()
                     if (e is BaseException) {
                         TickDialog(context).show()
                     } else {

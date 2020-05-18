@@ -41,7 +41,7 @@
 
 
             <TextView
-                    android:id="@+id/t1"
+                    android:id="@+id/moreInfoTitle"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="43dp"
                     android:layout_width="wrap_content"
@@ -64,9 +64,9 @@
                     android:thumb="@drawable/switch_intention_thumb"
                     android:layout_marginLeft="10dp"
                     android:track="@drawable/selector_switch_intention_track"
-                    app:layout_constraintBottom_toBottomOf="@id/t1"
-                    app:layout_constraintLeft_toRightOf="@id/t1"
-                    app:layout_constraintTop_toTopOf="@id/t1"
+                    app:layout_constraintBottom_toBottomOf="@id/moreInfoTitle"
+                    app:layout_constraintLeft_toRightOf="@id/moreInfoTitle"
+                    app:layout_constraintTop_toTopOf="@id/moreInfoTitle"
                     />
 
             <TextView
@@ -102,8 +102,8 @@
                     android:text="选择后会实时匹配跟你意向一致的Ta"
                     android:textColor="#ffffffff"
                     android:textSize="14sp"
-                    app:layout_constraintLeft_toLeftOf="@id/t1"
-                    app:layout_constraintTop_toBottomOf="@id/t1"
+                    app:layout_constraintLeft_toLeftOf="@id/moreInfoTitle"
+                    app:layout_constraintTop_toBottomOf="@id/moreInfoTitle"
                     />
 
 
